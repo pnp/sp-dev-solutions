@@ -18,6 +18,7 @@ import PersonDisplay from './PersonDisplay';
 import PersonEdit from './PersonEdit';
 import OrganizationDisplay from './OrganizationDisplay';
 import OrganizationEdit from './OrganizationEdit';
+import UserInterfaceUtility from '../../../sharePointComponents/UserInterfaceUtility';
 
 import { Label } from 'office-ui-fabric-react/lib/Label';
 import { Button } from 'office-ui-fabric-react/lib/Button';
@@ -425,6 +426,8 @@ export default class Crm extends React.Component<ICrmProps, ICrmState> {
       }
     ];
     
+    UserInterfaceUtility.applyWorkarounds();
+
     return (
       <div className={styles.crm}>
         <div className={styles.container}>

@@ -1,5 +1,7 @@
 export default class UserInterfaceUtility
 {
+    private static _outerElement : Element;
+
     public static padLeft(existing : string, padChar : string, length :  number) : string
     {
         while (existing.length < length)
@@ -9,7 +11,37 @@ export default class UserInterfaceUtility
 
         return existing;
     }
+    public static setOuterElement(elt : Element)
+    {
+      UserInterfaceUtility._outerElement = elt;
+    }
     
+    public static applyWorkarounds() 
+    {
+      // https://github.com/sharepoint/sp-dev-docs/issues/492
+
+ // if (Environment.type === EnvironmentType.ClassicSharePoint) 
+ // {
+      window.setTimeout( (elt) => 
+      {
+        const buttons = elt.getElementsByTagName('button');
+  
+        if (buttons && buttons.length) 
+        {
+          for (let i: number = 0; i < buttons.length; i++) 
+          {      
+            if (buttons[i]) 
+            {
+                // Disable the button onclick postback
+                buttons[i].onclick = () => { return false; };
+            }
+          }
+        }
+      }, 50, UserInterfaceUtility._outerElement);
+ // }
+
+    }
+
     public static getFriendlyDate(date : Date) : string
     {
       let dateVal = "";

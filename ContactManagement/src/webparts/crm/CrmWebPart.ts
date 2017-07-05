@@ -14,6 +14,7 @@ import CrmManager  from '../../data/CrmManager';
 import ViewManagerPropertyPaneField from './ViewManagerPropertyPaneField';
 import View from '../../data/View';
 import ViewSet from '../../data/ViewSet';
+import UserInterfaceUtility from '../../sharePointComponents/UserInterfaceUtility';
 
 export interface ICrmWebPartProps {
   description: string;
@@ -44,8 +45,13 @@ export default class CrmWebPart extends BaseClientSideWebPart<ICrmWebPartProps> 
 
     this.properties.views = newViews;
 
+    UserInterfaceUtility.setOuterElement(this.domElement);
+  
+    UserInterfaceUtility.applyWorkarounds();
+  
     return new Promise<void>( (resolve) => { resolve(); } );
-  }
+}
+
 
   public render(): void {
     const element: React.ReactElement<ICrmProps> = React.createElement(
@@ -58,6 +64,9 @@ export default class CrmWebPart extends BaseClientSideWebPart<ICrmWebPartProps> 
     );
 
     ReactDom.render(element, this.domElement);
+
+    UserInterfaceUtility.setOuterElement(this.domElement);
+    UserInterfaceUtility.applyWorkarounds();
   }
 
   protected get dataVersion(): Version {

@@ -8,7 +8,8 @@ import OrganizationEdit from './OrganizationEdit';
 import { IOrganization } from '../../../data/IOrganization';
 import { IPerson } from '../../../data/IPerson';
 import ItemFieldIterator from '../../../sharePointComponents/ItemFieldIterator';
-import ItemRichTextFieldDisplay  from '../../../sharePointComponents/ItemRichTextFieldDisplay';
+import ItemRichTextFieldDisplay from '../../../sharePointComponents/ItemRichTextFieldDisplay';
+import UserInterfaceUtility from '../../../sharePointComponents/UserInterfaceUtility';
 import ItemContext from '../../../sharePointComponents/ItemContext';
 import PersonMiniDisplay from './PersonMiniDisplay';
 import ElementUtilities from '../../../utilities/ElementUtilities';
@@ -153,6 +154,8 @@ export default class OrganizationDisplay extends React.Component<IOrganizationDi
 
       this._executeQuery();
     }
+
+    UserInterfaceUtility.applyWorkarounds();
 
     if (this.props.isEditing || this.state.isEditing)
     {
