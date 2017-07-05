@@ -39,6 +39,17 @@ jspm_packages/
 # Typescript v1 declaration files
 typings/
 
+# Exclude configuration files
+config/
+configRelease/
+configShip/
+configStaging/
+configTest/
+configProd/
+configPreProd/
+configAlpha/
+configBeta/
+
 # Optional npm cache directory
 .npm
 

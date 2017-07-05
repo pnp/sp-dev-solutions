@@ -1,0 +1,183 @@
+.sharePointComponent 
+{
+  .container
+  {
+    background-color: green;
+  }
+  
+  .button 
+  {
+    text-decoration: none;
+  }
+}
+
+.clauseEditor
+{
+  .rowTable
+  {
+    display: block;
+  }
+
+  .row
+  {
+    display: block;
+  }
+
+  .cell
+  {
+    display: inline-block;
+    vertical-align: top;
+    width: 160px;
+    padding-right: 4px;
+    height:32px;
+  }
+
+  .operatorCell
+  {
+    display: inline-block;
+    vertical-align: top;
+    width: 100px;
+    padding-right: 4px;
+    height:32px;
+  }
+
+  .valueCell
+  {
+    display: inline-block;
+    vertical-align: top;
+    width: 240px;
+    padding-right: 4px;
+    height:32px;
+    padding-top: 10px;
+  }
+}
+
+.queryEditor
+{
+  border: solid 0px;
+
+  .buttonArea
+  {
+    padding-top: 3px;
+    padding-bottom: 3px;
+  }
+
+  .clauseBin
+  {
+    margin:1px;
+    padding:2px;
+    margin-top: 6px;
+
+    min-height: 120px;
+    padding-left: 4px;
+    border: solid 1px #E0E0E0;
+    overflow: auto;
+    max-height: 350px;
+  }
+}
+
+.itemMultiLookupFieldDisplay
+{
+  .tag
+  {
+    background-color: #f4f4f4;
+    padding: 4px;
+    padding-left: 8px;
+    padding-right: 8px;
+    display: inline-block;
+    margin-right: 4px;
+    margin-bottom: 4px;
+  }
+}
+
+.itemRichTextFieldEditor
+{
+  .richTextEditor
+  {
+    font-family: inherit;
+    font-size: smaller;
+  }
+
+  div, span, select
+  {
+    z-index: inherit !important;
+  }
+}
+
+.itemFieldIterator
+{
+  .table
+  {
+    display: table;
+  }
+
+  .iteratorRow
+  {
+    display: table-row;
+  }
+
+  .iteratorHeaderCell
+  {
+    display: table-cell;
+    padding: 4px;
+    padding-top:9px;
+    vertical-align:  top;
+    color: #C0C0C0;
+  }
+
+  .iteratorValueCell, .iteratorSecondValueCell
+  {
+    display: table-cell;
+    padding: 4px;
+    min-width: 200px;
+        width:30vw;
+    min-width:200px;
+    max-width:500px;
+
+    vertical-align:  top;
+  }
+  .iteratorValueCell LABEL
+  {
+    display:none;
+  }
+  
+  .iteratorSecondHeaderCell
+  {
+    display: table-cell;
+    vertical-align: top;
+    padding: 4px;
+    padding-top:9px;
+    padding-left:10px;
+    color: #C0C0C0;
+  }
+
+  .iteratorSecondValueCell LABEL
+  {
+    display:none;
+  }
+
+  .iteratorHeaderCellDisplay
+  {
+    display: table-cell;
+    padding: 4px;
+    vertical-align:  top;
+    color: #C0C0C0;
+  }
+
+  .iteratorValueCellDisplay, .iteratorSecondValueCellDisplay
+  {
+    display: table-cell;
+    padding: 4px;
+    
+    vertical-align:  top;
+  }
+
+  .iteratorSecondHeaderCellDisplay
+  {
+    display: table-cell;
+    vertical-align: top;
+    padding: 4px;
+    padding-left:10px;
+    color: #C0C0C0;
+  }
+}

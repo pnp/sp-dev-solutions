@@ -1,0 +1,408 @@
+@font-face {
+    font-family: 'Segoe UI Light';
+    src: url('//capsstaging.azureedge.net/resources/fonts/segoeuil.eot');
+    src: url('//capsstaging.azureedge.net/resources/fonts/segoeuil.eot?#iefix') format('embedded-opentype'),
+         url('//capsstaging.azureedge.net/resources/fonts/segoeuil.woff') format('woff'),
+         url('//capsstaging.azureedge.net/resources/fonts/segoeuil.svg#SegoeUILight') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.crm  {
+  h1
+  {
+    font-size: 20pt;
+    color: #C0C0C0;
+    margin: 0px;
+    padding:0px;
+    font-family: 'Segoe UI Light';
+  }
+
+  h2
+  {
+    font-size: 14pt;
+    color: #C0C0C0;
+    margin:0px;
+    position: relative;
+    top: -2px;
+    padding:0px;
+    font-family: 'Segoe UI Light';
+  }
+
+  .errorText
+  {
+    color: #C06060;
+    text-decoration: italic;
+    font-size: 12pt;
+    padding-bottom:16px;
+  }
+
+  .logoArea
+  {
+    margin-top:16px;
+    margin-bottom: 16px;
+  }
+
+  .container {
+    display: table;
+    width:100%;
+  }
+
+  .row {
+    display: table-row;
+  }
+
+  .toolBarCell{
+    display: table-cell;
+  }
+
+  .contentCell{
+    display: table-cell;
+    height: 100%;
+    min-height:300px;
+  }
+
+  .formToolBar
+  {
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+  
+  .formButton 
+  {
+    background-color: white;
+    border: solid 0px;
+  }
+
+  .toolBarOuter
+  {
+    display:table;
+    border-top:solid 2px #F4F4F4;
+    background-color: #F4F4F4;
+    width:100%;
+  }
+
+  .toolBarInner
+  {
+    display:table-row;
+  }
+
+  .searchAreaLabel
+  {
+    display: table-cell;
+    vertical-align: top;
+    text-align: right;
+    padding:4px;    
+    padding-top:6px;
+    background-color: #f4f4f4;
+  }
+
+  .searchArea
+  {
+    display: table-cell;
+    max-width: 400px;
+    vertical-align: top;
+    padding: 4px;
+    background-color: #f4f4f4;
+  }
+
+  .toolBar
+  {
+    display: table-cell;
+    min-width: 300px;
+  }
+
+  .listItem {
+    margin: 5px auto 5px auto;
+    box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.2), 0 25px 50px 0 rgba(0, 0, 0, 0.1);
+  }
+
+  .button {
+    text-decoration: none;
+  }
+
+}
+
+.personDirectory
+{
+  width:100%;
+  height: 100%;
+}
+
+.personDisplay
+{
+  .organizationArea
+  {
+    padding-top:15px;
+  }
+}
+
+.organizationDirectory
+{
+  width:100%;
+  height: 100%;
+
+  .size
+  {
+    font-weight: bold;
+    padding:6px;
+    padding-top:20px;
+    display: block;
+  }
+
+  .personArea
+  {
+    padding-top: 15px;
+  }
+}
+
+.partViewManager
+{
+  .selectorArea
+  {
+    padding-bottom: 8px;
+    border-bottom: solid 1px #E0E0E0;
+  }
+
+  .viewArea
+  {
+    padding:4px;
+    padding-top: 8px;
+    background-color: #FAFAFA;
+  }
+
+  .selector
+  {
+    display: table;
+    width:100%;
+  }
+
+  .selectorRow 
+  {
+    display: table-row;
+  }
+
+  .selectorDropdown
+  {
+    display: table-cell;
+    width: 100%;
+  }
+
+  .selectorAdd
+  {
+    display: table-cell;
+    width:60px;
+  }
+}
+
+.organizationTile  {
+  width: 200px;
+  height: 100px;
+  vertical-align: bottom;
+  display: inline-block;
+  border: solid 1px #DADADA;
+  background-color: #F8F8F8;
+  margin:4px;
+
+  .header {
+    height: 30px;
+    vertical-align: middle;
+    padding: 4px;
+    height:22px;
+    display: inline-block;
+  }
+
+  .interior {
+    vertical-align: bottom;
+    display: block;
+    padding: 4px;
+    background-color: white;
+    width: 192px;
+    height: 60px;
+    padding: 4px;
+  }
+
+  .interiorImage
+  {
+    width:182px;
+    height:60px;
+    display:inline-block;
+    background-position-y: center;
+    background-position-x: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+
+  }
+}
+
+.organizationEdit {
+
+  .mainFieldArea
+  {
+    padding-bottom:20px;
+  }
+
+  .iteratorArea
+  {
+    font-size: small;
+  }
+
+  .fieldListArea
+  {
+    display: table;
+  }
+
+  .fieldTab
+  {
+    padding:4px;
+    padding-top:10px;
+    padding-left:6px;
+  }
+
+  .fieldArea 
+  {
+    display: table-row;
+  }
+
+  .fieldLabel
+  {
+    display: table-cell;
+    padding: 4px;
+    color: #C0C0C0;    
+  }
+
+  .fieldInput
+  {
+    display: table-cell;
+    padding: 4px;
+  }
+}
+
+.personEdit
+{
+  .nameArea {
+    display: table;
+  }
+
+  .nameInner {
+    display: table-row;
+  }
+
+  .nameFirst {
+    display: table-cell;
+  }
+
+  .nameLast { 
+    display: table-cell;
+    padding-left: 6px;
+  }
+}
+
+.personTile  {
+  width: 200px;
+  height: 100px;
+  vertical-align: bottom;
+  display: inline-block;
+  border: solid 1px #DADADA;
+  background-color: #F8F8F8;
+  padding:10px;
+  margin:3px;
+
+  .interior {
+    vertical-align: bottom;
+  }
+}
+
+.dialogOuter {
+	position:fixed;
+  z-index: 0;
+  min-width:100vw;
+  max-width:100vw;  
+  min-height:100vh;
+  max-height:100vh;
+  background-color: rgba(192, 192, 192, 0.6);
+  
+    :last-child
+    {
+      max-width: 90vw;
+    }
+  
+
+    :last-child :last-child :first-child
+    {
+      overflow: auto;
+      max-height: calc(100vh - 220px);
+    }
+
+    :last-child :last-child :first-child :first-child
+    {
+      overflow: visible;
+      max-height: none;
+    }
+
+}
+
+.dialogInner
+{
+  position:fixed;
+  left:10vw;
+  top:10vh;
+  min-width: 80vw;
+  max-width: 80vw;
+  min-height: 80vh;
+  max-height: 80vh; 
+  border-radius:6px;
+  border: solid 1px #FAFAFA;
+  background-color:#FAFAFA;
+}
+
+.dialogClose
+{
+  background-color: #DADADA;
+  min-width: 80px;
+  max-width: 80px;
+  vertical-align: middle;
+  text-align: center;
+  padding-top:.8em;
+  padding-bottom:.8em;
+  min-height: 3em;
+  max-height: 3em; 
+  border: solid 1px #C0C0C0;
+}
+
+.organizationDisplay
+{
+  .peopleList
+  {
+    padding:8px;
+    padding-left:20px;
+    padding-top:20px;
+  }
+
+  .displayArea
+  {
+    padding-top:15px;
+  }
+  
+  .peopleArea
+  {
+    padding-top:6px;
+  }
+
+  .iteratorArea
+  {
+    font-size:small;
+    padding-top:10px;
+  }
+
+  .addContact
+  {
+    padding-top: 15px;
+  }
+}
+
+.personMiniDisplay
+{
+  cursor: default;
+}
+

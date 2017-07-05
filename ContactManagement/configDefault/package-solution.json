@@ -1,0 +1,10 @@
+{
+  "solution": {
+    "name": "Contact Management (Community Solution)",
+    "id": "7e571ffc-e6a5-443e-8bbb-78d0ddbee6a1",
+    "version": "1.0.0.0"
+  },
+  "paths": {
+    "zippedPackage": "solution/crm.sppkg"
+  }
+}

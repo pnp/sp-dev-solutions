@@ -1,0 +1,20 @@
+{
+  "$schema": "../../../node_modules/@microsoft/sp-module-interfaces/lib/manifestSchemas/jsonSchemas/clientSideComponentManifestSchema.json",
+
+  "id": "098f096d-b64c-4b3c-9be0-ccb486bc9710",
+  "alias": "CrmWebPart",
+  "componentType": "WebPart",
+  "version": "0.0.5",
+  "manifestVersion": 2,
+
+  "preconfiguredEntries": [{
+    "groupId": "098f096d-b64c-4b3c-9be0-ccb486bc9710",
+    "group": { "default": "Under Development" },
+    "title": { "default": "Contact Management" },
+    "description": { "default": "A basic customer and contact infrastructure and part." },
+    "officeFabricIconFontName": "Page",
+    "properties": {
+      "description": "Contact Management"
+    }
+  }]
+}

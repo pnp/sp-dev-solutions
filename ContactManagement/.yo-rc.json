@@ -1,0 +1,7 @@
+{
+  "@microsoft/generator-sharepoint": {
+    "libraryName": "crm",
+    "libraryId": "7e571ffc-e6a5-443e-8bbb-78d0ddbee6a0",
+    "framework": "react"
+  }
+}
