@@ -1,9 +1,42 @@
 import SPUrl from './SPUrl';
 import { ISPList } from './ISPList';
-import { ISPField } from './ISPField';
+import { ISPField, FieldTypeKind } from './ISPField';
 
 export default class SharePointUtility
 {
+    public static getFieldTypeFriendlyName(kind : FieldTypeKind) : string
+    {
+        switch (kind)
+        {
+
+            case FieldTypeKind.Text:
+                return "Text";
+
+            case FieldTypeKind.Number:
+                return "Number";
+
+            case FieldTypeKind.Choice:
+                return "Choice";
+
+            case FieldTypeKind.Lookup:
+                return "Lookup";
+
+            case FieldTypeKind.Url:
+                return "Web Link";
+
+            case FieldTypeKind.User:
+                return "Person";
+
+            case FieldTypeKind.Boolean:
+                return "True/False";
+
+            case FieldTypeKind.DateTime:
+                return "Date/Time";
+
+            default:
+                return "Unknown";
+        }
+    }
   
     public static getField(list : ISPList, name : string) : ISPField 
     {

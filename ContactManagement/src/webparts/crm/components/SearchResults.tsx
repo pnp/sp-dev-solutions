@@ -96,12 +96,20 @@ export default class SearchResults extends React.Component<ISearchResultsProps, 
     }
     
     if (  this.props.searchTerm.length < 3 && 
-          (this.state != null && (this.state.organizationItems == null || this.state.organizationItems.organizations.length == 0))
+          (
+            this.state == null ||
+            (this.state != null && (this.state.organizationItems == null || this.state.organizationItems.organizations.length == 0))
+          )
       )
     {
       return <div>Please enter a longer search keyword.</div>;
     }
-    else if (this.state != null && (this.state.organizationItems == null || this.state.organizationItems.organizations.length == 0))
+    else if (this.state != null && 
+          (
+            this.state == null ||
+            (this.state.organizationItems == null || this.state.organizationItems.organizations.length == 0)
+          )
+      )
     {
       return <div>No matching organizations or people for '{this.props.searchTerm}'</div>;
     }

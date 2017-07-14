@@ -13,6 +13,7 @@ import ItemFieldIterator from '../../../sharePointComponents/ItemFieldIterator';
 import ItemMultilineTextFieldEditor  from '../../../sharePointComponents/ItemMultilineTextFieldEditor';
 import ItemMultiLookupFieldEditor  from '../../../sharePointComponents/ItemMultiLookupFieldEditor';
 import ItemTextFieldEditor  from '../../../sharePointComponents/ItemTextFieldEditor';
+import ItemUrlFieldEditor  from '../../../sharePointComponents/ItemUrlFieldEditor';
 import ItemContext from '../../../sharePointComponents/ItemContext';
 import ItemPeopleFieldEditor  from '../../../sharePointComponents/ItemPeopleFieldEditor';
 
@@ -177,8 +178,7 @@ export default class OrganizationEdit extends React.Component<IOrganizationEditP
               </div>
             </div>
           </PivotItem>
-          <PivotItem key="org" linkText='Address' >
-            
+          <PivotItem key="org" linkText='Address' >            
             <div className="{styles.fieldTab}">
               <div className={styles.fieldListArea}>
                 <div className={styles.fieldArea}>
@@ -223,6 +223,39 @@ export default class OrganizationEdit extends React.Component<IOrganizationEditP
                 </div>
               </div>
           </PivotItem>
+          <PivotItem key="res" linkText='Resources' >            
+            <div className="{styles.fieldTab}">
+              <div className={styles.fieldListArea}>
+                <div className={styles.fieldArea}>
+                  <div className={styles.fieldLabel}>
+                    Home Page:
+                  </div>
+                  <div className={styles.fieldInput}>
+                    <ItemTextFieldEditor field={this._itemContext.getField("HomePage") } itemContext={ this._itemContext } />
+                  </div>
+                </div>
+
+                <div className={styles.fieldArea}>
+                  <div className={styles.fieldLabel}>
+                    Wikipedia:
+                  </div>
+                  <div className={styles.fieldInput}>
+                    <ItemUrlFieldEditor field={this._itemContext.getField("Wikipedia") } itemContext={ this._itemContext } />
+                  </div>
+                </div>
+
+                <div className={styles.fieldArea}>
+                  <div className={styles.fieldLabel}>
+                    Logo:
+                  </div>
+                  <div className={styles.fieldInput}>
+                    <ItemUrlFieldEditor field={this._itemContext.getField("Logo") } itemContext={ this._itemContext } />
+                  </div>
+                </div>
+                
+              </div>
+            </div>
+          </PivotItem>
           <PivotItem key="orgrecent" linkText='Miscellaneous' >
               <div className={styles.fieldTab}>
             
@@ -235,6 +268,9 @@ export default class OrganizationEdit extends React.Component<IOrganizationEditP
                 "Tags",
                 "Organizational_x0020_Priority",
                 "Owner",
+                "Homepage",
+                "Logo",
+                "Wikipedia",
                 "PrimaryAddress", 
                 "PrimaryCity", 
                 "PrimaryStateProvince", 

@@ -19,6 +19,7 @@ import PersonEdit from './PersonEdit';
 import OrganizationDisplay from './OrganizationDisplay';
 import OrganizationEdit from './OrganizationEdit';
 import UserInterfaceUtility from '../../../sharePointComponents/UserInterfaceUtility';
+import SharePointUtility from '../../../data/SharePointUtility';
 
 import { Label } from 'office-ui-fabric-react/lib/Label';
 import { Button } from 'office-ui-fabric-react/lib/Button';
@@ -332,7 +333,50 @@ export default class Crm extends React.Component<ICrmProps, ICrmState> {
                   return <div key={i}>{ err.message } </div>;
                 }) : <div></div>
               }
-              </div>;
+              <p>
+                  <div>&#160;</div>
+                  <div>&#160;</div>
+                  Please note that you should have the following lists and fields in your site.
+                  <div className={ styles.errorDescription }>
+                    <div className={ styles.errorListTitle }>Organization List</div>
+                    <div  className={ styles.errorDescriptionList }>
+                      {
+                        this.props.manager.data.defaultOrganizationList.Fields.map((field, i) =>
+                        {
+                          return <div key={i} className={ styles.errorDescriptionField }>
+                              <div className={ styles.errorDescriptionData } >{ field.InternalName.replace("_x0020_", " ") }</div>
+                              <div className={ styles.errorDescriptionData }>{ SharePointUtility.getFieldTypeFriendlyName(field.FieldTypeKind)}</div>
+                            </div>;
+                        })
+                      }
+                    </div>
+                    <div className={ styles.errorListTitle }>Contacts List</div>
+                    <div  className={ styles.errorDescriptionList }>
+                      {
+                        this.props.manager.data.defaultPersonList.Fields.map((field, i) =>
+                        {
+                          return <div key={i} className={ styles.errorDescriptionField }>
+                              <div className={ styles.errorDescriptionData } >{ field.InternalName.replace("_x0020_", " ") }</div>
+                              <div className={ styles.errorDescriptionData }>{ SharePointUtility.getFieldTypeFriendlyName(field.FieldTypeKind)}</div>
+                            </div>;
+                        })
+                      }
+                    </div>
+                    <div className={ styles.errorListTitle }>Tags List</div>
+                    <div  className={ styles.errorDescriptionList }>
+                      {
+                        this.props.manager.data.defaultTagList.Fields.map((field, i) =>
+                        {
+                          return <div key={i} className={ styles.errorDescriptionField }>
+                              <div className={ styles.errorDescriptionData } >{ field.InternalName.replace("_x0020_", " ") }</div>
+                              <div className={ styles.errorDescriptionData }>{ SharePointUtility.getFieldTypeFriendlyName(field.FieldTypeKind)}</div>
+                            </div>;
+                        })
+                      }
+                    </div>                    
+                  </div>
+                </p>
+            </div>;
     }
     else if (  this.state.mode != CrmMode.Person && 
           this.state.mode != CrmMode.Organization)

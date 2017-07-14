@@ -19,12 +19,10 @@ export default class ItemUrlFieldEditor extends UrlFieldComponent<IItemUrlFieldE
     return (
       <div className={styles.sharePointComponent}>
         <TextField 
-          label="Url"
           value={ this.url }
           onChanged={ this._urlChanged }
         />
         <TextField 
-          label="Description"
           value={ this.description }
           onChanged={ this._descriptionChanged }
         />        

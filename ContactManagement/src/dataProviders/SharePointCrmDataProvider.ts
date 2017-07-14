@@ -21,7 +21,7 @@ import TagSet from './TagSet';
 import { BaseCrmDataProvider } from './BaseCrmDataProvider';
 
 import { IEvent } from '../utilities/Events';
-import { SPHttpClient, SPHttpClientResponse, SPHttpClientBatch  } from '@microsoft/sp-http';
+import { SPHttpClient, SPHttpClientResponse, SPHttpClientBatch, ISPHttpClientOptions  } from '@microsoft/sp-http';
 
 
 export default class SharePointCrmDataProvider extends BaseCrmDataProvider implements ICrmDataProvider {
@@ -68,28 +68,47 @@ export default class SharePointCrmDataProvider extends BaseCrmDataProvider imple
 
   private _resolvePersonBatch(batch: SPHttpClientBatch, promises: Promise<{}>[]): Promise<IPerson[]> {
     return batch.execute()
-      .then(() => Promise.all(promises).then(values => values[values.length - 1]));
+      .then(() => {
+          return Promise.all(promises).then( (values) => {
+            return values[values.length - 1];
+          }
+        )
+      }
+    );
   }
 
   /**
    * Batch the request to create item in the SharePoint list.
    */
   private _addPersonItem(batch: SPHttpClientBatch, person : IPerson): Promise<SPHttpClientResponse> {
-  /*  const body: {} = {
-      '@data.type': `${this.selectedPersonList.ListItemEntityTypeFullName}`,
-      'Title': lastName,
-      'FirstName': firstName,
-      'Company': company
-    };*/
-
     person["@data.type"] = "$" + this._selectedPersonList.ListItemEntityTypeFullName;
     person["Id"] = 0;
 
     return batch.post(
       this._personListUrl + "/items",
       SPHttpClientBatch.configurations.v1,
-      { body: JSON.stringify(person) }
+      { 
+        headers: this._getStandardHttpClientOptions().headers,
+        body: JSON.stringify(person) }
     );
+  }
+
+  private _getStandardHttpClientHeaders() : Headers
+  {
+    var headers : Headers = new Headers(
+      {
+        "X-ClientTag": "SPCommunityCrmWebPart"
+      });
+
+    return headers;
+  }
+
+  private _getStandardHttpClientOptions() : ISPHttpClientOptions
+  {
+    return {
+            headers: this._getStandardHttpClientHeaders(),
+            body: null
+        };
   }
 
   private _getUsers(query : string, requester: SPHttpClient): Promise<ISPUser[]> {
@@ -102,7 +121,7 @@ export default class SharePointCrmDataProvider extends BaseCrmDataProvider imple
 
     const queryUrl: string = this._usersListUrl + "/items" + queryString;
 
-    return requester.get(queryUrl, SPHttpClient.configurations.v1)
+    return requester.get(queryUrl, SPHttpClient.configurations.v1, this._getStandardHttpClientOptions())
       .then((response: SPHttpClientResponse) => {
         return response.json();
       })
@@ -123,7 +142,7 @@ export default class SharePointCrmDataProvider extends BaseCrmDataProvider imple
 
     const queryUrl: string = this._personListUrl + "/items" + queryString;
 
-    return requester.get(queryUrl, SPHttpClient.configurations.v1)
+    return requester.get(queryUrl, SPHttpClient.configurations.v1, this._getStandardHttpClientOptions())
       .then((response: SPHttpClientResponse) => {
         return response.json();
       })
@@ -144,7 +163,7 @@ export default class SharePointCrmDataProvider extends BaseCrmDataProvider imple
 
     const queryUrl: string = this._personListUrl + "/items" + queryString;
 
-    return requester.get(queryUrl, SPHttpClientBatch.configurations.v1)
+    return requester.get(queryUrl, SPHttpClientBatch.configurations.v1, this._getStandardHttpClientOptions())
       .then((response: SPHttpClientResponse) => {
         return response.json();
       })
@@ -166,7 +185,7 @@ export default class SharePointCrmDataProvider extends BaseCrmDataProvider imple
 
     const queryUrl: string = this._usersListUrl + "/items" + queryString;
 
-    return requester.get(queryUrl, SPHttpClientBatch.configurations.v1)
+    return requester.get(queryUrl, SPHttpClientBatch.configurations.v1, this._getStandardHttpClientOptions())
       .then((response: SPHttpClientResponse) => {
         return response.json();
       })
@@ -182,7 +201,7 @@ export default class SharePointCrmDataProvider extends BaseCrmDataProvider imple
 
     const itemUpdatedUrl: string = `${this._personListUrl + "/items"}(${item.Id})`;
 
-    const headers: Headers = new Headers();
+    const headers = this._getStandardHttpClientHeaders();
     headers.append('If-Match', '*');
 /*
     const body: {} = {
@@ -199,7 +218,7 @@ export default class SharePointCrmDataProvider extends BaseCrmDataProvider imple
       SPHttpClientBatch.configurations.v1,
       {
         body: JSON.stringify(item),
-        headers,
+        headers: headers,
         method: 'PATCH'
       }
     );
@@ -214,14 +233,21 @@ export default class SharePointCrmDataProvider extends BaseCrmDataProvider imple
   }*/
 
   public addPersonItem(newPerson : IPerson) : Promise<IPerson[]> {
-    const batch: SPHttpClientBatch = this._httpClient.beginBatch();
+    const batch: SPHttpClientBatch = this._httpClient.beginBatch(this._getStandardHttpClientOptions());
 
     const batchPromises: Promise<{}>[] = [
       this._addPersonItem(batch, newPerson),
       this._getPersonItemsBatched("$orderby=Created desc&$top=1", batch)
     ];
 
-    return this._resolvePersonBatch(batch, batchPromises);
+    return this._resolvePersonBatch(batch, batchPromises).then(
+      (people : IPerson[]) =>
+      {                  
+        this._onPersonAdded.dispatch(this, newPerson);
+
+        return people;
+      }
+    );
   }
 
   public notifyPersonChanged(person : IPerson)
@@ -290,7 +316,7 @@ export default class SharePointCrmDataProvider extends BaseCrmDataProvider imple
   }
 
   public updatePersonItem(itemUpdated: IPerson): Promise<IPerson[]> {
-    const batch: SPHttpClientBatch = this._httpClient.beginBatch();
+    const batch: SPHttpClientBatch = this._httpClient.beginBatch(this._getStandardHttpClientOptions());
 
     const batchPromises: Promise<{}>[] = [
       this._updatePersonItem(batch, itemUpdated),
@@ -328,26 +354,7 @@ export default class SharePointCrmDataProvider extends BaseCrmDataProvider imple
     return this._onTagRemoved.asEvent();
   }
 
-
-/*
-  public createOrganizationItem(title: string, type: string): Promise<IOrganizationSet> {
-    const batch: SPHttpClientBatch = this._httpClient.beginBatch();
-
-    const batchPromises: Promise<{}>[] = [
-      this._createOrganizationItem(batch, title, type),
-      this._getOrganizationItemsBatched("$orderby=Created desc&$top=1", batch)
-    ];
-
-    return this._resolveOrganizationBatch(batch, batchPromises);
-  }*/
-
-    private _addOrganizationItem(batch: SPHttpClientBatch, organization : IOrganization): Promise<SPHttpClientResponse> {
-  /*  const body: {} = {
-      '@data.type': `${this.selectedPersonList.ListItemEntityTypeFullName}`,
-      'Title': lastName,
-      'FirstName': firstName,
-      'Company': company
-    };*/
+  private _addOrganizationItem(batch: SPHttpClientBatch, organization : IOrganization): Promise<SPHttpClientResponse> {
 
     organization["@data.type"] = "$" + this.selectedOrganizationList.ListItemEntityTypeFullName;
     organization["Id"] = 0;
@@ -355,17 +362,14 @@ export default class SharePointCrmDataProvider extends BaseCrmDataProvider imple
     return batch.post(
       this._organizationListUrl + "/items",
       SPHttpClientBatch.configurations.v1,
-      { body: JSON.stringify(organization) }
+      { 
+        headers: this._getStandardHttpClientOptions().headers,
+        body: JSON.stringify(organization) 
+      }
     );
   }
 
     private _addTagItem(batch: SPHttpClientBatch, tag : ITag): Promise<SPHttpClientResponse> {
-  /*  const body: {} = {
-      '@data.type': `${this.selectedPersonList.ListItemEntityTypeFullName}`,
-      'Title': lastName,
-      'FirstName': firstName,
-      'Company': company
-    };*/
 
     tag["@data.type"] = "$" + this.selectedTagList.ListItemEntityTypeFullName;
     tag["Id"] = 0;
@@ -373,7 +377,10 @@ export default class SharePointCrmDataProvider extends BaseCrmDataProvider imple
     return batch.post(
       this._tagListUrl + "/items",
       SPHttpClientBatch.configurations.v1,
-      { body: JSON.stringify(tag) }
+      {
+        headers: this._getStandardHttpClientOptions().headers,
+         body: JSON.stringify(tag) 
+      }
     );
   }
   
@@ -383,9 +390,9 @@ export default class SharePointCrmDataProvider extends BaseCrmDataProvider imple
   }
   
   private _loadListData() : Promise<void> {
-    const batch: SPHttpClientBatch = this._httpClient.beginBatch();
+    const batch: SPHttpClientBatch = this._httpClient.beginBatch(this._getStandardHttpClientOptions());
 
-    let orgListDataPromise = batch.get(this._organizationListUrl, SPHttpClientBatch.configurations.v1)
+    let orgListDataPromise = batch.get(this._organizationListUrl, SPHttpClientBatch.configurations.v1, this._getStandardHttpClientOptions())
       .then((response: SPHttpClientResponse) => {
         return response.json();
       }, (error: any) => { 
@@ -394,7 +401,7 @@ export default class SharePointCrmDataProvider extends BaseCrmDataProvider imple
         this._selectedOrganizationList.Id = listProto.Id;
       });
 
-    let tagsListDataPromise = batch.get(this._tagListUrl, SPHttpClientBatch.configurations.v1)
+    let tagsListDataPromise = batch.get(this._tagListUrl, SPHttpClientBatch.configurations.v1, this._getStandardHttpClientOptions())
       .then((response: SPHttpClientResponse) => {
         return response.json();
       })
@@ -402,7 +409,7 @@ export default class SharePointCrmDataProvider extends BaseCrmDataProvider imple
         this._selectedTagList.Id = listProto.Id.toString();
       });
 
-    let orgListFieldDataPromise = batch.get(this._organizationListUrl + "/fields?$select=ID,InternalName,Title,FieldTypeKind,Choices,RichText,AllowMultipleValues,MaxLength,LookupList&$filter=Hidden eq false and FieldTypeKind ne 12 and InternalName ne 'AppEditor' and InternalName ne 'AppAuthor'", SPHttpClientBatch.configurations.v1)
+    let orgListFieldDataPromise = batch.get(this._organizationListUrl + "/fields?$select=ID,InternalName,Title,FieldTypeKind,Choices,RichText,AllowMultipleValues,MaxLength,LookupList&$filter=Hidden eq false and FieldTypeKind ne 12 and InternalName ne 'AppEditor' and InternalName ne 'AppAuthor'", SPHttpClientBatch.configurations.v1, this._getStandardHttpClientOptions())
       .then((response: SPHttpClientResponse) => {
         return response.json();
       })
@@ -423,7 +430,7 @@ export default class SharePointCrmDataProvider extends BaseCrmDataProvider imple
         this._selectedOrganizationList.Fields = fields;
       });
 
-    let personListFieldDataPromise = batch.get(this._personListUrl + "/fields?$select=ID,InternalName,Title,FieldTypeKind,Choices,RichText,AllowMultipleValues,MaxLength,LookupList&$filter=Hidden eq false and FieldTypeKind ne 12 and InternalName ne 'AppEditor' and InternalName ne 'AppAuthor'", SPHttpClientBatch.configurations.v1)
+    let personListFieldDataPromise = batch.get(this._personListUrl + "/fields?$select=ID,InternalName,Title,FieldTypeKind,Choices,RichText,AllowMultipleValues,MaxLength,LookupList&$filter=Hidden eq false and FieldTypeKind ne 12 and InternalName ne 'AppEditor' and InternalName ne 'AppAuthor'", SPHttpClientBatch.configurations.v1, this._getStandardHttpClientOptions())
       .then((response: SPHttpClientResponse) => {
         return response.json();
       })
@@ -506,7 +513,7 @@ export default class SharePointCrmDataProvider extends BaseCrmDataProvider imple
 
     const queryUrl: string = this._organizationListUrl + "/items" + queryString;
 
-    return requester.get(queryUrl, SPHttpClient.configurations.v1)
+    return requester.get(queryUrl, SPHttpClient.configurations.v1, this._getStandardHttpClientOptions())
       .then((response: SPHttpClientResponse) => {
         return response.json();
       }, (error: any) => {        
@@ -542,7 +549,7 @@ export default class SharePointCrmDataProvider extends BaseCrmDataProvider imple
     
     const queryUrl: string = this._organizationListUrl + "/items" +  queryString;
 
-    return requester.get(queryUrl, SPHttpClientBatch.configurations.v1)
+    return requester.get(queryUrl, SPHttpClientBatch.configurations.v1, this._getStandardHttpClientOptions().headers)
       .then((response: SPHttpClientResponse) => {
         return response.json();
       })
@@ -563,16 +570,10 @@ export default class SharePointCrmDataProvider extends BaseCrmDataProvider imple
 
     const itemUpdatedUrl: string = `${this._organizationListUrl + "/items"}(${item.Id})`;
 
-    const headers: Headers = new Headers();
+    const headers: Headers = this._getStandardHttpClientHeaders();
     headers.append('If-Match', '*');
-/*
-    const body: {} = {
-      '@data.type': `${this._selectedOrganizationList.ListItemEntityTypeFullName}`,
-      'Title': item.Title
-    };*/
 
     item["@data.type"] = "$" + this._selectedOrganizationList.ListItemEntityTypeFullName;
-
 
     return batch.fetch(itemUpdatedUrl,
       SPHttpClientBatch.configurations.v1,
@@ -585,7 +586,7 @@ export default class SharePointCrmDataProvider extends BaseCrmDataProvider imple
   }
 
   public addOrganizationItem(newOrganization : IOrganization) : Promise<IOrganizationSet> {
-    const batch: SPHttpClientBatch = this._httpClient.beginBatch();
+    const batch: SPHttpClientBatch = this._httpClient.beginBatch(this._getStandardHttpClientOptions());
 
     const batchPromises: Promise<{}>[] = [
       this._addOrganizationItem(batch, newOrganization),
@@ -635,7 +636,7 @@ export default class SharePointCrmDataProvider extends BaseCrmDataProvider imple
         }  
     }
 
-    if (search.length > 3)
+    if (search.length >= 3)
     {
       searchQuery = "substringof('" + search + "', Title)";
     }
@@ -680,7 +681,7 @@ export default class SharePointCrmDataProvider extends BaseCrmDataProvider imple
   }
 
   public updateOrganizationItem(itemUpdated: IOrganization): Promise<IOrganizationSet> {
-    const batch: SPHttpClientBatch = this._httpClient.beginBatch();
+    const batch: SPHttpClientBatch = this._httpClient.beginBatch(this._getStandardHttpClientOptions());
 
     const batchPromises: Promise<{}>[] = [
       this._updateOrganizationItem(batch, itemUpdated),
@@ -739,7 +740,7 @@ export default class SharePointCrmDataProvider extends BaseCrmDataProvider imple
 
     const queryUrl: string = this._tagListUrl + "/items" + queryString;
 
-    return requester.get(queryUrl, SPHttpClient.configurations.v1)
+    return requester.get(queryUrl, SPHttpClient.configurations.v1, this._getStandardHttpClientOptions())
       .then((response: SPHttpClientResponse) => {
         return response.json();
       })
@@ -767,7 +768,7 @@ export default class SharePointCrmDataProvider extends BaseCrmDataProvider imple
     
     const queryUrl: string = this._organizationListUrl + "/items" +  queryString;
 
-    return requester.get(queryUrl, SPHttpClientBatch.configurations.v1)
+    return requester.get(queryUrl, SPHttpClientBatch.configurations.v1, this._getStandardHttpClientOptions())
       .then((response: SPHttpClientResponse) => {
         return response.json();
       })
@@ -788,13 +789,8 @@ export default class SharePointCrmDataProvider extends BaseCrmDataProvider imple
 
     const itemUpdatedUrl: string = `${this._organizationListUrl + "/items"}(${item.Id})`;
 
-    const headers: Headers = new Headers();
+    const headers: Headers = this._getStandardHttpClientHeaders();
     headers.append('If-Match', '*');
-/*
-    const body: {} = {
-      '@data.type': `${this._selectedTagList.ListItemEntityTypeFullName}`,
-      'Title': item.Title
-    };*/
 
     item["@data.type"] = "$" + this._selectedTagList.ListItemEntityTypeFullName;
 
@@ -809,7 +805,7 @@ export default class SharePointCrmDataProvider extends BaseCrmDataProvider imple
   }
 
   public addTagItem(newTag : ITag) : Promise<ITagSet> {
-    const batch: SPHttpClientBatch = this._httpClient.beginBatch();
+    const batch: SPHttpClientBatch = this._httpClient.beginBatch(this._getStandardHttpClientOptions());
 
     const batchPromises: Promise<{}>[] = [
       this._addTagItem(batch, newTag),
@@ -859,7 +855,7 @@ export default class SharePointCrmDataProvider extends BaseCrmDataProvider imple
   }
 
   public updateTagItem(itemUpdated: ITag): Promise<ITagSet> {
-    const batch: SPHttpClientBatch = this._httpClient.beginBatch();
+    const batch: SPHttpClientBatch = this._httpClient.beginBatch(this._getStandardHttpClientOptions());
 
     const batchPromises: Promise<{}>[] = [
       this._updateTagItem(batch, itemUpdated),

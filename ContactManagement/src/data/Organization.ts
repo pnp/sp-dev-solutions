@@ -1,11 +1,14 @@
 import { IOrganization } from './IOrganization';
 import SharePointItem from './SharePointItem';
+import SPUrl from '../data/SPUrl';
 
 export default class Organization extends SharePointItem implements IOrganization {
     public Type : string;
     public Logo? : string;
     public Notes? : string;
     public Organizational_x0020_Priority? : number;
+    public Wikipedia? : SPUrl;
+    public HomePage? : string;    
     public PrimaryAddress? : string;
     public PrimaryCity? : string;
     public PrimaryStateProvince? : string;

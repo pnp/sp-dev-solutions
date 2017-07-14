@@ -14,6 +14,11 @@ import ItemContext from '../../../sharePointComponents/ItemContext';
 import PersonMiniDisplay from './PersonMiniDisplay';
 import ElementUtilities from '../../../utilities/ElementUtilities';
 
+import {
+  PivotItem,
+  Pivot
+} from 'office-ui-fabric-react/lib/Pivot';
+
 export interface IOrganizationDisplayProps extends ICrmComponentProps{
   organization: IOrganization;
   allowEdit: boolean;
@@ -178,7 +183,17 @@ export default class OrganizationDisplay extends React.Component<IOrganizationDi
 //          <Button onClick={  () => { this.setState( { isEditing: !this.state.isEditing }); } }>Edit</Button>
   //      </div>;
       }
+
+      let wikiContent = <div></div>;
       
+      if (this.props.organization.Wikipedia != null)
+      {
+        var wikiUrl = this.props.organization.Wikipedia.Url;
+        wikiUrl = wikiUrl.replace(".wikipedia.", ".m.wikipedia.");
+
+        wikiContent = <PivotItem key="wikipedia" linkText="Wikipedia"><div><iframe width="100%" frameBorder="0" className={ styles.wikipediaIframe } src={wikiUrl}></iframe></div></PivotItem>;
+      }
+
       let personsContent = <div></div>;
 
       if (this.state.persons != null)
@@ -205,18 +220,24 @@ export default class OrganizationDisplay extends React.Component<IOrganizationDi
     
       interior = <div>
           <h3>{ this.props.organization.Title }</h3>
-          <div className={ styles.displayArea }>
-            <ItemRichTextFieldDisplay field={this._itemContext.getField("Description") } itemContext={ this._itemContext } />
-          </div>
-          <div className={ styles.displayArea }>
-            <ItemRichTextFieldDisplay field={this._itemContext.getField("Notes") } itemContext={ this._itemContext } />
-          </div>
+          <Pivot ref="pivot">
+            <PivotItem key="summary" linkText="Summary">
 
-          <div className={styles.iteratorArea}>
-            <ItemFieldIterator isDisplayOnly={ true } excludedFields={ ["Title", "Notes", "Description"] } itemContext={ this._itemContext } />
-          </div>
+              <div className={ styles.displayArea }>
+                <ItemRichTextFieldDisplay field={this._itemContext.getField("Description") } itemContext={ this._itemContext } />
+              </div>
+              <div className={ styles.displayArea }>
+                <ItemRichTextFieldDisplay field={this._itemContext.getField("Notes") } itemContext={ this._itemContext } />
+              </div>
 
-          { personsContent }
+              <div className={styles.iteratorArea}>
+                <ItemFieldIterator isDisplayOnly={ true } excludedFields={ ["Title", "Notes", "Description"] } itemContext={ this._itemContext } />
+              </div>
+
+              { personsContent }
+            </PivotItem>
+            { wikiContent }
+          </Pivot>
         </div>;
     }
 

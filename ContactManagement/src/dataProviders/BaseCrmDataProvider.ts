@@ -673,6 +673,16 @@ export abstract class BaseCrmDataProvider implements ICrmDataProvider {
         Title: "Owner",
         InternalName: "OwnerId",
         FieldTypeKind: FieldTypeKind.User
+      },                        
+      { 
+        Title: "Home Page",
+        InternalName: "HomePage",
+        FieldTypeKind: FieldTypeKind.Text
+      },                        
+      { 
+        Title: "Wikipedia",
+        InternalName: "Wikipedia",
+        FieldTypeKind: FieldTypeKind.Url
       },
       { 
         Title: "Tags",
