@@ -690,6 +690,26 @@ export abstract class BaseCrmDataProvider implements ICrmDataProvider {
         FieldTypeKind: FieldTypeKind.Lookup,
         AllowMultipleValues: true,
         LookupList: this.defaultTagList.Id
+      },
+      { 
+        Title: "Created",
+        InternalName: "Created",
+        FieldTypeKind: FieldTypeKind.DateTime
+      },
+      { 
+        Title: "Modified",
+        InternalName: "Modified",
+        FieldTypeKind: FieldTypeKind.DateTime
+      },
+      { 
+        Title: "Author",
+        InternalName: "Author",
+        FieldTypeKind: FieldTypeKind.User
+      },
+      { 
+        Title: "Editor",
+        InternalName: "Editor",
+        FieldTypeKind: FieldTypeKind.User
       }
     ]
    };

@@ -61,7 +61,7 @@ export  class DropdownEx extends React.Component<IDropdownExProps, IDropdownExSt
           {
             this.props.options.map( (option, i) =>
             {
-              return <option value={ option.key } key={i}>{ option.text } </option>;
+              return <option value={ option.key } key={i} selected= { option.key  == this.props.selectedKey }>{ option.text } </option>;
             }) 
           }
         </select>
