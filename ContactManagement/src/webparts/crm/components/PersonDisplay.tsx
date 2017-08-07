@@ -124,7 +124,7 @@ export default class PersonDisplay extends React.Component<IPersonDisplayProps, 
       */
       
       interior = <div>
-          <h2>{ this.props.person.FirstName }&nbsp;{ this.props.person.Title }</h2>
+          <div className={ styles.name }>{ this.props.person.FirstName }&nbsp;{ this.props.person.Title }</div>
           <h3>{ this.props.person.Company }</h3>
 
           <ItemRichTextFieldDisplay field={ this._itemContext.getField("Comments") } itemContext={ this._itemContext } />
@@ -138,7 +138,7 @@ export default class PersonDisplay extends React.Component<IPersonDisplayProps, 
     }
 
     return (
-      <div className={styles.crm}>
+      <div className={ styles.personDisplay }>
         { toolbar }
         { interior }
       </div>

@@ -4,7 +4,7 @@ import * as React from 'react';
 import styles from './sharePointComponents.module.scss';
 
 import Query, { QueryCallback } from '../data/Query';
-import Clause from '../data/Clause';
+import Clause, { ClauseType, ClauseTypeJoin } from '../data/Clause';
 import { ISPList } from '../data/ISPList';
 import ClauseEditor from './ClauseEditor';
 
@@ -32,7 +32,17 @@ export default class QueryEditor extends React.Component<IQueryEditorProps, IQue
 
   private _handleAddClause()
   {
-    this.props.query.addClause(new Clause());
+    let c = new Clause();
+    c.joiner = ClauseTypeJoin.And;
+    c.value = "";
+    c.clauseType = ClauseType.Equals;
+
+    if (this.props.list != null && this.props.list.Fields.length > 0)
+    {
+      c.fieldName = this.props.list.Fields[0].InternalName;
+    }
+  
+    this.props.query.addClause(c);
     this.forceUpdate();
   }
 
@@ -60,16 +70,16 @@ export default class QueryEditor extends React.Component<IQueryEditorProps, IQue
             this.props.query.clauses.map( (clause, i) =>
             {
                   return <div data-clauseId={ i } key={ "CL" + i }>
-                            <ClauseEditor key={ "CE" + i } list={ me.props.list } clause={ clause } />
+                            <ClauseEditor hasMultiple={ this.props.query.clauses.length > 1 } isFirst= { i == 0 } key={ "CE" + i } list={ me.props.list } clause={ clause } />
                          </div>;
             }) 
           }
         </div>
         <div className={styles.buttonArea} >
-          <Button onClick={ this._handleAddClause }>Add</Button>
+          <Button onClick={ this._handleAddClause } className={ styles.button}>Add</Button>
           {
             this.props.displayApplyButton ?
-              <Button onClick={ this._handleApply }>Apply</Button> : <div></div>
+              <Button onClick={ this._handleApply } className={styles.button}>Apply</Button> : <div></div>
           }
         </div>
       </div>

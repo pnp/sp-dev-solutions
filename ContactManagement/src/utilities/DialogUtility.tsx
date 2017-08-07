@@ -39,8 +39,8 @@ export default class DialogUtility {
                             isBlocking={ false } >
                             {elt}
                       <DialogFooter>
-                        <Button onClick={ DialogUtility.saveDialog }>Save</Button>
-                        <Button onClick={ DialogUtility.hideDialog }>Cancel</Button>
+                        <Button style={{ border: "solid 1px #D0D0D0" }} onClick={ DialogUtility.saveDialog }>Save</Button>
+                        <Button style={{ border: "solid 1px #D0D0D0" }} onClick={ DialogUtility.hideDialog }>Cancel</Button>
                       </DialogFooter>
                     </Dialog>;
                 }

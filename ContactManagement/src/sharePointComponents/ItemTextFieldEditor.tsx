@@ -8,6 +8,7 @@ import { FieldComponent, IFieldComponentProps, IFieldComponentState } from './Fi
 import { TextField } from 'office-ui-fabric-react';
 
 export interface IItemTextFieldEditorProps extends IFieldComponentProps {
+  placeholder? : string;
 }
 
 export interface IItemTextFieldEditorState extends IFieldComponentState {
@@ -25,6 +26,7 @@ export default class ItemTextFieldEditor extends FieldComponent<IItemTextFieldEd
       <div className={styles.sharePointComponent}>
         <TextField 
           value={ this.valueString }
+          placeholder={ this.props.placeholder ? this.props.placeholder : "" }
           onChanged={ this._handleValueChanged }
         />
       </div>

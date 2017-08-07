@@ -154,14 +154,14 @@ export default class PersonEdit extends React.Component<IPersonEditProps, IPerso
         <div className= {styles.nameArea}>
           <div className={styles.nameInner}>
             <div className={styles.nameFirst}>
-              <ItemTextFieldEditor field={ this._itemContext.getField("FirstName") } itemContext={ this._itemContext } />
+              <ItemTextFieldEditor field={ this._itemContext.getField("FirstName") } placeholder="First Name" itemContext={ this._itemContext } />
             </div>
             <div className={styles.nameLast}>
-              <ItemTextFieldEditor field={ this._itemContext.getField("Title") } itemContext={ this._itemContext } />
+              <ItemTextFieldEditor field={ this._itemContext.getField("Title") } placeholder="Last Name" itemContext={ this._itemContext } />
             </div>
           </div>
         </div>
-        <ItemMultilineTextFieldEditor field={ this._itemContext.getField("Comments") } stripHtml={true} itemContext={ this._itemContext } />
+        <ItemMultilineTextFieldEditor field={ this._itemContext.getField("Comments") } placeholder="Comments" stripHtml={true} itemContext={ this._itemContext } />
 
         <div className={styles.iteratorArea}>
           <ItemFieldIterator excludedFields={ ["Title", "First Name", "Comments"] } itemContext={ this._itemContext } />

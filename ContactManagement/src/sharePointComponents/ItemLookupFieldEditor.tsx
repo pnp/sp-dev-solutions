@@ -5,7 +5,7 @@ import styles from './sharePointComponents.module.scss';
 
 import { FieldComponent, IFieldComponentProps, IFieldComponentState } from './FieldComponent';
 import { ISharePointItem } from '../data/ISharePointItem';
-import { Dropdown, IDropdownOption } from 'office-ui-fabric-react';
+import { DropdownEx, IDropdownExOption } from './DropdownEx';
 
 export interface IItemLookupFieldEditorProps extends IFieldComponentProps {
 
@@ -37,7 +37,7 @@ export default class ItemLookupFieldEditor extends FieldComponent<IItemLookupFie
     );
   }
 
-  protected _handleDropdownValueChanged(option : IDropdownOption) : void
+  protected _handleDropdownValueChanged(option : IDropdownExOption) : void
   {
     if (option == null)
     {
@@ -81,7 +81,7 @@ export default class ItemLookupFieldEditor extends FieldComponent<IItemLookupFie
     
     return (
       <div className={styles.sharePointComponent}>
-        <Dropdown
+        <DropdownEx
           label=""
           selectedKey={ this.value }
           options={ dropdownOptions }

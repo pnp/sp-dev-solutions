@@ -117,7 +117,7 @@ export default class OrganizationDirectory extends React.Component<IOrganization
           <span className={styles.size} >Items: {this.state.items.organizations.length } </span>
         : '' : ''
       } 
-        <div>
+        <div className={ styles.tileBin } >
       {
         this.state ?
         this.state.items ?

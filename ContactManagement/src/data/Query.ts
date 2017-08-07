@@ -94,28 +94,51 @@ export default class Query
                        }
                     }
 
-                    query += clause.fieldName + " ";
-
-                    switch (clause.clauseType)
+                    if (clause.clauseType == ClauseType.Contains)
                     {
-                        case ClauseType.Equals:
-                            query += "eq";
-                            break;
-
-                        case ClauseType.NotEquals:
-                            query += "ne";
-                            break;
-                    }
-
-                    query += " ";
-
-                    if (field.FieldTypeKind == FieldTypeKind.Text || field.FieldTypeKind == FieldTypeKind.Choice)
-                    {
-                        query += "'" +clause.value + "'";
+                        query += "substringof('" + clause.value + "', " + clause.fieldName  + ")";
                     }
                     else
                     {
-                        query += clause.value;
+                        query += clause.fieldName + " ";
+
+                        switch (clause.clauseType)
+                        {
+                            case ClauseType.LessThan:
+                                query += "lt";
+                                break;
+
+                            case ClauseType.LessThanOrEquals:
+                                query += "le";
+                                break;
+
+                            case ClauseType.GreaterThanOrEquals:
+                                query += "ge";
+                                break;
+
+                            case ClauseType.GreaterThan:
+                                query += "gt";
+                                break;
+
+                            case ClauseType.Equals:
+                                query += "eq";
+                                break;
+
+                            case ClauseType.NotEquals:
+                                query += "ne";
+                                break;
+                        }
+
+                        query += " ";
+
+                        if (field.FieldTypeKind == FieldTypeKind.Text || field.FieldTypeKind == FieldTypeKind.Choice)
+                        {
+                            query += "'" +clause.value + "'";
+                        }
+                        else
+                        {
+                            query += clause.value;
+                        }
                     }
                 }
             }

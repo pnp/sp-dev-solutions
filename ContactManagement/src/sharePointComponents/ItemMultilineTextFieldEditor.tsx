@@ -9,7 +9,8 @@ import { TextField } from 'office-ui-fabric-react';
 import Utility from '../utilities/Utility';
 
 export interface IItemMultilineTextFieldEditorProps extends IFieldComponentProps {
-  stripHtml : boolean;
+  stripHtml? : boolean;
+  placeholder? : string;
 }
 
 export interface IItemMultilineTextFieldEditorState extends IFieldComponentState {
@@ -36,6 +37,7 @@ export default class ItemMultilineTextFieldEditor extends FieldComponent<IItemMu
         <TextField 
           multiline = { true }
           value={ val }
+          placeholder={ this.props.placeholder ? this.props.placeholder : "" }
           onChanged={ this._handleValueChanged }
         />
       </div>

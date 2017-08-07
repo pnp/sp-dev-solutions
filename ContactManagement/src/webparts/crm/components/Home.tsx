@@ -154,11 +154,11 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
 
         <Pivot ref="pivot" onLinkClick={ this._handleLinkClick }  initialSelectedKey={ activeMode.toString() }>
           { searchPane } 
+          <PivotItem  key={ CrmMode.PersonDirectory.toString() } itemKey={ CrmMode.PersonDirectory.toString() }  linkText="People">
+              <PersonDirectory ref='personDirectory' manager={ this.props.manager } onPersonSelected={ this._handlePersonSelected } />
+          </PivotItem>
           <PivotItem key={ CrmMode.OrganizationDirectory.toString() } itemKey={ CrmMode.OrganizationDirectory.toString() }  linkText='Organizations'  >
               <OrganizationDirectory ref='organizationDirectory' mode={ OrganizationDirectoryMode.All } manager={ this.props.manager } onOrganizationSelected={ this._handleOrganizationSelected } />
-          </PivotItem>
-          <PivotItem key={ CrmMode.OrganizationQuery.toString() } itemKey={ CrmMode.OrganizationQuery.toString() }  linkText='Query'  >
-              <OrganizationQuery ref='organizationQuery' manager={ this.props.manager } onOrganizationSelected={ this._handleOrganizationSelected } />
           </PivotItem>
             {
               this.props.views != null ?
@@ -171,11 +171,9 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
                     </PivotItem>;
                 }) : ''
             } 
-
-          <PivotItem  key={ CrmMode.PersonDirectory.toString() } itemKey={ CrmMode.PersonDirectory.toString() }  linkText="People">
-              <PersonDirectory ref='personDirectory' manager={ this.props.manager } onPersonSelected={ this._handlePersonSelected } />
+          <PivotItem key={ CrmMode.OrganizationQuery.toString() } itemKey={ CrmMode.OrganizationQuery.toString() }  linkText='Query'  >
+              <OrganizationQuery ref='organizationQuery' manager={ this.props.manager } onOrganizationSelected={ this._handleOrganizationSelected } />
           </PivotItem>
-             
         </Pivot>
       </div>
         );

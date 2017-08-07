@@ -8,7 +8,8 @@ import ViewEditor from './ViewEditor';
 import styles from '../Crm.module.scss';
 import { ICrmDataProvider } from '../../../dataProviders/ICrmDataProvider';
 
-import { Button, Dropdown, IDropdownOption } from 'office-ui-fabric-react';
+import { Button, IDropdownOption } from 'office-ui-fabric-react';
+import { DropdownEx } from '../../../sharePointComponents/DropdownEx';
 
 export interface IPartViewManagerProps {
   views: ViewSet;
@@ -130,7 +131,7 @@ export default class PartViewManager extends React.Component<IPartViewManagerPro
                 <div className={ styles.selectorDropdown }>       
                 {
                   this.props.views.views.length > 1 ?                
-                   <Dropdown
+                   <DropdownEx
                       label=""
                       selectedKey={ selectedIndex }
                       options={ dropdownOptions }

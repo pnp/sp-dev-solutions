@@ -47,6 +47,7 @@
   .toolBarCell
   {
     display: table-cell;
+    border-bottom: solid 1px #DADADA;
   }
 
   .errorDescription
@@ -152,9 +153,35 @@
 
 .personDisplay
 {
+  .name
+  {
+    font-size: x-large;
+  }
+
   .organizationArea
   {
     padding-top:15px;
+  }
+}
+
+.organizationQuery
+{
+  .tileBin
+  {
+    background-color: #F4F4F4;
+    padding-top:10px;
+    
+    border-top: solid 1px #D0D0D0;
+  }
+
+  .size
+  {
+    font-weight: bold;
+    padding:6px;
+    padding-left: 8px;
+    padding-top:20px;    
+    padding-left: 8px;
+    display: block;
   }
 }
 
@@ -163,17 +190,53 @@
   width:100%;
   height: 100%;
 
+  .tileBin
+  {
+    background-color: #F4F4F4;
+    padding-top: 10px;
+    padding-left: 10px;
+    border-top: solid 1px #D0D0D0;
+  }
+
   .size
   {
     font-weight: bold;
     padding:6px;
-    padding-top:20px;
+    padding-left: 10px;
+    padding-top:20px;    
     display: block;
   }
 
   .personArea
   {
     padding-top: 15px;
+  }
+}
+
+.searchResults
+{
+  .searchResultList
+  {
+    display: table;
+  }
+
+  .searchResultItem
+  {
+    display: table-row;
+    cursor: default;
+  }
+
+  .searchResultItemInner
+  {
+    display: table-cell;
+  }
+  
+  .searchResultItemInnerA
+  {
+    margin: 3px;
+    padding: 4px;
+    border: solid 1px #D0D0D0;
+    min-width: 180px;
   }
 }
 
@@ -221,9 +284,11 @@
   height: 100px;
   vertical-align: bottom;
   display: inline-block;
-  border: solid 1px #DADADA;
+  border: solid 1px #D0D0D0;
   background-color: #F8F8F8;
   margin:4px;
+  box-shadow: 2px 2px 0px 0px #E8E8E8;
+
 
   .header {
     height: 30px;
@@ -399,22 +464,41 @@
     min-height: 300px;
     border: solid 0x;
   }
+
+  .peopleHeader
+  {
+    font-weight: bold;
+  }
+
+  .button
+  {
+    border: solid 1px #D0D0D0;
+    margin-left: 24px;
+  }
   
   .peopleList
   {
     padding:8px;
-    padding-left:20px;
-    padding-top:20px;
+    padding-left: 20px;
+    padding-top: 20px;
+  }
+
+  .displayHeader
+  {
+    color: #909090;
+    padding-bottom: 8px;
   }
 
   .displayArea
   {
-    padding-top:15px;
+    padding-top: 15px;
+    padding-left: 5px;
   }
   
   .peopleArea
   {
-    padding-top:6px;
+    padding-top: 6px;
+    padding-left: 7px;
   }
 
   .iteratorArea
@@ -432,5 +516,11 @@
 .personMiniDisplay
 {
   cursor: default;
+  border: solid 1px #D0D0D0;
+  background-color: #FAFAFA;
+  padding:5px;
+  display: inline-block;
+  min-width: 180px;
+  margin:4px;
 }
 

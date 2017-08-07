@@ -12,7 +12,7 @@ import {
 } from 'office-ui-fabric-react/lib/Pickers';
 import Utility  from '../utilities/Utility';
 
-import { IPersonaProps, PersonaPresence } from 'office-ui-fabric-react/lib/Persona';
+import { IPersonaProps, PersonaPresence, PersonaSize } from 'office-ui-fabric-react/lib/Persona';
 
 export interface IItemPeopleFieldEditorProps extends IFieldComponentProps {
 
@@ -48,7 +48,6 @@ export default class ItemPeopleFieldEditor extends FieldComponent<IItemPeopleFie
 
       if (val != null)
       {
-
         me.props.itemContext.readUsersByIds(val).then( (users: ISPUser[]) =>
         {
           var personas = new Array();
@@ -57,8 +56,10 @@ export default class ItemPeopleFieldEditor extends FieldComponent<IItemPeopleFie
           {
               var persona = {
                 primaryText: user.Title,
-                imageUrl : user.Picture != null ? user.Picture.Url : "",
+        //        imageUrl : user.Picture != null ? user.Picture.Url : "",
+                imageUrl: user.EMail != null ? "https://outlook.office365.com/owa/service.svc/s/GetPersonaPhoto?email=" + user.EMail + "&amp;UA=0&amp;size=HR64x64" : null,                       
                 presence : PersonaPresence.none,
+                size : PersonaSize.small,
                 key : user.Id,
                 tag : user          
               };
@@ -72,6 +73,18 @@ export default class ItemPeopleFieldEditor extends FieldComponent<IItemPeopleFie
           this._wasRetrieved = true;        
         });
       }
+      else
+      {
+        me.setState( {
+          selectedPersonas: null
+         } );
+      }      
+    }
+    else
+    {
+      me.setState( {
+        selectedPersonas: null
+       } );
     }
   }
 
@@ -88,9 +101,16 @@ export default class ItemPeopleFieldEditor extends FieldComponent<IItemPeopleFie
 
   private _onChange(currentPersonas: IPersonaProps[]) 
   {
+    if (currentPersonas == null || currentPersonas.length == 0)
+    {
+      this.value = null;
+      return;
+    }
+    
     for (var persona of currentPersonas)
     {
       this.value = persona["tag"].Id;
+      return;
     }
   }
 
@@ -108,9 +128,11 @@ export default class ItemPeopleFieldEditor extends FieldComponent<IItemPeopleFie
             {
               var persona = {
                 primaryText: user.Title,
-                imageUrl : user.Picture != null ? user.Picture.Url : "",
-                key: "U" + user.Id,
-                presence : PersonaPresence.none
+        //        imageUrl : user.Picture != null ? user.Picture.Url : "",
+                imageUrl: user.EMail != null ? "https://outlook.office365.com/owa/service.svc/s/GetPersonaPhoto?email=" + user.EMail + "&amp;UA=0&amp;size=HR64x64" : null,       
+                size : PersonaSize.small,
+                presence : PersonaPresence.none,
+                key: "U" + user.Id
               };
 
               persona["tag"] = user;
@@ -126,11 +148,16 @@ export default class ItemPeopleFieldEditor extends FieldComponent<IItemPeopleFie
 
   public render(): JSX.Element 
   {
+    if (this.state == null)
+    {
+      return <div></div>;
+    }
+
     return (
       <div className={styles.sharePointComponent}>
         <CompactPeoplePicker
           onResolveSuggestions={ this._onFilterChanged }
-          getTextFromItem={ (persona: IPersonaProps) => persona.primaryText }
+          getTextFromItem={ (persona: IPersonaProps) => persona ? persona.primaryText : null }
           className={ 'ms-PeoplePicker' }
           defaultSelectedItems={ this.state != null && this.state.selectedPersonas != null ? this.state.selectedPersonas : null }
           onChange={this._onChange }

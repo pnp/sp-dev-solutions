@@ -6,7 +6,8 @@ export enum ClauseType
     GreaterThanOrEquals = 3,
     LessThan = 4,
     LessThanOrEquals = 5,
-    Contains = 6
+    Contains = 6,
+    NotContains = 7
 }
 
 export enum ClauseTypeJoin
@@ -86,10 +87,94 @@ export default class Clause
         {
             if (item[this.fieldName] == null)
             {
-                return false;
+                return this.value == "";
             }
 
             if (item[this.fieldName] != this.value)
+            {
+                return false;
+            }
+        }
+        else if (this.clauseType == ClauseType.NotEquals)
+        {
+            if (item[this.fieldName] == null)
+            {
+                return this.value != "";
+            }
+
+            if (item[this.fieldName] == this.value)
+            {
+                return false;
+            }
+        }
+        else if (this.clauseType == ClauseType.Contains)
+        {
+            if (item[this.fieldName] == null)
+            {
+                return false;
+            }
+
+            if (item[this.fieldName].indexOf(this.value) < 0)
+            {
+                return false;
+            }
+        }
+        else if (this.clauseType == ClauseType.NotContains)
+        {
+            if (item[this.fieldName] == null)
+            {
+                return true;
+            }
+
+            if (item[this.fieldName].indexOf(this.value) >= 0)
+            {
+                return false;
+            }
+        }
+        else if (this.clauseType == ClauseType.GreaterThan)
+        {
+            if (item[this.fieldName] == null)
+            {
+                return false;
+            }
+
+            if (item[this.fieldName] <= this.value)
+            {
+                return false;
+            }
+        }
+        else if (this.clauseType == ClauseType.GreaterThanOrEquals)
+        {
+            if (item[this.fieldName] == null)
+            {
+                return false;
+            }
+
+            if (item[this.fieldName] < this.value)
+            {
+                return false;
+            }
+        }        
+        else if (this.clauseType == ClauseType.LessThan)
+        {
+            if (item[this.fieldName] == null)
+            {
+                return false;
+            }
+
+            if (item[this.fieldName] >= this.value)
+            {
+                return false;
+            }
+        }
+        else if (this.clauseType == ClauseType.LessThanOrEquals)
+        {
+            if (item[this.fieldName] == null)
+            {
+                return false;
+            }
+
+            if (item[this.fieldName] > this.value)
             {
                 return false;
             }

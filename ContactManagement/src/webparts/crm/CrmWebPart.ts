@@ -48,8 +48,8 @@ export default class CrmWebPart extends BaseClientSideWebPart<ICrmWebPartProps> 
     UserInterfaceUtility.setOuterElement(this.domElement);
   
     UserInterfaceUtility.applyWorkarounds();
-  
-    return new Promise<void>( (resolve) => { resolve(); } );
+
+    return this._manager.data.init();
 }
 
 
@@ -65,7 +65,6 @@ export default class CrmWebPart extends BaseClientSideWebPart<ICrmWebPartProps> 
 
     ReactDom.render(element, this.domElement);
 
-    UserInterfaceUtility.setOuterElement(this.domElement);
     UserInterfaceUtility.applyWorkarounds();
   }
 

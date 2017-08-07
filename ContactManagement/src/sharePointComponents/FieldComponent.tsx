@@ -3,11 +3,15 @@ import * as React from 'react';
 
 import { ItemComponent, IItemComponentProps, IItemComponentState } from './ItemComponent';
 import { ISPField, FieldTypeKind } from '../data/ISPField';
+import { ISharePointItem } from '../data/ISharePointItem';
 
 import Debug from '../utilities/Debug';
 
+export type FieldValueChangeCallback = (field : ISPField, item : ISharePointItem, value : any) => void;
+
 export interface IFieldComponentProps extends IItemComponentProps {
   field : ISPField;
+  onChanged? : FieldValueChangeCallback;
 }
 
 export interface IFieldComponentState extends IItemComponentState {
@@ -59,6 +63,14 @@ export abstract class FieldComponent<P extends IFieldComponentProps, S extends I
     if (newValue != io[this.effectiveFieldInternalName])
     {
       io[this.effectiveFieldInternalName] = newValue;
+
+      if (this.props.onChanged != null)
+      {
+        this.props.onChanged(this.props.field, this.props.itemContext.itemObject, newValue);
+      }
+
+      this.forceUpdate();
+
       this.props.itemContext.hasChanged = true;
     }
   }
@@ -90,7 +102,6 @@ export abstract class FieldComponent<P extends IFieldComponentProps, S extends I
       throw "Field was not found.";
     }
 
-   
 
     return io[this.effectiveFieldInternalName];
   }
@@ -117,6 +128,14 @@ export abstract class FieldComponent<P extends IFieldComponentProps, S extends I
     if (newValue != io[fieldName])
     {
       io[fieldName] = newValue;
+
+      if (this.props.onChanged != null)
+      {
+        this.props.onChanged(this.props.field, this.props.itemContext.itemObject, newValue);
+      }
+
+      this.forceUpdate();
+
       this.props.itemContext.hasChanged = true;
     }
   }

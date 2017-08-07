@@ -5,6 +5,7 @@ import { ISPField } from '../data/ISPField';
 import { ISPView } from '../data/ISPView';
 import { ISPList } from '../data/ISPList';
 import { ISPUser } from '../data/ISPUser';
+import { ISharePointItem } from '../data/ISharePointItem';
 
 import { IPerson } from '../data/IPerson';
 
@@ -72,7 +73,7 @@ export default class SharePointCrmDataProvider extends BaseCrmDataProvider imple
           return Promise.all(promises).then( (values) => {
             return values[values.length - 1];
           }
-        )
+        );
       }
     );
   }
@@ -106,8 +107,7 @@ export default class SharePointCrmDataProvider extends BaseCrmDataProvider imple
   private _getStandardHttpClientOptions() : ISPHttpClientOptions
   {
     return {
-            headers: this._getStandardHttpClientHeaders(),
-            body: null
+            headers: this._getStandardHttpClientHeaders()
         };
   }
 
@@ -196,6 +196,24 @@ export default class SharePointCrmDataProvider extends BaseCrmDataProvider imple
       });
  }*/
 
+  private _fixupItem(item: ISharePointItem)
+  {
+    // for lookup fields, make sure "FooStringId" matches the value of "FooId" so that updates don't get confused.
+    for (var key in item)
+    {
+      if (key.length >= 9 && key.substring(key.length - 8, key.length) == "StringId")
+      {
+        if (item[key.substring(0, key.length - 8) + "Id"] != null)
+        {
+          item[key] = item[key.substring(0, key.length - 8) + "Id"].toString();
+        }
+        else
+        {
+          item[key] = null;
+        }
+      }
+    }
+  }
 
   private _updatePersonItem(batch: SPHttpClientBatch, item: IPerson): Promise<SPHttpClientResponse> {
 
@@ -574,6 +592,7 @@ export default class SharePointCrmDataProvider extends BaseCrmDataProvider imple
     headers.append('If-Match', '*');
 
     item["@data.type"] = "$" + this._selectedOrganizationList.ListItemEntityTypeFullName;
+    this._fixupItem(item);
 
     return batch.fetch(itemUpdatedUrl,
       SPHttpClientBatch.configurations.v1,
@@ -587,6 +606,7 @@ export default class SharePointCrmDataProvider extends BaseCrmDataProvider imple
 
   public addOrganizationItem(newOrganization : IOrganization) : Promise<IOrganizationSet> {
     const batch: SPHttpClientBatch = this._httpClient.beginBatch(this._getStandardHttpClientOptions());
+    this._fixupItem(newOrganization);
 
     const batchPromises: Promise<{}>[] = [
       this._addOrganizationItem(batch, newOrganization),
@@ -655,7 +675,7 @@ export default class SharePointCrmDataProvider extends BaseCrmDataProvider imple
 
   public readOrganizationItemsByIds(ids : number[]): Promise<IOrganizationSet> 
   {
-    var searchQuery = "";
+    var searchQuery = ""; 
 
     for (var id of ids)
     {

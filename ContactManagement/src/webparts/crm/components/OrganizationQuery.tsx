@@ -8,6 +8,8 @@ import { IOrganizationSet  } from '../../../dataProviders/IOrganizationSet';
 
 import { ICrmComponentProps } from '../ICrmComponentProps';
 
+import UserInterfaceUtility from '../../../sharePointComponents/UserInterfaceUtility';
+
 import QueryEditor from '../../../sharePointComponents/QueryEditor';
 import Query from '../../../data/Query';
 
@@ -69,7 +71,6 @@ export default class OrganizationQuery extends React.Component<IOrganizationQuer
         query: this.state.query,
         title: "Basic"
       };
-      
       this.props.manager.data.readOrganizationItemsByView(view).then(
         (orgs: IOrganizationSet) => { 
           this.setState( { 
@@ -129,6 +130,8 @@ export default class OrganizationQuery extends React.Component<IOrganizationQuer
       return <div></div>;
     }
 
+    UserInterfaceUtility.applyWorkarounds();
+
     return (
       <div className={styles.organizationDirectory}>
         <QueryEditor list={ this.props.manager.data.selectedOrganizationList } query={ this.state.query } displayApplyButton={ true } onApply={ this._handleApply } />
@@ -139,7 +142,7 @@ export default class OrganizationQuery extends React.Component<IOrganizationQuer
           <span className={styles.size} >Items: {this.state.items.organizations.length } </span>
         : '' : ''
       } 
-        <div>
+        <div className={styles.tileBin}>
           {
             this.state ?
             this.state.items ?

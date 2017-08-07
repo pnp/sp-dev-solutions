@@ -89,9 +89,6 @@ export default class Crm extends React.Component<ICrmProps, ICrmState> {
 
   public componentWillMount()
   {
-
-     this.props.manager.data.init().then( () =>
-     {
        var errs = this.props.manager.data.getErrors();
 
        var mode = CrmMode.OrganizationDirectory;
@@ -110,6 +107,8 @@ export default class Crm extends React.Component<ICrmProps, ICrmState> {
         selectedPerson: this.state.selectedPerson ,
         isEditing: false     
        });
+
+/*     {
      }, (error : any) => {
 
        this.setState({
@@ -121,7 +120,7 @@ export default class Crm extends React.Component<ICrmProps, ICrmState> {
         selectedPerson: this.state.selectedPerson ,
         isEditing: false     
        });
-     });
+     });*/
   }
 
   private _handleNewPersonClick(val: any)
@@ -305,13 +304,13 @@ export default class Crm extends React.Component<ICrmProps, ICrmState> {
                        isSearchBoxVisible={ false }
                       items={ [] }
                      />        
-        <div className={ styles.logoArea }>
-          <h1>Contact Management</h1>
-          <h2>Community Solutions</h2>
-        </div>  
+          <div className={ styles.logoArea }>
+            <h1>Contact Management</h1>
+            <h2>Community Solutions</h2>
+          </div>  
         </div>;
 
-
+    
     if (this.state.mode == CrmMode.Loading)
     {
       return <div className={ styles.crm } >

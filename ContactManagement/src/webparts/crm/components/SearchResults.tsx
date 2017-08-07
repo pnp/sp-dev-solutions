@@ -116,25 +116,25 @@ export default class SearchResults extends React.Component<ISearchResultsProps, 
     else 
     {
       return (
-        <div>
-          Results:
-        <table className={styles.crm}>
-          <tbody>
-        {
-          this.state ?
-          this.state.organizationItems ?
-          this.state.organizationItems.organizations.map( (object, i) =>
+        <div className={styles.searchResults}>
+          <div>Results:</div>
+          <div className={styles.searchResultList}>
           {
-            return <tr key={"PDR" + object.Id}>
-                    <td>
-                      <div title='a' data-objectid={object.Id} onClick={me._handleOrganizationClick}>
-                      <b>{object.Title}</b>
-                      </div>
-                    </td></tr>;
-          }) : '' : ''
-        }
-          </tbody>
-        </table>
+            this.state ?
+            this.state.organizationItems ?
+            this.state.organizationItems.organizations.map( (object, i) =>
+            {
+              return <div key={"PDR" + object.Id} className={ styles.searchResultItem } onClick={me._handleOrganizationClick}>
+                      <div className={ styles.searchResultItemInner }>
+                        <div className={ styles.searchResultItemInnerA }>
+                          <div title='a' data-objectid={object.Id}>
+                          <b>{object.Title}</b>
+                          </div>
+                        </div>
+                      </div></div>;
+            }) : '' : ''
+          }
+          </div>
         </div>
       );
     }

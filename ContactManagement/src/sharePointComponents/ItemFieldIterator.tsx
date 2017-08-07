@@ -4,7 +4,6 @@ import * as React from 'react';
 import Debug from '../utilities/Debug';
 
 import { ISPField, FieldTypeKind } from '../data/ISPField';
-import { ISPList } from '../data/ISPList';
 import SPUrl from '../data/SPUrl';
 
 import styles from './sharePointComponents.module.scss';
@@ -13,21 +12,8 @@ import { ItemComponent, IItemComponentProps, IItemComponentState } from './ItemC
 
 import ItemFieldLabel from './ItemFieldLabel';
 
-import ItemLookupFieldEditor from './ItemLookupFieldEditor';
-import ItemLookupFieldDisplay from './ItemLookupFieldDisplay';
-import ItemMultiLookupFieldEditor from './ItemMultiLookupFieldEditor';
-import ItemMultiLookupFieldDisplay from './ItemMultiLookupFieldDisplay';
-import ItemMultilineTextFieldEditor from './ItemMultilineTextFieldEditor';
-import ItemPeopleFieldEditor from './ItemPeopleFieldEditor';
-import ItemPeopleFieldDisplay from './ItemPeopleFieldDisplay';
-import ItemDateFieldEditor from './ItemDateFieldDisplay';
-import ItemChoiceFieldEditor from './ItemChoiceFieldEditor';
-import ItemDateFieldDisplay from './ItemDateFieldDisplay';
-import ItemTextFieldEditor from './ItemTextFieldEditor';
-import ItemTextFieldDisplay from './ItemTextFieldDisplay';
-import ItemRichTextFieldDisplay from './ItemRichTextFieldDisplay';
-import ItemUrlFieldEditor from './ItemUrlFieldEditor';
-import ItemUrlFieldDisplay from './ItemUrlFieldDisplay';
+import UserInterfaceUtility from './UserInterfaceUtility';
+
 // import ItemRichTextFieldEditor from './ItemRichTextFieldEditor';
 
 export interface IItemFieldIteratorProps extends IItemComponentProps {
@@ -49,7 +35,6 @@ export default class ItemFieldIterator extends ItemComponent<IItemFieldIteratorP
 
     };
 
-    this._getFieldElement = this._getFieldElement.bind(this);
     this._isFieldExcluded = this._isFieldExcluded.bind(this);
   }
 
@@ -62,79 +47,6 @@ export default class ItemFieldIterator extends ItemComponent<IItemFieldIteratorP
           fields: this.props.itemContext.list.Fields
         }
       );
-    }
-  }
-
-  private _getFieldElement(list: ISPList, field : ISPField) : JSX.Element
-  {
-    if (this.props.isDisplayOnly == true)
-    {
-      switch (field.FieldTypeKind)
-      {
-        case FieldTypeKind.DateTime:
-          return <ItemDateFieldDisplay itemContext={ this.props.itemContext } field={ field } />;
-
-        case FieldTypeKind.Url:
-          return <ItemUrlFieldDisplay itemContext={ this.props.itemContext } field={ field } />;
-
-        case FieldTypeKind.Lookup:
-          if (field.AllowMultipleValues)
-          {
-            return <ItemMultiLookupFieldDisplay itemContext={ this.props.itemContext } field={ field } />;
-          }
-          
-          return <ItemLookupFieldDisplay itemContext={ this.props.itemContext } field={ field } />;
-        
-        case FieldTypeKind.User:
-          return <ItemPeopleFieldDisplay itemContext={ this.props.itemContext } field={ field } />;
-
-        default:
-          if (field.RichText == true)
-          {
-            return <ItemRichTextFieldDisplay itemContext={ this.props.itemContext } field={ field }/>;
-          }
-
-          return <ItemTextFieldDisplay itemContext={ this.props.itemContext } field={ field } />;
-      }
-    }
-    else
-    {
-      switch (field.FieldTypeKind)
-      {
-        case FieldTypeKind.DateTime:
-          return <ItemDateFieldEditor itemContext={ this.props.itemContext } field={ field } />;
-
-        case FieldTypeKind.Choice:
-          return <ItemChoiceFieldEditor itemContext={ this.props.itemContext } field={ field } />;
-
-        case FieldTypeKind.Url:
-          return <ItemUrlFieldEditor itemContext={ this.props.itemContext } field={ field }/>;
-
-        case FieldTypeKind.Lookup:
-          if (field.AllowMultipleValues)
-          {
-            return <ItemMultiLookupFieldEditor itemContext={ this.props.itemContext } field={ field } />;
-          }
-         else if (list.ListItemCount > 220)
-          {
-            return <ItemMultiLookupFieldEditor allowOnlySingleSelection={ true } itemContext={ this.props.itemContext } field={ field } />;
-          }
-          
-          return <ItemLookupFieldEditor itemContext={ this.props.itemContext } field={ field } />;
-        
-        case FieldTypeKind.User:
-          return <ItemPeopleFieldEditor itemContext={ this.props.itemContext } field={ field } />;
-
-        default:
-          if (field.RichText == true)
-          {
-            //return <ItemRichTextFieldEditor itemContext={ this.props.itemContext } field={ field } />;
-            return <ItemMultilineTextFieldEditor itemContext={ this.props.itemContext } stripHtml={ true } field={ field } />;
-
-          }
-
-          return <ItemTextFieldEditor itemContext={ this.props.itemContext } field={ field } />;
-      }
     }
   }
 
@@ -184,6 +96,12 @@ export default class ItemFieldIterator extends ItemComponent<IItemFieldIteratorP
         }
       }
     }
+
+    if (field.FieldTypeKind == FieldTypeKind.Lookup && val == 0)
+    {
+      return true;
+    }
+
     return false;
   }
 
@@ -249,7 +167,7 @@ export default class ItemFieldIterator extends ItemComponent<IItemFieldIteratorP
                    </span>
                    <span className={ me.props.isDisplayOnly ? styles.iteratorValueCellDisplay : styles.iteratorValueCell }>
                     {
-                      me._getFieldElement(me.props.itemContext.list, doubleField[0]) 
+                      UserInterfaceUtility.getFieldElement(me.props.itemContext, doubleField[0], me.props.isDisplayOnly) 
                     }
                    </span>
                 
@@ -258,7 +176,7 @@ export default class ItemFieldIterator extends ItemComponent<IItemFieldIteratorP
                     </span>
                     <span className={ me.props.isDisplayOnly ? styles.iteratorSecondValueCellDisplay : styles.iteratorSecondValueCell }>
                       {
-                        doubleField.length > 1 ? me._getFieldElement(me.props.itemContext.list, doubleField[1]) : null 
+                        doubleField.length > 1 ? UserInterfaceUtility.getFieldElement(me.props.itemContext, doubleField[1], me.props.isDisplayOnly) : null 
                       }
                     </span>                
                   </span>;

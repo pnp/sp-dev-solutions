@@ -9,6 +9,8 @@ import { IOrganization } from '../../../data/IOrganization';
 import { IPerson } from '../../../data/IPerson';
 import ItemFieldIterator from '../../../sharePointComponents/ItemFieldIterator';
 import ItemRichTextFieldDisplay from '../../../sharePointComponents/ItemRichTextFieldDisplay';
+import ItemDateFieldDisplay from '../../../sharePointComponents/ItemDateFieldDisplay';
+import ItemPeopleFieldDisplay from '../../../sharePointComponents/ItemPeopleFieldDisplay';
 import UserInterfaceUtility from '../../../sharePointComponents/UserInterfaceUtility';
 import ItemContext from '../../../sharePointComponents/ItemContext';
 import PersonMiniDisplay from './PersonMiniDisplay';
@@ -200,12 +202,12 @@ export default class OrganizationDisplay extends React.Component<IOrganizationDi
       {
         personsContent = <div className={ styles.peopleArea }>
             &nbsp;
-            <div>People</div>
-            <div className={styles.peopleList}>
+            <div className={ styles.peopleHeader }>People</div>
+            <div className={ styles.peopleList }>
             {
               this.state.persons.map( (person, i) =>
               {
-                return <div data-personId={i} onClick= { this._handlePersonClick }>
+                return <div data-personId={i} key={i} onClick= { this._handlePersonClick }>
                       <PersonMiniDisplay key={ "PMD" + i } manager={ me.props.manager } person={ person } />
                     </div>;
               }) 
@@ -213,7 +215,7 @@ export default class OrganizationDisplay extends React.Component<IOrganizationDi
             </div>
             
             <div className={ styles.addContact }>
-              <Button onClick={ this._handleNewPersonClick }>Add contact</Button>
+              <Button onClick={ this._handleNewPersonClick } className={ styles.button }>Add contact</Button>
             </div> 
           </div>;
       } 
@@ -222,21 +224,36 @@ export default class OrganizationDisplay extends React.Component<IOrganizationDi
           <h3>{ this.props.organization.Title }</h3>
           <Pivot ref="pivot">
             <PivotItem key="summary" linkText="Summary">
-
               <div className={ styles.displayArea }>
                 <ItemRichTextFieldDisplay field={this._itemContext.getField("Description") } itemContext={ this._itemContext } />
               </div>
               <div className={ styles.displayArea }>
                 <ItemRichTextFieldDisplay field={this._itemContext.getField("Notes") } itemContext={ this._itemContext } />
               </div>
-
               <div className={styles.iteratorArea}>
-                <ItemFieldIterator isDisplayOnly={ true } excludedFields={ ["Title", "Notes", "Description"] } itemContext={ this._itemContext } />
+                <ItemFieldIterator isDisplayOnly={ true } excludedFields={ ["Title", "Notes", "Description", "Created", "Modified", "Editor", "Author"] } itemContext={ this._itemContext } />
               </div>
-
               { personsContent }
             </PivotItem>
             { wikiContent }
+            <PivotItem key="history" linkText="History">
+              <div className={ styles.displayArea }>
+                <div className={ styles.displayHeader }>Created:</div> 
+                <ItemDateFieldDisplay field={this._itemContext.getField("Created") } itemContext={ this._itemContext } />
+              </div>
+              <div className={ styles.displayArea }>
+                <div className={ styles.displayHeader }>Creator:</div>
+                <ItemPeopleFieldDisplay field={this._itemContext.getField("Author") } itemContext={ this._itemContext } />
+              </div>
+              <div className={ styles.displayArea }>
+                <div className={ styles.displayHeader }>Modified:</div>
+                <ItemDateFieldDisplay field={this._itemContext.getField("Modified") } itemContext={ this._itemContext } />
+              </div>
+              <div className={ styles.displayArea }>
+                <div className={ styles.displayHeader }>Last Edited By:</div>
+                <ItemPeopleFieldDisplay field={this._itemContext.getField("Editor") } itemContext={ this._itemContext } />
+              </div>
+            </PivotItem>
           </Pivot>
         </div>;
     }
