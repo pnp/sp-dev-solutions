@@ -35,6 +35,11 @@ export default class OrganizationQuery extends React.Component<IOrganizationQuer
     this._handleQueryChange = this._handleQueryChange.bind(this);
 
     var query = new Query();
+
+    if (props.manager.data.meUser != null)
+    {
+      query.meUserId = props.manager.data.meUser.Id;
+    }
     query.onQueryChange = this._handleQueryChange;
 
     this.state = {
@@ -134,7 +139,7 @@ export default class OrganizationQuery extends React.Component<IOrganizationQuer
 
     return (
       <div className={styles.organizationDirectory}>
-        <QueryEditor list={ this.props.manager.data.selectedOrganizationList } query={ this.state.query } displayApplyButton={ true } onApply={ this._handleApply } />
+        <QueryEditor list={ this.props.manager.data.selectedOrganizationList } dataProvider= { this.props.manager.data } query={ this.state.query } displayApplyButton={ true } onApply={ this._handleApply } />
         <div>&nbsp;</div>
       {
         this.state ?

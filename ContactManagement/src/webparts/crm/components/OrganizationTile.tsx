@@ -63,17 +63,38 @@ export default class OrganizationTile extends React.Component<IOrganizationTileP
     
     var orgLogo = SharePointUtility.getUrl(org, "Logo");
 
+    var statusClass = styles.status;
+
+    if (org.Status != null)
+      {
+        var statusLower = org.Status.toLowerCase();
+
+        if (statusLower.indexOf("red") >= 0)
+        {
+          statusClass = styles.statusRed;
+        }
+        if (statusLower.indexOf("green") >= 0)
+        {
+          statusClass = styles.statusGreen;
+        }
+        if (statusLower.indexOf("yellow") >= 0)
+        {
+          statusClass = styles.statusYellow;
+        }
+      }
+
     return (
       <span className={styles.organizationTile}>
-        <span className={styles.header}>
-          { org.Title }       
-        </span>
         <span className={styles.interior}>
           <span className={styles.interiorImage} style={{
              backgroundImage: orgLogo != null ? "url(" + orgLogo + ")" : ""
             }}>
             &nbsp;
           </span>
+        </span>
+        <span className={styles.header}>
+          <div>{ org.Title }</div>
+          <div className = { statusClass }>{ org.Status }</div>             
         </span>
       </span>
     );

@@ -1,6 +1,6 @@
 {
   "name": "crm",
-  "version": "0.0.5",
+  "version": "1.0.7",
   "private": true,
   "engines": {
     "node": ">=0.10.0"

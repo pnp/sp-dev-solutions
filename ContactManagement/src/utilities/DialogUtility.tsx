@@ -65,6 +65,13 @@ export default class DialogUtility {
         this.activeOptions = options;
     }
 
+    public static doSaveCallout()
+    {
+        let diaOptions = DialogUtility.activeOptions;
+        
+        (diaOptions.onSaveCallout as DialogCallback)(diaOptions); 
+    }
+
     public static setActions(closeCancelCallout? : DialogCallback, saveCallout? : DialogCallback)
     {
         if (this.activeOptions != null)
@@ -98,9 +105,7 @@ export default class DialogUtility {
     {
         if (DialogUtility.activeOptions != null && DialogUtility.activeOptions.onSaveCallout != null)
         {
-            let diaOptions = DialogUtility.activeOptions;
-
-            (diaOptions.onSaveCallout as DialogCallback)(diaOptions); 
+           this.doSaveCallout();
         }
 
         DialogUtility.clearDialog();

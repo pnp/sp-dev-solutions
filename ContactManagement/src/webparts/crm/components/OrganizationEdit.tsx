@@ -9,7 +9,6 @@ import { ICrmComponentProps } from '../ICrmComponentProps';
 import { IOrganization } from '../../../data/IOrganization';
 import { IOrganizationSet  } from '../../../dataProviders/IOrganizationSet';
 import ItemFieldIterator from '../../../sharePointComponents/ItemFieldIterator';
-// import ItemRichTextFieldEditor  from '../../../sharePointComponents/ItemRichTextFieldEditor';
 import ItemMultilineTextFieldEditor  from '../../../sharePointComponents/ItemMultilineTextFieldEditor';
 import ItemMultiLookupFieldEditor  from '../../../sharePointComponents/ItemMultiLookupFieldEditor';
 import ItemTextFieldEditor  from '../../../sharePointComponents/ItemTextFieldEditor';
@@ -21,7 +20,6 @@ import {
   PivotItem,
   Pivot
 } from 'office-ui-fabric-react/lib/Pivot';
-
 
 export interface IOrganizationEditProps extends ICrmComponentProps {
   organization: IOrganization;
@@ -213,7 +211,7 @@ export default class OrganizationEdit extends React.Component<IOrganizationEditP
                     <ItemTextFieldEditor field={this._itemContext.getField("PrimaryStateProvince") } itemContext={ this._itemContext } />
                   </div>
                 </div>
-                <div className={styles.fieldArea}/>
+                <div className={styles.fieldArea}>
                   <div className={styles.fieldLabel}>
                     Country:
                   </div>
@@ -222,6 +220,7 @@ export default class OrganizationEdit extends React.Component<IOrganizationEditP
                   </div>
                 </div>
               </div>
+            </div>
           </PivotItem>
           <PivotItem key="res" linkText='Resources' >            
             <div className="{styles.fieldTab}">

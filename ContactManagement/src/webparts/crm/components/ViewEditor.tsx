@@ -56,7 +56,7 @@ export default class ViewEditor extends React.Component<IViewEditorProps, IViewE
       <div className={ styles.organizationDirectory }>
         
         <TextField onChanged={ this._handleChange } value= { this.props.view.title}></TextField>
-        <QueryEditor query={this.props.view.query} list={this.props.data.selectedOrganizationList } displayApplyButton={ false }/>
+        <QueryEditor query={this.props.view.query} list={this.props.data.selectedOrganizationList } dataProvider={ this.props.data } displayApplyButton={ false }/>
 
       </div>
     );

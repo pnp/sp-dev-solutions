@@ -1,0 +1,27 @@
+  .chekoutList{
+    margin: 10px 0;
+    clear: both;
+    float: none;    
+    border: 1px solid #c8c8c8;
+    
+    .gridheader{
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+        border-bottom: 1px solid #c8c8c8;
+
+        .gridheadertitle{
+            margin: 0;
+            padding: 0;
+            .gridheadercol{
+                border-right: 1px solid #c8c8c8; 
+                padding-top: 6px;
+                padding-bottom: 6px;
+               }
+            .gridheaderendcol{
+                padding-top: 6px;
+                padding-bottom: 6px;
+               }
+            }
+        }
+    }

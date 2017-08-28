@@ -9,6 +9,7 @@ export interface ISharePointDataProvider {
     readListItems(listName : string): Promise<ISharePointItem[]>;
     readListItemsBySearch(listName : string, searchTerm : string): Promise<ISharePointItem[]>;
     
+    readUsersByUserName(userName : string): Promise<ISPUser[]>;
     readUsersBySearch(searchTerm : string): Promise<ISPUser[]>;
     readUsersByIds(ids : number[]): Promise<ISPUser[]>;
 

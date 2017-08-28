@@ -20,6 +20,8 @@ export default class CrmManager
 
 	public get data(): ICrmDataProvider { return this._data; }
 
+    public get userLoginName() : string { return this._context.pageContext.user.loginName; }
+    
     constructor(context : IWebPartContext)
     {
         this._context = context;
@@ -33,7 +35,7 @@ export default class CrmManager
             let spcrmdata = new SharePointCrmDataProvider();
 
             spcrmdata.httpClient = this._context.spHttpClient;
-            
+            spcrmdata.meUserLoginName = this._context.pageContext.user.loginName;            
             spcrmdata.webUrl = this._context.pageContext.web.serverRelativeUrl;
 
             this._data = spcrmdata;

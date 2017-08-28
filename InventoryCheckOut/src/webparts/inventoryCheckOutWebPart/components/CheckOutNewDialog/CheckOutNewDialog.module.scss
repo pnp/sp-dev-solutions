@@ -1,0 +1,89 @@
+.checkOutDialog{
+    min-width: 500px;
+
+    .row{
+        margin: 10px 0;
+        position: relative;
+
+        > * {
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        label{
+            margin-right: 10px;
+            width: 100px;
+        }
+
+        label.noteLabel{
+            vertical-align: top;
+        }
+
+        input:global.form-control {
+            box-sizing: border-box;
+            height:26px;
+            width:332px;
+            border:1px solid #c8c8c8;
+        }
+
+        .quantity > div {
+            border: none;
+            height:auto;
+        }
+
+        input:global.form-control.quantityInput, div:global.ms-Dropdown-container {
+            width:100px;
+        }
+
+        div:global.ms-BasePicker-text {
+            width:332px;
+            border-color:#c8c8c8;
+            padding:0;
+            min-height: 26px;
+        }
+
+        div:global.ms-BasePicker-text input:global.ms-BasePicker-input{
+            margin:0
+        }
+
+        div:global.rdt input:global.form-control {
+            padding-right:21px;
+            width:260px;
+        }
+
+        textarea{
+            height: 100px;
+            min-width: 330px;
+        }
+
+        i:global.ms-Icon--Calendar {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            right: 80px;
+            left: auto;
+            font-size: 16px;
+        }
+
+        div:global.ms-PickerPersona-container + input {
+            display: none
+        }
+    }
+
+    .row.standardCheckoutLengthTip:not(:empty) {
+        margin-left: 110px;
+        margin-top: -15px;
+    }
+
+    .row:first-child{
+        margin-top: 0;
+    }
+
+    .row:last-child{
+        padding-bottom: 40px;
+    }
+
+    ul.row:last-child{
+        color: red;
+    }
+}

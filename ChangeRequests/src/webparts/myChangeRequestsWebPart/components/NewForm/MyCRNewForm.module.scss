@@ -1,0 +1,24 @@
+.mycrnewform{
+    margin: 0;
+    margin-left: -6px;
+    .mycrdialogButtons{
+        float: right;
+        margin: 20px 0;
+        margin-right: 8px;
+        >button:first-child{
+            margin-right: 8px;
+        }
+    }
+    .title{
+        margin: 20px 0;
+    }
+    .boldtitle{
+        font-weight: bold;
+    }
+    .errorMessage{
+        color: red;
+    }
+    .mycrnewformcell{
+        padding-top: 3px;
+    }
+}

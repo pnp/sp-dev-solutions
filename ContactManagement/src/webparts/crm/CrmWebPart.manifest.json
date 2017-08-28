@@ -4,7 +4,7 @@
   "id": "098f096d-b64c-4b3c-9be0-ccb486bc9710",
   "alias": "CrmWebPart",
   "componentType": "WebPart",
-  "version": "0.0.5",
+  "version": "1.0.7",
   "manifestVersion": 2,
 
   "preconfiguredEntries": [{

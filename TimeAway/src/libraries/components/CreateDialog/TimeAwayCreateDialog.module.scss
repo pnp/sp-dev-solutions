@@ -1,0 +1,27 @@
+.timeawaydialog{
+    min-width: 400px;
+
+    .row{
+        margin: 15px 0;
+    }
+
+    .row:nth-child(2){
+        margin-top: 0;
+    }
+
+    .row label{
+        padding-bottom: 5px;
+    }
+
+    .row textarea{
+        height: 150px;
+    }
+
+    .row:last-child{
+        padding-bottom: 40px;
+    }
+
+    p.row:last-child{
+        color: red;
+    }
+}

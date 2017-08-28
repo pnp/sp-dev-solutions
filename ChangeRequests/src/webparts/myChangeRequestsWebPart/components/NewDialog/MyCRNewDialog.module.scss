@@ -1,0 +1,17 @@
+
+@media screen and (min-width: 720px) {
+    .mycrdialog{
+        margin: 0;
+        min-width: 600px;
+        max-width: 800px;
+    }
+}
+
+@media screen and (max-width: 719px) {
+    .mycrdialog{
+        margin: 0;
+        min-width: 240px;
+        max-width: 800px;
+    }
+}
+

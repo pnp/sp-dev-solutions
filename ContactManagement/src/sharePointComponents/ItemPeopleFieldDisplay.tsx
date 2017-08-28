@@ -73,9 +73,8 @@ export default class ItemPeopleFieldDisplay extends FieldComponent<IItemPeopleFi
 
       var persona : IPersonaProps = {
         primaryText : user.Title,
-       // imageUrl : user.Picture != null ? user.Picture.Url : "",
         imageUrl: user.EMail != null ? "https://outlook.office365.com/owa/service.svc/s/GetPersonaPhoto?email=" + user.EMail + "&amp;UA=0&amp;size=HR64x64" : null,       
-        presence : PersonaPresence.none
+        presence : null
       };      
 
       personas.push(persona);

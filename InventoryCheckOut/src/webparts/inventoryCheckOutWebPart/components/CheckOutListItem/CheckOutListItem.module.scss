@@ -1,0 +1,31 @@
+.checkoutgridrow {
+    margin: 0;
+    padding: 0;
+    .checkoutgridLabel{
+      display: block;
+      margin: 6px 0 0 0;
+    }
+
+    .itemcell
+    {
+      vertical-align: middle;
+      padding-top:6px;
+    }
+
+    .btcol{
+      margin: 0;
+      padding: 0;
+      text-align: right;
+      .buttonArea
+      {
+        background-color: #eaeaea;
+        margin:2px;
+        padding:4px;
+        width:68px;
+        button{
+          margin: 0;
+          padding: 0;
+        }
+      }
+    }
+  }

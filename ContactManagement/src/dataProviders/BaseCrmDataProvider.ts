@@ -50,6 +50,8 @@ export abstract class BaseCrmDataProvider implements ICrmDataProvider {
     public get selectedTagList(): ISPList { return this._selectedTagList; }
     public set selectedTagList(value: ISPList) { this._selectedTagList = value; }
 
+    public meUser : ISPUser;
+
     protected _onPersonAdded;
     protected _onPersonChanged;
     protected _onPersonRemoved;
@@ -547,6 +549,7 @@ export abstract class BaseCrmDataProvider implements ICrmDataProvider {
 
     public abstract addPersonItem(newPerson : IPerson): Promise<IPerson[]>;
   
+    public abstract readUsersByUserName(userName : string): Promise<ISPUser[]>;
     public abstract readUsersBySearch(search : string): Promise<ISPUser[]>;
     public abstract readUsersByIds(ids : number[]): Promise<ISPUser[]>;
 
@@ -659,6 +662,11 @@ export abstract class BaseCrmDataProvider implements ICrmDataProvider {
         FieldTypeKind: FieldTypeKind.User
       },
       { 
+        Title: "Status",
+        InternalName: "Status",
+        FieldTypeKind: FieldTypeKind.Choice
+      },
+      { 
         Title: "Updates",
         InternalName: "Updates",
         FieldTypeKind: FieldTypeKind.Text,
@@ -750,6 +758,21 @@ export abstract class BaseCrmDataProvider implements ICrmDataProvider {
             FieldTypeKind: FieldTypeKind.Text
           },               
           { 
+            Title: "HomePhone",
+            InternalName: "HomePhone",
+            FieldTypeKind: FieldTypeKind.Text
+          },               
+          { 
+            Title: "CellPhone",
+            InternalName: "CellPhone",
+            FieldTypeKind: FieldTypeKind.Text
+          },               
+          { 
+            Title: "WorkFax",
+            InternalName: "WorkFax",
+            FieldTypeKind: FieldTypeKind.Text
+          },               
+          { 
             Title: "WorkAddress",
             InternalName: "WorkAddress",
             FieldTypeKind: FieldTypeKind.Text
@@ -780,8 +803,31 @@ export abstract class BaseCrmDataProvider implements ICrmDataProvider {
             FieldTypeKind: FieldTypeKind.Text
           },               
           { 
+            Title: "PersonalWebsite",
+            InternalName: "PersonalWebsite",
+            FieldTypeKind: FieldTypeKind.Url
+          },               
+          { 
             Title: "Comments",
             InternalName: "Comments",
+            FieldTypeKind: FieldTypeKind.Text,
+            RichText: true
+          },               
+          { 
+            Title: "LinkedIn",
+            InternalName: "LinkedIn",
+            FieldTypeKind: FieldTypeKind.Text,
+            RichText: true
+          },               
+          { 
+            Title: "Facebook",
+            InternalName: "Facebook",
+            FieldTypeKind: FieldTypeKind.Text,
+            RichText: true
+          },               
+          { 
+            Title: "Twitter",
+            InternalName: "Twitter",
             FieldTypeKind: FieldTypeKind.Text,
             RichText: true
           },               
@@ -792,7 +838,7 @@ export abstract class BaseCrmDataProvider implements ICrmDataProvider {
           },                        
           { 
             Title: "Organization",
-            InternalName: "OrganizationId",
+            InternalName: "Organization",
             FieldTypeKind: FieldTypeKind.Lookup,
             LookupList: this.defaultOrganizationList.Id
           },

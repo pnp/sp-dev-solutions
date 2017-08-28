@@ -1,0 +1,16 @@
+.inventoryList{
+    .inventoryListTitle {
+        padding-bottom: 4px;
+    }
+    ul {
+        margin: 12px 6px;
+        
+        list-style-type: none !important;
+        -webkit-padding-start:6px;
+        li{list-style-type: none !important;display:block;cursor: pointer;}
+    }
+    .mycheckoutitems {
+        padding-left:12px !important;
+        -webkit-padding-start:20px;
+    }
+}

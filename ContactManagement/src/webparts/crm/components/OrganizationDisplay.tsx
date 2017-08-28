@@ -8,7 +8,10 @@ import OrganizationEdit from './OrganizationEdit';
 import { IOrganization } from '../../../data/IOrganization';
 import { IPerson } from '../../../data/IPerson';
 import ItemFieldIterator from '../../../sharePointComponents/ItemFieldIterator';
+import ItemTextFieldDisplay from '../../../sharePointComponents/ItemTextFieldDisplay';
 import ItemRichTextFieldDisplay from '../../../sharePointComponents/ItemRichTextFieldDisplay';
+import ItemMultiLookupFieldDisplay from '../../../sharePointComponents/ItemMultiLookupFieldDisplay';
+import ItemUrlFieldDisplay from '../../../sharePointComponents/ItemUrlFieldDisplay';
 import ItemDateFieldDisplay from '../../../sharePointComponents/ItemDateFieldDisplay';
 import ItemPeopleFieldDisplay from '../../../sharePointComponents/ItemPeopleFieldDisplay';
 import UserInterfaceUtility from '../../../sharePointComponents/UserInterfaceUtility';
@@ -182,8 +185,6 @@ export default class OrganizationDisplay extends React.Component<IOrganizationDi
       if (this.props.allowEdit)
       {
         toolbar = <div></div>;
-//          <Button onClick={  () => { this.setState( { isEditing: !this.state.isEditing }); } }>Edit</Button>
-  //      </div>;
       }
 
       let wikiContent = <div></div>;
@@ -224,34 +225,127 @@ export default class OrganizationDisplay extends React.Component<IOrganizationDi
           <h3>{ this.props.organization.Title }</h3>
           <Pivot ref="pivot">
             <PivotItem key="summary" linkText="Summary">
-              <div className={ styles.displayArea }>
-                <ItemRichTextFieldDisplay field={this._itemContext.getField("Description") } itemContext={ this._itemContext } />
+              <div className={styles.pivotInterior}>
+                <div className={ styles.displayArea }>
+                  <ItemRichTextFieldDisplay field={this._itemContext.getField("Description") } itemContext={ this._itemContext } />
+                </div>
+                <div className={ styles.displayArea }>
+                  <ItemRichTextFieldDisplay field={this._itemContext.getField("Notes") } itemContext={ this._itemContext } />
+                </div>
+                <div>&#160;</div>
+                <div className={styles.fieldListArea}>
+                  <div className={styles.fieldArea}>
+                    <div className={styles.fieldLabel}>
+                      Status:
+                    </div>
+                    <div className={styles.fieldInput}>
+                      <ItemTextFieldDisplay field={this._itemContext.getField("Status") } itemContext={ this._itemContext } />
+                    </div>
+                  </div>
+                  <div className={styles.fieldArea}>
+                    <div className={styles.fieldLabel}>
+                      Tags:
+                    </div>
+                    <div className={styles.fieldInput}>
+                      <ItemMultiLookupFieldDisplay field={this._itemContext.getField("Tags") } itemContext={ this._itemContext } />
+                    </div>
+                    <div className={styles.fieldLabel}>
+                      Priority:
+                    </div>
+                    <div className={styles.fieldInput}>
+                      <ItemTextFieldDisplay field={this._itemContext.getField("Organizational_x0020_Priority") } itemContext={ this._itemContext } />
+                    </div>
+                  </div>
+                  <div className={styles.fieldArea}>
+                      <div className={styles.fieldLabel}>
+                      Home Page:
+                    </div>
+                    <div className={styles.fieldInput}>
+                      <ItemUrlFieldDisplay field={this._itemContext.getField("HomePage") } itemContext={ this._itemContext } />
+                    </div>
+                    <div className={styles.fieldLabel}>
+                      Owner:
+                    </div>
+                    <div className={styles.fieldInput}>
+                      <ItemPeopleFieldDisplay field={this._itemContext.getField("Owner") } itemContext={ this._itemContext } />
+                    </div>
+                  </div>
+                </div>
+                { personsContent }
               </div>
-              <div className={ styles.displayArea }>
-                <ItemRichTextFieldDisplay field={this._itemContext.getField("Notes") } itemContext={ this._itemContext } />
-              </div>
-              <div className={styles.iteratorArea}>
-                <ItemFieldIterator isDisplayOnly={ true } excludedFields={ ["Title", "Notes", "Description", "Created", "Modified", "Editor", "Author"] } itemContext={ this._itemContext } />
-              </div>
-              { personsContent }
             </PivotItem>
             { wikiContent }
+            <PivotItem key="org" linkText='Address'>
+              <div className={styles.pivotInterior}>            
+                <div className={styles.fieldListArea}>
+                  <div className={styles.fieldArea}>
+                    <div className={styles.fieldLabel}>
+                      Address:
+                    </div>
+                    <div className={styles.fieldInput}>
+                      <ItemTextFieldDisplay field={this._itemContext.getField("PrimaryAddress") } itemContext={ this._itemContext } />
+                    </div>
+                  </div>
+                  <div className={styles.fieldArea}>
+                    <div className={styles.fieldLabel}>
+                      City:
+                    </div>
+                    <div className={styles.fieldInput}>                
+                      <ItemTextFieldDisplay field={this._itemContext.getField("PrimaryCity") } itemContext={ this._itemContext } />
+                    </div>
+                  </div>
+                  <div className={styles.fieldArea}>
+                    <div className={styles.fieldLabel}>
+                      Zip/Postal Code:
+                    </div>
+                    <div className={styles.fieldInput}>                
+                      <ItemTextFieldDisplay field={this._itemContext.getField("PrimaryZipPostalCode") } itemContext={ this._itemContext } />
+                    </div>
+                  </div>                
+                  <div className={styles.fieldArea}>
+                    <div className={styles.fieldLabel}>
+                      State/Province:
+                    </div>
+                    <div className={styles.fieldInput}>
+                      <ItemTextFieldDisplay field={this._itemContext.getField("PrimaryStateProvince") } itemContext={ this._itemContext } />
+                    </div>
+                  </div>
+                  <div className={styles.fieldArea}/>
+                    <div className={styles.fieldLabel}>
+                      Country:
+                    </div>
+                    <div className={styles.fieldInput}>
+                      <ItemTextFieldDisplay field={this._itemContext.getField("PrimaryCountry") } itemContext={ this._itemContext } />
+                    </div>
+                  </div>
+              </div>
+            </PivotItem>            
+            <PivotItem key="miscellaneous" linkText="Miscellaneous">
+              <div className={styles.pivotInterior}>
+                <div className={styles.iteratorArea}>
+                  <ItemFieldIterator isDisplayOnly={ true } excludedFields={ ["Title", "Notes", "Description", "Created", "Modified", "Editor", "Author", "PrimaryAddress", "PrimaryStateProvince", "PrimaryCity", "PrimaryCountry", "PrimaryZipPostalCode", "Logo"] } itemContext={ this._itemContext } />
+                </div>
+                { personsContent }
+              </div>
+            </PivotItem>
             <PivotItem key="history" linkText="History">
-              <div className={ styles.displayArea }>
-                <div className={ styles.displayHeader }>Created:</div> 
-                <ItemDateFieldDisplay field={this._itemContext.getField("Created") } itemContext={ this._itemContext } />
-              </div>
-              <div className={ styles.displayArea }>
-                <div className={ styles.displayHeader }>Creator:</div>
-                <ItemPeopleFieldDisplay field={this._itemContext.getField("Author") } itemContext={ this._itemContext } />
-              </div>
-              <div className={ styles.displayArea }>
-                <div className={ styles.displayHeader }>Modified:</div>
-                <ItemDateFieldDisplay field={this._itemContext.getField("Modified") } itemContext={ this._itemContext } />
-              </div>
-              <div className={ styles.displayArea }>
-                <div className={ styles.displayHeader }>Last Edited By:</div>
-                <ItemPeopleFieldDisplay field={this._itemContext.getField("Editor") } itemContext={ this._itemContext } />
+              <div className={styles.pivotInterior}>
+                <div className={ styles.displayArea }>
+                  <div className={ styles.displayHeader }>Created:</div> 
+                  <ItemDateFieldDisplay field={this._itemContext.getField("Created") } itemContext={ this._itemContext } />
+                </div>
+                <div className={ styles.displayArea }>
+                  <div className={ styles.displayHeader }>Creator:</div>
+                  <ItemPeopleFieldDisplay field={this._itemContext.getField("Author") } itemContext={ this._itemContext } />
+                </div>
+                <div className={ styles.displayArea }>
+                  <div className={ styles.displayHeader }>Modified:</div>
+                  <ItemDateFieldDisplay field={this._itemContext.getField("Modified") } itemContext={ this._itemContext } />
+                </div>
+                <div className={ styles.displayArea }>
+                  <div className={ styles.displayHeader }>Last Edited By:</div>
+                  <ItemPeopleFieldDisplay field={this._itemContext.getField("Editor") } itemContext={ this._itemContext } />
+                </div>
               </div>
             </PivotItem>
           </Pivot>

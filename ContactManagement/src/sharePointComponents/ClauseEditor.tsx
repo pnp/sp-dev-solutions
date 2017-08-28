@@ -6,6 +6,7 @@ import styles from './sharePointComponents.module.scss';
 import Clause, { ClauseType, ClauseTypeJoin } from '../data/Clause';
 import { ISPList } from '../data/ISPList';
 import { ISPField, FieldTypeKind } from '../data/ISPField';
+import { ISharePointDataProvider } from '../data/ISharePointDataProvider';
 import { ISharePointItem } from '../data/ISharePointItem';
 
 import { DropdownEx, IDropdownExOption } from './DropdownEx';
@@ -18,6 +19,7 @@ export interface IClauseEditorProps {
   list: ISPList;
   isFirst : boolean;
   hasMultiple : boolean;
+  dataProvider: ISharePointDataProvider;
 }
 
 export interface IClauseEditorState {
@@ -119,6 +121,7 @@ export default class ClauseEditor extends React.Component<IClauseEditorProps, IC
     {
       ic.itemId = 0;
       ic.itemObject = { };
+      ic.dataProvider = this.props.dataProvider;
       ic.itemObject[sourceField.InternalName] = this.props.clause.value;
       ic.list = {
         Title: ""

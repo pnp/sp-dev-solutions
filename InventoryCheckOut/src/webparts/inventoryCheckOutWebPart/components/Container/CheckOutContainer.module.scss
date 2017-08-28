@@ -1,0 +1,58 @@
+.inventorycheckout{
+  margin: 0;  
+  .page{
+    .error{
+      color: red;
+    }
+     
+  }
+.topcontrol{
+  min-height:30px;
+  margin-bottom: 12px;
+}
+ .marginright12{
+  margin-right: 12px;
+}
+
+.brandArea
+{
+    margin-top: 16px;
+    border-top: solid 1px #F0F0F0;
+}
+
+.brandContent
+{
+    padding-top: 2px;
+    font-size: small;
+    padding-bottom: 2px;
+}
+
+.brandLink
+{
+  color: #D0D0D0;
+  text-decoration: none;  
+}
+
+.iconArea
+{
+    position: relative;
+    top: 5px;
+    padding-right: 10px;
+    font-size: large;
+}
+
+.checkOutList {
+  padding-left:40px;
+  padding-right:6px;
+}
+.leftpanelcontent {
+    padding: 0 12px 0 0;
+    }
+.rightpanelcontent {
+    padding: 0 0 0 12px;
+    button{
+      margin: 12px 12px 12px 0;
+      }
+    border-left: solid black 1px;
+    }
+}

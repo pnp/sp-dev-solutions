@@ -5,7 +5,7 @@ import styles from './sharePointComponents.module.scss';
 
 import { FieldComponent, IFieldComponentProps, IFieldComponentState } from './FieldComponent';
 import { ISPUser } from '../data/ISPUser';
-import { IDropdownOption } from 'office-ui-fabric-react';
+import { IDropdownOption, IPickerItemProps } from 'office-ui-fabric-react';
 
 import {
   CompactPeoplePicker
@@ -15,7 +15,7 @@ import Utility  from '../utilities/Utility';
 import { IPersonaProps, PersonaPresence, PersonaSize } from 'office-ui-fabric-react/lib/Persona';
 
 export interface IItemPeopleFieldEditorProps extends IFieldComponentProps {
-
+  displayMe? : boolean;
 }
 
 export interface IItemPeopleFieldEditorState extends IFieldComponentState {
@@ -58,10 +58,10 @@ export default class ItemPeopleFieldEditor extends FieldComponent<IItemPeopleFie
                 primaryText: user.Title,
         //        imageUrl : user.Picture != null ? user.Picture.Url : "",
                 imageUrl: user.EMail != null ? "https://outlook.office365.com/owa/service.svc/s/GetPersonaPhoto?email=" + user.EMail + "&amp;UA=0&amp;size=HR64x64" : null,                       
-                presence : PersonaPresence.none,
-                size : PersonaSize.small,
-                key : user.Id,
-                tag : user          
+                presence: PersonaPresence.none,
+                size: PersonaSize.small,
+                key: user.Id,
+                tag: user          
               };
 
               personas.push(persona);
@@ -123,15 +123,24 @@ export default class ItemPeopleFieldEditor extends FieldComponent<IItemPeopleFie
       return this.props.itemContext.readUsersBySearch(filterText).then( (users: ISPUser[]) =>
         {
             var personas : IPersonaProps[] = new Array();
-            
+
+            var personaMe = {
+              primaryText: "[me]",
+              size: PersonaSize.small,
+              presence: PersonaPresence.none,
+              key: "Ume" 
+            };
+
+            personaMe["tag"] = { "Id": "[me]" };
+            personas.push(personaMe);
+
             for (var user of users)
             {
               var persona = {
                 primaryText: user.Title,
-        //        imageUrl : user.Picture != null ? user.Picture.Url : "",
                 imageUrl: user.EMail != null ? "https://outlook.office365.com/owa/service.svc/s/GetPersonaPhoto?email=" + user.EMail + "&amp;UA=0&amp;size=HR64x64" : null,       
                 size : PersonaSize.small,
-                presence : PersonaPresence.none,
+                presence: PersonaPresence.none,
                 key: "U" + user.Id
               };
 

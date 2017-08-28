@@ -16,6 +16,7 @@ export interface IOrganization extends ISharePointItem {
     PrimaryStateProvince? : string;
     PrimaryCountry? : string;
     PrimaryZipPostalCode? : string;
+    Status? : string;
     OwnerId? : number;
 }
 

@@ -1,0 +1,39 @@
+.itemdetail{
+    
+     >div{width:100%;}
+     .title
+     {
+
+         font-size:x-large;
+         font-weight:bold;
+     }
+     .details
+     {
+         padding-left: 40px;
+     }
+     .buttonBar
+     {
+         display: inline-block;
+         background-color: #eaeaea;
+         padding-top: 10px;
+         padding-bottom: 10px;
+     }
+     .control{    
+         text-align: right;  
+         button {
+                margin:0 12px;max-width:20px;height:auto;
+            }
+     }
+
+     .backButton
+     {
+         position: relative;
+         left: -8px;
+         top: 4px;
+     }
+
+     .desc{margin:6px 0 12px 0;padding-left: 4px;}
+     .items{margin:6px 0;}
+     .btn button{margin:20px 12px 20px 0;}
+     br{clear: both;}
+}

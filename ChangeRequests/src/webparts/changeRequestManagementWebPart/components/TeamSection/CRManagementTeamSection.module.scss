@@ -1,0 +1,67 @@
+.crmanagementteamsection{
+    padding: 16px;
+    background-color: #f4f4f4;
+    border-top: solid 1px #f0f0f0;
+    border-bottom: solid 1px #f0f0f0;
+
+    .formHeader
+    {
+        padding-top:5px;
+    }
+
+    .infoIcon
+    {
+        position: relative;
+        top: 3px;
+        left: 2px;
+    }
+
+    h3{
+        line-height: 1em;
+        color: black;
+        font-weight: bold;
+        margin-top: 0px;
+        padding-top: 0px;
+        padding-bottom: 20px;
+    }
+    h3 i{
+        position: relative;
+        top: 1px;
+        left: 7px;
+        color: #385492;
+        font-size: 18px;
+    }
+    .peoplepicker{
+        margin-bottom: 8px;
+    }
+
+    .peoplepicker input{
+        display: none;
+    }
+
+    .peoplepicker > div > div > div > input:nth-child(1){
+        display: block;
+    }
+
+    .hidden > div{
+        visibility: hidden;
+    }
+
+    .tab button {
+        margin: 0!important;
+        height: 30px!important;
+        width: 33%!important;
+        background-color: lightblue;
+    }
+
+    .tab button *{
+        justify-content: center!important;
+        text-align: center!important;
+    }
+    .tab button[aria-selected="true"]{
+        background-color: gray!important;
+    }
+        .tab button[aria-selected="false"]{
+        background-color: white;
+    }
+}

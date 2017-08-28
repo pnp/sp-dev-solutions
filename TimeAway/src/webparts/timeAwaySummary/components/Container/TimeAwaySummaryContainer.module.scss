@@ -1,0 +1,53 @@
+.timeawaySummary {
+  .page{
+    padding:0;
+  }
+  .link{
+    padding: 0;
+  }
+  .row{
+    margin: 15px 0;
+  }
+  .row label{
+    font-weight: bold;
+  }
+
+  .row p{
+    padding-left: 20px;
+  }
+  
+  .error{
+    color: red;
+  }
+
+  .brandArea
+  {
+      margin-top: 16px;
+      border-top: solid 1px #F0F0F0;
+      color: #D0D0D0;
+    }
+
+  .timeAwayAction > div > span {
+    color: #2488d8 !important;
+  }
+
+  .brandContent
+  {
+      padding-top: 2px;
+      font-size: small;
+      padding-bottom: 2px;
+  }
+  
+  .iconArea
+  {
+      position: relative;
+      top: 5px;
+      padding-right: 10px;
+      font-size: large;
+  }
+
+  .brandLink{
+    text-decoration: none;
+    color: #D0D0D0;
+  }
+}

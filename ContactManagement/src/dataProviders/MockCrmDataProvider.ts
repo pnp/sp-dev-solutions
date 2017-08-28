@@ -47,6 +47,9 @@ export default class MockCrmDataProvider extends BaseCrmDataProvider implements 
       orgs.push(this._generateTagItem('Contoso.' + i + '.' + Utility.generateRandomId()));
     }
 
+    orgs.push(this._generateOrganizationItem('Fabrikam', 'Bravo'));
+    orgs.push(this._generateOrganizationItem('VanArsdel Ltd', 'Bravo'));
+    
     let people: IPerson[] = new Array();
     
     for (let i=0; i< 20; i++)
@@ -146,6 +149,24 @@ export default class MockCrmDataProvider extends BaseCrmDataProvider implements 
             filteredItems.push(item);
           }
         }
+      }
+    }
+
+    return new Promise<ISPUser[]>((resolve) => {
+      setTimeout(() => resolve(filteredItems), 500);
+    });
+  }
+
+  public readUsersByUserName(userName : string): Promise<ISPUser[]> {
+    const items: ISPUser[] = this._usersStore["Users"].slice(0, this._maxNumberOfPersons);
+
+    const filteredItems : ISPUser[] = new Array();
+
+    for (let item of items)
+    {
+      if (item.Name == userName || item.EMail == userName)
+      {
+        filteredItems.push(item);
       }
     }
 

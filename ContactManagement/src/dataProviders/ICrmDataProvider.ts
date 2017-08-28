@@ -12,6 +12,8 @@ import { IOrganizationSet } from './IOrganizationSet';
 import { ITagSet } from './ITagSet';
 import { ISPView } from '../data/ISPView';
 
+import { ISPUser } from '../data/ISPUser';
+
 import { IEvent } from '../utilities/Events';
 
 export interface ICrmDataProvider extends ISharePointDataProvider {
@@ -22,6 +24,8 @@ export interface ICrmDataProvider extends ISharePointDataProvider {
   defaultPersonList: ISPList;
   defaultOrganizationList: ISPList;
   defaultTagList: ISPList;
+  
+  meUser : ISPUser;
 
   init() : Promise<void>;
 

@@ -1,0 +1,17 @@
+.mytimeawaylist{
+    margin: 0;
+
+    button:nth-child(2){
+        position: absolute;
+        right: 62px;
+        top: -3px;
+        min-width: 32px!important;
+    }
+
+    button:nth-child(3){
+        position: absolute;
+        right: 10px;
+        top: -3px;
+        min-width: 32px!important;
+    }
+}

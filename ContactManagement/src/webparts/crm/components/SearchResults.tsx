@@ -127,7 +127,7 @@ export default class SearchResults extends React.Component<ISearchResultsProps, 
               return <div key={"PDR" + object.Id} className={ styles.searchResultItem } onClick={me._handleOrganizationClick}>
                       <div className={ styles.searchResultItemInner }>
                         <div className={ styles.searchResultItemInnerA }>
-                          <div title='a' data-objectid={object.Id}>
+                          <div data-objectid={object.Id}>
                           <b>{object.Title}</b>
                           </div>
                         </div>

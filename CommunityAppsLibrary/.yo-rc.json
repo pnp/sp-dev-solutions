@@ -1,0 +1,8 @@
+{
+  "@microsoft/generator-sharepoint": {
+    "libraryName": "spca",
+    "framework": "react",
+    "version": "1.0.2",
+    "libraryId": "fda66e22-a8d8-4263-9c41-5b54c1ef16e1"
+  }
+}

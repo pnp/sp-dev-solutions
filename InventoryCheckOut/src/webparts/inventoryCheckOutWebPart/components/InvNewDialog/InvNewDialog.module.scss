@@ -1,0 +1,24 @@
+
+.invNewDialog{
+    
+    min-width: 500px;
+    max-width: 800px;
+    margin: 0;
+    .main{min-width: 400px;}
+   .title{font-weight:bold;}
+    .container{
+        padding:12px 0;
+        br{clear:both;}
+    }
+    
+    .leftcolumn {
+        width: 30%;
+        float: left;
+        padding-top: 7px;
+    }
+    .rightcolumn{width:69%;float:left;
+    input{min-width: 301px;}
+    }
+    textarea{min-height: 100px;min-width: 300px;}
+    .error{color: red;}
+}

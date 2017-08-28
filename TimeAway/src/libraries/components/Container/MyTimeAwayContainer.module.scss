@@ -1,0 +1,19 @@
+.page{
+    margin: 0;
+    i{
+      color: black!important;
+    }
+    button:before{
+      height: 0!important;
+    }
+    div[role="tabpanel"]{
+      padding: 0 8px!important;
+      margin-left: 10px!important;
+    }
+    .addNewAction > div > span {
+      color: #2488d8 !important;
+    }
+    .error{
+      color: red;
+    }
+  }

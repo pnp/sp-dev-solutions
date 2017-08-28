@@ -32,6 +32,7 @@ export default class SharePointCrmDataProvider extends BaseCrmDataProvider imple
   private _tagListUrl: string;
   private _usersListUrl: string;
   private _webUrl: string;
+  private _meUserLoginName : string;
 
   private _personFieldListSelect = "$select=Id,Title,FirstName,Company,OrganizationId";
   private _organizationFieldListSelect = "$select=Id,Title";
@@ -39,6 +40,12 @@ export default class SharePointCrmDataProvider extends BaseCrmDataProvider imple
 
   public get httpClient() : SPHttpClient { return this._httpClient; }
   public set httpClient(value : SPHttpClient) { this._httpClient = value; }
+
+  public get meUserLoginName() : string { return this.webUrl; }
+  public set meUserLoginName(newValue : string) 
+  {
+    this._meUserLoginName = newValue;
+  }
 
   public get webUrl() : string { return this.webUrl; }
   public set webUrl(newValue : string) 
@@ -289,6 +296,10 @@ export default class SharePointCrmDataProvider extends BaseCrmDataProvider imple
     return this._getUsers(query, this._httpClient);
   }
 
+  public readUsersByUserName(userName : string): Promise<ISPUser[]> {
+    return this._getUsers("UserName eq '" + userName + "'", this._httpClient);
+  }
+
   public readUsersBySearch(search : string): Promise<ISPUser[]> {
     return this._getUsers("substringof('" + search + "', Title)", this._httpClient);
   }
@@ -427,6 +438,17 @@ export default class SharePointCrmDataProvider extends BaseCrmDataProvider imple
         this._selectedTagList.Id = listProto.Id.toString();
       });
 
+    let meUserListDataPromise = batch.get(this._usersListUrl + "/items?$filter=UserName eq '" + this._meUserLoginName + "'", SPHttpClientBatch.configurations.v1, this._getStandardHttpClientOptions())
+      .then((response: SPHttpClientResponse) => {
+        return response.json();
+      })
+      .then((users) => {
+        if (users.value != null && users.value.length == 1)
+        {
+          this.meUser = users.value[0];
+        }
+      });
+
     let orgListFieldDataPromise = batch.get(this._organizationListUrl + "/fields?$select=ID,InternalName,Title,FieldTypeKind,Choices,RichText,AllowMultipleValues,MaxLength,LookupList&$filter=Hidden eq false and FieldTypeKind ne 12 and InternalName ne 'AppEditor' and InternalName ne 'AppAuthor'", SPHttpClientBatch.configurations.v1, this._getStandardHttpClientOptions())
       .then((response: SPHttpClientResponse) => {
         return response.json();
@@ -473,6 +495,7 @@ export default class SharePointCrmDataProvider extends BaseCrmDataProvider imple
       orgListDataPromise,
       tagsListDataPromise,
       orgListFieldDataPromise,
+      meUserListDataPromise,
       personListFieldDataPromise
     ];
 

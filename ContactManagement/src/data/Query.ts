@@ -9,6 +9,7 @@ export default class Query
 {
     public clauses : Clause[];
     public onQueryChange? : QueryCallback;
+    public meUserId : number;
 
     public constructor()
     {
@@ -23,6 +24,8 @@ export default class Query
     public static fromData(incomingQuery : Query) : Query
     {
         var newQuery = new Query();
+
+        newQuery.meUserId = incomingQuery.meUserId;
 
         if (incomingQuery == null)
         {
@@ -131,7 +134,11 @@ export default class Query
 
                         query += " ";
 
-                        if (field.FieldTypeKind == FieldTypeKind.Text || field.FieldTypeKind == FieldTypeKind.Choice)
+                        if (field.FieldTypeKind == FieldTypeKind.User && (clause.value == "[Me]" || clause.value == "[me]"))
+                        {
+                            query += this.meUserId;
+                        }
+                        else if (field.FieldTypeKind == FieldTypeKind.Text || field.FieldTypeKind == FieldTypeKind.Choice)
                         {
                             query += "'" +clause.value + "'";
                         }

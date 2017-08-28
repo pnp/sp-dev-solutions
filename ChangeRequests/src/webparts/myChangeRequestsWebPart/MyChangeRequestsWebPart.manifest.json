@@ -1,0 +1,23 @@
+{
+  "$schema": "../../../node_modules/@microsoft/sp-module-interfaces/lib/manifestSchemas/jsonSchemas/clientSideComponentManifestSchema.json",
+
+  "id": "fc1fa611-07f5-4af4-b9eb-d59da23fec1f",
+  "alias": "MyChangeRequestsWebPart",
+  "componentType": "WebPart",
+  "version": "0.0.1",
+  "manifestVersion": 2,
+
+  "preconfiguredEntries": [{
+    "groupId": "fc1fa611-07f5-4af4-b9eb-d59da23fec1f",
+    "group": { "default": "Under Development" },
+    "title": { "default": "My Change Requests" },
+    "description": { "default": "My Change Requests" },
+    "officeFabricIconFontName": "Page",
+    "properties": {
+      "newcrdisplays": "1",
+      "newcrtext": "If you have an issue or question, please let us know.",
+      "newcrsubmissiontext": "Thank you for submitting your change request.",
+      "newcrbuttontext": "Create New Change Request"
+    }
+  }]
+}

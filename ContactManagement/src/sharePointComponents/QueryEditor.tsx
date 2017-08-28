@@ -5,6 +5,7 @@ import styles from './sharePointComponents.module.scss';
 
 import Query, { QueryCallback } from '../data/Query';
 import Clause, { ClauseType, ClauseTypeJoin } from '../data/Clause';
+import { ISharePointDataProvider } from '../data/ISharePointDataProvider';
 import { ISPList } from '../data/ISPList';
 import ClauseEditor from './ClauseEditor';
 
@@ -13,6 +14,7 @@ import { Button } from 'office-ui-fabric-react';
 export interface IQueryEditorProps {
   query: Query;
   list: ISPList;
+  dataProvider: ISharePointDataProvider;
   displayApplyButton: boolean;
   onApply?: QueryCallback;
 }
@@ -70,7 +72,7 @@ export default class QueryEditor extends React.Component<IQueryEditorProps, IQue
             this.props.query.clauses.map( (clause, i) =>
             {
                   return <div data-clauseId={ i } key={ "CL" + i }>
-                            <ClauseEditor hasMultiple={ this.props.query.clauses.length > 1 } isFirst= { i == 0 } key={ "CE" + i } list={ me.props.list } clause={ clause } />
+                            <ClauseEditor hasMultiple={ this.props.query.clauses.length > 1 } dataProvider={ this.props.dataProvider } isFirst= { i == 0 } key={ "CE" + i } list={ me.props.list } clause={ clause } />
                          </div>;
             }) 
           }

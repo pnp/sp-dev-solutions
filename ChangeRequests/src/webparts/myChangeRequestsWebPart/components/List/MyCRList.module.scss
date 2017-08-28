@@ -1,0 +1,25 @@
+  .mychangerequestlist{
+    margin: 0;
+    clear: both;
+    float: none;
+    border: 1px solid #E0E0E0;
+    .mycrheadergrid{
+        margin: 0;
+        padding: 0;
+        .mycrlistheader{
+            margin: 0;
+            padding: 0;
+            background-color: #F8F8F8;
+            border-bottom: 1px solid #E0E0E0;
+            .mycrlistcol{
+                border-right: 1px solid #E0E0E0; 
+                padding-top: 6px;
+                padding-bottom: 6px;
+                }
+            .mycrlistcolend{
+                padding-top: 6px;
+                padding-bottom: 6px;
+                }
+            }
+        }
+    }

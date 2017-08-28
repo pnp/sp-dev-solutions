@@ -3,11 +3,14 @@ import { css } from 'office-ui-fabric-react';
 import styles from '../Crm.module.scss';
 import { ICrmComponentProps } from '../ICrmComponentProps';
 
-import { CommandBar, IContextualMenuItem } from 'office-ui-fabric-react';
+import { CommandBar, IContextualMenuItem, Dialog, DialogType, DialogFooter } from 'office-ui-fabric-react';
 
 import DialogUtility from '../../../utilities/DialogUtility';
 
 import ViewSet from '../../../data/ViewSet';
+import View from '../../../data/View';
+import Clause, { ClauseType } from '../../../data/Clause';
+import OrganizationSet from '../../../dataProviders/OrganizationSet';
 import { IPerson } from '../../../data/IPerson';
 import { IOrganization } from '../../../data/IOrganization';
 import { ITagSet } from '../../../dataProviders/ITagSet';
@@ -33,6 +36,13 @@ export interface IPickerItem
   name: string;
 }
 
+export enum CrmDialogMode
+{
+  None = 0,
+  Organization = 1,
+  Person = 2
+}
+
 export enum CrmMode
 {
   Loading = 0,
@@ -55,6 +65,8 @@ export interface ICrmProps extends ICrmComponentProps {
 export interface ICrmState {
   lastMode: CrmMode;
   mode: CrmMode;
+  isContextMenuShown?: boolean;
+  dialogMode: CrmDialogMode,
   searchTerm?: string;
   searchTags?: number[];
 	selectedPerson?: IPerson;
@@ -66,6 +78,7 @@ export default class Crm extends React.Component<ICrmProps, ICrmState> {
   private _organizationDisplay : OrganizationDisplay;
   private _personDisplay : PersonDisplay;
   private _lastMode? : CrmMode;
+  private container;
 
   public constructor(props?: ICrmProps, context?: any)
   {
@@ -73,6 +86,7 @@ export default class Crm extends React.Component<ICrmProps, ICrmState> {
 
     this.state = {
       lastMode: CrmMode.Loading,
+      dialogMode: CrmDialogMode.None,
       mode: CrmMode.Loading,
       isEditing: false
     };
@@ -85,77 +99,111 @@ export default class Crm extends React.Component<ICrmProps, ICrmState> {
     this._handleSearchChanged = this._handleSearchChanged.bind(this);
     this._handleNewPersonClick = this._handleNewPersonClick.bind(this);
     this._handleNewOrganizationClick = this._handleNewOrganizationClick.bind(this);
-}
+    this._hideDialog = this._hideDialog.bind(this);
+    this._confirmDialog = this._confirmDialog.bind(this);
+  }
 
   public componentWillMount()
   {
-       var errs = this.props.manager.data.getErrors();
+    var errs = this.props.manager.data.getErrors();
 
-       var mode = CrmMode.OrganizationDirectory;
+    var mode = CrmMode.OrganizationDirectory;
 
-       if (errs != null && errs.length > 0)
-       {
-         mode = CrmMode.Error;
-       }
+    let locationHash = location.hash;
 
-       this.setState({
-        searchTerm: this.state.searchTerm,
-        searchTags: this.state.searchTags,
-        lastMode: mode,
-        mode: mode,
-        selectedOrganization: this.state.selectedOrganization,
-        selectedPerson: this.state.selectedPerson ,
-        isEditing: false     
-       });
+    if (locationHash != null)
+    {
+      locationHash = locationHash.trim().replace("#", "");
+        
+      if (locationHash == "people")
+      {
+        mode = CrmMode.PersonDirectory;
+      }
 
-/*     {
-     }, (error : any) => {
+      if (locationHash.length > 8 && locationHash.substring(0, 4) == "org(")
+      {
+        let view = new View();
+        let titleEqualsValue = new Clause();
+        titleEqualsValue.fieldName = "Title";
+        titleEqualsValue.clauseType = ClauseType.Equals;
+        titleEqualsValue.value = locationHash.substring(4, locationHash.length - 1);
+        view.query.addClause(titleEqualsValue);
 
-       this.setState({
-        searchTerm: this.state.searchTerm,
-        searchTags: this.state.searchTags,
-        lastMode: CrmMode.Error,
-        mode: CrmMode.Error,
-        selectedOrganization: this.state.selectedOrganization,
-        selectedPerson: this.state.selectedPerson ,
-        isEditing: false     
-       });
-     });*/
+        this.props.manager.data.readOrganizationItemsByView(view).then((organizationSet : OrganizationSet) =>
+        {
+          if (organizationSet != null && organizationSet.organizations.length == 1)
+          {            
+            this.setState({
+              searchTerm: this.state.searchTerm,
+              searchTags: this.state.searchTags,
+              lastMode: mode,
+              dialogMode: this.state.dialogMode, 
+              mode: CrmMode.Organization,
+              selectedOrganization: organizationSet.organizations[0],
+              selectedPerson: null,
+              isEditing: false     
+            });
+          }
+        });
+      }
+    }
+
+    if (errs != null && errs.length > 0)
+    {
+      mode = CrmMode.Error;
+    }
+
+    this.setState({
+      searchTerm: this.state.searchTerm,
+      searchTags: this.state.searchTags,
+      dialogMode: this.state.dialogMode, 
+      lastMode: mode,
+      mode: mode,
+      selectedOrganization: this.state.selectedOrganization,
+      selectedPerson: this.state.selectedPerson,
+      isEditing: false     
+    });
   }
 
-  private _handleNewPersonClick(val: any)
-  {    
-    const personEditElement : React.ReactElement<IPersonEditProps> = React.createElement(
-      PersonEdit,
-      {
-        person: null,
-        manager: this.props.manager,
-        ensureNew: true,
-        isDialog: true
-      }
-    );
-        
-    DialogUtility.showDialog(personEditElement, {
-      displaySaveButton: true,
-      dialogTitle: "Add Person"
+  private _confirmDialog()
+  {
+    DialogUtility.doSaveCallout();
+    this._hideDialog();
+  }
+
+  private _hideDialog()
+  {
+    this.setState({
+      lastMode: this.state.lastMode,
+      mode: this.state.mode,
+      dialogMode: CrmDialogMode.None, 
+      selectedPerson: this.state.selectedPerson,
+      selectedOrganization: this.state.selectedOrganization,
+      isEditing: false
     });
   }
 
   private _handleNewOrganizationClick(val: any)
-  {    
-    const organizationEditElement : React.ReactElement<IOrganizationEditProps> = React.createElement(
-      OrganizationEdit,
-      {
-        organization: null,
-        manager: this.props.manager,
-        ensureNew: true,
-        isDialog: true
-      }
-    );
+  { 
+    this.setState({
+      lastMode: this.state.lastMode,
+      mode: this.state.mode,
+      dialogMode: CrmDialogMode.Organization, 
+      selectedPerson: this.state.selectedPerson,
+      selectedOrganization: this.state.selectedOrganization,
+      isEditing: false
+    });
+  }
 
-    DialogUtility.showDialog(organizationEditElement, {
-      displaySaveButton: true,
-      dialogTitle: "Add Organization"
+  private _handleNewPersonClick(val: any)
+  { 
+    this.setState({
+      lastMode: this.state.lastMode,
+      mode: this.state.mode,
+      dialogMode: CrmDialogMode.Person, 
+      selectedPerson: this.state.selectedPerson,
+      selectedOrganization: this.state.selectedOrganization,
+      isEditing: false
     });
   }
 
@@ -164,6 +212,7 @@ export default class Crm extends React.Component<ICrmProps, ICrmState> {
     this.setState({
       lastMode: this.state.mode,
       mode: CrmMode.Person,
+      dialogMode: this.state.dialogMode, 
       selectedPerson: val,
       isEditing: false
     });
@@ -174,6 +223,7 @@ export default class Crm extends React.Component<ICrmProps, ICrmState> {
     this.setState({      
       lastMode: this.state.mode,
       mode: CrmMode.Organization,
+      dialogMode: this.state.dialogMode, 
       selectedOrganization: val,
       isEditing: false
     });
@@ -187,6 +237,7 @@ export default class Crm extends React.Component<ICrmProps, ICrmState> {
         searchTerm: newValue,
         searchTags: this.state.searchTags,
         lastMode: this.state.mode,
+        dialogMode: this.state.dialogMode, 
         mode: CrmMode.Search,
         selectedOrganization: this.state.selectedOrganization,
         selectedPerson: this.state.selectedPerson ,
@@ -199,6 +250,7 @@ export default class Crm extends React.Component<ICrmProps, ICrmState> {
         searchTerm: newValue,
         searchTags: this.state.searchTags,
         lastMode: this.state.mode, 
+        dialogMode: this.state.dialogMode, 
         mode: CrmMode.OrganizationDirectory,
         selectedOrganization: this.state.selectedOrganization,
         selectedPerson: this.state.selectedPerson,
@@ -218,6 +270,7 @@ export default class Crm extends React.Component<ICrmProps, ICrmState> {
        this.setState({
           searchTerm: this.state.searchTerm,
           searchTags: null,
+          dialogMode: this.state.dialogMode,           
           lastMode: CrmMode.OrganizationDirectory,
           mode: CrmMode.OrganizationDirectory,
           selectedOrganization: this.state.selectedOrganization,
@@ -238,7 +291,8 @@ export default class Crm extends React.Component<ICrmProps, ICrmState> {
        this.setState({
           searchTerm: this.state.searchTerm,
           searchTags: selectedItems,
-          lastMode: this.state.mode,          
+          lastMode: this.state.mode,         
+          dialogMode: this.state.dialogMode,          
           mode: CrmMode.Search,
           selectedOrganization: this.state.selectedOrganization,
           selectedPerson: this.state.selectedPerson,
@@ -250,16 +304,6 @@ export default class Crm extends React.Component<ICrmProps, ICrmState> {
   public _handleModeChanged(mode: CrmMode)
   {
     this._lastMode = mode;
-    /*
-     this.setState({
-          searchTerm: this.state.searchTerm,
-          searchTags: this.state.searchTags,
-          lastMode: mode,          
-          mode: mode,
-          selectedOrganization: this.state.selectedOrganization,
-          selectedPerson: this.state.selectedPerson,
-          isEditing: this.state.isEditing
-        }); */
   }
 
   private _onFilterChanged(filterText: string, tagList: IPickerItem[])  
@@ -294,11 +338,81 @@ export default class Crm extends React.Component<ICrmProps, ICrmState> {
     }
   }
 
+  /*
+  private _renderSplitButtonMenuItem(item: IContextualMenuItem) {
+    let darkerBG = this.state.isContextMenuShown && styles.darkerBG;
+
+    let dropDownButtonClass = css(
+      styles.button,
+      darkerBG
+    );
+    let mainBtnClassName = css(
+      !item.name && ('ms-CommandBarItem--noName'),
+      styles.button,
+      darkerBG
+    );
+
+    return (
+      <div>
+        <div className={ css(
+          styles.customButtonContainer,
+          darkerBG
+        ) } ref={ ref => this.container = ref }>
+          <Button
+            className={ mainBtnClassName }
+            iconProps={ { iconName: 'Add' } }
+            text='New' />
+          <span className={ styles.splitter }>|</span>
+          <DefaultButton
+            onClick={ this._onClickChevron }
+            className={ dropDownButtonClass }
+            menuProps={ {
+              className: css('ms-CommandBar-menuHost'),
+              items:  {
+                  items: [
+                    {
+                      key: 'emailMessage',
+                      name: 'Email message',
+                      icon: 'Mail',
+                      ['data-automation-id']: 'newEmailButton'
+                    },
+                    {
+                      key: 'calendarEvent',
+                      name: 'Calendar event',
+                      icon: 'Calendar',
+                      ['data-automation-id']: 'newCalendarButton'
+                    }
+                  ],
+                },
+            } } />
+        </div>
+      </div >
+    );
+  }
+
+  private _onClickChevron(ev: any) {
+    ev.stopPropagation();
+    this._toggleDropDownMenuShown(ev);
+  }
+
+  private _toggleDropDownMenuShown(ev: any) {
+    this.setState({
+      searchTerm: this.state.searchTerm,
+      searchTags: this.state.searchTags,
+      lastMode: this.state.lastMode,         
+      dialogMode: this.state.dialogMode,          
+      mode: this.state.mode,
+      selectedOrganization: this.state.selectedOrganization,
+      selectedPerson: this.state.selectedPerson,
+      isEditing: this.state.isEditing,
+      isContextMenuShown: !this.state.isContextMenuShown
+    });
+  }*/
 
   public render(): React.ReactElement<ICrmProps> {
     var pageRender;
 
-
+    
     var splashHeader = <div>
               	    <CommandBar
                        isSearchBoxVisible={ false }
@@ -377,8 +491,8 @@ export default class Crm extends React.Component<ICrmProps, ICrmState> {
                 </p>
             </div>;
     }
-    else if (  this.state.mode != CrmMode.Person && 
-          this.state.mode != CrmMode.Organization)
+    else if (   this.state.mode != CrmMode.Person && 
+                this.state.mode != CrmMode.Organization)
     {
       pageRender = <Home  manager={ this.props.manager } 
                           mode={ this.state.mode } 
@@ -402,6 +516,7 @@ export default class Crm extends React.Component<ICrmProps, ICrmState> {
 
                   this.setState( { 
                       mode: this._lastMode != null ? this._lastMode : this.state.lastMode, 
+                      dialogMode: this.state.dialogMode, 
                       lastMode: CrmMode.OrganizationDirectory,
                       isEditing: false});
                 }
@@ -414,6 +529,7 @@ export default class Crm extends React.Component<ICrmProps, ICrmState> {
 
                 this.setState( { 
                       mode: this.state.mode, 
+                      dialogMode: this.state.dialogMode, 
                       lastMode: CrmMode.OrganizationDirectory, 
                       isEditing: !this.state.isEditing });
                 }
@@ -436,6 +552,7 @@ export default class Crm extends React.Component<ICrmProps, ICrmState> {
 
                   this.setState( { 
                     mode: this._lastMode != null ? this._lastMode : this.state.lastMode, 
+                    dialogMode: this.state.dialogMode, 
                     lastMode: this._lastMode != null ? this._lastMode : this.state.lastMode, 
                     isEditing: false });
                 }
@@ -446,7 +563,12 @@ export default class Crm extends React.Component<ICrmProps, ICrmState> {
                   this._organizationDisplay.updateOrganizationEdit();
                 }
             
-                this.setState( { mode: this.state.mode, lastMode: this.state.lastMode, isEditing: !this.state.isEditing});
+                this.setState( { 
+                  mode: this.state.mode, 
+                  dialogMode: this.state.dialogMode, 
+                  lastMode: this.state.lastMode, 
+                  isEditing: !this.state.isEditing
+                });
                }}><i className="ms-Icon ms-Icon--Edit" aria-hidden="true"></i></Button>
           </div>
           <OrganizationDisplay manager={ this.props.manager }
@@ -455,19 +577,40 @@ export default class Crm extends React.Component<ICrmProps, ICrmState> {
                isEditing={this.state.isEditing} itemId={this.state.selectedOrganization.Id} organization={ this.state.selectedOrganization } allowEdit={ true }/>
         </div>;              
     }
-
+ 
 	  const menuItems: IContextualMenuItem[] = [ 
-	    { 
-        name: 'New Person', 
-  	    key: 'newPerson',
-        onClick: this._handleNewPersonClick
-      },
-      { 
-        name: 'New Organization', 
-  	    key: 'newOrganization',
-        onClick: this._handleNewOrganizationClick
+        { 
+          name: 'New Person', 
+          key: 'newPerson',
+          onClick: this._handleNewPersonClick
+        },
+        { 
+          name: 'New Organization', 
+          key: 'newOrganization',
+          onClick: this._handleNewOrganizationClick
+        }
+    ];/*        
+        key: 'new',
+        name: 'Add',
+        className: 'ms-CommandBarItem',
+        subMenuProps: {
+          items: [
+            {
+              key: 'emailMessage',
+              name: 'Email message',
+              icon: 'Mail',
+              ['data-automation-id']: 'newEmailButton'
+            },
+            {
+              key: 'calendarEvent',
+              name: 'Calendar event',
+              icon: 'Calendar',
+              ['data-automation-id']: 'newCalendarButton'
+            }
+          ],
+        },
       }
-    ];
+    ];*/
     
     UserInterfaceUtility.applyWorkarounds();
 
@@ -510,6 +653,38 @@ export default class Crm extends React.Component<ICrmProps, ICrmState> {
             </div>
           </div>          
         </div>
+        <Dialog  isOpen={ this.state.dialogMode == CrmDialogMode.Organization }
+          type={ DialogType.largeHeader }    
+          title= { "Organization" }
+          containerClassName = { styles.fullDialog }
+          isBlocking={ true } >
+          <OrganizationEdit
+            organization = { null }
+            manager = { this.props.manager }
+            ensureNew = {true }
+            isDialog = { true }
+          />
+          <DialogFooter>
+            <Button style={{ border: "solid 1px #D0D0D0" }} onClick={ this._confirmDialog }>Save</Button>
+            <Button style={{ border: "solid 1px #D0D0D0" }} onClick={ this._hideDialog }>Cancel</Button>
+          </DialogFooter>
+        </Dialog>
+        <Dialog  isOpen={ this.state.dialogMode == CrmDialogMode.Person }
+          type={ DialogType.largeHeader }    
+          title= { "Person" }
+          containerClassName = { styles.fullDialog }
+          isBlocking={ true } >
+          <PersonEdit
+            person = { null }
+            manager = { this.props.manager }
+            ensureNew = {true }
+            isDialog = { true }
+          />
+          <DialogFooter>
+            <Button style={{ border: "solid 1px #D0D0D0" }} onClick={ this._confirmDialog }>Save</Button>
+            <Button style={{ border: "solid 1px #D0D0D0" }} onClick={ this._hideDialog }>Cancel</Button>
+          </DialogFooter>
+        </Dialog>     
       </div>
     );
   }

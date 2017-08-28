@@ -133,7 +133,8 @@ export default class ItemFieldIterator extends ItemComponent<IItemFieldIteratorP
           ) 
         ))
         {
-          if (me.props != null && (!me.props.isDisplayOnly || !me._isValueEmpty(field)))
+          if (me.props != null)
+          // && (!me.props.isDisplayOnly || !me._isValueEmpty(field)))
           {
             fields.push(field);
           }
@@ -185,27 +186,5 @@ export default class ItemFieldIterator extends ItemComponent<IItemFieldIteratorP
         </div>
       </div>
     );
-/*
-    return (
-      <div className={ styles.itemFieldIterator }>
-        <div className={ styles.table }>
-          {
-            fields.map(function(field : ISPField, i)
-              {
-                return <span key={"SPIF" + i} className={ styles.iteratorRow }>
-                  <span className={ styles.iteratorCell }>
-                    <ItemFieldLabel itemContext={ me.props.itemContext } field={ field } fieldName={ field.InternalName }/>
-                   </span>
-                   <span>
-                    {
-                      me._getFieldElement(field) 
-                    }
-                    </span>
-                  </span>;
-              })
-            }
-        </div>
-      </div>
-    );*/
   }
 }

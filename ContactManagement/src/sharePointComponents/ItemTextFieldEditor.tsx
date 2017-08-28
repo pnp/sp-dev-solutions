@@ -23,7 +23,7 @@ export default class ItemTextFieldEditor extends FieldComponent<IItemTextFieldEd
 
   public render(): JSX.Element {
     return (
-      <div className={styles.sharePointComponent}>
+      <div className={styles.textFieldEditor}>
         <TextField 
           value={ this.valueString }
           placeholder={ this.props.placeholder ? this.props.placeholder : "" }

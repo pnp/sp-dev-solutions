@@ -151,7 +151,6 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
 
   	return (
     	<div className={styles.crm} >
-
         <Pivot ref="pivot" onLinkClick={ this._handleLinkClick }  initialSelectedKey={ activeMode.toString() }>
           { searchPane } 
           <PivotItem  key={ CrmMode.PersonDirectory.toString() } itemKey={ CrmMode.PersonDirectory.toString() }  linkText="People">

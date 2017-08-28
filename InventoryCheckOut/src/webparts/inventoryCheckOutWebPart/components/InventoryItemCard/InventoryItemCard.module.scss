@@ -1,0 +1,30 @@
+.inventoryitemcard {
+    display: inline-block;
+    margin-right: 4px;
+    margin-bottom: 4px;
+    border: solid 1px #D0D0D0;
+    min-width: 160px;
+    max-width: 160px;
+    height: 120px;
+
+    .placeHolder
+    {
+        color:white;
+        font-size: xx-large;
+        padding-top:20px;
+    }
+    .imageArea
+    {
+        min-width: 160px;
+        max-width: 160px;
+        height: 80px;
+        text-align: center;
+        vertical-align: middle;
+        background-color: #E0E0E0;
+        border-bottom: solid 1px #D0D0D0;
+    }
+    .titleArea {
+        display: inline-block;
+        padding: 3px;
+    }
+}

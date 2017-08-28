@@ -1,14 +1,23 @@
+.ms-Persona-presence
+{
+  display: none;
+}
+
 .sharePointComponent 
 {
-  .container
-  {
-    background-color: green;
-  }
-  
   .button 
   {
     text-decoration: none;
   }
+}
+
+.textFieldEditor 
+{
+  INPUT
+  {
+    height: 40px;
+    color: #333333;
+  }  
 }
 
 .clauseEditor
@@ -30,7 +39,7 @@
     padding-right: 4px;
     min-width: 80px;
     padding-top: 2px;
-    height:32px;
+    height:44px;
   }
 
   .cell
@@ -39,7 +48,7 @@
     vertical-align: top;
     padding-right: 4px;
     padding-top: 2px;
-    height:32px;
+    height:44px;
   }
 
   .operatorCell
@@ -48,7 +57,7 @@
     vertical-align: top;
     padding-right: 4px;
     padding-top: 2px;
-    height:32px;
+    height:44px;
   }
 
   .valueCell
@@ -71,7 +80,7 @@
     padding:2px;  
     margin-right:6px;
     width:100%;
-    height: 2.4em;
+    height: 40px;
     border: solid 1px #AAAAAA;
   }
 }

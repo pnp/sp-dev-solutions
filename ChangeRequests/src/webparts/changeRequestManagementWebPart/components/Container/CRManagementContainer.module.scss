@@ -1,0 +1,98 @@
+.container{
+    width: 100%;
+
+    .halfList
+    {
+        overflow: auto;
+        height:100%;
+    }
+
+    .brandArea
+    {
+        margin-top: 16px;
+        border-top: solid 1px #F0F0F0;
+        color: #D0D0D0;
+    }
+
+    .brandContent
+    {
+        padding-top: 2px;
+        font-size: small;
+        padding-bottom: 2px;
+    }
+    
+    .iconArea
+    {
+        position: relative;
+        top: 5px;
+        padding-right: 10px;
+        font-size: large;
+    }
+
+    .fullList
+    {
+        overflow: auto;
+        min-height:240px;
+        height:calc(100vh - 340px);
+    }
+
+    .contentAreaClass
+    {
+        width:100%;
+        min-height: calc(100vh - 340px);
+    }
+
+    .itemArea
+    {
+        background-color: #F0F0F0;
+        padding:16px;
+        border-top: solid 1px #C0C0C0;
+    }
+
+    .itemAreaInterior
+    {
+        background-color: white;
+        border: solid 1px #C0C0C0;
+    }
+    .row{
+        margin: 0;
+    }
+    .error{
+        color: red;
+    }
+    .bottomrow{
+        text-align: right;
+        padding-top:10px;
+        padding-bottom:10px;
+    }
+    .bottomrow button{
+       margin-right: 8px;
+    } 
+    .hideLoading > div:nth-child(1){
+        display: none;
+    }
+    .hideLoading > div:nth-child(2){
+        visibility: visible;
+    }
+    .showLoading > div:nth-child(1){
+        display: block;
+        margin-top: 20px;
+    }
+    .showLoading > div:nth-child(2){
+        visibility: hidden;
+    }
+}
+
+.modelcontainer{
+    min-width: 600px;
+    padding: 30px;
+    .header{
+        margin: 20px;
+    }
+    .body{
+        margin: 20px;
+        button{
+            margin-right: 4px;
+        }
+    }
+}

@@ -1,0 +1,8 @@
+{
+  "@microsoft/generator-sharepoint": {
+    "version": "1.1.1",
+    "libraryName": "inventory-check-out",
+    "libraryId": "409e89a1-db89-4b0f-b599-fa67cc22c273",
+    "environment": "spo"
+  }
+}
