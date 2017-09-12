@@ -80,7 +80,8 @@ export default class TimeAwaySummaryDataProvider implements ITimeAwaySummaryData
             let nextDay = this._getFirstDay(weekType, phase).add(index + 1, 'days');
             return {
               WeekDay : day.format('dddd'),
-              MonthDate : day.format('MMM D'),
+              MonthDate : day.format('D'),
+              Month : day.format('MMM'),
               PersonNameArray : json.value.map((item: any) => {
                 let start: moment.Moment =  moment(item.Start);
                 let end: moment.Moment =  moment(item.End);

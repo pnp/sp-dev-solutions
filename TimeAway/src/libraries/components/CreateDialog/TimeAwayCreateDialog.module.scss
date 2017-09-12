@@ -1,20 +1,38 @@
 .timeawaydialog{
-    min-width: 400px;
+    min-width: 500px;
+    min-height: 450px;
 
     .row{
         margin: 15px 0;
+        display: table-row;
     }
 
-    .row:nth-child(2){
-        margin-top: 0;
+    .formArea
+    {
+        display: table;
+        padding-bottom: 140px;
+    }
+
+    .dataCell
+    {
+        display: table-cell;
+        padding: 4px;
+        min-width: 120px;
     }
 
     .row label{
         padding-bottom: 5px;
     }
 
-    .row textarea{
+    .dataCell textarea{
         height: 150px;
+        width: 380px;
+    }
+
+    .dataCell input
+    {
+        padding: 6px;
+        font-family: "Segoe UI WestEuropean","Segoe UI",-apple-system,BlinkMacSystemFont,Roboto,"Helvetica Neue",sans-serif
     }
 
     .row:last-child{

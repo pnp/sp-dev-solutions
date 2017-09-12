@@ -74,7 +74,8 @@ export default class MockTimeAwaySummaryDataProvider implements ITimeAwaySummary
       let timeAwaySummaryItem: TimeAwaySummaryItem = new TimeAwaySummaryItem();
 
       timeAwaySummaryItem.WeekDay = day.format('dddd').substring(0, 3);
-      timeAwaySummaryItem.MonthDate = day.format('MMM D');
+      timeAwaySummaryItem.MonthDate = day.format('D');
+      timeAwaySummaryItem.Month = day.format('MMM');
       timeAwaySummaryItem.PersonNameArray = items.map((item: IMyTimeAwayItem) => {
         let start1: moment.Moment =  moment(item.start);
         let end1: moment.Moment =  moment(item.end);

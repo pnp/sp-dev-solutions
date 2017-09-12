@@ -51,8 +51,18 @@ export default class TimeAwaySummaryContainer extends React.Component<ITimeAwayS
     if (isInitialized) {
       return (
         <div className={styles.timeawaySummary}>
-          {(
-            <div>
+          {showMyTimeAwayLink ? (
+            <div className={styles.page}>
+              <CommandButton
+                data-automation-id='ShowMyTimeAway'
+                className={styles.timeAwayAction }
+                text={isShowtimeawaySummary ? 'Edit Your Time Away' : 'Group Calendar'}
+                onClick={this._showMyTimeAway.bind(this)} />
+
+            </div>
+          ) : null}
+          { isShowtimeawaySummary ? (
+            <div className={styles.summaryArea}>
               <div className={styles.row}>
                 <TimeAwaySummaryWeek weekType={weekType} phase={Phase.ThisWeek} />
                 <TimeAwaySummaryList weekType={weekType} phase={Phase.ThisWeek} dataProvider={this.props.dataProvider} statusFilter={statusFilter} />
@@ -61,17 +71,6 @@ export default class TimeAwaySummaryContainer extends React.Component<ITimeAwayS
                 <TimeAwaySummaryWeek weekType={weekType} phase={Phase.NextWeek} />
                 <TimeAwaySummaryList weekType={weekType} phase={Phase.NextWeek} dataProvider={this.props.dataProvider} statusFilter={statusFilter} />
               </div>
-            </div>
-          )}
-          {showMyTimeAwayLink ? (
-            <div className={styles.page}>
-              <hr />
-              <CommandButton
-                data-automation-id='ShowMyTimeAway'
-                className={styles.timeAwayAction }
-                text={isShowtimeawaySummary ? 'Edit Your Time Away' : 'Hide Your Time Away Form'}
-                onClick={this._showMyTimeAway.bind(this)} />
-
             </div>
           ) : null}
           {

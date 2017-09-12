@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Elements xmlns="http://schemas.microsoft.com/sharepoint/">
+
+    <ListInstance 
+            FeatureId="00bfea71-de22-43b2-a848-c05709900100"
+            CustomSchema="organizationlistschema.xml"
+            Title="Organizations" 
+            Description="List of organizations"
+            TemplateType="100"
+            Url="Lists/Organizations">
+    </ListInstance>
+
+    <ListInstance 
+            FeatureId="00bfea71-7e6d-4186-9ba8-c047ac750105"
+            Title="Contacts" 
+            Description="List of contacts"
+            TemplateType="105"
+            Url="Lists/Contacts">
+    </ListInstance>
+
+    <ListInstance 
+            FeatureId="00bfea71-de22-43b2-a848-c05709900100"
+            Title="Tags" 
+            Description="List of tags"
+            TemplateType="100"
+            Url="Lists/Tags">
+    </ListInstance>
+
+</Elements>

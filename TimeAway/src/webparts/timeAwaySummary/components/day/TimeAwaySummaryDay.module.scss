@@ -12,30 +12,44 @@
   {
     display: table-cell;
     vertical-align: top;
-    padding-top:8px;
+    padding-top:4px;
     padding-left:4px;
   }
 
   .timeawayCalendarBox
   {
-    width: 90px;
-    height: 100px;
+    width: 70px;
+    height: 82px;
     border: solid 1px #CACACA;
     vertical-align: middle;
     text-align: center;
-    margin: 8px;
+    margin: 6px;
+    box-shadow: 1px 1px 1px #CACACA;
+  }
+
+  .timeawayMonth
+  {
+    text-transform: uppercase;
+    padding-top: 2px;
+    font-size: small;
+    width: 100%;
+    border-top: solid 1px #CACACA;
   }
 
   .timeawayDayOfWeek
   {
     text-transform: uppercase;
-    padding-top: 25px;
+    padding-top: 6px;
     font-size: small;
   }
 
   .timeawayDayNumber
   {
     text-transform: uppercase;
-    font-size: large;
+    font-size: x-large;
+    padding-bottom:8px;
+    padding-top: 2px;
+
+    line-height: 1;
   }
 }

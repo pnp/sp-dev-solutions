@@ -84,22 +84,37 @@ export default class TimeAwayCreateDialog extends React.Component<ITimeAwayCreat
             <input type="text" />
           </div>
 
-          <div className={styles.row}>
-            <Label>Start</Label>
-            <DateTimePicker value={item.start} onChange={this._handleStartDateChange.bind(this)} />
+          <div className={styles.formArea}>
+            <div className={styles.row}>
+              <div className={styles.dataCell}>
+                <Label>Start Time:</Label>
+              </div>
+              <div className={styles.dataCell}>
+                <DateTimePicker value={item.start} onChange={this._handleStartDateChange.bind(this)} />
+              </div>
+            </div>
+
+            <div className={styles.row}>
+              <div className={styles.dataCell}>
+                <Label>End Time:</Label>
+              </div>
+              <div className={styles.dataCell}>
+                <DateTimePicker value={item.end} onChange={this._handleEndDateChange.bind(this)} />
+              </div>
+            </div>
+
+            <div className={styles.row}>
+              <div className={styles.dataCell}>
+                <Label>Commments:</Label>
+              </div>
+              <div className={styles.dataCell}>
+                <TextField value={item.comments} multiline resizable={false} onChanged={this._handleCommentsChange.bind(this)} />
+              </div>
+            </div>
           </div>
 
-          <div className={styles.row}>
-            <Label>End</Label>
-            <DateTimePicker value={item.end} onChange={this._handleEndDateChange.bind(this)} />
-          </div>
-
-          <div className={styles.row}>
-            <TextField label='Comments' value={item.comments} multiline resizable={false} onChanged={this._handleCommentsChange.bind(this)} />
-          </div>
-
-          <p className={styles.row}>
-            {errorMessage}
+          <p>
+            {errorMessage ? errorMessage : <span>&#160;</span> }
           </p>
 
           <DialogFooter>
