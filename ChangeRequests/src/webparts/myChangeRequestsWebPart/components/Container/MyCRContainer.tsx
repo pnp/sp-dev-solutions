@@ -42,7 +42,7 @@ export default class MyCRContainer extends React.Component<IMyCRContainerProps, 
           <div hidden={this.props.newcrdisplays == `${NewCRDisplays.Inline}`}>
             <Label >{this.props.newcrtext}</Label>
           </div>
-          <div hidden={this.props.newcrdisplays == `${NewCRDisplays.Inline}`}>
+          <div className={styles.primaryButtonArea} hidden={this.props.newcrdisplays == `${NewCRDisplays.Inline}`}>
             <PrimaryButton
               className={styles.createnewchangerequestbt}
               data-automation-id='CreateNewChangeRequest'

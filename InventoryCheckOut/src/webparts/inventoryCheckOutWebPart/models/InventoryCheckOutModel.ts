@@ -36,6 +36,7 @@ export interface ICheckOut {
 export interface IInventoryItem {
     id: number;
     title: string;
+    imageUrl: string;
     description?: string;
     location?: string;
     totalQuantity: number;

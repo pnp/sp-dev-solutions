@@ -1,6 +1,6 @@
 import { IInventoryItem } from "../../models/InventoryCheckOutModel";
 
-interface InvNewDialogPorps {
+interface InvNewDialogProps {
     item?: IInventoryItem;
     isOpen: boolean;
     isNew: boolean;
@@ -10,4 +10,4 @@ interface InvNewDialogPorps {
     itemValidOperationCallback: any;
 }
 
-export default InvNewDialogPorps;
+export default InvNewDialogProps;

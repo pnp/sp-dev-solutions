@@ -93,7 +93,8 @@ export class InventoryCheckOutDataProvider implements IInventoryCheckOutDataProv
             'Title': item.title,
             'Description': item.description,
             'Location': item.location,
-            'Total_x0020_Quantity': item.totalQuantity
+            'Total_x0020_Quantity': item.totalQuantity,
+            'Image_x0020_Url' : item.imageUrl
         };
         let requester: SPHttpClient = this._webPartContext.spHttpClient;
         return requester.post(`${this._ivItemlistItemsUrl}`, SPHttpClient.configurations.v1,
@@ -109,7 +110,8 @@ export class InventoryCheckOutDataProvider implements IInventoryCheckOutDataProv
                     title: json.Title,
                     description: json.Description,
                     location: json.Location,
-                    totalQuantity: json.Total_x0020_Quantity
+                    totalQuantity: json.Total_x0020_Quantity,
+                    imageUrl: json.Image_x0020_Url
                 };
                 return ivItem;
             });
@@ -121,7 +123,8 @@ export class InventoryCheckOutDataProvider implements IInventoryCheckOutDataProv
             'Title': item.title,
             'Description': item.description,
             'Location': item.location,
-            'Total_x0020_Quantity': item.totalQuantity
+            'Total_x0020_Quantity': item.totalQuantity,
+            'Image_x0020_Url': item.imageUrl
         };
         let requester: SPHttpClient = this._webPartContext.spHttpClient;
         let headers: Headers = new Headers();
@@ -294,7 +297,7 @@ export class InventoryCheckOutDataProvider implements IInventoryCheckOutDataProv
     }
     private _getInventoryItems(filterString: string): Promise<IInventoryItem[]> {
         const requester: SPHttpClient = this._webPartContext.spHttpClient;
-        const queryString: string = `?$select=Id,Title,Description,Location,Total_x0020_Quantity`;
+        const queryString: string = `?$select=Id,Title,Description,Location,Total_x0020_Quantity,Image_x0020_Url`;
         const queryUrl: string = this._ivItemlistItemsUrl + queryString + filterString;
         console.log(queryUrl);
         return requester.get(queryUrl, SPHttpClient.configurations.v1)
@@ -309,7 +312,8 @@ export class InventoryCheckOutDataProvider implements IInventoryCheckOutDataProv
                             title: item.Title,
                             description: item.Description,
                             location: item.Location,
-                            totalQuantity: item.Total_x0020_Quantity
+                            totalQuantity: item.Total_x0020_Quantity,
+                            imageUrl: item.Image_x0020_Url
                         };
                         return ivItem;
                     });

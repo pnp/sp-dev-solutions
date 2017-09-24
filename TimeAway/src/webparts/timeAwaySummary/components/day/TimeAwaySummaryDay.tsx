@@ -33,8 +33,8 @@ export default class TimeAwaySummaryDay extends React.Component<ITimeAwaySummary
           <div className={ styles.timeawaySummaryDay }>
             <div className={ styles.day }>
               <div className= { styles.timeawayCalendarBox}>
-                <div className={styles.timeawayDayOfWeek}>{WeekDay}</div>
-                <div className={styles.timeawayDayNumber}>{MonthDate}</div> 
+                <div className={styles.timeawayDayOfWeek}>{WeekDay.substring(0, 3)}</div>
+                <div className={styles.timeawayDayNumber}>{MonthDate}</div>   
                 <div className={styles.timeawayMonth}>{Month}</div>
               </div>
             </div>

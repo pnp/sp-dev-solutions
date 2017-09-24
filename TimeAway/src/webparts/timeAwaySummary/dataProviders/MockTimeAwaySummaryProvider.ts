@@ -73,7 +73,7 @@ export default class MockTimeAwaySummaryDataProvider implements ITimeAwaySummary
       let nextDay = this._getFirstDay(weekType, phase).add(index + 1, 'days');
       let timeAwaySummaryItem: TimeAwaySummaryItem = new TimeAwaySummaryItem();
 
-      timeAwaySummaryItem.WeekDay = day.format('dddd').substring(0, 3);
+      timeAwaySummaryItem.WeekDay = day.format('dddd');
       timeAwaySummaryItem.MonthDate = day.format('D');
       timeAwaySummaryItem.Month = day.format('MMM');
       timeAwaySummaryItem.PersonNameArray = items.map((item: IMyTimeAwayItem) => {

@@ -4,15 +4,15 @@
   "id": "c9db9295-9313-477a-80e4-b1727e700c40",
   "alias": "ChangeRequestManagementWebPart",
   "componentType": "WebPart",
-  "version": "0.0.1",
+  "version": "1.0.1",
   "manifestVersion": 2,
 
   "preconfiguredEntries": [{
     "groupId": "c9db9295-9313-477a-80e4-b1727e700c40",
-    "group": { "default": "Under Development" },
+    "group": { "default": "Business and intelligence" },
     "title": { "default": "Change Request Management" },
-    "description": { "default": "Change Request Management" },
-    "officeFabricIconFontName": "Page",
+    "officeFabricIconFontName": "InboxCheck",    
+    "description": { "default": "Provides a simple way to manage inbound change requests coming from users." },
     "properties": {
     }
   }]

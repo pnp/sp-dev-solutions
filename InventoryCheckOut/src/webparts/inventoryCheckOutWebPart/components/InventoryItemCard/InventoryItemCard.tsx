@@ -34,8 +34,9 @@ export default class InventoryItemCard extends React.Component<IInventoryItemCar
         return (
             <span className={ style.inventoryitemcard } onClick={() => this._handleChange(this.state.item.id, true)} >
                 <div className={ style.imageArea }>
-                    { this.state.item.title == "foo"?
+                    { this.state.item.imageUrl != null && this.state.item.imageUrl.length >= 7 ?
                         <div>
+                            <div className={ style.coverPhoto } style={ { backgroundImage: "url('" + this.state.item.imageUrl + "')" } }>&#160;</div>
                         </div> :
                         <div className={style.placeHolder}>
                             <i className={ "ms-Icon ms-Icon--ProHockey "} aria-hidden="true"></i>

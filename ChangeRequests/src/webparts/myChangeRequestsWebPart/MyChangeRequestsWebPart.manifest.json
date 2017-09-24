@@ -4,15 +4,15 @@
   "id": "fc1fa611-07f5-4af4-b9eb-d59da23fec1f",
   "alias": "MyChangeRequestsWebPart",
   "componentType": "WebPart",
-  "version": "0.0.1",
+  "version": "1.0.1",
   "manifestVersion": 2,
 
   "preconfiguredEntries": [{
     "groupId": "fc1fa611-07f5-4af4-b9eb-d59da23fec1f",
-    "group": { "default": "Under Development" },
+    "group": { "default": "Business and intelligence" },
     "title": { "default": "My Change Requests" },
-    "description": { "default": "My Change Requests" },
-    "officeFabricIconFontName": "Page",
+    "description": { "default": "Lets a user manage a set of change requests." },
+    "officeFabricIconFontName": "NewFolder",
     "properties": {
       "newcrdisplays": "1",
       "newcrtext": "If you have an issue or question, please let us know.",

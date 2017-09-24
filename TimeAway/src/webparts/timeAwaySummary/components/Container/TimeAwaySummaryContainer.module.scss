@@ -41,7 +41,8 @@
       padding-top: 2px;
       font-size: small;
       padding-bottom: 2px;
-  }
+      text-decoration: none;
+    }
   
   .iconArea
   {
@@ -49,10 +50,5 @@
       top: 5px;
       padding-right: 10px;
       font-size: large;
-  }
-
-  .brandLink{
-    text-decoration: none;
-    color: #D0D0D0;
   }
 }

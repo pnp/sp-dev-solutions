@@ -4,14 +4,14 @@
   "id": "36fdabcd-20fd-4630-a536-80495dfcfc0b",
   "alias": "TimeAwaySummaryWebPart",
   "componentType": "WebPart",
-  "version": "0.0.1",
+  "version": "1.0.1",
   "manifestVersion": 2,
 
   "preconfiguredEntries": [{
     "groupId": "36fdabcd-20fd-4630-a536-80495dfcfc0b",
-    "group": { "default": "Under Development" },
+    "group": { "default": "Communication and collaboration" },
     "title": { "default": "Time Away Summary" },
-    "description": { "default": "TimeAwaySummary description" },
+    "description": { "default": "Provides a summary view of who is away over the next two upcoming weeks." },
     "officeFabricIconFontName": "Page",
     "properties": {
       "myTimeAwayToggleField": true,

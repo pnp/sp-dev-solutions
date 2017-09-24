@@ -18,13 +18,13 @@ export class MockInventoryCheckOutList {
         if (this._inventoryItems == null) {
             this._idInventoryCounter = 0;
             this._inventoryItems = [
-                this._createMockInventoryItem({ id: -1, title: 'Google Nexus 5', description: 'The quick brown fox jumps over the lazy dog.', location: "Mike's Office", totalQuantity: 1 }),
-                this._createMockInventoryItem({ id: -1, title: 'Google Nexus 5', description: 'The quick brown fox jumps over the lazy dog.', location: "Mike's Office", totalQuantity: 2 }),
-                this._createMockInventoryItem({ id: -1, title: 'Google Nexus 5', description: 'The quick brown fox jumps over the lazy dog.', location: "Mike's Office", totalQuantity: 3 }),
-                this._createMockInventoryItem({ id: -1, title: 'Google Nexus 5', description: 'The quick brown fox jumps over the lazy dog.', location: "Mike's Office", totalQuantity: 4 }),
-                this._createMockInventoryItem({ id: -1, title: 'Google Nexus 5', description: 'The quick brown fox jumps over the lazy dog.', location: "Mike's Office", totalQuantity: 5 }),
-                this._createMockInventoryItem({ id: -1, title: 'Google Nexus 5', description: 'The quick brown fox jumps over the lazy dog.', location: "Mike's Office", totalQuantity: 6 }),
-                this._createMockInventoryItem({ id: -1, title: 'Google Nexus 5', description: 'The quick brown fox jumps over the lazy dog.', location: "Mike's Office", totalQuantity: 7 }),
+                this._createMockInventoryItem({ id: -1, title: 'Contoso Small Phone', description: 'The quick brown fox jumps over the lazy dog.', location: "Mike's Storage Cabinet near 1044", totalQuantity: 1, imageUrl: null }),
+                this._createMockInventoryItem({ id: -2, title: 'Fabrikam Small Phone', description: 'The quick brown fox jumps over the lazy dog.', location: "Mike's Storage Cabinet near 1044", totalQuantity: 2, imageUrl: null  }),
+                this._createMockInventoryItem({ id: -3, title: 'VanArsdel Large Tablet', description: 'The quick brown fox jumps over the lazy dog.', location: "Hallway Storage Closet near 1171", totalQuantity: 3, imageUrl: null  }),
+                this._createMockInventoryItem({ id: -4, title: 'Wingtip Large Tablet', description: 'The quick brown fox jumps over the lazy dog.', location: "Hallway Storage Closet near 1171", totalQuantity: 4, imageUrl: null  }),
+                this._createMockInventoryItem({ id: -5, title: 'Fabrikam 2-in-1 PC ', description: 'The quick brown fox jumps over the lazy dog.', location: "Offsite Storage", totalQuantity: 5, imageUrl: null  }),
+                this._createMockInventoryItem({ id: -6, title: 'Fabrikam Tablet', description: 'The quick brown fox jumps over the lazy dog.', location: "Offsite Storage", totalQuantity: 6, imageUrl: null  }),
+                this._createMockInventoryItem({ id: -7, title: 'Contoso All-in-one', description: 'The quick brown fox jumps over the lazy dog.', location: "Device Lab", totalQuantity: 7, imageUrl: null  }),
             ];
         }
         if (this._checkOutItems == null) {
@@ -153,7 +153,8 @@ export class MockInventoryCheckOutList {
             title: item.title,
             description: item.description,
             location: item.location,
-            totalQuantity: item.totalQuantity
+            totalQuantity: item.totalQuantity,
+            imageUrl: item.imageUrl
         };
         return mockInventoryItem;
     }

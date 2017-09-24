@@ -9,9 +9,9 @@
 
   "preconfiguredEntries": [{
     "groupId": "098f096d-b64c-4b3c-9be0-ccb486bc9710",
-    "group": { "default": "Under Development" },
+    "group": { "default": "Business and intelligence" },
     "title": { "default": "Contact Management" },
-    "description": { "default": "A basic customer and contact infrastructure and part." },
+    "description": { "default": "A basic customer and contact infrastructure built on lists, along with a part." },
     "officeFabricIconFontName": "Page",
     "properties": {
       "description": "Contact Management"

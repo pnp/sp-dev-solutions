@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { css, Label, PrimaryButton, CommandButton, DocumentCard, DocumentCardActivity, DocumentCardPreview, IDocumentCardPreviewProps, ImageFit,DocumentCardTitle } from 'office-ui-fabric-react';
+import { css, Label, PrimaryButton, CommandButton, DocumentCard, DocumentCardActivity, DocumentCardPreview, ImageFit,DocumentCardTitle } from 'office-ui-fabric-react';
 import InventoryItemCard from '../InventoryItemCard/InventoryItemCard';
 import IInventoryListProps from './IInventoryListProps';
 import style from './InventoryList.module.scss';
@@ -35,19 +35,6 @@ export default class InventoryList extends React.Component<IInventoryListProps, 
      public render(): JSX.Element {
          let myCheckoutItems = this.props.myCheckoutItems;
          let allItems = this.props.allItems;
-         let previewProps: IDocumentCardPreviewProps = {
-            previewImages: [
-              {
-                name: 'Revenue stream proposal fiscal year 2016 version02.pptx',
-                url: 'http://bing.com',
-                previewImageSrc: "",
-                iconSrc: "",
-                imageFit: ImageFit.cover,
-                width: 318,
-                height: 196
-              }
-            ],
-          };
       
         return (
             <div className={style.inventoryList}>
@@ -58,7 +45,7 @@ export default class InventoryList extends React.Component<IInventoryListProps, 
                 }
                 <div className={style.mycheckoutitems}>
                  {myCheckoutItems.map((item) =>
-                    <InventoryItemCard item={ item } onClickEvent={ this._handleChange }/>
+                    <InventoryItemCard key={ item.id } item={ item } onClickEvent={ this._handleChange }/>
                  )}
                 </div>
                 <div className={style.inventoryListTitle}>
@@ -66,7 +53,7 @@ export default class InventoryList extends React.Component<IInventoryListProps, 
                 </div>
                 <div className={style.mycheckoutitems}>
                   {allItems.map((item) =>
-                    <InventoryItemCard item={ item } onClickEvent={ this._handleChange }/>
+                    <InventoryItemCard key={ item.id } item={ item } onClickEvent={ this._handleChange }/>
                 )}    
                 </div>
             </div>

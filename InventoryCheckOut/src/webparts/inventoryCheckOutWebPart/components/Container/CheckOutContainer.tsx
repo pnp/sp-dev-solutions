@@ -26,6 +26,7 @@ export default class MyCRContainer extends React.Component<ICheckOutContainerPro
       myCheckoutItems: [],
       myCheckoutItemsOriginal: [],
       allItems: [],
+      allItemsOriginal: [],
       currentItem: null,
       currentCheckOuts: [],
       selectCheckOut: null,
@@ -147,7 +148,7 @@ export default class MyCRContainer extends React.Component<ICheckOutContainerPro
   }
   //prepare init data
   private _initData() {
-    let { currentUser, allItems, myCheckoutItems, myCheckoutItemsOriginal, checkOutStatus, allUsers } = this.state;
+    let { currentUser, allItems, allItemsOriginal, myCheckoutItems, myCheckoutItemsOriginal, checkOutStatus, allUsers } = this.state;
     this.props.dataProvider.getCurrentUser().
       then((person: IPerson) => {
         currentUser = person;
@@ -159,6 +160,7 @@ export default class MyCRContainer extends React.Component<ICheckOutContainerPro
       })
       .then((allinventoryitems: IInventoryItem[]) => {
         allItems = allinventoryitems;
+        allItemsOriginal = allinventoryitems;
         //get my checkout inventory items
         return this.props.dataProvider.getAllMyInventoryItems(currentUser.id).then(
           (myInventoryItems: IInventoryItem[]) => {
@@ -178,7 +180,7 @@ export default class MyCRContainer extends React.Component<ICheckOutContainerPro
       })
       .then((users: IPerson[]) => {
         allUsers = users;
-        return this.setState({ currentUser: currentUser, allItems: allItems, myCheckoutItems: myCheckoutItems, checkOutStatus: checkOutStatus, allUsers: allUsers, myCheckoutItemsOriginal: myCheckoutItems });
+        return this.setState({ currentUser: currentUser, allItems: allItems, myCheckoutItems: myCheckoutItems, checkOutStatus: checkOutStatus, allUsers: allUsers, myCheckoutItemsOriginal: myCheckoutItems, allItemsOriginal: allItems });
       });
 
   }
@@ -225,10 +227,12 @@ private _getAvailableCount(checkouts: ICheckOut[]): number {
     }
   }
   //hand event
-  private _handleSearchChange(event) {
+  private _handleSearchChange(eventValue) {
 
-    this.hideDialoge();
-    let filter = lodash.toLower(event.target.value);
+    this.hideDialog();
+
+    let filter = lodash.toLower(eventValue);
+
     if (filter.length > 0) {
       let myCheckoutItems = [];
       let count = this.state.myCheckoutItemsOriginal.length;
@@ -237,9 +241,16 @@ private _getAvailableCount(checkouts: ICheckOut[]): number {
           myCheckoutItems.push(this.state.myCheckoutItemsOriginal[i]);
         }
       }
-      this.setState({ myCheckoutItems: myCheckoutItems });
+      let allItems = [];
+      count = this.state.allItemsOriginal.length;
+      for (var i = 0; i < count; i++) {
+        if (lodash.toLower(this.state.allItemsOriginal[i].title).indexOf(filter) >= 0) {
+          allItems.push(this.state.allItemsOriginal[i]);
+        }
+      }
+      this.setState({ myCheckoutItems: myCheckoutItems, allItems: allItems });
     } else {
-      this.setState({ myCheckoutItems: this.state.myCheckoutItemsOriginal });
+      this.setState({ myCheckoutItems: this.state.myCheckoutItemsOriginal, allItems: this.state.allItemsOriginal });
     }
   }
 
@@ -279,7 +290,7 @@ private _getAvailableCount(checkouts: ICheckOut[]): number {
   }
   // delete inventory item button click
   private _handleDeleteInvClick() {
-    this.hideDialoge();
+    this.hideDialog();
     this.setState({
       showDialogType: DialogType.ConfirmDelete
     });
@@ -298,7 +309,13 @@ private _getAvailableCount(checkouts: ICheckOut[]): number {
         items = lodash.remove(items, (item) => {
           return item["id"] != itemToDelete.id;
         });
-        this.setState({ showDialogType: DialogType.Hidden, allItems: this.sortItemsByTitle(items) });
+        
+        let itemsOriginal = lodash.clone(this.state.allItems);
+        itemsOriginal = lodash.remove(items, (item) => {
+          return item["id"] != itemToDelete.id;
+        });
+
+        this.setState({ showDialogType: DialogType.Hidden, allItems: this.sortItemsByTitle(items), allItemsOriginal: this.sortItemsByTitle(itemsOriginal) });
       }
       else {
         alert("Delete failed!");
@@ -337,7 +354,7 @@ private _getAvailableCount(checkouts: ICheckOut[]): number {
         .then((myinventoryitems) => {        
           return  this.setState({ myCheckoutItems: myinventoryitems,  myCheckoutItemsOriginal: myinventoryitems });    
         });
-        this.hideDialoge();
+        this.hideDialog();
       });
     });
   }
@@ -345,12 +362,14 @@ private _getAvailableCount(checkouts: ICheckOut[]): number {
 
   //close dialog
   private _itemCloseDialogCallback() {
-    this.hideDialoge();
+    this.hideDialog();
   }
 
   //create/edit an new inventory item
   private _invItemSaveEditCallback(invItem) {
     let items = this.state.allItems;
+    let itemsOrig = this.state.allItemsOriginal;
+
     if (invItem.id != 0) {
       //Edit an item.
       this.props.dataProvider.updateInventoryItem(invItem).then((item: IInventoryItem) => {
@@ -359,9 +378,15 @@ private _getAvailableCount(checkouts: ICheckOut[]): number {
         (removeitem) => {
           return removeitem["id"] != invItem.id;
         });
+        itemsOrig = lodash.remove(itemsOrig,
+        (removeitem) => {
+          return removeitem["id"] != invItem.id;
+        });
       items.push(invItem);
+      itemsOrig.push(invItem);
       items = this.sortItemsByTitle(items);
-      this.setState({ showDialogType: DialogType.Hidden, allItems: items,currentItem: invItem });
+      itemsOrig = this.sortItemsByTitle(itemsOrig);
+      this.setState({ showDialogType: DialogType.Hidden, allItems: items,allItemsOriginal: itemsOrig,currentItem: invItem });
       });
     }
     else {
@@ -369,7 +394,9 @@ private _getAvailableCount(checkouts: ICheckOut[]): number {
       this.props.dataProvider.createInventoryItem(invItem).then((item: IInventoryItem) => {
         items.push(item);
         items = this.sortItemsByTitle(items);
-        this.setState({ showDialogType: DialogType.Hidden, allItems: items });
+        itemsOrig.push(item);
+        itemsOrig = this.sortItemsByTitle(itemsOrig);
+        this.setState({ showDialogType: DialogType.Hidden, allItemsOriginal: itemsOrig, allItems: items });
       });
 
     }
@@ -378,7 +405,7 @@ private _getAvailableCount(checkouts: ICheckOut[]): number {
   }
 
 
-  private hideDialoge() {
+  private hideDialog() {
     this.setState({
       showDialogType: DialogType.Hidden
     });

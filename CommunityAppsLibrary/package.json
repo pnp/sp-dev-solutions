@@ -1,5 +1,5 @@
 {
-  "name": "communityappslibrary",
+  "name": "sppnpcommunitysolutionslibrary",
   "version": "1.4.0",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",

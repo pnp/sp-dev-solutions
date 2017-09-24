@@ -22,9 +22,16 @@ export default class MyCRList extends React.Component<IMyCRListProps, any> {
                         <div className={`ms-Grid-col ${styles.mycrlistcol} ms-u-sm12 ms-u-md9 ms-u-lg9`}>Title / Update</div>
                         <div className={`ms-Grid-col ${styles.mycrlistcolend} ms-u-hiddenSm ms-u-md3 ms-u-lg2`}>Status</div>
                     </div>
+                    {
+                        this.props.items.map( (item, i) =>
+                        {
+                            return <MyCRItem key={item.id}
+                                    item={item}
+                                   itemEditIconClickCallback={this.props.itemEditIconClickCallback} />;
+       
+                        })
+                    }
                 </div>
-                <List items={this.props.items}
-                    onRenderCell={this._onRenderCell} />
             </div>
         );
     }

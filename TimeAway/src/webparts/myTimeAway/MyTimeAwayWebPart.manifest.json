@@ -4,14 +4,14 @@
   "id": "cc3ff58a-edf7-44ba-a47c-7daa593e1b93",
   "alias": "MyTimeAwayWebPart",
   "componentType": "WebPart",
-  "version": "0.0.1",
+  "version": "1.0.1",
   "manifestVersion": 2,
 
   "preconfiguredEntries": [{
     "groupId": "cc3ff58a-edf7-44ba-a47c-7daa593e1b93",
-    "group": { "default": "Under Development" },
+    "group": { "default": "Communication and collaboration" },
     "title": { "default": "Your Time Away" },
-    "description": { "default": "MyTimeAway description" },
+    "description": { "default": "Provides a simple way for a user to enter and list their time away." },
     "officeFabricIconFontName": "Page",
     "properties": {
       "normalWeekToggleField": true

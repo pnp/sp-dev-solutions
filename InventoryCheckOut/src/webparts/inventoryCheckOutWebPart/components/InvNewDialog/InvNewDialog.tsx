@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as lodash from 'lodash';
-import InvNewDialogPorps from './InvNewDialogPorps';
+import InvNewDialogProps from './InvNewDialogProps';
 import { IInventoryItem } from "../../models/InventoryCheckOutModel";
 import style from "./InvNewDialog.module.scss";
 import {
@@ -8,11 +8,11 @@ import {
   ChoiceGroup, TextField, Icon, autobind, Label, Dropdown
 } from 'office-ui-fabric-react';
 
-export default class InvNewDialog extends React.Component<InvNewDialogPorps, any> {
+export default class InvNewDialog extends React.Component<InvNewDialogProps, any> {
   private _saveCallback: Function;
   private _validCallback: Function;
   private _locations: any;
-  constructor(props: InvNewDialogPorps) {
+  constructor(props: InvNewDialogProps) {
     super(props);
     this.state = {
       item: props.item ? props.item : { title: "", description: "", id: 0, location: "", totalQuantity: 1 },
@@ -22,12 +22,13 @@ export default class InvNewDialog extends React.Component<InvNewDialogPorps, any
     this._handleTitleChange = this._handleTitleChange.bind(this);
     this._handleDescriptionChange = this._handleDescriptionChange.bind(this);
     this._handleQuantityChange = this._handleQuantityChange.bind(this);
+    this._handleImageUrlChange = this._handleImageUrlChange.bind(this);
     this._saveCallback = props.itemSaveOperationCallback;
     this._validCallback = props.itemValidOperationCallback;
     this._handleSelectChange = this._handleSelectChange.bind(this);
   }
 
-  public componentWillReceiveProps(props: InvNewDialogPorps) {
+  public componentWillReceiveProps(props: InvNewDialogProps) {
     if (props.isNew) {
       this.setState({
         item: { id: 0, title: "", description: "", totalQuantity: 1, location: "" }
@@ -70,11 +71,18 @@ export default class InvNewDialog extends React.Component<InvNewDialogPorps, any
             <div className={style.container}>
               <div className={style.leftcolumn}>Description:</div>
               <div className={style.rightcolumn}>
-
                 <TextField multiline={true} value={item ? item.description : ""} name="description"
                   onChanged={this._handleDescriptionChange}
                 />
-
+              </div>
+              <br />
+            </div>
+            <div className={style.container}>
+              <div className={style.leftcolumn}>Image Url:</div>
+              <div className={style.rightcolumn}>
+                <TextField value={item ? item.imageUrl : ""} name="image url"
+                  onChanged={ this._handleImageUrlChange }
+                />
               </div>
               <br />
             </div>
@@ -116,6 +124,7 @@ export default class InvNewDialog extends React.Component<InvNewDialogPorps, any
   private _saveChange() {
     let error: string = "";
     let totalQuantity = this.state.item.totalQuantity;
+    
     if (!this.isNumeric(totalQuantity) || totalQuantity < 1) {
       error = "Total Quantity must be 1 or higher.";
     }
@@ -158,6 +167,14 @@ export default class InvNewDialog extends React.Component<InvNewDialogPorps, any
     let item = this.state.item;
 
     item.totalQuantity = newValue;
+    
+    this.setState({ item: item });
+  }
+
+  private _handleImageUrlChange(newValue) {
+    let item = this.state.item;
+
+    item.imageUrl = newValue;
     
     this.setState({ item: item });
   }

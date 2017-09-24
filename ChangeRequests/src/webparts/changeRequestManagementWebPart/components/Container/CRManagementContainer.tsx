@@ -169,10 +169,10 @@ export default class ChangeRequestManagementContainer extends React.Component<IC
           { 
             this.props.displayMode != 1 ?
             <div className={styles.brandArea}>
-              <div className={styles.brandContent}>
+              <a className={styles.brandContent} href="https://aka.ms/sppnpsolutions">
                 <span className={styles.iconArea}><i className={`ms-Icon ms-Icon--PostUpdate`} aria-hidden="true"></i></span>
-                <span>SharePoint Community Solutions</span>
-              </div>
+                <span>SharePoint Patterns and Practices Community Solutions</span>
+              </a>
             </div> : 
             <div></div> 
           }

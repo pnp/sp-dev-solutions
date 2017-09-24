@@ -15,9 +15,9 @@
 
   "preconfiguredEntries": [{
     "groupId": "5034eacb-edff-4372-b956-dd98bce7f6d6",
-    "group": { "default": "Under Development" },
-    "title": { "default": "Inventory Check Out" },
-    "description": { "default": "InventoryCheckOutWebPart description" },
+    "group": { "default": "Business and intelligence" },
+    "title": { "default": "Inventory and Check-out" },
+    "description": { "default": "A simple web part for managing a list of items, and letting users borrow or reserve items." },
     "officeFabricIconFontName": "Page",
     "properties": {
       "description": "InventoryCheckOutWebPart"
