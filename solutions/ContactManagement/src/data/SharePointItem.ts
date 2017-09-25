@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license.
+
 import { ISharePointItem } from './ISharePointItem';
 
 export default class SharePointItem implements ISharePointItem {

@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license.
+
 import { ICRManagementDataProvider } from './ICRManagementDataProvider';
 import { MockChangeRequestLists } from '../../../libraries/index';
 import { IChangeRequestManagementItem, CRMTab } from '../models/CRManagementModel';

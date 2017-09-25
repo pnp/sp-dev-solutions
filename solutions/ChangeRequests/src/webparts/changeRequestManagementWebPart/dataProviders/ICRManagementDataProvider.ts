@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license.
+
 import { IChangeRequestManagementItem, CRMTab } from '../models/CRManagementModel';
 import { IPerson } from '../../../libraries/models/ChangeRequestModel';
 

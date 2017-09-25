@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license.
+
 import * as React from 'react';
 import * as update from 'immutability-helper';
 import ICheckOutNewDialogProp from './CheckOutNewDialogProp';
@@ -11,8 +14,6 @@ import { Dialog, DialogType, DialogFooter, PrimaryButton, DefaultButton, ChoiceG
 import * as DateTimePicker from 'react-datetime';
 import * as moment from 'moment';
 import { Moment } from 'moment';
-
-
 
 //CheckOutNewDialog react component
 export default class CheckOutNewDialog extends React.Component<ICheckOutNewDialogProp, ICheckOutNewDialogState> {

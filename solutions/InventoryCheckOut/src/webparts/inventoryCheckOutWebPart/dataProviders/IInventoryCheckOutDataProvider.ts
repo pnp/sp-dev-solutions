@@ -1,5 +1,7 @@
-import { ICheckOut, IInventoryItem, IPerson } from "../models/InventoryCheckOutModel";
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license.
 
+import { ICheckOut, IInventoryItem, IPerson } from "../models/InventoryCheckOutModel";
 
 export interface IInventoryCheckOutDataProvider {
   //get current User

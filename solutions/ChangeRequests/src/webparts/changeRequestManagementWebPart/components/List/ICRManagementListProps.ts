@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license.
+
 import { IChangeRequestManagementItem } from '../../models/CRManagementModel';
 import { ICRManagementDataProvider } from '../../dataProviders/ICRManagementDataProvider';
 import { IPerson } from '../../../../libraries/index';

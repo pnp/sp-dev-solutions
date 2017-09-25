@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license.
+
 import SPUrl from './SPUrl';
 import { ISPList } from './ISPList';
 import { ISPField, FieldTypeKind } from './ISPField';

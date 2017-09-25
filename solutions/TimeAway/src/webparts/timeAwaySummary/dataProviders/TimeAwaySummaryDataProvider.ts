@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license.
+
 import {TimeAwaySummaryItem} from "../models/TimeAwaySummaryItem";
 import {IWebPartContext } from '@microsoft/sp-webpart-base';
 import {ITimeAwaySummaryDataProvider} from './ITimeAwaySummaryDataProvider';

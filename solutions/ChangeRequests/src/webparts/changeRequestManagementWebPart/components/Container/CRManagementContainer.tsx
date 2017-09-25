@@ -1,10 +1,13 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license.
+
 import * as React from 'react';
 import * as Update from 'immutability-helper';
 import { css, Label, PrimaryButton, CommandButton, Spinner, SpinnerSize } from 'office-ui-fabric-react';
+
 import { Modal } from 'office-ui-fabric-react/lib/Modal';
 import * as _ from "lodash";
 import { SharePointUtilityModule as ca } from 'communityappslibrary';
-import styles from './CRManagementContainer.module.scss';
 import { provisionManager } from '../../../../libraries/index';
 import { CRMTab, IChangeRequestManagementItem } from '../../models/CRManagementModel';
 import { ICRManagementContainerProps } from './ICRManagementContainerProps';
@@ -14,17 +17,18 @@ import CRManagementList from '../List/CRManagementList';
 import CRManagementPublicSection from "../PublicSection/CRManagementPublicSection";
 import CRManagementTeamSection from "../TeamSection/CRManagementTeamSection";
 import { IPerson, IMyChangeRequestItem, IChangeDiscussionItem } from '../../../../libraries/index';
+import styles from './CRManagementContainer.module.scss';
 
 export default class ChangeRequestManagementContainer extends React.Component<ICRManagementContainerProps, ICRManagementContainerState> {
-  private _currentClickedItem: any;
+  private _currentClickedItem: IMyChangeRequestItem | IChangeDiscussionItem;
   private _tempCRItem: IMyChangeRequestItem;
   private _tempCDItem: IChangeDiscussionItem;
   private _isEdit: boolean;
 
   constructor(props: ICRManagementContainerProps) {
-    const utility = ca.SharePointUtility;
-
     super(props);
+    
+    const utility = ca.SharePointUtility;
 
     this.state = {
       hasAdminPermission: utility.checkCurrentUserIsAbleToManageList(this.props.context),
@@ -118,23 +122,17 @@ export default class ChangeRequestManagementContainer extends React.Component<IC
     
     let tempCRItem = selectedItem && selectedItem.critem ? _.cloneDeep(selectedItem.critem) : null;
     let tempCDItem = selectedItem && selectedItem.cditem ? _.cloneDeep(selectedItem.cditem) : null;
-/*
-    if (loading)
-    {
-      return (
-        <div className={styles.container}>
-          <div className={styles.contentAreaClass} >
-            <Spinner size={SpinnerSize.large} />
-          </div>
-        </div>);
-    }
-    else */if (isInitialized) {
+
+    if (isInitialized) {
       return (
         <div className={styles.container}>
           <CRManagementTab selectedTab={selectedTab} tabOperationClickCallback={this._tabOperationClickCallback.bind(this)} />
           <div className={styles.contentAreaClass} >
             <div className={ showSections? styles.halfList : styles.fullList}>
-              <CRManagementList allUsers={allPersons} items={items} selectedItem={selectedItem} itemClickCallback={this._itemClickHandler.bind(this)} isTriageTeamMember={isTriageTeamMember} dataProvider={this.props.dataProvider} />
+              <CRManagementList allUsers={allPersons} items={items} selectedItem={selectedItem} 
+                                itemClickCallback={this._itemClickHandler.bind(this)} 
+                                isTriageTeamMember={isTriageTeamMember} 
+                                dataProvider={this.props.dataProvider} />
             </div>
             {showSections ? (
               <div className={styles.itemArea}>

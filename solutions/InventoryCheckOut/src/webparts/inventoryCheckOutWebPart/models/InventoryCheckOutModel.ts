@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license.
+
 export class Constants{
    public static readonly ItemsListTitle: string = "Items";
    public static readonly CheckOutsListTitle: string = "Check-Outs";

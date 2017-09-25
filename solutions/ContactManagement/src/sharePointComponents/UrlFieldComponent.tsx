@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license.
+
 import { FieldComponent, IFieldComponentProps, IFieldComponentState } from './FieldComponent';
 import SPUrl from '../data/SPUrl';
 import SharePointUtility from '../data/SharePointUtility';

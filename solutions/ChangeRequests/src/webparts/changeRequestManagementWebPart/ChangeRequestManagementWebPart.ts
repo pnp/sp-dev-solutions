@@ -1,9 +1,10 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license.
+
 import * as React from 'react';
 import * as ReactDom from 'react-dom';
 import { Version, Environment, EnvironmentType } from '@microsoft/sp-core-library';
-import {
-  BaseClientSideWebPart
-} from '@microsoft/sp-webpart-base';
+import { BaseClientSideWebPart } from '@microsoft/sp-webpart-base';
 
 import CRManagementContainer from './components/Container/CRManagementContainer';
 import { ICRManagementContainerProps } from './components/Container/ICRManagementContainerProps';
@@ -13,6 +14,7 @@ import { ICRManagementDataProvider } from './dataProviders/ICRManagementDataProv
 import { CRManagementDataProvider } from './dataProviders/CRManagementDataProvider';
 import { MockCRManagementDataProvider } from './dataProviders/MockCRManagementDataProvider';
 
+// Provides a web part for team managers for triaging a set of change requests.
 export default class ChangeRequestManagementWebPart extends BaseClientSideWebPart<IChangeRequestManagementWebPartProps> {
   private _isInitialized: boolean = false;
   private _dataProvider: ICRManagementDataProvider;
@@ -50,9 +52,5 @@ export default class ChangeRequestManagementWebPart extends BaseClientSideWebPar
     );
 
     ReactDom.render(element, this.domElement);
-  }
-
-  protected get dataVersion(): Version {
-    return Version.parse('1.0');
   }
 }

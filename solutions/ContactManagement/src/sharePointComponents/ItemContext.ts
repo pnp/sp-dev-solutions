@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license.
+
 import ListContext from './ListContext';
 import { ISharePointDataProvider } from '../data/ISharePointDataProvider';
 import { ISharePointItem } from '../data/ISharePointItem';

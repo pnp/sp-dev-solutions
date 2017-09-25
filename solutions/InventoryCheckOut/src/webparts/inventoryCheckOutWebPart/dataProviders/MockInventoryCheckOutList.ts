@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license.
+
 import * as lodash from '@microsoft/sp-lodash-subset';
 import { IPerson, CheckOutStatus, ICheckOut, IInventoryItem } from "../models/InventoryCheckOutModel";
 

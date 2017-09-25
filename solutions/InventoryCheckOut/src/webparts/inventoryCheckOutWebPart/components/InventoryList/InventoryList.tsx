@@ -1,9 +1,11 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license.
+
 import * as React from 'react';
 import { css, Label, PrimaryButton, CommandButton, DocumentCard, DocumentCardActivity, DocumentCardPreview, ImageFit,DocumentCardTitle } from 'office-ui-fabric-react';
 import InventoryItemCard from '../InventoryItemCard/InventoryItemCard';
 import IInventoryListProps from './IInventoryListProps';
 import style from './InventoryList.module.scss';
-
 
 export default class InventoryList extends React.Component<IInventoryListProps, any> {
   constructor(props: IInventoryListProps) {

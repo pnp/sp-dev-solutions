@@ -1,6 +1,8 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license.
+
 // tslint:disable-next-line:no-unused-variable
 import * as React from 'react';
-
 
 import ItemLookupFieldEditor from './ItemLookupFieldEditor';
 import ItemLookupFieldDisplay from './ItemLookupFieldDisplay';

@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license.
+
 import * as React from 'react';
 import * as Update from 'immutability-helper';
 import ITimeAwaySummaryListProps from './ITimeAwaySummaryListProps';
@@ -5,7 +8,6 @@ import TimeAwaySummaryDay from '../day/TimeAwaySummaryDay';
 import { TimeAwaySummaryItem } from "../../models/TimeAwaySummaryItem";
 import { List, FocusZone, FocusZoneDirection } from 'office-ui-fabric-react';
 import styles from './TimeAwaySummaryList.module.scss';
-
 
 export default class TimeAwaySummaryList extends React.Component<ITimeAwaySummaryListProps, any> {
   constructor(props: ITimeAwaySummaryListProps) {

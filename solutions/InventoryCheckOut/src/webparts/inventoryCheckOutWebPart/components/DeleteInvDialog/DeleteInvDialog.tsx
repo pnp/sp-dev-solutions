@@ -1,18 +1,19 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license.
+
 import * as React from 'react';
 import {
     Dialog, DialogType, DialogFooter, PrimaryButton, DefaultButton, Spinner,
     SpinnerSize
 } from 'office-ui-fabric-react';
-import DeleteInvDialogPorps from './DeleteInvDialogPorps';
+import DeleteInvDialogProps from './DeleteInvDialogProps';
 
-
-
-export default class DeleteInvDialog extends React.Component<DeleteInvDialogPorps, any>{
-    constructor(props: DeleteInvDialogPorps) {
+export default class DeleteInvDialog extends React.Component<DeleteInvDialogProps, any>{
+    constructor(props: DeleteInvDialogProps) {
         super(props);
         this.state = { showDialog: this.props.showDialog };
     }
-    public componentWillReceiveProps(props: DeleteInvDialogPorps) {
+    public componentWillReceiveProps(props: DeleteInvDialogProps) {
         this.setState({ showDialog: props.showDialog });
     }
 

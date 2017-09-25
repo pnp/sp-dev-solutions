@@ -1,10 +1,12 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license.
+
 import * as React from 'react';
 import { css, Label, PrimaryButton, CommandButton, FocusZone, FocusZoneDirection, List } from 'office-ui-fabric-react';
 import { ICheckOut } from "../../models/InventoryCheckOutModel";
 import styles from './CheckOutList.module.scss';
 import ICheckOutListProps from './ICheckOutListProps';
 import CheckOutListItem from '../CheckOutListItem/CheckOutListItem';
-
 
 export default class CheckOutList extends React.Component<ICheckOutListProps, any> {
     constructor(props: ICheckOutListProps) {

@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license.
+
 import { IOrganization } from './IOrganization';
 import SharePointItem from './SharePointItem';
 import SPUrl from '../data/SPUrl';

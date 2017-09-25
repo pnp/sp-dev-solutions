@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license.
+
 import Clause, {ClauseTypeJoin, ClauseType} from './Clause';
 import { ISPList } from './ISPList';
 import SharePointUtility from './SharePointUtility';

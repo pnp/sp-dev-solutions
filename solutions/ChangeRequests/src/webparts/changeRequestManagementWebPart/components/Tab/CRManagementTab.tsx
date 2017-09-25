@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license.
+
 import * as React from 'react';
 import ICRManagementTabProps from './ICRManagementTabProps';
 import { Pivot, PivotItem, PivotLinkSize, css } from 'office-ui-fabric-react';
@@ -29,7 +32,7 @@ export default class CRManagementTab extends React.Component<ICRManagementTabPro
     }
 
     private _handleTabClick(item: PivotItem): void {
-        if(this.props.selectedTab.toString() !== item.props.itemKey){
+        if (this.props.selectedTab.toString() !== item.props.itemKey) {
             this.props.tabOperationClickCallback(Number(item.props.itemKey));
         }
     }

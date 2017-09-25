@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license.
+
 import { IPerson, ICheckOut, IInventoryItem, CheckOutStatus } from "../models/InventoryCheckOutModel";
 import { IWebPartContext } from '@microsoft/sp-webpart-base';
 import { IInventoryCheckOutDataProvider } from "./IInventoryCheckOutDataProvider";

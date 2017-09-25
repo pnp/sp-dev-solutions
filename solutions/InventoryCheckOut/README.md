@@ -1,8 +1,20 @@
 ﻿## Inventory Check Out
 
-The Inventory Check Out web part provides the ability to check in and check out equipment.
+![Inventory and Check-out Screenshot](../../assets/inventorycheckout.png)
 
-The Inventory Check Out web part relies on the CommunityAppsLibrary NPM package which provides common functions used to set up and configure the SharePoint lists the web part uses.
+The Inventory and Checkout management part lets you manage a simple list inventory items, and build a "lending library" style check out infrastructure around them.   
+
+The inventory web part is a single web part you can add to a web part page.  When fully configured, you can add inventory items to a list.  
+
+Optionally, you can configure a list of locations via web part properties that lets users pick an explicit set of locations from a list.
+
+Optionally, you can also choose to upload and link to pictures for items, so that viewers to the site can see pictures of the various items.
+
+Users can individually view the items in the inventory list, and if they'd like, check out items from the list by clicking the checkout item button.  From there, they can input a time by which they expect to return the item.
+
+## Installation and Configuration
+
+When you add the web part for the first time, a user will need to create the backing lists within the site that support storage of Time Away entries.  A user with list creation permissions within the site will need to click the "Create Lists" button that shows up within the web part.
 
 ### Building the code
 
@@ -25,20 +37,4 @@ gulp clean
 gulp serve
 gulp bundle
 gulp package-solution
-
-### Open source libraries
-
-"@types/react": "0.14.46"
-"@types/react-addons-shallow-compare": "0.14.17"
-"@types/react-addons-test-utils": "0.14.15"
-"@types/react-addons-update": "0.14.14"
-"@types/react-dom": "0.14.18"
-"@types/webpack-env": ">=1.12.1 <1.14.0"
-"communityappslibrary": "^1.4.0"
-"immutability-helper": "^2.2.2"
-"lodash": "^4.17.4"
-"moment": "^2.18.1"
-"react": "15.4.2"
-"react-datetime": "^2.8.10"
-"react-dom": "15.4.2"
 

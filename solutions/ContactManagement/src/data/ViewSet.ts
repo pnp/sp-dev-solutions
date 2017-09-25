@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license.
+
 import View, { ViewCallback } from './View';
 
 export type ViewSetCallback = (viewSet: ViewSet) => void;

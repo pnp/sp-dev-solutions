@@ -1,4 +1,3 @@
-
 /*!
  * Strongly Typed Events for TypeScript - 1.0.1
  * https://github.com/KeesCBakker/StronlyTypedEvents/
@@ -11,6 +10,7 @@
 /**
  * Event handler function with a generic sender and a generic argument.
  */
+
 export interface IEventHandler<TSender, TArgs> {
     /**
       * @sender The sender.
