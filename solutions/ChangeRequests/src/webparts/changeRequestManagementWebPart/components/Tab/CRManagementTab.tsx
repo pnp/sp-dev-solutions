@@ -12,6 +12,7 @@ export default class CRManagementTab extends React.Component<ICRManagementTabPro
 
     public render() {
         return (
+            // (MG) two spaces
             <div className={styles.crmanagementtab}>
                 <Pivot linkSize={PivotLinkSize.large} onLinkClick={this._handleTabClick.bind(this)} selectedKey={`${this.props.selectedTab}`}>
                     <PivotItem linkText='Active Issues' itemKey={`${CRMTab.ActiveIssues}`}>
@@ -29,7 +30,7 @@ export default class CRManagementTab extends React.Component<ICRManagementTabPro
     }
 
     private _handleTabClick(item: PivotItem): void {
-        if(this.props.selectedTab.toString() !== item.props.itemKey){
+        if (this.props.selectedTab.toString() !== item.props.itemKey) {
             this.props.tabOperationClickCallback(Number(item.props.itemKey));
         }
     }

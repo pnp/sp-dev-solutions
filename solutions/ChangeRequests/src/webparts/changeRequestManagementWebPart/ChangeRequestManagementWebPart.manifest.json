@@ -1,19 +1,25 @@
 {
   "$schema": "../../../node_modules/@microsoft/sp-module-interfaces/lib/manifestSchemas/jsonSchemas/clientSideComponentManifestSchema.json",
-
   "id": "c9db9295-9313-477a-80e4-b1727e700c40",
   "alias": "ChangeRequestManagementWebPart",
   "componentType": "WebPart",
   "version": "1.0.1",
   "manifestVersion": 2,
-
-  "preconfiguredEntries": [{
-    "groupId": "c9db9295-9313-477a-80e4-b1727e700c40",
-    "group": { "default": "Business and intelligence" },
-    "title": { "default": "Change Request Management" },
-    "officeFabricIconFontName": "InboxCheck",    
-    "description": { "default": "Provides a simple way to manage inbound change requests coming from users." },
-    "properties": {
+  "preconfiguredEntries": [
+    {
+      "groupId": "c9db9295-9313-477a-80e4-b1727e700c40",
+      // (MG) What about non-english locales ?
+      "group": {
+        "default": "Business and intelligence"
+      },
+      "title": {
+        "default": "Change Request Management"
+      },
+      "officeFabricIconFontName": "InboxCheck", // (MG) is this the right icon ?
+      "description": {
+        "default": "Provides a simple way to manage inbound change requests coming from users."
+      },
+      "properties": {}
     }
-  }]
+  ]
 }
