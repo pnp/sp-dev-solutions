@@ -1,9 +1,14 @@
 import * as React from 'react';
 import * as Update from 'immutability-helper';
 import { css, Label, PrimaryButton, CommandButton, Spinner, SpinnerSize } from 'office-ui-fabric-react';
+
+// (MG) there should be an empty line here
 import { Modal } from 'office-ui-fabric-react/lib/Modal';
+// (MG) are you not able to use sp-lodash?
 import * as _ from "lodash";
 import { SharePointUtilityModule as ca } from 'communityappslibrary';
+
+// (MG) this should be at the end of the list
 import styles from './CRManagementContainer.module.scss';
 import { provisionManager } from '../../../../libraries/index';
 import { CRMTab, IChangeRequestManagementItem } from '../../models/CRManagementModel';
@@ -16,6 +21,7 @@ import CRManagementTeamSection from "../TeamSection/CRManagementTeamSection";
 import { IPerson, IMyChangeRequestItem, IChangeDiscussionItem } from '../../../../libraries/index';
 
 export default class ChangeRequestManagementContainer extends React.Component<ICRManagementContainerProps, ICRManagementContainerState> {
+  // (MG) any should be avoided as much as possilbe. i.e. "IMyChangeRequestItem | IChangeDiscussionItem" is a valid type
   private _currentClickedItem: any;
   private _tempCRItem: IMyChangeRequestItem;
   private _tempCDItem: IChangeDiscussionItem;
@@ -24,6 +30,7 @@ export default class ChangeRequestManagementContainer extends React.Component<IC
   constructor(props: ICRManagementContainerProps) {
     const utility = ca.SharePointUtility;
 
+    // (MG) as a rule, this should always be the first line    
     super(props);
 
     this.state = {
@@ -50,6 +57,8 @@ export default class ChangeRequestManagementContainer extends React.Component<IC
   public componentDidMount() {
     let { status, isTriageTeamMember, items, allTriageUsers, allPersons } = this.state;
 
+    // (MG) since I cannot load it, I am unable to confirm. But do all these async requests
+    // after component mounting. Do they spoil the user experience.
     this.props.dataProvider.isTriageTeamUser()
       .then((value: boolean) => {
         isTriageTeamMember = value;
@@ -90,6 +99,7 @@ export default class ChangeRequestManagementContainer extends React.Component<IC
       .then((values: any) => {
         allTriageUsers = values;
 
+        // (MG) Seems verbose. I often use lodash.merge for updating state       
         this.setState(Update(this.state, {
           items: {
             $set: items
@@ -115,9 +125,11 @@ export default class ChangeRequestManagementContainer extends React.Component<IC
 
   public render(): React.ReactElement<ICRManagementContainerProps> {
     let { showModal, allPersons, allTriageUsers, hasAdminPermission, loading, isInitialized, submitting, items, selectedTab, isTriageTeamMember, showSections, selectedItem, status } = this.state;
-    
+
     let tempCRItem = selectedItem && selectedItem.critem ? _.cloneDeep(selectedItem.critem) : null;
     let tempCDItem = selectedItem && selectedItem.cditem ? _.cloneDeep(selectedItem.cditem) : null;
+
+    // (MG) We usually do not have such commented code in shipping codebase
 /*
     if (loading)
     {
@@ -133,15 +145,17 @@ export default class ChangeRequestManagementContainer extends React.Component<IC
         <div className={styles.container}>
           <CRManagementTab selectedTab={selectedTab} tabOperationClickCallback={this._tabOperationClickCallback.bind(this)} />
           <div className={styles.contentAreaClass} >
-            <div className={ showSections? styles.halfList : styles.fullList}>
+            <div className={showSections ? styles.halfList : styles.fullList}>
               <CRManagementList allUsers={allPersons} items={items} selectedItem={selectedItem} itemClickCallback={this._itemClickHandler.bind(this)} isTriageTeamMember={isTriageTeamMember} dataProvider={this.props.dataProvider} />
             </div>
             {showSections ? (
               <div className={styles.itemArea}>
                 <div className={styles.itemAreaInterior}>
+                  // (MG) we allow only max 120 character wide lines
                   <CRManagementPublicSection allUsers={allPersons} selectedItem={tempCRItem} statusItems={status} itemChangeHandler={this._itemChangeHandler.bind(this)} />
                   <CRManagementTeamSection selectedItem={tempCDItem} isTriageTeamMember={isTriageTeamMember} itemChangeHandler={this._itemChangeHandler.bind(this)} allTriageUser={allTriageUsers} />
                   <div className={styles.bottomrow}>
+                    // (MG) all these bindings should be setup in the constructor for perf reasons
                     <PrimaryButton text='Save' disabled={submitting} onClick={this._saveForm.bind(this)} />
                     <PrimaryButton text='Cancel' disabled={submitting} onClick={this._cancelForm.bind(this)} />
                   </div>
@@ -156,29 +170,32 @@ export default class ChangeRequestManagementContainer extends React.Component<IC
             containerClassName={styles.modelcontainer}
           >
             <div>
-              <div className={ styles.header }>
+              <div className={styles.header}>
                 <span>Changes to Change Request {tempCRItem ? tempCRItem.id : -1} are not saved.   Would you like to save or discard these changes?</span>
               </div>
-              <div className={ styles.body }>
-                <PrimaryButton text='Save Changes' disabled={submitting} onClick= { this._saveChange.bind(this) } />
-                <PrimaryButton text='Discard Changes' disabled={submitting} onClick= { this._discardChanges.bind(this) } />
-                <PrimaryButton text='Cancel' disabled={submitting} onClick= { this._cancelChange.bind(this) }/>
+              <div className={styles.body}>
+                <PrimaryButton text='Save Changes' disabled={submitting} onClick={this._saveChange.bind(this)} />
+                <PrimaryButton text='Discard Changes' disabled={submitting} onClick={this._discardChanges.bind(this)} />
+                <PrimaryButton text='Cancel' disabled={submitting} onClick={this._cancelChange.bind(this)} />
               </div>
             </div>
           </Modal>
-          { 
+          {
             this.props.displayMode != 1 ?
-            <div className={styles.brandArea}>
-              <a className={styles.brandContent} href="https://aka.ms/sppnpsolutions">
-                <span className={styles.iconArea}><i className={`ms-Icon ms-Icon--PostUpdate`} aria-hidden="true"></i></span>
-                <span>SharePoint Patterns and Practices Community Solutions</span>
-              </a>
-            </div> : 
-            <div></div> 
+              <div className={styles.brandArea}>
+                <a className={styles.brandContent} href="https://aka.ms/sppnpsolutions">
+                  // (MG) do we have any guidelines around accessibility  
+                  <span className={styles.iconArea}><i className={`ms-Icon ms-Icon--PostUpdate`} aria-hidden="true"></i></span>
+                  // (MG) what about localization ?
+                  <span>SharePoint Patterns and Practices Community Solutions</span>
+                </a>
+              </div> :
+              <div></div>
           }
         </div>
       );
     }
+    // (MG) this should be in the previous line i.e. } else {
     else {
       return (
         <div className={styles.container}>
@@ -247,7 +264,7 @@ export default class ChangeRequestManagementContainer extends React.Component<IC
 
   private _itemClickHandler(item: any): void {
     this._currentClickedItem = item;
-    
+
     if (this.state.selectedItem && this._currentClickedItem.id === this.state.selectedItem.critem.id) {
       return;
     }
@@ -342,6 +359,7 @@ export default class ChangeRequestManagementContainer extends React.Component<IC
     });
   }
 
+  // (MG) any should be avoided as much as possible  
   private _itemChangeHandler(type: string, item: any) {
     this._isEdit = true;
 

@@ -2,6 +2,9 @@ import * as React from 'react';
 import * as Update from 'immutability-helper';
 import * as _ from "lodash";
 import * as moment from 'moment';
+
+// (MG) empty line here
+// (MG) styles should be on the last line
 import styles from './CRManagementList.module.scss';
 import { ICRManagementListProps } from './ICRManagementListProps';
 import { IChangeRequestManagementItem } from '../../models/CRManagementModel';
