@@ -20,7 +20,7 @@ import { IPerson, IMyChangeRequestItem, IChangeDiscussionItem } from '../../../.
 import styles from './CRManagementContainer.module.scss';
 
 export default class ChangeRequestManagementContainer extends React.Component<ICRManagementContainerProps, ICRManagementContainerState> {
-  private _currentClickedItem: IMyChangeRequestItem | IChangeDiscussionItem;
+  private _currentClickedItem: any;
   private _tempCRItem: IMyChangeRequestItem;
   private _tempCDItem: IChangeDiscussionItem;
   private _isEdit: boolean;
@@ -154,13 +154,13 @@ export default class ChangeRequestManagementContainer extends React.Component<IC
             containerClassName={styles.modelcontainer}
           >
             <div>
-              <div className={ styles.header }>
+              <div className={styles.header}>
                 <span>Changes to Change Request {tempCRItem ? tempCRItem.id : -1} are not saved.   Would you like to save or discard these changes?</span>
               </div>
-              <div className={ styles.body }>
-                <PrimaryButton text='Save Changes' disabled={submitting} onClick= { this._saveChange.bind(this) } />
-                <PrimaryButton text='Discard Changes' disabled={submitting} onClick= { this._discardChanges.bind(this) } />
-                <PrimaryButton text='Cancel' disabled={submitting} onClick= { this._cancelChange.bind(this) }/>
+              <div className={styles.body}>
+                <PrimaryButton text='Save Changes' disabled={submitting} onClick= {this._saveChange.bind(this)} />
+                <PrimaryButton text='Discard Changes' disabled={submitting} onClick={this._discardChanges.bind(this)} />
+                <PrimaryButton text='Cancel' disabled={submitting} onClick={this._cancelChange.bind(this)}/>
               </div>
             </div>
           </Modal>
@@ -168,7 +168,7 @@ export default class ChangeRequestManagementContainer extends React.Component<IC
             this.props.displayMode != 1 ?
             <div className={styles.brandArea}>
               <a className={styles.brandContent} href="https://aka.ms/sppnpsolutions">
-                <span className={styles.iconArea}><i className={`ms-Icon ms-Icon--PostUpdate`} aria-hidden="true"></i></span>
+                <span className={styles.iconArea}><i className={`ms-Icon ms-Icon--SharepointLogo`} aria-hidden="true"></i></span>
                 <span>SharePoint Patterns and Practices Community Solutions</span>
               </a>
             </div> : 
@@ -176,8 +176,7 @@ export default class ChangeRequestManagementContainer extends React.Component<IC
           }
         </div>
       );
-    }
-    else {
+    } else {
       return (
         <div className={styles.container}>
           {hasAdminPermission ? (

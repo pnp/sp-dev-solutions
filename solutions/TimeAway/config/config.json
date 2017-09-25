@@ -1,0 +1,19 @@
+{
+  "entries": [
+    {
+      "entry": "./lib/webparts/timeAwaySummary/TimeAwaySummaryWebPart.js",
+      "manifest": "./src/webparts/timeAwaySummary/TimeAwaySummaryWebPart.manifest.json",
+      "outputPath": "./dist/time-away-summary.bundle.js"
+    },
+    {
+      "entry": "./lib/webparts/myTimeAway/MyTimeAwayWebPart.js",
+      "manifest": "./src/webparts/myTimeAway/MyTimeAwayWebPart.manifest.json",
+      "outputPath": "./dist/my-time-away.bundle.js"
+    }
+  ],
+  "externals": {},
+  "localizedResources": {
+    "timeAwaySummaryStrings": "webparts/timeAwaySummary/loc/{locale}.js",
+    "myTimeAwayStrings": "webparts/myTimeAway/loc/{locale}.js"
+  }
+}

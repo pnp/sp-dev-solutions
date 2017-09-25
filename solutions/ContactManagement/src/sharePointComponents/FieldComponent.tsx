@@ -116,7 +116,6 @@ export abstract class FieldComponent<P extends IFieldComponentProps, S extends I
     if (io == null)
     {
       // Debug.fail("Could not update field '" + this.effectiveFieldInternalName + "' - no backing object.");
-
       return;
     }
 

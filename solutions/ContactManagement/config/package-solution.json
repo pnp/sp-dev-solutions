@@ -1,0 +1,27 @@
+{
+  "solution": {
+    "name": "Contact Management",
+    "id": "7e571ffc-e6a5-443e-8bbb-78d0ddbee6a0",
+    "version": "1.0.12.0",
+    "features": [{
+      "title": "Contact Management Solution",
+      "description": "Contact Management Solution",
+      "id": "BF238909-3634-4934-AB08-1B64622913C1",
+      "version": "1.0.12.0",
+      "assets": {
+        "elementManifests": [
+          "elements.xml"
+        ],
+        "elementFiles":[
+          "organizationlistschema.xml"
+        ],        
+        "upgradeActions":[
+          "upgradeactions.xml"
+      ]
+      }
+    }]  
+  },
+  "paths": {
+    "zippedPackage": "solution/contact-management.sppkg"
+  }
+}

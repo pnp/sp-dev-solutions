@@ -1,0 +1,11 @@
+{
+  "solution": {
+    "name": "Time Away Tracking",
+    "id": "fda66e22-a8d8-4263-9c41-5b54c1ef16e1",
+    "version": "1.0.12.0",
+    "iconPath": "timeawayicon.png"
+  },
+  "paths": {
+    "zippedPackage": "solution/time-away.sppkg"
+  }
+}

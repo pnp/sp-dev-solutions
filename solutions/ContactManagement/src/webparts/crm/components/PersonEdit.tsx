@@ -354,7 +354,6 @@ export default class PersonEdit extends React.Component<IPersonEditProps, IPerso
               </div>
             </PivotItem>
         </Pivot>
-
       </div>
     );
   }

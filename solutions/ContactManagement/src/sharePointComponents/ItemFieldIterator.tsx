@@ -17,8 +17,6 @@ import ItemFieldLabel from './ItemFieldLabel';
 
 import UserInterfaceUtility from './UserInterfaceUtility';
 
-// import ItemRichTextFieldEditor from './ItemRichTextFieldEditor';
-
 export interface IItemFieldIteratorProps extends IItemComponentProps {
   excludedFields? : string[];
   isDisplayOnly? : boolean;
@@ -78,7 +76,7 @@ export default class ItemFieldIterator extends ItemComponent<IItemFieldIteratorP
     return false;
   }
 
-  private _isValueEmpty(field : ISPField) : boolean
+  public isValueEmpty(field : ISPField) : boolean
   {
     var val = this.props.itemContext.itemObject[this.effectiveInternalNameForField(field)];
 

@@ -1,6 +1,5 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
-
 import * as React from 'react';
 import ItemContext from './ItemContext';
 
@@ -34,5 +33,4 @@ export abstract class ItemComponent<P extends IItemComponentProps, S extends IIt
 
     return fieldName;
   }
-
 }

@@ -7,7 +7,6 @@ import * as React from 'react';
 import styles from './sharePointComponents.module.scss';
 
 import { FieldComponent, IFieldComponentProps, IFieldComponentState } from './FieldComponent';
-// import RichTextEditor from 'react-rte';
 import { FocusZone } from 'office-ui-fabric-react/lib/FocusZone';
 
 export interface IItemRichTextFieldEditorProps extends IFieldComponentProps {

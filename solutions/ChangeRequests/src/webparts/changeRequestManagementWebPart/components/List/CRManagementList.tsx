@@ -5,11 +5,12 @@ import * as React from 'react';
 import * as Update from 'immutability-helper';
 import * as _ from "lodash";
 import * as moment from 'moment';
-import styles from './CRManagementList.module.scss';
+
 import { ICRManagementListProps } from './ICRManagementListProps';
 import { IChangeRequestManagementItem } from '../../models/CRManagementModel';
 import { IPerson } from '../../../../libraries/models/ChangeRequestModel';
 import { css, DetailsList, MarqueeSelection, SelectionMode, Selection, IColumn, CheckboxVisibility, ConstrainMode } from 'office-ui-fabric-react';
+import styles from './CRManagementList.module.scss';
 
 export default class CRManagementList extends React.Component<ICRManagementListProps, any> {
   private _selection: Selection;

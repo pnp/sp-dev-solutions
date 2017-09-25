@@ -103,8 +103,6 @@ export default class PersonDisplay extends React.Component<IPersonDisplayProps, 
     if (this.state.isEditing || this.props.isEditing)
     {
       toolbar = <div></div>;
-//          <Button onClick={  () => { this.setState( { isEditing: !this.state.isEditing }); this._updatePersionEdit(); } }>Done</Button>
-  //      </div>;
 
       interior = <PersonEdit   person={ this.props.person }
                       ensureNew={ false } 
@@ -117,22 +115,9 @@ export default class PersonDisplay extends React.Component<IPersonDisplayProps, 
       if (this.props.allowEdit)
       {
         toolbar = <div></div>;
-        /*
-          <Button onClick={  () => { this.setState( { isEditing: !this.state.isEditing }); } }>Edit</Button>
-        </div>;*/
       }
 
       let organizationContent = <div></div>;
-
-      /*
-      if (this.state.organization != null)
-      {
-        organizationContent = <div className={ styles.organizationArea }>
-            <div>Organization</div>
-            <div>{this.state.organization.Title}</div>
-          </div>;
-      } 
-      */
       
       interior = <div>
           <div className={styles.topArea}>

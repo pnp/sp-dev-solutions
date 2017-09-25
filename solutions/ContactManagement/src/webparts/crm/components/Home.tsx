@@ -70,17 +70,6 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
     }
   }
 
-  public componentWillReceiveProps(nextProps : IHomeProps) {
-
-    if (this.state != null && nextProps != null)
-    {
-    /*  this.setState({
-        initialMode: nextProps.mode,
-        mode: nextProps.mode
-      });*/
-    }
-  }
-
   public _handlePersonSelected(val: any)
   {
     if (this.props.onPersonSelected != null)
@@ -103,11 +92,6 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
 
     if (newMode != null)
     {
-   /*   this.setState( {
-        mode: newMode,
-        initialMode: this.state.initialMode
-        });
-      */
       if (this.props.onModeChanged != null)
       {
         this.props.onModeChanged(newMode);

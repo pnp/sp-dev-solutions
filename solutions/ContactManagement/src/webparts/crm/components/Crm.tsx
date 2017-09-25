@@ -29,8 +29,6 @@ import SharePointUtility from '../../../data/SharePointUtility';
 
 import { Label } from 'office-ui-fabric-react/lib/Label';
 import { Button } from 'office-ui-fabric-react/lib/Button';
-import { IPersonEditProps } from './PersonEdit';
-import { IOrganizationEditProps } from './OrganizationEdit';
 import { TagPicker } from 'office-ui-fabric-react/lib/components/pickers/TagPicker/TagPicker';
 
 export interface IPickerItem 
@@ -63,13 +61,14 @@ export enum CrmMode
 export interface ICrmProps extends ICrmComponentProps {
   description: string;
   views: ViewSet;
+  displayMode: number;  
 }
 
 export interface ICrmState {
   lastMode: CrmMode;
   mode: CrmMode;
   isContextMenuShown?: boolean;
-  dialogMode: CrmDialogMode,
+  dialogMode: CrmDialogMode;
   searchTerm?: string;
   searchTags?: number[];
 	selectedPerson?: IPerson;
@@ -81,7 +80,6 @@ export default class Crm extends React.Component<ICrmProps, ICrmState> {
   private _organizationDisplay : OrganizationDisplay;
   private _personDisplay : PersonDisplay;
   private _lastMode? : CrmMode;
-  private container;
 
   public constructor(props?: ICrmProps, context?: any)
   {
@@ -341,77 +339,6 @@ export default class Crm extends React.Component<ICrmProps, ICrmState> {
     }
   }
 
-  /*
-  private _renderSplitButtonMenuItem(item: IContextualMenuItem) {
-    let darkerBG = this.state.isContextMenuShown && styles.darkerBG;
-
-    let dropDownButtonClass = css(
-      styles.button,
-      darkerBG
-    );
-    let mainBtnClassName = css(
-      !item.name && ('ms-CommandBarItem--noName'),
-      styles.button,
-      darkerBG
-    );
-
-    return (
-      <div>
-        <div className={ css(
-          styles.customButtonContainer,
-          darkerBG
-        ) } ref={ ref => this.container = ref }>
-          <Button
-            className={ mainBtnClassName }
-            iconProps={ { iconName: 'Add' } }
-            text='New' />
-          <span className={ styles.splitter }>|</span>
-          <DefaultButton
-            onClick={ this._onClickChevron }
-            className={ dropDownButtonClass }
-            menuProps={ {
-              className: css('ms-CommandBar-menuHost'),
-              items:  {
-                  items: [
-                    {
-                      key: 'emailMessage',
-                      name: 'Email message',
-                      icon: 'Mail',
-                      ['data-automation-id']: 'newEmailButton'
-                    },
-                    {
-                      key: 'calendarEvent',
-                      name: 'Calendar event',
-                      icon: 'Calendar',
-                      ['data-automation-id']: 'newCalendarButton'
-                    }
-                  ],
-                },
-            } } />
-        </div>
-      </div >
-    );
-  }
-
-  private _onClickChevron(ev: any) {
-    ev.stopPropagation();
-    this._toggleDropDownMenuShown(ev);
-  }
-
-  private _toggleDropDownMenuShown(ev: any) {
-    this.setState({
-      searchTerm: this.state.searchTerm,
-      searchTags: this.state.searchTags,
-      lastMode: this.state.lastMode,         
-      dialogMode: this.state.dialogMode,          
-      mode: this.state.mode,
-      selectedOrganization: this.state.selectedOrganization,
-      selectedPerson: this.state.selectedPerson,
-      isEditing: this.state.isEditing,
-      isContextMenuShown: !this.state.isContextMenuShown
-    });
-  }*/
-
   public render(): React.ReactElement<ICrmProps> {
     var pageRender;
 
@@ -423,7 +350,6 @@ export default class Crm extends React.Component<ICrmProps, ICrmState> {
                      />        
           <div className={ styles.logoArea }>
             <h1>Contact Management</h1>
-            <h2>Community Solutions</h2>
           </div>  
         </div>;
 
@@ -516,7 +442,6 @@ export default class Crm extends React.Component<ICrmProps, ICrmState> {
                     this._personDisplay.updatePersonEdit();
                   }
 
-
                   this.setState( { 
                       mode: this._lastMode != null ? this._lastMode : this.state.lastMode, 
                       dialogMode: this.state.dialogMode, 
@@ -592,28 +517,7 @@ export default class Crm extends React.Component<ICrmProps, ICrmState> {
           key: 'newOrganization',
           onClick: this._handleNewOrganizationClick
         }
-    ];/*        
-        key: 'new',
-        name: 'Add',
-        className: 'ms-CommandBarItem',
-        subMenuProps: {
-          items: [
-            {
-              key: 'emailMessage',
-              name: 'Email message',
-              icon: 'Mail',
-              ['data-automation-id']: 'newEmailButton'
-            },
-            {
-              key: 'calendarEvent',
-              name: 'Calendar event',
-              icon: 'Calendar',
-              ['data-automation-id']: 'newCalendarButton'
-            }
-          ],
-        },
-      }
-    ];*/
+    ];
     
     UserInterfaceUtility.applyWorkarounds();
 
@@ -656,6 +560,16 @@ export default class Crm extends React.Component<ICrmProps, ICrmState> {
             </div>
           </div>          
         </div>
+        { 
+            this.props.displayMode != 1 ?
+            <div className={styles.brandArea}>
+              <a className={styles.brandContent} href="https://aka.ms/sppnpsolutions">
+                <span className={styles.iconArea}><i className={`ms-Icon ms-Icon--SharepointLogo`} aria-hidden="true"></i></span>
+                <span>SharePoint Patterns and Practices Community Solutions</span>
+              </a>
+            </div> : 
+            <div></div> 
+        }        
         <Dialog  isOpen={ this.state.dialogMode == CrmDialogMode.Organization }
           type={ DialogType.largeHeader }    
           title= { "Organization" }

@@ -173,15 +173,12 @@ export default class OrganizationDisplay extends React.Component<IOrganizationDi
     if (this.props.isEditing || this.state.isEditing)
     {
       toolbar = <div></div>;
-   //       <Button onClick={  () => { this.setState( { isEditing: !this.state.isEditing }); this.updatePersionEdit(); } }>Done</Button>
-       // </div>;
 
       interior = <OrganizationEdit   organization={ this.props.organization }
                       ensureNew={ false } 
                       ref={ (incomingOrganizationEdit : OrganizationEdit) => { this._organizationEdit = incomingOrganizationEdit; } }
                       manager={ this.props.manager } 
                       />;
-
     }
     else
     {

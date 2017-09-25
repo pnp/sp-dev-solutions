@@ -62,6 +62,7 @@ export default class CrmWebPart extends BaseClientSideWebPart<ICrmWebPartProps> 
       {
         description: this.properties.description,
         manager: this._manager,
+        displayMode: this.displayMode,
         views: this.properties.views
       }
     );

@@ -8,7 +8,7 @@ import styles from './sharePointComponents.module.scss';
 
 import { FieldComponent, IFieldComponentProps, IFieldComponentState } from './FieldComponent';
 import { ISPUser } from '../data/ISPUser';
-import { IDropdownOption, IPickerItemProps } from 'office-ui-fabric-react';
+import { IDropdownOption } from 'office-ui-fabric-react';
 
 import {
   CompactPeoplePicker
@@ -59,7 +59,6 @@ export default class ItemPeopleFieldEditor extends FieldComponent<IItemPeopleFie
           {
               var persona = {
                 primaryText: user.Title,
-        //        imageUrl : user.Picture != null ? user.Picture.Url : "",
                 imageUrl: user.EMail != null ? "https://outlook.office365.com/owa/service.svc/s/GetPersonaPhoto?email=" + user.EMail + "&amp;UA=0&amp;size=HR64x64" : null,                       
                 presence: PersonaPresence.none,
                 size: PersonaSize.small,
@@ -120,9 +119,6 @@ export default class ItemPeopleFieldEditor extends FieldComponent<IItemPeopleFie
   private _onFilterChanged(filterText: string, currentPersonas: IPersonaProps[], limitResults?: number) 
   {
     if (filterText) {
-
-//          return new Promise<IPersonaProps[]>((resolve, reject) => setTimeout(() => resolve(results), 2000));
-
       return this.props.itemContext.readUsersBySearch(filterText).then( (users: ISPUser[]) =>
         {
             var personas : IPersonaProps[] = new Array();

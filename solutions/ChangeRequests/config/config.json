@@ -1,0 +1,19 @@
+{
+  "entries": [
+    {
+      "entry": "./lib/webparts/changeRequestManagementWebPart/ChangeRequestManagementWebPart.js",
+      "manifest": "./src/webparts/changeRequestManagementWebPart/ChangeRequestManagementWebPart.manifest.json",
+      "outputPath": "./dist/change-request-management-web-part.bundle.js"
+    },
+    {
+      "entry": "./lib/webparts/myChangeRequestsWebPart/MyChangeRequestsWebPart.js",
+      "manifest": "./src/webparts/myChangeRequestsWebPart/MyChangeRequestsWebPart.manifest.json",
+      "outputPath": "./dist/my-change-requests-web-part.bundle.js"
+    }
+  ],
+  "externals": {},
+  "localizedResources": {
+    "changeRequestManagementWebPartStrings": "webparts/changeRequestManagementWebPart/loc/{locale}.js",
+    "myChangeRequestsWebPartStrings": "webparts/myChangeRequestsWebPart/loc/{locale}.js"
+  }
+}

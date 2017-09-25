@@ -92,7 +92,7 @@ export default class MyCRContainer extends React.Component<ICheckOutContainerPro
             this.props.displayMode != 1 ?
             <div className={styles.brandArea}>
               <div className={styles.brandContent}>
-                <span className={styles.iconArea}><i className={`ms-Icon ms-Icon--PostUpdate`} aria-hidden="true"></i></span>
+                <span className={styles.iconArea}><i className={`ms-Icon ms-Icon--SharepointLogo`} aria-hidden="true"></i></span>
                 <span><a href="https://aka.ms/spcommunitysolutions/" className={styles.brandLink}>SharePoint Community Solutions</a></span>
               </div>
             </div> : 
@@ -246,11 +246,13 @@ private _getAvailableCount(checkouts: ICheckOut[]): number {
       }
       let allItems = [];
       count = this.state.allItemsOriginal.length;
-      for (var i = 0; i < count; i++) {
-        if (lodash.toLower(this.state.allItemsOriginal[i].title).indexOf(filter) >= 0) {
-          allItems.push(this.state.allItemsOriginal[i]);
+
+      for (var j = 0; j < count; j++) {
+        if (lodash.toLower(this.state.allItemsOriginal[j].title).indexOf(filter) >= 0) {
+          allItems.push(this.state.allItemsOriginal[j]);
         }
       }
+
       this.setState({ myCheckoutItems: myCheckoutItems, allItems: allItems });
     } else {
       this.setState({ myCheckoutItems: this.state.myCheckoutItemsOriginal, allItems: this.state.allItemsOriginal });

@@ -1,0 +1,10 @@
+{
+  "solution": {
+    "name": "Change Request Management",
+    "id": "9fcb6dd8-3a9b-4501-9e77-8a4ed3b914ea",
+    "version": "1.0.12.0"
+  },
+  "paths": {
+    "zippedPackage": "solution/change-request-management.sppkg"
+  }
+}

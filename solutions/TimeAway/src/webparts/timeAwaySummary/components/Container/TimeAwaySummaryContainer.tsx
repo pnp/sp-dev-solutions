@@ -85,7 +85,7 @@ export default class TimeAwaySummaryContainer extends React.Component<ITimeAwayS
             this.props.displayMode != 1 ?
             <div className={styles.brandArea}>
               <a className={styles.brandContent} href="https://aka.ms/sppnpsolutions">
-                <span className={styles.iconArea}><i className={`ms-Icon ms-Icon--PostUpdate`} aria-hidden="true"></i></span>
+                <span className={styles.iconArea}><i className={`ms-Icon ms-Icon--SharepointLogo`} aria-hidden="true"></i></span>
                 <span>SharePoint Patterns and Practices Community Solutions</span>
               </a>
             </div> : 

@@ -2,9 +2,10 @@
 
 # SharePoint Patterns and Practices Community Solutions
 
-Welcome to the SharePoint PnP Community Solutions repository!
+Welcome to the SharePoint PnP Community Solutions repository. This repository contains samples and templates you can use as foundations and patterns of solutions for your SharePoint sites.
 
-This repository contains samples and templates you can use as foundations and patterns of solutions for your SharePoint sites.
+#### STATUS
+These web parts are currently in preview, and undergoing further updates to improve quality, based on your feedback.
   
 ## About
 
@@ -18,7 +19,7 @@ Note that this repository is licensed via the [MIT license](LICENSE).  The softw
 
 | Solution           | Description                                                                        | Link  |
 | ------------------ |:-----------------------------------------------------------------------------------| -----:|
-| ChangeRequests     | Manage and close change requests opened by users.                                  | [Link](./solutions/changeRequest/README.md) |
+| ChangeRequests     | Manage and close change requests opened by users.                                  | [Link](./solutions/changeRequests/README.md) |
 | ContactManagement  | Organize and manage contacts and organizations.                                    | [Link](./solutions/ContactManagement/README.md) |
 | InventoryCheckOut  | Manage a list of items in an inventory, and let users check out and reserve items. | [Link](./solutions/InventoryCheckOut/README.md) | 
 | TimeAway           | Provides a simple out-of-office tracker for members of your team.                  | [Link](./solutions/TimeAway/README.md) | 

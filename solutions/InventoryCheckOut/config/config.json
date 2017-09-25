@@ -1,0 +1,13 @@
+{
+  "entries": [
+    {
+      "entry": "./lib/webparts/inventoryCheckOutWebPart/InventoryCheckOutWebPartWebPart.js",
+      "manifest": "./src/webparts/inventoryCheckOutWebPart/InventoryCheckOutWebPartWebPart.manifest.json",
+      "outputPath": "./dist/inventory-check-out-web-part.bundle.js"
+    }
+  ],
+  "externals": {},
+  "localizedResources": {
+    "inventoryCheckOutWebPartStrings": "webparts/inventoryCheckOutWebPart/loc/{locale}.js"
+  }
+}

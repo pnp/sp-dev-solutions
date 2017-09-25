@@ -1,0 +1,13 @@
+{
+  "entries": [
+    {
+      "entry": "./lib/webparts/crm/CrmWebPart.js",
+      "manifest": "./src/webparts/crm/CrmWebPart.manifest.json",
+      "outputPath": "./dist/crm.bundle.js"
+    }
+  ],
+  "externals": {},
+  "localizedResources": {
+    "crmStrings": "webparts/crm/loc/{locale}.js"
+  }
+}

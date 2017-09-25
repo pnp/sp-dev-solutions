@@ -109,15 +109,14 @@ export default class OrganizationEdit extends React.Component<IOrganizationEditP
         this.props.manager.data.addOrganizationItem(this.state.organization).then((data: IOrganizationSet) => {
           
         //Debug.message("Result from saving organization (note new ID)" + JSON.stringify(data.organizations[0]));
-          this._itemContext.itemId = data.organizations[0].Id;
-          this._itemContext.itemObject = data.organizations[0];
+        this._itemContext.itemId = data.organizations[0].Id;
+        this._itemContext.itemObject = data.organizations[0];
 
-          this.setState( { 
+        this.setState( { 
             organization: data.organizations[0],
             newItemWasCreated: false
           });
         });
-
       }
       else
       {
