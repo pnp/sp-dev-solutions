@@ -1,0 +1,28 @@
+{
+    "$schema": "../../../node_modules/@microsoft/sp-module-interfaces/lib/manifestSchemas/jsonSchemas/clientSideComponentManifestSchema.json",
+
+    "id": "01c3854e-1d25-4325-8891-fbb4c5bfe1aa",
+    "alias": "HandlebarTemplateDisplayWebPart",
+    "componentType": "WebPart",
+    "version": "*", // The "*" signifies that the version should be taken from the package.json
+    "manifestVersion": 2,
+
+    /**
+     * This property should only be set to true if it is certain that the webpart does not
+     *  allow arbitrary scripts to be called
+     */
+    "safeWithCustomScriptDisabled": false,
+
+    "preconfiguredEntries": [{
+        "groupId": "01c3854e-1d25-4325-8891-fbb4c5bfe1aa",
+        "group": { "default": "Hub Web Parts" },
+        "title": { "default": "Hub Template" },
+        "description": { "default": "Display the list items for a selected list with a selected handlebars template" },
+        "officeFabricIconFontName": "MultiSelect",
+        "properties": {
+            "listQuery": "",
+            "handlebarTemplateUrl": "",
+            "containerClass": ""
+        }
+    }]
+}

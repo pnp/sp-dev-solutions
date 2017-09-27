@@ -1,0 +1,177 @@
+.featured-content {
+    width: 100%;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #333;
+    background-color: #fff;
+    & .featured-content-item {
+        position: relative;
+        width: 100%;
+        &:nth-child(2n) {
+            & .content {
+                margin-left: 0;
+                margin-right: 300px;
+            }
+            & .image {
+                left: auto;
+                right: 0;
+            }
+        }
+        &.edit {
+            & .edit-controls {
+                display: none;
+                position: absolute;
+                right: 0;
+                top: 0;
+                width: 40px;
+                & button {
+                    display: block;
+                    min-width: 40px;
+                    padding: 0;
+                }
+                .left-button {
+                    width: 40px;
+                    text-align: center;
+                    padding: 3px;
+                    background-color: #F4F4F4;
+                    cursor: move;
+                    &:hover {
+                        background-color: #EAEAEA;
+                    }
+                }
+            }
+            &:hover {
+                & .edit-controls {
+                    display: block;
+                }
+            }
+        }
+    }
+    & .content {
+        display: block;
+        padding: 20px 20px 0;
+        vertical-align: top;
+        position: relative;
+        margin-left: 300px;
+        min-height: 300px;
+    }
+    & .box-container {
+        clear: both;
+        border: 1px solid #eaeaea;
+        margin: 0 0 20px 0;
+        display: table;
+        width: 100%;
+    }
+    & .image {
+        width: 300px;
+        overflow: hidden;
+        display: block;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        & img {
+            width: auto;
+            height: 100%;
+        }
+    }
+    & .featured-content-link:hover {
+        text-decoration: none;
+    }
+    & .title {
+        font-size: 28px;
+        color: #333;
+        font-weight: 600;
+        width: 100%;
+        position: relative;
+        top: 0;
+        height: auto!important;
+        box-sizing: border-box;
+    }
+    & .description {
+        position: relative;
+        display: block;
+        padding-bottom: 7px;
+    }
+    & .rich-text-field {
+        display: block;
+        position: relative;
+        & ul {
+            margin: 0;
+        }
+    }
+}
+
+:global .ms-sm12.ms-xl4 {
+    & :local .featured-content {
+        & :local .image {
+            & img {
+                left: 0;
+                height: auto;
+                width: 100%;
+                position: relative;
+            }
+        }
+    }
+    & :local .featured-content {
+        & :local .image {
+            width: 100%;
+            height: auto;
+            overflow: hidden;
+            display: block;
+            position: relative;
+            float: left;
+        }
+    }
+    & :local .featured-content {
+        & :local .featured-content-item {
+            & :local .content {
+                width: 100%;
+                display: block;
+                padding: 21px 20px;
+                vertical-align: top;
+                margin-left: 0;
+                &:nth-child(2n) {
+                    margin-right: 0;
+                }
+            }
+        }
+    }
+}
+
+@media (max-width:767px) {
+    .featured-content {
+        & .image {
+            & img {
+                left: 0;
+                height: auto;
+                width: 100%;
+                position: relative;
+            }
+        }
+    }
+    .featured-content {
+        & .image {
+            width: 100%;
+            height: auto;
+            overflow: hidden;
+            display: block;
+            position: relative;
+            float: left;
+        }
+    }
+    .featured-content {
+        & .featured-content-item {
+            & .content {
+                width: 100%;
+                display: block;
+                padding: 21px 20px;
+                vertical-align: top;
+                margin-left: 0;
+                &:nth-child(2n) {
+                    margin-right: 0;
+                }
+            }
+        }
+    }
+}

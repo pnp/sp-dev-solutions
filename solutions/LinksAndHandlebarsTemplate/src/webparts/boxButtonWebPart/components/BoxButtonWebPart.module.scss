@@ -1,0 +1,145 @@
+.webpart-header {
+    font-size: 24px;
+    font-weight: 100;
+    margin-bottom: 11px;
+    & .edit {
+        background-color: transparent;
+        border: none;
+        box-sizing: border-box;
+        display: block;
+        margin: 0;
+        outline: 0;
+        overflow: hidden;
+        resize: none;
+        white-space: pre;
+        width: 100%;
+        font-family: inherit;
+        font-size: inherit;
+        font-weight: inherit;
+        line-height: inherit;
+        text-align: inherit;
+        color: #333333;
+        height: 40px;
+    }
+    & .view {
+        color: #333333;
+    }
+}
+
+.box-link {
+    margin: 20px 0;
+    display: block;
+    text-decoration: none;
+    position: relative;
+    &:first {
+        margin: 0;
+    }
+    & .box-button {
+        border: 1px solid #006699;
+        color: #006699;
+        background-color: #FFFFFF;
+        padding: 10px 20px;
+        text-align: center;
+        text-transform: uppercase;
+        position: relative;
+        cursor: pointer;
+        font-weight: bold;
+        font-size: 18px;
+        &.blue {
+            color: #FFFFFF;
+            background-color: #006699;
+        }
+        & i {
+            margin-right: 10px;
+        }
+    }
+    & .empty-box {
+        background-color: #D9D9D9;
+        padding: 10px 20px;
+        text-align: center;
+        text-transform: uppercase;
+        cursor: pointer;
+        font-weight: bold;
+        font-size: 18px;
+        & div {
+            height: 90%;
+            width: 50%;
+            margin: auto;
+            padding: 10px 0;
+            line-height: 100%;
+            vertical-align: middle;
+            color: #FFFFFF;
+            background-color: #006699;
+        }
+    }
+    &:hover {
+        & a {
+            text-decoration: none;
+            & .box-button.edit {
+                -webkit-box-shadow: 0px 0px 0px 10px rgba(239, 239, 239, 1);
+                -moz-box-shadow: 0px 0px 0px 10px rgba(239, 239, 239, 1);
+                box-shadow: 0px 0px 0px 10px rgba(239, 239, 239, 1);
+                margin: 10px 42px 10px 10px;
+            }
+        }
+    }
+    &:visited {
+        text-decoration: none;
+    }
+    & .edit-controls {
+        display: none;
+        position: absolute;
+        width: 42px;
+        right: 0;
+        text-align: right;
+        top: -10px;
+        bottom: -15px;
+        background-color: transparent;
+        z-index: 1000000;
+        &>button {
+            min-width: 20px;
+            width: 32px;
+            height: 22px;
+            padding: 0 5px;
+            background-color: white;
+            border-color: white;
+        }
+        &>i {
+            color: #333333;
+            padding: 5px;
+            font-size: 12px;
+            line-height: 13px;
+            margin-left: 10px;
+            text-align: center;
+            width: 32px;
+            cursor: move;
+            background-color: white;
+            &:hover {
+                background-color: #EAEAEA;
+            }
+        }
+        & :global .ms-Button.ms-Button--default :global .ms-Button-icon {
+            line-height: 15px;
+            height: 10px;
+            &>i {
+                font-size: 12px;
+            }
+        }
+    }
+    &:hover .edit-controls {
+        display: block;
+    }
+}
+
+@media (max-width: 992px) {
+    .box-button {
+        width: calc(100% - 20px);
+    }
+}
+
+@media (max-width: 767px) {
+    .box-button {
+        display: block;
+        width: 100%;
+    }
+}

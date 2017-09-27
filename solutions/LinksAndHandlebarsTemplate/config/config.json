@@ -1,0 +1,56 @@
+{
+    "entries": [{
+            "entry": "./lib/webparts/boxButtonWebPart/BoxButtonWebPartWebPart.js",
+            "manifest": "./src/webparts/boxButtonWebPart/BoxButtonWebPartWebPart.manifest.json",
+            "outputPath": "./dist/box-button-web-part.bundle.js"
+        },
+        {
+            "entry": "./lib/webparts/featuredContentWebPart/FeaturedContentWebPartWebPart.js",
+            "manifest": "./src/webparts/featuredContentWebPart/FeaturedContentWebPartWebPart.manifest.json",
+            "outputPath": "./dist/featured-content-web-part.bundle.js"
+        },
+        {
+            "entry": "./lib/webparts/hubLinks/HubLinksWebPart.js",
+            "manifest": "./src/webparts/hubLinks/HubLinksWebPart.manifest.json",
+            "outputPath": "./dist/hub-links.bundle.js"
+        },
+        {
+            "entry": "./lib/webparts/handlebarTemplateDisplay/HandlebarTemplateDisplayWebPart.js",
+            "manifest": "./src/webparts/handlebarTemplateDisplay/HandlebarTemplateDisplayWebPart.manifest.json",
+            "outputPath": "./dist/handlebar-template-display.bundle.js"
+        }
+    ],
+    "externals": {
+        "camljs": {
+            "path": "https://raw.githubusercontent.com/andrei-markeev/camljs/master/CamlJs/camljs.js", //Set URL to your caml.js file
+            "globalName": "camljs"
+        },
+        "jquery": {
+            "path": "https://code.jquery.com/jquery-1.12.3.min.js",
+            "globalName": "jquery"
+        },
+        "kendo": {
+            "path": "https://kendo.cdn.telerik.com/2017.2.621/js/kendo.editor.min.js",
+            "globalName": "kendo"
+        },
+        "handlebars": {
+            "path": "https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.10/handlebars.min.js",
+            "globalName": "handlebars"
+        },
+        "file-saver": {
+            "path": "https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.3/FileSaver.min.js",
+            "globalName": "file-saver"
+        },
+        "moment": {
+            "path": "https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js",
+            "globalName": "moment"
+        }
+    },
+    "localizedResources": {
+        "boxButtonWebPartStrings": "webparts/boxButtonWebPart/loc/{locale}.js",
+        "featuredContentWebPartStrings": "webparts/featuredContentWebPart/loc/{locale}.js",
+        "propertyFieldStrings": "propertyPane/loc/{locale}.js",
+        "hubLinksStrings": "webparts/hubLinks/loc/{locale}.js",
+        "handlebarTemplateDisplayStrings": "webparts/handlebarTemplateDisplay/loc/{locale}.js"
+    }
+}

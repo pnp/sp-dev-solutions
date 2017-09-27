@@ -1,0 +1,199 @@
+.featured-content {
+    display: block;
+    width: 100%;
+    flex-wrap: wrap;
+    margin-bottom: 25px;
+    & .all-featured-link {
+        text-transform: uppercase;
+        float: right;
+    }
+    & .featured-content-item {
+        width: 31%;
+        position: relative;
+        padding-right: 0;
+        padding-left: 0;
+        margin: 0 2% 20px 0;
+        border: 1px solid #eaeaea;
+        outline: 1px solid transparent;
+        min-height: 238px;
+        &:hover {
+            border: 1px #C8C8C8 solid;
+            outline: 1px #C8C8C8 solid;
+        }
+        & .featured-content-picture-container {
+            min-height: 200px;
+            max-height: 200px;
+            overflow: hidden;
+            & img {
+                min-width: 100%;
+                min-height: 200px;
+                max-height: 200px;
+            }
+        }
+        & .featured-content-title {
+            font-size: 14px;
+            padding: 8px 10px;
+            background: #fff;
+            overflow: hidden;
+            color: #333;
+            font-weight: 600;
+            width: 100%;
+            position: relative;
+            top: 0px;
+            height: auto!important;
+            box-sizing: border-box;
+        }
+        & a.featured-content-link {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+        }
+        &.edit {
+            & .edit-controls {
+                display: none;
+                position: absolute;
+                height: 38px;
+                right: 0;
+                left: 0;
+                bottom: 0;
+                background-color: rgba(0, 0, 0, 0.75);
+                z-index: 1000000;
+                &>button {
+                    min-width: 20px;
+                    line-height: 34px;
+                    width: 32px;
+                    padding: 0 5px;
+                    font-weight: bold;
+                    background-color: transparent;
+                    border-color: transparent;
+                    color: white;
+                    &.right-button {
+                        float: right;
+                    }
+                    &.left-button {
+                        float: left;
+                    }
+                    &>span {
+                        line-height: 34px;
+                        vertical-align: middle;
+                        & i {
+                            font-size: 16px;
+                            font-weight: bold;
+                        }
+                    }
+                }
+                &>i {
+                    color: #FFFFFF;
+                    padding: 5px;
+                    padding-top: 16px;
+                    font-size: 16px;
+                    font-weight: bold;
+                    line-height: 14px;
+                    margin-left: 3px;
+                    text-align: center;
+                    width: 22px;
+                    cursor: move;
+                    background-color: transparent;
+                }
+                & :global .ms-Button.ms-Button--default :global .ms-Button-icon {
+                    line-height: 15px;
+                    height: 10px;
+                    &>i {
+                        font-size: 12px;
+                    }
+                }
+            }
+            &:hover {
+                & .edit-controls {
+                    display: block;
+                }
+            }
+        }
+        &.empty {
+            background-color: #EFEFEF;
+            text-align: center;
+            cursor: pointer;
+            min-height: 238px;
+            &>div {
+                width: 60%;
+                height: 50px;
+                line-height: 50px;
+                vertical-align: middle;
+                text-align: center;
+                color: white;
+                background-color: #006699;
+                font-size: 14px;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                margin-right: -50%;
+                transform: translate(-50%, -50%);
+            }
+        }
+    }
+    @media all and (-ms-high-contrast: none),
+    (-ms-high-contrast: active) {
+        /* IE10+ CSS styles go here */
+        & a.featured-content-link,
+        .news-tile.news-container a.tile-link {
+            width: 100%;
+            height: 100%;
+            display: block;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            background-color: rgba(255, 0, 0, 0.0);
+        }
+        & .featured-content-title {
+            width: calc(100% - 20px);
+        }
+    }
+    & .clear {
+        clear: both;
+        height: 0;
+    }
+}
+
+:global .ms-sm12.ms-xl4 {
+    & :local .featured-content {
+        & :local .featured-content-item {
+            width: 100%;
+        }
+    }
+}
+
+@media (max-width: 1199px) {
+    .featured-content-item {
+        margin: 0 2% 30px 0;
+        &:nth-child(4) {
+            margin: 0 0 46px 0;
+        }
+    }
+}
+
+@media (max-width: 992px) {
+    .featured-content-item {
+        margin: 0 2% 30px 0;
+        float: left;
+        &:nth-child(4) {
+            margin: 0 0 60px 0;
+        }
+    }
+}
+
+@media (max-width: 767px) {
+    .featured-content-item {
+        margin: 0 0 56px 0 !important;
+        width: 100% !important;
+        &:nth-child(4) {
+            margin: 0 0 66px 0 !important;
+        }
+    }
+    .featured-content {
+        display: block;
+        width: 100%;
+    }
+}

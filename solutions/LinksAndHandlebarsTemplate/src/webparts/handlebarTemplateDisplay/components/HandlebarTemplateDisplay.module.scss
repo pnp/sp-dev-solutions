@@ -1,0 +1,65 @@
+.webpart-header {
+    font-size: 24px;
+    font-weight: 100;
+    margin-bottom: 11px;
+    & .edit {
+        background-color: transparent;
+        border: none;
+        box-sizing: border-box;
+        display: block;
+        margin: 0;
+        outline: 0;
+        overflow: hidden;
+        resize: none;
+        white-space: pre;
+        width: 100%;
+        font-family: inherit;
+        font-size: inherit;
+        font-weight: inherit;
+        line-height: inherit;
+        text-align: inherit;
+        color: #333333;
+        height: 40px;
+    }
+    & .view {
+        color: #333333;
+    }
+}
+
+.template-modal {
+    width: 70%;
+    margin: 0 auto;
+    & .template-header {
+        -webkit-box-flex: 1;
+        -ms-flex: 1 1 auto;
+        flex: 1 1 auto;
+        background: #0078d7;
+        color: #fff;
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-align: center;
+        -ms-flex-align: center;
+        align-items: center;
+        font-size: 28px;
+        font-weight: 100;
+        font-weight: 600;
+        padding-left: 28px;
+        min-height: 40px;
+        & :global .ms-Button-flexContainer {
+            color: white;
+            &>i {
+                color: white;
+            }
+        }
+    }
+    & .template-value {
+        -webkit-box-flex: 4;
+        -ms-flex: 4 4 auto;
+        flex: 4 4 auto;
+        padding: 5px 28px;
+        overflow-y: auto;
+        height: 500px;
+        white-space: pre-wrap;
+    }
+}

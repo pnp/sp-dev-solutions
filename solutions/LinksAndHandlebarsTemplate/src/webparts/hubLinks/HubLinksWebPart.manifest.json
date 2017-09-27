@@ -1,0 +1,25 @@
+{
+    "$schema": "../../../node_modules/@microsoft/sp-module-interfaces/lib/manifestSchemas/jsonSchemas/clientSideComponentManifestSchema.json",
+
+    "id": "4a8180df-c6b5-413e-a7cf-e5f4af80b1bf",
+    "alias": "HubLinksWebPart",
+    "componentType": "WebPart",
+    "version": "1.0.0",
+    "manifestVersion": 2,
+
+    "preconfiguredEntries": [{
+        "groupId": "4a8180df-c6b5-413e-a7cf-e5f4af80b1bf",
+        "group": { "default": "Hub Web Parts" },
+        "title": { "default": "Hub Links List" },
+        "description": { "default": "A list of links from a SharePoint list" },
+        "officeFabricIconFontName": "List",
+        "properties": {
+            "listQuery": "",
+            "title": "",
+            "layoutMode": 0,
+            "hubLinksItems": [],
+            "groups": [],
+            "version": "1.0"
+        }
+    }]
+}
