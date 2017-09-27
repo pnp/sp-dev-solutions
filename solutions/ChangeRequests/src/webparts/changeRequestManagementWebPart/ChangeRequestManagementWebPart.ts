@@ -9,7 +9,7 @@ import { BaseClientSideWebPart } from '@microsoft/sp-webpart-base';
 import CRManagementContainer from './components/Container/CRManagementContainer';
 import { ICRManagementContainerProps } from './components/Container/ICRManagementContainerProps';
 import { IChangeRequestManagementWebPartProps } from './IChangeRequestManagementWebPartProps';
-import { provisionManager as ProvisionManager } from '../../libraries/index';
+import { ProvisionManager as ProvisionManager } from '../../libraries/index';
 import { ICRManagementDataProvider } from './dataProviders/ICRManagementDataProvider';
 import { CRManagementDataProvider } from './dataProviders/CRManagementDataProvider';
 import { MockCRManagementDataProvider } from './dataProviders/MockCRManagementDataProvider';

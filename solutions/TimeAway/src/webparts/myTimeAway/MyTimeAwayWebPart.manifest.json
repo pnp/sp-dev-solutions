@@ -12,7 +12,7 @@
     "group": { "default": "Communication and collaboration" },
     "title": { "default": "Your Time Away" },
     "description": { "default": "Provides a simple way for a user to enter and list their time away." },
-    "officeFabricIconFontName": "Page",
+    "officeFabricIconFontName": "Sunny",
     "properties": {
       "normalWeekToggleField": true
     }

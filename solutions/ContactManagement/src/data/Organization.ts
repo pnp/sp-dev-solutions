@@ -10,7 +10,7 @@ export default class Organization extends SharePointItem implements IOrganizatio
     public Logo? : string;
     public Notes? : string;
     public Organizational_x0020_Priority? : number;
-    public Wikipedia? : SPUrl;
+    public About? : SPUrl;
     public HomePage? : string;    
     public PrimaryAddress? : string;
     public PrimaryCity? : string;

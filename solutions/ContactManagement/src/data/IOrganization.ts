@@ -12,7 +12,7 @@ export interface IOrganization extends ISharePointItem {
     Logo? : string;
     Notes? : string;
     Organizational_x0020_Priority? : number;
-    Wikipedia? : SPUrl;
+    About? : SPUrl;
     HomePage? : string;        
     PrimaryAddress? : string;
     PrimaryCity? : string;

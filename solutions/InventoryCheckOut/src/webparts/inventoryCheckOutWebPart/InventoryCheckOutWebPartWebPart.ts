@@ -10,7 +10,7 @@ import {
   PropertyPaneTextField,
   PropertyPaneCheckbox
 } from '@microsoft/sp-webpart-base';
-
+import { escape } from '@microsoft/sp-lodash-subset';
 import * as strings from 'inventoryCheckOutWebPartStrings';
 import { IInventoryCheckOutWebPartWebPartProps } from './IInventoryCheckOutWebPartWebPartProps';
 import CheckOutContainer from './components/Container/CheckOutContainer';
@@ -30,8 +30,8 @@ export default class InventoryCheckOutWebPartWebPart extends BaseClientSideWebPa
 
   protected async onInit(): Promise<void> {
     this.context.statusRenderer.displayLoadingIndicator(this.domElement, "Loading List");
-    this._location = this.properties.locations;
-    this._standardCheckoutLength = this.properties.standardCheckoutLength;
+    this._location = escape(this.properties.locations);
+    this._standardCheckoutLength = escape(this.properties.standardCheckoutLength);
     this._allowCheckoutIntheFuture = this.properties.allowCheckoutsIntheFuture;
     
     if (Environment.type === EnvironmentType.Local) {

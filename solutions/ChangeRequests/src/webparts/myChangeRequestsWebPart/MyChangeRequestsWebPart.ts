@@ -17,8 +17,8 @@ import { MockMyCRDataProvider } from './dataProviders/MockMyCRDataProvider';
 
 import IMyCRContainerProps from './components/Container/IMyCRContainerProps';
 import { IMyChangeRequestsWebPartProps } from './IMyChangeRequestsWebPartProps';
-import {NewCRDisplays} from './models/MyCRModel';
-import { provisionManager as ProvisionManager } from '../../libraries/index';
+import { NewCRDisplays } from './models/MyCRModel';
+import { ProvisionManager as ProvisionManager } from '../../libraries/index';
 
 export default class MyChangeRequestsWebPart extends BaseClientSideWebPart<IMyChangeRequestsWebPartProps> {
   private myCRContainerProps: IMyCRContainerProps;
@@ -52,7 +52,7 @@ export default class MyChangeRequestsWebPart extends BaseClientSideWebPart<IMyCh
     this.myCRContainerProps = {
       context: this.context,
       dataProvider: this._dataProvider,
-      newcrdisplays: this.properties.newcrdisplays,
+      newcrdisplays: escape(this.properties.newcrdisplays),
       newcrtext: escape(this.properties.newcrtext),
       newcrsubmissiontext: escape(this.properties.newcrsubmissiontext),
       newcrbuttontext: escape(this.properties.newcrbuttontext),

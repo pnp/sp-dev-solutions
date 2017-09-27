@@ -18,9 +18,12 @@
     "group": { "default": "Business and intelligence" },
     "title": { "default": "Inventory and Check-out" },
     "description": { "default": "A simple web part for managing a list of items, and letting users borrow or reserve items." },
-    "officeFabricIconFontName": "Page",
+    "officeFabricIconFontName": "Repo",
     "properties": {
-      "description": "InventoryCheckOutWebPart"
+      "description": "InventoryCheckOutWebPart",
+      "standardCheckoutLength": 2,
+      "allowCheckoutsIntheFuture": true,
+      "locations": ""
     }
   }]
 }

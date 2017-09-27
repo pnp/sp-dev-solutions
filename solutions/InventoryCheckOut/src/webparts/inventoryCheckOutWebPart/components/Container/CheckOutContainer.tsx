@@ -91,13 +91,13 @@ export default class MyCRContainer extends React.Component<ICheckOutContainerPro
           { 
             this.props.displayMode != 1 ?
             <div className={styles.brandArea}>
-              <div className={styles.brandContent}>
+              <a className={styles.brandContent} href="https://aka.ms/sppnpsolutions">
                 <span className={styles.iconArea}><i className={`ms-Icon ms-Icon--SharepointLogo`} aria-hidden="true"></i></span>
-                <span><a href="https://aka.ms/spcommunitysolutions/" className={styles.brandLink}>SharePoint Community Solutions</a></span>
-              </div>
+                <span>SharePoint Patterns and Practices Community Solutions</span>
+              </a>
             </div> : 
             <div></div> 
-          }
+        }        
           <DeleteInvDialog showDialog={this.state.showDialogType == DialogType.ConfirmDelete}
             itemDeleteConfirmOperationCallback={this._handleDeleteInvConfirmClick.bind(this)} title={currentItem ? currentItem.title : ""} />
           <InvNewDialog item={this.state.isNewInvForm == true ? null : currentItem} isOpen={this.state.showDialogType == DialogType.CreateInventoryItem}
@@ -403,12 +403,8 @@ private _getAvailableCount(checkouts: ICheckOut[]): number {
         itemsOrig = this.sortItemsByTitle(itemsOrig);
         this.setState({ showDialogType: DialogType.Hidden, allItemsOriginal: itemsOrig, allItems: items });
       });
-
     }
-   
-
   }
-
 
   private hideDialog() {
     this.setState({

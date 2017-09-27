@@ -235,16 +235,14 @@ export default class OrganizationEdit extends React.Component<IOrganizationEditP
                     <ItemTextFieldEditor field={this._itemContext.getField("HomePage") } itemContext={ this._itemContext } />
                   </div>
                 </div>
-
                 <div className={styles.fieldArea}>
                   <div className={styles.fieldLabel}>
-                    Wikipedia:
+                    About:
                   </div>
                   <div className={styles.fieldInput}>
-                    <ItemUrlFieldEditor field={this._itemContext.getField("Wikipedia") } itemContext={ this._itemContext } />
+                    <ItemUrlFieldEditor field={this._itemContext.getField("About") } itemContext={ this._itemContext } />
                   </div>
                 </div>
-
                 <div className={styles.fieldArea}>
                   <div className={styles.fieldLabel}>
                     Logo:
@@ -271,7 +269,7 @@ export default class OrganizationEdit extends React.Component<IOrganizationEditP
                 "Owner",
                 "Homepage",
                 "Logo",
-                "Wikipedia",
+                "About",
                 "PrimaryAddress", 
                 "PrimaryCity", 
                 "PrimaryStateProvince", 

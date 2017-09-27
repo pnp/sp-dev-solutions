@@ -8,6 +8,10 @@
   "dependencies": {
     "@microsoft/sp-core-library": "~1.1.0",
     "@microsoft/sp-webpart-base": "~1.1.1",
+    "@microsoft/sp-lodash-subset": "~1.1.0",
+    "@microsoft/sp-http": "~1.1.1",
+    "@microsoft/sp-page-context": "~1.1.0",
+    "office-ui-fabric-react": "~2.31.0",
     "@types/react": "0.14.46",
     "@types/react-addons-shallow-compare": "0.14.17",
     "@types/react-addons-test-utils": "0.14.15",

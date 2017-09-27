@@ -691,8 +691,8 @@ export abstract class BaseCrmDataProvider implements ICrmDataProvider {
         FieldTypeKind: FieldTypeKind.Text
       },                        
       { 
-        Title: "Wikipedia",
-        InternalName: "Wikipedia",
+        Title: "About",
+        InternalName: "About",
         FieldTypeKind: FieldTypeKind.Url
       },
       { 

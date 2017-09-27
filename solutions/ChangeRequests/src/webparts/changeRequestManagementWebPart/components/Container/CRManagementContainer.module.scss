@@ -11,7 +11,6 @@
     {
         margin-top: 16px;
         border-top: solid 1px #F0F0F0;
-        color: #D0D0D0;
     }
 
     .brandContent
@@ -20,6 +19,12 @@
         font-size: small;
         padding-bottom: 2px;
         text-decoration: none;
+        color: #006AC3;        
+    }
+
+    .brandContend:visited
+    {
+        color: #006AC3;        
     }
     
     .iconArea

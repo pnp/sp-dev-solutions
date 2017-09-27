@@ -96,8 +96,8 @@ export default class OrganizationTile extends React.Component<IOrganizationTileP
           </span>
         </span>
         <span className={styles.header}>
-          <div>{ org.Title }</div>
-          <div className = { statusClass }>{ org.Status }</div>             
+          <div>{org.Title}</div>
+          <div className={statusClass}>{org.Status}</div>             
         </span>
       </span>
     );

@@ -12,7 +12,7 @@
     "group": { "default": "Communication and collaboration" },
     "title": { "default": "Time Away Summary" },
     "description": { "default": "Provides a summary view of who is away over the next two upcoming weeks." },
-    "officeFabricIconFontName": "Page",
+    "officeFabricIconFontName": "RecurringEvent",
     "properties": {
       "myTimeAwayToggleField": true,
       "normalWeekToggleField": true,

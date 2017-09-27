@@ -32,8 +32,14 @@
       font-size: small;
       padding-bottom: 2px;
       text-decoration: none;
+      color: #006AC3;        
   }
-  
+
+  .brandContend:visited
+  {
+      color: #006AC3;        
+  }
+
   .iconArea
   {
       position: relative;
@@ -377,7 +383,7 @@
 
 .organizationTile  
 {
-  width: 200px;
+  width: 192px;
   height: 120px;
   vertical-align: bottom;
   display: inline-block;
@@ -413,8 +419,8 @@
     height: 50px;
     vertical-align: middle;
     border-top: solid 1px #D0D0D0;
-    width:192px;
-    padding: 4px;
+    width:180px;
+    padding: 6px;
     height:42px;
     display: inline-block;
   }
@@ -422,16 +428,16 @@
   .interior {
     vertical-align: bottom;
     display: block;
-    padding: 4px;
+    padding: 6px;
     background-color: white;
-    width: 192px;
+    width: 180px;
     height: 60px;
-    padding: 4px;
+    padding: 6px;
   }
 
   .interiorImage
   {
-    width:182px;
+    width:170px;
     height:60px;
     display:inline-block;
     background-position-y: center;

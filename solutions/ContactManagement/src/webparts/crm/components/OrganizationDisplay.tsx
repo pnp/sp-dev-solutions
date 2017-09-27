@@ -187,14 +187,18 @@ export default class OrganizationDisplay extends React.Component<IOrganizationDi
         toolbar = <div></div>;
       }
 
-      let wikiContent = <div></div>;
+      let aboutContent = <div></div>;
       
-      if (this.props.organization.Wikipedia != null)
+      if (this.props.organization.About != null)
       {
-        var wikiUrl = this.props.organization.Wikipedia.Url;
-        wikiUrl = wikiUrl.replace(".wikipedia.", ".m.wikipedia.");
+        let aboutUrl = this.props.organization.About.Url;
 
-        wikiContent = <PivotItem key="wikipedia" linkText="Wikipedia"><div><iframe width="100%" frameBorder="0" className={ styles.wikipediaIframe } src={wikiUrl}></iframe></div></PivotItem>;
+        if (aboutUrl != null && aboutUrl.toLowerCase().indexOf("wikipedia") >= 0)
+        {
+          aboutUrl = aboutUrl.replace(".wikipedia.", ".m.wikipedia.");
+
+          aboutContent = <PivotItem key="wikipedia" linkText="Wikipedia"><div><iframe width="100%" frameBorder="0" className={ styles.wikipediaIframe } src={aboutUrl}></iframe></div></PivotItem>;
+        }
       }
 
       let personsContent = <div></div>;
@@ -274,7 +278,7 @@ export default class OrganizationDisplay extends React.Component<IOrganizationDi
                 { personsContent }
               </div>
             </PivotItem>
-            { wikiContent }
+            { aboutContent }
             <PivotItem key="org" linkText='Address'>
               <div className={styles.pivotInterior}>            
                 <div className={styles.fieldListArea}>

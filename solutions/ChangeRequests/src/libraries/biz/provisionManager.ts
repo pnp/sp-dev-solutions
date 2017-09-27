@@ -3,7 +3,7 @@ import { Constants } from "../common/constants";
 import { EnsureListResult } from "../models/EnsureListResult";
 import { IWebPartContext } from '@microsoft/sp-webpart-base';
 
-export class provisionManager {
+export class ProvisionManager {
   public static utility = ca.SharePointUtility;
   public static crlistTitle: string = Constants.ChangeRequestListTitle;
   public static cdlistTitle: string = Constants.ChangeDiscussionListTitle;
@@ -23,10 +23,10 @@ export class provisionManager {
     let crListExists: boolean = false;
     let cdListExists: boolean = false;
     
-    return provisionManager.utility.checkListExists(ctx, provisionManager.crlistTitle)
+    return ProvisionManager.utility.checkListExists(ctx, ProvisionManager.crlistTitle)
     .then((listExists: boolean) => {
       crListExists = listExists;
-      return provisionManager.utility.checkListExists(ctx, provisionManager.cdlistTitle);
+      return ProvisionManager.utility.checkListExists(ctx, ProvisionManager.cdlistTitle);
     })
     .then((listExists: boolean) => {
       cdListExists = listExists;
@@ -43,7 +43,7 @@ export class provisionManager {
   }
 
   public static siteProvisoning(ctx: IWebPartContext): Promise<EnsureListResult>{
-    let canProvisoning = provisionManager.utility.checkCurrentUserIsAbleToManageList(ctx);
+    let canProvisoning = ProvisionManager.utility.checkCurrentUserIsAbleToManageList(ctx);
 
     if (!canProvisoning)
        return Promise.resolve(new EnsureListResult({ hasPermission: false }));
@@ -69,28 +69,28 @@ export class provisionManager {
   private static assignPermissionForRequestUsers(ctx: IWebPartContext): Promise<void>{
     let permissionId: string;
 
-    return provisionManager.utility.getRoleId(ctx, "Contribute")
+    return ProvisionManager.utility.getRoleId(ctx, "Contribute")
       .then((value: string) => {
         permissionId = value;
-        return provisionManager.utility.breakRoleInheritanceOfList(ctx, this.crlistTitle);
+        return ProvisionManager.utility.breakRoleInheritanceOfList(ctx, this.crlistTitle);
       })
       .then(() => {
-        return provisionManager.utility.setNewPermissionsForGroup(ctx, this.crlistTitle, this.cruGroupId, permissionId);
+        return ProvisionManager.utility.setNewPermissionsForGroup(ctx, this.crlistTitle, this.cruGroupId, permissionId);
       });
   }
 
   private static addRoleAssignment(ctx: IWebPartContext): Promise<void>{
-    return provisionManager.utility.addRoleAssignment(ctx, this.cruGroupId, this.cruRoleId)
+    return ProvisionManager.utility.addRoleAssignment(ctx, this.cruGroupId, this.cruRoleId)
       .then(() => {
-        return provisionManager.utility.addRoleAssignment(ctx, this.crtGroupId, this.crtRoleId);
+        return ProvisionManager.utility.addRoleAssignment(ctx, this.crtGroupId, this.crtRoleId);
       });
   }
 
   private static rolesProvisoning(ctx: IWebPartContext): Promise<void>{
-     return provisionManager.utility.createRole(ctx, this.crtRoleTitle, "432", "1011031039")
+     return ProvisionManager.utility.createRole(ctx, this.crtRoleTitle, "432", "1011031039")
      .then((value: any) => {
         this.crtRoleId = value.Id;
-        return provisionManager.utility.createRole(ctx, this.cruRoleTitle, "176", "138612833");
+        return ProvisionManager.utility.createRole(ctx, this.cruRoleTitle, "176", "138612833");
      })
      .then((value: any) => {
         this.cruRoleId = value.Id;
@@ -98,10 +98,10 @@ export class provisionManager {
   }
 
   private static groupsProvisoning(ctx: IWebPartContext): Promise<void> {
-    return provisionManager.utility.createGroup(ctx, this.cruGroupTitle)
+    return ProvisionManager.utility.createGroup(ctx, this.cruGroupTitle)
       .then((value: any) => {
         this.cruGroupId = value.Id;
-        return provisionManager.utility.createGroup(ctx, this.crtGroupTitle);
+        return ProvisionManager.utility.createGroup(ctx, this.crtGroupTitle);
       })
       .then((value: any) => {
         this.crtGroupId = value.Id;
@@ -110,18 +110,18 @@ export class provisionManager {
 
   private static listsProvisoning(ctx: IWebPartContext): Promise<void> {
     //Create Change Request list
-    return provisionManager.utility.createList(ctx, provisionManager.crlistTitle, "", 100, false, true)
+    return ProvisionManager.utility.createList(ctx, ProvisionManager.crlistTitle, "", 100, false, true)
       .then((value: any): any => {
         this.crListId = value.Id;
-        return provisionManager.utility.setListSecurity(ctx, provisionManager.crlistTitle, "2", "2");
+        return ProvisionManager.utility.setListSecurity(ctx, ProvisionManager.crlistTitle, "2", "2");
       })
       .then((): Promise<void> => {
-        return provisionManager.utility.createListField(ctx, this.crListId , "Description", "taDescription", false, "SP.FieldMultiLineText", 3, {
+        return ProvisionManager.utility.createListField(ctx, this.crListId , "Description", "taDescription", false, "SP.FieldMultiLineText", 3, {
           'RichText': true
         });
       })
       .then((): Promise<void> => {
-        return provisionManager.utility.createListField(ctx, this.crListId , "Status", "taStatus", false, "SP.FieldChoice", 6,
+        return ProvisionManager.utility.createListField(ctx, this.crListId , "Status", "taStatus", false, "SP.FieldChoice", 6,
           {"Choices": [
             "Open",
             "In Progress",
@@ -129,25 +129,25 @@ export class provisionManager {
             "DefaultValue": "Lead"});
       })
       .then((): Promise<void> => {
-        return provisionManager.utility.createListField(ctx, this.crListId , "Status Updates", "taStatusUpdates", false, "SP.FieldMultiLineText", 3, {
+        return ProvisionManager.utility.createListField(ctx, this.crListId , "Status Updates", "taStatusUpdates", false, "SP.FieldMultiLineText", 3, {
           "RichText": true
         });
       })
       .then((): Promise<void> => {
-        return provisionManager.utility.createList(ctx, provisionManager.cdlistTitle, "", 100, false); 
+        return ProvisionManager.utility.createList(ctx, ProvisionManager.cdlistTitle, "", 100, false); 
       })
       .then((value: any): any => {
         this.cdListId = value.Id;
-        return provisionManager.utility.createListField(ctx, this.cdListId, "Change", "crmChange", true, "SP.FieldLookup", 7, null, this.crListId, "Title");
+        return ProvisionManager.utility.createListField(ctx, this.cdListId, "Change", "crmChange", true, "SP.FieldLookup", 7, null, this.crListId, "Title");
       })
       .then((value: string): any => {
-        return provisionManager.utility.updateListField(ctx, this.cdListId, value, "SP.FieldLookup", {Indexed: true, RelationshipDeleteBehavior : 1});
+        return ProvisionManager.utility.updateListField(ctx, this.cdListId, value, "SP.FieldLookup", {Indexed: true, RelationshipDeleteBehavior : 1});
       })
       .then((): Promise<void> => {
-        return provisionManager.utility.createListField(ctx, this.cdListId, "Triage Comments", "taTriageComments", false, "SP.FieldMultiLineText", 3, {'RichText': true});
+        return ProvisionManager.utility.createListField(ctx, this.cdListId, "Triage Comments", "taTriageComments", false, "SP.FieldMultiLineText", 3, {'RichText': true});
       })
       .then((): Promise<void> => {
-        return provisionManager.utility.createListField(ctx, this.cdListId, "Sub Status", "taSubStatus", false, "SP.FieldChoice", 6,
+        return ProvisionManager.utility.createListField(ctx, this.cdListId, "Sub Status", "taSubStatus", false, "SP.FieldChoice", 6,
           {"Choices": [
             "Untriaged",
             "Investigating",
@@ -158,7 +158,7 @@ export class provisionManager {
             "DefaultValue": "Untriaged"});
       })
       .then((): Promise<void> => {
-        return provisionManager.utility.createListField(ctx, this.cdListId, "Priority", "taPriority", false, "SP.FieldChoice", 6,
+        return ProvisionManager.utility.createListField(ctx, this.cdListId, "Priority", "taPriority", false, "SP.FieldChoice", 6,
           {"Choices": [
             "High",
             "Medium",
@@ -166,7 +166,7 @@ export class provisionManager {
             "DefaultValue": "Medium"});
       })
       .then((): Promise<void> => {
-        return provisionManager.utility.createListField(ctx, this.cdListId, "Assigned To", "taAssignedTo", false, "SP.FieldUser", 20);
+        return ProvisionManager.utility.createListField(ctx, this.cdListId, "Assigned To", "taAssignedTo", false, "SP.FieldUser", 20);
       });
   }
 }
