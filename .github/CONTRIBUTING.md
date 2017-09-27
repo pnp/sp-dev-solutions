@@ -46,10 +46,8 @@ When you are submitting a new sample, it has to follow up below guidelines
     - If you for example use Office Graph with React, please rather add new web part to already existing solution, rather than introducing completely new solution
     - When you update existing samples, please update also README accordingly with information on provided changes and with your author details
 - When you are submitting new sample solution, please name the sample solution folder accordingly
-    - Folder should start by identifying JS library used - like "react-", "angular-", "knockout-"
-    - If you are not using any specific JS library, please use "js-" as the prefix for your sample
+    - Name your folder based on the primary functionality of the component - for example, "ContactManagement"
     - Do not use words "sample", "webpart" or "wb" in the folder or sample name - these are samples for client-side web parts repository
-    - If your solution is demonstrating multiple technologies, please use functional terms as the name for the solution folder
 - Do not use period/dot in the folder name of the provided sample
 
 ## Step-by-step on submitting a pull request to this repository

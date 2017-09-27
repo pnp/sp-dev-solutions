@@ -18,7 +18,7 @@ We welcome your reported issues, pull requests, and new solution samples. Please
 
 | Solution           | Description                                                                        | Link  |
 | ------------------ |:-----------------------------------------------------------------------------------| -----:|
-| ChangeRequests     | Manage and close change requests opened by users.                                  | [Link](./solutions/changeRequests/README.md) |
+| ChangeRequests     | Manage and close change requests opened by users.                                  | [Link](./solutions/ChangeRequests/README.md) |
 | ContactManagement  | Organize and manage contacts and organizations.                                    | [Link](./solutions/ContactManagement/README.md) |
 | InventoryCheckOut  | Manage a list of items in an inventory, and let users check out and reserve items. | [Link](./solutions/InventoryCheckOut/README.md) | 
 | TimeAway           | Provides a simple out-of-office tracker for members of your team.                  | [Link](./solutions/TimeAway/README.md) | 
