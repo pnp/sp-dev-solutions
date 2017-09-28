@@ -36,7 +36,7 @@ export default class CheckOutListItem extends React.Component<ICheckOutListItemP
         <div className={`ms-Grid-col ${styles.itemcell} ms-u-lg4`}>
           <span className={checkoutgridLabel}>{
             item.quantity > 1 ?
-              `${item.checkedOutTo.displayName}&#160;(${item.quantity})` : `${item.checkedOutTo.displayName}`}</span>
+              `${item.checkedOutTo.displayName} (${item.quantity})` : `${item.checkedOutTo.displayName}`}</span>
         </div>
         <div className={`ms-Grid-col ${styles.itemcell} ms-u-lg6`}>
           <span className={checkoutgridLabel}>{moment(item.checkedOutDate).format("M/D/YYYY")}</span>

@@ -21,22 +21,19 @@ export class ProvisionManager {
   
   public static checkSPlistsExist(ctx: IWebPartContext): Promise<boolean>{
     let crListExists: boolean = false;
-    let cdListExists: boolean = false;
     
+    // note that we don't check for the change discussion list explicitly, since the user
+    // may have been restricted access to the list.
     return ProvisionManager.utility.checkListExists(ctx, ProvisionManager.crlistTitle)
     .then((listExists: boolean) => {
       crListExists = listExists;
-      return ProvisionManager.utility.checkListExists(ctx, ProvisionManager.cdlistTitle);
-    })
-    .then((listExists: boolean) => {
-      cdListExists = listExists;
 
-      if (crListExists && cdListExists){
-        console.log("the lists exist");
+      if (crListExists){
+        console.log("The lists exist");
         return Promise.resolve(true);
       }
       else{
-        console.log("the lists not exist");
+        console.log("The lists not exist");
         return Promise.resolve(false);
       }
     });

@@ -29,6 +29,17 @@ bower_components
 # node-waf configuration
 .lock-wscript
 
+# temporary build artifacts
+dist/
+temp/
+lib/
+*.scss.ts
+*.resx.ts
+
+# Packages and deployments
+solution/
+*.sppkg
+
 # Compiled binary addons (http://nodejs.org/api/addons.html)
 build/Release
 

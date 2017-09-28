@@ -81,7 +81,12 @@ export default class MyCRContainer extends React.Component<IMyCRContainerProps, 
             </div>
           ) : (
               <div className={styles.error}>
-                <p>Change Request lists are not configured yet.</p>
+                { 
+                  this.state.hasAdminPermission ?
+                    <p>Change Request lists are not configured yet.</p>
+                    :
+                    <p>Change Request lists are not configured yet, or you may not have permissions to view them.</p>
+                }                    
               </div>
             )}
         </div>

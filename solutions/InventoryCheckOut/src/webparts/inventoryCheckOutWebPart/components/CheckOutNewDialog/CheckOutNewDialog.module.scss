@@ -1,5 +1,8 @@
 .checkOutDialog{
-    min-width: 500px;
+
+    @media (min-width: 480px) {        
+        min-width: 480px !important;
+    }
 
     .row{
         margin: 10px 0;

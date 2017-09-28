@@ -81,11 +81,16 @@ export default class MyCRContainer extends React.Component<ICheckOutContainerPro
                   onEditClickEvent={this._handleEditInvClick.bind(this)}
                   onCreateCheckOutClickEvent={this._handleCheckOutCreateButtonClick.bind(this)}
                   onCheckMyItemButtonClick={this._handleCheckMyItemButtonClick.bind(this)} available={this.state.available}/>
-                  <div className={styles.checkOutList}>
-                    <CheckOutList checkouts={this.state.currentCheckOuts}                   
-                      checkOutEditIconClickCallback={this._handleCheckOutEditButtonClick.bind(this)}
-                      checkOutMarkconClickCallback={this._handleCheckOutMarkButtonClick.bind(this)} />
-                  </div>
+                  {
+                    this.state.currentCheckOuts != null && this.state.currentCheckOuts.length > 0 ?
+                  
+                    <div className={styles.checkOutList}>
+                      <CheckOutList checkouts={this.state.currentCheckOuts}                   
+                        checkOutEditIconClickCallback={this._handleCheckOutEditButtonClick.bind(this)}
+                        checkOutMarkconClickCallback={this._handleCheckOutMarkButtonClick.bind(this)} />
+                    </div>
+                    : ''
+                  }
               </div>
           }
           { 
