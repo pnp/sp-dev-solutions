@@ -13,8 +13,6 @@ export interface IPropertyFieldImageSelectorProps{
     context?: IWebPartContext;
     label: string;
     key?: string;
-    guidelineUrl: string;
-    libraryUrl: string;
     imageMode: ImageDisplayType;
     changeImage?: (url: string, name?: string) => void;
     changeImageMode?: (imageDisplayMode: ImageDisplayType)=>void;
@@ -26,8 +24,6 @@ export interface IPropertyFieldImageSelectorPropsInternal extends IPropertyField
     targetProperty: string;
     label: string;
     key?: string;
-    guidelineUrl: string;
-    libraryUrl: string;
     imageMode: ImageDisplayType;
     changeImage?: (url: string, name?: string) => void;  
     changeImageMode?: (imageDisplayMode: ImageDisplayType)=>void;
@@ -40,8 +36,6 @@ class PropertyFieldImageSelectorBuilder implements IPropertyPaneField<IPropertyF
     public context?: IWebPartContext;
     public label: string;
     public key?: string;
-    public guidelineUrl: string;
-    public libraryUrl: string;
     public changeImage?: (url: string, name?: string) => void;
     public changeImageMode?: (imageDisplayMode: ImageDisplayType)=>void;
     public imageMode: ImageDisplayType;
@@ -54,8 +48,6 @@ class PropertyFieldImageSelectorBuilder implements IPropertyPaneField<IPropertyF
         this.properties.onRender = this.render;
         this.label = _properties.label;
         this.key = _properties.key;
-        this.guidelineUrl = _properties.guidelineUrl;
-        this.libraryUrl = _properties.libraryUrl;
         this.changeImage = _properties.changeImage;
         this.changeImageMode = _properties.changeImageMode;
         this.imageMode = _properties.imageMode;
@@ -69,8 +61,6 @@ class PropertyFieldImageSelectorBuilder implements IPropertyPaneField<IPropertyF
             targetProperty: this.targetProperty ,
             label: this.label,
             key: this.key,
-            guidelineUrl: this.guidelineUrl,
-            libraryUrl: this.libraryUrl,
             changeImage: this.changeImage,
             changeImageMode: this.changeImageMode,
             imageMode: this.imageMode
@@ -87,8 +77,6 @@ export function PropertyPaneImageSelector(targetProperty: string, properties: IP
         targetProperty: targetProperty,
         label: properties.label,
         key: properties.key,
-        guidelineUrl: properties.guidelineUrl,
-        libraryUrl: properties.libraryUrl,
         changeImage: properties.changeImage,
         changeImageMode: properties.changeImageMode,
         imageMode: properties.imageMode

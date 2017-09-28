@@ -23,14 +23,6 @@ define([], function() {
         "SPListFilterCompareAll": "All",
         "SPListFilterCompareAny": "Any",
 
-        "GuidanceMessageSegment1": "Visit the ",
-        "GuidanceMessageSegment2": " for training and usage guidelines for this web part.",
-        "GuidanceMessageLink1Text": "Guidance site",
-
-        "ImageSelectorMessageSegment1": "All images are required to comply with ",
-        "ImageSelectorMessageSegment2": ".  Approved images are located in the ",
-        "ImageSelectorMessageLink1Text": "Shire Brand Guidelines",
-        "ImageSelectorMessageLink2Text": "Corporate Brand Portal",
         "ImageSelectorTypeAuto": "Auto-selected image",
         "ImageSelectorTypeCustom": "Custom image",
 

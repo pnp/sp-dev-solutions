@@ -227,11 +227,11 @@ export default class FeaturedContentWebPartWebPart extends BaseClientSideWebPart
                   ],
                   createFields:[
                     '<Field ID="{c29e077d-f466-4d8e-8bbe-72b66c5f205c}" Name="URL" SourceID="http://schemas.microsoft.com/sharepoint/v3" StaticName="URL" Group="Base Columns" Type="URL" DisplayName="URL" Required="TRUE"/>',
-                    '<Field Type="Text" DisplayName="Description" Required="FALSE" EnforceUniqueValues="FALSE" Indexed="FALSE" MaxLength="255" Group="Shire Hub Columns" ID="{6df0c033-e0f6-4801-aa83-b7a5bb80f0f4}" SourceID="{a5df0f33-264b-4bf8-a651-222fcdf5d32d}" StaticName="Description" Name="Description" Version="5" />',
+                    '<Field Type="Text" DisplayName="Description" Required="FALSE" EnforceUniqueValues="FALSE" Indexed="FALSE" MaxLength="255" Group="Web Part Columns" ID="{6df0c033-e0f6-4801-aa83-b7a5bb80f0f4}" SourceID="{a5df0f33-264b-4bf8-a651-222fcdf5d32d}" StaticName="Description" Name="Description" Version="5" />',
                     '<Field Type="Note" DisplayName="Content" Required="FALSE" EnforceUniqueValues="FALSE" Indexed="FALSE" NumLines="6" RichText="TRUE" RichTextMode="FullHtml" IsolateStyles="TRUE" Sortable="FALSE" ID="{24f71f35-b1ad-43dc-8ad7-56faddad0870}" SourceID="{11fc90a7-6fab-44ff-87ca-f7ac20b3bc50}" StaticName="Content" Name="Content" ColName="ntext2" RowOrdinal="0" Version="1" />',
-                    '<Field Type="Number" DisplayName="SortOrder" Required="FALSE" EnforceUniqueValues="FALSE" Indexed="FALSE" Group="Shire Hub Columns" ID="{7a911a9e-dbe1-4a87-bd40-c042db929a80}" SourceID="{a5df0f41-264b-4bf8-a651-222fcdf5d32d}" StaticName="SortOrder" Name="SortOrder" Version="5" />',
-                    '<Field Type="URL" DisplayName="Image" Required="FALSE" EnforceUniqueValues="FALSE" Indexed="FALSE" Group="Shire Hub Columns" ID="{f9ba1903-e722-42cd-843e-f898d4c1fcb4}" SourceID="{f9ba1903-e722-42cd-843e-f898d4c1fcb4}" StaticName="Image" Name="Image" Version="5" />',
-                    '<Field Type="Boolean" DisplayName="OpenLinkinNewTab" Required="FALSE" EnforceUniqueValues="FALSE" Indexed="FALSE" Group="Shire Hub Columns" ID="{4bf7c60f-0737-49c9-894c-6a31af134242}" SourceID="{4bf7c60f-0737-49c9-894c-6a31af134242}" StaticName="OpenLinkInNewTab" Name="OpenLinkInNewTab" Version="5" />'
+                    '<Field Type="Number" DisplayName="SortOrder" Required="FALSE" EnforceUniqueValues="FALSE" Indexed="FALSE" Group="Web Part Columns" ID="{7a911a9e-dbe1-4a87-bd40-c042db929a80}" SourceID="{a5df0f41-264b-4bf8-a651-222fcdf5d32d}" StaticName="SortOrder" Name="SortOrder" Version="5" />',
+                    '<Field Type="URL" DisplayName="Image" Required="FALSE" EnforceUniqueValues="FALSE" Indexed="FALSE" Group="Web Part Columns" ID="{f9ba1903-e722-42cd-843e-f898d4c1fcb4}" SourceID="{f9ba1903-e722-42cd-843e-f898d4c1fcb4}" StaticName="Image" Name="Image" Version="5" />',
+                    '<Field Type="Boolean" DisplayName="OpenLinkinNewTab" Required="FALSE" EnforceUniqueValues="FALSE" Indexed="FALSE" Group="Web Part Columns" ID="{4bf7c60f-0737-49c9-894c-6a31af134242}" SourceID="{4bf7c60f-0737-49c9-894c-6a31af134242}" StaticName="OpenLinkInNewTab" Name="OpenLinkInNewTab" Version="5" />'
                   ],
                   createTitleRequired:false,
                   includeHidden: false,
@@ -309,8 +309,6 @@ export default class FeaturedContentWebPartWebPart extends BaseClientSideWebPart
                   label: strings.EditItemImageEntryLabel,
                   properties: this.properties,
                   context: this.context,
-                  guidelineUrl: "http://shire.co/brand",
-                  libraryUrl: "https://shirepharma.sharepoint.com/Pages/BrandHub/Brand-Resources.aspx",
                   changeImage: (url: string, name?: string)=>{
                     const oldMode = this.properties.featuredContentItems[this.activeIndex].ImageMode;
                     const oldUrl = this.properties.featuredContentItems[this.activeIndex].CustomImageUrl;

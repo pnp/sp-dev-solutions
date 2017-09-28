@@ -72,12 +72,6 @@ export default class PropertyFieldImageSelectorHost extends React.Component<IPro
     public render(): JSX.Element {
         return (
             <div className={styles["image-selector"]}>
-                <div className={styles["guidance-text"]}>
-                    <span>{strings.ImageSelectorMessageSegment1}</span>
-                    <Link target="_blank" href={this.props.guidelineUrl}>{strings.ImageSelectorMessageLink1Text}</Link>
-                    <span>{strings.ImageSelectorMessageSegment2}</span>
-                    <Link target="_blank" href={this.props.libraryUrl}>{strings.ImageSelectorMessageLink2Text}</Link>                
-                </div>
                 <ChoiceGroup className={styles["root"]}
                     onChange={this.changeImageType.bind(this)}
                     selectedKey={this.state.imageMode.toString()}
