@@ -4,7 +4,7 @@ This solution contains the following web parts.
 * Hub Links: A list of links that can either be set within the properties of the web part or in a SharePoint List
 * Featured Content: Tile links that enable users to show links with images stored within the web part or in a SharePoint list
 * Box Button: Button links that can be stored within the web part or in a SharePoint list
-* Hub Template: A handlebars template web part that enables highly customized UI code to be applied to SharePoint list items
+* Hub Template: A handlebars template web part that enables highly customized UI code to be applied to SharePoint list items (__This web part enables script injection__)
 
 Steps needed to prepare the solution for deployment:
 1) Download the [caml.js](https://github.com/andrei-markeev/camljs/blob/master/CamlJs/camljs.js) library and host it in an accessible location.
