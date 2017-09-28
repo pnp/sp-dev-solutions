@@ -29,7 +29,7 @@ define([], function() {
         "EditItemGeneralDescriptionPreCountLabel": "130 Max Character Limit - ",
         "EditItemGeneralDescriptionPostCountLabel": " Characters Remaining",
         "EditItemGeneralDescriptionErrorText": " This field is limited to 130 characters",
-        "EditItemGeneralContentLabel": "Content",
+        "EditItemGeneralContentLabel": "Content (HTML allowed)",
         "EditItemGeneralSelectLinkLabel": "Select a link from a document or page",
         "EditItemGeneralSelectLinkButtonText": "Change",
         "EditItemGeneralOpenTabLabel": "Open link in a new window",

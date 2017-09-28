@@ -22,7 +22,6 @@ import { IHubLinksProps } from './components/IHubLinksProps';
 import { IHubLinksWebPartProps } from './IHubLinksWebPartProps';
 import { PropertyFieldCamlQueryFieldMapping, SPFieldType, SPFieldRequiredLevel, PropertyFieldCamlQueryOrderBy } from '../../propertyPane/propertyFieldCamlQueryFieldMapping/PropertyFieldCamlQueryFieldMapping';
 import { PropertyPaneGroupSort } from '../../propertyPane/propertyFieldGroupSort/PropertyFieldGroupSort'; 
-import { PropertyPaneGuidance } from '../../propertyPane/propertyFieldGuidanceMessage/PropertyFieldGuidanceMessage';
 import pnp from 'sp-pnp-js';
 import QueryStringParser from "../../utilities/urlparser/queryStringParser";
 
@@ -540,15 +539,6 @@ export default class HubLinksWebPart extends BaseClientSideWebPart<IHubLinksWebP
                   text: strings.EditItemIconEntryLinkText,
                   href:"http://fontawesome.io/cheatsheet/",
                   target: "_blank"
-                })
-              ]
-            },
-            {
-              groupName: strings.EditItemGuidanceLabel,
-              groupFields:[
-                PropertyPaneGuidance("guidance",{
-                  url:'https://shirepharma.sharepoint.com/sites/Guidance/Pages/Overview.aspx',
-                  key: "guidanceInfo"
                 })
               ]
             }

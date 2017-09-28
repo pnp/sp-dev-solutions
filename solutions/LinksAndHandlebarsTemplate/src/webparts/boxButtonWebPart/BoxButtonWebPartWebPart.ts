@@ -17,7 +17,6 @@ import * as strings from 'boxButtonWebPartStrings';
 import BoxButtonWebPart from './components/BoxButtonWebPart';
 import { IBoxButtonWebPartProps } from './components/IBoxButtonWebPartProps';
 import { IBoxButtonWebPartWebPartProps } from './IBoxButtonWebPartWebPartProps';
-import { PropertyPaneGuidance } from '../../propertyPane/propertyFieldGuidanceMessage/PropertyFieldGuidanceMessage';
 import { SPFieldType, PropertyFieldCamlQueryOrderBy, SPFieldRequiredLevel, PropertyFieldCamlQueryFieldMapping } from '../../propertyPane/propertyFieldCamlQueryFieldMapping/PropertyFieldCamlQueryFieldMapping';
 import pnp from 'sp-pnp-js';
 import QueryStringParser from "../../utilities/urlparser/queryStringParser";
@@ -370,15 +369,6 @@ export default class BoxButtonWebPartWebPart extends BaseClientSideWebPart<IBoxB
                   label:strings.EditItemColorFieldLabel,
                   onText: strings.EditItemColorOnLabel,
                   offText: strings.EditItemColorOffLabel
-                })
-              ]
-            },
-            {
-              groupName: strings.EditItemGuidanceLabel,
-              groupFields:[
-                PropertyPaneGuidance("guidance",{
-                  url:'https://shirepharma.sharepoint.com/sites/Office365/SitePages/Hub%20Button%20Box%20WebPart.aspx',
-                  key: "guidanceInfo"
                 })
               ]
             }

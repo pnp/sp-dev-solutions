@@ -29,10 +29,6 @@
             "path": "https://code.jquery.com/jquery-1.12.3.min.js",
             "globalName": "jquery"
         },
-        "kendo": {
-            "path": "https://kendo.cdn.telerik.com/2017.2.621/js/kendo.editor.min.js",
-            "globalName": "kendo"
-        },
         "handlebars": {
             "path": "https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.10/handlebars.min.js",
             "globalName": "handlebars"

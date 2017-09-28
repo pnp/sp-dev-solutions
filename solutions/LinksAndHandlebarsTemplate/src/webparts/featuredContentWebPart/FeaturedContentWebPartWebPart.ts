@@ -21,8 +21,6 @@ import { IFeaturedContentWebPartProps } from './components/IFeaturedContentWebPa
 import { IFeaturedContentWebPartWebPartProps } from './IFeaturedContentWebPartWebPartProps';
 import { FeaturedContentLayout } from './components/layouts/FeatureContentLayout';
 import { PropertyFieldCamlQueryFieldMapping, SPFieldType, SPFieldRequiredLevel, PropertyFieldCamlQueryOrderBy } from '../../propertyPane/propertyFieldCamlQueryFieldMapping/PropertyFieldCamlQueryFieldMapping';
-import { PropertyPaneGuidance } from '../../propertyPane/propertyFieldGuidanceMessage/PropertyFieldGuidanceMessage';
-import { PropertyPaneRichText } from '../../propertyPane/propertyFieldRichText/PropertyFieldRichText';
 import pnp from 'sp-pnp-js';
 import { PropertyPaneImageSelector, ImageDisplayType } from "../../propertyPane/propertyFieldImageSelector/PropertyFieldImageSelector";
 import QueryStringParser from "../../utilities/urlparser/queryStringParser";
@@ -282,10 +280,9 @@ export default class FeaturedContentWebPartWebPart extends BaseClientSideWebPart
                   description: strings.EditItemGeneralDescriptionPreCountLabel+(130-(this.properties.featuredContentItems[this.activeIndex].Description ? this.properties.featuredContentItems[this.activeIndex].Description.length : 0))+strings.EditItemGeneralDescriptionPostCountLabel,
                   onGetErrorMessage: this.itemValidation.bind(this, 130, false, strings.EditItemGeneralDescriptionErrorText)
                 }),
-                  PropertyPaneRichText("featuredContentItems["+this.activeIndex+"].Content",{
+                PropertyPaneTextField("featuredContentItems["+this.activeIndex+"].Content",{
                     label: strings.EditItemGeneralContentLabel,
-                    properties: this.properties,
-                    onChange: this.onContentChange.bind(this)
+                    multiline:true
                   }),
                 PropertyPaneLabel("itemLinkLabel",{
                   text: strings.EditItemGeneralSelectLinkLabel
@@ -354,15 +351,6 @@ export default class FeaturedContentWebPartWebPart extends BaseClientSideWebPart
                   label: strings.EditItemGeneralAlternateLabel,
                   description: strings.EditItemGeneralDescriptionPreCountLabel+(130-(this.properties.featuredContentItems[this.activeIndex].ImageAlternate ? this.properties.featuredContentItems[this.activeIndex].ImageAlternate.length : 0))+strings.EditItemGeneralDescriptionPostCountLabel,
                   onGetErrorMessage: this.itemValidation.bind(this, 130, false, strings.EditItemGeneralDescriptionErrorText)
-                })
-              ]
-            },
-            {
-              groupName: strings.EditItemGuidanceLabel,
-              groupFields:[
-                PropertyPaneGuidance("guidance",{
-                  url:'https://shirepharma.sharepoint.com/sites/Guidance/Pages/Overview.aspx',
-                  key: "guidanceInfo"
                 })
               ]
             }
