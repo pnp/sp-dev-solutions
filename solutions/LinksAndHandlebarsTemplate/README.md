@@ -2,6 +2,7 @@
 
 __This solution contains the following web parts.__
 * Hub Links: A list of links that can either be set within the properties of the web part or in a SharePoint List
+
 Icon Layout:
 ![Hub Links Icons Layout](../../assets/hub_links_icon.png "Hub Links Icons Layout")
 
@@ -12,6 +13,7 @@ Grouped Layout:
 ![Hub Links Group Layout](../../assets/hub_links_grouped.png "Hub Links Group Layout")
 
 * Featured Content: Tile links that enable users to show links with images stored within the web part or in a SharePoint list
+
 Default Layout:
 ![Featured Content Default Layout](../../assets/featured_content.png "Featured Content Default Layout")
 
