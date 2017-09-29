@@ -8,7 +8,7 @@ __This solution contains the following web parts.__
 
 * Featured Content: Tile links that enable users to show links with images stored within the web part or in a SharePoint list
 ![Featured Content Default Layout](../../assets/featured_content.png "Featured Content Default Layout")
-![Featured Content Single Column Layout](../../assets/featured_content_small.png "Featured Content Single Column Layout")
+![Featured Content Single Column Layout](../../assets/featured_content_small_column.png "Featured Content Single Column Layout")
 ![Featured Content Stacked Layout](../../assets/featured_content_stacked.png "Featured Content Stacked Layout")
 
 * Box Button: Button links that can be stored within the web part or in a SharePoint list
