@@ -1,0 +1,24 @@
+{
+    "$schema": "../../../node_modules/@microsoft/sp-module-interfaces/lib/manifestSchemas/jsonSchemas/clientSideComponentManifestSchema.json",
+
+    "id": "6e7296cf-4ba1-4c8e-8d21-41fe5f23900b",
+    "alias": "FeaturedContentWebPart",
+    "componentType": "WebPart",
+    "version": "1.1.0",
+    "manifestVersion": 2,
+
+    "preconfiguredEntries": [{
+        "groupId": "6e7296cf-4ba1-4c8e-8d21-41fe5f23900b",
+        "group": { "default": "Hub Web Parts" },
+        "title": { "default": "Hub Featured Content" },
+        "description": { "default": "This web part is used to display featured content links" },
+        "officeFabricIconFontName": "Tiles",
+        "properties": {
+            "layoutMode": 0,
+            "featuredContentItems": [],
+            "title": "",
+            "advancedCamlQuery": "",
+            "approvedImageUrl": "https://thehubcdnvz.azureedge.net/hub-web-parts/config/ApprovedImageLibs.json"
+        }
+    }]
+}

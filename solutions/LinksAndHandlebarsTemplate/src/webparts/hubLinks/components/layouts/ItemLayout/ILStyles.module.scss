@@ -1,0 +1,135 @@
+.hubLinks {
+    list-style-type: none;
+    padding-left: 0px;
+    overflow: hidden;
+    &.blue {
+        & .faIcon {
+            padding: 15px 12px;
+            background-color: #007cc5;
+            border-radius: 35px;
+            font-size: 20px;
+            color: #fff;
+            display: block;
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            width: 50px;
+            height: 50px;
+            box-sizing: border-box;
+            &::before {
+                margin-left: 3px;
+            }
+        }
+        & a.linktitle {
+            color: #007cc5;
+            display: block;
+            font-size: 16px;
+            font-weight: 300;
+            margin-left: 67px;
+        }
+        & .linkdescription {
+            font-size: 13px;
+            display: block;
+            margin-left: 67px;
+        }
+    }
+    & li {
+        display: inline-block;
+        margin-bottom: 15px;
+        width: calc(50% - 25px);
+        margin-right: 20px;
+        min-height: 70px;
+        vertical-align: top;
+        position: relative;
+        border: 1px solid transparent;
+        &:hover {
+            border: 1px solid #c8c8c8;
+        }
+        & .editControls {
+            display: none;
+            width: 42px;
+            text-align: right;
+            background-color: transparent;
+            z-index: 1000000;
+            float: right;
+            margin-top: -51px;
+            position: absolute;
+            right: 0;
+            top: 51px;
+            &>button {
+                min-width: 20px;
+                width: 32px;
+                height: 22px;
+                padding: 0 5px;
+                background-color: white;
+                border-color: white;
+            }
+            &>i {
+                color: #333333;
+                padding: 5px;
+                font-size: 12px;
+                line-height: 14px;
+                width: 32px;
+                margin-left: 10px;
+                text-align: center;
+                cursor: move;
+                background-color: white;
+            }
+            & :global .ms-Button.ms-Button--default :global .ms-Button-icon {
+                line-height: 15px;
+                height: 10px;
+                &>i {
+                    font-size: 12px;
+                }
+            }
+        }
+        &:hover .editControls {
+            display: block;
+        }
+        &.emptyBox {
+            background-color: #D9D9D9;
+            padding: 10px 20px;
+            text-align: center;
+            text-transform: uppercase;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 18px;
+            & div {
+                width: 60%;
+                height: 40px;
+                line-height: 40px;
+                vertical-align: middle;
+                text-align: center;
+                color: #fff;
+                background-color: #069;
+                font-size: 14px;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                margin-right: -50%;
+                -webkit-transform: translate(-50%, -50%);
+                transform: translate(-50%, -50%);
+            }
+        }
+    }
+    &.edit li:hover {
+        border: 1px solid #c8c8c8;
+        padding-left: 7px;
+    }
+}
+
+:global .ms-sm12.ms-xl4 {
+    & :local .hubLinks {
+        & :local li {
+            width: 100%;
+        }
+    }
+}
+
+@media (max-width:767px) {
+    .hubLinks {
+        & li {
+            width: 100%;
+        }
+    }
+}

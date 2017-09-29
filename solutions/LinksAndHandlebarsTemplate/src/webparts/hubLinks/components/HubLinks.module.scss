@@ -1,0 +1,88 @@
+.webpart-header {
+    font-size: 24px;
+    font-weight: 100;
+    margin-bottom: 11px;
+    & .edit {
+        background-color: transparent;
+        border: none;
+        box-sizing: border-box;
+        display: block;
+        margin: 0;
+        outline: 0;
+        overflow: hidden;
+        resize: none;
+        white-space: pre;
+        width: 100%;
+        font-family: inherit;
+        font-size: inherit;
+        font-weight: inherit;
+        line-height: inherit;
+        text-align: inherit;
+        color: #333333;
+        height: 40px;
+    }
+    & .view {
+        color: #333333;
+    }
+}
+
+.linkPicker {
+    & [role="navigation"] {
+        width: 210px;
+        min-height: 100%;
+        padding-top: 60px;
+        box-sizing: border-box;
+        border-top: 40px solid #F4F4F4;
+        border-right: 2px solid #F4F4F4;
+    }
+    & .tabs {
+        position: absolute;
+        left: 250px;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        &>div,
+        & iframe {
+            height: 100%;
+            width: 100%;
+            border: none;
+        }
+        & .linkInsert {
+            padding-left: 30px;
+            box-sizing: border-box;
+            border-top: 40px solid #F4F4F4;
+            border-right: 2px solid #F4F4F4;
+            & label:after {
+                content: ' *';
+                color: #a80000;
+            }
+        }
+        & textarea {
+            resize: none;
+            line-height: 17px;
+            overflow: auto;
+            min-height: 60px;
+            max-width: 639px;
+            width: 100%;
+            padding: 6px 12px 0 12px;
+            border: solid 1px #C8C8C8;
+            font-family: "Segoe UI WestEuropean", "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif;
+        }
+        & .buttons {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            & button {
+                margin-right: 20px;
+            }
+        }
+    }
+}
+
+[aria-describedby="propertyPaneDescriptionId"]>div>div {
+    height: auto;
+}
+
+[aria-labelledby='propertyPaneTitleId']>div>div {
+    height: auto;
+}

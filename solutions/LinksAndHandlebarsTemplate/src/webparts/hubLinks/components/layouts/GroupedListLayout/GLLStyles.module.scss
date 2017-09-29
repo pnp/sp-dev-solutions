@@ -1,0 +1,194 @@
+.hubLinks {
+    box-sizing: border-box;
+    overflow: hidden;
+    &>div {
+        padding: 0;
+        clear: both;
+        & i {
+            margin-right: 10px;
+            position: absolute;
+        }
+    }
+    & .linkItem {
+        display: block;
+        position: relative;
+        clear: both;
+        margin: 0;
+        line-height: 18px;
+        margin-left: 0;
+        list-style-type: none;
+        padding: 10px;
+        height: auto;
+        border: 1px solid transparent;
+        &:hover {
+            border: 1px solid #c8c8c8;
+        }
+        & .faIcon {
+            color: #007cc5;
+            font-size: 16px!important;
+            width: 20px;
+            display: inline-block;
+            padding-top: 5px;
+            padding-right: 15px;
+        }
+        & a.linktitle {
+            width: 200px;
+            padding-top: 2px;
+            max-width: 200px;
+            display: inline-block;
+            vertical-align: top;
+            margin-left: 31px;
+        }
+        & .linkdescription {
+            max-width: 430px;
+            display: inline-block;
+            margin: 0;
+            padding: 2px 0 0 31px;
+            width: auto;
+            vertical-align: top;
+        }
+        @media screen and (max-width:600px) {
+            .linkdescription {
+                max-width: 300px;
+                display: inline-block;
+                margin: 0;
+                padding-top: 5px;
+            }
+        }
+        @media all and (max-width: 600px) and (min-width: 320px) {
+            .linktitle {
+                float: none;
+            }
+            .linkdescription {
+                padding-left: 31px;
+            }
+        }
+        & .editControls {
+            display: none;
+            width: 42px;
+            text-align: right;
+            background-color: transparent;
+            z-index: 1000000;
+            float: right;
+            margin-top: -51px;
+            position: absolute;
+            right: 0;
+            top: 51px;
+            &>button {
+                min-width: 20px;
+                width: 32px;
+                height: 22px;
+                padding: 0 5px;
+                background-color: white;
+                border-color: white;
+            }
+            &>i {
+                color: #333333;
+                padding: 5px;
+                font-size: 12px;
+                line-height: 22px;
+                margin-left: 10px;
+                text-align: center;
+                width: 32px;
+                cursor: move;
+                background-color: white;
+            }
+            & :global .ms-Button.ms-Button--default :global .ms-Button-icon {
+                line-height: 15px;
+                height: 10px;
+                &>i {
+                    font-size: 12px;
+                }
+            }
+        }
+        &:hover .editControls {
+            display: block;
+        }
+    }
+    &.edit .linkItem:hover {
+        border: 1px solid #c8c8c8;
+        padding-left: 7px;
+    }
+    &.edit .grouped ul li:hover {
+        border: 1px solid #c8c8c8;
+        display: block;
+        clear: both;
+        padding: 10px;
+        min-height: 78px;
+    }
+    & .grouped {
+        & .expand {
+            display: block;
+        }
+        & .collapse {
+            display: none;
+        }
+        & .expand,
+        & .collapse {
+            float: right;
+            font-weight: 300;
+            margin-left: 18px;
+            font-size: 20px;
+        }
+        & .groupHeader {
+            font-size: 18px;
+            float: left;
+            cursor: pointer;
+            margin: 0 0 7px 0;
+        }
+        & ul {
+            padding: 0;
+            display: none;
+            background-color: #fff;
+            margin: 0;
+        }
+        & ul li {
+            padding: 10px;
+            margin: 0 0 10px;
+            line-height: 18px;
+            margin-left: 0;
+            list-style-type: none;
+            display: table;
+            width: 100%;
+            & .row {
+                margin: 0;
+            }
+        }
+    }
+    .grouped[data-expanded] {
+        & .expand {
+            display: none;
+        }
+        & .collapse {
+            display: block;
+        }
+        ul {
+            display: block;
+        }
+    }
+}
+
+@media (max-width: 992px) {
+    .hubLinks {
+        width: calc(100% - 20px);
+    }
+}
+
+@media (max-width: 767px) {
+    .hubLinks {
+        display: block;
+        width: 100%;
+    }
+}
+
+@media screen and (-ms-high-contrast: active),
+(-ms-high-contrast: none) {
+    .hubLinks {
+        & .grouped {
+            & .collapse,
+            & .expand {
+                margin: 5px 0 0 18px;
+            }
+        }
+    }
+}

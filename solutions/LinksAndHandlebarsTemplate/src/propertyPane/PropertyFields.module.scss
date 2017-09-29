@@ -1,0 +1,205 @@
+.msDialogMainCustom {
+    width: auto;
+    min-width: 288px;
+    max-width: 680px !important;
+}
+
+.upload-image {
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+    & button {
+        padding: 25px 20px;
+        text-align: center;
+        color: #7D7D7D;
+        border: none;
+        background-color: #EFEFEF;
+        & i {
+            font-size: 20px;
+            display: block;
+        }
+    }
+    & input[type=file] {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        opacity: 0;
+        cursor: pointer;
+    }
+}
+
+.image-selector {
+    & .guidance-text {
+        margin-bottom: 10px;
+    }
+    &>.preview {
+        & label {
+            display: block;
+        }
+        & button {
+            display: inline-block;
+            margin-left: 15px;
+            vertical-align: bottom;
+            &[hidden] {
+                display: none;
+            }
+        }
+    }
+    & :global .ms-ChoiceField--icon {
+        height: auto;
+        & :global .ms-ChoiceField-iconWrapper {
+            margin: 8px 0;
+        }
+    }
+}
+
+.link-picker {
+    & [role="navigation"] {
+        width: 210px;
+        min-height: 100%;
+        padding-top: 60px;
+        box-sizing: border-box;
+        border-top: 40px solid #F4F4F4;
+        border-right: 2px solid #F4F4F4;
+        & a {
+            width: 100%;
+            &:hover,
+            &:focus {
+                text-decoration: none;
+            }
+        }
+    }
+    & .source-type {
+        height: 100%;
+    }
+    & .tabs {
+        position: absolute;
+        left: 250px;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        &>div,
+        & iframe {
+            height: 100%;
+            width: 100%;
+            border: none;
+        }
+        & .link-insert {
+            padding-left: 30px;
+            box-sizing: border-box;
+            border-top: 40px solid #F4F4F4;
+            border-right: 2px solid #F4F4F4;
+            & label:after {
+                content: ' *';
+                color: #a80000;
+            }
+        }
+        & textarea {
+            resize: none;
+            line-height: 17px;
+            overflow: auto;
+            min-height: 60px;
+            max-width: 639px;
+            width: 100%;
+            padding: 6px 12px 0 12px;
+            border: solid 1px #C8C8C8;
+            font-family: "Segoe UI WestEuropean", "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif;
+        }
+        & .buttons {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            & button {
+                margin-right: 20px;
+            }
+        }
+    }
+}
+
+:global .title-label {
+    font-weight: 400;
+}
+
+:global .public-DraftEditor-content {
+    font-family: Segoe UI WestEuropean, Segoe UI, -apple-system, BlinkMacSystemFont, Roboto, Helvetica Neue, sans-serif;
+    &>[data-contents="true"] {
+        max-height: 15em;
+    }
+}
+
+.expand-button {
+    float: right;
+    height: 22px;
+    width: 22px;
+}
+
+.modal-rte {
+     :global .ms-Dialog-main {
+        width: 75%;
+        max-width: 75%;
+        min-width: 75%;
+         :global .DraftEditor-root,
+        textarea {
+            width: 100%;
+        }
+         :global .DraftEditor-root {
+            height: 15em;
+        }
+        textarea {
+            height: 20em;
+            resize: none;
+            overflow: auto;
+        }
+    }
+}
+
+:global .k-button-group .k-tool {
+    width: 1.95em !important;
+}
+
+[hidden] {
+    display: none;
+}
+
+.slider {
+    & :global .ms-Slider-container {
+        & label {
+            width: auto;
+        }
+    }
+}
+
+.custom-rte {
+    & :global .cke_top {
+        display: block;
+    }
+}
+
+.groupSort {
+    >div {
+        border: 1px solid gray;
+        padding: 0 10px 5px 10px;
+    }
+    .groupButton {
+        display: inline-block !important;
+        margin-right: 5px;
+    }
+    .groupListItem {
+        cursor: pointer;
+        padding: 5px 0;
+        >span {
+            padding: 0 4px;
+        }
+        &.highlight {
+            background-color: #006699;
+            color: white;
+        }
+    }
+    i {
+        margin-right: 5px;
+        color: #006699;
+        font-size: 1.5em;
+    }
+}
