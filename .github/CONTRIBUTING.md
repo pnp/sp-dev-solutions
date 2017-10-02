@@ -38,16 +38,15 @@ Here's a high level process for submitting new samples or updates to existing on
 ## Sample naming and structure guidelines
 When you are submitting a new sample, it has to follow up below guidelines
 
-- You will need to have a README file for your contribution, which is based on [provided template](../samples/README-template.md) under the Samples folder. Please copy this template and update accordingly. README has to be named as README.md with capital letters.
+- You will need to have a README file for your contribution, which is based on [provided template](../solutions/README-template.md) under the `solutions` folder. Please copy this template and update accordingly. README has to be named as README.md with capital letters.
     - You will need to have a picture of the web part in practice in the README file ("pics or it didn't happen"). Preview image must be located in /assets/ folder in the root your you solution.
-- README template contains specific tracking image as a final entry in the page with img tag by default to https://telemetry.sharepointpnp.com/sp-dev-fx-webparts/samples/readme-template. This is transparent image, which is used to track popularity of individual samples in GitHub.
-    - Updated the image src element according with repository name and folder information. If your sample is for example in samples folder and named as react-todo, src element should be updated as https://telemetry.sharepointpnp.com/sp-dev-fx-webparts/samples/react-todo
+- README template contains specific tracking image as a final entry in the page with img tag by default to https://telemetry.sharepointpnp.com/sp-dev-solutions/solutions/readme-template. This is transparent image, which is used to track popularity of individual samples in GitHub.
+    - Updated the image src element according with repository name and folder information. If your sample is for example in samples folder and named as react-todo, src element should be updated as https://telemetry.sharepointpnp.com/sp-dev-solutioins/solutions/ChangeRequests
 - If you find already similar kind of sample from the existing samples, we would appreciate you to rather extend existing one, than submitting a new similar sample
-    - If you for example use Office Graph with React, please rather add new web part to already existing solution, rather than introducing completely new solution
     - When you update existing samples, please update also README accordingly with information on provided changes and with your author details
 - When you are submitting new sample solution, please name the sample solution folder accordingly
     - Name your folder based on the primary functionality of the component - for example, "ContactManagement"
-    - Do not use words "sample", "webpart" or "wb" in the folder or sample name - these are samples for client-side web parts repository
+    - Do not use words "sample", "solution", "extension", "webpart" or "wb" in the folder or sample name
 - Do not use period/dot in the folder name of the provided sample
 
 ## Step-by-step on submitting a pull request to this repository
