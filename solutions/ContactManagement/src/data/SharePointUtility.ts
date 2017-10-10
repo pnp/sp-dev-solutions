@@ -3,7 +3,8 @@
 
 import SPUrl from './SPUrl';
 import { ISPList } from './ISPList';
-import { ISPField, FieldTypeKind } from './ISPField';
+import { ISPField } from './ISPField';
+import { FieldTypeKind } from './FieldTypeKind';
 
 export default class SharePointUtility
 {

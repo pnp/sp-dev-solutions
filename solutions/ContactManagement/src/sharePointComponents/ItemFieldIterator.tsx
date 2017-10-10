@@ -6,7 +6,8 @@ import * as React from 'react';
 
 import Debug from '../utilities/Debug';
 
-import { ISPField, FieldTypeKind } from '../data/ISPField';
+import { ISPField } from '../data/ISPField';
+import { FieldTypeKind } from '../data/FieldTypeKind';
 import SPUrl from '../data/SPUrl';
 
 import styles from './sharePointComponents.module.scss';

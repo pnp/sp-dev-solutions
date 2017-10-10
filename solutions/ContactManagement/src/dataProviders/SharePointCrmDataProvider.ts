@@ -76,7 +76,6 @@ export default class SharePointCrmDataProvider extends BaseCrmDataProvider imple
     return new Promise<boolean>( (resolve) => { resolve(true); });
   }
 
-
   private _resolvePersonBatch(batch: SPHttpClientBatch, promises: Promise<{}>[]): Promise<IPerson[]> {
     return batch.execute()
       .then(() => {
@@ -430,6 +429,11 @@ export default class SharePointCrmDataProvider extends BaseCrmDataProvider imple
       }, (error: any) => { 
         this.pushError("The Organization list was not found.", DataProviderErrorCodes.OrganizationListDoesNotExist); })
       .then((listProto : ISPList) => {
+        if (listProto == null)
+          {
+            this.pushError("The Organization list was not found.", DataProviderErrorCodes.OrganizationListDoesNotExist); 
+            return;
+          }
         this._selectedOrganizationList.Id = listProto.Id;
       });
 

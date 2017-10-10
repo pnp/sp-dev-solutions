@@ -5,7 +5,8 @@
 import * as React from 'react';
 
 import { ItemComponent, IItemComponentProps, IItemComponentState } from './ItemComponent';
-import { ISPField, FieldTypeKind } from '../data/ISPField';
+import { ISPField } from '../data/ISPField';
+import { FieldTypeKind } from '../data/FieldTypeKind';
 import { ISharePointItem } from '../data/ISharePointItem';
 
 import Debug from '../utilities/Debug';

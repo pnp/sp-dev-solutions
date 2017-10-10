@@ -23,7 +23,8 @@ import ItemUrlFieldDisplay from './ItemUrlFieldDisplay';
 import ItemContext from './ItemContext';
 import { FieldValueChangeCallback} from './FieldComponent';
 
-import { ISPField, FieldTypeKind } from '../data/ISPField';
+import { ISPField } from '../data/ISPField';
+import { FieldTypeKind } from '../data/FieldTypeKind';
 
 import {
   Environment,

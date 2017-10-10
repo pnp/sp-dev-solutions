@@ -4,7 +4,7 @@
 import Clause, {ClauseTypeJoin, ClauseType} from './Clause';
 import { ISPList } from './ISPList';
 import SharePointUtility from './SharePointUtility';
-import { FieldTypeKind } from './ISPField';
+import { FieldTypeKind } from './FieldTypeKind';
 
 export type QueryCallback = (query: Query) => void;
 

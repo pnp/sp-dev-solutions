@@ -3,7 +3,7 @@
 
 import * as React from 'react';
 import * as ReactDom from 'react-dom';
-import { Version } from '@microsoft/sp-core-library';
+import { Version, Environment, EnvironmentType } from '@microsoft/sp-core-library';
 import {
   BaseClientSideWebPart,
   IPropertyPaneConfiguration,
@@ -12,7 +12,8 @@ import {
 
 import * as strings from 'crmStrings';
 import { ICrmProps } from './components/Crm';
-import Crm from './components/Crm';
+import Crm, { CrmMode } from './components/Crm';
+import { ProvisionManager }  from '../../biz/ProvisionManager';
 import CrmManager  from '../../data/CrmManager';
 import ViewManagerPropertyPaneField from './ViewManagerPropertyPaneField';
 import View from '../../data/View';
@@ -26,35 +27,60 @@ export interface ICrmWebPartProps {
 
 export default class CrmWebPart extends BaseClientSideWebPart<ICrmWebPartProps> {
   private _manager : CrmManager;
-  
+  private _isInitialized : boolean;
+
   public constructor() {
     super();
   }
 
   protected onInit(): Promise<void>  {
+    if (Environment.type === EnvironmentType.Local) {
+      this._isInitialized = true;
+
+      return this.initializeCore();
+    }
+    else {
+      return ProvisionManager
+      .checkSPlistsExist(this.context)
+      .then((prop: boolean) => {
+
+        this._isInitialized = prop;
+
+        return this.initializeCore();
+        }, (er: any) => {
+        return super.onInit();
+      });
+    }
+  }
+
+  private initializeCore() : Promise<void>{
     this._manager = new CrmManager(this.context);
-
+    
     var newViews = new ViewSet();
-
+    
     if (this.properties.views != null)
     {
       for (var view of this.properties.views.views)
       {
         var newView = View.fromData(view);
-
+    
         newViews.views.push(newView);
       }
     }
-
+    
     this.properties.views = newViews;
-
+    
     UserInterfaceUtility.setOuterElement(this.domElement);
-  
+      
     UserInterfaceUtility.applyWorkarounds();
-
-    return this._manager.data.init();
-}
-
+    
+    if (this._isInitialized)
+    {
+      return this._manager.data.init();
+    }
+  
+    return Promise.resolve(null);
+  }
 
   public render(): void {
     const element: React.ReactElement<ICrmProps> = React.createElement(
@@ -62,7 +88,9 @@ export default class CrmWebPart extends BaseClientSideWebPart<ICrmWebPartProps> 
       {
         description: this.properties.description,
         manager: this._manager,
+        context: this.context,
         displayMode: this.displayMode,
+        initialMode: this._isInitialized == true ? CrmMode.Loading : CrmMode.ListsNotInitialized,
         views: this.properties.views
       }
     );

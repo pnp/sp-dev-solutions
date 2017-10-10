@@ -47,6 +47,5 @@ export default class CrmManager
         this._data.selectedOrganizationList = this._data.defaultOrganizationList;
         this._data.selectedPersonList = this._data.defaultPersonList;
         this._data.selectedTagList =  this._data.defaultTagList;
-
     }
 }

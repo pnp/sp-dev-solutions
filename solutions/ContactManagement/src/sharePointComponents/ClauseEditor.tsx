@@ -8,7 +8,8 @@ import styles from './sharePointComponents.module.scss';
 
 import Clause, { ClauseType, ClauseTypeJoin } from '../data/Clause';
 import { ISPList } from '../data/ISPList';
-import { ISPField, FieldTypeKind } from '../data/ISPField';
+import { ISPField } from '../data/ISPField';
+import { FieldTypeKind } from '../data/FieldTypeKind';
 import { ISharePointDataProvider } from '../data/ISharePointDataProvider';
 import { ISharePointItem } from '../data/ISharePointItem';
 

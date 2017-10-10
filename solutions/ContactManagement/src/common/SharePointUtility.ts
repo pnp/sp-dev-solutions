@@ -114,6 +114,11 @@ export namespace SharePointUtilityModule {
                   }
                 }`);
 
+                if (more != null) {
+                    for (let i: number = 0; i < Object.getOwnPropertyNames(more).length; i++)
+                        reqJSON["parameters"][Object.getOwnPropertyNames(more)[i]] = more[Object.getOwnPropertyNames(more)[i]];
+                }
+    
                 postUrl += "/addfield";
             }
             else {
@@ -132,11 +137,11 @@ export namespace SharePointUtilityModule {
                     reqJSON["DisplayFormat"] = 1;
                     reqJSON["FriendlyDisplayFormat"] = 1;
                 }
-            }
 
-            if (more != null) {
-                for (let i: number = 0; i < Object.getOwnPropertyNames(more).length; i++)
-                    reqJSON[Object.getOwnPropertyNames(more)[i]] = more[Object.getOwnPropertyNames(more)[i]];
+                if (more != null) {
+                    for (let i: number = 0; i < Object.getOwnPropertyNames(more).length; i++)
+                        reqJSON[Object.getOwnPropertyNames(more)[i]] = more[Object.getOwnPropertyNames(more)[i]];
+                }
             }
 
             return context.spHttpClient.post(

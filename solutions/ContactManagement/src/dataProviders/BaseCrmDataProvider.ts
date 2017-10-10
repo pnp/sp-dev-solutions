@@ -16,7 +16,7 @@ import { IOrganizationSet } from './IOrganizationSet';
 import OrganizationSetChange from './OrganizationSetChange';
 import OrganizationSet from './OrganizationSet';
 import DataError, { DataProviderErrorCodes } from './DataError';
-import { FieldTypeKind } from '../data/ISPField';
+import { FieldTypeKind } from '../data/FieldTypeKind';
 
 import { ITag } from '../data/ITag';
 import { ITagSet } from './ITagSet';
@@ -588,25 +588,23 @@ export abstract class BaseCrmDataProvider implements ICrmDataProvider {
     public abstract updateTagItem(itemUpdated: ITag): Promise<ITagSet>;
     public abstract deleteTagItem(itemDeleted: ITag): Promise<ITagSet>;
     
-       public defaultTagList = {
-            Title: 'Tags',
-            ListItemEntityTypeFullName: '#SP.Data.TagsListItem',
-            Id: 'f3c61a58-44a8-4f87-bf5b-03668af15ea7',
-            Fields: [
-                { 
-                    Title: "Title",
-                    InternalName: "Title",
-                    FieldTypeKind: FieldTypeKind.Text
-                },
-                { 
-                    Title: "Description",
-                    InternalName: "Description",
-                    FieldTypeKind: FieldTypeKind.Text
-                }                
-            ]
-            
+    public defaultTagList = {
+        Title: 'Tags',
+        ListItemEntityTypeFullName: '#SP.Data.TagsListItem',
+        Id: 'f3c61a58-44a8-4f87-bf5b-03668af15ea7',
+        Fields: [
+            { 
+                Title: "Title",
+                InternalName: "Title",
+                FieldTypeKind: FieldTypeKind.Text
+            },
+            { 
+                Title: "Description",
+                InternalName: "Description",
+                FieldTypeKind: FieldTypeKind.Text
+            }                
+        ]            
    };
-
 
     public defaultOrganizationList = {
       Title : "Organizations", 

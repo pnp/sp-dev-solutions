@@ -20,6 +20,7 @@ We welcome your reported issues, pull requests, and new solution samples. Please
 | ------------------ |:-----------------------------------------------------------------------------------| -----:|
 | ChangeRequests     | Manage and close change requests opened by users.                                  | [Link](./solutions/ChangeRequests/README.md) |
 | ContactManagement  | Organize and manage contacts and organizations.                                    | [Link](./solutions/ContactManagement/README.md) |
+| LinksAndHandlebarsTemplate  | Different kinds of visuals for hosting sets of links on a page, including with custom Handlebars Templates | [Link](./solutions/LinksAndHandlebarsTemplate/README.md) | 
 | InventoryCheckOut  | Manage a list of items in an inventory, and let users check out and reserve items. | [Link](./solutions/InventoryCheckOut/README.md) | 
 | TimeAway           | Provides a simple out-of-office tracker for members of your team.                  | [Link](./solutions/TimeAway/README.md) | 
  

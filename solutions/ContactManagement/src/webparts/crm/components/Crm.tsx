@@ -5,8 +5,13 @@ import * as React from 'react';
 import { css } from 'office-ui-fabric-react';
 import styles from '../Crm.module.scss';
 import { ICrmComponentProps } from '../ICrmComponentProps';
+import {
+  IWebPartContext
+} from '@microsoft/sp-webpart-base';
 
 import { CommandBar, IContextualMenuItem, Dialog, DialogType, DialogFooter } from 'office-ui-fabric-react';
+import { ProvisionManager }  from '../../../biz/ProvisionManager';
+import { EnsureListResult } from "../../../common/EnsureListResult";
 
 import DialogUtility from '../../../utilities/DialogUtility';
 
@@ -55,13 +60,16 @@ export enum CrmMode
   Search = 4,
   OrganizationRecent = 9,
   OrganizationUnprioritized = 10,
-  OrganizationQuery = 11
+  OrganizationQuery = 11,
+  ListsNotInitialized = 12
 }
 
 export interface ICrmProps extends ICrmComponentProps {
   description: string;
   views: ViewSet;
-  displayMode: number;  
+  context: IWebPartContext;
+  displayMode: number; 
+  initialMode: CrmMode; 
 }
 
 export interface ICrmState {
@@ -86,12 +94,12 @@ export default class Crm extends React.Component<ICrmProps, ICrmState> {
     super(props, context);
 
     this.state = {
-      lastMode: CrmMode.Loading,
+      lastMode: props.initialMode,
       dialogMode: CrmDialogMode.None,
-      mode: CrmMode.Loading,
+      mode: props.initialMode,
       isEditing: false
     };
-    
+
     this._onFilterChanged = this._onFilterChanged.bind(this);
     this._handleModeChanged = this._handleModeChanged.bind(this);
     this._handleChanged = this._handleChanged.bind(this);
@@ -108,7 +116,12 @@ export default class Crm extends React.Component<ICrmProps, ICrmState> {
   {
     var errs = this.props.manager.data.getErrors();
 
-    var mode = CrmMode.OrganizationDirectory;
+    var mode = this.props.initialMode;
+
+    if (mode == CrmMode.Loading)
+    {
+      mode = CrmMode.OrganizationDirectory;
+    }
 
     let locationHash = location.hash;
 
@@ -361,6 +374,28 @@ export default class Crm extends React.Component<ICrmProps, ICrmState> {
         <div>Loading...</div>
       </div>;
     }
+    else if (this.state.mode == CrmMode.ListsNotInitialized)
+    {
+      return <div className={ styles.crm } >
+        { splashHeader } 
+        <div>This web part requires Organization, Contact, and Tag lists for storage of data. Click Create Lists to set these lists up.</div>
+        <p>
+          <Button onClick={ () => { 
+            ProvisionManager.provisionSite(this.props.context).then((result: EnsureListResult) => {          
+              this.props.manager.data.init().then( () => {
+                this.setState( { 
+                    mode: CrmMode.OrganizationDirectory, 
+                    dialogMode: this.state.dialogMode, 
+                    lastMode: CrmMode.Organization,
+                    isEditing: false});
+                  });
+              });
+            }}>
+            Create Lists
+          </Button>
+        </p>        
+      </div>;
+    }
     else if (this.state.mode == CrmMode.Error)
     {
       var errs = this.props.manager.data.getErrors();
@@ -393,7 +428,7 @@ export default class Crm extends React.Component<ICrmProps, ICrmState> {
                       }
                     </div>
                     <div className={ styles.errorListTitle }>Contacts List</div>
-                    <div  className={ styles.errorDescriptionList }>
+                    <div className={ styles.errorDescriptionList }>
                       {
                         this.props.manager.data.defaultPersonList.Fields.map((field, i) =>
                         {
@@ -405,7 +440,7 @@ export default class Crm extends React.Component<ICrmProps, ICrmState> {
                       }
                     </div>
                     <div className={ styles.errorListTitle }>Tags List</div>
-                    <div  className={ styles.errorDescriptionList }>
+                    <div className={ styles.errorDescriptionList }>
                       {
                         this.props.manager.data.defaultTagList.Fields.map((field, i) =>
                         {
