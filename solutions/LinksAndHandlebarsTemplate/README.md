@@ -1,6 +1,9 @@
-## hub-web-parts
+# Hub and Link Web Parts
 
-__This solution contains the following web parts.__
+## Summary
+
+This solution contains the following web parts:
+
 * Hub Links: A list of links that can either be set within the properties of the web part or in a SharePoint List
 
 Icon Layout:
@@ -35,32 +38,44 @@ Stacked Layout:
 * Hub Template: A handlebars template web part that enables highly customized UI code to be applied to SharePoint list items (__The Hub Template web part allow users to add JavaScript into the page.  Carefully consider the implications of this capability, and restrict creation and updating of this part to specific site collections and audiences. The Hub Template is the only web part in the group that allows script injection__)
 ![Hub Template](../../assets/hub_template.png "Hub Template")
 
-__Steps needed to prepare the solution for deployment:__
-1) Download the [caml.js](https://github.com/andrei-markeev/camljs/blob/master/CamlJs/camljs.js) library and host it in an accessible location.
-2) Change the config/config.json file to point to the above location.
-3) Set the cdnBasePath in the config/write-manifests.json file
-4) (_Optional_) Set the Azure storage account information for where the files should be deployed
+## Used SharePoint Framework Version 
+![drop](https://img.shields.io/badge/version-GA-green.svg)
+
+## Applies to
+
+* [SharePoint Framework](https://dev.office.com/sharepoint)
+* [Office 365 tenant](https://dev.office.com/sharepoint/docs/spfx/set-up-your-development-environment)
+
+## Prerequisites
+ 
+Note that you will need to download and host a CAMLJS javascript library (https://github.com/andrei-markeev/camljs/blob/master/CamlJs/camljs.js).
 
 
-### Building the code
+## Version history
 
-```bash
-git clone the repo
-npm i
-npm i -g gulp
-gulp
-```
+Version  | Date               | Comments
+-------- | ------------------ | --------
+1.0      | September 27, 2017 | Initial release
 
-This package produces the following:
+## Disclaimer
+**THIS CODE IS PROVIDED *AS IS* WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING ANY IMPLIED WARRANTIES OF FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.**
 
-* lib/* - intermediate-stage commonjs build artifacts
-* dist/* - the bundled script, along with other resources
-* deploy/* - all resources which should be uploaded to a CDN.
+---
 
-### Build options
+## Minimal Path to Awesome
 
-gulp clean - TODO
-gulp test - TODO
-gulp serve - TODO
-gulp bundle - TODO
-gulp package-solution - TODO
+- Clone this repository
+- Download the [caml.js](https://github.com/andrei-markeev/camljs/blob/master/CamlJs/camljs.js) library and host it in an accessible location.
+- Change the config/config.json file to point to the above location.
+- Set the cdnBasePath in the config/write-manifests.json file
+- (_Optional_) Set the Azure storage account information for where the files should be deployed
+- in the command line run:
+  - `npm install`
+  - `gulp serve`
+
+
+<img src="https://telemetry.sharepointpnp.com/sp-dev-solutions/solutions/linksandhandlebarstemplate/readme" />
+
+
+
+

@@ -1,8 +1,55 @@
-## Contact Management
+# Contact Management
+
+## Summary
+The Contact Management application provides simplified management of contacts and organizations.  It uses a Contacts list to store basic Contacts.  This Contact list is tied to a set of Organizations.  These Organizations become the locus of organizing tracking of the relationship of your organization to the related organization.
 
 ![Contact Management Screenshot](../../assets/contactmanagement.png)
 
-The Contact Management application provides simplified management of contacts and organizations.  It uses a Contacts list to store basic Contacts.  This Contact list is tied to a set of Organizations.  These Organizations become the locus of organizing tracking of the relationship of your organization to the related organization.
+## Used SharePoint Framework Version 
+![drop](https://img.shields.io/badge/version-GA-green.svg)
+
+## Applies to
+
+* [SharePoint Framework](https://dev.office.com/sharepoint)
+* [Office 365 tenant](https://dev.office.com/sharepoint/docs/spfx/set-up-your-development-environment)
+
+## Prerequisites
+ 
+None.
+
+## Solution
+
+Solution                     | Author                                     			|
+---------------------------- | ---------------------------------------------------- |
+ContactManagement            | Mike Ammerlaan (Microsoft) @mammerla                 |
+ContactManagement            | Todd Baginski (Microsoft MVP, Canviz) @tbag          |
+ContactManagement            | Alex Chen (Canviz) @alexchx  						|
+ContactManagement            | Luis Lu (Canviz) @stluislu   						|
+ContactManagement            | Theodore Shi (Canviz) @TheodoreShi                   |
+ContactManagement            | Max Liu (Canviz) @maxliu0621 						|
+ContactManagement            | Cloris Sun (Canviz) @suheart                         |
+ContactManagement            | Benny Zhang (Canviz)                                 |
+ContactManagement            | Cindy Yan (Canviz)                                   |
+
+## Version history
+
+Version  | Date               | Comments
+-------- | ------------------ | --------
+1.0      | September 27, 2017 | Initial release
+
+## Disclaimer
+**THIS CODE IS PROVIDED *AS IS* WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING ANY IMPLIED WARRANTIES OF FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.**
+
+---
+
+## Minimal Path to Awesome
+
+- Clone this repository
+- in the command line run:
+  - `npm install`
+  - `gulp serve`
+
+## Features
 
 ### Custom Fields
 
@@ -14,19 +61,6 @@ The Content Management application features simple tagging capabilities, along w
 
 ### Feedback, Issues, and More
 
-We look forward to your feedback. Use Github Issues to provide information about issues, as well as your feedback requests.  You can also submit pull requests; see [this link](../../.github/CONTRIBUTING.md) for more information on Contributing.
+We look forward to your feedback. Use Github Issues to provide information about issues as well as your feedback requests.  You can also submit pull requests; see [this link](../../.github/CONTRIBUTING.md) for more information on Contributing.
 
-### Building the code
-
-```bash
-git clone the repo
-npm i
-npm i -g gulp
-gulp
-```
-
-This package produces the following:
-
-* lib/* commonjs components - this allows this package to be reused from other packages.
-* dist/* - a single bundle containing the components used for uploading to a cdn pointing a registered Sharepoint webpart library to.
-* example/* a test page that hosts all components in this package.
+<img src="https://telemetry.sharepointpnp.com/sp-dev-solutions/solutions/contactmanagement/readme" />

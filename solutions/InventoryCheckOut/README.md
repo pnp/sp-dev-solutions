@@ -1,6 +1,4 @@
-﻿## Inventory Check Out
-
-![Inventory and Check-out Screenshot](../../assets/inventorycheckout.png)
+﻿# Inventory and Check Outs
 
 The Inventory and Checkout management part lets you manage a simple list inventory items, and build a "lending library" style check out infrastructure around them.   
 
@@ -12,29 +10,57 @@ Optionally, you can also choose to upload and link to pictures for items, so tha
 
 Users can individually view the items in the inventory list, and if they'd like, check out items from the list by clicking the checkout item button.  From there, they can input a time by which they expect to return the item.
 
-## Installation and Configuration
+![Inventory and Check-out Screenshot](../../assets/inventorycheckout.png)
+
+## Used SharePoint Framework Version 
+![drop](https://img.shields.io/badge/version-GA-green.svg)
+
+## Applies to
+
+* [SharePoint Framework](https://dev.office.com/sharepoint)
+* [Office 365 tenant](https://dev.office.com/sharepoint/docs/spfx/set-up-your-development-environment)
+
+## Prerequisites
+ 
+None.
+
+## Solution
+
+Solution                     | Author                                     			|
+---------------------------- | ---------------------------------------------------- |
+InventoryCheckOut            | Mike Ammerlaan (Microsoft) @mammerla                 |
+InventoryCheckOut            | Todd Baginski (Microsoft MVP, Canviz) @tbag          |
+InventoryCheckOut            | Alex Chen (Canviz) @alexchx  						|
+InventoryCheckOut            | Luis Lu (Canviz) @stluislu   						|
+InventoryCheckOut            | Theodore Shi (Canviz) @TheodoreShi                   |
+InventoryCheckOut            | Max Liu (Canviz) @maxliu0621 						|
+InventoryCheckOut            | Cloris Sun (Canviz) @suheart                         |
+InventoryCheckOut            | Benny Zhang (Canviz)                                 |
+InventoryCheckOut            | Cindy Yan (Canviz)                                   |
+
+## Version history
+
+Version  | Date               | Comments
+-------- | ------------------ | --------
+1.0      | September 27, 2017 | Initial release
+
+
+## Disclaimer
+**THIS CODE IS PROVIDED *AS IS* WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING ANY IMPLIED WARRANTIES OF FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.**
+
+---
+
+## Minimal Path to Awesome
+
+- Clone this repository
+- in the command line run:
+  - `npm install`
+  - `gulp serve`
+
+## Features
+
+### Installation and Configuration
 
 When you add the web part for the first time, a user will need to create the backing lists within the site that support storage of Time Away entries.  A user with list creation permissions within the site will need to click the "Create Lists" button that shows up within the web part.
 
-### Building the code
-
-```bash
-git clone the repo
-npm i
-npm i -g gulp
-gulp
-```
-
-This package produces the following:
-
-* lib/* - intermediate-stage commonjs build artifacts
-* dist/* - the bundled script, along with other resources
-* deploy/* - all resources which should be uploaded to a CDN.
-
-### Build options
-
-gulp clean
-gulp serve
-gulp bundle
-gulp package-solution
-
+<img src="https://telemetry.sharepointpnp.com/sp-dev-solutions/solutions/inventorycheckout/readme" />
