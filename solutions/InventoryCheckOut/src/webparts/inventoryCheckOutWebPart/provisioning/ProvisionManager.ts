@@ -2,9 +2,9 @@
 // Licensed under the MIT license.
 
 import { Constants } from "../models/InventoryCheckOutModel";
-import { EnsureListResult } from "../models/EnsureListResult";
 import { IWebPartContext } from '@microsoft/sp-webpart-base';
-import { SharePointUtilityModule as ca } from 'communityappslibrary';
+import { EnsureListResult } from "../../../libraries/solutions/EnsureListResult";
+import { SharePointUtilityModule as ca } from '../../../libraries/solutions/SharePointUtility';
 
 export class ProvisionManager {
   public static utility = ca.SharePointUtility;
@@ -55,6 +55,9 @@ export class ProvisionManager {
 
       .then((): Promise<void> => {
         return ProvisionManager.utility.createListField(ctx, this.itemslistId, "Location", "icoLocation", false, "SP.FieldText", 2);
+      })
+      .then((): Promise<void> => {
+        return ProvisionManager.utility.createListField(ctx, this.itemslistId, "Image Url", "Image Url", false, "SP.FieldUrl", 11);
       })
       .then((): Promise<void> => {
         return ProvisionManager.utility.createListField(ctx, this.itemslistId, "Total Quantity", "icoTotalQuantity", true, "SP.FieldNumber", 9, { "MinimumValue": 1 });

@@ -1,4 +1,4 @@
-export * from "./biz/ProvisionManager";
+export * from "./provisioning/ProvisionManager";
 export * from "./models/ChangeRequestModel";
-export * from "./common/constants";
+export * from "./provisioning/Constants";
 export * from "./dataProviders/MockChangeRequestLists";

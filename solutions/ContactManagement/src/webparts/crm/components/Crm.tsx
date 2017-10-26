@@ -11,7 +11,7 @@ import {
 
 import { CommandBar, IContextualMenuItem, Dialog, DialogType, DialogFooter } from 'office-ui-fabric-react';
 import { ProvisionManager }  from '../../../biz/ProvisionManager';
-import { EnsureListResult } from "../../../common/EnsureListResult";
+import { EnsureListResult } from "../../../libraries/solutions/EnsureListResult";
 
 import DialogUtility from '../../../utilities/DialogUtility';
 
@@ -534,10 +534,12 @@ export default class Crm extends React.Component<ICrmProps, ICrmState> {
                 });
                }}><i className="ms-Icon ms-Icon--Edit" aria-hidden="true"></i></Button>
           </div>
-          <OrganizationDisplay manager={ this.props.manager }
-              ref={ (incomingOrganizationDisplay : OrganizationDisplay) => { this._organizationDisplay = incomingOrganizationDisplay; } }
-              onPersonSelected={ this._handlePersonSelected } 
-               isEditing={this.state.isEditing} itemId={this.state.selectedOrganization.Id} organization={ this.state.selectedOrganization } allowEdit={ true }/>
+          <div className={styles.formArea}>
+            <OrganizationDisplay manager={ this.props.manager }
+                ref={ (incomingOrganizationDisplay : OrganizationDisplay) => { this._organizationDisplay = incomingOrganizationDisplay; } }
+                onPersonSelected={ this._handlePersonSelected } 
+                 isEditing={this.state.isEditing} itemId={this.state.selectedOrganization.Id} organization={ this.state.selectedOrganization } allowEdit={ true }/>
+          </div>
         </div>;              
     }
  

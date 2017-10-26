@@ -7,7 +7,7 @@ import { css, Label, PrimaryButton, CommandButton, Spinner, SpinnerSize } from '
 
 import { Modal } from 'office-ui-fabric-react/lib/Modal';
 import * as _ from "lodash";
-import { SharePointUtilityModule as ca } from 'communityappslibrary';
+import { SharePointUtilityModule as ca } from '../../../../libraries/solutions/SharePointUtility';
 import { ProvisionManager } from '../../../../libraries/index';
 import { CRMTab, IChangeRequestManagementItem } from '../../models/CRManagementModel';
 import { ICRManagementContainerProps } from './ICRManagementContainerProps';

@@ -1,5 +1,5 @@
-import * as ca from "communityappslibrary";
-import {Constants} from "../common/constants";
+import * as ca from "../solutions/SharePointUtility";
+import {Constants} from "../provisioning/Constants";
 import { EnsureListResult } from "../models/timeAwayModel";
 import { IWebPartContext } from '@microsoft/sp-webpart-base';
 
@@ -15,7 +15,7 @@ export class TimeAwayManager {
       .then((isExisted: boolean): Promise<EnsureListResult> => {
         if (!isExisted) {
           console.log("The SharePoint list " + listTitle + " does not exist.");
-          let isAbleCreateList = utility.checkCurrentUserIsAbleManageList(ctx);
+          let isAbleCreateList = utility.checkCurrentUserIsAbleToManageList(ctx);
           if (!isAbleCreateList) {
             return Promise.resolve(new EnsureListResult({ contentlistExists: false, hasPermission: false, message: "Time Away is not configured yet." }));
           }

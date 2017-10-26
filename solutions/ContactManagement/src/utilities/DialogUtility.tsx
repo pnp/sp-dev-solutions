@@ -108,7 +108,7 @@ export default class DialogUtility {
     {
         if (DialogUtility.activeOptions != null && DialogUtility.activeOptions.onSaveCallout != null)
         {
-           this.doSaveCallout();
+           DialogUtility.doSaveCallout();
         }
 
         DialogUtility.clearDialog();

@@ -158,7 +158,7 @@
   {
     display: table-cell;
     padding: 4px;
-    padding-top:9px;
+    padding-top:13px;
     vertical-align:  top;
     color: #C0C0C0;
   }
@@ -184,7 +184,7 @@
     display: table-cell;
     vertical-align: top;
     padding: 4px;
-    padding-top:9px;
+    padding-top:13px;
     padding-left:10px;
     color: #C0C0C0;
   }
@@ -206,7 +206,8 @@
   {
     display: table-cell;
     padding: 4px;
-    
+    min-width: 100px;
+    padding-top:14px;
     vertical-align:  top;
   }
 
@@ -215,6 +216,7 @@
     display: table-cell;
     vertical-align: top;
     padding: 4px;
+    min-width: 100px;
     padding-left:10px;
     color: #C0C0C0;
   }

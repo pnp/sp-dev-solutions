@@ -19,6 +19,13 @@
     font-family: 'Segoe UI Light', 'Helvetica', 'Arial';
   }
 
+  .formArea
+  {
+    background-color: #FAFAFA;
+    padding: 4px;    
+    border-top: solid 1px #DADADA;
+  }
+
   .brandArea
   {
       margin-top: 16px;
@@ -717,6 +724,7 @@
   {
     display: table-cell;
     padding: 4px;
+    min-width:120px;
   }
 }
 

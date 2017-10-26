@@ -5,6 +5,9 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+# No temporary scripts
+*.cmd
+
 # Runtime data
 pids
 *.pid

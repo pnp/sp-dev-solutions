@@ -1495,11 +1495,6 @@
         }
       }
     },
-    "communityappslibrary": {
-      "version": "1.2.0",
-      "from": "communityappslibrary@latest",
-      "resolved": "https://registry.npmjs.org/communityappslibrary/-/communityappslibrary-1.2.0.tgz"
-    },
     "component-bind": {
       "version": "1.0.0",
       "from": "component-bind@1.0.0",

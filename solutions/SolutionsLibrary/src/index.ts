@@ -1,1 +1,1 @@
-export * from "./common/sharepointUtility";
+export * from "./solutions/sharepointUtility";

@@ -5,7 +5,7 @@ import * as React from 'react';
 import * as Update from 'immutability-helper';
 import styles from './TimeAwaySummaryContainer.module.scss';
 
-import * as ca from "communityappslibrary";
+import * as ca from "../../../../libraries/solutions/SharePointUtility";
 import ITimeAwaySummaryPagePros from './ITimeAwaySummaryContainerProps';
 import TimeAwaySummaryWeek from '../week/TimeAwaySummaryWeek';
 import TimeAwaySummaryList from '../list/TimeAwaySummaryList';
@@ -28,7 +28,7 @@ export default class TimeAwaySummaryContainer extends React.Component<ITimeAwayS
       weekType: this.props.weekType,
       statusFilter: this.props.statusFilter,
       showMyTimeAwayLink: this.props.showMyTimeAwayLink,
-      isHaveAdminPermission: utility.checkCurrentUserIsAbleManageList(this.props.context),
+      isHaveAdminPermission: utility.checkCurrentUserIsAbleToManageList(this.props.context),
       submitting: false,
       isInitialized: this.props.isInitialized
     };

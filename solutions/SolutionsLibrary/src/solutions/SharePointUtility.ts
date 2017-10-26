@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license.
+
 //Import Web Part properties
 import { IWebPartContext } from '@microsoft/sp-webpart-base';
 //Import SPHttpClient
@@ -10,7 +13,6 @@ export namespace SharePointUtilityModule {
 
         // Checks if the current user has permissions to manage lists.
         public static checkCurrentUserIsAbleToManageList(context: IWebPartContext): boolean {
-            let result = false;
             let currentPermission = context.pageContext.web.permissions;
             var isAbleToProvision = currentPermission.hasPermission(SPPermission.manageLists) && currentPermission.hasPermission(SPPermission.managePermissions);
             console.log("Current user permission: { High:" + currentPermission.value.High + ",Low:" + currentPermission.value.Low + "}");
@@ -115,6 +117,11 @@ export namespace SharePointUtilityModule {
                   }
                 }`);
 
+                if (more != null) {
+                    for (let i: number = 0; i < Object.getOwnPropertyNames(more).length; i++)
+                        reqJSON["parameters"][Object.getOwnPropertyNames(more)[i]] = more[Object.getOwnPropertyNames(more)[i]];
+                }
+    
                 postUrl += "/addfield";
             }
             else {
@@ -133,11 +140,11 @@ export namespace SharePointUtilityModule {
                     reqJSON["DisplayFormat"] = 1;
                     reqJSON["FriendlyDisplayFormat"] = 1;
                 }
-            }
 
-            if (more != null) {
-                for (let i: number = 0; i < Object.getOwnPropertyNames(more).length; i++)
-                    reqJSON[Object.getOwnPropertyNames(more)[i]] = more[Object.getOwnPropertyNames(more)[i]];
+                if (more != null) {
+                    for (let i: number = 0; i < Object.getOwnPropertyNames(more).length; i++)
+                        reqJSON[Object.getOwnPropertyNames(more)[i]] = more[Object.getOwnPropertyNames(more)[i]];
+                }
             }
 
             return context.spHttpClient.post(

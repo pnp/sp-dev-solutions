@@ -33,7 +33,7 @@ import {
 
 export default class UserInterfaceUtility
 {
-    private static _outerElement : Element;
+  private static _outerElement : Element;
 
   public static getFieldElement(itemContext : ItemContext, field : ISPField, displayOnly : boolean, onChanged? : FieldValueChangeCallback) : JSX.Element
   {

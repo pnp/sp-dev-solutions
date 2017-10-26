@@ -1,6 +1,6 @@
-import { SharePointUtilityModule } from '../common/SharePointUtility';
-import { Constants } from "../common/Constants";
-import { EnsureListResult } from "../common/EnsureListResult";
+import { SharePointUtilityModule } from '../libraries/solutions/SharePointUtility';
+import { Constants } from "./Constants";
+import { EnsureListResult } from "../libraries/solutions/EnsureListResult";
 import { IWebPartContext } from '@microsoft/sp-webpart-base';
 import { FieldTypeKind } from '../data/FieldTypeKind';
 

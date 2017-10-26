@@ -210,6 +210,8 @@ export default class OrganizationDisplay extends React.Component<IOrganizationDi
             <div className={ styles.peopleHeader }>People</div>
             <div className={ styles.peopleList }>
             {
+              this.state.persons == null || this.state.persons.length == 0 ?
+                <div>(No related people added yet.)</div> : 
               this.state.persons.map( (person, i) =>
               {
                 return <div data-personId={i} key={i} onClick= { this._handlePersonClick }>
@@ -261,12 +263,6 @@ export default class OrganizationDisplay extends React.Component<IOrganizationDi
                     </div>
                   </div>
                   <div className={styles.fieldArea}>
-                      <div className={styles.fieldLabel}>
-                      Home Page:
-                    </div>
-                    <div className={styles.fieldInput}>
-                      <ItemUrlFieldDisplay field={this._itemContext.getField("HomePage") } itemContext={ this._itemContext } />
-                    </div>
                     <div className={styles.fieldLabel}>
                       Owner:
                     </div>
@@ -324,10 +320,32 @@ export default class OrganizationDisplay extends React.Component<IOrganizationDi
                   </div>
               </div>
             </PivotItem>            
+            <PivotItem key="resources" linkText='Resources'>
+              <div className={styles.pivotInterior}>            
+                <div className={styles.fieldListArea}>
+                  <div className={styles.fieldArea}>
+                    <div className={styles.fieldLabel}>
+                      Home Page:
+                    </div>
+                    <div className={styles.fieldInput}>
+                      <ItemTextFieldDisplay field={this._itemContext.getField("HomePage") } itemContext={ this._itemContext } />
+                    </div>
+                  </div>
+                  <div className={styles.fieldArea}>
+                    <div className={styles.fieldLabel}>
+                      About:
+                    </div>
+                    <div className={styles.fieldInput}>                
+                      <ItemUrlFieldDisplay field={this._itemContext.getField("About") } itemContext={ this._itemContext } />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </PivotItem>            
             <PivotItem key="miscellaneous" linkText="Miscellaneous">
               <div className={styles.pivotInterior}>
                 <div className={styles.iteratorArea}>
-                  <ItemFieldIterator isDisplayOnly={ true } excludedFields={ ["Title", "Notes", "Description", "Created", "Modified", "Editor", "Author", "PrimaryAddress", "PrimaryStateProvince", "PrimaryCity", "PrimaryCountry", "PrimaryZipPostalCode", "Logo"] } itemContext={ this._itemContext } />
+                  <ItemFieldIterator isDisplayOnly={ true } excludedFields={ ["Title", "Notes", "Description", "Created", "Modified", "Editor", "Author", "PrimaryAddress", "PrimaryStateProvince", "PrimaryCity", "PrimaryCountry", "PrimaryZipPostalCode", "Logo", "HomePage", "Updates", "Tags", "Status", "About", "Owner"] } itemContext={ this._itemContext } />
                 </div>
                 { personsContent }
               </div>
@@ -342,7 +360,7 @@ export default class OrganizationDisplay extends React.Component<IOrganizationDi
                   <div className={ styles.displayHeader }>Creator:</div>
                   <ItemPeopleFieldDisplay field={this._itemContext.getField("Author") } itemContext={ this._itemContext } />
                 </div>
-                <div className={ styles.displayArea }>
+              <div className={ styles.displayArea }>
                   <div className={ styles.displayHeader }>Modified:</div>
                   <ItemDateFieldDisplay field={this._itemContext.getField("Modified") } itemContext={ this._itemContext } />
                 </div>

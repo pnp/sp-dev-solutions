@@ -32,10 +32,6 @@
     "clean": "gulp clean",
     "test": "gulp test"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/cloris/communityappslibrary.git"
-  },
   "keywords": [
     "sharepoint",
     "Typescript"

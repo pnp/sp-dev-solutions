@@ -38,6 +38,7 @@ export default class ItemFieldIterator extends ItemComponent<IItemFieldIteratorP
     };
 
     this._isFieldExcluded = this._isFieldExcluded.bind(this);
+    this._isFieldTypeExcluded = this._isFieldTypeExcluded.bind(this);
   }
 
   public componentWillMount()
@@ -55,6 +56,22 @@ export default class ItemFieldIterator extends ItemComponent<IItemFieldIteratorP
   private _canonicalizeFieldName(fieldName : string) : string
   {
     return fieldName.replace(" ", "").replace("_x0020_", "").toLowerCase();
+  }
+
+  private _isFieldTypeExcluded(kind : FieldTypeKind) : boolean
+  {
+    if (kind == FieldTypeKind.DateTime  ||
+        kind == FieldTypeKind.Choice ||
+        kind == FieldTypeKind.Url || 
+        kind == FieldTypeKind.Lookup ||
+        kind == FieldTypeKind.User || 
+        kind == FieldTypeKind.Text || 
+        kind == FieldTypeKind.Note)
+        {
+          return false;
+        }
+
+    return true;
   }
 
   private _isFieldExcluded(fieldInternalName : string) : boolean
@@ -121,6 +138,7 @@ export default class ItemFieldIterator extends ItemComponent<IItemFieldIteratorP
         if (field != null && ( field.InternalName != 'ID' && 
           field.Title != 'Version' && 
           !me._isFieldExcluded(field.InternalName) && 
+          !me._isFieldTypeExcluded(field.FieldTypeKind) && 
           field.Title != 'Item Child Count' && 
           field.Title != 'Attachments' && 
           field.Title != 'Folder Child Count'  &&  
@@ -166,7 +184,7 @@ export default class ItemFieldIterator extends ItemComponent<IItemFieldIteratorP
               {
                 return <span key={"SPIF" + i} className={ styles.iteratorRow }>
                   <span className={ me.props.isDisplayOnly ? styles.iteratorHeaderCellDisplay : styles.iteratorHeaderCell }>
-                    <ItemFieldLabel itemContext={ me.props.itemContext } field={ doubleField[0] } />
+                    <ItemFieldLabel appendColon={ true } itemContext={ me.props.itemContext } field={ doubleField[0] } />
                    </span>
                    <span className={ me.props.isDisplayOnly ? styles.iteratorValueCellDisplay : styles.iteratorValueCell }>
                     {
@@ -175,7 +193,7 @@ export default class ItemFieldIterator extends ItemComponent<IItemFieldIteratorP
                    </span>
                 
                     <span className={ me.props.isDisplayOnly ? styles.iteratorSecondHeaderCellDisplay : styles.iteratorSecondHeaderCell }>
-                      <ItemFieldLabel itemContext={ me.props.itemContext } field={ doubleField.length > 1 ? doubleField[1] : null } />
+                      <ItemFieldLabel appendColon={ true } itemContext={ me.props.itemContext } field={ doubleField.length > 1 ? doubleField[1] : null } />
                     </span>
                     <span className={ me.props.isDisplayOnly ? styles.iteratorSecondValueCellDisplay : styles.iteratorSecondValueCell }>
                       {

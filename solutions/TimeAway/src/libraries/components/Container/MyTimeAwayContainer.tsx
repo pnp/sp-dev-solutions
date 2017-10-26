@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as Update from 'immutability-helper';
-import * as ca from "communityappslibrary";
+import * as ca from "../../solutions/SharePointUtility";
 import { CommandButton, Label, css, PrimaryButton } from 'office-ui-fabric-react';
 import styles from './MyTimeAwayContainer.module.scss';
 import { IMyTimeAwayContainerProps } from './IMyTimeAwayContainerProps';
@@ -17,12 +17,12 @@ export class MyTimeAwayContainer extends React.Component<IMyTimeAwayContainerPro
   constructor(props: IMyTimeAwayContainerProps) {
     const utility = ca.SharePointUtilityModule.SharePointUtility;
 
-    super(props);
+  super(props);
     this.state = {
       showDialogType: TimeAwayDialogType.Hidden,
       period: this.props.period,
       items: [],
-      isHaveAdminPermission: utility.checkCurrentUserIsAbleManageList(this.props.context),
+      isHaveAdminPermission: utility.checkCurrentUserIsAbleToManageList(this.props.context),
       submitting: false,
       isInitialized: this.props.isInitialized
     };

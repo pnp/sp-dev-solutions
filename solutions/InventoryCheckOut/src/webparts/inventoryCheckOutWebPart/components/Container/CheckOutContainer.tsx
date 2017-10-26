@@ -3,8 +3,8 @@
 
 import * as React from 'react';
 import { css, Label, PrimaryButton, DefaultButton, TextField, CommandButton } from 'office-ui-fabric-react';
-import { SharePointUtilityModule } from 'communityappslibrary';
-import { ProvisionManager } from '../../common/provisionManager';
+import { SharePointUtilityModule } from '../../../../libraries/solutions/SharePointUtility';
+import { ProvisionManager } from '../../provisioning/ProvisionManager';
 import * as lodash from 'lodash';
 import * as moment from 'moment';
 

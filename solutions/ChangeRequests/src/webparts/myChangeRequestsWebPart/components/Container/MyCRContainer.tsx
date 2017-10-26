@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { css, Label, PrimaryButton, CommandButton } from 'office-ui-fabric-react';
-import { SharePointUtilityModule as ca } from 'communityappslibrary';
+import { SharePointUtilityModule as ca } from '../../../../libraries/solutions/SharePointUtility';
 import {  ProvisionManager as ProvisionManager, IMyChangeRequestItem, ChangeRequestStatus } from '../../../../libraries/index';
 import styles from './MyCRContainer.module.scss';
 

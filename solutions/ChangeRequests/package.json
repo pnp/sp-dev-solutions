@@ -19,7 +19,6 @@
     "@types/react-dom": "0.14.18",
     "@types/webpack-env": ">=1.12.1 <1.14.0",
     "immutability-helper": "^2.2.2",
-    "communityappslibrary": "^1.4.0",
     "lodash": "^4.17.4",
     "moment": "^2.18.1",
     "react": "15.4.2",

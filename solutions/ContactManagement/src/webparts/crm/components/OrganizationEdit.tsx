@@ -183,7 +183,7 @@ export default class OrganizationEdit extends React.Component<IOrganizationEditP
               <div className={styles.fieldListArea}>
                 <div className={styles.fieldArea}>
                   <div className={styles.fieldLabel}>
-                    Address:
+                      Address:
                   </div>
                   <div className={styles.fieldInput}>
                     <ItemTextFieldEditor field={this._itemContext.getField("PrimaryAddress") } itemContext={ this._itemContext } />

@@ -658,14 +658,10 @@ export abstract class BaseCrmDataProvider implements ICrmDataProvider {
         RichText: true  
       },
       { 
-        Title: "Owner",
-        InternalName: "Owner",
-        FieldTypeKind: FieldTypeKind.User
-      },
-      { 
         Title: "Status",
         InternalName: "Status",
-        FieldTypeKind: FieldTypeKind.Choice
+        FieldTypeKind: FieldTypeKind.Choice,
+        Choices: [ "Active", "Closed" ]
       },
       { 
         Title: "Updates",
@@ -680,7 +676,7 @@ export abstract class BaseCrmDataProvider implements ICrmDataProvider {
       },                        
       { 
         Title: "Owner",
-        InternalName: "OwnerId",
+        InternalName: "Owner",
         FieldTypeKind: FieldTypeKind.User
       },                        
       { 

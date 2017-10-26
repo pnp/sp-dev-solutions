@@ -15,7 +15,7 @@ import * as strings from 'inventoryCheckOutWebPartStrings';
 import { IInventoryCheckOutWebPartWebPartProps } from './IInventoryCheckOutWebPartWebPartProps';
 import CheckOutContainer from './components/Container/CheckOutContainer';
 import ICheckOutContainerProps from './components/Container/ICheckOutContainerProps';
-import { ProvisionManager } from './common/provisionManager';
+import { ProvisionManager } from './provisioning/ProvisionManager';
 import { IInventoryCheckOutDataProvider } from './dataProviders/IInventoryCheckOutDataProvider';
 import { InventoryCheckOutDataProvider } from './dataProviders/InventoryCheckOutDataProvider';
 import { MockInventoryCheckOutDataProvider } from './dataProviders/MockInventoryCheckOutDataProvider';

@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license.
+
 //Import Web Part properties
 import { IWebPartContext } from '@microsoft/sp-webpart-base';
 //Import SPHttpClient

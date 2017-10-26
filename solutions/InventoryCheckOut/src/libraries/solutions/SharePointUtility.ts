@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license.
+
 //Import Web Part properties
 import { IWebPartContext } from '@microsoft/sp-webpart-base';
 //Import SPHttpClient
@@ -8,8 +11,8 @@ export namespace SharePointUtilityModule {
     export class SharePointUtility {
         constructor() { }
 
+        // Checks if the current user has permissions to manage lists.
         public static checkCurrentUserIsAbleToManageList(context: IWebPartContext): boolean {
-            let result = false;
             let currentPermission = context.pageContext.web.permissions;
             var isAbleToProvision = currentPermission.hasPermission(SPPermission.manageLists) && currentPermission.hasPermission(SPPermission.managePermissions);
             console.log("Current user permission: { High:" + currentPermission.value.High + ",Low:" + currentPermission.value.Low + "}");
@@ -17,7 +20,7 @@ export namespace SharePointUtilityModule {
             return isAbleToProvision;
         }
 
-        //Determine if a SharePoint list exists
+        // Determines if a SharePoint list exists
         public static checkListExists(context: IWebPartContext, listTitle: string): Promise<boolean> {
             return context.spHttpClient.get(context.pageContext.web.absoluteUrl
                 + "/_api/web/lists/GetByTitle('"
@@ -33,7 +36,7 @@ export namespace SharePointUtilityModule {
                 });
         }
 
-        //Create a SharePoint list
+        // Creates a SharePoint list
         public static createList(context: IWebPartContext,
             listTitle: string,
             listDescription: string,
@@ -76,7 +79,7 @@ export namespace SharePointUtilityModule {
                 });
         }
 
-        //Create a field in a SharePoint list
+        // Creates a field in a SharePoint list
         public static createListField(context: IWebPartContext,
             listGuid: string,
             title: string,
@@ -114,6 +117,11 @@ export namespace SharePointUtilityModule {
                   }
                 }`);
 
+                if (more != null) {
+                    for (let i: number = 0; i < Object.getOwnPropertyNames(more).length; i++)
+                        reqJSON["parameters"][Object.getOwnPropertyNames(more)[i]] = more[Object.getOwnPropertyNames(more)[i]];
+                }
+    
                 postUrl += "/addfield";
             }
             else {
@@ -132,11 +140,11 @@ export namespace SharePointUtilityModule {
                     reqJSON["DisplayFormat"] = 1;
                     reqJSON["FriendlyDisplayFormat"] = 1;
                 }
-            }
 
-            if (more != null) {
-                for (let i: number = 0; i < Object.getOwnPropertyNames(more).length; i++)
-                    reqJSON[Object.getOwnPropertyNames(more)[i]] = more[Object.getOwnPropertyNames(more)[i]];
+                if (more != null) {
+                    for (let i: number = 0; i < Object.getOwnPropertyNames(more).length; i++)
+                        reqJSON[Object.getOwnPropertyNames(more)[i]] = more[Object.getOwnPropertyNames(more)[i]];
+                }
             }
 
             return context.spHttpClient.post(
@@ -155,7 +163,7 @@ export namespace SharePointUtilityModule {
                 });
         }
 
-        //Modify a field in a SharePoint list
+        // Modifies a field in a SharePoint list
         public static updateListField(context: IWebPartContext, listGuid: string, fieldGuid: string, fieldType: string, change: Object)
             : Promise<any> {
 
@@ -189,7 +197,7 @@ export namespace SharePointUtilityModule {
                 });
         }
 
-        //Create a SharePoint Group in a SharePoint site
+        // Creates a SharePoint Group in a SharePoint site
         public static createGroup(context: IWebPartContext, groupTitle: string): Promise<any> {
             console.log(`create group ${groupTitle}`);
 
@@ -220,7 +228,7 @@ export namespace SharePointUtilityModule {
                 });
         }
 
-        //Create a Role defination in a SharePoint site
+        // Creates a Role definition in a SharePoint site
         public static createRole(context: IWebPartContext, roleTitle: string, high: string, low: string): Promise<void> {
             console.log(`create role ${roleTitle}`);
 
@@ -256,7 +264,7 @@ export namespace SharePointUtilityModule {
             });
         }
 
-        //Assign a role defination to a user or group in SharePoint site
+        // Assigns a role definition to a user or group in SharePoint site
         public static addRoleAssignment(context: IWebPartContext, principalid: string, roleId: string): Promise<any> {
             let restUrl: string = context.pageContext.web.absoluteUrl
                     + `/_api/web/roleassignments/addroleassignment(principalid=${principalid}, roledefid=${roleId})`;
@@ -278,7 +286,7 @@ export namespace SharePointUtilityModule {
             });
         }
 
-        //Get role id on the web
+        // Gets the role id for a role in the current web
         public static getRoleId(context: IWebPartContext, roleName: string): Promise<string>{
             let restUrl: string = context.pageContext.web.absoluteUrl
                 + `/_api/web/roledefinitions?$filter=Name eq '${roleName}'`;
@@ -304,7 +312,7 @@ export namespace SharePointUtilityModule {
             });
         }
 
-        // Break role inheritance on the list.
+        // Breaks role inheritance on a SharePoint list
         public static breakRoleInheritanceOfList(context: IWebPartContext, listTitle: string): Promise<void> {
             let restUrl: string = context.pageContext.web.absoluteUrl
                 + `/_api/web/lists/getbytitle('${listTitle}')/breakroleinheritance(true)`;
@@ -325,7 +333,7 @@ export namespace SharePointUtilityModule {
             });
         }
 
-        // Add the new role assignment for the group on the list.
+        // Adds a new role assignment for the group on a SharePoint list
         public static setNewPermissionsForGroup(context: IWebPartContext, listTitle: string, principalid: string, roleid: string): Promise<void> {
             let restUrl: string = context.pageContext.web.absoluteUrl
                     + `/_api/web/lists/getbytitle('${listTitle}')/roleassignments/addroleassignment(principalid=${principalid},roledefid=${roleid})`;
@@ -346,7 +354,7 @@ export namespace SharePointUtilityModule {
             });
         }
 
-        // set or update ReadSecurity or WriteSecurity using REST API
+        // Sets or updates ReadSecurity or WriteSecurity on a SharePoint list
         public static setListSecurity(context: IWebPartContext, listTitle: string, readSecurity: string, writeSecurity: string): Promise<void>{
             let restUrl: string = context.pageContext.web.absoluteUrl
                     + `/_api/web/lists/getbytitle('${listTitle}')`;

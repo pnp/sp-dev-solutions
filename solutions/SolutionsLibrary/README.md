@@ -1,6 +1,8 @@
-﻿The SolutionsLibrary is an NPM package used by the SharePoint Community web parts.
+﻿The SolutionsLibrary is a small library of re-usable code used by the SharePoint Community web parts.  Code from the src/solutions folder is xcopy'ed and checked into to the ChangeRequest,
+ContactManagement, InventorCheckOut, and TimeAway folders respectively.  Over time, we expect
+this folder to grow with more shared code, and potentially ultimately, a maintained NPM package.
 
-It includes the following functions:
+It includes the following functions within SharePointUtility.ts:
 
 checkCurrentUserIsAbleToManageList - Checks if the current user has permissions to manage lists.
 checkListExists - Determines if a SharePoint list exists.

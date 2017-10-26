@@ -1,5 +1,5 @@
-import { SharePointUtilityModule as ca } from 'communityappslibrary';
-import { Constants } from "../common/constants";
+import { SharePointUtilityModule as ca } from '../solutions/SharePointUtility';
+import { Constants } from "./Constants";
 import { EnsureListResult } from "../models/EnsureListResult";
 import { IWebPartContext } from '@microsoft/sp-webpart-base';
 
