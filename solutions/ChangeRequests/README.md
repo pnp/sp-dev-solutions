@@ -8,10 +8,10 @@ There are two web parts included with Change Request Management:
 * A "My Change Requests" web part is a submission tool for users across your organization to submit new change requests.
 * A "Change Requests Management" web part lets a triage time view all of the inbound requests, assign them to team mates, and otherwise discuss them.
 
-![Issues Screenshot](../../assets/issues.png)
+![Issues Screenshot](./assets/screenshot.png)
 
 ## Used SharePoint Framework Version 
-![drop](https://img.shields.io/badge/version-GA-green.svg)
+![drop](https://img.shields.io/badge/version-v1.1-green.svg)
 
 ## Applies to
 
@@ -51,6 +51,7 @@ Version | Date               | Comments
 ## Minimal Path to Awesome
 
 - Clone this repository
+- Move to solution folder
 - In the command line run:
   - `npm install`
   - `gulp serve`
@@ -71,4 +72,4 @@ The My Change Requests web part allows you to submit change requests.
 
 The Change Request web parts rely on the CommunityAppsLibrary NPM package which provides common functions used to set up and configure the SharePoint lists the web parts use.
 
-<img src="https://telemetry.sharepointpnp.com/sp-dev-solutions/solutions/changerequests/readme" />
+<img src="https://telemetry.sharepointpnp.com/sp-dev-solutions/solutions/changerequests" />

@@ -11,10 +11,10 @@ The Time Away web part contains two web parts:
 
 When you add the web part for the first time, a user will need to create the backing lists within the site that support storage of Time Away entries.  A user with list creation permissions within the site will need to click the "Create Lists" button that shows up within the web part.
 
-![Time Away Screenshot](../../assets/timeaway.png)
+![Time Away Screenshot](./assets/timeaway.png)
 
 ## Used SharePoint Framework Version 
-![drop](https://img.shields.io/badge/version-GA-green.svg)
+![drop](https://img.shields.io/badge/version-1.0-green.svg)
 
 ## Applies to
 
@@ -53,6 +53,7 @@ Version  | Date               | Comments
 ## Minimal Path to Awesome
 
 - Clone this repository
+- Move to solution folder
 - in the command line run:
   - `npm install`
   - `gulp serve`
@@ -67,5 +68,5 @@ You can also toggle whether the web part willl show a full week, or only show Mo
 
 Finally, you can also choose to use content approval features in SharePoint to set up simple notifications or approvals. Via a setting in the Time Away Summary web part, you can choose to hide Time Away out-of-office entries unless the Approval field is set to Approved. This gives administrators the ability to connect SharePoint approval features, or a workflow product like Microsoft Flow, tied to the Approval field in the Time Away list, to let managers choose to approve or hide fields.
 
-<img src="https://telemetry.sharepointpnp.com/sp-dev-solutions/solutions/timeaway/readme" />
+<img src="https://telemetry.sharepointpnp.com/sp-dev-solutions/solutions/timeaway" />
 

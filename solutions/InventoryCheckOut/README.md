@@ -10,10 +10,10 @@ Optionally, you can also choose to upload and link to pictures for items, so tha
 
 Users can individually view the items in the inventory list, and if they'd like, check out items from the list by clicking the checkout item button.  From there, they can input a time by which they expect to return the item.
 
-![Inventory and Check-out Screenshot](../../assets/inventorycheckout.png)
+![Inventory and Check-out Screenshot](./assets/inventorycheckout.png)
 
 ## Used SharePoint Framework Version 
-![drop](https://img.shields.io/badge/version-GA-green.svg)
+![drop](https://img.shields.io/badge/version-v1.1-green.svg)
 
 ## Applies to
 
@@ -53,6 +53,7 @@ Version  | Date               | Comments
 ## Minimal Path to Awesome
 
 - Clone this repository
+- Move to solution folder
 - in the command line run:
   - `npm install`
   - `gulp serve`

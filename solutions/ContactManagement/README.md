@@ -3,10 +3,10 @@
 ## Summary
 The Contact Management application provides simplified management of contacts and organizations.  It uses a Contacts list to store basic Contacts.  This Contact list is tied to a set of Organizations.  These Organizations become the locus of organizing tracking of the relationship of your organization to the related organization.
 
-![Contact Management Screenshot](../../assets/contactmanagement.png)
+![Contact Management Screenshot](./assets/contactmanagement.png)
 
 ## Used SharePoint Framework Version 
-![drop](https://img.shields.io/badge/version-GA-green.svg)
+![drop](https://img.shields.io/badge/version-v1.0-green.svg)
 
 ## Applies to
 
@@ -45,6 +45,7 @@ Version  | Date               | Comments
 ## Minimal Path to Awesome
 
 - Clone this repository
+- Move to right folder
 - in the command line run:
   - `npm install`
   - `gulp serve`
@@ -63,4 +64,4 @@ The Content Management application features simple tagging capabilities, along w
 
 We look forward to your feedback. Use Github Issues to provide information about issues as well as your feedback requests.  You can also submit pull requests; see [this link](../../.github/CONTRIBUTING.md) for more information on Contributing.
 
-<img src="https://telemetry.sharepointpnp.com/sp-dev-solutions/solutions/contactmanagement/readme" />
+<img src="https://telemetry.sharepointpnp.com/sp-dev-solutions/solutions/contactmanagement" />
