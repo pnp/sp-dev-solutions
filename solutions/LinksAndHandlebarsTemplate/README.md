@@ -39,6 +39,7 @@ Stacked Layout:
 ### Box Button
 
 Button links that can be stored within the web part or in a SharePoint list
+
 ![Box Button](./assets/box_button.png "Box Button")
 
 ### Hub Template
