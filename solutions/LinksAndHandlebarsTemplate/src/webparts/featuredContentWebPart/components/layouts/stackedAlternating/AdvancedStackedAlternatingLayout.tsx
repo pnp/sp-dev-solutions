@@ -4,6 +4,12 @@ import { IFeaturedContentLayout } from '../FeatureContentLayout';
 import FeaturedContentFactory from '../FeaturedContentFactory';
 import styles from './Styles.module.scss';
 
+const urlField = "URL";
+const imageField = "Image";
+const contentField = "Content";
+const descriptionField = "Description";
+const openNewTabField = "NewTab";
+
 export default class AdvancedStackedLayout implements IFeaturedContentLayout{
   constructor(){}
 
@@ -16,17 +22,17 @@ export default class AdvancedStackedLayout implements IFeaturedContentLayout{
                 <div className={styles["featured-content-item"]}>
                   <div role="presentation" className={styles["box-container"]}>
                     <div className={styles["image"]}>
-                      <a className={styles["featured-content-link"]} href={item.URL} target={item.NewTab ? "_blank" : ""}></a>
-                      {item["Image"] && 
-                      <img src={item["Image"]+FeaturedContentFactory.getWidthHeightQueryStringAppendForImage(item.Image)} alt={item.ImageAlternate}/>
+                      <a className={styles["featured-content-link"]} href={item[urlField]} target={item[openNewTabField] ? "_blank" : ""}></a>
+                      {item[imageField] && 
+                      <img src={item[imageField]+FeaturedContentFactory.getWidthHeightQueryStringAppendForImage(item[imageField])}/>
                       }
                     </div>
                     <div className={styles["content"]}>
                       <div className={styles["title"]}>
-                        <a className={styles["featured-content-link"]} href={item.URL} target={item.NewTab ? "_blank" : ""}>{item.Title}</a>
+                        <a className={styles["featured-content-link"]} href={item[urlField]} target={item[openNewTabField] ? "_blank" : ""}>{item[urlField+"_text"]}</a>
                       </div>
-                      <span className={styles["description"]}>{item.Description}</span>
-                      <span className={styles["rich-text-field"]}>{item.Content}></span>
+                      <span className={styles["description"]}>{item[descriptionField]}</span>
+                      <span className={styles["rich-text-field"]}>{item[contentField]}></span>
                     </div>
                   </div>
                 </div>

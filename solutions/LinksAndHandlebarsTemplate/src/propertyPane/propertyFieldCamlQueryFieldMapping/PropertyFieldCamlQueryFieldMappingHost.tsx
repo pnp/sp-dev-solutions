@@ -148,13 +148,14 @@ export default class PropertyFieldCamlQueryFieldMappingHost extends React.Compon
   }
 
   private loadDefaultData(): void {
-    if(this.props != null && this.props.properties[this.props.dataPropertyPath] != null)
+    if(this.props && this.props.properties[this.props.dataPropertyPath])
     {
       var stateObj = JSON.parse(this.props.properties[this.props.dataPropertyPath]);
       this.state.max = stateObj.max;
       this.state.selectedList = stateObj.selectedList;
       this.state.sort = stateObj.sort;
       this.state.fieldMappings = stateObj.fieldMappings;
+      this.state.filterType = stateObj.filterType;
       this.state.filters = stateObj.filters;
     }
   }
@@ -180,7 +181,7 @@ export default class PropertyFieldCamlQueryFieldMappingHost extends React.Compon
 
   private loadFields(updateView: boolean = false): void {
     if(this.state.selectedList && this.state.selectedList.id){
-      pnp.sp.web.lists.getById(this.state.selectedList.id).fields.select("Title","InternalName","TypeAsString").filter("Hidden eq false and ReadOnlyField eq false").orderBy("Title").get().then((response: ISPField[]) => {
+      pnp.sp.web.lists.getById(this.state.selectedList.id).fields.select("Title","InternalName","TypeAsString").filter("Hidden eq false").orderBy("Title").get().then((response: ISPField[]) => {
         this.state.fields = new List<IField>();
         response.map((field: ISPField) => {
           const option = {
@@ -882,7 +883,7 @@ export default class PropertyFieldCamlQueryFieldMappingHost extends React.Compon
           />
           : ''}
 
-          {this.state.filters != null && this.state.filters.length > 0 ?
+          {this.state.filters != null && this.state.filters.length > 1 ?
             <Dropdown
               label={strings.SPListFilterCompareType}
               disabled={this.props.disabled}

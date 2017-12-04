@@ -14,11 +14,15 @@
         "description": { "default": "A list of links from a SharePoint list" },
         "officeFabricIconFontName": "List",
         "properties": {
-            "listQuery": "",
             "title": "",
             "layoutMode": 0,
             "hubLinksItems": [],
+            "usesListMode": false,
+            "listQuery": "",
+            "data": "",
             "groups": [],
+            "showDescription": false,
+            "defaultExpand": false,
             "version": "1.0"
         }
     }]

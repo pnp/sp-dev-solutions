@@ -152,7 +152,7 @@ export default class HubLinks extends React.Component<IHubLinksProps, void> {
             webPartContext={this.props.context}
             className={styles["link-picker"]}
             webAbsUrl={this.props.context.pageContext.web.absoluteUrl}
-            linkType={ LinkType.all }
+            linkType={ LinkType.any }
             ref={ (ref) => { this.linkPickerPanel = ref; } } />
         }
       </div>
