@@ -14,11 +14,12 @@
         "description": { "default": "This web part is used to display featured content links" },
         "officeFabricIconFontName": "Tiles",
         "properties": {
+            "title": "",
             "layoutMode": 0,
             "featuredContentItems": [],
-            "title": "",
+            "usesListMode": false,
             "advancedCamlQuery": "",
-            "approvedImageUrl": "https://thehubcdnvz.azureedge.net/hub-web-parts/config/ApprovedImageLibs.json"
+            "advancedCamlData": ""
         }
     }]
 }

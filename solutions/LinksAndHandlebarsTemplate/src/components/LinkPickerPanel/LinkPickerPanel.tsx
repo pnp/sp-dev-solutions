@@ -154,7 +154,7 @@ export default class LinkPickerPanel
     if(this.props.linkType != LinkType.all){
       typeFilter += '&typeFilters=';
       if (this.props.linkType & LinkType.folder) typeFilter += 'folder,';
-      if (this.props.linkType & LinkType.doc)    typeFilter += '.doc,.docx,.xls,.xlsx,.pot,.potx,.ppt,.pptx,.vsdx,.vsdm,.vsd,.pdf,';
+      if (this.props.linkType & LinkType.doc)    typeFilter += '.doc,.docx,.docm,.xls,.xlsx,.xlsm,.pot,.potx,.ppt,.pptx,.pptm,.vsdx,.vsdm,.vsd,.pdf,';
       if (this.props.linkType & LinkType.image)  typeFilter += '.gif,.jpg,.jpeg,.bmp,.dib,.tif,.tiff,.ico,.png,.jxr,';
       if (this.props.linkType & LinkType.page)   typeFilter += '.aspx,';
       if (this.props.linkType & LinkType.developer) typeFilter += '.html,.css,.handlebars,.js,.json,.ts,.tsx,.jsx,.less,.scss,.sass';

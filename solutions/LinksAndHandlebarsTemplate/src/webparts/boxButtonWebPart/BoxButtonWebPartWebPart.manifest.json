@@ -14,9 +14,11 @@
         "description": { "default": "Create a large button with a colored border on it" },
         "officeFabricIconFontName": "Link",
         "properties": {
-            "data": [],
             "title": "",
-            "advancedCamlQuery": ""
+            "data": [],
+            "usesListMode": false,
+            "advancedCamlQuery": "",
+            "advancedCamlData": ""
         }
     }]
 }
