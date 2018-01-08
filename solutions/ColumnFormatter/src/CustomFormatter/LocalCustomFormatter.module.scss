@@ -1,0 +1,58 @@
+@import '~@microsoft/sp-office-ui-fabric-core/dist/sass/_SPFabricCore.scss';
+$ms-successBackground:      "[theme:successBackground, default:rgba(186,216,10,.2)]";
+$ms-warningBackground:      "[theme:warningBackground, default:rgba(255,185,0,.2)]";
+$ms-errorBackground:        "[theme:errorBackground, default:rgba(232,17,35,.2)]";
+$ms-blockingBackground:     "[theme:blockingBackground, default:rgba(234,67,0,.2)]";
+
+:global {
+    .sp-field-customFormatter{
+        min-height:inherit;
+        display:-webkit-box;
+        display:-ms-flexbox;
+        display:flex;
+        -webkit-box-align:center;
+        -ms-flex-align:center;
+        align-items:center;
+    }
+    .sp-field-customFormatBackground-margin{
+        margin:-10px 0;
+    }
+    .sp-field-severity--good{
+        background-color: $ms-successBackground;
+    }
+    .sp-field-severity--low{
+        background-color:inherit}
+    .sp-field-severity--warning{
+        background-color: $ms-warningBackground;
+    }
+    .sp-field-severity--severeWarning{
+        background-color: $ms-errorBackground;
+    }
+    .sp-field-severity--blocked{
+        background-color: $ms-blockingBackground;
+    }
+    .sp-field-dataBars{
+        background-color: $ms-color-themeTertiary;
+        border-top:2px solid;
+        border-color: $ms-color-themePrimary;
+        color: $ms-color-neutralPrimary;
+        padding:0 8px
+    }
+    .sp-field-trending--up{
+        color: $ms-color-green;
+    }
+    .sp-field-trending--down{
+        color: $ms-color-error;
+    }
+    .sp-field-quickAction{
+        font-size:14px;
+        font-weight:400;
+        padding:0
+    }
+    [dir=ltr] .sp-field-quickAction{
+        padding-left:8px
+    }
+    [dir=rtl] .sp-field-quickAction{
+        padding-right:8px
+    }
+}

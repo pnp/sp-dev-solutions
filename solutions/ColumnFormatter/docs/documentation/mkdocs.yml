@@ -1,0 +1,39 @@
+site_name: Column Formatter
+pages:
+  - Home: 'index.md'
+  - 'Setup & Configuration': 'setup.md'
+  - 'Getting started': 'getting-started.md'
+  - General:
+    - 'Using the Editor': 'editor/index.md'
+    - 'Editing Code': 'editor/code-editor.md'
+    - 'Save Options': 'editor/saving.md'
+    - 'Sample Data': 'editor/sample-data.md'
+    - 'Elements Tree': 'editor/tree.md'
+  - Wizards:
+    - 'Wizards': 'wizards/index.md'
+  - About: 
+    - 'About': 'about/index.md'
+    - License: 'about/license.md'
+theme:
+  name: 'material'
+  palette:
+    primary: 'blue'
+  logo: 'assets/sharepoint.png'
+  feature:
+    tabs: true
+markdown_extensions:
+  - admonition
+  - codehilite:
+      guess_lang: false
+  - toc:
+      permalink: true
+extra:
+  social:
+    - type: 'twitter'
+      link: 'https://twitter.com/officedevpnp'
+    - type: 'youtube'
+      link: 'http://aka.ms/sppnp-videos'
+    - type: 'link'
+      link: 'https://aka.ms/sppnp'
+repo_url: https://github.com/SharePoint/sp-dev-solutions
+edit_uri: blob/master/docs/documentation/docs
