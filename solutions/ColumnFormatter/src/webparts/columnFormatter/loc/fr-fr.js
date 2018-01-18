@@ -1,8 +1,13 @@
-define([], function () {
+define([], function() {
   return {
-    'PropertyPaneDescription': 'Description',
-    'BasicGroupName': 'Group Name',
-    'DescriptionFieldLabel': 'Description Field',
+    //Property Pane
+    PropertyBasicGroupName: 'Propriétés',
+    PropertyHeightLabel: 'Hauteur',
+
+    //General
+    FeatureUnavailableFromLocalWorkbench: 'Cette fonctionnalité n\'est pas disponible depuis l\'atelier local',
+    TechnicalDetailsErrorHeader: 'Détails techniques',
+    WizardDefaultField: 'Mon champ',
 
     //Welcome
     WelcomeTitle: 'Column Formatter',
@@ -14,6 +19,7 @@ define([], function () {
     WelcomeNewColumnTypeLabel: 'Type de colonne',
     WelcomeNewWizardOption: 'Commencez avec un modèle',
     WelcomeNewBlankOption: 'Commencer à partir de zéro',
+    WelcomeNewNoTemplates: 'Aucun modèle disponible pour le type de colonne choisi',
     WelcomeBackButton: 'Précedent',
     WelcomeOKButton: 'OK',
     WelcomeNextButton: 'Suivant',
@@ -22,12 +28,25 @@ define([], function () {
     WelcomeOpenColumnTypeLabel: 'Type de colonne',
     WelcomeOpenLoadFileLibrary: 'Ouvrir un fichier à partir d\'une bibliothèque locale',
     WelcomeOpenLoadFileUpload: 'Téléverser un fichier',
-
-    WelcomeOpenLoadFileUploadTitle: 'Téléversement d\'un fichier',
-    WelcomeOpenLoadFileUploadDesc: 'Déposez votre fichier json ici, ou cliquez pour sélectionner le fichier à télécharger. Seuls les fichiers *.json seront acceptés',
-    WelcomeOpenLoadFileUploadChooseBtnLabel: 'Choisissez un fichier',
-    WelcomeOpenLoadFileUploadRejectError:'Impossible d\'accepter :',
-    WelcomeOpenLoadFileUploadFileError:'Le fichier est vide !',
+    WelcomeUploadHeader: 'Téléversement d\'un fichier',
+    WelcomeUploadInstructions1: 'Déposez votre fichier json ici, ou cliquez pour sélectionner le fichier à téléverser.',
+    WelcomeUploadInstructions2: 'Seuls les fichiers *.json seront acceptés',
+    WelcomeUploadUploadButton: 'Choisissez un fichier',
+    WelcomeUploadRejectError: 'Impossible d\'accepter :',
+    WelcomeUploadEmptyFileError: 'Le fichier est vide !',
+    WelcomeLoadFromListLoadingLists: 'Chargement des listes ...',
+    WelcomeLoadFromListListLabel: 'Liste locale',
+    WelcomeLoadFromListFieldLabel: 'Champ',
+    WelcomeLoadFromListLoading: 'Chargement de la liste ...',
+    WelcomeLoadFromListLoadingListsError: 'Erreur lors du chargement des listes !',
+    WelcomeLoadFromListLoadingError: 'Erreur lors du chargement !',
+    WelcomeLoadFromLibraryLoadingLibraries: 'Chargement des bibliothèques ...',
+    WelcomeLoadFromLibraryLibraryLabel: 'Bibliothèque locale',
+    WelcomeLoadFromLibraryFolderPathLabel: 'Chemin du dossier',
+    WelcomeLoadFromLibraryFilenameLabel: 'Nom de fichier',
+    WelcomeLoadFromLibraryLoading: 'Chargement de la bibliothèque ...',
+    WelcomeLoadFromLibraryLoadingLibrariesError: 'Erreur lors du chargement des bibliothèques !',
+    WelcomeLoadFromLibraryLoadingError: 'Erreur lors du chargement! Vérifiez que le chemin du dossier est correct (s\'il est utilisé) et que vous avez l\'autorisation d\'accéder à cette bibliothèque.',
 
     //Tab Names
     TabWizard: 'Assistant',
@@ -51,14 +70,7 @@ define([], function () {
     CommandCopy: 'Copier dans le presse-papier',
     CommandSaveToLibrary: 'Copier dans le presse-papier',
     CommandApplyToList: 'Appliquer au champ de liste local',
-
-    // Local list
-    LocalListDropdownTitle: 'Liste locale',
-    LocalListFieldTitle: 'Champ',
-
-    // Tree
-    TreePanelElementsTreeTitle: 'Elements de l\'arbre',
-    TreePanelElementsTreeError: 'Erreur lors du chargement de l\'arbre ! Détails techniques :',
+    CommandSave: 'Sauvegarder',
 
     //New Confirmation Dialog
     NewConfirmationDialogTitle: 'Recommencer ?',
@@ -76,11 +88,27 @@ define([], function () {
     SaveToLibraryDialogTitle: 'Enregistrer dans la bibliothèque locale',
     SaveToLibraryDialogConfirmButton: 'Enregistrer',
     SaveToLibraryDialogCancelButton: 'Annuler',
+    SaveToLibraryLoading: 'Chargement des bibliothèques ...',
+    SaveToLibraryLibraryLabel: 'Bibliothèque locale',
+    SaveToLibraryFolderPathLabel: 'Chemin du dossier (facultatif)',
+    SaveToLibraryFilenameLabel: 'Nom de fichier',
+    SaveToLibrarySaving: 'Enregistrement dans la bibliothèque ...',
+    SaveToLibraryLoadError: 'Erreur lors du chargement des bibliothèques !',
+    SaveToLibrarySaveError: 'Erreur lors de l\'enregistrement ! Vérifiez que le chemin du dossier est correct (s\'il est utilisé) et que vous avez la permission d\'enregistrer dans cette bibliothèque.',
 
     //Apply To List Dialog
     ApplyToListDialogTitle: 'Appliquer au champ de liste local',
     ApplyToListDialogConfirmButton: 'Enregistrer',
     ApplyToListDialogCancelButton: 'Annuler',
+    ApplyToListLoading: 'Chargement des listes ...',
+    ApplyToListListLabel: 'Liste locale',
+    ApplyToListFieldLabel: 'Champ',
+    ApplyToListApplying: 'Appliquer à la liste ...',
+    ApplyToListLoadError: 'Erreur lors du chargement des listes !',
+    ApplyToListApplyError: 'Erreur lors de l\'application! Vérifiez que vous avez la permission de mettre à jour les paramètres de cette bibliothèque.',
+
+    //Copy
+    CopyToClipboardError: 'Impossible de copier !',
 
     //Data Column/Row buttons
     DeleteRow: 'Supprimer la ligne',
@@ -95,6 +123,13 @@ define([], function () {
     ColumnTypeChangeTooltip: 'Cliquez pour changer',
     SubPropertiesHeadline: 'Sous Propriétés',
     TimeHeadline: 'Temps',
+    DataColumnDefaultName: 'NouveauChamp',
+    DataColumnLinkDescriptionLabel: 'desc :',
+    DataColumnLookupIdLabel: 'lookupId :',
+    DataColumnPersonIdLabel: 'id :',
+    DataColumnPersonEmailLabel: 'email :',
+    DataColumnPersonSIPLabel: 'sip :',
+    DataColumnPersonPictureLabel: 'image :',
 
     //Column Type Names
     ColumnTypeBoolean: 'Oui/Non',
@@ -174,12 +209,19 @@ define([], function () {
     CFSoperatorMissing: 'Opérateur manquant dans l\'expression: {0}.',
     CFSunsupportedType: 'Le type de champ {0} n\'est pas pris en charge pour le moment.',
     CFSuserFieldError: 'Le champ "{0}" est de type "Utilisateur" et ne peut pas être utilisé directement car il possède des sous-propriétés. Vous devez spécifier la sous-propriété que vous souhaitez utiliser. par exemple : [$ AssignedTo.email]',
+    CFSRowLabel: 'Ligne',
 
     //Format Validation Messages
     PreviewValidationGood: 'Validation passée !',
     PreviewValidationBad: 'JSON (code) incorrect :',
 
+    //Tree View
+    TreeViewHeader: 'Elements Tree',
+    TreeViewError: 'Error Loading Tree!',
+
     //Wizard Data Bars
+    WizardDataBarsName: 'Barres de données',
+    WizardDataBarsDescription: 'Ajoute des barres horizontales au champ pour exprimer visuellement la valeur par longueur',
     WizardDataBarsEmptyBarLabel: 'Basse :',
     WizardDataBarsEmptyBarTooltip: 'La valeur la plus basse sur l\'échelle \nLes valeurs égales ou inférieures à cela seront affichées à 0%',
     WizardDataBarsFullBarLabel: 'Haute:',
@@ -190,26 +232,69 @@ define([], function () {
     WizardDataBarsValueDisplayPercentage: 'Afficher le pourcentage',
     WizardDataBarsValueDisplayNone: 'Aucun',
 
-    WizardInfoDataBarsTitle: 'Barres de données',
-    WizardInfoDataBarsDesc: 'Ajoute des barres horizontales au champ pour exprimer visuellement la valeur par longueur',
+    //Wizard Checkboxes
+    WizardCheckboxesName: 'Cases à cocher',
+    WizardCheckboxesDescription: 'Affiche les champs Oui / Non en tant que cases à cocher',
 
-    // Wizard Trending
-    WizardInfoTrendingTitle: '# Tendance',
-    WizardInfoTrendingDesc: 'Compare les autres champs de la ligne pour fournir une icône basée sur les valeurs de tendance',
+    //Wizard Overdue
+    WizardOverdueName: 'En retard',
+    WizardOverdueDescription: 'Couleurs le champ rouge une fois que la date est plus grande qu\'aujourd\'hui',
 
-    // Wizard Overdue
-    WizardInfoOverdueTitle: 'En retard',
-    WizardInfoOverdueDesc: 'Couleurs le champ rouge une fois que la date est plus grande qu\'aujourd\'hui',
+    //Wizard Number Trending
+    WizardNumberTrendingName: '# Tendance',
+    WizardNumberTrendingDescription: 'Compare les autres champs de la ligne pour fournir une icône basée sur les valeurs de tendance',
+    WizardNumberTrendingCurrent: 'Actuel',
+    WizardNumberTrendingPrevious: 'Précédent',
 
-    // Wizard standard
-    WizardStartingColumnsTitle: 'MonChamp',
+    //Wizard Action Link
+    WizardActionLinkName: 'Lien d\'action',
+    WizardActionLinkDescription: 'Ajoute une icône d\'action rapide à un lien',
 
-    // Wizard mail
-    WizardInfoMailTitle: 'Mail',
-    WizardInfoMailDesc: 'pout test, ce n\'est pas un vrai assistant',
+    //Wizard Severity
+    WizardSeverityName: 'Gravité',
+    WizardSeverityDescription: 'Applique conditionnellement les styles de gravité en fonction de la valeur du champ',
+    WizardSeverityGood: 'Terminé',
+    WizardSeverityLow: 'En cours',
+    WizardSeverityWarning: 'En revue',
+    WizardSeveritySevereWarning: 'A des problèmes',
+    WizardSeverityBlocked: 'Bloqué',
+    WizardSeverityOther: 'Autre valeur',
+    WizardSeverityGroupValues: 'Valeurs conditionnelles',
+    WizardSeverityGoodLabel: 'Bien',
+    WizardSeverityLowLabel: 'Bas',
+    WizardSeverityWarningLabel: 'Attention',
+    WizardSeveritySevereWarningLabel: 'Avertissement sévère',
+    WizardSeverityBlockedLabel: 'Bloqué',
+    WizardSeverityDefaultSeverityLabel: 'Gravité par défaut',
+    WizardSeverityGroupDisplay: 'Afficher',
+    WizardSeverityValueVisible: 'Valeur visible',
+    WizardSeverityValueHidden: 'Valeur invisible',
+    WizardSeverityIconVisible: 'Icone visible',
+    WizardSeverityIconHidden: 'Icone invisible',
 
-    // Wizard checkbox
-    WizardInfoCheckboxesTitle: 'Cases à cocher',
-    WizardInfoCheckboxesDesc: 'Affiche les champs Oui / Non en tant que cases à cocher'
+    //Wizard Current User
+    WizardCurrentUserName: 'Utilisateur actuel',
+    WizardCurrentUserDescription: 'Mise en avant de l\'utilisateur actuel',
+
+    //Wizard Round Image
+    WizardRoundImageName: 'Image ronde',
+    WizardRoundImageDescription: 'Affiche l\'image / l\'image de l\'utilisateur sous la forme d\'un cercle',
+
+    //Wizard Mail To
+    WizardMailToName: 'Mail à',
+    WizardMailToDescription: 'Crée un lien pour lancer un e-mail',
+    WizardMailToGroupDisplay: 'Afficher',
+    WizardMailToDisplayValue: 'Texte',
+    WizardMailToGroupParameters: 'Paramètres',
+    WizardMailToSubject: 'Sujet',
+    WizardMailToBody: 'Corp',
+    WizardMailToBCC: 'bcc',
+    WizardMailToCC: 'cc',
+    WizardMailToIconLink: 'Icone du lien',
+    WizardMailToTextLink: 'Texte du lien',
+
+    //Wizard Mini Map
+    WizardMiniMapName: 'Mini carte',
+    WizardMiniMapDescription: 'Affiche une carte minuscule pour un voir un emplacement (veillez à utiliser votre propre clé API)'
   }
 });
