@@ -3,7 +3,7 @@
   "solution": {
     "name": "column-formatter-client-side-solution",
     "id": "f6303744-9308-4228-9465-a5c9ee30147c",
-    "version": "1.1.0.0",
+    "version": "1.2.0.0",
     "includeClientSideAssets": true,
     "skipFeatureDeployment": true
   },
