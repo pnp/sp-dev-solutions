@@ -15,6 +15,10 @@
     "@microsoft/sp-lodash-subset": "~1.4.1",
     "@microsoft/sp-office-ui-fabric-core": "~1.4.1",
     "@microsoft/sp-webpart-base": "~1.4.1",
+    "@pnp/common": "^1.0.3",
+    "@pnp/logging": "^1.0.3",
+    "@pnp/odata": "^1.0.3",
+    "@pnp/sp": "^1.0.3",
     "@pnp/spfx-property-controls": "^1.4.1",
     "@types/react": "15.6.6",
     "@types/react-dom": "15.5.6",
@@ -37,7 +41,6 @@
     "@types/mocha": ">=2.2.33 <2.6.0",
     "@types/react-redux": "^5.0.15",
     "ajv": "~5.2.2",
-    "gulp": "~3.9.1",
-    "sp-pnp-js": "^3.0.6"
+    "gulp": "~3.9.1"
   }
 }

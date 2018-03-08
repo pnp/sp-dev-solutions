@@ -1,13 +1,12 @@
-import { Version } from '@microsoft/sp-core-library';
-import { Environment, EnvironmentType } from '@microsoft/sp-core-library';
+import { Environment, EnvironmentType, Version } from '@microsoft/sp-core-library';
 import { BaseClientSideWebPart, IPropertyPaneConfiguration } from '@microsoft/sp-webpart-base';
+import { sp } from '@pnp/sp';
 import { PropertyFieldSpinButton } from '@pnp/spfx-property-controls/lib/PropertyFieldSpinButton';
 import * as strings from 'ColumnFormatterWebPartStrings';
 import * as React from 'react';
 import * as ReactDom from 'react-dom';
 import { Provider, ProviderProps } from 'react-redux';
 import { createStore, Store } from 'redux';
-import pnp from 'sp-pnp-js';
 
 import { ColumnFormatter } from './components/ColumnFormatter';
 import { setContext, setHeight } from './state/Actions';
@@ -42,7 +41,7 @@ export default class ColumnFormatterWebPart extends BaseClientSideWebPart<IColum
 
     //Initializes PNP JS Core with SPFx context
     return super.onInit().then(_ => {
-      pnp.setup({
+      sp.setup({
         spfxContext: this.context
       });
     });

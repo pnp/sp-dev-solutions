@@ -12,7 +12,6 @@
     }
   },
   "externals": {
-    "sp-pnp-js": "https://cdnjs.cloudflare.com/ajax/libs/sp-pnp-js/3.0.2/pnp.min.js",
     "monaco": {
       "path": "/src/MonacoCustomBuild/index.js",
       "globalName": "monaco"

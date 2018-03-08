@@ -3,6 +3,7 @@
 ### Added
 - French (fr-fr) localization (thanks [PooLP](https://github.com/PooLP)!)
   - Added targeted styling for fr-fr locale to accomodate long strings
+- Replaced sp-pnp-js with PnPJS
 
 ### Changed
 - Updated to [SharePoint Framework](https://github.com/SharePoint/sp-dev-docs/wiki/Release-Notes-for-SPFx-Package-Version-1.4.1) from 1.4.0 to 1.4.1
@@ -12,7 +13,7 @@
 - Updated [@types/react-redux](https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/react-redux) from 5.0.14 to 5.0.15
 
 ### Removed
-- 
+- Dependency on sp-pnp-js (through CDN)
 
 ### Fixed
 - 

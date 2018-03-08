@@ -1,3 +1,4 @@
+import { sp } from '@pnp/sp';
 import * as strings from 'ColumnFormatterWebPartStrings';
 import { DefaultButton, PrimaryButton } from 'office-ui-fabric-react/lib/Button';
 import { CommandBar } from 'office-ui-fabric-react/lib/CommandBar';
@@ -10,7 +11,6 @@ import { autobind } from 'office-ui-fabric-react/lib/Utilities';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
-import pnp from 'sp-pnp-js';
 
 import { textForType, typeForTypeAsString } from '../helpers/ColumnTypeHelpers';
 import { changeUIState, chooseTheme, disconnectWizard } from '../state/Actions';
@@ -448,7 +448,7 @@ class ColumnFormatterEditorCommands_ extends React.Component<IColumnFormatterEdi
   private onSaveToLibraryClick(ev?:React.MouseEvent<HTMLElement>, item?:IContextualMenuItem): void {
     if(!this.state.librariesLoaded) {
       if(this.props.context.isOnline) {
-        pnp.sp.site.getDocumentLibraries(this.props.context.webAbsoluteUrl)
+        sp.site.getDocumentLibraries(this.props.context.webAbsoluteUrl)
           .then((data:any) => {
             this.setState({
               librariesLoaded: true,
@@ -492,7 +492,7 @@ class ColumnFormatterEditorCommands_ extends React.Component<IColumnFormatterEdi
       librarySaveError: undefined,
       saveToLibraryDialogVisible: true
     });
-    pnp.sp.web.getFolderByServerRelativeUrl(this.state.selectedLibraryUrl + (this.state.libraryFolderPath.length > 0 ? '/' + this.state.libraryFolderPath : ''))
+    sp.web.getFolderByServerRelativeUrl(this.state.selectedLibraryUrl + (this.state.libraryFolderPath.length > 0 ? '/' + this.state.libraryFolderPath : ''))
       .files.add(this.state.libraryFileName, this.props.editorString, true)
       .then(()=>{
         this.setState({
@@ -514,7 +514,7 @@ class ColumnFormatterEditorCommands_ extends React.Component<IColumnFormatterEdi
   private onApplyToListClick(ev?:React.MouseEvent<HTMLElement>, item?:IContextualMenuItem): void {
     if(!this.state.listsLoaded) {
       if(this.props.context.isOnline) {
-        pnp.sp.web.lists.filter('Hidden eq false').select('Id','Title','Fields/InternalName','Fields/TypeAsString','Fields/Hidden','Fields/Title','Fields/DisplayFormat').expand('Fields').get()
+        sp.web.lists.filter('Hidden eq false').select('Id','Title','Fields/InternalName','Fields/TypeAsString','Fields/Hidden','Fields/Title','Fields/DisplayFormat').expand('Fields').get()
           .then((data:any) => {
             let listdata:Array<any> = new Array<any>();
             for(var i=0; i<data.length; i++){
@@ -603,7 +603,7 @@ class ColumnFormatterEditorCommands_ extends React.Component<IColumnFormatterEdi
       listSaveError: undefined,
       applyToListDialogVisible: true
     });
-    pnp.sp.web.lists.getById(this.state.selectedList)
+    sp.web.lists.getById(this.state.selectedList)
       .fields.getByInternalNameOrTitle(this.state.selectedField).update({
         CustomFormatter: this.props.editorString
       })

@@ -1,3 +1,4 @@
+import { sp } from '@pnp/sp';
 import * as strings from 'ColumnFormatterWebPartStrings';
 import { DefaultButton, PrimaryButton } from 'office-ui-fabric-react/lib/Button';
 import { ChoiceGroup } from 'office-ui-fabric-react/lib/ChoiceGroup';
@@ -10,7 +11,6 @@ import { autobind } from 'office-ui-fabric-react/lib/Utilities';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
-import pnp from 'sp-pnp-js';
 
 import { textForType, typeForTypeAsString } from '../helpers/ColumnTypeHelpers';
 import { launchEditor, launchEditorWithCode } from '../state/Actions';
@@ -491,7 +491,7 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
   private gotoLoadFromList(): void {
     if(!this.state.listsLoaded) {
       if(this.props.context.isOnline) {
-        pnp.sp.web.lists.filter('Hidden eq false').select('Id','Title','Fields/InternalName','Fields/TypeAsString','Fields/Hidden','Fields/Title','Fields/DisplayFormat').expand('Fields').get()
+        sp.web.lists.filter('Hidden eq false').select('Id','Title','Fields/InternalName','Fields/TypeAsString','Fields/Hidden','Fields/Title','Fields/DisplayFormat').expand('Fields').get()
           .then((data:any) => {
             let listdata:Array<any> = new Array<any>();
             for(var i=0; i<data.length; i++){
@@ -561,7 +561,7 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
       loadingFromList: true,
       loadFromListError: undefined
     });
-    pnp.sp.web.lists.getById(this.state.selectedList)
+    sp.web.lists.getById(this.state.selectedList)
       .fields.getByInternalNameOrTitle(this.state.selectedField).select('CustomFormatter','TypeAsString','DisplayFormat').get()
       .then((data)=>{
         this.launchEditorFromText(data.CustomFormatter, typeForTypeAsString(data.TypeAsString, data.DisplayFormat), saveMethod.ListField);
@@ -580,7 +580,7 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
   private gotoLoadFromLibrary(): void {
     if(!this.state.librariesLoaded) {
       if(this.props.context.isOnline) {
-        pnp.sp.site.getDocumentLibraries(this.props.context.webAbsoluteUrl)
+        sp.site.getDocumentLibraries(this.props.context.webAbsoluteUrl)
           .then((data:any) => {
             this.setState({
               librariesLoaded: true,
@@ -615,7 +615,7 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
       loadingFromLibrary: true,
       loadFromLibraryError: undefined
     });
-    pnp.sp.web.getFileByServerRelativeUrl(this.state.selectedLibraryUrl + (this.state.libraryFolderPath.length > 0 ? '/' + this.state.libraryFolderPath : '') + '/' + this.state.libraryFileName)
+    sp.web.getFileByServerRelativeUrl(this.state.selectedLibraryUrl + (this.state.libraryFolderPath.length > 0 ? '/' + this.state.libraryFolderPath : '') + '/' + this.state.libraryFileName)
       .getText()
       .then((text:string)=>{
         this.launchEditorFromText(text, this.state.columnTypeForOpen, saveMethod.Library);
