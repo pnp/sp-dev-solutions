@@ -25,6 +25,7 @@ export enum welcomeStage {
   open,
   upload,
   loadFromList,
+  loadFromSiteColumn,
   loadFromLibrary
 }
 
@@ -35,6 +36,7 @@ export interface IColumnFormatterWelcomeProps {
   launchEditorWithCode?: (wizardName:string, colType:columnTypes, editorString:string, validationErrors:Array<string>, saveDetails: ISaveDetails) => void;
 }
 
+
 export interface IColumnFormatterWelcomeState {
   stage: welcomeStage;
   columnTypeForNew?: columnTypes;
@@ -43,6 +45,12 @@ export interface IColumnFormatterWelcomeState {
   loadChoiceForOpen?: string;
   columnTypeForOpen?: columnTypes;
   fileChoiceForOpen?: string;
+  siteColumnsLoaded: boolean;
+  siteColumns: Array<any>;
+  selectedSiteColumnGroup?: string;
+  selectedSiteColumn?: string;
+  loadingFromSiteColumn: boolean;
+  loadFromSiteColumnError?: string;
   listsLoaded: boolean;
   lists: Array<any>;
   selectedList?: string;
@@ -70,6 +78,9 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
       listsLoaded: false,
       lists: new Array<any>(),
       loadingFromList: false,
+      siteColumnsLoaded: false,
+      siteColumns: new Array<any>(),
+      loadingFromSiteColumn: false,
       librariesLoaded: false,
       libraries: new Array<any>(),
       libraryFolderPath: '',
@@ -172,6 +183,7 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
                onChange={this.onLoadChoiceForOpenChanged}
                options={[
                 {key:'list', text: strings.WelcomeOpenLoadList},
+                {key:'sitecolumn', text: strings.WelcomeOpenLoadSiteColumn},
                 {key:'file', text: strings.WelcomeOpenLoadFile, onRenderField: (props, render) => {
                   return (
                     <div>
@@ -275,6 +287,49 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
           )}
 
 
+          {this.state.stage == welcomeStage.loadFromSiteColumn && (
+            <div>
+              {!this.props.context.isOnline && (
+                <span>{strings.FeatureUnavailableFromLocalWorkbench}</span>
+              )}
+              {!this.state.siteColumnsLoaded && this.props.context.isOnline && !this.state.loadingFromSiteColumn && this.state.loadFromSiteColumnError == undefined && (
+                <Spinner size={SpinnerSize.large} label={strings.WelcomeLoadFromSiteColumnLoadingSiteColumns}/>
+              )}
+              {this.state.siteColumnsLoaded && this.props.context.isOnline && !this.state.loadingFromSiteColumn && this.state.loadFromSiteColumnError == undefined && (
+                <div>
+                  <Dropdown
+                   label={strings.WelcomeLoadFromSiteColumnGroupLabel}
+                   selectedKey={this.state.selectedSiteColumnGroup}
+                   onChanged={(item:IDropdownOption)=> {this.setState({selectedSiteColumnGroup: item.key.toString(), selectedSiteColumn: undefined});}}
+                   required={true}
+                   options={this.siteColumnGroupsToOptions()} />
+                  <Dropdown
+                   label={strings.WelcomeLoadFromSiteColumnFieldLabel}
+                   selectedKey={this.state.selectedSiteColumn}
+                   disabled={this.state.selectedSiteColumnGroup == undefined}
+                   onChanged={(item:IDropdownOption)=> {this.setState({selectedSiteColumn: item.key.toString()});}}
+                   required={true}
+                   options={this.siteColumnsToOptions()} />
+                </div>
+              )}
+              {this.state.loadingFromSiteColumn && this.state.loadFromSiteColumnError == undefined &&(
+                <Spinner size={SpinnerSize.large} label={strings.WelcomeLoadFromSiteColumnLoading}/>
+              )}
+              {this.state.loadFromSiteColumnError !== undefined && (
+                <span className={styles.errorMessage}>{this.state.loadFromSiteColumnError}</span>
+              )}
+              <div className={styles.navigationButtons}>
+                <div>
+                  <DefaultButton text={strings.WelcomeBackButton} onClick={() => {this.gotoStage(welcomeStage.open);}}/>
+                </div>
+                <div style={{textAlign: 'right'}}>
+                  <PrimaryButton text={strings.WelcomeOKButton} disabled={!this.okButtonEnabled()} onClick={this.onOkForLoadFromSiteColumnClick}/>
+                </div>
+              </div>
+            </div>
+          )}
+
+
           {this.state.stage == welcomeStage.loadFromLibrary && (
             <div>
               {!this.props.context.isOnline && (
@@ -341,12 +396,18 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
       case welcomeStage.open:
         return (
           this.state.loadChoiceForOpen == 'list' ||
+          this.state.loadChoiceForOpen == 'sitecolumn' ||
           (this.state.loadChoiceForOpen == 'file' && this.state.columnTypeForOpen !== undefined && this.state.fileChoiceForOpen !== undefined)
         );
       case welcomeStage.loadFromList:
         return (
           this.props.context.isOnline && this.state.selectedList !== undefined &&
             this.state.selectedField !== undefined && this.state.loadFromListError == undefined
+        );
+      case welcomeStage.loadFromSiteColumn:
+        return (
+          this.props.context.isOnline && this.state.selectedSiteColumnGroup !== undefined &&
+            this.state.selectedSiteColumn !== undefined && this.state.loadFromSiteColumnError == undefined
         );
       case welcomeStage.loadFromLibrary:
         return (
@@ -447,14 +508,20 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
 
   @autobind
   private onOkForOpenClick(): void {
-    if(this.state.loadChoiceForOpen == 'list'){
-      this.gotoLoadFromList();
-    } else {
-      if(this.state.fileChoiceForOpen == 'library'){
-        this.gotoLoadFromLibrary();
-      } else {
-        this.gotoStage(welcomeStage.upload);
-      }
+    switch (this.state.loadChoiceForOpen) {
+      case 'list':
+        this.gotoLoadFromList();
+        break;
+      case 'sitecolumn':
+        this.gotoLoadFromSiteColumn();
+        break;
+      default:
+        if(this.state.fileChoiceForOpen == 'library'){
+          this.gotoLoadFromLibrary();
+        } else {
+          this.gotoStage(welcomeStage.upload);
+        }
+        break;
     }
   }
 
@@ -576,6 +643,95 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
         });
       });
   }
+
+
+  private gotoLoadFromSiteColumn(): void {
+    if(!this.state.siteColumnsLoaded) {
+      if(this.props.context.isOnline) {
+        sp.web.fields.filter('ReadOnlyField eq false and Hidden eq false').select('Id','Group','Title','InternalName','TypeAsString','DisplayFormat').orderBy('Group').get()
+          .then((data:any) => {
+            let groupdata:Array<any> = new Array<any>();
+            var curGroupName:string;
+            for(var i=0; i<data.length; i++){
+              let ftype = typeForTypeAsString(data[i].TypeAsString, data[i].DisplayFormat);
+              if(ftype !== undefined) {
+                if(curGroupName != data[i].Group) {
+                  groupdata.push({
+                    Group: data[i].Group,
+                    Fields: []
+                  });
+                }
+                groupdata[groupdata.length-1].Fields.push({
+                  Id: data[i].Id,
+                  Title: data[i].Title,
+                  InternalName: data[i].InternalName,
+                  Type: ftype
+                });
+              }
+            }
+
+            this.setState({
+              siteColumnsLoaded: true,
+              siteColumns: groupdata
+            });
+          })
+          .catch((error:any) => {
+            this.setState({
+              loadFromSiteColumnError: strings.WelcomeLoadFromSiteColumnLoadingSiteColumnsError + ' ' + strings.TechnicalDetailsErrorHeader + ': ' + error.message
+            });
+          });
+      }
+    }
+    this.gotoStage(welcomeStage.loadFromSiteColumn);
+  }
+
+  private siteColumnGroupsToOptions(): Array<IDropdownOption> {
+    let items:Array<IDropdownOption> = new Array<IDropdownOption>();
+    for(var group of this.state.siteColumns) {
+      items.push({
+        key: group.Group,
+        text: group.Group
+      });
+    }
+    return items;
+  }
+
+  private siteColumnsToOptions(): Array<IDropdownOption> {
+    let items:Array<IDropdownOption> = new Array<IDropdownOption>();
+    for(var group of this.state.siteColumns) {
+      if(group.Group == this.state.selectedSiteColumnGroup) {
+        for(var field of group.Fields) {
+          items.push({
+            key: field.InternalName,
+            text: field.Title + ' [' + textForType(field.Type) + ']'
+          });
+        }
+      } 
+    }
+    return items;
+  }
+
+  @autobind
+  private onOkForLoadFromSiteColumnClick(): void {
+    this.setState({
+      loadingFromSiteColumn: true,
+      loadFromSiteColumnError: undefined
+    });
+    sp.web.fields.getByInternalNameOrTitle(this.state.selectedSiteColumn).select('CustomFormatter','TypeAsString','DisplayFormat').get()
+      .then((data)=>{
+        this.launchEditorFromText(data.CustomFormatter, typeForTypeAsString(data.TypeAsString, data.DisplayFormat), saveMethod.SiteColumn);
+        this.setState({
+          loadingFromSiteColumn: false,
+        });
+      })
+      .catch((error:any) => {
+        this.setState({
+          loadingFromSiteColumn: false,
+          loadFromSiteColumnError: strings.WelcomeLoadFromSiteColumnLoadingError + ' ' + strings.TechnicalDetailsErrorHeader + ': ' + error.message
+        });
+      });
+  }
+
 
   private gotoLoadFromLibrary(): void {
     if(!this.state.librariesLoaded) {

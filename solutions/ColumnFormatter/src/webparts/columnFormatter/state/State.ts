@@ -26,7 +26,8 @@ export enum saveMethod {
 	Download,
 	Copy,
 	Library,
-	ListField
+	ListField,
+	SiteColumn
 }
 //#endregion
 

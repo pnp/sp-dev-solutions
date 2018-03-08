@@ -23,6 +23,7 @@ declare interface IColumnFormatterWebPartStrings {
   WelcomeOKButton: string;
   WelcomeNextButton: string;
   WelcomeOpenLoadList: string;
+  WelcomeOpenLoadSiteColumn: string;
   WelcomeOpenLoadFile: string;
   WelcomeOpenColumnTypeLabel: string;
   WelcomeOpenLoadFileLibrary: string;
@@ -39,6 +40,12 @@ declare interface IColumnFormatterWebPartStrings {
   WelcomeLoadFromListLoading: string;
   WelcomeLoadFromListLoadingListsError: string;
   WelcomeLoadFromListLoadingError: string;
+  WelcomeLoadFromSiteColumnLoadingSiteColumns: string;
+  WelcomeLoadFromSiteColumnGroupLabel: string;
+  WelcomeLoadFromSiteColumnFieldLabel: string;
+  WelcomeLoadFromSiteColumnLoading: string;
+  WelcomeLoadFromSiteColumnLoadingSiteColumnsError: string;
+  WelcomeLoadFromSiteColumnLoadingError: string;
   WelcomeLoadFromLibraryLoadingLibraries: string;
   WelcomeLoadFromLibraryLibraryLabel: string;
   WelcomeLoadFromLibraryFolderPathLabel: string;
