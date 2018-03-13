@@ -20,6 +20,7 @@ export type ActionTypes =
 	| IChooseThemeAction
 	| IUpdateEditorStringAction
 	| IUpdateFormatterErrorsAction
+	| ILoadedJSOMAction
 	| IOtherAction;
 
 //** Action keys (by using strings, TS can deduce the action interface in the reducer which is convienent)*/
@@ -45,6 +46,8 @@ export enum typeKeys {
 
 	UPDATE_EDITOR_STRING = "UPDATE_EDITOR_STRING",
 	UPDATE_FORMATTER_ERRORS = "UPDATE_FORMATTER_ERRORS",
+
+	LOADED_JSOM = "LOADED_JSOM",
 
 	OTHER_ACTION = "ANY_OTHER_ACTION"
 }
@@ -239,6 +242,16 @@ export interface IUpdateFormatterErrorsAction {
 export const updateFormatterErrors = (formatterErrors:Array<string>): IUpdateFormatterErrorsAction => ({
 	type: typeKeys.UPDATE_FORMATTER_ERRORS,
 	formatterErrors
+});
+
+
+export interface ILoadedJSOMAction {
+	type: typeKeys.LOADED_JSOM;
+	jsomLoaded: boolean;
+}
+export const loadedJSOM = (jsomLoaded:boolean): ILoadedJSOMAction => ({
+	type: typeKeys.LOADED_JSOM,
+	jsomLoaded
 });
 
 

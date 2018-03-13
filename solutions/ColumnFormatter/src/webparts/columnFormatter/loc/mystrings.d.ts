@@ -75,6 +75,7 @@ declare interface IColumnFormatterWebPartStrings {
   CommandDownload: string;
   CommandCopy: string;
   CommandSaveToLibrary: string;
+  CommandApplyToSiteColumn: string;
   CommandApplyToList: string;
   CommandSave: string;
   
@@ -101,6 +102,19 @@ declare interface IColumnFormatterWebPartStrings {
   SaveToLibrarySaving: string;
   SaveToLibraryLoadError: string;
   SaveToLibrarySaveError: string;
+
+  //Apply To Site Column Dialog
+  ApplyToSiteColumnDialogTitle: string;
+  ApplyToSiteColumnDialogConfirmButton: string;
+  ApplyToSiteColumnDialogCancelButton: string;
+  ApplyToSiteColumnLoading: string;
+  ApplyToSiteColumnGroupLabel: string;
+  ApplyToSiteColumnFieldLabel: string;
+  ApplyToSiteColumnPushToListsOnLabel: string;
+  ApplyToSiteColumnPushToListsOffLabel: string;
+  ApplyToSiteColumnApplying: string;
+  ApplyToSiteColumnLoadError: string;
+  ApplyToSiteColumnApplyError: string;
 
   //Apply To List Dialog
   ApplyToListDialogTitle: string;

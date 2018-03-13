@@ -22,7 +22,8 @@ import {
     IUpdateDataColumnNameAction,
     IUpdateDataColumnTypeAction,
     IUpdateDataRowAction,
-    IUpdateEditorStringAction,
+	IUpdateEditorStringAction,
+	ILoadedJSOMAction,
     typeKeys,
 } from './Actions';
 import {
@@ -106,6 +107,10 @@ export const cfReducer = (state:IApplicationState = initialState, action:ActionT
 		case typeKeys.UPDATE_FORMATTER_ERRORS:
 			newState.code.formatterErrors = action.formatterErrors;
 			break;
+		
+		case typeKeys.LOADED_JSOM:
+			newState.context.jsomLoaded = action.jsomLoaded;
+			break;
 
 		default:
 			return state;
@@ -120,7 +125,8 @@ function SetContextReducer(context:IContext, action:ISetContextAction): IContext
 		user: {
 			displayName: action.userDisplayName,
 			email: action.userEmail
-		}
+		},
+		jsomLoaded: context.jsomLoaded		
 	};
 }
 

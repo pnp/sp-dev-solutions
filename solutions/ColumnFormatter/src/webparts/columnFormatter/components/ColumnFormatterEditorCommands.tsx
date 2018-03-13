@@ -13,9 +13,11 @@ import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 
 import { textForType, typeForTypeAsString } from '../helpers/ColumnTypeHelpers';
-import { changeUIState, chooseTheme, disconnectWizard } from '../state/Actions';
+import { changeUIState, chooseTheme, disconnectWizard, loadedJSOM } from '../state/Actions';
 import { columnTypes, editorThemes, IApplicationState, IContext, ISaveDetails, saveMethod, uiState } from '../state/State';
 import styles from './ColumnFormatter.module.scss';
+import { Toggle } from 'office-ui-fabric-react/lib/Toggle';
+import { loadJSOM } from '../helpers/jsomLoader';
 
 var fileDownload = require('js-file-download');
 
@@ -32,6 +34,8 @@ export interface IColumnFormatterEditorCommandsProps {
   fieldType?: columnTypes;
   viewTab?: number;
   saveDetailsFromLoad?: ISaveDetails;
+  jsomLoaded?: boolean;
+  loadedJSOM?: (jsomLoaded:boolean) => void;
 }
 
 export interface IColumnFormatterEditorCommandsState {
@@ -52,6 +56,14 @@ export interface IColumnFormatterEditorCommandsState {
   selectedField?: string;
   listIsApplying: boolean;
   listSaveError?: string;
+  applyToSiteColumnDialogVisible: boolean;
+  siteColumnsLoaded: boolean;
+  siteColumns: Array<any>;
+  selectedSiteColumnGroup?: string;
+  selectedSiteColumn?: string;
+  siteColumnIsApplying: boolean;
+  siteColumnSaveError?: string;
+  siteColumnPushToLists: boolean;
   activeSaveMethod?: saveMethod;
 }
 
@@ -76,6 +88,13 @@ class ColumnFormatterEditorCommands_ extends React.Component<IColumnFormatterEdi
       listIsApplying: false,
       selectedList: (props.saveDetailsFromLoad.activeSaveMethod == saveMethod.ListField ? props.saveDetailsFromLoad.list : undefined),
       selectedField: (props.saveDetailsFromLoad.activeSaveMethod == saveMethod.ListField ? props.saveDetailsFromLoad.field : undefined),
+      applyToSiteColumnDialogVisible: false,
+      siteColumnsLoaded: false,
+      siteColumns: new Array<any>(),
+      siteColumnIsApplying: false,
+      siteColumnPushToLists: true,
+      selectedSiteColumnGroup: (props.saveDetailsFromLoad.activeSaveMethod == saveMethod.SiteColumn ? props.saveDetailsFromLoad.siteColumnGroup : undefined),
+      selectedSiteColumn: (props.saveDetailsFromLoad.activeSaveMethod == saveMethod.SiteColumn ? props.saveDetailsFromLoad.siteColumn : undefined),
       activeSaveMethod: props.saveDetailsFromLoad.activeSaveMethod
     };
   }
@@ -161,6 +180,55 @@ class ColumnFormatterEditorCommands_ extends React.Component<IColumnFormatterEdi
           <DialogFooter>
             <PrimaryButton text={strings.SaveToLibraryDialogConfirmButton} disabled={!this.saveToLibrarySaveButtonEnabled()} onClick={this.onSaveToLibrarySaveButtonClick}/>
             <DefaultButton text={strings.SaveToLibraryDialogCancelButton} onClick={this.closeDialog}/>
+          </DialogFooter>
+        </Dialog>
+
+
+        <Dialog
+         hidden={!this.state.applyToSiteColumnDialogVisible}
+         onDismiss={this.closeDialog}
+         dialogContentProps={{
+          type: DialogType.largeHeader,
+          title: strings.ApplyToSiteColumnDialogTitle
+        }}>
+         {!this.props.context.isOnline && (
+           <span>{strings.FeatureUnavailableFromLocalWorkbench}</span>
+         )}
+         {!this.state.siteColumnsLoaded && this.props.context.isOnline && !this.state.siteColumnIsApplying && this.state.siteColumnSaveError == undefined && (
+           <Spinner size={SpinnerSize.large} label={strings.ApplyToSiteColumnLoading}/>
+         )}
+         {this.state.siteColumnsLoaded && this.props.context.isOnline && !this.state.siteColumnIsApplying && this.state.siteColumnSaveError == undefined && (
+           <div>
+             <Dropdown
+              label={strings.ApplyToSiteColumnGroupLabel}
+              selectedKey={this.state.selectedSiteColumnGroup}
+              onChanged={(item:IDropdownOption)=> {this.setState({selectedSiteColumnGroup: item.key.toString(),selectedSiteColumn: undefined});}}
+              required={true}
+              options={this.siteColumnGroupsToOptions()} />
+             <Dropdown
+              label={strings.ApplyToSiteColumnFieldLabel}
+              selectedKey={this.state.selectedSiteColumn}
+              disabled={this.state.selectedSiteColumnGroup == undefined}
+              onChanged={(item:IDropdownOption)=> {this.setState({selectedSiteColumn: item.key.toString()});}}
+              required={true}
+              options={this.siteColumnsToOptions()} />
+             <Toggle
+              checked={this.state.siteColumnPushToLists}
+              onChanged={()=> {this.setState({siteColumnPushToLists:!this.state.siteColumnPushToLists});}}
+              onText={strings.ApplyToSiteColumnPushToListsOnLabel}
+              offText={strings.ApplyToSiteColumnPushToListsOffLabel}
+             />
+           </div>
+         )}
+         {this.state.siteColumnIsApplying && this.state.siteColumnSaveError == undefined &&(
+           <Spinner size={SpinnerSize.large} label={strings.ApplyToSiteColumnApplying}/>
+         )}
+         {this.state.siteColumnSaveError !== undefined && (
+           <span className={styles.errorMessage}>{this.state.siteColumnSaveError}</span>
+         )}
+          <DialogFooter>
+            <PrimaryButton text={strings.ApplyToSiteColumnDialogConfirmButton} disabled={!this.applyToSiteColumnSaveButtonEnabled()} onClick={this.onApplyToSiteColumnSaveButtonClick}/>
+            <DefaultButton text={strings.ApplyToSiteColumnDialogCancelButton} onClick={this.closeDialog}/>
           </DialogFooter>
         </Dialog>
 
@@ -293,6 +361,12 @@ class ColumnFormatterEditorCommands_ extends React.Component<IColumnFormatterEdi
                 onClick: this.onSaveToLibraryClick
               },
               {
+                key: 'saveas-sitecolumn',
+                name: this.saveMethodTitle(saveMethod.SiteColumn),
+                iconProps: { iconName: this.saveMethodIcon(saveMethod.SiteColumn) },
+                onClick: this.onApplyToSiteColumnClick
+              },
+              {
                 key: 'saveas-listfield',
                 name: this.saveMethodTitle(saveMethod.ListField),
                 iconProps: { iconName: this.saveMethodIcon(saveMethod.ListField) },
@@ -304,7 +378,8 @@ class ColumnFormatterEditorCommands_ extends React.Component<IColumnFormatterEdi
     );
     if(this.state.activeSaveMethod !== undefined &&
       ((this.state.activeSaveMethod == saveMethod.Library && this.saveToLibrarySaveButtonEnabled()) || this.state.activeSaveMethod !== saveMethod.Library) &&
-      ((this.state.activeSaveMethod == saveMethod.ListField && this.applyToListSaveButtonEnabled()) || this.state.activeSaveMethod !== saveMethod.ListField)) {
+      ((this.state.activeSaveMethod == saveMethod.ListField && this.applyToListSaveButtonEnabled()) || this.state.activeSaveMethod !== saveMethod.ListField) &&
+      ((this.state.activeSaveMethod == saveMethod.SiteColumn && this.applyToSiteColumnSaveButtonEnabled()) || this.state.activeSaveMethod !== saveMethod.SiteColumn)) {
       items.push({
         key: 'save',
         name: strings.CommandSave,
@@ -324,6 +399,8 @@ class ColumnFormatterEditorCommands_ extends React.Component<IColumnFormatterEdi
         return 'Copy';
       case saveMethod.Library:
         return 'DocLibrary';
+      case saveMethod.SiteColumn:
+        return 'Redeploy';
       case saveMethod.ListField:
         return 'Deploy';
       default:
@@ -339,6 +416,8 @@ class ColumnFormatterEditorCommands_ extends React.Component<IColumnFormatterEdi
         return strings.CommandCopy;
       case saveMethod.Library:
         return strings.CommandSaveToLibrary;
+      case saveMethod.SiteColumn:
+        return strings.CommandApplyToSiteColumn;
       case saveMethod.ListField:
         return strings.CommandApplyToList;
       default:
@@ -380,7 +459,8 @@ class ColumnFormatterEditorCommands_ extends React.Component<IColumnFormatterEdi
       customizeConfirmationDialogVisible: false,
       saveToLibraryDialogVisible: false,
       librarySaveError: undefined,
-      applyToListDialogVisible: false
+      applyToListDialogVisible: false,
+      applyToSiteColumnDialogVisible: false
     });
   }
 
@@ -443,6 +523,7 @@ class ColumnFormatterEditorCommands_ extends React.Component<IColumnFormatterEdi
       activeSaveMethod: saveMethod.Copy
     });
   }
+
 
   @autobind
   private onSaveToLibraryClick(ev?:React.MouseEvent<HTMLElement>, item?:IContextualMenuItem): void {
@@ -509,6 +590,144 @@ class ColumnFormatterEditorCommands_ extends React.Component<IColumnFormatterEdi
         });
       });
   }
+
+
+  @autobind
+  private onApplyToSiteColumnClick(ev?:React.MouseEvent<HTMLElement>, item?:IContextualMenuItem): void {
+    if(!this.state.siteColumnsLoaded) {
+      if(this.props.context.isOnline) {
+        sp.web.fields.filter('ReadOnlyField eq false and Hidden eq false').select('Id','Group','Title','InternalName','TypeAsString','DisplayFormat').orderBy('Group').get()
+          .then((data:any) => {
+            let groupdata:Array<any> = new Array<any>();
+            var curGroupName:string;
+            for(var i=0; i<data.length; i++){
+              let ftype = typeForTypeAsString(data[i].TypeAsString, data[i].DisplayFormat);
+              if(ftype !== undefined) {
+                if(curGroupName != data[i].Group) {
+                  groupdata.push({
+                    Group: data[i].Group,
+                    Fields: []
+                  });
+                  curGroupName = data[i].Group;
+                }
+                groupdata[groupdata.length-1].Fields.push({
+                  Id: data[i].Id,
+                  Title: data[i].Title,
+                  InternalName: data[i].InternalName,
+                  Type: ftype,
+                  FieldType: data[i]["odata.type"]
+                });
+              }
+            }
+
+            this.setState({
+              siteColumnsLoaded: true,
+              siteColumns: groupdata
+            });
+          })
+          .catch((error:any) => {
+            this.setState({
+              siteColumnSaveError: strings.WelcomeLoadFromSiteColumnLoadingSiteColumnsError + ' ' + strings.TechnicalDetailsErrorHeader + ': ' + error.message
+            });
+          });
+      }
+    }
+    
+    this.setState({
+      applyToSiteColumnDialogVisible: true
+    });
+  }
+
+  private siteColumnGroupsToOptions(): Array<IDropdownOption> {
+    let items:Array<IDropdownOption> = new Array<IDropdownOption>();
+    for(var group of this.state.siteColumns) {
+      items.push({
+        key: group.Group,
+        text: group.Group
+      });
+    }
+    return items;
+  }
+
+  private siteColumnsToOptions(): Array<IDropdownOption> {
+    let items:Array<IDropdownOption> = new Array<IDropdownOption>();
+    for(var group of this.state.siteColumns) {
+      if(group.Group == this.state.selectedSiteColumnGroup) {
+        for(var field of group.Fields) {
+          items.push({
+            key: field.InternalName,
+            text: field.Title + ' [' + textForType(field.Type) + ']'
+          });
+        }
+      } 
+    }
+    return items;
+  }
+
+  private applyToSiteColumnSaveButtonEnabled(): boolean{
+    return (
+      this.props.context.isOnline && this.state.selectedSiteColumnGroup !== undefined &&
+        this.state.selectedSiteColumn !== undefined && this.state.siteColumnSaveError == undefined
+    );
+  }
+
+  @autobind
+  private onApplyToSiteColumnSaveButtonClick(): void {
+    this.setState({
+      siteColumnIsApplying: true,
+      siteColumnSaveError: undefined,
+      applyToSiteColumnDialogVisible: true
+    });
+
+    //Save to site column (no way to push changes to lists in REST directly)
+    sp.web.fields.getByInternalNameOrTitle(this.state.selectedSiteColumn).update({
+        CustomFormatter: this.props.editorString
+    })
+      .then(()=>{
+        if(this.state.siteColumnPushToLists) {
+          //if push to lists, then JSOM is used to just load the field (with the saves from above) and push it down
+          if(!this.props.jsomLoaded) {
+            loadJSOM().then(() => {
+              this.props.loadedJSOM(true);
+              return this.applyToSiteColumnAndPushChanges();
+            });
+          } else {
+            return this.applyToSiteColumnAndPushChanges();
+          }
+        } else {
+          return;
+        }
+      })
+      .then(() => {
+        this.setState({
+          siteColumnIsApplying: false,
+          applyToSiteColumnDialogVisible: false,
+          activeSaveMethod: saveMethod.SiteColumn
+        });
+      })
+      .catch((error:any) => {
+        this.setState({
+          siteColumnIsApplying: false,
+          siteColumnSaveError: strings.ApplyToSiteColumnApplyError + ' ' + strings.TechnicalDetailsErrorHeader + ': ' + error.message,
+          activeSaveMethod: undefined
+        });
+      });
+  }
+
+  private applyToSiteColumnAndPushChanges(): Promise<any> {
+    return new Promise<any>((resolve:() => void, reject: (error:any) => void): void => {
+      let ctx: SP.ClientContext = SP.ClientContext.get_current();
+      let web: SP.Web = ctx.get_web();
+      let field = web.get_fields().getByInternalNameOrTitle(this.state.selectedSiteColumn);
+      field.updateAndPushChanges(true);
+      ctx.executeQueryAsync(():void => {
+        resolve();
+      }, (sender:any,args:SP.ClientRequestFailedEventArgs):void => {
+        reject(args.get_errorValue());
+      });
+    });
+  }
+
 
   @autobind
   private onApplyToListClick(ev?:React.MouseEvent<HTMLElement>, item?:IContextualMenuItem): void {
@@ -633,7 +852,8 @@ function mapStateToProps(state: IApplicationState): IColumnFormatterEditorComman
     fieldName: state.data.columns[0].name,
     fieldType: state.data.columns[0].type,
     viewTab: state.ui.tabs.viewTab,
-    saveDetailsFromLoad: state.ui.saveDetails
+    saveDetailsFromLoad: state.ui.saveDetails,
+    jsomLoaded: state.context.jsomLoaded
 	};
 }
 
@@ -647,6 +867,9 @@ function mapDispatchToProps(dispatch: Dispatch<IColumnFormatterEditorCommandsPro
     },
     chooseTheme: (theme:editorThemes) => {
       dispatch(chooseTheme(theme));
+    },
+    loadedJSOM: (jsomLoaded:boolean) => {
+      dispatch(loadedJSOM(jsomLoaded));
     }
 	};
 }

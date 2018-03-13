@@ -77,6 +77,8 @@ export interface ISaveDetails {
 	libraryFilename?: string;
 	list?: string;
 	field?: string;
+	siteColumnGroup?: string;
+	siteColumn?: string;
 }
 
 export interface IUI {
@@ -105,6 +107,7 @@ export interface IContext {
 	isOnline: boolean;
 	webAbsoluteUrl: string;
 	user: IUserContext;
+	jsomLoaded: boolean;
 }
 
 export interface IApplicationState {
@@ -154,6 +157,7 @@ export const initialState: IApplicationState = {
 		user: {
 			displayName: undefined,
 			email: undefined
-		}
+		},
+		jsomLoaded: false
 	}
 };

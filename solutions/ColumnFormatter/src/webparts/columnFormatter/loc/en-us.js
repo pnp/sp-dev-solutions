@@ -76,6 +76,7 @@ define([], function() {
     CommandDownload: 'Download',
     CommandCopy: 'Copy to clipboard',
     CommandSaveToLibrary: 'Save to local library',
+    CommandApplyToSiteColumn: 'Apply to site column',
     CommandApplyToList: 'Apply to local list field',
     CommandSave: 'Save',
 
@@ -103,6 +104,19 @@ define([], function() {
     SaveToLibraryLoadError: 'Error while loading libraries!',
     SaveToLibrarySaveError: 'Error while saving! Verify the folderpath is correct (if used) and that you have permission to save to this library.',
 
+    //Apply To Site Column Dialog
+    ApplyToSiteColumnDialogTitle: 'Apply to site column',
+    ApplyToSiteColumnDialogConfirmButton: 'Save',
+    ApplyToSiteColumnDialogCancelButton: 'Cancel',
+    ApplyToSiteColumnLoading: 'Loading Site Columns...',
+    ApplyToSiteColumnGroupLabel: 'Group',
+    ApplyToSiteColumnFieldLabel: 'Column',
+    ApplyToSiteColumnPushToListsOnLabel: 'Push changes to Lists',
+    ApplyToSiteColumnPushToListsOffLabel: 'Site column only',
+    ApplyToSiteColumnApplying: 'Applying to site column...',
+    ApplyToSiteColumnLoadError: 'Error while loading site columns!',
+    ApplyToSiteColumnApplyError: 'Error while applying! Verify you have permission to update site columns.',
+
     //Apply To List Dialog
     ApplyToListDialogTitle: 'Apply to local list field',
     ApplyToListDialogConfirmButton: 'Save',
@@ -112,7 +126,7 @@ define([], function() {
     ApplyToListFieldLabel: 'Field',
     ApplyToListApplying: 'Applying to list...',
     ApplyToListLoadError: 'Error while loading lists!',
-    ApplyToListApplyError: 'Error while applying! Verify you have permission to update this library\'s settings.',
+    ApplyToListApplyError: 'Error while applying! Verify you have permission to update this list\'s settings.',
 
     //Copy
     CopyToClipboardError: 'Unable to copy!',

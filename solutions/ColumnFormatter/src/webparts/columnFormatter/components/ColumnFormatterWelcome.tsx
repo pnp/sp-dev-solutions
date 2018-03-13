@@ -92,7 +92,7 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
   public render(): React.ReactElement<IColumnFormatterWelcomeProps> {
 
     //TEMP (helpful for testing and skipping the welcome altogether)
-    //this.props.launchEditor(undefined,columnTypes.text);
+    this.props.launchEditor(undefined,columnTypes.text);
     //this.props.launchEditor('Data Bars', columnTypes.number);
     //this.props.launchEditor('Severity', columnTypes.text);
 
@@ -550,7 +550,9 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
       libraryFolderPath: (loadMethod == saveMethod.Library ? this.state.libraryFolderPath : ''),
       libraryFilename: (loadMethod == saveMethod.Library ? this.state.libraryFileName : ''),
       list: (loadMethod == saveMethod.ListField ? this.state.selectedList : undefined),
-      field: (loadMethod == saveMethod.ListField ? this.state.selectedField : undefined)
+      field: (loadMethod == saveMethod.ListField ? this.state.selectedField : undefined),
+      siteColumnGroup: (loadMethod == saveMethod.SiteColumn ? this.state.selectedSiteColumnGroup : undefined),
+      siteColumn: (loadMethod == saveMethod.SiteColumn ? this.state.selectedSiteColumn : undefined)
     };
     this.props.launchEditorWithCode(undefined, type, text, validationErrors, saveDetails);
   }
@@ -660,6 +662,7 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
                     Group: data[i].Group,
                     Fields: []
                   });
+                  curGroupName = data[i].Group;
                 }
                 groupdata[groupdata.length-1].Fields.push({
                   Id: data[i].Id,

@@ -76,6 +76,7 @@ define([], function() {
     CommandDownload: 'Télécharger',
     CommandCopy: 'Copier dans le presse-papier',
     CommandSaveToLibrary: 'Copier dans le presse-papier',
+    CommandApplyToSiteColumn: 'Appliquer à la colonne du site',
     CommandApplyToList: 'Appliquer au champ de liste local',
     CommandSave: 'Sauvegarder',
 
@@ -103,6 +104,17 @@ define([], function() {
     SaveToLibraryLoadError: 'Erreur lors du chargement des bibliothèques !',
     SaveToLibrarySaveError: 'Erreur lors de l\'enregistrement ! Vérifiez que le chemin du dossier est correct (s\'il est utilisé) et que vous avez la permission d\'enregistrer dans cette bibliothèque.',
 
+    //Apply To Site Column Dialog
+    ApplyToSiteColumnDialogTitle: 'Appliquer à la colonne de site',
+    ApplyToSiteColumnDialogConfirmButton: 'Enregistrer',
+    ApplyToSiteColumnDialogCancelButton: 'Annuler',
+    ApplyToSiteColumnLoading: 'Chargement des colonnes de site ...',
+    ApplyToSiteColumnGroupLabel: 'Groupe',
+    ApplyToSiteColumnFieldLabel: 'Colonne',
+    ApplyToSiteColumnApplying: 'Application à la colonne de site ...',
+    ApplyToSiteColumnLoadError: 'Erreur lors du chargement des colonnes de site !',
+    ApplyToSiteColumnApplyError: 'Erreur lors de l\'application! Vérifiez que vous avez l\'autorisation de mettre à jour les colonnes du site.',
+
     //Apply To List Dialog
     ApplyToListDialogTitle: 'Appliquer au champ de liste local',
     ApplyToListDialogConfirmButton: 'Enregistrer',
@@ -110,6 +122,8 @@ define([], function() {
     ApplyToListLoading: 'Chargement des listes ...',
     ApplyToListListLabel: 'Liste locale',
     ApplyToListFieldLabel: 'Champ',
+    ApplyToSiteColumnPushToListsOnLabel: 'Push modifications aux listes',
+    ApplyToSiteColumnPushToListsOffLabel: 'Colonne de site uniquement',
     ApplyToListApplying: 'Appliquer à la liste ...',
     ApplyToListLoadError: 'Erreur lors du chargement des listes !',
     ApplyToListApplyError: 'Erreur lors de l\'application! Vérifiez que vous avez la permission de mettre à jour les paramètres de cette bibliothèque.',
