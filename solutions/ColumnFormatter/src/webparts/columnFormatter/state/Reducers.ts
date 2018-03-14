@@ -48,7 +48,8 @@ export const cfReducer = (state:IApplicationState = initialState, action:ActionT
 
 		case typeKeys.SET_CONTEXT:
 			newState.context = SetContextReducer(newState.context, action);
-			newState.ui.height = action.height;
+			newState.ui.height = action.properties.height;
+			newState.code.editorTheme = action.properties.editorTheme;
 			break;
 		
 		case typeKeys.SET_HEIGHT:
@@ -98,7 +99,7 @@ export const cfReducer = (state:IApplicationState = initialState, action:ActionT
 			newState.ui.panes = PaneResizeReducer(newState.ui.panes, action);
 			break;
 		case typeKeys.CHOOSE_THEME:
-			newState.code.theme = action.theme;
+			newState.code.editorTheme = action.theme;
 			break;
 
 		case typeKeys.UPDATE_EDITOR_STRING:
@@ -126,7 +127,8 @@ function SetContextReducer(context:IContext, action:ISetContextAction): IContext
 			displayName: action.userDisplayName,
 			email: action.userEmail
 		},
-		jsomLoaded: context.jsomLoaded		
+		jsomLoaded: context.jsomLoaded,
+		properties: action.properties
 	};
 }
 

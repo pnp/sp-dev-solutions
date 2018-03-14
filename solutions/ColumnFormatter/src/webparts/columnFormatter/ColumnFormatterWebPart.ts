@@ -1,5 +1,5 @@
 import { Environment, EnvironmentType, Version } from '@microsoft/sp-core-library';
-import { BaseClientSideWebPart, IPropertyPaneConfiguration } from '@microsoft/sp-webpart-base';
+import { BaseClientSideWebPart, IPropertyPaneConfiguration, PropertyPaneDropdown } from '@microsoft/sp-webpart-base';
 import { sp } from '@pnp/sp';
 import { PropertyFieldSpinButton } from '@pnp/spfx-property-controls/lib/PropertyFieldSpinButton';
 import * as strings from 'ColumnFormatterWebPartStrings';
@@ -9,12 +9,13 @@ import { Provider, ProviderProps } from 'react-redux';
 import { createStore, Store } from 'redux';
 
 import { ColumnFormatter } from './components/ColumnFormatter';
-import { setContext, setHeight } from './state/Actions';
+import { chooseTheme, setContext, setHeight } from './state/Actions';
 import { cfReducer } from './state/Reducers';
 import { IApplicationState } from './state/State';
 
 export interface IColumnFormatterWebPartProps {
   height: number; //Controls the height of the webpart
+  editorTheme: string;
 }
 
 export default class ColumnFormatterWebPart extends BaseClientSideWebPart<IColumnFormatterWebPartProps> {
@@ -35,7 +36,7 @@ export default class ColumnFormatterWebPart extends BaseClientSideWebPart<IColum
         this.context.pageContext.web.absoluteUrl,
         this.context.pageContext.user.displayName,
         this.context.pageContext.user.email,
-        this.properties.height || 340
+        this.properties
       )
     );
 
@@ -69,11 +70,23 @@ export default class ColumnFormatterWebPart extends BaseClientSideWebPart<IColum
   }
 
   //** Intercepts property pane value changes and dispatches them to the store */
-  public onDispatchablePropertyChanged(propertyPath: string, oldValue: any, newValue: any): void {
-    if(propertyPath == 'height' && oldValue !== newValue) {
-      this.store.dispatch(setHeight(Math.max(340, newValue)));
-    }
+  /*public onDispatchablePropertyChanged(propertyPath: string, oldValue: any, newValue: any): void {
+    
+    
     this.onPropertyPaneFieldChanged(propertyPath, oldValue, newValue);
+  }*/
+
+  public onPropertyPaneFieldChanged(propertyPath: string, oldValue: any, newValue: any): void {
+    if(oldValue !== newValue) {
+      switch(propertyPath) {
+        case 'height':
+          this.store.dispatch(setHeight(Math.max(340, newValue)));
+          break;
+        case 'editorTheme':
+          this.store.dispatch(chooseTheme(newValue));
+          break;
+      }
+    }
   }
 
   protected getPropertyPaneConfiguration(): IPropertyPaneConfiguration {
@@ -87,13 +100,27 @@ export default class ColumnFormatterWebPart extends BaseClientSideWebPart<IColum
                 PropertyFieldSpinButton('height', {
                   label: strings.PropertyHeightLabel,
                   initialValue: this.properties.height,
-                  onPropertyChange: this.onDispatchablePropertyChanged.bind(this),
+                  onPropertyChange: this.onPropertyPaneFieldChanged.bind(this),
                   properties: this.properties,
                   suffix: ' px',
                   min: 340,
                   step: 10,
                   decimalPlaces: 0,
                   key: 'height'
+                })
+              ]
+            },
+            {
+              groupName: strings.PropertyEditorGroupName,
+              groupFields: [
+                PropertyPaneDropdown('editorTheme', {
+                  label: strings.PropertyEditorThemeLabel,
+                  selectedKey: this.properties.editorTheme,
+                  options: [
+                    { key: 'vs', text: 'vs' },
+                    { key: 'vs-dark', text: 'vs-dark' },
+                    { key: 'hc-black', text: 'hc-black' }
+                  ]
                 })
               ]
             }

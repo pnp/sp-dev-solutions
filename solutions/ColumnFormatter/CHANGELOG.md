@@ -4,6 +4,8 @@
 - French (fr-fr) localization (thanks [PooLP](https://github.com/PooLP)!)
   - Added targeted styling for fr-fr locale to accomodate long strings
 - Replaced sp-pnp-js with PnPJS
+- German (de-de) localization (thanks [Thomas Goelles](h\https://github.com/thomyg)!)
+- Column Formatter now supports Full-Width columns (full bleed)
 
 ### Changed
 - Updated to [SharePoint Framework](https://github.com/SharePoint/sp-dev-docs/wiki/Release-Notes-for-SPFx-Package-Version-1.4.1) from 1.4.0 to 1.4.1
@@ -11,6 +13,9 @@
 - Updated [react-dropzone](https://react-dropzone.js.org/) from 4.2.3 to 4.2.9
 - Updated [react-redux](https://github.com/reactjs/react-redux/releases) from 5.0.6 to 5.0.7
 - Updated [@types/react-redux](https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/react-redux) from 5.0.14 to 5.0.15
+- Moved Editor Theme options to property pane
+  - Cleans up UI
+  - Ensures theme selection is remembered
 
 ### Removed
 - Dependency on sp-pnp-js (through CDN)

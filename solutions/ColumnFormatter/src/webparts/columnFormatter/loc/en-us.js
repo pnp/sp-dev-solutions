@@ -3,6 +3,8 @@ define([], function() {
     //Property Pane
     PropertyBasicGroupName: "Properties",
     PropertyHeightLabel: "Height",
+    PropertyEditorGroupName: "Editor",
+    PropertyEditorThemeLabel: "Theme",
 
     //General
     FeatureUnavailableFromLocalWorkbench: 'This feature is not available from the local workbench',

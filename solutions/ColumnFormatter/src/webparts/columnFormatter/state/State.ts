@@ -1,3 +1,5 @@
+import { IColumnFormatterWebPartProps } from '../ColumnFormatterWebPart';
+
 //#region Enums
 export enum columnTypes {
 	text,
@@ -9,12 +11,6 @@ export enum columnTypes {
 	picture,
 	datetime,
 	lookup
-}
-
-export enum editorThemes {
-	vs = "vs",
-	vsDark = "vs-dark",
-	hcBlack = "hc-black"
 }
 
 export enum uiState {
@@ -94,8 +90,8 @@ export interface ICode {
 	formatterErrors: Array<string>;
 	editorString: string;
 	formatterString: string;
-	theme: editorThemes;
 	wizardName: string;
+	editorTheme: string;
 }
 
 export interface IUserContext {
@@ -108,6 +104,7 @@ export interface IContext {
 	webAbsoluteUrl: string;
 	user: IUserContext;
 	jsomLoaded: boolean;
+	properties?: IColumnFormatterWebPartProps;
 }
 
 export interface IApplicationState {
@@ -148,8 +145,8 @@ export const initialState: IApplicationState = {
 		formatterErrors: [],
 		editorString: '',
 		formatterString:'',
-		theme: editorThemes.vs,
-		wizardName: undefined
+		wizardName: undefined,
+		editorTheme: 'vs'
 	},
 	context: {
 		isOnline: false,

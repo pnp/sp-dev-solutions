@@ -2,12 +2,12 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 
-import { editorThemes, IApplicationState } from '../../../state/State';
+import { IApplicationState } from '../../../state/State';
 import { updateEditorString } from './../../../state/Actions';
 import { MonacoEditor } from './MonacoEditor';
 
 export interface ICodeEditorProps {
-	theme?:editorThemes;
+	theme?:string;
 	editorString?:string;
 	readOnly?: boolean;
 
@@ -44,7 +44,7 @@ class CodeEditor_ extends React.Component<ICodeEditorProps, ICodeEditorState> {
 
 function mapStateToProps(state: IApplicationState): ICodeEditorProps{
 	return {
-		theme: state.code.theme,
+		theme: state.code.editorTheme,
 		editorString: state.code.editorString,
 		readOnly: state.ui.tabs.wizardTabVisible,
 		mainPane: state.ui.panes.main,

@@ -1,4 +1,5 @@
-import { columnTypes, editorThemes, ISaveDetails, uiState } from './State';
+import { IColumnFormatterWebPartProps } from '../ColumnFormatterWebPart';
+import { columnTypes, ISaveDetails, uiState } from './State';
 
 //** All the action interfaces */
 export type ActionTypes = 
@@ -59,15 +60,15 @@ export interface ISetContextAction {
 	webAbsoluteUrl: string;
 	userDisplayName: string;
 	userEmail: string;
-	height: number;
+	properties: IColumnFormatterWebPartProps;
 }
-export const setContext = (isOnline:boolean, webAbsoluteUrl:string, userDisplayName:string, userEmail:string, height:number): ISetContextAction => ({
+export const setContext = (isOnline:boolean, webAbsoluteUrl:string, userDisplayName:string, userEmail:string, properties:IColumnFormatterWebPartProps): ISetContextAction => ({
 	type: typeKeys.SET_CONTEXT,
 	isOnline,
 	webAbsoluteUrl,
 	userDisplayName,
 	userEmail,
-	height
+	properties
 });
 
 export interface ISetHeightAction {
@@ -216,9 +217,9 @@ export const resizePane = (paneName:string, size:number): IPaneResizeAction => (
 
 export interface IChooseThemeAction {
 	type: typeKeys.CHOOSE_THEME;
-	theme: editorThemes;
+	theme: string;
 }
-export const chooseTheme = (theme:editorThemes): IChooseThemeAction => ({
+export const chooseTheme = (theme:string): IChooseThemeAction => ({
 	type: typeKeys.CHOOSE_THEME,
 	theme
 });

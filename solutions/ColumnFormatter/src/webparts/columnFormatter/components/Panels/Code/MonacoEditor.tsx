@@ -2,14 +2,13 @@ import { autobind } from 'office-ui-fabric-react/lib/Utilities';
 import * as React from 'react';
 
 import { ColumnFormattingSchema, ColumnFormattingSchemaURI } from '../../../helpers/ColumnFormattingSchema';
-import { editorThemes } from '../../../state/State';
 import styles from '../../ColumnFormatter.module.scss';
 
 const monaco = require('../../../../../MonacoCustomBuild');
 
 export interface IMonacoEditorProps {
 	value: string;
-	theme: editorThemes;
+	theme: string;
 	readOnly: boolean;
 	onValueChange: (newValue:string, validationErrors:Array<string>) => void;
 }

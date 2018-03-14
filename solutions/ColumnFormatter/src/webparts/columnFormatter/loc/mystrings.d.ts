@@ -2,6 +2,8 @@ declare interface IColumnFormatterWebPartStrings {
   //Property Pane
   PropertyBasicGroupName: string;
   PropertyHeightLabel: string;
+  PropertyEditorGroupName: string;
+  PropertyEditorThemeLabel: string;
 
   //General
   FeatureUnavailableFromLocalWorkbench: string;

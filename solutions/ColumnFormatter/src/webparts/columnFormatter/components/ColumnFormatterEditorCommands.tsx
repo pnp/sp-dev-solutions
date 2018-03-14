@@ -7,17 +7,17 @@ import { Dialog, DialogFooter, DialogType } from 'office-ui-fabric-react/lib/Dia
 import { Dropdown, IDropdownOption } from 'office-ui-fabric-react/lib/Dropdown';
 import { Spinner, SpinnerSize } from 'office-ui-fabric-react/lib/Spinner';
 import { TextField } from 'office-ui-fabric-react/lib/TextField';
+import { Toggle } from 'office-ui-fabric-react/lib/Toggle';
 import { autobind } from 'office-ui-fabric-react/lib/Utilities';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 
 import { textForType, typeForTypeAsString } from '../helpers/ColumnTypeHelpers';
-import { changeUIState, chooseTheme, disconnectWizard, loadedJSOM } from '../state/Actions';
-import { columnTypes, editorThemes, IApplicationState, IContext, ISaveDetails, saveMethod, uiState } from '../state/State';
-import styles from './ColumnFormatter.module.scss';
-import { Toggle } from 'office-ui-fabric-react/lib/Toggle';
 import { loadJSOM } from '../helpers/jsomLoader';
+import { changeUIState, disconnectWizard, loadedJSOM } from '../state/Actions';
+import { columnTypes, IApplicationState, IContext, ISaveDetails, saveMethod, uiState } from '../state/State';
+import styles from './ColumnFormatter.module.scss';
 
 var fileDownload = require('js-file-download');
 
@@ -27,8 +27,6 @@ export interface IColumnFormatterEditorCommandsProps {
   changeUIState?: (state:uiState) => void;
   disconnectWizard?: () => void;
   wizardTabVisible?: boolean;
-  theme?: editorThemes;
-  chooseTheme?: (theme:editorThemes) => void;
   editorString?: string;
   fieldName?: string;
   fieldType?: columnTypes;
@@ -301,40 +299,6 @@ class ColumnFormatterEditorCommands_ extends React.Component<IColumnFormatterEdi
 
   private getCommandBarFarItems(): Array<IContextualMenuItem> {
     let items:Array<IContextualMenuItem> = [];
-    if(this.props.viewTab > 0) {
-      items.push(
-        {
-          key: 'theme',
-          name: strings.CommandEditor,
-          iconProps: {iconName: 'Color'},
-          subMenuProps: {
-            items: [
-              {
-                key: 'vs',
-                name: 'vs',
-                canCheck: true,
-                checked: this.props.theme == editorThemes.vs,
-                onClick: this.onChooseTheme
-              },
-              {
-                key: 'vsDark',
-                name: 'vs-dark',
-                canCheck: true,
-                checked: this.props.theme == editorThemes.vsDark,
-                onClick: this.onChooseTheme
-              },
-              {
-                key: 'hcBlack',
-                name: 'hc-black',
-                canCheck: true,
-                checked: this.props.theme == editorThemes.hcBlack,
-                onClick: this.onChooseTheme
-              }
-            ]
-          }
-        }
-      );
-    }
     items.push(
         {
           key: 'saveas',
@@ -462,11 +426,6 @@ class ColumnFormatterEditorCommands_ extends React.Component<IColumnFormatterEdi
       applyToListDialogVisible: false,
       applyToSiteColumnDialogVisible: false
     });
-  }
-
-  @autobind
-  private onChooseTheme(ev?:React.MouseEvent<HTMLElement>, item?:IContextualMenuItem): void {
-    this.props.chooseTheme(editorThemes[item.key]);
   }
 
   @autobind
@@ -847,7 +806,6 @@ function mapStateToProps(state: IApplicationState): IColumnFormatterEditorComman
 	return {
     context: state.context,
     wizardTabVisible: state.ui.tabs.wizardTabVisible,
-    theme: state.code.theme,
     editorString: state.code.editorString,
     fieldName: state.data.columns[0].name,
     fieldType: state.data.columns[0].type,
@@ -864,9 +822,6 @@ function mapDispatchToProps(dispatch: Dispatch<IColumnFormatterEditorCommandsPro
     },
     disconnectWizard: () => {
       dispatch(disconnectWizard());
-    },
-    chooseTheme: (theme:editorThemes) => {
-      dispatch(chooseTheme(theme));
     },
     loadedJSOM: (jsomLoaded:boolean) => {
       dispatch(loadedJSOM(jsomLoaded));
