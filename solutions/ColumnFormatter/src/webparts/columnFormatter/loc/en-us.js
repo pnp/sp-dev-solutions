@@ -318,6 +318,16 @@ define([], function() {
 
     //Wizard Mini Map
     WizardMiniMapName: 'Mini Map',
-    WizardMiniMapDescription: 'Displays a tiny map image for a location (be sure to use your own API key)'
+    WizardMiniMapDescription: 'Displays a tiny map image for a location (be sure to use your own API key)',
+
+    //Wizard Flow
+    WizardFlowName: 'Launch Flow',
+    WizardFlowDescription: 'Creates a button to easily launch a Flow for an item',
+    WizardFlowFlowId: 'Flow Id',
+    WizardFlowShowIconOn: 'Show Icon',
+    WizardFlowShowIconOff: 'No Icon',
+    WizardFlowIconName: 'Icon',
+    WizardFlowDisplayValue: 'Text',
+    WizardFlowColor: 'Color'
   }
 });

@@ -141,12 +141,6 @@ export class WizardMailToPanel extends React.Component<IWizardMailToPanelProps, 
 	Wizard Definition
 */
 
-export interface ISeverityLevel {
-	value: string;
-	class: string;
-	icon: string;
-}
-
 const calculateCode = (colType:columnTypes, displayValue:string, iconLink:boolean, subject:string, body:string, cc:string, bcc:string): string => {
 	let toAddress = '@currentField.email';
 	if(colType == columnTypes.link) {

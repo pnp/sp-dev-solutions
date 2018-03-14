@@ -92,9 +92,10 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
   public render(): React.ReactElement<IColumnFormatterWelcomeProps> {
 
     //TEMP (helpful for testing and skipping the welcome altogether)
-    this.props.launchEditor(undefined,columnTypes.text);
+    //this.props.launchEditor(undefined,columnTypes.text);
     //this.props.launchEditor('Data Bars', columnTypes.number);
     //this.props.launchEditor('Severity', columnTypes.text);
+    this.props.launchEditor('Launch Flow', columnTypes.text);
 
     return (
       <div className={styles.welcome} style={{height: this.props.uiHeight + 'px'}}>

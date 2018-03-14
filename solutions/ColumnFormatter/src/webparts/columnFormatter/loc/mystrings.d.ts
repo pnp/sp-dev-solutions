@@ -318,6 +318,16 @@ declare interface IColumnFormatterWebPartStrings {
   //Wizard Mini Map
   WizardMiniMapName: string;
   WizardMiniMapDescription: string;
+
+  //Wizard Flow
+  WizardFlowName: string;
+  WizardFlowDescription: string;
+  WizardFlowFlowId: string;
+  WizardFlowShowIconOn: string;
+  WizardFlowShowIconOff: string;
+  WizardFlowIconName: string;
+  WizardFlowDisplayValue: string;
+  WizardFlowColor: string;
 }
 
 declare module 'ColumnFormatterWebPartStrings' {
