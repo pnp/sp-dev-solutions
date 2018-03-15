@@ -4,6 +4,10 @@ declare interface IColumnFormatterWebPartStrings {
   PropertyHeightLabel: string;
   PropertyEditorGroupName: string;
   PropertyEditorThemeLabel: string;
+  PropertyLineNumbersLabel: string;
+  PropertyVisibleOn: string;
+  PropertyVisibleOff: string;
+  PropertyMiniMapLabel: string;
 
   //General
   FeatureUnavailableFromLocalWorkbench: string;

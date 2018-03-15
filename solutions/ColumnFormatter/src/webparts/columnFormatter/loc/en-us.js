@@ -5,6 +5,10 @@ define([], function() {
     PropertyHeightLabel: "Height",
     PropertyEditorGroupName: "Editor",
     PropertyEditorThemeLabel: "Theme",
+    PropertyLineNumbersLabel: "Line Numbers",
+    PropertyVisibleOn: "On",
+    PropertyVisibleOff: "Off",
+    PropertyMiniMapLabel: "Mini Map",
 
     //General
     FeatureUnavailableFromLocalWorkbench: 'This feature is not available from the local workbench',

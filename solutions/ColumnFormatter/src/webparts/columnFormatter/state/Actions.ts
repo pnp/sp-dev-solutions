@@ -20,6 +20,7 @@ export type ActionTypes =
 	| IPaneResizeAction
 	| IChooseThemeAction
 	| IToggleLineNumbersAction
+	| IToggleMiniMapAction
 	| IUpdateEditorStringAction
 	| IUpdateFormatterErrorsAction
 	| ILoadedJSOMAction
@@ -46,6 +47,7 @@ export enum typeKeys {
 	PANE_RESIZE = "PANE_RESIZE",
 	CHOOSE_THEME = "CHOOSE_THEME",
 	TOGGLE_LINENUMBERS = "TOGGLE_LINENUMBERS",
+	TOGGLE_MINIMAP = "TOGGLE_MINIMAP",
 
 	UPDATE_EDITOR_STRING = "UPDATE_EDITOR_STRING",
 	UPDATE_FORMATTER_ERRORS = "UPDATE_FORMATTER_ERRORS",
@@ -233,6 +235,15 @@ export interface IToggleLineNumbersAction {
 export const toggleLineNumbers = (showLineNumbers:boolean): IToggleLineNumbersAction => ({
 	type: typeKeys.TOGGLE_LINENUMBERS,
 	showLineNumbers
+});
+
+export interface IToggleMiniMapAction {
+	type: typeKeys.TOGGLE_MINIMAP;
+	showMiniMap: boolean;
+}
+export const toggleMiniMap = (showMiniMap:boolean): IToggleMiniMapAction => ({
+	type: typeKeys.TOGGLE_MINIMAP,
+	showMiniMap
 });
 
 

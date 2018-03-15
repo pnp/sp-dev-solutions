@@ -14,7 +14,7 @@ import { Provider, ProviderProps } from 'react-redux';
 import { createStore, Store } from 'redux';
 
 import { ColumnFormatter } from './components/ColumnFormatter';
-import { chooseTheme, setContext, setHeight, toggleLineNumbers } from './state/Actions';
+import { chooseTheme, setContext, setHeight, toggleLineNumbers, toggleMiniMap } from './state/Actions';
 import { cfReducer } from './state/Reducers';
 import { IApplicationState } from './state/State';
 
@@ -22,6 +22,7 @@ export interface IColumnFormatterWebPartProps {
   height: number; //Controls the height of the webpart
   editorTheme: string; //Controls the colors used by the code editor
   showLineNumbers: boolean; //Toggles the visibility of line numbers in the code editor
+  showMiniMap: boolean; //Toggles the visibility of the mini map in the code editor
 }
 
 export default class ColumnFormatterWebPart extends BaseClientSideWebPart<IColumnFormatterWebPartProps> {
@@ -94,6 +95,9 @@ export default class ColumnFormatterWebPart extends BaseClientSideWebPart<IColum
         case 'showLineNumbers':
           this.store.dispatch(toggleLineNumbers(newValue));
           break;
+        case 'showMiniMap':
+          this.store.dispatch(toggleMiniMap(newValue));
+          break;
       }
     }
   }
@@ -132,9 +136,14 @@ export default class ColumnFormatterWebPart extends BaseClientSideWebPart<IColum
                   ]
                 }),
                 PropertyPaneToggle('showLineNumbers', {
-                  label: 'Line Numbers',
-                  onText: 'Visible',
-                  offText: 'Hidden'
+                  label: strings.PropertyLineNumbersLabel,
+                  onText: strings.PropertyVisibleOn,
+                  offText: strings.PropertyVisibleOff
+                }),
+                PropertyPaneToggle('showMiniMap', {
+                  label: strings.PropertyMiniMapLabel,
+                  onText: strings.PropertyVisibleOn,
+                  offText: strings.PropertyVisibleOff
                 })
               ]
             }

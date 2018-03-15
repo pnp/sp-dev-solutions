@@ -105,6 +105,9 @@ export const cfReducer = (state:IApplicationState = initialState, action:ActionT
 		case typeKeys.TOGGLE_LINENUMBERS:
 			newState.code.showLineNumbers = action.showLineNumbers;
 			break;
+		case typeKeys.TOGGLE_MINIMAP:
+			newState.code.showMiniMap = action.showMiniMap;
+			break;
 
 		case typeKeys.UPDATE_EDITOR_STRING:
 			newState.code = UpdateEditorStringReducer(newState.code, action);

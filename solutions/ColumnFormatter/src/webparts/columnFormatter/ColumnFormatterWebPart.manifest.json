@@ -24,7 +24,8 @@
     "properties": {
       "height": 340,
       "editorTheme": "vs",
-      "showLineNumbers": false
+      "showLineNumbers": false,
+      "showMiniMap": false
     }
   }]
 }
