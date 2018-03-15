@@ -1,13 +1,11 @@
 import * as strings from 'ColumnFormatterWebPartStrings';
-import { TextField } from 'office-ui-fabric-react/lib/TextField';
 import { Toggle } from 'office-ui-fabric-react/lib/Toggle';
 import { autobind } from 'office-ui-fabric-react/lib/Utilities';
 import * as React from 'react';
 
 import { columnTypes, IDataColumn, IUserContext } from '../../state/State';
-import styles from '../ColumnFormatter.module.scss';
+import { SpinButtonWithSuffix } from './Controls/SpinButtonWithSuffix';
 import { StandardColorsDropdown } from './Controls/StandardColorsDropdown';
-import { IconsDropdown } from './Controls/IconsDropdown';
 import { IWizard, standardWizardStartingColumns, standardWizardStartingRows } from './WizardCommon';
 
 /*
@@ -56,7 +54,13 @@ export class WizardDonutPanel extends React.Component<IWizardDonutPanelProps, IW
 				 onChanged={this.onShowAsDonutChanged}
 				 onText={strings.WizardDonutDonut}
 				 offText={strings.WizardDonutPie}/>
-
+				<SpinButtonWithSuffix
+				 label={strings.WizardDonutSize}
+				 initialValue={this.state.size}
+				 onChanged={this.onSizeChanged}
+				 suffix=' px'
+				 min={40}
+				 max={134}/>
 				<Toggle
 				 checked={this.state.showValue}
 				 onChanged={this.onShowValueChanged}
@@ -87,6 +91,14 @@ export class WizardDonutPanel extends React.Component<IWizardDonutPanelProps, IW
 			showAsDonut: checked!
 		});
 		this.props.updateValues(checked, this.state.size, this.state.showValue, this.state.outerColor, this.state.innerColor, this.state.textColor);
+	}
+
+	@autobind
+	private onSizeChanged(value: number): void {
+		this.setState({
+			size: value
+		});
+		this.props.updateValues(this.state.showAsDonut, value, this.state.showValue, this.state.outerColor, this.state.innerColor, this.state.textColor);
 	}
 
 	@autobind
@@ -164,7 +176,7 @@ const calculateCode = (showAsDonut:boolean, size:number, showValue:boolean, oute
 		'                "d": {',
 		'                  "operator": "+",',
 		'                  "operands": [',
-		'                    "M50,50 L50,0, A50,50 0 ",',
+		'                    "M' + half + ',' + half +' L' + half + ',0, A' + half +',' + half + ' 0 ",',
 		'                    {',
 		'                      "operator": ":",',
 		'                      "operands": [',
@@ -186,7 +198,7 @@ const calculateCode = (showAsDonut:boolean, size:number, showValue:boolean, oute
 		'                        {',
 		'                          "operator": "+",',
 		'                          "operands": [',
-		'                            50,',
+		'                            ' + half + ',',
 		'                            {',
 		'                              "operator": "*",',
 		'                              "operands": [',
@@ -234,7 +246,7 @@ const calculateCode = (showAsDonut:boolean, size:number, showValue:boolean, oute
 		'                                    }',
 		'                                  ]',
 		'                                },',
-		'                                50',
+		'                                ' + half,
 		'                              ]',
 		'                            }',
 		'                          ]',
@@ -248,7 +260,7 @@ const calculateCode = (showAsDonut:boolean, size:number, showValue:boolean, oute
 		'                        {',
 		'                          "operator": "-",',
 		'                          "operands": [',
-		'                            50,',
+		'                            ' + half + ',',
 		'                            {',
 		'                              "operator": "*",',
 		'                              "operands": [',
@@ -296,7 +308,7 @@ const calculateCode = (showAsDonut:boolean, size:number, showValue:boolean, oute
 		'                                    }',
 		'                                  ]',
 		'                                },',
-		'                                50',
+		'                                ' + half,
 		'                              ]',
 		'                            }',
 		'                          ]',
@@ -374,13 +386,13 @@ export const WizardDonut: IWizard = {
 	startingColumns: (colType:columnTypes): Array<IDataColumn> => {return standardWizardStartingColumns(colType);},
 	startingRows: (colType:columnTypes, user?:IUserContext): Array<Array<any>> => {return standardWizardStartingRows(colType);},
 	startingCode: (colType:columnTypes): string => {
-		return calculateCode(true,100,true,'#c8c8c8','#ff8c00','white');
+		return calculateCode(true,60,true,'#c8c8c8','#ff8c00','white');
 	},
 	onWizardRender: (updateEditorString:(editorString:string) => void, colType:columnTypes): JSX.Element => {
 		return (
 			<WizardDonutPanel
 			 showAsDonut={true}
-			 size={100}
+			 size={60}
 			 showValue={true}
 			 outerColor='#c8c8c8'
 			 innerColor='#ff8c00'

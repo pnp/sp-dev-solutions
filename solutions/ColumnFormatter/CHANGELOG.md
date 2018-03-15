@@ -12,6 +12,8 @@
 - Line Numbers in the editor (toggle in the property pane)
 - Ability to adjust Indent Guides in the editor (toggle in the property pane)
 - Mini Map in the editor (toggle in the property pane)
+- SpinButtonWithSuffix (for use in wizards)
+- Donut Wizard
 
 ### Changed
 - Updated to [SharePoint Framework](https://github.com/SharePoint/sp-dev-docs/wiki/Release-Notes-for-SPFx-Package-Version-1.4.1) from 1.4.0 to 1.4.1
