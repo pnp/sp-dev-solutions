@@ -6,6 +6,7 @@ import { WizardActionLink } from './WizardActionLink';
 import { WizardCheckboxes } from './WizardCheckboxes';
 import { WizardCurrentUser } from './WizardCurrentUser';
 import { WizardDataBars } from './WizardDataBars';
+import { WizardDonut } from './WizardDonut';
 import { WizardFlow } from './WizardFlow';
 import { WizardMailTo } from './WizardMailTo';
 import { WizardMiniMap } from './WizardMiniMap';
@@ -51,6 +52,7 @@ export const Wizards: Array<IWizard> = [
 	WizardCheckboxes,
 	WizardCurrentUser,
 	WizardDataBars,
+	WizardDonut,
 	WizardFlow,
 	WizardMailTo,
 	WizardMiniMap,

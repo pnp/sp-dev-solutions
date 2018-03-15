@@ -373,6 +373,18 @@ define([], function() {
     WizardFlowShowIconOff: 'No Icon',
     WizardFlowIconName: 'Icon',
     WizardFlowDisplayValue: 'Text',
-    WizardFlowColor: 'Color'
+    WizardFlowColor: 'Color',
+
+    //Wizard Donut
+    WizardDonutName: 'Donut',
+    WizardDonutDescription: 'Show a value using a donut or pie chart',
+    WizardDonutDonut: 'Show as Donut',
+    WizardDonutPie: 'Show as Pie',
+    WizardDonutSize: 'Size',
+    WizardDonutValueOn: 'Show Value',
+    WizardDonutValueOff: 'Hide Value',
+    WizardDonutOuterColor: 'Outer Color',
+    WizardDonutInnerColor: 'Inner Color',
+    WizardDonutTextColor: 'Text Color'
   }
 });

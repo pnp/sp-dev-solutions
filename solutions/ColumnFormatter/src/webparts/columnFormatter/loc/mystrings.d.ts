@@ -373,6 +373,18 @@ declare interface IColumnFormatterWebPartStrings {
   WizardFlowIconName: string;
   WizardFlowDisplayValue: string;
   WizardFlowColor: string;
+
+  //Wizard Donut
+  WizardDonutName: string;
+  WizardDonutDescription: string;
+  WizardDonutDonut: string;
+  WizardDonutPie: string;
+  WizardDonutSize: string;
+  WizardDonutValueOn: string;
+  WizardDonutValueOff: string;
+  WizardDonutOuterColor: string;
+  WizardDonutInnerColor: string;
+  WizardDonutTextColor: string;
 }
 
 declare module 'ColumnFormatterWebPartStrings' {
