@@ -4,9 +4,10 @@ import { Toggle } from 'office-ui-fabric-react/lib/Toggle';
 import { autobind } from 'office-ui-fabric-react/lib/Utilities';
 import * as React from 'react';
 
-import { columnTypes, IDataColumn, IPersonFieldValue, IUserContext } from '../../state/State';
-import { generatePerson, generateRowValue } from '../../state/ValueGeneration';
+import { columnTypes, IDataColumn, IUserContext } from '../../state/State';
 import styles from '../ColumnFormatter.module.scss';
+import { StandardColorsDropdown } from './Controls/StandardColorsDropdown';
+import { IconsDropdown } from './Controls/IconsDropdown';
 import { IWizard, standardWizardStartingColumns, standardWizardStartingRows } from './WizardCommon';
 
 /*
@@ -50,12 +51,22 @@ export class WizardFlowPanel extends React.Component<IWizardFlowPanelProps, IWiz
 				<TextField
 				 label={strings.WizardFlowFlowId + ':'}
 				 value={this.state.flowId}
-				 onChanged={this.onFlowIdChanged}/>
+				 onChanged={this.onFlowIdChanged}
+				 title={strings.WizardFlowFlowIdInstructions}/>
 				<TextField
 				 label={strings.WizardFlowDisplayValue + ':'}
 				 value={this.state.displayValue}
 				 onChanged={this.onDisplayValueChanged}/>
-				
+				<span className={styles.wizardGroupLabel}>{strings.WizardFlowDisplayGroupLabel}</span>
+				<StandardColorsDropdown
+				 label={strings.WizardFlowColor}
+				 onChanged={this.onColorChanged}
+				 selectedKey={this.state.color}/>
+				<IconsDropdown
+				 label={strings.WizardFlowIconName}
+				 onChanged={this.onIconNameChanged}
+				 selectedKey={this.state.iconName}
+				 color={this.state.color}/>
 				<Toggle
 				 checked={this.state.showIcon}
 				 onChanged={this.onShowIconChanged}
@@ -71,7 +82,7 @@ export class WizardFlowPanel extends React.Component<IWizardFlowPanelProps, IWiz
 		this.setState({
 			flowId: text
 		});
-		this.props.updateValues(this.state.flowId, this.state.showIcon, this.state.iconName, this.state.color, this.state.displayValue);
+		this.props.updateValues(text, this.state.showIcon, this.state.iconName, this.state.color, this.state.displayValue);
 	}
 
 	@autobind
@@ -88,6 +99,22 @@ export class WizardFlowPanel extends React.Component<IWizardFlowPanelProps, IWiz
 			showIcon: checked!
 		});
 		this.props.updateValues(this.state.flowId, checked, this.state.iconName, this.state.color, this.state.displayValue);
+	}
+
+	@autobind
+	private onColorChanged(text: string) {
+		this.setState({
+			color: text
+		});
+		this.props.updateValues(this.state.flowId, this.state.showIcon, this.state.iconName, text, this.state.displayValue);
+	}
+
+	@autobind
+	private onIconNameChanged(text: string) {
+		this.setState({
+			iconName: text
+		});
+		this.props.updateValues(this.state.flowId, this.state.showIcon, text, this.state.color, this.state.displayValue);
 	}
 }
 

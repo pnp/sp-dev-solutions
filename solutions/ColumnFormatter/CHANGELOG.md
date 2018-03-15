@@ -6,6 +6,9 @@
 - Replaced sp-pnp-js with PnPJS
 - German (de-de) localization (thanks [Thomas Goelles](h\https://github.com/thomyg)!)
 - Column Formatter now supports Full-Width columns (full bleed)
+- Start Flow Wizard
+- StandardColorsDropdown (for use in wizards)
+- IconsDropdown (for use in wizards)
 
 ### Changed
 - Updated to [SharePoint Framework](https://github.com/SharePoint/sp-dev-docs/wiki/Release-Notes-for-SPFx-Package-Version-1.4.1) from 1.4.0 to 1.4.1

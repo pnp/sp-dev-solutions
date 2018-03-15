@@ -241,6 +241,43 @@ declare interface IColumnFormatterWebPartStrings {
   TreeViewHeader: string;
   TreeViewError: string;
 
+  //Wizard Controls
+  StandardColorsDropdownYellow: string;
+  StandardColorsDropdownYellowLight: string;
+  StandardColorsDropdownOrange: string;
+  StandardColorsDropdownOrangeLight: string;
+  StandardColorsDropdownOrangeLighter: string;
+  StandardColorsDropdownRedDark: string;
+  StandardColorsDropdownRed: string;
+  StandardColorsDropdownMagentaDark: string;
+  StandardColorsDropdownMagenta: string;
+  StandardColorsDropdownMagentaLight: string;
+  StandardColorsDropdownPurpleDark: string;
+  StandardColorsDropdownPurple: string;
+  StandardColorsDropdownPurpleLight: string;
+  StandardColorsDropdownBlueDark: string;
+  StandardColorsDropdownBlueMid: string;
+  StandardColorsDropdownBlue: string;
+  StandardColorsDropdownBlueLight: string;
+  StandardColorsDropdownTealDark: string;
+  StandardColorsDropdownTeal: string;
+  StandardColorsDropdownTealLight: string;
+  StandardColorsDropdownGreenDark: string;
+  StandardColorsDropdownGreen: string;
+  StandardColorsDropdownGreenLight: string;
+  StandardColorsDropdownBlack: string;
+  StandardColorsDropdownNeutralDark: string;
+  StandardColorsDropdownNeutralPrimary: string;
+  StandardColorsDropdownNeutralPrimaryAlt: string;
+  StandardColorsDropdownNeutralSecondary: string;
+  StandardColorsDropdownNeutralTertiary: string;
+  StandardColorsDropdownNeutralTertiaryAlt: string;
+  StandardColorsDropdownNeutralLight: string;
+  StandardColorsDropdownNeutralLighter: string;
+  StandardColorsDropdownNeutralLighterAlt: string;
+  StandardColorsDropdownWhite: string;
+  StandardColorsDropdownTransparent: string;
+
   //Wizard Data Bars
   WizardDataBarsName: string;
   WizardDataBarsDescription: string;
@@ -320,9 +357,11 @@ declare interface IColumnFormatterWebPartStrings {
   WizardMiniMapDescription: string;
 
   //Wizard Flow
+  WizardFlowDisplayGroupLabel: string;
   WizardFlowName: string;
   WizardFlowDescription: string;
   WizardFlowFlowId: string;
+  WizardFlowFlowIdInstructions: string;
   WizardFlowShowIconOn: string;
   WizardFlowShowIconOff: string;
   WizardFlowIconName: string;
