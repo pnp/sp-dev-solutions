@@ -51,6 +51,7 @@ export const cfReducer = (state:IApplicationState = initialState, action:ActionT
 			newState.ui.height = action.properties.height;
 			newState.code.editorTheme = action.properties.editorTheme;
 			newState.code.showLineNumbers = action.properties.showLineNumbers;
+			newState.code.showIndentGuides = action.properties.showIndentGuides;
 			break;
 		
 		case typeKeys.SET_HEIGHT:
@@ -107,6 +108,9 @@ export const cfReducer = (state:IApplicationState = initialState, action:ActionT
 			break;
 		case typeKeys.TOGGLE_MINIMAP:
 			newState.code.showMiniMap = action.showMiniMap;
+			break;
+		case typeKeys.TOGGLE_INDENTGUIDES:
+			newState.code.showIndentGuides = action.showIndentGuides;
 			break;
 
 		case typeKeys.UPDATE_EDITOR_STRING:

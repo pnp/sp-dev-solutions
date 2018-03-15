@@ -21,6 +21,7 @@ export type ActionTypes =
 	| IChooseThemeAction
 	| IToggleLineNumbersAction
 	| IToggleMiniMapAction
+	| IToggleIndentGuidesAction
 	| IUpdateEditorStringAction
 	| IUpdateFormatterErrorsAction
 	| ILoadedJSOMAction
@@ -48,6 +49,7 @@ export enum typeKeys {
 	CHOOSE_THEME = "CHOOSE_THEME",
 	TOGGLE_LINENUMBERS = "TOGGLE_LINENUMBERS",
 	TOGGLE_MINIMAP = "TOGGLE_MINIMAP",
+	TOGGLE_INDENTGUIDES = "TOGGLE_INDENTGUIDES",
 
 	UPDATE_EDITOR_STRING = "UPDATE_EDITOR_STRING",
 	UPDATE_FORMATTER_ERRORS = "UPDATE_FORMATTER_ERRORS",
@@ -244,6 +246,15 @@ export interface IToggleMiniMapAction {
 export const toggleMiniMap = (showMiniMap:boolean): IToggleMiniMapAction => ({
 	type: typeKeys.TOGGLE_MINIMAP,
 	showMiniMap
+});
+
+export interface IToggleIndentGuidesAction {
+	type: typeKeys.TOGGLE_INDENTGUIDES;
+	showIndentGuides: boolean;
+}
+export const toggleIndentGuides = (showIndentGuides:boolean): IToggleIndentGuidesAction => ({
+	type: typeKeys.TOGGLE_INDENTGUIDES,
+	showIndentGuides
 });
 
 

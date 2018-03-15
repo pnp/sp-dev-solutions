@@ -12,6 +12,7 @@ export interface IMonacoEditorProps {
 	readOnly: boolean;
 	showLineNumbers: boolean;
 	showMiniMap: boolean;
+	showIndentGuides: boolean;
 	onValueChange: (newValue:string, validationErrors:Array<string>) => void;
 }
 
@@ -53,7 +54,7 @@ export class MonacoEditor extends React.Component<IMonacoEditorProps, {}> {
 			theme: this.props.theme,
 			language: 'json',
 			folding: true,
-			renderIndentGuides: true,
+			renderIndentGuides: this.props.showIndentGuides,
 			readOnly: this.props.readOnly,
 			lineNumbers: this.props.showLineNumbers,
 			lineNumbersMinChars: 4,
@@ -76,7 +77,8 @@ export class MonacoEditor extends React.Component<IMonacoEditorProps, {}> {
 			monaco.editor.setTheme(this.props.theme);
 		}
 		if(this.props.showLineNumbers != prevProps.showLineNumbers ||
-			this.props.showMiniMap != prevProps.showMiniMap) {
+			this.props.showMiniMap != prevProps.showMiniMap ||
+			this.props.showIndentGuides != prevProps.showIndentGuides) {
 			this.createEditor();
 		}
 		if(this._editor) {

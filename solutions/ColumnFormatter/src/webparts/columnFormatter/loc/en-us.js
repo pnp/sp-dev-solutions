@@ -9,6 +9,7 @@ define([], function() {
     PropertyVisibleOn: "On",
     PropertyVisibleOff: "Off",
     PropertyMiniMapLabel: "Mini Map",
+    PropertyIndentGuidesLabel: 'Indent Guides',
 
     //General
     FeatureUnavailableFromLocalWorkbench: 'This feature is not available from the local workbench',

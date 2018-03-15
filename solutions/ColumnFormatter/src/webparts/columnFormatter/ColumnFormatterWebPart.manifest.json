@@ -25,7 +25,8 @@
       "height": 340,
       "editorTheme": "vs",
       "showLineNumbers": false,
-      "showMiniMap": false
+      "showMiniMap": false,
+      "showIndentGuides": true
     }
   }]
 }

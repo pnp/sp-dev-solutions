@@ -94,6 +94,7 @@ export interface ICode {
 	editorTheme: string;
 	showLineNumbers: boolean;
 	showMiniMap: boolean;
+	showIndentGuides: boolean;
 }
 
 export interface IUserContext {
@@ -150,7 +151,8 @@ export const initialState: IApplicationState = {
 		wizardName: undefined,
 		editorTheme: 'vs',
 		showLineNumbers: false,
-		showMiniMap: false
+		showMiniMap: false,
+		showIndentGuides: false
 	},
 	context: {
 		isOnline: false,

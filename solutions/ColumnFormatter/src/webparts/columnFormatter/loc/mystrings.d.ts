@@ -8,6 +8,7 @@ declare interface IColumnFormatterWebPartStrings {
   PropertyVisibleOn: string;
   PropertyVisibleOff: string;
   PropertyMiniMapLabel: string;
+  PropertyIndentGuidesLabel: string;
 
   //General
   FeatureUnavailableFromLocalWorkbench: string;

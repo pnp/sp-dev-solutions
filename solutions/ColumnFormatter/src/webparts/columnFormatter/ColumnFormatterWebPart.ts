@@ -14,7 +14,7 @@ import { Provider, ProviderProps } from 'react-redux';
 import { createStore, Store } from 'redux';
 
 import { ColumnFormatter } from './components/ColumnFormatter';
-import { chooseTheme, setContext, setHeight, toggleLineNumbers, toggleMiniMap } from './state/Actions';
+import { chooseTheme, setContext, setHeight, toggleIndentGuides, toggleLineNumbers, toggleMiniMap } from './state/Actions';
 import { cfReducer } from './state/Reducers';
 import { IApplicationState } from './state/State';
 
@@ -23,6 +23,7 @@ export interface IColumnFormatterWebPartProps {
   editorTheme: string; //Controls the colors used by the code editor
   showLineNumbers: boolean; //Toggles the visibility of line numbers in the code editor
   showMiniMap: boolean; //Toggles the visibility of the mini map in the code editor
+  showIndentGuides: boolean; //Toggle the visibility of the indent guides in the code editor
 }
 
 export default class ColumnFormatterWebPart extends BaseClientSideWebPart<IColumnFormatterWebPartProps> {
@@ -98,6 +99,9 @@ export default class ColumnFormatterWebPart extends BaseClientSideWebPart<IColum
         case 'showMiniMap':
           this.store.dispatch(toggleMiniMap(newValue));
           break;
+        case 'showIndentGuides':
+          this.store.dispatch(toggleIndentGuides(newValue));
+          break;
       }
     }
   }
@@ -137,6 +141,11 @@ export default class ColumnFormatterWebPart extends BaseClientSideWebPart<IColum
                 }),
                 PropertyPaneToggle('showLineNumbers', {
                   label: strings.PropertyLineNumbersLabel,
+                  onText: strings.PropertyVisibleOn,
+                  offText: strings.PropertyVisibleOff
+                }),
+                PropertyPaneToggle('showIndentGuides', {
+                  label: strings.PropertyIndentGuidesLabel,
                   onText: strings.PropertyVisibleOn,
                   offText: strings.PropertyVisibleOff
                 }),

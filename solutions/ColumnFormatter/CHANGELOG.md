@@ -10,6 +10,7 @@
 - StandardColorsDropdown (for use in wizards)
 - IconsDropdown (for use in wizards)
 - Line Numbers in the editor (toggle in the property pane)
+- Ability to adjust Indent Guides in the editor (toggle in the property pane)
 - Mini Map in the editor (toggle in the property pane)
 
 ### Changed
