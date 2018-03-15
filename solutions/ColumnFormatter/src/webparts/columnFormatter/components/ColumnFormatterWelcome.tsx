@@ -95,7 +95,7 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
     //this.props.launchEditor(undefined,columnTypes.text);
     //this.props.launchEditor('Data Bars', columnTypes.number);
     //this.props.launchEditor('Severity', columnTypes.text);
-    this.props.launchEditor('Start Flow', columnTypes.text);
+    //this.props.launchEditor('Start Flow', columnTypes.text);
 
     return (
       <div className={styles.welcome} style={{height: this.props.uiHeight + 'px'}}>

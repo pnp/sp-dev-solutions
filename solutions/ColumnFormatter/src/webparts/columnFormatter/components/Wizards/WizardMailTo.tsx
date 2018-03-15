@@ -7,6 +7,7 @@ import * as React from 'react';
 import { columnTypes, IDataColumn, IPersonFieldValue, IUserContext } from '../../state/State';
 import { generatePerson, generateRowValue } from '../../state/ValueGeneration';
 import styles from '../ColumnFormatter.module.scss';
+import { IconsDropdown } from './Controls/IconsDropdown';
 import { IWizard, standardWizardStartingColumns } from './WizardCommon';
 
 /*
@@ -20,7 +21,8 @@ export interface IWizardMailToPanelProps {
 	body?: string;
 	bcc?: string;
 	cc?: string;
-	updateValues:(displayValue:string, iconLink:boolean, subject:string, body:string, cc:string, bcc:string) => void;
+	iconName: string;
+	updateValues:(displayValue:string, iconLink:boolean, subject:string, body:string, cc:string, bcc:string, iconName:string) => void;
 }
 
 export interface IWizardMailToPanelState {
@@ -30,6 +32,7 @@ export interface IWizardMailToPanelState {
 	body: string;
 	bcc: string;
 	cc: string;
+	iconName: string;
 }
 
 export class WizardMailToPanel extends React.Component<IWizardMailToPanelProps, IWizardMailToPanelState> {
@@ -43,7 +46,8 @@ export class WizardMailToPanel extends React.Component<IWizardMailToPanelProps, 
 			subject: props.subject || '',
 			body: props.body || '',
 			bcc: props.bcc || '',
-			cc: props.cc || ''
+			cc: props.cc || '',
+			iconName: props.iconName
 		};
 	}
 
@@ -59,7 +63,7 @@ export class WizardMailToPanel extends React.Component<IWizardMailToPanelProps, 
 				 label={strings.WizardMailToBody + ':'}
 				 value={this.state.body}
 				 multiline
-				 rows={4}
+				 rows={3}
 				 onChanged={this.onBodyChanged}/>
 				<TextField
 				 label={strings.WizardMailToCC + ':'}
@@ -77,6 +81,10 @@ export class WizardMailToPanel extends React.Component<IWizardMailToPanelProps, 
 				 label={strings.WizardMailToDisplayValue + ':'}
 				 value={this.state.displayValue}
 				 onChanged={this.onDisplayValueChanged}/>
+				<IconsDropdown
+				 label={strings.WizardMailToIconName}
+				 onChanged={this.onIconNameChanged}
+				 selectedKey={this.state.iconName}/>
 				<Toggle
 				 checked={this.state.iconLink}
 				 onChanged={this.onIconLinkChanged}
@@ -92,7 +100,7 @@ export class WizardMailToPanel extends React.Component<IWizardMailToPanelProps, 
 		this.setState({
 			subject: text
 		});
-		this.props.updateValues(this.state.displayValue, this.state.iconLink, text, this.state.body, this.state.cc, this.state.bcc);
+		this.props.updateValues(this.state.displayValue, this.state.iconLink, text, this.state.body, this.state.cc, this.state.bcc, this.state.iconName);
 	}
 
 	@autobind
@@ -100,7 +108,7 @@ export class WizardMailToPanel extends React.Component<IWizardMailToPanelProps, 
 		this.setState({
 			body: text
 		});
-		this.props.updateValues(this.state.displayValue, this.state.iconLink, this.state.subject, text, this.state.cc, this.state.bcc);
+		this.props.updateValues(this.state.displayValue, this.state.iconLink, this.state.subject, text, this.state.cc, this.state.bcc, this.state.iconName);
 	}
 
 	@autobind
@@ -108,7 +116,7 @@ export class WizardMailToPanel extends React.Component<IWizardMailToPanelProps, 
 		this.setState({
 			cc: text
 		});
-		this.props.updateValues(this.state.displayValue, this.state.iconLink, this.state.subject, this.state.body, text, this.state.bcc);
+		this.props.updateValues(this.state.displayValue, this.state.iconLink, this.state.subject, this.state.body, text, this.state.bcc, this.state.iconName);
 	}
 
 	@autobind
@@ -116,7 +124,7 @@ export class WizardMailToPanel extends React.Component<IWizardMailToPanelProps, 
 		this.setState({
 			bcc: text
 		});
-		this.props.updateValues(this.state.displayValue, this.state.iconLink, this.state.subject, this.state.body, this.state.cc, text);
+		this.props.updateValues(this.state.displayValue, this.state.iconLink, this.state.subject, this.state.body, this.state.cc, text, this.state.iconName);
 	}
 
 	@autobind
@@ -124,7 +132,15 @@ export class WizardMailToPanel extends React.Component<IWizardMailToPanelProps, 
 		this.setState({
 			displayValue: text
 		});
-		this.props.updateValues(text, this.state.iconLink, this.state.subject, this.state.body, this.state.cc, this.state.bcc);
+		this.props.updateValues(text, this.state.iconLink, this.state.subject, this.state.body, this.state.cc, this.state.bcc, this.state.iconName);
+	}
+
+	@autobind
+	private onIconNameChanged(text: string) {
+		this.setState({
+			iconName: text
+		});
+		this.props.updateValues(this.state.displayValue, this.state.iconLink, this.state.subject, this.state.body, this.state.cc, this.state.bcc, text);
 	}
 
 	@autobind
@@ -132,7 +148,7 @@ export class WizardMailToPanel extends React.Component<IWizardMailToPanelProps, 
 		this.setState({ 
 			iconLink: checked!
 		});
-		this.props.updateValues(this.state.displayValue, checked!, this.state.subject, this.state.body, this.state.cc, this.state.bcc);
+		this.props.updateValues(this.state.displayValue, checked!, this.state.subject, this.state.body, this.state.cc, this.state.bcc, this.state.iconName);
 	}
 }
 
@@ -141,7 +157,7 @@ export class WizardMailToPanel extends React.Component<IWizardMailToPanelProps, 
 	Wizard Definition
 */
 
-const calculateCode = (colType:columnTypes, displayValue:string, iconLink:boolean, subject:string, body:string, cc:string, bcc:string): string => {
+const calculateCode = (colType:columnTypes, displayValue:string, iconLink:boolean, subject:string, body:string, cc:string, bcc:string, iconName:string): string => {
 	let toAddress = '@currentField.email';
 	if(colType == columnTypes.link) {
 		toAddress = '@currentField';
@@ -194,7 +210,7 @@ const calculateCode = (colType:columnTypes, displayValue:string, iconLink:boolea
 	]);
 	if(iconLink) {
 		children.push(...[
-			'        "iconName": "Mail",',
+			'        "iconName": "' + iconName + '",',
 			'        "class": "sp-field-quickActions"',
 			'      }',
 			'    }',
@@ -256,7 +272,7 @@ export const WizardMailTo: IWizard = {
 		];
 	},
 	startingCode: (colType:columnTypes): string => {
-		return calculateCode(colType, (colType == columnTypes.person ? '@currentField.title' : 'Send Mail'), true, 'Hello There!', 'Yo, what up?\r\nWelp, talk to you later!','','');
+		return calculateCode(colType, (colType == columnTypes.person ? '@currentField.title' : 'Send Mail'), true, 'Hello There!', 'Yo, what up?\r\nWelp, talk to you later!', '', '', 'Mail');
 	},
 	onWizardRender: (updateEditorString:(editorString:string) => void, colType:columnTypes): JSX.Element => {
 		return (
@@ -265,8 +281,9 @@ export const WizardMailTo: IWizard = {
 			 iconLink={true}
 			 subject='Hello There!'
 			 body='Yo, what up?\r\nWelp, talk to you later!'
-			 updateValues={(displayValue:string, iconLink:boolean, subject:string, body:string, cc:string, bcc:string) => {
-				updateEditorString(calculateCode(colType, displayValue, iconLink, subject, body, cc, bcc));
+			 iconName='Mail'
+			 updateValues={(displayValue:string, iconLink:boolean, subject:string, body:string, cc:string, bcc:string, iconName:string) => {
+				updateEditorString(calculateCode(colType, displayValue, iconLink, subject, body, cc, bcc, iconName));
 			 }}/>
 		);
 	}

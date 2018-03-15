@@ -349,6 +349,7 @@ declare interface IColumnFormatterWebPartStrings {
   WizardMailToBody: string;
   WizardMailToBCC: string;
   WizardMailToCC: string;
+  WizardMailToIconName: string;
   WizardMailToIconLink: string;
   WizardMailToTextLink: string;
 

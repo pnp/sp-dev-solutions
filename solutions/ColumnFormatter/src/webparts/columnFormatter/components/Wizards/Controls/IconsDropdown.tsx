@@ -8,7 +8,7 @@ import { DropdownSort } from '../../../helpers/Utilities';
 export interface IIconsDropdownProps {
 	label: string;
 	selectedKey?: string;
-	color: string;
+	color?: string;
 	onChanged: (color:string) => void;
 }
 
@@ -1433,7 +1433,7 @@ export class IconsDropdown extends React.Component<IIconsDropdownProps, IIconsDr
 		  return (
 			<div>
 				<Icon
-				 style={{marginRight:'6px',color:this.props.color}}
+				 style={{marginRight:'6px',color:this.props.color?this.props.color:'inherit'}}
 				 iconName={option.key.toString()}
 				 aria-hidden={true}
 				 title={option.text}/>

@@ -1,5 +1,5 @@
 # Releases
-## [1.2.0] - 2018-03-07
+## [1.2.0] - 2018-03-15
 ### Added
 - French (fr-fr) localization (thanks [PooLP](https://github.com/PooLP)!)
   - Added targeted styling for fr-fr locale to accomodate long strings
@@ -19,6 +19,7 @@
 - Moved Editor Theme options to property pane
   - Cleans up UI
   - Ensures theme selection is remembered
+- Added Icon dropdown to the Mail To Wizard
 
 ### Removed
 - Dependency on sp-pnp-js (through CDN)

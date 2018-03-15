@@ -350,6 +350,7 @@ define([], function() {
     WizardMailToBody: 'Body',
     WizardMailToBCC: 'bcc',
     WizardMailToCC: 'cc',
+    WizardMailToIconName: 'Icon',
     WizardMailToIconLink: 'Icon Link',
     WizardMailToTextLink: 'Text Link',
 
