@@ -23,7 +23,8 @@
     "officeFabricIconFontName": "Design",
     "properties": {
       "height": 340,
-      "editorTheme": "vs"
+      "editorTheme": "vs",
+      "showLineNumbers": false
     }
   }]
 }

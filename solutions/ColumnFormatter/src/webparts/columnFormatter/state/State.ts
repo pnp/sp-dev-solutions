@@ -92,6 +92,7 @@ export interface ICode {
 	formatterString: string;
 	wizardName: string;
 	editorTheme: string;
+	showLineNumbers: boolean;
 }
 
 export interface IUserContext {
@@ -146,7 +147,8 @@ export const initialState: IApplicationState = {
 		editorString: '',
 		formatterString:'',
 		wizardName: undefined,
-		editorTheme: 'vs'
+		editorTheme: 'vs',
+		showLineNumbers: false
 	},
 	context: {
 		isOnline: false,

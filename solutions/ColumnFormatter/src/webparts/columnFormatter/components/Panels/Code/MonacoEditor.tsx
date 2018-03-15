@@ -10,6 +10,7 @@ export interface IMonacoEditorProps {
 	value: string;
 	theme: string;
 	readOnly: boolean;
+	showLineNumbers: boolean;
 	onValueChange: (newValue:string, validationErrors:Array<string>) => void;
 }
 
@@ -36,6 +37,14 @@ export class MonacoEditor extends React.Component<IMonacoEditorProps, {}> {
 			});
 		});
 
+		this.createEditor();
+	}
+
+	private createEditor() {
+		if(this._editor) {
+			this._editor.dispose();
+		}
+
 		//Create the editor
 		this._editor = monaco.editor.create(this._container, {
 			value: this.props.value,
@@ -45,8 +54,8 @@ export class MonacoEditor extends React.Component<IMonacoEditorProps, {}> {
 			folding: true,
 			renderIndentGuides: true,
 			readOnly: this.props.readOnly,
-			lineNumbers: false,
-			//lineNumbersMinChars: 4,
+			lineNumbers: this.props.showLineNumbers,
+			lineNumbersMinChars: 4,
 			minimap: {
 				enabled: false
 			}
@@ -64,6 +73,9 @@ export class MonacoEditor extends React.Component<IMonacoEditorProps, {}> {
 		}
 		if(this.props.theme !== prevProps.theme) {
 			monaco.editor.setTheme(this.props.theme);
+		}
+		if(this.props.showLineNumbers != prevProps.showLineNumbers) {
+			this.createEditor();
 		}
 		if(this._editor) {
 			this._editor.layout();

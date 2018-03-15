@@ -1,5 +1,10 @@
 import { Environment, EnvironmentType, Version } from '@microsoft/sp-core-library';
-import { BaseClientSideWebPart, IPropertyPaneConfiguration, PropertyPaneDropdown } from '@microsoft/sp-webpart-base';
+import {
+  BaseClientSideWebPart,
+  IPropertyPaneConfiguration,
+  PropertyPaneDropdown,
+  PropertyPaneToggle,
+} from '@microsoft/sp-webpart-base';
 import { sp } from '@pnp/sp';
 import { PropertyFieldSpinButton } from '@pnp/spfx-property-controls/lib/PropertyFieldSpinButton';
 import * as strings from 'ColumnFormatterWebPartStrings';
@@ -9,13 +14,14 @@ import { Provider, ProviderProps } from 'react-redux';
 import { createStore, Store } from 'redux';
 
 import { ColumnFormatter } from './components/ColumnFormatter';
-import { chooseTheme, setContext, setHeight } from './state/Actions';
+import { chooseTheme, setContext, setHeight, toggleLineNumbers } from './state/Actions';
 import { cfReducer } from './state/Reducers';
 import { IApplicationState } from './state/State';
 
 export interface IColumnFormatterWebPartProps {
   height: number; //Controls the height of the webpart
-  editorTheme: string;
+  editorTheme: string; //Controls the colors used by the code editor
+  showLineNumbers: boolean; //Toggles the visibility of line numbers in the code editor
 }
 
 export default class ColumnFormatterWebPart extends BaseClientSideWebPart<IColumnFormatterWebPartProps> {
@@ -85,6 +91,9 @@ export default class ColumnFormatterWebPart extends BaseClientSideWebPart<IColum
         case 'editorTheme':
           this.store.dispatch(chooseTheme(newValue));
           break;
+        case 'showLineNumbers':
+          this.store.dispatch(toggleLineNumbers(newValue));
+          break;
       }
     }
   }
@@ -121,6 +130,11 @@ export default class ColumnFormatterWebPart extends BaseClientSideWebPart<IColum
                     { key: 'vs-dark', text: 'vs-dark' },
                     { key: 'hc-black', text: 'hc-black' }
                   ]
+                }),
+                PropertyPaneToggle('showLineNumbers', {
+                  label: 'Line Numbers',
+                  onText: 'Visible',
+                  offText: 'Hidden'
                 })
               ]
             }

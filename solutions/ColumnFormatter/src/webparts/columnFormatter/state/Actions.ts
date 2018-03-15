@@ -19,6 +19,7 @@ export type ActionTypes =
 	| ISelectTabAction
 	| IPaneResizeAction
 	| IChooseThemeAction
+	| IToggleLineNumbersAction
 	| IUpdateEditorStringAction
 	| IUpdateFormatterErrorsAction
 	| ILoadedJSOMAction
@@ -44,6 +45,7 @@ export enum typeKeys {
 	SELECT_TAB = "SELECT_TAB",
 	PANE_RESIZE = "PANE_RESIZE",
 	CHOOSE_THEME = "CHOOSE_THEME",
+	TOGGLE_LINENUMBERS = "TOGGLE_LINENUMBERS",
 
 	UPDATE_EDITOR_STRING = "UPDATE_EDITOR_STRING",
 	UPDATE_FORMATTER_ERRORS = "UPDATE_FORMATTER_ERRORS",
@@ -222,6 +224,15 @@ export interface IChooseThemeAction {
 export const chooseTheme = (theme:string): IChooseThemeAction => ({
 	type: typeKeys.CHOOSE_THEME,
 	theme
+});
+
+export interface IToggleLineNumbersAction {
+	type: typeKeys.TOGGLE_LINENUMBERS;
+	showLineNumbers: boolean;
+}
+export const toggleLineNumbers = (showLineNumbers:boolean): IToggleLineNumbersAction => ({
+	type: typeKeys.TOGGLE_LINENUMBERS,
+	showLineNumbers
 });
 
 

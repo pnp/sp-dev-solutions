@@ -10,6 +10,7 @@ export interface ICodeEditorProps {
 	theme?:string;
 	editorString?:string;
 	readOnly?: boolean;
+	showLineNumbers?: boolean;
 
 	updateEditorString?: (editorString:string, validationErrors:Array<string>) => void;
 
@@ -37,6 +38,7 @@ class CodeEditor_ extends React.Component<ICodeEditorProps, ICodeEditorState> {
 				theme={this.props.theme}
 				readOnly={this.props.readOnly}
 				onValueChange={this.props.updateEditorString}
+				showLineNumbers={this.props.showLineNumbers}
 			/>
 		);
 	}
@@ -49,7 +51,8 @@ function mapStateToProps(state: IApplicationState): ICodeEditorProps{
 		readOnly: state.ui.tabs.wizardTabVisible,
 		mainPane: state.ui.panes.main,
 		splitPane: state.ui.panes.split,
-		uiHeight: state.ui.height
+		uiHeight: state.ui.height,
+		showLineNumbers: state.code.showLineNumbers
 	};
 }
 

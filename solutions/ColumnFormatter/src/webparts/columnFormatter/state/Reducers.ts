@@ -50,6 +50,7 @@ export const cfReducer = (state:IApplicationState = initialState, action:ActionT
 			newState.context = SetContextReducer(newState.context, action);
 			newState.ui.height = action.properties.height;
 			newState.code.editorTheme = action.properties.editorTheme;
+			newState.code.showLineNumbers = action.properties.showLineNumbers;
 			break;
 		
 		case typeKeys.SET_HEIGHT:
@@ -100,6 +101,9 @@ export const cfReducer = (state:IApplicationState = initialState, action:ActionT
 			break;
 		case typeKeys.CHOOSE_THEME:
 			newState.code.editorTheme = action.theme;
+			break;
+		case typeKeys.TOGGLE_LINENUMBERS:
+			newState.code.showLineNumbers = action.showLineNumbers;
 			break;
 
 		case typeKeys.UPDATE_EDITOR_STRING:
