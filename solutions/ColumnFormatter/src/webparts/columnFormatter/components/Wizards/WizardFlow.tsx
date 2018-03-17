@@ -54,24 +54,25 @@ export class WizardFlowPanel extends React.Component<IWizardFlowPanelProps, IWiz
 				 onChanged={this.onFlowIdChanged}
 				 title={strings.WizardFlowFlowIdInstructions}/>
 				<TextField
-				 label={strings.WizardFlowDisplayValue + ':'}
+				 label={strings.Wizard_Text + ':'}
 				 value={this.state.displayValue}
 				 onChanged={this.onDisplayValueChanged}/>
-				<span className={styles.wizardGroupLabel}>{strings.WizardFlowDisplayGroupLabel}</span>
+
+				<span className={styles.wizardGroupLabel}>{strings.Wizard_GroupLabelDisplay}</span>
 				<StandardColorsDropdown
-				 label={strings.WizardFlowColor}
+				 label={strings.Wizard_Color}
 				 onChanged={this.onColorChanged}
 				 selectedKey={this.state.color}/>
 				<IconsDropdown
-				 label={strings.WizardFlowIconName}
+				 label={strings.Wizard_Icon}
 				 onChanged={this.onIconNameChanged}
 				 selectedKey={this.state.iconName}
 				 color={this.state.color}/>
 				<Toggle
 				 checked={this.state.showIcon}
 				 onChanged={this.onShowIconChanged}
-				 onText={strings.WizardFlowShowIconOn}
-				 offText={strings.WizardFlowShowIconOff}/>
+				 onText={strings.Wizard_IconVisibleOn}
+				 offText={strings.Wizard_IconVisibleOff}/>
 			</div>
 		);
 	}

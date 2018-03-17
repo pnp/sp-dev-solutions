@@ -49,33 +49,33 @@ export class WizardDataBarsPanel extends React.Component<IWizardDataBarsPanelPro
 	public render(): React.ReactElement<IWizardDataBarsPanelProps> {
 		return (
 			<div>
-				<span className={styles.wizardGroupLabel}>{strings.WizardDataBarsRangeGroupLabel}</span>
+				<span className={styles.wizardGroupLabel}>{strings.Wizard_GroupLabelRange}</span>
 				<SpinButton
 				 value={this.state.emptyBarValue.toString()}
-				 label={strings.WizardDataBarsEmptyBarLabel}
+				 label={strings.Wizard_PercentRangeEmptyLabel}
 				 labelPosition={Position.start}
-				 title={strings.WizardDataBarsEmptyBarTooltip}
+				 title={strings.Wizard_PercentRangeEmptyTooltip}
 				 styles={emptyBarStyle}
 				 onValidate={this.onValidateEmptyBarValue}
 				 onIncrement={this.onIncrementEmptyBarValue}
 				 onDecrement={this.onDecrementEmptyBarValue}/>
 				<SpinButton
 				 value={this.state.fullBarValue.toString()}
-				 label={strings.WizardDataBarsFullBarLabel}
-				 title={strings.WizardDataBarsFullBarTooltip}
+				 label={strings.Wizard_PercentRangeFullLabel}
+				 title={strings.Wizard_PercentRangeFullTooltip}
 				 labelPosition={Position.start}
 				 onValidate={this.onValidateFullBarValue}
 				 onIncrement={this.onIncrementFullBarValue}
 				 onDecrement={this.onDecrementFullBarValue}/>
 
-				<span className={styles.wizardGroupLabel}>{strings.WizardDataBarsValueDisplayGroupLabel}</span>
+				<span className={styles.wizardGroupLabel}>{strings.Wizard_GroupLabelValueDisplay}</span>
 				<ChoiceGroup
 				 selectedKey={this.state.valueDisplay}
 				 onChange={this.onValueDisplayChange}
 				 options={[
-					{ key: 'value', text: strings.WizardDataBarsValueDisplayActual},
-					{ key: 'percentage', text: strings.WizardDataBarsValueDisplayPercentage},
-					{ key: 'none', text: strings.WizardDataBarsValueDisplayNone}
+					{ key: 'value', text: strings.Wizard_ValueDisplayActual},
+					{ key: 'percentage', text: strings.Wizard_ValueDisplayPercentage},
+					{ key: 'none', text: strings.Wizard_ValueDisplayNone}
 				 ]}/>
 			</div>
 		);

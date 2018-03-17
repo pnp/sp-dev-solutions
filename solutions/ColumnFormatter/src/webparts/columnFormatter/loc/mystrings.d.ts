@@ -246,55 +246,72 @@ declare interface IColumnFormatterWebPartStrings {
   TreeViewHeader: string;
   TreeViewError: string;
 
-  //Wizard Controls
-  StandardColorsDropdownYellow: string;
-  StandardColorsDropdownYellowLight: string;
-  StandardColorsDropdownOrange: string;
-  StandardColorsDropdownOrangeLight: string;
-  StandardColorsDropdownOrangeLighter: string;
-  StandardColorsDropdownRedDark: string;
-  StandardColorsDropdownRed: string;
-  StandardColorsDropdownMagentaDark: string;
-  StandardColorsDropdownMagenta: string;
-  StandardColorsDropdownMagentaLight: string;
-  StandardColorsDropdownPurpleDark: string;
-  StandardColorsDropdownPurple: string;
-  StandardColorsDropdownPurpleLight: string;
-  StandardColorsDropdownBlueDark: string;
-  StandardColorsDropdownBlueMid: string;
-  StandardColorsDropdownBlue: string;
-  StandardColorsDropdownBlueLight: string;
-  StandardColorsDropdownTealDark: string;
-  StandardColorsDropdownTeal: string;
-  StandardColorsDropdownTealLight: string;
-  StandardColorsDropdownGreenDark: string;
-  StandardColorsDropdownGreen: string;
-  StandardColorsDropdownGreenLight: string;
-  StandardColorsDropdownBlack: string;
-  StandardColorsDropdownNeutralDark: string;
-  StandardColorsDropdownNeutralPrimary: string;
-  StandardColorsDropdownNeutralPrimaryAlt: string;
-  StandardColorsDropdownNeutralSecondary: string;
-  StandardColorsDropdownNeutralTertiary: string;
-  StandardColorsDropdownNeutralTertiaryAlt: string;
-  StandardColorsDropdownNeutralLight: string;
-  StandardColorsDropdownNeutralLighter: string;
-  StandardColorsDropdownNeutralLighterAlt: string;
-  StandardColorsDropdownWhite: string;
-  StandardColorsDropdownTransparent: string;
+  //Standard Colors
+  ColorYellow: string;
+  ColorYellowLight: string;
+  ColorOrange: string;
+  ColorOrangeLight: string;
+  ColorOrangeLighter: string;
+  ColorRedDark: string;
+  ColorRed: string;
+  ColorMagentaDark: string;
+  ColorMagenta: string;
+  ColorMagentaLight: string;
+  ColorPurpleDark: string;
+  ColorPurple: string;
+  ColorPurpleLight: string;
+  ColorBlueDark: string;
+  ColorBlueMid: string;
+  ColorBlue: string;
+  ColorBlueLight: string;
+  ColorTealDark: string;
+  ColorTeal: string;
+  ColorTealLight: string;
+  ColorGreenDark: string;
+  ColorGreen: string;
+  ColorGreenLight: string;
+  ColorBlack: string;
+  ColorNeutralDark: string;
+  ColorNeutralPrimary: string;
+  ColorNeutralPrimaryAlt: string;
+  ColorNeutralSecondary: string;
+  ColorNeutralTertiary: string;
+  ColorNeutralTertiaryAlt: string;
+  ColorNeutralLight: string;
+  ColorNeutralLighter: string;
+  ColorNeutralLighterAlt: string;
+  ColorWhite: string;
+  ColorTransparent: string;
+
+  //Wizard Shared Group Labels
+  Wizard_GroupLabelRange: string;
+  Wizard_GroupLabelValueDisplay: string;
+  Wizard_GroupLabelConditionalValues: string;
+  Wizard_GroupLabelDisplay: string;
+  Wizard_GroupLabelParameters: string;
+
+  //Wizard Shared Field Labels
+  Wizard_PercentRangeEmptyLabel: string;
+  Wizard_PercentRangeEmptyTooltip: string;
+  Wizard_PercentRangeFullLabel: string;
+  Wizard_PercentRangeFullTooltip: string;
+  Wizard_ValueDisplayActual: string;
+  Wizard_ValueDisplayPercentage: string;
+  Wizard_ValueDisplayNone: string;
+  Wizard_ValueVisibleOn: string;
+  Wizard_ValueVisibleOff: string;
+  Wizard_IconVisibleOn: string;
+  Wizard_IconVisibleOff: string;
+  Wizard_Text: string;
+  Wizard_Icon: string;
+  Wizard_Color: string;
+  Wizard_Size: string;
+  Wizard_TooltipOn: string;
+  Wizard_TooltipOff: string;
 
   //Wizard Data Bars
   WizardDataBarsName: string;
   WizardDataBarsDescription: string;
-  WizardDataBarsEmptyBarLabel: string;
-  WizardDataBarsEmptyBarTooltip: string;
-  WizardDataBarsFullBarLabel: string;
-  WizardDataBarsFullBarTooltip: string;
-  WizardDataBarsRangeGroupLabel: string;
-  WizardDataBarsValueDisplayGroupLabel: string;
-  WizardDataBarsValueDisplayActual: string;
-  WizardDataBarsValueDisplayPercentage: string;
-  WizardDataBarsValueDisplayNone: string;
 
   //Wizard Checkboxes
   WizardCheckboxesName: string;
@@ -323,18 +340,12 @@ declare interface IColumnFormatterWebPartStrings {
   WizardSeveritySevereWarning: string;
   WizardSeverityBlocked: string;
   WizardSeverityOther: string;
-  WizardSeverityGroupValues: string;
   WizardSeverityGoodLabel: string;
   WizardSeverityLowLabel: string;
   WizardSeverityWarningLabel: string;
   WizardSeveritySevereWarningLabel: string;
   WizardSeverityBlockedLabel: string;
   WizardSeverityDefaultSeverityLabel: string;
-  WizardSeverityGroupDisplay: string;
-  WizardSeverityValueVisible: string;
-  WizardSeverityValueHidden: string;
-  WizardSeverityIconVisible: string;
-  WizardSeverityIconHidden: string;
 
   //Wizard Current User
   WizardCurrentUserName: string;
@@ -347,14 +358,10 @@ declare interface IColumnFormatterWebPartStrings {
   //Wizard Mail To
   WizardMailToName: string;
   WizardMailToDescription: string;
-  WizardMailToGroupDisplay: string;
-  WizardMailToDisplayValue: string;
-  WizardMailToGroupParameters: string;
   WizardMailToSubject: string;
   WizardMailToBody: string;
   WizardMailToBCC: string;
   WizardMailToCC: string;
-  WizardMailToIconName: string;
   WizardMailToIconLink: string;
   WizardMailToTextLink: string;
 
@@ -363,25 +370,16 @@ declare interface IColumnFormatterWebPartStrings {
   WizardMiniMapDescription: string;
 
   //Wizard Flow
-  WizardFlowDisplayGroupLabel: string;
   WizardFlowName: string;
   WizardFlowDescription: string;
   WizardFlowFlowId: string;
   WizardFlowFlowIdInstructions: string;
-  WizardFlowShowIconOn: string;
-  WizardFlowShowIconOff: string;
-  WizardFlowIconName: string;
-  WizardFlowDisplayValue: string;
-  WizardFlowColor: string;
 
   //Wizard Donut
   WizardDonutName: string;
   WizardDonutDescription: string;
   WizardDonutDonut: string;
   WizardDonutPie: string;
-  WizardDonutSize: string;
-  WizardDonutValueOn: string;
-  WizardDonutValueOff: string;
   WizardDonutOuterColor: string;
   WizardDonutInnerColor: string;
   WizardDonutTextColor: string;
@@ -389,12 +387,9 @@ declare interface IColumnFormatterWebPartStrings {
   //Wizard Twitter
   WizardTwitterName: string;
   WizardTwitterDescription: string;
-  WizardTwitterSize: string;
   WizardTwitterRounding: string;
   WizardTwitterLinkOn: string;
   WizardTwitterLinkOff: string;
-  WizardTwitterTooltipOn: string;
-  WizardTwitterTooltipOff: string;
 }
 
 declare module 'ColumnFormatterWebPartStrings' {

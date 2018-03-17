@@ -66,8 +66,8 @@ export class WizardTwitterPanel extends React.Component<IWizardTwitterPanelProps
 				<Toggle
 				 checked={this.state.showTooltip}
 				 onChanged={this.onShowTooltipChanged}
-				 onText={strings.WizardTwitterTooltipOn}
-				 offText={strings.WizardTwitterTooltipOff}/>
+				 onText={strings.Wizard_TooltipOn}
+				 offText={strings.Wizard_TooltipOff}/>
 			</div>
 		);
 	}

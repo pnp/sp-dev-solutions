@@ -14,6 +14,8 @@ export interface ISpinButtonWithSuffixProps {
 	suffix?: string;
 	decimalPlaces?: number;
 	disabled?: boolean;
+	labelPosition?: Position;
+	title?: string;
 	onChanged: (value:number) => void;
 }
 
@@ -37,12 +39,13 @@ export class SpinButtonWithSuffix extends React.Component<ISpinButtonWithSuffixP
 		return (
 			<SpinButton
 			 label={this.props.label}
-			 labelPosition={Position.top}
+			 labelPosition={this.props.labelPosition || Position.top}
 			 value={this.formatValueString(this.svalue)}
 			 onValidate={this.validate}
 			 onIncrement={this.increment}
 			 onDecrement={this.decrement}
 			 disabled={this.props.disabled}
+			 title={this.props.title}
 			 incrementButtonIcon={{iconName: this.props.incrementIconName || 'ChevronUpSmall'}}
 			 decrementButtonIcon={{iconName: this.props.decrementIconName || 'ChevronDownSmall'}} />
 		);

@@ -25,7 +25,7 @@ export class IconsDropdown extends React.Component<IIconsDropdownProps, IIconsDr
 	public render(): React.ReactElement<IIconsDropdownProps> {
 		return (
 			<Dropdown
-			 label={this.props.label + ':'}
+			 label={this.props.label}
 			 selectedKey={this.props.selectedKey}
 			 options={this.iconOptions()}
 			 onChanged={this.onChanged}

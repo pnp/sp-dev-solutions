@@ -54,7 +54,7 @@ export class WizardMailToPanel extends React.Component<IWizardMailToPanelProps, 
 	public render(): React.ReactElement<IWizardMailToPanelProps> {
 		return (
 			<div>
-				<span className={styles.wizardGroupLabel}>{strings.WizardMailToGroupParameters}</span>
+				<span className={styles.wizardGroupLabel}>{strings.Wizard_GroupLabelParameters}</span>
 				<TextField
 				 label={strings.WizardMailToSubject + ':'}
 				 value={this.state.subject}
@@ -76,13 +76,13 @@ export class WizardMailToPanel extends React.Component<IWizardMailToPanelProps, 
 				 iconProps={{iconName:'Mail'}}
 				 onChanged={this.onBCCChanged}/>
 				
-				<span className={styles.wizardGroupLabel}>{strings.WizardMailToGroupDisplay}</span>
+				<span className={styles.wizardGroupLabel}>{strings.Wizard_GroupLabelDisplay}</span>
 				<TextField
-				 label={strings.WizardMailToDisplayValue + ':'}
+				 label={strings.Wizard_Text + ':'}
 				 value={this.state.displayValue}
 				 onChanged={this.onDisplayValueChanged}/>
 				<IconsDropdown
-				 label={strings.WizardMailToIconName + ':'}
+				 label={strings.Wizard_Icon + ':'}
 				 onChanged={this.onIconNameChanged}
 				 selectedKey={this.state.iconName}/>
 				<Toggle

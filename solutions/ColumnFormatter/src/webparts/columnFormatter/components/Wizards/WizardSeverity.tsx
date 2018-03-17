@@ -55,7 +55,7 @@ export class WizardSeverityPanel extends React.Component<IWizardSeverityPanelPro
 	public render(): React.ReactElement<IWizardSeverityPanelProps> {
 		return (
 			<div>
-				<span className={styles.wizardGroupLabel}>{strings.WizardSeverityGroupValues}</span>
+				<span className={styles.wizardGroupLabel}>{strings.Wizard_GroupLabelConditionalValues}</span>
 				<TextField
 				 label={strings.WizardSeverityGoodLabel + ':'}
 				 value={this.state.goodValue}
@@ -99,17 +99,17 @@ export class WizardSeverityPanel extends React.Component<IWizardSeverityPanelPro
 				 ]}
 				 onChanged={this.onDefaultSeverityChanged}/>
 
-				<span className={styles.wizardGroupLabel}>{strings.WizardSeverityGroupDisplay}</span>
+				<span className={styles.wizardGroupLabel}>{strings.Wizard_GroupLabelDisplay}</span>
 				<Toggle
 				 checked={this.state.showValue}
 				 onChanged={this.onShowValueChanged}
-				 onText={strings.WizardSeverityValueVisible}
-				 offText={strings.WizardSeverityValueHidden}/>
+				 onText={strings.Wizard_ValueVisibleOn}
+				 offText={strings.Wizard_ValueVisibleOff}/>
 				<Toggle
 				 checked={this.state.showIcon}
 				 onChanged={this.onShowIconChanged}
-				 onText={strings.WizardSeverityIconVisible}
-				 offText={strings.WizardSeverityIconHidden}/>
+				 onText={strings.Wizard_IconVisibleOn}
+				 offText={strings.Wizard_IconVisibleOff}/>
 			</div>
 		);
 	}
