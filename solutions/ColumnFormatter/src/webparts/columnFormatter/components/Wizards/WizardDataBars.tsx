@@ -1,6 +1,5 @@
 import * as strings from 'ColumnFormatterWebPartStrings';
 import { ChoiceGroup } from 'office-ui-fabric-react/lib/ChoiceGroup';
-import { ISpinButtonStyles } from 'office-ui-fabric-react/lib/SpinButton';
 import { autobind } from 'office-ui-fabric-react/lib/Utilities';
 import { Position } from 'office-ui-fabric-react/lib/utilities/positioning';
 import * as React from 'react';
@@ -13,12 +12,6 @@ import { IWizard, standardWizardStartingColumns } from './WizardCommon';
 /*
 Wizard Tab Rendering
 */
-
-const spinLabelStyle: Partial<ISpinButtonStyles> = {
-	labelWrapper: {
-		width: '33px'
-	}
-};
 
 export interface IWizardDataBarsPanelProps {
 	emptyBarValue:number;
@@ -54,7 +47,7 @@ export class WizardDataBarsPanel extends React.Component<IWizardDataBarsPanelPro
 				 onChanged={this.onEmptyBarValueChanged}
 				 labelPosition={Position.start}
 				 title={strings.Wizard_PercentRangeEmptyTooltip}
-				 styles={spinLabelStyle}
+				 labelWidth={33}
 				 min={0}
 				 max={this.state.fullBarValue-1}/>
 				<SpinButtonWithSuffix
@@ -63,7 +56,7 @@ export class WizardDataBarsPanel extends React.Component<IWizardDataBarsPanelPro
 				 onChanged={this.onFullBarValueChanged}
 				 labelPosition={Position.start}
 				 title={strings.Wizard_PercentRangeFullTooltip}
-				 styles={spinLabelStyle}
+				 labelWidth={33}
 				 min={this.state.emptyBarValue+1}/>
 
 				<span className={styles.wizardGroupLabel}>{strings.Wizard_GroupLabelValueDisplay}</span>

@@ -17,6 +17,7 @@ export interface ISpinButtonWithSuffixProps {
 	labelPosition?: Position;
 	title?: string;
 	styles?: Partial<ISpinButtonStyles>;
+	labelWidth?: number;
 	onChanged: (value:number) => void;
 }
 
@@ -37,6 +38,14 @@ export class SpinButtonWithSuffix extends React.Component<ISpinButtonWithSuffixP
 	}
 
 	public render(): React.ReactElement<ISpinButtonWithSuffixProps> {
+		let styles: Partial<ISpinButtonStyles> = this.props.styles;
+		if(typeof styles == "undefined" && typeof this.props.labelWidth != "undefined") {
+			styles = {
+				labelWrapper: {
+					width: this.props.labelWidth.toString() + 'px'
+				}
+			};
+		}
 		return (
 			<SpinButton
 			 label={this.props.label}
@@ -47,7 +56,7 @@ export class SpinButtonWithSuffix extends React.Component<ISpinButtonWithSuffixP
 			 onDecrement={this.decrement}
 			 disabled={this.props.disabled}
 			 title={this.props.title}
-			 styles={this.props.styles}
+			 styles={styles}
 			 incrementButtonIcon={{iconName: this.props.incrementIconName || 'ChevronUpSmall'}}
 			 decrementButtonIcon={{iconName: this.props.decrementIconName || 'ChevronDownSmall'}} />
 		);

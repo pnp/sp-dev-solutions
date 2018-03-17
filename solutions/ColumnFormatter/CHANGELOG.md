@@ -35,6 +35,7 @@
 
 ### Fixed
 - Removed empty Attributes from the Round Image Wizard
+- Fixed issue with DataBars wizard where range values could be equal and low could be greater than high
 
 ## [1.1.0] - 2018-01-08
 ### Added
