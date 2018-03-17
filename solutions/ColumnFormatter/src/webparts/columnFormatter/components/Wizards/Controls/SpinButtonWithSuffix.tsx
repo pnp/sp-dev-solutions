@@ -1,4 +1,4 @@
-import { SpinButton } from 'office-ui-fabric-react/lib/SpinButton';
+import { ISpinButtonStyles, SpinButton } from 'office-ui-fabric-react/lib/SpinButton';
 import { autobind } from 'office-ui-fabric-react/lib/Utilities';
 import { Position } from 'office-ui-fabric-react/lib/utilities/positioning';
 import * as React from 'react';
@@ -16,6 +16,7 @@ export interface ISpinButtonWithSuffixProps {
 	disabled?: boolean;
 	labelPosition?: Position;
 	title?: string;
+	styles?: Partial<ISpinButtonStyles>;
 	onChanged: (value:number) => void;
 }
 
@@ -46,6 +47,7 @@ export class SpinButtonWithSuffix extends React.Component<ISpinButtonWithSuffixP
 			 onDecrement={this.decrement}
 			 disabled={this.props.disabled}
 			 title={this.props.title}
+			 styles={this.props.styles}
 			 incrementButtonIcon={{iconName: this.props.incrementIconName || 'ChevronUpSmall'}}
 			 decrementButtonIcon={{iconName: this.props.decrementIconName || 'ChevronDownSmall'}} />
 		);

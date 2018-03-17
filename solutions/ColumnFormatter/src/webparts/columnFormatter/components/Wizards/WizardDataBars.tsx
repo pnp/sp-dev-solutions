@@ -13,12 +13,9 @@ import { IWizard, standardWizardStartingColumns } from './WizardCommon';
 Wizard Tab Rendering
 */
 
-const emptyBarStyle: Partial<ISpinButtonStyles> = {
+const spinLabelStyle: Partial<ISpinButtonStyles> = {
 	labelWrapper: {
-		paddingRight: '5px'
-	},
-	spinButtonWrapper: {
-		paddingLeft: '1px'
+		width: '33px'
 	}
 };
 
@@ -52,17 +49,18 @@ export class WizardDataBarsPanel extends React.Component<IWizardDataBarsPanelPro
 				<span className={styles.wizardGroupLabel}>{strings.Wizard_GroupLabelRange}</span>
 				<SpinButton
 				 value={this.state.emptyBarValue.toString()}
-				 label={strings.Wizard_PercentRangeEmptyLabel}
+				 label={strings.Wizard_PercentRangeEmptyLabel + ':'}
 				 labelPosition={Position.start}
 				 title={strings.Wizard_PercentRangeEmptyTooltip}
-				 styles={emptyBarStyle}
+				 styles={spinLabelStyle}
 				 onValidate={this.onValidateEmptyBarValue}
 				 onIncrement={this.onIncrementEmptyBarValue}
 				 onDecrement={this.onDecrementEmptyBarValue}/>
 				<SpinButton
 				 value={this.state.fullBarValue.toString()}
-				 label={strings.Wizard_PercentRangeFullLabel}
+				 label={strings.Wizard_PercentRangeFullLabel + ':'}
 				 title={strings.Wizard_PercentRangeFullTooltip}
+				 styles={spinLabelStyle}
 				 labelPosition={Position.start}
 				 onValidate={this.onValidateFullBarValue}
 				 onIncrement={this.onIncrementFullBarValue}

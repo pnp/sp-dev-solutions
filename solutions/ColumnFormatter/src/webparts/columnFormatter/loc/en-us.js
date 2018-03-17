@@ -292,9 +292,9 @@ define([], function() {
     Wizard_GroupLabelParameters: 'Parameters',
 
     //Wizard Shared Field Labels
-    Wizard_PercentRangeEmptyLabel: 'Low:',
+    Wizard_PercentRangeEmptyLabel: 'Low',
     Wizard_PercentRangeEmptyTooltip: 'The lowest value on the scale\nValues equal or lower than this will be shown as 0% full',
-    Wizard_PercentRangeFullLabel: 'High:',
+    Wizard_PercentRangeFullLabel: 'High',
     Wizard_PercentRangeFullTooltip: 'The highest value on the scale\nValues equal or higher than this will be shown as 100% full',
     Wizard_ValueDisplayActual: 'Show actual value',
     Wizard_ValueDisplayPercentage: 'Show percentage',
