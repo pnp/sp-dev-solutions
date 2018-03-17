@@ -30,7 +30,7 @@
 - Dependency on sp-pnp-js (through CDN)
 
 ### Fixed
-- 
+- Removed empty Attributes from the Round Image Wizard
 
 ## [1.1.0] - 2018-01-08
 ### Added

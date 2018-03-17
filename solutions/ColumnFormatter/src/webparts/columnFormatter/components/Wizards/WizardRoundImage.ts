@@ -52,7 +52,6 @@ export const WizardRoundImage: IWizard = {
 			'{',
 			'  "$schema": "http://columnformatting.sharepointpnp.com/columnFormattingSchema.json",',
 			'  "elmType": "div",',
-			'  "attributes": {},',
 			'  "children": [',
 			'    {',
 			'      "elmType": "div",',
