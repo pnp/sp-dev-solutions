@@ -385,6 +385,16 @@ declare interface IColumnFormatterWebPartStrings {
   WizardDonutOuterColor: string;
   WizardDonutInnerColor: string;
   WizardDonutTextColor: string;
+
+  //Wizard Twitter
+  WizardTwitterName: string;
+  WizardTwitterDescription: string;
+  WizardTwitterSize: string;
+  WizardTwitterRounding: string;
+  WizardTwitterLinkOn: string;
+  WizardTwitterLinkOff: string;
+  WizardTwitterTooltipOn: string;
+  WizardTwitterTooltipOff: string;
 }
 
 declare module 'ColumnFormatterWebPartStrings' {

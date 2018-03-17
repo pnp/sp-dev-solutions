@@ -1,5 +1,5 @@
 # Releases
-## [1.2.0] - 2018-03-15
+## 1.2.0 - 2018-03-15
 ### Added
 - French (fr-fr) localization (thanks [PooLP](https://github.com/PooLP)!)
   - Added targeted styling for fr-fr locale to accomodate long strings
@@ -7,6 +7,7 @@
 - German (de-de) localization (thanks [Thomas Goelles](h\https://github.com/thomyg)!)
 - Column Formatter now supports Full-Width columns (full bleed)
 - Start Flow Wizard
+  - Creates a button to easily launch a Flow for an item
 - StandardColorsDropdown (for use in wizards)
 - IconsDropdown (for use in wizards)
 - Line Numbers in the editor (toggle in the property pane)
@@ -14,6 +15,9 @@
 - Mini Map in the editor (toggle in the property pane)
 - SpinButtonWithSuffix (for use in wizards)
 - Donut Wizard
+  - Shows values using a donut or pie chart
+- Twitter Wizard
+  - Displays Twitter profile pictures from Twitter handles
 
 ### Changed
 - Updated to [SharePoint Framework](https://github.com/SharePoint/sp-dev-docs/wiki/Release-Notes-for-SPFx-Package-Version-1.4.1) from 1.4.0 to 1.4.1

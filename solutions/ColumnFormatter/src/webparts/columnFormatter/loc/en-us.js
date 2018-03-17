@@ -385,6 +385,16 @@ define([], function() {
     WizardDonutValueOff: 'Hide Value',
     WizardDonutOuterColor: 'Outer Color',
     WizardDonutInnerColor: 'Inner Color',
-    WizardDonutTextColor: 'Text Color'
+    WizardDonutTextColor: 'Text Color',
+
+    //Wizard Twitter
+    WizardTwitterName: 'Twitter',
+    WizardTwitterDescription: 'Displays Twitter profile pictures from Twitter handles',
+    WizardTwitterSize: 'Size',
+    WizardTwitterRounding: 'Rounding',
+    WizardTwitterLinkOn: 'Link to profile',
+    WizardTwitterLinkOff: 'No Link',
+    WizardTwitterTooltipOn: 'Show tooltip',
+    WizardTwitterTooltipOff: 'No tooltip'
   }
 });

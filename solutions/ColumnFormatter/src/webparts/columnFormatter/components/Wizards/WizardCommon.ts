@@ -14,6 +14,7 @@ import { WizardNumberTending } from './WizardNumberTrending';
 import { WizardOverdue } from './WizardOverdue';
 import { WizardRoundImage } from './WizardRoundImage';
 import { WizardSeverity } from './WizardSeverity';
+import { WizardTwitter } from './WizardTwitter';
 
 //** Implement this interface to create your own wizard/template */
 export interface IWizard {
@@ -58,7 +59,8 @@ export const Wizards: Array<IWizard> = [
 	WizardMiniMap,
 	WizardOverdue,
 	WizardRoundImage,
-	WizardSeverity
+	WizardSeverity,
+	WizardTwitter
 ];
 
 
