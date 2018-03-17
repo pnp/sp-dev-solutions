@@ -1,9 +1,12 @@
 import * as strings from 'ColumnFormatterWebPartStrings';
+import { ChoiceGroup } from 'office-ui-fabric-react/lib/ChoiceGroup';
 import { Toggle } from 'office-ui-fabric-react/lib/Toggle';
 import { autobind } from 'office-ui-fabric-react/lib/Utilities';
+import { Position } from 'office-ui-fabric-react/lib/utilities/positioning';
 import * as React from 'react';
 
 import { columnTypes, IDataColumn, IUserContext } from '../../state/State';
+import styles from '../ColumnFormatter.module.scss';
 import { SpinButtonWithSuffix } from './Controls/SpinButtonWithSuffix';
 import { StandardColorsDropdown } from './Controls/StandardColorsDropdown';
 import { IWizard, standardWizardStartingColumns, standardWizardStartingRows } from './WizardCommon';
@@ -16,19 +19,23 @@ export interface IWizardDonutPanelProps {
 	outerColor: string;
 	innerColor: string;
 	textColor: string;
-	showValue: boolean;
+	valueDisplay: string;
 	size: number;
 	showAsDonut: boolean;
-	updateValues:(showAsDonut:boolean, size:number, showValue:boolean, outerColor:string, innerColor:string, textColor:string) => void;
+	rangeEmpty: number;
+	rangeFull: number;
+	updateValues:(showAsDonut:boolean, size:number, valueDisplay:string, outerColor:string, innerColor:string, textColor:string, rangeEmpty:number, rangeFull:number) => void;
 }
 
 export interface IWizardDonutPanelState {
 	outerColor: string;
 	innerColor: string;
 	textColor: string;
-	showValue: boolean;
+	valueDisplay: string;
 	size: number;
 	showAsDonut: boolean;
+	rangeEmpty: number;
+	rangeFull: number;
 }
 
 export class WizardDonutPanel extends React.Component<IWizardDonutPanelProps, IWizardDonutPanelState> {
@@ -40,32 +47,51 @@ export class WizardDonutPanel extends React.Component<IWizardDonutPanelProps, IW
 			outerColor: props.outerColor,
 			innerColor: props.innerColor,
 			textColor: props.textColor,
-			showValue: props.showValue,
+			valueDisplay: props.valueDisplay,
 			size: props.size,
-			showAsDonut: props.showAsDonut
+			showAsDonut: props.showAsDonut,
+			rangeEmpty: props.rangeEmpty,
+			rangeFull: props.rangeFull
 		};
 	}
 
 	public render(): React.ReactElement<IWizardDonutPanelProps> {
 		return (
 			<div>
+				<span className={styles.wizardGroupLabel}>{strings.Wizard_GroupLabelRange}</span>
+				<SpinButtonWithSuffix
+				 label={strings.Wizard_PercentRangeEmptyLabel + ':'}
+				 title={strings.Wizard_PercentRangeEmptyTooltip}
+				 initialValue={this.state.rangeEmpty}
+				 onChanged={this.onRangeEmptyChanged}
+				 labelPosition={Position.start}
+				 labelWidth={33}
+				 min={0}
+				 max={this.state.rangeFull-1}/>
+				<SpinButtonWithSuffix
+				 label={strings.Wizard_PercentRangeFullLabel + ':'}
+				 title={strings.Wizard_PercentRangeFullTooltip}
+				 initialValue={this.state.rangeFull}
+				 onChanged={this.onRangeFullChanged}
+				 labelPosition={Position.start}
+				 labelWidth={33}
+				 min={this.state.rangeEmpty+1}/>
+
+				<span className={styles.wizardGroupLabel}>{strings.Wizard_GroupLabelDisplay}</span>
 				<Toggle
 				 checked={this.state.showAsDonut}
 				 onChanged={this.onShowAsDonutChanged}
 				 onText={strings.WizardDonutDonut}
 				 offText={strings.WizardDonutPie}/>
 				<SpinButtonWithSuffix
-				 label={strings.WizardDonutSize + ':'}
+				 label={strings.Wizard_Size + ':'}
 				 initialValue={this.state.size}
 				 onChanged={this.onSizeChanged}
+				 labelPosition={Position.start}
+				 labelWidth={33}
 				 suffix=' px'
 				 min={40}
 				 max={134}/>
-				<Toggle
-				 checked={this.state.showValue}
-				 onChanged={this.onShowValueChanged}
-				 onText={strings.WizardDonutValueOn}
-				 offText={strings.WizardDonutValueOff}/>
 				<StandardColorsDropdown
 				 label={strings.WizardDonutOuterColor + ':'}
 				 onChanged={this.onOuterColorChanged}
@@ -74,6 +100,16 @@ export class WizardDonutPanel extends React.Component<IWizardDonutPanelProps, IW
 				 label={strings.WizardDonutInnerColor + ':'}
 				 onChanged={this.onInnerColorChanged}
 				 selectedKey={this.state.innerColor}/>
+				
+				<span className={styles.wizardGroupLabel}>{strings.Wizard_GroupLabelValueDisplay}</span>
+				<ChoiceGroup
+				 selectedKey={this.state.valueDisplay}
+				 onChange={this.onValueDisplayChange}
+				 options={[
+					{ key: 'value', text: strings.Wizard_ValueDisplayActual},
+					{ key: 'percentage', text: strings.Wizard_ValueDisplayPercentage},
+					{ key: 'none', text: strings.Wizard_ValueDisplayNone}
+				 ]}/>
 				{!this.state.showAsDonut &&
 					<StandardColorsDropdown
 					 label={strings.WizardDonutTextColor + ':'}
@@ -90,7 +126,7 @@ export class WizardDonutPanel extends React.Component<IWizardDonutPanelProps, IW
 		this.setState({ 
 			showAsDonut: checked!
 		});
-		this.props.updateValues(checked, this.state.size, this.state.showValue, this.state.outerColor, this.state.innerColor, this.state.textColor);
+		this.props.updateValues(checked, this.state.size, this.state.valueDisplay, this.state.outerColor, this.state.innerColor, this.state.textColor, this.state.rangeEmpty, this.state.rangeFull);
 	}
 
 	@autobind
@@ -98,15 +134,15 @@ export class WizardDonutPanel extends React.Component<IWizardDonutPanelProps, IW
 		this.setState({
 			size: value
 		});
-		this.props.updateValues(this.state.showAsDonut, value, this.state.showValue, this.state.outerColor, this.state.innerColor, this.state.textColor);
+		this.props.updateValues(this.state.showAsDonut, value, this.state.valueDisplay, this.state.outerColor, this.state.innerColor, this.state.textColor, this.state.rangeEmpty, this.state.rangeFull);
 	}
 
 	@autobind
-	private onShowValueChanged(checked: boolean): void {
+	private onValueDisplayChange(ev: React.FormEvent<HTMLInputElement>, option: any) {
 		this.setState({ 
-			showValue: checked!
+			valueDisplay: option.key
 		});
-		this.props.updateValues(this.state.showAsDonut, this.state.size, checked, this.state.outerColor, this.state.innerColor, this.state.textColor);
+		this.props.updateValues(this.state.showAsDonut, this.state.size, option.key, this.state.outerColor, this.state.innerColor, this.state.textColor, this.state.rangeEmpty, this.state.rangeFull);
 	}
 
 	@autobind
@@ -114,7 +150,7 @@ export class WizardDonutPanel extends React.Component<IWizardDonutPanelProps, IW
 		this.setState({
 			outerColor: text
 		});
-		this.props.updateValues(this.state.showAsDonut, this.state.size, this.state.showValue, text, this.state.innerColor, this.state.textColor);
+		this.props.updateValues(this.state.showAsDonut, this.state.size, this.state.valueDisplay, text, this.state.innerColor, this.state.textColor, this.state.rangeEmpty, this.state.rangeFull);
 	}
 
 	@autobind
@@ -122,7 +158,7 @@ export class WizardDonutPanel extends React.Component<IWizardDonutPanelProps, IW
 		this.setState({
 			innerColor: text
 		});
-		this.props.updateValues(this.state.showAsDonut, this.state.size, this.state.showValue, this.state.outerColor, text, this.state.textColor);
+		this.props.updateValues(this.state.showAsDonut, this.state.size, this.state.valueDisplay, this.state.outerColor, text, this.state.textColor, this.state.rangeEmpty, this.state.rangeFull);
 	}
 
 	@autobind
@@ -130,7 +166,23 @@ export class WizardDonutPanel extends React.Component<IWizardDonutPanelProps, IW
 		this.setState({
 			textColor: text
 		});
-		this.props.updateValues(this.state.showAsDonut, this.state.size, this.state.showValue, this.state.outerColor, this.state.innerColor, text);
+		this.props.updateValues(this.state.showAsDonut, this.state.size, this.state.valueDisplay, this.state.outerColor, this.state.innerColor, text, this.state.rangeEmpty, this.state.rangeFull);
+	}
+
+	@autobind
+	private onRangeEmptyChanged(value: number): void {
+		this.setState({
+			rangeEmpty: value
+		});
+		this.props.updateValues(this.state.showAsDonut, this.state.size, this.state.valueDisplay, this.state.outerColor, this.state.innerColor, this.state.textColor, value, this.state.rangeFull);
+	}
+
+	@autobind
+	private onRangeFullChanged(value: number): void {
+		this.setState({
+			rangeFull: value
+		});
+		this.props.updateValues(this.state.showAsDonut, this.state.size, this.state.valueDisplay, this.state.outerColor, this.state.innerColor, this.state.textColor, this.state.rangeEmpty, value);
 	}
 }
 
@@ -139,11 +191,13 @@ export class WizardDonutPanel extends React.Component<IWizardDonutPanelProps, IW
 	Wizard Definition
 */
 
-const calculateCode = (showAsDonut:boolean, size:number, showValue:boolean, outerColor:string, innerColor:string, textColor:string): string => {
+const calculateCode = (showAsDonut:boolean, size:number, valueDisplay:string, outerColor:string, innerColor:string, textColor:string, rangeEmpty:number, rangeFull:number): string => {
 	let full:string = size.toString();
 	let half:string = (size/2).toString();
 	let quarter:string = (size/4).toString();
 	let fSize:string = (size/5).toString();
+
+	let showValue:boolean = (valueDisplay != "none");
 
 	let json:Array<string> = [
 		'{',
@@ -184,7 +238,7 @@ const calculateCode = (showAsDonut:boolean, size:number, showValue:boolean, oute
 		'                          "operator": "<=",',
 		'                          "operands": [',
 		'                            "@currentField",',
-		'                            50',
+		'                            ' + (((rangeFull-rangeEmpty)/2) + rangeEmpty).toString(),
 		'                          ]',
 		'                        },',
 		'                        "0",',
@@ -213,33 +267,39 @@ const calculateCode = (showAsDonut:boolean, size:number, showValue:boolean, oute
 		'                                          "operator": "/",',
 		'                                          "operands": [',
 		'                                            {',
-		'                                              "operator": "?",',
+		'                                              "operator": "-",',
 		'                                              "operands": [',
-		'                                                {',
-		'                                                  "operator": ">=",',
-		'                                                  "operands": [',
-		'                                                    "@currentField",',
-		'                                                    100',
-		'                                                  ]',
-		'                                                },',
-		'                                                99.9999,',
 		'                                                {',
 		'                                                  "operator": "?",',
 		'                                                  "operands": [',
 		'                                                    {',
-		'                                                      "operator": "<",',
+		'                                                      "operator": ">=",',
 		'                                                      "operands": [',
 		'                                                        "@currentField",',
-		'                                                        0',
+		'                                                        ' + rangeFull.toString(),
 		'                                                      ]',
 		'                                                    },',
-		'                                                    0,',
-		'                                                    "@currentField"',
+		'                                                    ' + (rangeFull - .0001).toString() + ',',
+		'                                                    {',
+		'                                                      "operator": "?",',
+		'                                                      "operands": [',
+		'                                                        {',
+		'                                                          "operator": "<",',
+		'                                                          "operands": [',
+		'                                                            "@currentField",',
+		'                                                            ' + rangeEmpty.toString(),
+		'                                                          ]',
+		'                                                        },',
+		'                                                        ' + rangeEmpty.toString() + ',',
+		'                                                        "@currentField"',
+		'                                                      ]',
+		'                                                    }',
 		'                                                  ]',
-		'                                                }',
+		'                                                },',
+		'                                                ' + rangeEmpty.toString(),
 		'                                              ]',
 		'                                            },',
-		'                                            100',
+		'                                            ' + (rangeFull-rangeEmpty).toString(),
 		'                                          ]',
 		'                                        }',
 		'                                      ]',
@@ -275,33 +335,39 @@ const calculateCode = (showAsDonut:boolean, size:number, showValue:boolean, oute
 		'                                          "operator": "/",',
 		'                                          "operands": [',
 		'                                            {',
-		'                                              "operator": "?",',
+		'                                              "operator": "-",',
 		'                                              "operands": [',
-		'                                                {',
-		'                                                  "operator": ">=",',
-		'                                                  "operands": [',
-		'                                                    "@currentField",',
-		'                                                    100',
-		'                                                  ]',
-		'                                                },',
-		'                                                99.9999,',
 		'                                                {',
 		'                                                  "operator": "?",',
 		'                                                  "operands": [',
 		'                                                    {',
-		'                                                      "operator": "<",',
+		'                                                      "operator": ">=",',
 		'                                                      "operands": [',
 		'                                                        "@currentField",',
-		'                                                        0',
+		'                                                        ' + rangeFull.toString(),
 		'                                                      ]',
 		'                                                    },',
-		'                                                    0,',
-		'                                                    "@currentField"',
+		'                                                    ' + (rangeFull - .0001).toString() + ',',
+		'                                                    {',
+		'                                                      "operator": "?",',
+		'                                                      "operands": [',
+		'                                                        {',
+		'                                                          "operator": "<",',
+		'                                                          "operands": [',
+		'                                                            "@currentField",',
+		'                                                            ' + rangeEmpty.toString(),
+		'                                                          ]',
+		'                                                        },',
+		'                                                        ' + rangeEmpty.toString() + ',',
+		'                                                        "@currentField"',
+		'                                                      ]',
+		'                                                    }',
 		'                                                  ]',
-		'                                                }',
+		'                                                },',
+		'                                                ' + rangeEmpty.toString(),
 		'                                              ]',
 		'                                            },',
-		'                                            100',
+		'                                            ' + (rangeFull-rangeEmpty).toString(),
 		'                                          ]',
 		'                                        }',
 		'                                      ]',
@@ -341,14 +407,52 @@ const calculateCode = (showAsDonut:boolean, size:number, showValue:boolean, oute
 		json.push(...[
 		'      "children": [',
 		'        {',
-		'          "elmType": "div",',
+		'          "elmType": "div",']);
+		if(valueDisplay == "value") {
+			json.push(...[
+		'          "txtContent": "@currentField",',
+			]);
+		} else {
+			if(rangeEmpty == 0 && rangeFull == 100) {
+				json.push(...[
 		'          "txtContent": {',
 		'            "operator": "+",',
 		'            "operands": [',
 		'              "@currentField",',
 		'              "%"',
 		'            ]',
-		'          },',
+		'          },']);
+			} else {
+				json.push(...[
+		'          "txtContent": {',
+		'            "operator": "+",',
+		'            "operands": [',
+		'              {',
+		'                "operator": "*",',
+		'                "operands": [',
+		'                  100,',
+		'                  {',
+		'                    "operator": "/",',
+		'                    "operands": [',
+		'                      {',
+		'                        "operator": "-",',
+		'                        "operands": [',
+		'                          "@currentField",',
+		'                          ' + rangeEmpty.toString(),
+		'                        ]',
+		'                      },',
+		'                      ' + (rangeFull-rangeEmpty).toString(),
+		'                    ]',
+		'                  }',
+		'                ]',
+		'              },',
+		'              "%"',
+		'            ]',
+		'          },']);
+			}
+		}
+
+		json.push(...[
 		'          "style": {',
 		'            "position": "relative",',
 		'            "text-align": "center",',
@@ -386,19 +490,21 @@ export const WizardDonut: IWizard = {
 	startingColumns: (colType:columnTypes): Array<IDataColumn> => {return standardWizardStartingColumns(colType);},
 	startingRows: (colType:columnTypes, user?:IUserContext): Array<Array<any>> => {return standardWizardStartingRows(colType);},
 	startingCode: (colType:columnTypes): string => {
-		return calculateCode(true,60,true,'#c8c8c8','#ff8c00','white');
+		return calculateCode(true,60,'percentage','#c8c8c8','#ff8c00','white',0,100);
 	},
 	onWizardRender: (updateEditorString:(editorString:string) => void, colType:columnTypes): JSX.Element => {
 		return (
 			<WizardDonutPanel
 			 showAsDonut={true}
 			 size={60}
-			 showValue={true}
+			 valueDisplay="percentage"
 			 outerColor='#c8c8c8'
 			 innerColor='#ff8c00'
 			 textColor='white'
-			 updateValues={(showAsDonut:boolean, size:number, showValue:boolean, outerColor:string, innerColor:string, textColor:string) => {
-				updateEditorString(calculateCode(showAsDonut,size,showValue,outerColor,innerColor,textColor));
+			 rangeEmpty={0}
+			 rangeFull={100}
+			 updateValues={(showAsDonut:boolean, size:number, valueDisplay:string, outerColor:string, innerColor:string, textColor:string, rangeEmpty:number, rangeFull:number) => {
+				updateEditorString(calculateCode(showAsDonut,size,valueDisplay,outerColor,innerColor,textColor,rangeEmpty,rangeFull));
 			 }}/>
 		);
 	}
