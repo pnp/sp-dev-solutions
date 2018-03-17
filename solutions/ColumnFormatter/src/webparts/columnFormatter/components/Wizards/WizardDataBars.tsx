@@ -1,12 +1,13 @@
 import * as strings from 'ColumnFormatterWebPartStrings';
 import { ChoiceGroup } from 'office-ui-fabric-react/lib/ChoiceGroup';
-import { ISpinButtonStyles, SpinButton } from 'office-ui-fabric-react/lib/SpinButton';
+import { ISpinButtonStyles } from 'office-ui-fabric-react/lib/SpinButton';
 import { autobind } from 'office-ui-fabric-react/lib/Utilities';
 import { Position } from 'office-ui-fabric-react/lib/utilities/positioning';
 import * as React from 'react';
 
 import { columnTypes, IDataColumn } from '../../state/State';
 import styles from '../ColumnFormatter.module.scss';
+import { SpinButtonWithSuffix } from './Controls/SpinButtonWithSuffix';
 import { IWizard, standardWizardStartingColumns } from './WizardCommon';
 
 /*
@@ -47,24 +48,23 @@ export class WizardDataBarsPanel extends React.Component<IWizardDataBarsPanelPro
 		return (
 			<div>
 				<span className={styles.wizardGroupLabel}>{strings.Wizard_GroupLabelRange}</span>
-				<SpinButton
-				 value={this.state.emptyBarValue.toString()}
+				<SpinButtonWithSuffix
 				 label={strings.Wizard_PercentRangeEmptyLabel + ':'}
+				 initialValue={this.state.emptyBarValue}
+				 onChanged={this.onEmptyBarValueChanged}
 				 labelPosition={Position.start}
 				 title={strings.Wizard_PercentRangeEmptyTooltip}
 				 styles={spinLabelStyle}
-				 onValidate={this.onValidateEmptyBarValue}
-				 onIncrement={this.onIncrementEmptyBarValue}
-				 onDecrement={this.onDecrementEmptyBarValue}/>
-				<SpinButton
-				 value={this.state.fullBarValue.toString()}
+				 min={0}
+				 max={this.state.fullBarValue-1}/>
+				<SpinButtonWithSuffix
 				 label={strings.Wizard_PercentRangeFullLabel + ':'}
+				 initialValue={this.state.fullBarValue}
+				 onChanged={this.onFullBarValueChanged}
+				 labelPosition={Position.start}
 				 title={strings.Wizard_PercentRangeFullTooltip}
 				 styles={spinLabelStyle}
-				 labelPosition={Position.start}
-				 onValidate={this.onValidateFullBarValue}
-				 onIncrement={this.onIncrementFullBarValue}
-				 onDecrement={this.onDecrementFullBarValue}/>
+				 min={this.state.emptyBarValue+1}/>
 
 				<span className={styles.wizardGroupLabel}>{strings.Wizard_GroupLabelValueDisplay}</span>
 				<ChoiceGroup
@@ -80,67 +80,27 @@ export class WizardDataBarsPanel extends React.Component<IWizardDataBarsPanelPro
 	}
 
 	@autobind
-	private onValidateEmptyBarValue(value:string): string {
-		if(isNaN(+value)){
-			value = this.props.emptyBarValue.toString();
-		}
-		let numValue: number = +value;
-		if(numValue < 0) {
-			numValue = 0;
-		}
-		this.props.updateValues(numValue, this.state.fullBarValue, this.state.valueDisplay);
+	private onEmptyBarValueChanged(value:number): void {
 		this.setState({
-			emptyBarValue: numValue
+			emptyBarValue: value
 		});
-		return numValue.toString();
+		this.props.updateValues(value, this.state.fullBarValue, this.state.valueDisplay);
 	}
 
 	@autobind
-	private onIncrementEmptyBarValue(value:string): string {
-		let newValue: number = +value + 1;
-		return this.onValidateEmptyBarValue(newValue.toString());
-	}
-
-	@autobind
-	private onDecrementEmptyBarValue(value:string): string {
-		let newValue: number = +value - 1;
-		return this.onValidateEmptyBarValue(newValue.toString());
-	}
-
-	@autobind
-	private onValidateFullBarValue(value:string): string {
-		if(isNaN(+value)){
-			value = this.props.fullBarValue.toString();
-		}
-		let numValue: number = +value;
-		if(numValue < this.state.emptyBarValue) {
-			numValue = this.state.emptyBarValue + 1;
-		}
-		this.props.updateValues(this.state.emptyBarValue, numValue, this.state.valueDisplay);
+	private onFullBarValueChanged(value:number): void {
 		this.setState({
-			fullBarValue: numValue
+			fullBarValue: value
 		});
-		return numValue.toString();
-	}
-
-	@autobind
-	private onIncrementFullBarValue(value:string): string {
-		let newValue: number = +value + 1;
-		return this.onValidateFullBarValue(newValue.toString());
-	}
-
-	@autobind
-	private onDecrementFullBarValue(value:string): string {
-		let newValue: number = +value - 1;
-		return this.onValidateFullBarValue(newValue.toString());
+		this.props.updateValues(this.state.emptyBarValue, value, this.state.valueDisplay);
 	}
 
 	@autobind
 	private onValueDisplayChange(ev: React.FormEvent<HTMLInputElement>, option: any) {
-	  this.props.updateValues(this.state.emptyBarValue, this.state.fullBarValue, option.key);
 	  this.setState({
 		  valueDisplay: option.key
 	  });
+	  this.props.updateValues(this.state.emptyBarValue, this.state.fullBarValue, option.key);
 	}
 }
 
