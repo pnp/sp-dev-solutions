@@ -55,7 +55,7 @@ export class WizardDonutPanel extends React.Component<IWizardDonutPanelProps, IW
 				 onText={strings.WizardDonutDonut}
 				 offText={strings.WizardDonutPie}/>
 				<SpinButtonWithSuffix
-				 label={strings.WizardDonutSize}
+				 label={strings.WizardDonutSize + ':'}
 				 initialValue={this.state.size}
 				 onChanged={this.onSizeChanged}
 				 suffix=' px'
@@ -67,16 +67,16 @@ export class WizardDonutPanel extends React.Component<IWizardDonutPanelProps, IW
 				 onText={strings.WizardDonutValueOn}
 				 offText={strings.WizardDonutValueOff}/>
 				<StandardColorsDropdown
-				 label={strings.WizardDonutOuterColor}
+				 label={strings.WizardDonutOuterColor + ':'}
 				 onChanged={this.onOuterColorChanged}
 				 selectedKey={this.state.outerColor}/>
 				<StandardColorsDropdown
-				 label={strings.WizardDonutInnerColor}
+				 label={strings.WizardDonutInnerColor + ':'}
 				 onChanged={this.onInnerColorChanged}
 				 selectedKey={this.state.innerColor}/>
 				{!this.state.showAsDonut &&
 					<StandardColorsDropdown
-					 label={strings.WizardDonutTextColor}
+					 label={strings.WizardDonutTextColor + ':'}
 					 onChanged={this.onTextColorChanged}
 					 selectedKey={this.state.textColor}/>
 				}

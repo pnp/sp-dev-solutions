@@ -24,7 +24,7 @@ export class StandardColorsDropdown extends React.Component<IStandardColorsDropd
 	public render(): React.ReactElement<IStandardColorsDropdownProps> {
 		return (
 			<Dropdown
-			 label={this.props.label + ':'}
+			 label={this.props.label}
 			 selectedKey={this.props.selectedKey}
 			 options={this.colorOptions()}
 			 onChanged={this.onChanged}

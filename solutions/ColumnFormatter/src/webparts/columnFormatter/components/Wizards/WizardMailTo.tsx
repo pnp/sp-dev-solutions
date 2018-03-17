@@ -82,7 +82,7 @@ export class WizardMailToPanel extends React.Component<IWizardMailToPanelProps, 
 				 value={this.state.displayValue}
 				 onChanged={this.onDisplayValueChanged}/>
 				<IconsDropdown
-				 label={strings.WizardMailToIconName}
+				 label={strings.WizardMailToIconName + ':'}
 				 onChanged={this.onIconNameChanged}
 				 selectedKey={this.state.iconName}/>
 				<Toggle
