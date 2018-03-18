@@ -1431,7 +1431,9 @@ export class IconsDropdown extends React.Component<IIconsDropdownProps, IIconsDr
 	  @autobind
 	  private onRenderOption(option:IDropdownOption): JSX.Element {
 		  return (
-			<div>
+			<div style={{
+				whiteSpace: 'nowrap'
+			}}>
 				<Icon
 				 style={{marginRight:'6px',color:this.props.color?this.props.color:'inherit'}}
 				 iconName={option.key.toString()}

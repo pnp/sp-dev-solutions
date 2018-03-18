@@ -81,7 +81,9 @@ export class StandardColorsDropdown extends React.Component<IStandardColorsDropd
 	  @autobind
 	  private onRenderOption(option:IDropdownOption): JSX.Element {
 		  return (
-			<div>
+			<div style={{
+				whiteSpace: 'nowrap'
+			}}>
 				<div style={{
 					backgroundColor:option.key,
 					width:'12px',
