@@ -291,7 +291,7 @@ define([], function() {
     TreeView_Header: 'Elements tree',
     TreeView_Error: 'Error loading tree!',
 
-    //Wizard Controls
+    //Standard Colors
     Color_Yellow: 'Yellow',
     Color_YellowLight: 'Yellow light',
     Color_Orange: 'Orange',
