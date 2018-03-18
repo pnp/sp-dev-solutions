@@ -37,10 +37,10 @@ class ColumnFormatterPropertyPane_ extends React.Component<IColumnFormatterPrope
 				</TabPanel>
 				<TabList>
 					{this.props.wizardTabVisible && (
-						<Tab><Icon iconName='LightningBolt'/><span>{strings.TabWizard}</span></Tab>
+						<Tab><Icon iconName='LightningBolt'/><span>{strings.Tab_Wizard}</span></Tab>
 					)}
-					<Tab><Icon iconName='TextField'/><span>{strings.TabData}</span></Tab>
-					<Tab><Icon iconName='Bookmarks'/><span>{strings.TabTree}</span></Tab>
+					<Tab><Icon iconName='TextField'/><span>{strings.Tab_Data}</span></Tab>
+					<Tab><Icon iconName='Bookmarks'/><span>{strings.Tab_Tree}</span></Tab>
 				</TabList>
 		  </Tabs>
 		);

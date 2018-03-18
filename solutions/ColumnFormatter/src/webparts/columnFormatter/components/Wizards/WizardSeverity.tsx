@@ -57,45 +57,45 @@ export class WizardSeverityPanel extends React.Component<IWizardSeverityPanelPro
 			<div>
 				<span className={styles.wizardGroupLabel}>{strings.Wizard_GroupLabelConditionalValues}</span>
 				<TextField
-				 label={strings.WizardSeverityGoodLabel + ':'}
+				 label={strings.WizardSeverity_GoodLabel + ':'}
 				 value={this.state.goodValue}
 				 iconProps={{iconName:'CheckMark'}}
 				 onChanged={this.onGoodValueChanged}
 				 disabled={this.state.defaultSeverity=='good'}/>
 				<TextField
-				 label={strings.WizardSeverityLowLabel + ':'}
+				 label={strings.WizardSeverity_LowLabel + ':'}
 				 value={this.state.lowValue}
 				 iconProps={{iconName:'Forward'}}
 				 onChanged={this.onLowValueChanged}
 				 disabled={this.state.defaultSeverity=='low'}/>
 				<TextField
-				 label={strings.WizardSeverityWarningLabel + ':'}
+				 label={strings.WizardSeverity_WarningLabel + ':'}
 				 value={this.state.warningValue}
 				 iconProps={{iconName:'Error'}}
 				 onChanged={this.onWarningValueChanged}
 				 disabled={this.state.defaultSeverity=='warning'}/>
 				<TextField
-				 label={strings.WizardSeveritySevereWarningLabel + ':'}
+				 label={strings.WizardSeverity_SevereWarningLabel + ':'}
 				 value={this.state.severeWarningValue}
 				 iconProps={{iconName:'Warning'}}
 				 onChanged={this.onSevereWarningValueChanged}
 				 disabled={this.state.defaultSeverity=='severeWarning'}/>
 				<TextField
-				 label={strings.WizardSeverityBlockedLabel + ':'}
+				 label={strings.WizardSeverity_BlockedLabel + ':'}
 				 value={this.state.blockedValue}
 				 iconProps={{iconName:'ErrorBadge'}}
 				 onChanged={this.onBlockedValueChanged}
 				 disabled={this.state.defaultSeverity=='blocked'}/>
 
 				<Dropdown
-				 label={strings.WizardSeverityDefaultSeverityLabel + ':'}
+				 label={strings.WizardSeverity_DefaultSeverityLabel + ':'}
 				 selectedKey={this.state.defaultSeverity}
 				 options={[
-					 { key: 'good', text: strings.WizardSeverityGoodLabel },
-					 { key: 'low', text: strings.WizardSeverityLowLabel },
-					 { key: 'warning', text: strings.WizardSeverityWarningLabel },
-					 { key: 'severeWarning', text: strings.WizardSeveritySevereWarningLabel },
-					 { key: 'blocked', text: strings.WizardSeverityBlockedLabel}
+					 { key: 'good', text: strings.WizardSeverity_GoodLabel },
+					 { key: 'low', text: strings.WizardSeverity_LowLabel },
+					 { key: 'warning', text: strings.WizardSeverity_WarningLabel },
+					 { key: 'severeWarning', text: strings.WizardSeverity_SevereWarningLabel },
+					 { key: 'blocked', text: strings.WizardSeverity_BlockedLabel}
 				 ]}
 				 onChanged={this.onDefaultSeverityChanged}/>
 
@@ -334,8 +334,8 @@ const calculateCode = (colType:columnTypes, showValue:boolean, showIcon:boolean,
 
 
 export const WizardSeverity: IWizard = {
-	name: strings.WizardSeverityName,
-	description: strings.WizardSeverityDescription,
+	name: strings.WizardSeverity_Name,
+	description: strings.WizardSeverity_Description,
 	iconName: 'Info',
 	fieldTypes: [
 		columnTypes.text,
@@ -348,12 +348,12 @@ export const WizardSeverity: IWizard = {
 	startingRows: (colType:columnTypes): Array<Array<any>> => {
 		if(colType == columnTypes.lookup) {
 			return [
-				[{lookupId:1, lookupValue: strings.WizardSeverityGood}],
-				[{lookupId:2, lookupValue: strings.WizardSeverityLow}],
-				[{lookupId:3, lookupValue: strings.WizardSeverityWarning}],
-				[{lookupId:4, lookupValue: strings.WizardSeveritySevereWarning}],
-				[{lookupId:5, lookupValue: strings.WizardSeverityBlocked}],
-				[{lookupId:6, lookupValue: strings.WizardSeverityOther}]
+				[{lookupId:1, lookupValue: strings.WizardSeverity_Good}],
+				[{lookupId:2, lookupValue: strings.WizardSeverity_Low}],
+				[{lookupId:3, lookupValue: strings.WizardSeverity_Warning}],
+				[{lookupId:4, lookupValue: strings.WizardSeverity_SevereWarning}],
+				[{lookupId:5, lookupValue: strings.WizardSeverity_Blocked}],
+				[{lookupId:6, lookupValue: strings.WizardSeverity_Other}]
 			];
 		}
 		if(colType == columnTypes.number) {
@@ -367,33 +367,33 @@ export const WizardSeverity: IWizard = {
 			];
 		}
 		return [
-			[strings.WizardSeverityGood],
-			[strings.WizardSeverityLow],
-			[strings.WizardSeverityWarning],
-			[strings.WizardSeveritySevereWarning],
-			[strings.WizardSeverityBlocked],
-			[strings.WizardSeverityOther]
+			[strings.WizardSeverity_Good],
+			[strings.WizardSeverity_Low],
+			[strings.WizardSeverity_Warning],
+			[strings.WizardSeverity_SevereWarning],
+			[strings.WizardSeverity_Blocked],
+			[strings.WizardSeverity_Other]
 		];
 	},
 	startingCode: (colType:columnTypes): string => {
 		return calculateCode(colType, true, true, [
 			{
-				value: colType == columnTypes.number ? "1" : strings.WizardSeverityGood,
+				value: colType == columnTypes.number ? "1" : strings.WizardSeverity_Good,
 				class: 'sp-field-severity--good',
 				icon: 'CheckMark'
 			},
 			{
-				value: colType == columnTypes.number ? "2" : strings.WizardSeverityLow,
+				value: colType == columnTypes.number ? "2" : strings.WizardSeverity_Low,
 				class: 'sp-field-severity--low',
 				icon: 'Forward'
 			},
 			{
-				value: colType == columnTypes.number ? "3" : strings.WizardSeverityWarning,
+				value: colType == columnTypes.number ? "3" : strings.WizardSeverity_Warning,
 				class: 'sp-field-severity--warning',
 				icon: 'Error'
 			},
 			{
-				value: colType == columnTypes.number ? "4" : strings.WizardSeveritySevereWarning,
+				value: colType == columnTypes.number ? "4" : strings.WizardSeverity_SevereWarning,
 				class: 'sp-field-severity--severeWarning',
 				icon: 'Warning'
 			}
@@ -404,11 +404,11 @@ export const WizardSeverity: IWizard = {
 			<WizardSeverityPanel
 			 showValue={true}
 			 showIcon={true}
-			 goodValue={colType == columnTypes.number ? "1" : strings.WizardSeverityGood}
-			 lowValue={colType == columnTypes.number ? "2" : strings.WizardSeverityLow}
-			 warningValue={colType == columnTypes.number ? "3" : strings.WizardSeverityWarning}
-			 severeWarningValue={colType == columnTypes.number ? "4" : strings.WizardSeveritySevereWarning}
-			 blockedValue={colType == columnTypes.number ? "5" : strings.WizardSeverityBlocked}
+			 goodValue={colType == columnTypes.number ? "1" : strings.WizardSeverity_Good}
+			 lowValue={colType == columnTypes.number ? "2" : strings.WizardSeverity_Low}
+			 warningValue={colType == columnTypes.number ? "3" : strings.WizardSeverity_Warning}
+			 severeWarningValue={colType == columnTypes.number ? "4" : strings.WizardSeverity_SevereWarning}
+			 blockedValue={colType == columnTypes.number ? "5" : strings.WizardSeverity_Blocked}
 			 updateValues={(showValue:boolean, showIcon:boolean, levels:Array<ISeverityLevel>, defaultClass:string, defaultIcon:string) => {
 				updateEditorString(calculateCode(colType, showValue, showIcon, levels, defaultClass, defaultIcon));
 			 }}/>

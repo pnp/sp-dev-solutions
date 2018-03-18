@@ -60,12 +60,12 @@ export class SampleLookup extends React.Component<ISampleLookupProps, ISampleLoo
 					 targetElement={this._container}
 					 hasCloseIcon={true}
 					 hasCondensedHeadline={true}
-					 headline={strings.SubPropertiesHeadline}
+					 headline={strings.DataColumn_SubPropertiesHeadline}
 					 onDismiss={this.subPropertiesButtonClick}>
 					 	<div className={styles.tbSpinButtonOverride}>
 							<SpinButton
 							value={this.props.value.lookupId.toString()}
-							label={strings.DataColumnLookupIdLabel}
+							label={strings.DataColumn_LookupIdLabel + ':'}
 							labelPosition={Position.top}
 							onValidate={this.onLookupIdValidate}
 							onIncrement={this.onLookupIdIncrement}

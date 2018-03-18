@@ -68,7 +68,7 @@ export class DataColumnHeader extends React.Component<IDataColumnHeaderProps, ID
 						<TextField
 						 value={this.props.name}
 						 onChanged={this.props.onNameChanged}
-						 title={strings.ColumnNameChangeTooltip}/>
+						 title={strings.DataColumn_ColumnNameChangeTooltip}/>
 					)}
 				</div>
 				<div className={styles.buttonBox}>
@@ -81,7 +81,7 @@ export class DataColumnHeader extends React.Component<IDataColumnHeaderProps, ID
 					{this.props.editable && (
 						<IconButton
 						 iconProps={{iconName:iconForType(this.props.type)}}
-						 title={textForType(this.props.type) + '\n(' + strings.ColumnTypeChangeTooltip + ')'}
+						 title={textForType(this.props.type) + '\n(' + strings.DataColumn_ColumnTypeChangeTooltip + ')'}
 						 onClick={this.onTypeIconClick}
 						 styles={buttonStyles}/>
 					)}
@@ -91,7 +91,7 @@ export class DataColumnHeader extends React.Component<IDataColumnHeaderProps, ID
 					 targetElement={this._container}
 					 hasCloseIcon={true}
 					 hasCondensedHeadline={true}
-					 headline={strings.ColumnTypeHeadline}
+					 headline={strings.DataColumn_ColumnTypeHeadline}
 					 onDismiss={this.onTypeIconClick}>
 					 	<div className={styles.tbChoiceGroupOverride}>
 							<ChoiceGroup
@@ -108,7 +108,7 @@ export class DataColumnHeader extends React.Component<IDataColumnHeaderProps, ID
 								this.optionForType(columnTypes.text),
 								this.optionForType(columnTypes.boolean)
 							]}/>
-							<span>{strings.ColumnTypeMessage}</span>
+							<span>{strings.DataColumn_ColumnTypeMessage}</span>
 						 </div>
 					</TeachingBubble>
 				)}

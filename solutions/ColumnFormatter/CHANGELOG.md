@@ -29,6 +29,7 @@
   - Cleans up UI
   - Ensures theme selection is remembered
 - Added Icon dropdown to the Mail To Wizard
+- Reorganized and standardized strings (localization)
 
 ### Removed
 - Dependency on sp-pnp-js (through CDN)

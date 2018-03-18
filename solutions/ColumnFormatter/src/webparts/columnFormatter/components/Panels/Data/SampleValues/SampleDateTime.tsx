@@ -73,7 +73,7 @@ export class SampleDateTime extends React.Component<ISampleDateTimeProps, ISampl
 				<div className={styles.buttonBox}>
 					<SubPropsButton
 					 onClick={this.subPropertiesButtonClick}
-					 tooltip={strings.TimeHeadline}
+					 tooltip={strings.DataColumn_TimeHeadline}
 					 iconName='Clock'/>
 				</div>
 				{this.state.subPropertiesVisible && (
@@ -81,12 +81,12 @@ export class SampleDateTime extends React.Component<ISampleDateTimeProps, ISampl
 					 targetElement={this._container}
 					 hasCloseIcon={true}
 					 hasCondensedHeadline={true}
-					 headline={strings.TimeHeadline}
+					 headline={strings.DataColumn_TimeHeadline}
 					 onDismiss={this.subPropertiesButtonClick}>
 					 	<div className={styles.tbSpinButtonOverride}>
 							<SpinButton
 							 value={this.hour.toString()}
-							 label={strings.HourLabel + ':'}
+							 label={strings.DataColumn_HourLabel + ':'}
 							 labelPosition={Position.top}
 							 onValidate={this.onHourValidate}
 							 onIncrement={this.onHourIncrement}
@@ -96,7 +96,7 @@ export class SampleDateTime extends React.Component<ISampleDateTimeProps, ISampl
 							 downArrowButtonStyles={sbuttonStyles}/>
 							<SpinButton
 							 value={this.minute.toString()}
-							 label={strings.MinuteLabel + ':'}
+							 label={strings.DataColumn_MinuteLabel + ':'}
 							 labelPosition={Position.top}
 							 onValidate={this.onMinuteValidate}
 							 onIncrement={this.onMinuteIncrement}
@@ -106,7 +106,7 @@ export class SampleDateTime extends React.Component<ISampleDateTimeProps, ISampl
 							 downArrowButtonStyles={sbuttonStyles}/>
 							<SpinButton
 							 value={this.second.toString()}
-							 label={strings.SecondsLabel + ':'}
+							 label={strings.DataColumn_SecondsLabel + ':'}
 							 labelPosition={Position.top}
 							 onValidate={this.onSecondValidate}
 							 onIncrement={this.onSecondIncrement}

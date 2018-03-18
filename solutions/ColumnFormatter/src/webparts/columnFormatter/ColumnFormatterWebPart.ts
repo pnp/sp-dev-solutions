@@ -112,10 +112,10 @@ export default class ColumnFormatterWebPart extends BaseClientSideWebPart<IColum
         {
           groups: [
             {
-              groupName: strings.PropertyBasicGroupName,
+              groupName: strings.Property_BasicGroupName,
               groupFields: [
                 PropertyFieldSpinButton('height', {
-                  label: strings.PropertyHeightLabel,
+                  label: strings.Property_HeightLabel,
                   initialValue: this.properties.height,
                   onPropertyChange: this.onPropertyPaneFieldChanged.bind(this),
                   properties: this.properties,
@@ -128,10 +128,10 @@ export default class ColumnFormatterWebPart extends BaseClientSideWebPart<IColum
               ]
             },
             {
-              groupName: strings.PropertyEditorGroupName,
+              groupName: strings.Property_EditorGroupName,
               groupFields: [
                 PropertyPaneDropdown('editorTheme', {
-                  label: strings.PropertyEditorThemeLabel,
+                  label: strings.Property_EditorThemeLabel,
                   selectedKey: this.properties.editorTheme,
                   options: [
                     { key: 'vs', text: 'vs' },
@@ -140,19 +140,19 @@ export default class ColumnFormatterWebPart extends BaseClientSideWebPart<IColum
                   ]
                 }),
                 PropertyPaneToggle('showLineNumbers', {
-                  label: strings.PropertyLineNumbersLabel,
-                  onText: strings.PropertyVisibleOn,
-                  offText: strings.PropertyVisibleOff
+                  label: strings.Property_LineNumbersLabel,
+                  onText: strings.Property_VisibleOn,
+                  offText: strings.Property_VisibleOff
                 }),
                 PropertyPaneToggle('showIndentGuides', {
-                  label: strings.PropertyIndentGuidesLabel,
-                  onText: strings.PropertyVisibleOn,
-                  offText: strings.PropertyVisibleOff
+                  label: strings.Property_IndentGuidesLabel,
+                  onText: strings.Property_VisibleOn,
+                  offText: strings.Property_VisibleOff
                 }),
                 PropertyPaneToggle('showMiniMap', {
-                  label: strings.PropertyMiniMapLabel,
-                  onText: strings.PropertyVisibleOn,
-                  offText: strings.PropertyVisibleOff
+                  label: strings.Property_MiniMapLabel,
+                  onText: strings.Property_VisibleOn,
+                  offText: strings.Property_VisibleOff
                 })
               ]
             }

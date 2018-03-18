@@ -49,10 +49,10 @@ export class WizardFlowPanel extends React.Component<IWizardFlowPanelProps, IWiz
 		return (
 			<div>
 				<TextField
-				 label={strings.WizardFlowFlowId + ':'}
+				 label={strings.WizardFlow_FlowId + ':'}
 				 value={this.state.flowId}
 				 onChanged={this.onFlowIdChanged}
-				 title={strings.WizardFlowFlowIdInstructions}/>
+				 title={strings.WizardFlow_FlowIdInstructions}/>
 				<TextField
 				 label={strings.Wizard_Text + ':'}
 				 value={this.state.displayValue}
@@ -166,8 +166,8 @@ const calculateCode = (flowId:string, showIcon:boolean, iconName:string, color:s
 
 
 export const WizardFlow: IWizard = {
-	name: strings.WizardFlowName,
-	description: strings.WizardFlowDescription,
+	name: strings.WizardFlow_Name,
+	description: strings.WizardFlow_Description,
 	iconName: 'Flow',
 	fieldTypes: [], //all
 	isTemplate: false,

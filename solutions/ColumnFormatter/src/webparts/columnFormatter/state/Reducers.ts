@@ -283,12 +283,12 @@ function AddDataColumnReducer(data:IData, action:IAddDataColumnAction): IData {
 	//Ensure new column has a unique name
 	let isUnique:boolean = false;
 	let fieldCounter:number = 1;
-	let fieldName:string = strings.DataColumnDefaultName;
+	let fieldName:string = strings.DataColumn_DefaultName;
 	do {
 		for(var column of data.columns){
 			if(column.name == fieldName){
 				fieldCounter++;
-				fieldName = strings.DataColumnDefaultName + fieldCounter.toString();
+				fieldName = strings.DataColumn_DefaultName + fieldCounter.toString();
 				continue;
 			}
 		}

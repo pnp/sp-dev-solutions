@@ -52,7 +52,7 @@ export class WizardTwitterPanel extends React.Component<IWizardTwitterPanelProps
 					{key:'bigger', text:'Bigger (73x73)'}
 				 ]}/>
 				<SpinButtonWithSuffix
-				 label={strings.WizardTwitterRounding}
+				 label={strings.WizardTwitter_Rounding}
 				 initialValue={this.state.rounding}
 				 onChanged={this.onRoundingChanged}
 				 suffix='%'
@@ -61,8 +61,8 @@ export class WizardTwitterPanel extends React.Component<IWizardTwitterPanelProps
 				<Toggle
 				 checked={this.state.linkToProfile}
 				 onChanged={this.onLinkToProfileChanged}
-				 onText={strings.WizardTwitterLinkOn}
-				 offText={strings.WizardTwitterLinkOff}/>
+				 onText={strings.WizardTwitter_LinkOn}
+				 offText={strings.WizardTwitter_LinkOff}/>
 				<Toggle
 				 checked={this.state.showTooltip}
 				 onChanged={this.onShowTooltipChanged}
@@ -220,8 +220,8 @@ const calculateCode = (colType:columnTypes, size:string, rounding:number, linkTo
 
 
 export const WizardTwitter: IWizard = {
-	name: strings.WizardTwitterName,
-	description: strings.WizardTwitterDescription,
+	name: strings.WizardTwitter_Name,
+	description: strings.WizardTwitter_Description,
 	iconName: 'Feedback',
 	fieldTypes: [
 		columnTypes.choice,

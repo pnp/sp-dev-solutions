@@ -204,8 +204,8 @@ const calculateCode = (emptyBarValue:number, fullBarValue:number, valueDisplay:s
 
 
 export const WizardDataBars: IWizard = {
-	name: strings.WizardDataBarsName,
-	description: strings.WizardDataBarsDescription,
+	name: strings.WizardDataBars_Name,
+	description: strings.WizardDataBars_Description,
 	iconName: 'BarChartHorizontal',
 	fieldTypes: [
 		columnTypes.number

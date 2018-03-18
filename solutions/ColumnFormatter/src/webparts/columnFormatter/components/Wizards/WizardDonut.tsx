@@ -81,8 +81,8 @@ export class WizardDonutPanel extends React.Component<IWizardDonutPanelProps, IW
 				<Toggle
 				 checked={this.state.showAsDonut}
 				 onChanged={this.onShowAsDonutChanged}
-				 onText={strings.WizardDonutDonut}
-				 offText={strings.WizardDonutPie}/>
+				 onText={strings.WizardDonut_Donut}
+				 offText={strings.WizardDonut_Pie}/>
 				<SpinButtonWithSuffix
 				 label={strings.Wizard_Size + ':'}
 				 initialValue={this.state.size}
@@ -93,11 +93,11 @@ export class WizardDonutPanel extends React.Component<IWizardDonutPanelProps, IW
 				 min={40}
 				 max={134}/>
 				<StandardColorsDropdown
-				 label={strings.WizardDonutOuterColor + ':'}
+				 label={strings.WizardDonut_OuterColor + ':'}
 				 onChanged={this.onOuterColorChanged}
 				 selectedKey={this.state.outerColor}/>
 				<StandardColorsDropdown
-				 label={strings.WizardDonutInnerColor + ':'}
+				 label={strings.WizardDonut_InnerColor + ':'}
 				 onChanged={this.onInnerColorChanged}
 				 selectedKey={this.state.innerColor}/>
 				
@@ -112,7 +112,7 @@ export class WizardDonutPanel extends React.Component<IWizardDonutPanelProps, IW
 				 ]}/>
 				{!this.state.showAsDonut &&
 					<StandardColorsDropdown
-					 label={strings.WizardDonutTextColor + ':'}
+					 label={strings.WizardDonut_TextColor + ':'}
 					 onChanged={this.onTextColorChanged}
 					 selectedKey={this.state.textColor}/>
 				}
@@ -482,8 +482,8 @@ const calculateCode = (showAsDonut:boolean, size:number, valueDisplay:string, ou
 
 
 export const WizardDonut: IWizard = {
-	name: strings.WizardDonutName,
-	description: strings.WizardDonutDescription,
+	name: strings.WizardDonut_Name,
+	description: strings.WizardDonut_Description,
 	iconName: 'DonutChart',
 	fieldTypes: [columnTypes.number],
 	isTemplate: false,

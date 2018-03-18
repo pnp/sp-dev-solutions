@@ -112,12 +112,12 @@ class ColumnFormatterEditorCommands_ extends React.Component<IColumnFormatterEdi
          onDismiss={this.closeDialog}
          dialogContentProps={{
            type: DialogType.normal,
-           title: strings.NewConfirmationDialogTitle,
-           subText: strings.NewConfirmationDialogText
+           title: strings.NewConfirmationDialog_Title,
+           subText: strings.NewConfirmationDialog_Text
          }}>
          <DialogFooter>
-           <PrimaryButton text={strings.NewConfirmationDialogConfirmButton} onClick={this.onNewConfirmationClick}/>
-           <DefaultButton text={strings.NewConfirmationDialogCancelButton} onClick={this.closeDialog}/>
+           <PrimaryButton text={strings.Dialog_Yes} onClick={this.onNewConfirmationClick}/>
+           <DefaultButton text={strings.Dialog_Cancel} onClick={this.closeDialog}/>
          </DialogFooter>
         </Dialog>
 
@@ -127,12 +127,12 @@ class ColumnFormatterEditorCommands_ extends React.Component<IColumnFormatterEdi
          onDismiss={this.closeDialog}
          dialogContentProps={{
            type: DialogType.normal,
-           title: strings.CustomizeConfirmationDialogTitle,
-           subText: strings.CustomizeConfirmationDialogText
+           title: strings.CustomizeConfirmationDialog_Title,
+           subText: strings.CustomizeConfirmationDialog_Text
          }}>
          <DialogFooter>
-           <PrimaryButton text={strings.CustomizeConfirmationDialogConfirmButton} onClick={this.onCustomizeConfirmationClick}/>
-           <DefaultButton text={strings.CustomizeConfirmationDialogCancelButton} onClick={this.closeDialog}/>
+           <PrimaryButton text={strings.Dialog_Yes} onClick={this.onCustomizeConfirmationClick}/>
+           <DefaultButton text={strings.Dialog_Cancel} onClick={this.closeDialog}/>
          </DialogFooter>
         </Dialog>
 
@@ -142,42 +142,42 @@ class ColumnFormatterEditorCommands_ extends React.Component<IColumnFormatterEdi
          onDismiss={this.closeDialog}
          dialogContentProps={{
            type: DialogType.largeHeader,
-           title: strings.SaveToLibraryDialogTitle
+           title: strings.Library_SaveDialogTitle
          }}>
           {!this.props.context.isOnline && (
             <span>{strings.FeatureUnavailableFromLocalWorkbench}</span>
           )}
           {!this.state.librariesLoaded && this.props.context.isOnline && !this.state.libraryIsSaving && this.state.librarySaveError == undefined && (
-            <Spinner size={SpinnerSize.large} label={strings.SaveToLibraryLoading}/>
+            <Spinner size={SpinnerSize.large} label={strings.Library_LoadingLibraries}/>
           )}
           {this.state.librariesLoaded && this.props.context.isOnline && !this.state.libraryIsSaving && this.state.librarySaveError == undefined && (
             <div>
               <Dropdown
-               label={strings.SaveToLibraryLibraryLabel}
+               label={strings.Library_Library}
                selectedKey={this.state.selectedLibraryUrl}
                onChanged={(item:IDropdownOption)=> {this.setState({selectedLibraryUrl: item.key.toString()});}}
                required={true}
                options={this.librariesToOptions()} />
               <TextField
-               label={strings.SaveToLibraryFolderPathLabel}
+               label={strings.Library_FolderPath}
                value={this.state.libraryFolderPath}
                onChanged={(value:string) => {this.setState({libraryFolderPath: value});}}/>
               <TextField
-               label={strings.SaveToLibraryFilenameLabel}
+               label={strings.Library_Filename}
                required={true}
                value={this.state.libraryFileName}
                onChanged={(value:string) => {this.setState({libraryFileName: value});}}/>
             </div>
           )}
           {this.state.libraryIsSaving && this.state.librarySaveError == undefined &&(
-            <Spinner size={SpinnerSize.large} label={strings.SaveToLibrarySaving}/>
+            <Spinner size={SpinnerSize.large} label={strings.Library_Saving}/>
           )}
           {this.state.librarySaveError !== undefined && (
             <span className={styles.errorMessage}>{this.state.librarySaveError}</span>
           )}
           <DialogFooter>
-            <PrimaryButton text={strings.SaveToLibraryDialogConfirmButton} disabled={!this.saveToLibrarySaveButtonEnabled()} onClick={this.onSaveToLibrarySaveButtonClick}/>
-            <DefaultButton text={strings.SaveToLibraryDialogCancelButton} onClick={this.closeDialog}/>
+            <PrimaryButton text={strings.Dialog_Save} disabled={!this.saveToLibrarySaveButtonEnabled()} onClick={this.onSaveToLibrarySaveButtonClick}/>
+            <DefaultButton text={strings.Dialog_Cancel} onClick={this.closeDialog}/>
           </DialogFooter>
         </Dialog>
 
@@ -187,24 +187,24 @@ class ColumnFormatterEditorCommands_ extends React.Component<IColumnFormatterEdi
          onDismiss={this.closeDialog}
          dialogContentProps={{
           type: DialogType.largeHeader,
-          title: strings.ApplyToSiteColumnDialogTitle
+          title: strings.SiteColumn_SaveDialogTitle
         }}>
          {!this.props.context.isOnline && (
            <span>{strings.FeatureUnavailableFromLocalWorkbench}</span>
          )}
          {!this.state.siteColumnsLoaded && this.props.context.isOnline && !this.state.siteColumnIsApplying && this.state.siteColumnSaveError == undefined && (
-           <Spinner size={SpinnerSize.large} label={strings.ApplyToSiteColumnLoading}/>
+           <Spinner size={SpinnerSize.large} label={strings.SiteColumn_LoadingSiteColumns}/>
          )}
          {this.state.siteColumnsLoaded && this.props.context.isOnline && !this.state.siteColumnIsApplying && this.state.siteColumnSaveError == undefined && (
            <div>
              <Dropdown
-              label={strings.ApplyToSiteColumnGroupLabel}
+              label={strings.SiteColumn_Group}
               selectedKey={this.state.selectedSiteColumnGroup}
               onChanged={(item:IDropdownOption)=> {this.setState({selectedSiteColumnGroup: item.key.toString(),selectedSiteColumn: undefined});}}
               required={true}
               options={this.siteColumnGroupsToOptions()} />
              <Dropdown
-              label={strings.ApplyToSiteColumnFieldLabel}
+              label={strings.SiteColumn_Field}
               selectedKey={this.state.selectedSiteColumn}
               disabled={this.state.selectedSiteColumnGroup == undefined}
               onChanged={(item:IDropdownOption)=> {this.setState({selectedSiteColumn: item.key.toString()});}}
@@ -213,20 +213,20 @@ class ColumnFormatterEditorCommands_ extends React.Component<IColumnFormatterEdi
              <Toggle
               checked={this.state.siteColumnPushToLists}
               onChanged={()=> {this.setState({siteColumnPushToLists:!this.state.siteColumnPushToLists});}}
-              onText={strings.ApplyToSiteColumnPushToListsOnLabel}
-              offText={strings.ApplyToSiteColumnPushToListsOffLabel}
+              onText={strings.SiteColumn_PushToListsOn}
+              offText={strings.SiteColumn_PushToListsOff}
              />
            </div>
          )}
          {this.state.siteColumnIsApplying && this.state.siteColumnSaveError == undefined &&(
-           <Spinner size={SpinnerSize.large} label={strings.ApplyToSiteColumnApplying}/>
+           <Spinner size={SpinnerSize.large} label={strings.SiteColumn_Saving}/>
          )}
          {this.state.siteColumnSaveError !== undefined && (
            <span className={styles.errorMessage}>{this.state.siteColumnSaveError}</span>
          )}
           <DialogFooter>
-            <PrimaryButton text={strings.ApplyToSiteColumnDialogConfirmButton} disabled={!this.applyToSiteColumnSaveButtonEnabled()} onClick={this.onApplyToSiteColumnSaveButtonClick}/>
-            <DefaultButton text={strings.ApplyToSiteColumnDialogCancelButton} onClick={this.closeDialog}/>
+            <PrimaryButton text={strings.Dialog_Save} disabled={!this.applyToSiteColumnSaveButtonEnabled()} onClick={this.onApplyToSiteColumnSaveButtonClick}/>
+            <DefaultButton text={strings.Dialog_Cancel} onClick={this.closeDialog}/>
           </DialogFooter>
         </Dialog>
 
@@ -236,24 +236,24 @@ class ColumnFormatterEditorCommands_ extends React.Component<IColumnFormatterEdi
          onDismiss={this.closeDialog}
          dialogContentProps={{
           type: DialogType.largeHeader,
-          title: strings.ApplyToListDialogTitle
+          title: strings.ListField_SaveDialogTitle
         }}>
          {!this.props.context.isOnline && (
            <span>{strings.FeatureUnavailableFromLocalWorkbench}</span>
          )}
          {!this.state.listsLoaded && this.props.context.isOnline && !this.state.listIsApplying && this.state.listSaveError == undefined && (
-           <Spinner size={SpinnerSize.large} label={strings.ApplyToListLoading}/>
+           <Spinner size={SpinnerSize.large} label={strings.ListField_LoadingLists}/>
          )}
          {this.state.listsLoaded && this.props.context.isOnline && !this.state.listIsApplying && this.state.listSaveError == undefined && (
            <div>
              <Dropdown
-              label={strings.ApplyToListListLabel}
+              label={strings.ListField_List}
               selectedKey={this.state.selectedList}
               onChanged={(item:IDropdownOption)=> {this.setState({selectedList: item.key.toString(),selectedField: undefined});}}
               required={true}
               options={this.listsToOptions()} />
              <Dropdown
-              label={strings.ApplyToListFieldLabel}
+              label={strings.ListField_Field}
               selectedKey={this.state.selectedField}
               disabled={this.state.selectedList == undefined}
               onChanged={(item:IDropdownOption)=> {this.setState({selectedField: item.key.toString()});}}
@@ -262,14 +262,14 @@ class ColumnFormatterEditorCommands_ extends React.Component<IColumnFormatterEdi
            </div>
          )}
          {this.state.listIsApplying && this.state.listSaveError == undefined &&(
-           <Spinner size={SpinnerSize.large} label={strings.ApplyToListApplying}/>
+           <Spinner size={SpinnerSize.large} label={strings.ListField_Saving}/>
          )}
          {this.state.listSaveError !== undefined && (
            <span className={styles.errorMessage}>{this.state.listSaveError}</span>
          )}
           <DialogFooter>
-            <PrimaryButton text={strings.ApplyToListDialogConfirmButton} disabled={!this.applyToListSaveButtonEnabled()} onClick={this.onApplyToListSaveButtonClick}/>
-            <DefaultButton text={strings.ApplyToListDialogCancelButton} onClick={this.closeDialog}/>
+            <PrimaryButton text={strings.Dialog_Save} disabled={!this.applyToListSaveButtonEnabled()} onClick={this.onApplyToListSaveButtonClick}/>
+            <DefaultButton text={strings.Dialog_Cancel} onClick={this.closeDialog}/>
           </DialogFooter>
         </Dialog>
 
@@ -281,7 +281,7 @@ class ColumnFormatterEditorCommands_ extends React.Component<IColumnFormatterEdi
     let items:Array<IContextualMenuItem> = [
       {
         key: 'new',
-        name: strings.CommandNew,
+        name: strings.Command_New,
         iconProps: {iconName: 'Add'},
         onClick: this.onNewClick
       }
@@ -289,7 +289,7 @@ class ColumnFormatterEditorCommands_ extends React.Component<IColumnFormatterEdi
     if(this.props.wizardTabVisible) {
       items.push({
         key: 'customize',
-        name: strings.CommandCustomize,
+        name: strings.Command_Customize,
         iconProps: {iconName: 'Fingerprint'},
         onClick: this.onCustomizeClick
       });
@@ -302,7 +302,7 @@ class ColumnFormatterEditorCommands_ extends React.Component<IColumnFormatterEdi
     items.push(
         {
           key: 'saveas',
-          name: strings.CommandSaveAs,
+          name: strings.Command_SaveAs,
           iconProps: {iconName: 'SaveAs'},
           subMenuProps: {
             items: [
@@ -346,7 +346,7 @@ class ColumnFormatterEditorCommands_ extends React.Component<IColumnFormatterEdi
       ((this.state.activeSaveMethod == saveMethod.SiteColumn && this.applyToSiteColumnSaveButtonEnabled()) || this.state.activeSaveMethod !== saveMethod.SiteColumn)) {
       items.push({
         key: 'save',
-        name: strings.CommandSave,
+        name: strings.Command_Save,
         iconProps: { iconName: this.saveMethodIcon(this.state.activeSaveMethod)},
         title: this.saveMethodTitle(this.state.activeSaveMethod),
         onClick: this.onSaveClick
@@ -375,17 +375,17 @@ class ColumnFormatterEditorCommands_ extends React.Component<IColumnFormatterEdi
   private saveMethodTitle(method:saveMethod): string {
     switch (method) {
       case saveMethod.Download:
-        return strings.CommandDownload;
+        return strings.Command_Download;
       case saveMethod.Copy:
-        return strings.CommandCopy;
+        return strings.Command_Copy;
       case saveMethod.Library:
-        return strings.CommandSaveToLibrary;
+        return strings.Command_SaveToLibrary;
       case saveMethod.SiteColumn:
-        return strings.CommandApplyToSiteColumn;
+        return strings.Command_ApplyToSiteColumn;
       case saveMethod.ListField:
-        return strings.CommandApplyToList;
+        return strings.Command_ApplyToList;
       default:
-        return strings.CommandSave;
+        return strings.Command_Save;
     }
   }
 
@@ -497,7 +497,7 @@ class ColumnFormatterEditorCommands_ extends React.Component<IColumnFormatterEdi
           })
           .catch((error:any) => {
             this.setState({
-              librarySaveError: strings.SaveToLibraryLoadError + ' ' + strings.TechnicalDetailsErrorHeader + ': ' + error.message
+              librarySaveError: strings.Library_LibrariesLoadError + ' ' + strings.TechnicalDetailsErrorHeader + ': ' + error.message
             });
           });
       }
@@ -544,7 +544,7 @@ class ColumnFormatterEditorCommands_ extends React.Component<IColumnFormatterEdi
       .catch((error:any) => {
         this.setState({
           libraryIsSaving: false,
-          librarySaveError: strings.SaveToLibrarySaveError + ' ' + strings.TechnicalDetailsErrorHeader + ': ' + error.message,
+          librarySaveError: strings.Library_SaveError + ' ' + strings.TechnicalDetailsErrorHeader + ': ' + error.message,
           activeSaveMethod: undefined
         });
       });
@@ -586,7 +586,7 @@ class ColumnFormatterEditorCommands_ extends React.Component<IColumnFormatterEdi
           })
           .catch((error:any) => {
             this.setState({
-              siteColumnSaveError: strings.WelcomeLoadFromSiteColumnLoadingSiteColumnsError + ' ' + strings.TechnicalDetailsErrorHeader + ': ' + error.message
+              siteColumnSaveError: strings.SiteColumn_SiteColumnsLoadError + ' ' + strings.TechnicalDetailsErrorHeader + ': ' + error.message
             });
           });
       }
@@ -667,7 +667,7 @@ class ColumnFormatterEditorCommands_ extends React.Component<IColumnFormatterEdi
       .catch((error:any) => {
         this.setState({
           siteColumnIsApplying: false,
-          siteColumnSaveError: strings.ApplyToSiteColumnApplyError + ' ' + strings.TechnicalDetailsErrorHeader + ': ' + error.message,
+          siteColumnSaveError: strings.SiteColumn_SaveError + ' ' + strings.TechnicalDetailsErrorHeader + ': ' + error.message,
           activeSaveMethod: undefined
         });
       });
@@ -721,7 +721,7 @@ class ColumnFormatterEditorCommands_ extends React.Component<IColumnFormatterEdi
           })
           .catch((error:any) => {
             this.setState({
-              listSaveError: strings.ApplyToListLoadError + ' ' + strings.TechnicalDetailsErrorHeader + ': ' + error.message
+              listSaveError: strings.ListField_ListLoadError + ' ' + strings.TechnicalDetailsErrorHeader + ': ' + error.message
             });
           });
       }
@@ -795,7 +795,7 @@ class ColumnFormatterEditorCommands_ extends React.Component<IColumnFormatterEdi
       .catch((error:any) => {
         this.setState({
           listIsApplying: false,
-          listSaveError: strings.ApplyToListApplyError + ' ' + strings.TechnicalDetailsErrorHeader + ': ' + error.message,
+          listSaveError: strings.ListField_SaveError + ' ' + strings.TechnicalDetailsErrorHeader + ': ' + error.message,
           activeSaveMethod: undefined
         });
       });

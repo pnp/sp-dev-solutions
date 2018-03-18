@@ -4,8 +4,8 @@ import { columnTypes, IDataColumn } from '../../state/State';
 import { IWizard, standardWizardStartingColumns } from './WizardCommon';
 
 export const WizardCheckboxes: IWizard = {
-	name: strings.WizardCheckboxesName,
-	description: strings.WizardCheckboxesDescription,
+	name: strings.WizardCheckboxes_Name,
+	description: strings.WizardCheckboxes_Description,
 	iconName: 'CheckboxComposite',
 	fieldTypes: [
 		columnTypes.boolean

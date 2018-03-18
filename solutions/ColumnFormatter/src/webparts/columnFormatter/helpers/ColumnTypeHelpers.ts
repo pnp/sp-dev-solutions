@@ -30,25 +30,25 @@ export const iconForType = (type:columnTypes): string => {
 export const textForType = (type:columnTypes): string => {
 	switch(type){
 		case columnTypes.boolean:
-			return strings.ColumnTypeBoolean;
+			return strings.ColumnType_Boolean;
 		case columnTypes.choice:
-			return strings.ColumnTypeChoice;
+			return strings.ColumnType_Choice;
 		case columnTypes.datetime:
-			return strings.ColumnTypeDateTime;
+			return strings.ColumnType_DateTime;
 		case columnTypes.link:
-			return strings.ColumnTypeLink;
+			return strings.ColumnType_Link;
 		case columnTypes.picture:
-			return strings.ColumnTypePicture;
+			return strings.ColumnType_Picture;
 		case columnTypes.lookup:
-			return strings.ColumnTypeLookup;
+			return strings.ColumnType_Lookup;
 		case columnTypes.number:
-			return strings.ColumnTypeNumber;
+			return strings.ColumnType_Number;
 		case columnTypes.person:
-			return strings.ColumnTypePerson;
+			return strings.ColumnType_Person;
 		case columnTypes.text:
-			return strings.ColumnTypeText;
+			return strings.ColumnType_Text;
 		default:
-			return strings.ColumnTypeUnknown;
+			return strings.ColumnType_Unknown;
 	}
 };
 

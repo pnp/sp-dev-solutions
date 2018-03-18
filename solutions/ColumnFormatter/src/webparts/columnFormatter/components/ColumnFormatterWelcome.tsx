@@ -104,8 +104,8 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
           {this.state.stage == welcomeStage.start && (
             <div>
               <div className={styles.header}>
-                <h1>{strings.WelcomeTitle}</h1>
-                <span>{strings.WelcomeSubTitle}</span>
+                <h1>{strings.Welcome_Title}</h1>
+                <span>{strings.Welcome_SubTitle}</span>
               </div>
               <div className={styles.startButtons}>
                 <div className={styles.startButton} onClick={() => {this.gotoStage(welcomeStage.new);}}>
@@ -113,8 +113,8 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
                     <Icon iconName='Filters'/>
                   </div>
                   <div className={styles.words}>
-                    <h2>{strings.WelcomeNewHeader}</h2>
-                    <span>{strings.WelcomeNewDescription}</span>
+                    <h2>{strings.Welcome_NewHeader}</h2>
+                    <span>{strings.Welcome_NewDescription}</span>
                   </div>
                 </div>
                 <div className={styles.startButton} onClick={() => {this.gotoStage(welcomeStage.open);}}>
@@ -122,8 +122,8 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
                     <Icon iconName='OpenFolderHorizontal'/>
                   </div>
                   <div className={styles.words}>
-                    <h2>{strings.WelcomeOpenHeader}</h2>
-                    <span>{strings.WelcomeOpenDescription}</span>
+                    <h2>{strings.Welcome_OpenHeader}</h2>
+                    <span>{strings.Welcome_OpenDescription}</span>
                   </div>
                 </div>
               </div>
@@ -134,7 +134,7 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
           {this.state.stage == welcomeStage.new && (
             <div className={styles.newForm}>
               <div className={styles.columnType}>
-                <Label required={true}>{strings.WelcomeNewColumnTypeLabel}</Label>
+                <Label required={true}>{strings.Welcome_ColumnType}</Label>
                 <Dropdown
                  selectedKey={this.state.columnTypeForNew}
                  onChanged={this.onChangeColumnTypeForNew}
@@ -155,7 +155,7 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
                selectedKey={this.state.useWizardForNew ? 'wizard' : 'blank'}
                onChange={this.onNewStartWithChanged}
                options={[
-                 {key:'wizard', text:strings.WelcomeNewWizardOption, onRenderField: (props, render) => {
+                 {key:'wizard', text:strings.Welcome_NewWizardOption, onRenderField: (props, render) => {
                   return(
                     <div>
                       { render!(props) }
@@ -163,14 +163,14 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
                     </div>
                   );
                  }},
-                 {key:'blank', text:strings.WelcomeNewBlankOption}
+                 {key:'blank', text:strings.Welcome_NewBlankOption}
                ]}/>
               <div className={styles.navigationButtons}>
                 <div>
-                  <DefaultButton text={strings.WelcomeBackButton} onClick={() => {this.gotoStage(welcomeStage.start);}}/>
+                  <DefaultButton text={strings.Welcome_BackButton} onClick={() => {this.gotoStage(welcomeStage.start);}}/>
                 </div>
                 <div style={{textAlign: 'right'}}>
-                  <PrimaryButton text={strings.WelcomeOKButton} disabled={!this.okButtonEnabled()} onClick={this.onOkForNewClick}/>
+                  <PrimaryButton text={strings.Welcome_OKButton} disabled={!this.okButtonEnabled()} onClick={this.onOkForNewClick}/>
                 </div>
               </div>
             </div>
@@ -183,14 +183,14 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
                selectedKey={this.state.loadChoiceForOpen}
                onChange={this.onLoadChoiceForOpenChanged}
                options={[
-                {key:'list', text: strings.WelcomeOpenLoadList},
-                {key:'sitecolumn', text: strings.WelcomeOpenLoadSiteColumn},
-                {key:'file', text: strings.WelcomeOpenLoadFile, onRenderField: (props, render) => {
+                {key:'list', text: strings.Welcome_OpenLoadList},
+                {key:'sitecolumn', text: strings.Welcome_OpenLoadSiteColumn},
+                {key:'file', text: strings.Welcome_OpenLoadFile, onRenderField: (props, render) => {
                   return (
                     <div>
                       { render!(props) }
                       <div className={styles.columnType}>
-                        <Label required={true}>{strings.WelcomeOpenColumnTypeLabel}</Label>
+                        <Label required={true}>{strings.Welcome_ColumnType}</Label>
                         <Dropdown
                          selectedKey={this.state.columnTypeForOpen}
                          onChanged={this.onChangeColumnTypeForOpen}
@@ -213,8 +213,8 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
                          onChange={this.onFileChoiceForOpenChanged}
                          disabled={this.state.loadChoiceForOpen !== 'file'}
                          options={[
-                           {key:'library', text: strings.WelcomeOpenLoadFileLibrary},
-                           {key:'upload', text: strings.WelcomeOpenLoadFileUpload}
+                           {key:'library', text: strings.Welcome_OpenLoadFileLibrary},
+                           {key:'upload', text: strings.Welcome_OpenLoadFileUpload}
                          ]}/>
                       </div>
                     </div>
@@ -223,10 +223,10 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
                ]}/>
               <div className={styles.navigationButtons}>
                 <div>
-                  <DefaultButton text={strings.WelcomeBackButton} onClick={() => {this.gotoStage(welcomeStage.start);}}/>
+                  <DefaultButton text={strings.Welcome_BackButton} onClick={() => {this.gotoStage(welcomeStage.start);}}/>
                 </div>
                 <div style={{textAlign: 'right'}}>
-                  <PrimaryButton text={strings.WelcomeNextButton} disabled={!this.okButtonEnabled()} onClick={this.onOkForOpenClick}/>
+                  <PrimaryButton text={strings.Welcome_NextButton} disabled={!this.okButtonEnabled()} onClick={this.onOkForOpenClick}/>
                 </div>
               </div>
             </div>
@@ -238,7 +238,7 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
               <FileUploader onTextLoaded={this.onFileTextReceived}/>
               <div className={styles.navigationButtons}>
                 <div>
-                  <DefaultButton text={strings.WelcomeBackButton} onClick={() => {this.gotoStage(welcomeStage.open);}}/>
+                  <DefaultButton text={strings.Welcome_BackButton} onClick={() => {this.gotoStage(welcomeStage.open);}}/>
                 </div>
               </div>
             </div>
@@ -251,18 +251,18 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
                 <span>{strings.FeatureUnavailableFromLocalWorkbench}</span>
               )}
               {!this.state.listsLoaded && this.props.context.isOnline && !this.state.loadingFromList && this.state.loadFromListError == undefined && (
-                <Spinner size={SpinnerSize.large} label={strings.WelcomeLoadFromListLoadingLists}/>
+                <Spinner size={SpinnerSize.large} label={strings.ListField_LoadingLists}/>
               )}
               {this.state.listsLoaded && this.props.context.isOnline && !this.state.loadingFromList && this.state.loadFromListError == undefined && (
                 <div>
                   <Dropdown
-                  label={strings.WelcomeLoadFromListListLabel}
+                  label={strings.ListField_List}
                   selectedKey={this.state.selectedList}
                   onChanged={(item:IDropdownOption)=> {this.setState({selectedList: item.key.toString(),selectedField: undefined});}}
                   required={true}
                   options={this.listsToOptions()} />
                   <Dropdown
-                  label={strings.WelcomeLoadFromListFieldLabel}
+                  label={strings.ListField_Field}
                   selectedKey={this.state.selectedField}
                   disabled={this.state.selectedList == undefined}
                   onChanged={(item:IDropdownOption)=> {this.setState({selectedField: item.key.toString()});}}
@@ -271,17 +271,17 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
                 </div>
               )}
               {this.state.loadingFromList && this.state.loadFromListError == undefined &&(
-                <Spinner size={SpinnerSize.large} label={strings.WelcomeLoadFromListLoading}/>
+                <Spinner size={SpinnerSize.large} label={strings.ListField_LoadingFromList}/>
               )}
               {this.state.loadFromListError !== undefined && (
                 <span className={styles.errorMessage}>{this.state.loadFromListError}</span>
               )}
               <div className={styles.navigationButtons}>
                 <div>
-                  <DefaultButton text={strings.WelcomeBackButton} onClick={() => {this.gotoStage(welcomeStage.open);}}/>
+                  <DefaultButton text={strings.Welcome_BackButton} onClick={() => {this.gotoStage(welcomeStage.open);}}/>
                 </div>
                 <div style={{textAlign: 'right'}}>
-                  <PrimaryButton text={strings.WelcomeOKButton} disabled={!this.okButtonEnabled()} onClick={this.onOkForLoadFromListClick}/>
+                  <PrimaryButton text={strings.Welcome_OKButton} disabled={!this.okButtonEnabled()} onClick={this.onOkForLoadFromListClick}/>
                 </div>
               </div>
             </div>
@@ -294,18 +294,18 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
                 <span>{strings.FeatureUnavailableFromLocalWorkbench}</span>
               )}
               {!this.state.siteColumnsLoaded && this.props.context.isOnline && !this.state.loadingFromSiteColumn && this.state.loadFromSiteColumnError == undefined && (
-                <Spinner size={SpinnerSize.large} label={strings.WelcomeLoadFromSiteColumnLoadingSiteColumns}/>
+                <Spinner size={SpinnerSize.large} label={strings.SiteColumn_LoadingSiteColumns}/>
               )}
               {this.state.siteColumnsLoaded && this.props.context.isOnline && !this.state.loadingFromSiteColumn && this.state.loadFromSiteColumnError == undefined && (
                 <div>
                   <Dropdown
-                   label={strings.WelcomeLoadFromSiteColumnGroupLabel}
+                   label={strings.SiteColumn_Group}
                    selectedKey={this.state.selectedSiteColumnGroup}
                    onChanged={(item:IDropdownOption)=> {this.setState({selectedSiteColumnGroup: item.key.toString(), selectedSiteColumn: undefined});}}
                    required={true}
                    options={this.siteColumnGroupsToOptions()} />
                   <Dropdown
-                   label={strings.WelcomeLoadFromSiteColumnFieldLabel}
+                   label={strings.SiteColumn_Field}
                    selectedKey={this.state.selectedSiteColumn}
                    disabled={this.state.selectedSiteColumnGroup == undefined}
                    onChanged={(item:IDropdownOption)=> {this.setState({selectedSiteColumn: item.key.toString()});}}
@@ -314,17 +314,17 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
                 </div>
               )}
               {this.state.loadingFromSiteColumn && this.state.loadFromSiteColumnError == undefined &&(
-                <Spinner size={SpinnerSize.large} label={strings.WelcomeLoadFromSiteColumnLoading}/>
+                <Spinner size={SpinnerSize.large} label={strings.SiteColumn_LoadingFromSiteColumn}/>
               )}
               {this.state.loadFromSiteColumnError !== undefined && (
                 <span className={styles.errorMessage}>{this.state.loadFromSiteColumnError}</span>
               )}
               <div className={styles.navigationButtons}>
                 <div>
-                  <DefaultButton text={strings.WelcomeBackButton} onClick={() => {this.gotoStage(welcomeStage.open);}}/>
+                  <DefaultButton text={strings.Welcome_BackButton} onClick={() => {this.gotoStage(welcomeStage.open);}}/>
                 </div>
                 <div style={{textAlign: 'right'}}>
-                  <PrimaryButton text={strings.WelcomeOKButton} disabled={!this.okButtonEnabled()} onClick={this.onOkForLoadFromSiteColumnClick}/>
+                  <PrimaryButton text={strings.Welcome_OKButton} disabled={!this.okButtonEnabled()} onClick={this.onOkForLoadFromSiteColumnClick}/>
                 </div>
               </div>
             </div>
@@ -337,39 +337,39 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
                 <span>{strings.FeatureUnavailableFromLocalWorkbench}</span>
               )}
               {!this.state.librariesLoaded && this.props.context.isOnline && !this.state.loadingFromLibrary && this.state.loadFromLibraryError == undefined && (
-                <Spinner size={SpinnerSize.large} label={strings.WelcomeLoadFromLibraryLoadingLibraries}/>
+                <Spinner size={SpinnerSize.large} label={strings.Library_LoadingLibraries}/>
               )}
               {this.state.librariesLoaded && this.props.context.isOnline && !this.state.loadingFromLibrary && this.state.loadFromLibraryError == undefined && (
                 <div>
                   <Dropdown
-                   label={strings.WelcomeLoadFromLibraryLibraryLabel}
+                   label={strings.Library_Library}
                    selectedKey={this.state.selectedLibraryUrl}
                    onChanged={(item:IDropdownOption)=> {this.setState({selectedLibraryUrl: item.key.toString()});}}
                    required={true}
                    options={this.librariesToOptions()} />
                   <TextField
-                   label={strings.WelcomeLoadFromLibraryFolderPathLabel}
+                   label={strings.Library_FolderPath}
                    value={this.state.libraryFolderPath}
                    onChanged={(value:string) => {this.setState({libraryFolderPath: value});}}/>
                   <TextField
-                   label={strings.WelcomeLoadFromLibraryFilenameLabel}
+                   label={strings.Library_Filename}
                    required={true}
                    value={this.state.libraryFileName}
                    onChanged={(value:string) => {this.setState({libraryFileName: value});}}/>
                 </div>
               )}
               {this.state.loadingFromLibrary && this.state.loadFromLibraryError == undefined &&(
-                <Spinner size={SpinnerSize.large} label={strings.WelcomeLoadFromLibraryLoading}/>
+                <Spinner size={SpinnerSize.large} label={strings.Library_LoadingFromLibrary}/>
               )}
               {this.state.loadFromLibraryError !== undefined && (
                 <span className={styles.errorMessage}>{this.state.loadFromLibraryError}</span>
               )}
               <div className={styles.navigationButtons}>
                 <div>
-                  <DefaultButton text={strings.WelcomeBackButton} onClick={() => {this.gotoStage(welcomeStage.open);}}/>
+                  <DefaultButton text={strings.Welcome_BackButton} onClick={() => {this.gotoStage(welcomeStage.open);}}/>
                 </div>
                 <div style={{textAlign: 'right'}}>
-                  <PrimaryButton text={strings.WelcomeOKButton} disabled={!this.okButtonEnabled()} onClick={this.onOkForLoadFromLibraryClick}/>
+                  <PrimaryButton text={strings.Welcome_OKButton} disabled={!this.okButtonEnabled()} onClick={this.onOkForLoadFromLibraryClick}/>
                 </div>
               </div>
             </div>
@@ -464,7 +464,7 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
           );
         })}
         {filteredWizards.length == 0 && (
-          <span className={styles.noWizards}>{strings.WelcomeNewNoTemplates}</span>
+          <span className={styles.noWizards}>{strings.Welcome_NewNoTemplates}</span>
         )}
       </div>
     </div>
@@ -590,7 +590,7 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
           })
           .catch((error:any) => {
             this.setState({
-              loadFromListError: strings.WelcomeLoadFromListLoadingListsError + ' ' + strings.TechnicalDetailsErrorHeader + ': ' + error.message
+              loadFromListError: strings.ListField_ListLoadError + ' ' + strings.TechnicalDetailsErrorHeader + ': ' + error.message
             });
           });
       }
@@ -642,7 +642,7 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
       .catch((error:any) => {
         this.setState({
           loadingFromList: false,
-          loadFromListError: strings.WelcomeLoadFromListLoadingError + ' ' + strings.TechnicalDetailsErrorHeader + ': ' + error.message
+          loadFromListError: strings.Welcome_LoadingError + ' ' + strings.TechnicalDetailsErrorHeader + ': ' + error.message
         });
       });
   }
@@ -681,7 +681,7 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
           })
           .catch((error:any) => {
             this.setState({
-              loadFromSiteColumnError: strings.WelcomeLoadFromSiteColumnLoadingSiteColumnsError + ' ' + strings.TechnicalDetailsErrorHeader + ': ' + error.message
+              loadFromSiteColumnError: strings.SiteColumn_SiteColumnsLoadError + ' ' + strings.TechnicalDetailsErrorHeader + ': ' + error.message
             });
           });
       }
@@ -731,7 +731,7 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
       .catch((error:any) => {
         this.setState({
           loadingFromSiteColumn: false,
-          loadFromSiteColumnError: strings.WelcomeLoadFromSiteColumnLoadingError + ' ' + strings.TechnicalDetailsErrorHeader + ': ' + error.message
+          loadFromSiteColumnError: strings.Welcome_LoadingError + ' ' + strings.TechnicalDetailsErrorHeader + ': ' + error.message
         });
       });
   }
@@ -749,7 +749,7 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
           })
           .catch((error:any) => {
             this.setState({
-              loadFromLibraryError: strings.WelcomeLoadFromLibraryLoadingLibrariesError + ' ' + strings.TechnicalDetailsErrorHeader + ': ' + error.message
+              loadFromLibraryError: strings.Library_LibrariesLoadError + ' ' + strings.TechnicalDetailsErrorHeader + ': ' + error.message
             });
           });
       }
@@ -786,7 +786,7 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
       .catch((error:any) => {
         this.setState({
           loadingFromLibrary: false,
-          loadFromLibraryError: strings.WelcomeLoadFromLibraryLoadingError + ' ' + strings.TechnicalDetailsErrorHeader + ': ' + error.message
+          loadFromLibraryError: strings.Welcome_LoadingError + ' ' + strings.TechnicalDetailsErrorHeader + ': ' + error.message
         });
       });
   }

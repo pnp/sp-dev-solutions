@@ -28,7 +28,7 @@ export class SubPropsButton extends React.Component<ISubPropsButtonProps, {}> {
 		return (
 			<IconButton
 			 iconProps={{iconName: this.props.iconName || 'CustomList'}}
-			 title={this.props.tooltip || strings.SubPropertiesHeadline}
+			 title={this.props.tooltip || strings.DataColumn_SubPropertiesHeadline}
 			 onClick={this.props.onClick}
 			 styles={propButtonStyles}/>
 		);

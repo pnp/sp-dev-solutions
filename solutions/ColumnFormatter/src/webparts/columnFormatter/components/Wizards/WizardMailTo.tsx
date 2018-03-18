@@ -56,22 +56,22 @@ export class WizardMailToPanel extends React.Component<IWizardMailToPanelProps, 
 			<div>
 				<span className={styles.wizardGroupLabel}>{strings.Wizard_GroupLabelParameters}</span>
 				<TextField
-				 label={strings.WizardMailToSubject + ':'}
+				 label={strings.WizardMailTo_Subject + ':'}
 				 value={this.state.subject}
 				 onChanged={this.onSubjectChanged}/>
 				<TextField
-				 label={strings.WizardMailToBody + ':'}
+				 label={strings.WizardMailTo_Body + ':'}
 				 value={this.state.body}
 				 multiline
 				 rows={3}
 				 onChanged={this.onBodyChanged}/>
 				<TextField
-				 label={strings.WizardMailToCC + ':'}
+				 label={strings.WizardMailTo_CC + ':'}
 				 value={this.state.cc}
 				 iconProps={{iconName:'Mail'}}
 				 onChanged={this.onCCChanged}/>
 				<TextField
-				 label={strings.WizardMailToBCC + ':'}
+				 label={strings.WizardMailTo_BCC + ':'}
 				 value={this.state.bcc}
 				 iconProps={{iconName:'Mail'}}
 				 onChanged={this.onBCCChanged}/>
@@ -88,8 +88,8 @@ export class WizardMailToPanel extends React.Component<IWizardMailToPanelProps, 
 				<Toggle
 				 checked={this.state.iconLink}
 				 onChanged={this.onIconLinkChanged}
-				 onText={strings.WizardMailToIconLink}
-				 offText={strings.WizardMailToTextLink}/>
+				 onText={strings.WizardMailTo_IconLink}
+				 offText={strings.WizardMailTo_TextLink}/>
 			</div>
 		);
 	}
@@ -237,8 +237,8 @@ const calculateCode = (colType:columnTypes, displayValue:string, iconLink:boolea
 
 
 export const WizardMailTo: IWizard = {
-	name: strings.WizardMailToName,
-	description: strings.WizardMailToDescription,
+	name: strings.WizardMailTo_Name,
+	description: strings.WizardMailTo_Description,
 	iconName: 'Mail',
 	fieldTypes: [
 		columnTypes.person,
