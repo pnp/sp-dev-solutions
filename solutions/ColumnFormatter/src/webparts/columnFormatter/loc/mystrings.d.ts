@@ -1,4 +1,5 @@
 declare interface IColumnFormatterWebPartStrings {
+  
   //Property Pane
   Property_BasicGroupName: string;
   Property_HeightLabel: string;

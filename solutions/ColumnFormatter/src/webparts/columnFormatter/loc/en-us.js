@@ -33,7 +33,6 @@ define([], function() {
     Welcome_OpenLoadList: 'Load from a local list',
     Welcome_OpenLoadSiteColumn: 'Load from a site column',
     Welcome_OpenLoadFile: 'Load from a file:',
-    //WelcomeOpenColumnTypeLabel: 'Column Type',
     Welcome_OpenLoadFileLibrary: 'Open a file from a local library',
     Welcome_OpenLoadFileUpload: 'Upload a file',
     Welcome_UploadHeader: 'File Upload',
@@ -42,25 +41,7 @@ define([], function() {
     Welcome_UploadUploadButton: 'Choose a File',
     Welcome_UploadRejectError: 'Unable to accept',
     Welcome_UploadEmptyFileError: 'File is empty!',
-    //WelcomeLoadFromListLoadingLists: 'Loading Lists...',
-    //WelcomeLoadFromListListLabel: 'Local list',
-    //WelcomeLoadFromListFieldLabel: 'Field',
-    //WelcomeLoadFromListLoading: 'Loading from list...',
-    //WelcomeLoadFromListLoadingListsError: 'Error while loading lists!',
     Welcome_LoadingError: 'Error while loading!',
-    //WelcomeLoadFromSiteColumnLoadingSiteColumns: 'Loading Site Columns...',
-    //WelcomeLoadFromSiteColumnGroupLabel: 'Group',
-    //WelcomeLoadFromSiteColumnFieldLabel: 'Column',
-    //WelcomeLoadFromSiteColumnLoading: 'Loading from site column...',
-    //WelcomeLoadFromSiteColumnLoadingSiteColumnsError: 'Error while loading site columns!',
-    //WelcomeLoadFromSiteColumnLoadingError: 'Error while loading!',
-    //WelcomeLoadFromLibraryLoadingLibraries: 'Loading Libraries...',
-    //WelcomeLoadFromLibraryLibraryLabel: 'Local library',
-    //WelcomeLoadFromLibraryFolderPathLabel: 'Folder Path',
-    //WelcomeLoadFromLibraryFilenameLabel: 'Filename',
-    //WelcomeLoadFromLibraryLoading: 'Loading from Library...',
-    //WelcomeLoadFromLibraryLoadingLibrariesError: 'Error while loading libraries!',
-    //WelcomeLoadFromLibraryLoadingError: 'Error while loading! Verify the folderpath is correct (if used) and that you have permission to access this library.',
 
     //List Field (Load/Apply)
     ListField_LoadingLists: 'Loading lists...',
@@ -71,7 +52,6 @@ define([], function() {
     ListField_SaveDialogTitle: 'Apply to local list field',
     ListField_Saving: 'Applying to list...',
     ListField_SaveError: 'Error while applying! Verify you have permission to update this list\'s settings.',
-
 
     //Site Column (Load/Apply)
     SiteColumn_LoadingSiteColumns: 'Loading site columns...',
@@ -84,7 +64,6 @@ define([], function() {
     SiteColumn_PushToListsOff: 'Site column only',
     SiteColumn_Saving: 'Applying to site column...',
     SiteColumn_SaveError: 'Error while applying! Verify you have permission to update site columns.',
-
 
     //Library (Load/Save)
     Library_LoadingLibraries: 'Loading libraries...',
@@ -131,50 +110,10 @@ define([], function() {
     //New Confirmation Dialog
     NewConfirmationDialog_Title: 'Start Fresh?',
     NewConfirmationDialog_Text: 'Any unsaved changes will be lost. Do you want to continue?',
-    //NewConfirmationDialogConfirmButton: 'Yes',
-    //NewConfirmationDialogCancelButton: 'Cancel',
 
     //Customize Confirmation Dialog
     CustomizeConfirmationDialog_Title: 'Remove Wizard?',
     CustomizeConfirmationDialog_Text: 'You will be able to edit the code directly, but the wizard pane will no longer be available. This is for advanced users. Are you sure?',
-    //CustomizeConfirmationDialogConfirmButton: 'Yes',
-    //CustomizeConfirmationDialogCancelButton: 'Cancel',
-
-    //Save To Library Dialog
-    //SaveToLibraryDialogTitle: 'Save to local library',
-    //SaveToLibraryDialogConfirmButton: 'Save',
-    //SaveToLibraryDialogCancelButton: 'Cancel',
-    //SaveToLibraryLoading: 'Loading Libraries...',
-    //SaveToLibraryLibraryLabel: 'Local library',
-    //SaveToLibraryFolderPathLabel: 'Folder Path (optional)',
-    //SaveToLibraryFilenameLabel: 'Filename',
-    //SaveToLibrarySaving: 'Saving to Library...',
-    //SaveToLibraryLoadError: 'Error while loading libraries!',
-    //SaveToLibrarySaveError: 'Error while saving! Verify the folderpath is correct (if used) and that you have permission to save to this library.',
-
-    //Apply To Site Column Dialog
-    //ApplyToSiteColumnDialogTitle: 'Apply to site column',
-    //ApplyToSiteColumnDialogConfirmButton: 'Save',
-    //ApplyToSiteColumnDialogCancelButton: 'Cancel',
-    //ApplyToSiteColumnLoading: 'Loading Site Columns...',
-    //ApplyToSiteColumnGroupLabel: 'Group',
-    //ApplyToSiteColumnFieldLabel: 'Column',
-    //ApplyToSiteColumnPushToListsOnLabel: 'Push changes to Lists',
-    //ApplyToSiteColumnPushToListsOffLabel: 'Site column only',
-    //ApplyToSiteColumnApplying: 'Applying to site column...',
-    //ApplyToSiteColumnLoadError: 'Error while loading site columns!',
-    //ApplyToSiteColumnApplyError: 'Error while applying! Verify you have permission to update site columns.',
-
-    //Apply To List Dialog
-    //ApplyToListDialogTitle: 'Apply to local list field',
-    //ApplyToListDialogConfirmButton: 'Save',
-    //ApplyToListDialogCancelButton: 'Cancel',
-    //ApplyToListLoading: 'Loading Lists...',
-    //ApplyToListListLabel: 'Local list',
-    //ApplyToListFieldLabel: 'Field',
-    //ApplyToListApplying: 'Applying to list...',
-    //ApplyToListLoadError: 'Error while loading lists!',
-    //ApplyToListApplyError: 'Error while applying! Verify you have permission to update this list\'s settings.',
 
     //Copy
     CopyToClipboardError: 'Unable to copy!',
@@ -263,9 +202,6 @@ define([], function() {
     DateTime_DTnextMonthAriaLabel: "Go to next month",
     DateTime_DTprevYearAriaLabel: "Go to previous year",
     DateTime_DTnextYearAriaLabel: "Go to next year",
-    //DateTime_HourLabel: "Hour",
-    //DateTime_MinuteLabel: "Minute",
-    //DateTime_SecondsLabel: "Seconds",
 
     //Custom Formatting Error Strings
     CFS_ariaError: "No aria- tags found. As such, the field will not be accessible via a screen reader.",
@@ -357,15 +293,6 @@ define([], function() {
     //Wizard Data Bars
     WizardDataBars_Name: 'Data Bars',
     WizardDataBars_Description: 'Adds horizontal bars to the field to visually express the value by length',
-    //WizardDataBarsEmptyBarLabel: 'Low:',
-    //WizardDataBarsEmptyBarTooltip: 'The lowest value on the scale\nValues equal or lower than this will be shown as 0% full',
-    //WizardDataBarsFullBarLabel: 'High:',
-    //WizardDataBarsFullBarTooltip: 'The highest value on the scale\nValues equal or higher than this will be shown as 100% full',
-    //WizardDataBarsRangeGroupLabel: 'Range',
-    //WizardDataBarsValueDisplayGroupLabel: 'Value Display',
-    //WizardDataBarsValueDisplayActual: 'Show Actual Value',
-    //WizardDataBarsValueDisplayPercentage: 'Show Percentage',
-    //WizardDataBarsValueDisplayNone: 'None',
 
     //Wizard Checkboxes
     WizardCheckboxes_Name: 'Checkboxes',
@@ -394,18 +321,12 @@ define([], function() {
     WizardSeverity_SevereWarning: 'Has issues',
     WizardSeverity_Blocked: 'Blocked',
     WizardSeverity_Other: 'Other Value',
-    //WizardSeverityGroupValues: 'Conditional Values',
     WizardSeverity_GoodLabel: 'Good',
     WizardSeverity_LowLabel: 'Low',
     WizardSeverity_WarningLabel: 'Warning',
     WizardSeverity_SevereWarningLabel: 'Severe warning',
     WizardSeverity_BlockedLabel: 'Blocked',
     WizardSeverity_DefaultSeverityLabel: 'Default severity',
-    //WizardSeverityGroupDisplay: 'Display',
-    //WizardSeverityValueVisible: 'Value Visible',
-    //WizardSeverityValueHidden: 'Value Hidden',
-    //WizardSeverityIconVisible: 'Icon Visible',
-    //WizardSeverityIconHidden: 'Icon Hidden',
 
     //Wizard Current User
     WizardCurrentUser_Name: 'Current User',
@@ -418,16 +339,12 @@ define([], function() {
     //Wizard Mail To
     WizardMailTo_Name: 'Mail To',
     WizardMailTo_Description: 'Creates a link to launch an email',
-    //WizardMailToGroupDisplay: 'Display',
-    //WizardMailToDisplayValue: 'Text',
-    //WizardMailToGroupParameters: 'Parameters',
     WizardMailTo_Subject: 'Subject',
     WizardMailTo_DefaultSubject: 'Stuff',
     WizardMailTo_Body: 'Body',
     WizardMailTo_DefaultBody: 'Dear Vesa,\r\nSharing is caring.\r\nbuhbye!',
     WizardMailTo_BCC: 'bcc',
     WizardMailTo_CC: 'cc',
-    //WizardMailToIconName: 'Icon',
     WizardMailTo_IconLink: 'Icon link',
     WizardMailTo_TextLink: 'Text link',
     WizardMailTo_DefaultText: 'Send Mail',

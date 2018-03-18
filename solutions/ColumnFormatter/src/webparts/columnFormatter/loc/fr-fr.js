@@ -23,7 +23,7 @@ define([], function() {
     Welcome_NewDescription: 'Commencez à partir de zéro ou choisissez un modèle',
     Welcome_OpenHeader: 'Ouvrir',
     Welcome_OpenDescription: 'Charger depuis une bibliothèque ou récupéré d\'une liste locale',
-    Welcome_NewColumnTypeLabel: 'Type de colonne',
+    Welcome_ColumnType: 'Type de colonne',
     Welcome_NewWizardOption: 'Commencez avec un modèle',
     Welcome_NewBlankOption: 'Commencer à partir de zéro',
     Welcome_NewNoTemplates: 'Aucun modèle disponible pour le type de colonne choisi',
@@ -33,7 +33,6 @@ define([], function() {
     Welcome_OpenLoadList: 'Charger à partir d\'une liste locale',
     Welcome_OpenLoadSiteColumn: 'Charger à partir d\'une colonne de site',
     Welcome_OpenLoadFile: 'Charger à partir d\'un fichier :',
-    //WelcomeOpenColumnTypeLabel: 'Type de colonne',
     Welcome_OpenLoadFileLibrary: 'Ouvrir un fichier à partir d\'une bibliothèque locale',
     Welcome_OpenLoadFileUpload: 'Téléverser un fichier',
     Welcome_UploadHeader: 'Téléversement d\'un fichier',
@@ -42,26 +41,8 @@ define([], function() {
     Welcome_UploadUploadButton: 'Choisissez un fichier',
     Welcome_UploadRejectError: 'Impossible d\'accepter :',
     Welcome_UploadEmptyFileError: 'Le fichier est vide !',
-    //WelcomeLoadFromListLoadingLists: 'Chargement des listes ...',
-    //WelcomeLoadFromListListLabel: 'Liste locale',
-    //WelcomeLoadFromListFieldLabel: 'Champ',
-    //WelcomeLoadFromListLoading: 'Chargement de la liste ...',
-    //WelcomeLoadFromListLoadingListsError: 'Erreur lors du chargement des listes !',
     Welcome_LoadingError: 'Erreur lors du chargement !',
-    //WelcomeLoadFromSiteColumnLoadingSiteColumns: 'Chargement des colonnes du site ...',
-    //WelcomeLoadFromSiteColumnGroupLabel: 'Groupe',
-    //WelcomeLoadFromSiteColumnFieldLabel: 'Colonne',
-    //WelcomeLoadFromSiteColumnLoading: 'Chargement depuis la colonne du site ...',
-    //WelcomeLoadFromSiteColumnLoadingSiteColumnsError: 'Erreur lors du chargement des colonnes de site !',
-    //WelcomeLoadFromSiteColumnLoadingError: 'Erreur lors du chargement !',
-    //WelcomeLoadFromLibraryLoadingLibraries: 'Chargement des bibliothèques ...',
-    //WelcomeLoadFromLibraryLibraryLabel: 'Bibliothèque locale',
-    //WelcomeLoadFromLibraryFolderPathLabel: 'Chemin du dossier',
-    //WelcomeLoadFromLibraryFilenameLabel: 'Nom de fichier',
-    //WelcomeLoadFromLibraryLoading: 'Chargement de la bibliothèque ...',
-    //WelcomeLoadFromLibraryLoadingLibrariesError: 'Erreur lors du chargement des bibliothèques !',
-    //WelcomeLoadFromLibraryLoadingError: 'Erreur lors du chargement! Vérifiez que le chemin du dossier est correct (s\'il est utilisé) et que vous avez l\'autorisation d\'accéder à cette bibliothèque.',
-
+    
     //List Field (Load/Apply)
     ListField_LoadingLists: 'Chargement des listes ...',
     ListField_List: 'Liste locale',
@@ -71,7 +52,6 @@ define([], function() {
     ListField_SaveDialogTitle: 'Appliquer au champ de liste local',
     ListField_Saving: 'Appliquer à la liste ...',
     ListField_SaveError: 'Erreur lors de l\'application! Vérifiez que vous avez la permission de mettre à jour les paramètres de cette bibliothèque.',
-
 
     //Site Column (Load/Apply)
     SiteColumn_LoadingSiteColumns: 'Chargement des colonnes du site ...',
@@ -84,7 +64,6 @@ define([], function() {
     SiteColumn_PushToListsOff: 'Colonne du site uniquement',
     SiteColumn_Saving: 'Application à la colonne de site ...',
     SiteColumn_SaveError: 'Erreur lors de l\'application! Vérifiez que vous avez l\'autorisation de mettre à jour les colonnes du site.',
-
 
     //Library (Load/Save)
     Library_LoadingLibraries: 'Chargement des bibliothèques ...',
@@ -131,50 +110,10 @@ define([], function() {
     //New Confirmation Dialog
     NewConfirmationDialog_Title: 'Recommencer ?',
     NewConfirmationDialog_Text: 'Tout changement non enregistré sera perdu. Voulez-vous continuer ?',
-    //NewConfirmationDialogConfirmButton: 'Oui',
-    //NewConfirmationDialogCancelButton: 'Annuler',
 
     //Customize Confirmation Dialog
     CustomizeConfirmationDialog_Title: 'Enlever l\'assistant ?',
     CustomizeConfirmationDialog_Text: 'Vous serez en mesure de modifier le code directement, mais le volet de l\'assistant ne sera plus disponible. Ceci est pour les utilisateurs avancés. Êtes-vous sûr ?',
-    //CustomizeConfirmationDialogConfirmButton: 'Oui',
-    //CustomizeConfirmationDialogCancelButton: 'Annuler',
-
-    //Save To Library Dialog
-    //SaveToLibraryDialogTitle: 'Enregistrer dans la bibliothèque locale',
-    //SaveToLibraryDialogConfirmButton: 'Enregistrer',
-    //SaveToLibraryDialogCancelButton: 'Annuler',
-    //SaveToLibraryLoading: 'Chargement des bibliothèques ...',
-    //SaveToLibraryLibraryLabel: 'Bibliothèque locale',
-    //SaveToLibraryFolderPathLabel: 'Chemin du dossier (facultatif)',
-    //SaveToLibraryFilenameLabel: 'Nom de fichier',
-    //SaveToLibrarySaving: 'Enregistrement dans la bibliothèque ...',
-    //SaveToLibraryLoadError: 'Erreur lors du chargement des bibliothèques !',
-    //SaveToLibrarySaveError: 'Erreur lors de l\'enregistrement ! Vérifiez que le chemin du dossier est correct (s\'il est utilisé) et que vous avez la permission d\'enregistrer dans cette bibliothèque.',
-
-    //Apply To Site Column Dialog
-    //ApplyToSiteColumnDialogTitle: 'Appliquer à la colonne de site',
-    //ApplyToSiteColumnDialogConfirmButton: 'Enregistrer',
-    //ApplyToSiteColumnDialogCancelButton: 'Annuler',
-    //ApplyToSiteColumnLoading: 'Chargement des colonnes de site ...',
-    //ApplyToSiteColumnGroupLabel: 'Groupe',
-    //ApplyToSiteColumnFieldLabel: 'Colonne',
-    //ApplyToSiteColumnPushToListsOnLabel: 'Push modifications aux listes',
-    //ApplyToSiteColumnPushToListsOffLabel: 'Colonne de site uniquement',
-    //ApplyToSiteColumnApplying: 'Application à la colonne de site ...',
-    //ApplyToSiteColumnLoadError: 'Erreur lors du chargement des colonnes de site !',
-    //ApplyToSiteColumnApplyError: 'Erreur lors de l\'application! Vérifiez que vous avez l\'autorisation de mettre à jour les colonnes du site.',
-
-    //Apply To List Dialog
-    //ApplyToListDialogTitle: 'Appliquer au champ de liste local',
-    //ApplyToListDialogConfirmButton: 'Enregistrer',
-    //ApplyToListDialogCancelButton: 'Annuler',
-    //ApplyToListLoading: 'Chargement des listes ...',
-    //ApplyToListListLabel: 'Liste locale',
-    //ApplyToListFieldLabel: 'Champ',
-    //ApplyToListApplying: 'Appliquer à la liste ...',
-    //ApplyToListLoadError: 'Erreur lors du chargement des listes !',
-    //ApplyToListApplyError: 'Erreur lors de l\'application! Vérifiez que vous avez la permission de mettre à jour les paramètres de cette bibliothèque.',
 
     //Copy
     CopyToClipboardError: 'Impossible de copier !',
@@ -263,9 +202,6 @@ define([], function() {
     DateTime_DTnextMonthAriaLabel: 'Aller au mois suivant',
     DateTime_DTprevYearAriaLabel: 'Aller à l\'année précédente',
     DateTime_DTnextYearAriaLabel: 'Aller à l\'année prochaine',
-    //HourLabel: 'Heure',
-    //MinuteLabel: 'Minute',
-    //SecondsLabel: 'Seconde',
 
     //Custom Formatting Error Strings
     CFS_ariaError: 'Aucune étiquette trouvée. En tant que tel, le champ ne sera pas accessible via un lecteur d\'écran.',
@@ -357,15 +293,6 @@ define([], function() {
     //Wizard Data Bars
     WizardDataBars_Name: 'Barres de données',
     WizardDataBars_Description: 'Ajoute des barres horizontales au champ pour exprimer visuellement la valeur par longueur',
-    //WizardDataBarsEmptyBarLabel: 'Basse :',
-    //WizardDataBarsEmptyBarTooltip: 'La valeur la plus basse sur l\'échelle \nLes valeurs égales ou inférieures à cela seront affichées à 0%',
-    //WizardDataBarsFullBarLabel: 'Haute:',
-    //WizardDataBarsFullBarTooltip: 'La valeur la plus élevée sur l\'échelle \nLes valeurs égales ou supérieures à celle-ci seront affichées comme étant à 100%',
-    //WizardDataBarsRangeGroupLabel: 'Fourchette',
-    //WizardDataBarsValueDisplayGroupLabel: 'Affichage de la valeur',
-    //WizardDataBarsValueDisplayActual: 'Afficher la valeur réelle',
-    //WizardDataBarsValueDisplayPercentage: 'Afficher le pourcentage',
-    //WizardDataBarsValueDisplayNone: 'Aucun',
 
     //Wizard Checkboxes
     WizardCheckboxes_Name: 'Cases à cocher',
@@ -394,18 +321,12 @@ define([], function() {
     WizardSeverity_SevereWarning: 'A des problèmes',
     WizardSeverity_Blocked: 'Bloqué',
     WizardSeverity_Other: 'Autre valeur',
-    //WizardSeverityGroupValues: 'Valeurs conditionnelles',
     WizardSeverity_GoodLabel: 'Bien',
     WizardSeverity_LowLabel: 'Bas',
     WizardSeverity_WarningLabel: 'Attention',
     WizardSeverity_SevereWarningLabel: 'Avertissement sévère',
     WizardSeverity_BlockedLabel: 'Bloqué',
     WizardSeverity_DefaultSeverityLabel: 'Gravité par défaut',
-    //WizardSeverityGroupDisplay: 'Afficher',
-    //WizardSeverityValueVisible: 'Valeur visible',
-    //WizardSeverityValueHidden: 'Valeur invisible',
-    //WizardSeverityIconVisible: 'Icone visible',
-    //WizardSeverityIconHidden: 'Icone invisible',
 
     //Wizard Current User
     WizardCurrentUser_Name: 'Utilisateur actuel',
@@ -418,16 +339,12 @@ define([], function() {
     //Wizard Mail To
     WizardMailTo_Name: 'Mail à',
     WizardMailTo_Description: 'Crée un lien pour lancer un e-mail',
-    //WizardMailToGroupDisplay: 'Afficher',
-    //WizardMailToDisplayValue: 'Texte',
-    //WizardMailToGroupParameters: 'Paramètres',
     WizardMailTo_Subject: 'Sujet',
     WizardMailTo_DefaultSubject: 'Des trucs',
     WizardMailTo_Body: 'Corp',
     WizardMailTo_DefaultBody: 'Cher Vesa,\r\nPartager c\'est aimer !\r\nbuhbye !',
     WizardMailTo_BCC: 'bcc',
     WizardMailTo_CC: 'cc',
-    //WizardMailToIconName: 'Icon',
     WizardMailTo_IconLink: 'Icone du lien',
     WizardMailTo_TextLink: 'Texte du lien',
     WizardMailTo_DefaultText: 'Envoyer un email',

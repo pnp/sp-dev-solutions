@@ -33,7 +33,6 @@ define([], function() {
     Welcome_OpenLoadList: 'Von lokaler liste laden',
     Welcome_OpenLoadSiteColumn: 'Von einer Site-Spalte laden',
     Welcome_OpenLoadFile: 'Von Datei laden:',
-    //WelcomeOpenColumnTypeLabel: 'Spaltentyp',
     Welcome_OpenLoadFileLibrary: 'Datei aus lokaler Bibliothek öffnen',
     Welcome_OpenLoadFileUpload: 'Datei hochladen',
     Welcome_UploadHeader: 'Hochladen der Datei',
@@ -42,25 +41,7 @@ define([], function() {
     Welcome_UploadUploadButton: 'Datei auswählen',
     Welcome_UploadRejectError: 'Datei kann nicht hochgeladen werden.',
     Welcome_UploadEmptyFileError: 'Datei ist leer!',
-    //WelcomeLoadFromListLoadingLists: 'Lade Listen...',
-    //WelcomeLoadFromListListLabel: 'Lokale Liste',
-    //WelcomeLoadFromListFieldLabel: 'Field',
-    //WelcomeLoadFromListLoading: 'Lade von Liste...',
-    //WelcomeLoadFromListLoadingListsError: 'Fehler beim Laden der Listen!',
     Welcome_LoadingError: 'Fehler beim Laden!',
-    //WelcomeLoadFromSiteColumnLoadingSiteColumns: 'Loading Site Columns...',
-    //WelcomeLoadFromSiteColumnGroupLabel: 'Group',
-    //WelcomeLoadFromSiteColumnFieldLabel: 'Column',
-    //WelcomeLoadFromSiteColumnLoading: 'Loading from site column...',
-    //WelcomeLoadFromSiteColumnLoadingSiteColumnsError: 'Error while loading site columns!',
-    //WelcomeLoadFromSiteColumnLoadingError: 'Error while loading!',
-    //WelcomeLoadFromLibraryLoadingLibraries: 'Lade Bibliotheken...',
-    //WelcomeLoadFromLibraryLibraryLabel: 'Lokale Bibiliothek',
-    //WelcomeLoadFromLibraryFolderPathLabel: 'Ordner Pfad',
-    //WelcomeLoadFromLibraryFilenameLabel: 'Dateiname',
-    //WelcomeLoadFromLibraryLoading: 'Lade aus Bibiliothek...',
-    //WelcomeLoadFromLibraryLoadingLibrariesError: 'Fehler beim Laden der Bibliotheken!',
-    //WelcomeLoadFromLibraryLoadingError: 'Fehler beim Laden! Überprüfen Sie die benötigten Berechtigungen und den Ordner Pfad, fals in Verwendung.',
 
     //List Field (Load/Apply)
     ListField_LoadingLists: 'Lade Listen...',
@@ -71,7 +52,6 @@ define([], function() {
     ListField_SaveDialogTitle: 'Auf lokales Listefeld anwenden',
     ListField_Saving: 'Formatierung wird gesetzt...',
     ListField_SaveError: 'Fehler beim Setzen der Formatierung. Überprüfen Sie Ihre Berechtigungen auf der Liste.',
-
 
     //Site Column (Load/Apply)
     SiteColumn_LoadingSiteColumns: 'Laden von Site-Spalten...',
@@ -84,7 +64,6 @@ define([], function() {
     SiteColumn_PushToListsOff: 'Nur Site-Spalte',
     SiteColumn_Saving: 'Anwenden auf die Site-Spalte...',
     SiteColumn_SaveError: 'Fehler bei der Bewerbung! Stellen Sie sicher, dass Sie berechtigt sind, Site-Spalten zu aktualisieren.',
-
 
     //Library (Load/Save)
     Library_LoadingLibraries: 'Lade Bibliotheken...',
@@ -131,50 +110,10 @@ define([], function() {
     //New Confirmation Dialog
     NewConfirmationDialog_Title: 'Von vorne beginnen?',
     NewConfirmationDialog_Text: 'Alle Änderungen werden verworfen. Sind Sie sicher?',
-    //NewConfirmationDialogConfirmButton: 'Ja',
-    //NewConfirmationDialogCancelButton: 'Abbrechen',
 
     //Customize Confirmation Dialog
     CustomizeConfirmationDialog_Title: 'Assistent abschalten?',
     CustomizeConfirmationDialog_Text: 'Code kann direkt bearbeitet werden ohne Assistent. Für erfahrene User gedacht. Sind Sie sicher?',
-    //CustomizeConfirmationDialogConfirmButton: 'Ja',
-    //CustomizeConfirmationDialogCancelButton: 'Abbrechen',
-
-    //Save To Library Dialog
-    //SaveToLibraryDialogTitle: 'In lokale Bibliothek speichern',
-    //SaveToLibraryDialogConfirmButton: 'Speichern',
-    //SaveToLibraryDialogCancelButton: 'Abbrechen',
-    //SaveToLibraryLoading: 'Lade Bibliothken...',
-    //SaveToLibraryLibraryLabel: 'Lokale Bibliothek',
-    //SaveToLibraryFolderPathLabel: 'Ordner Pfad (optional)',
-    //SaveToLibraryFilenameLabel: 'Dateinae',
-    //SaveToLibrarySaving: 'Speichere in Bibliothek...',
-    //SaveToLibraryLoadError: 'Fehler beim Laden von Bibliothek!',
-    //SaveToLibrarySaveError: 'Fehler beim Speichern! Überprüfen Sie die Berechtgiungen der Bibliothek und falls verwendent den Ordner Pfad.',
-
-    //Apply To Site Column Dialog
-    //ApplyToSiteColumnDialogTitle: 'Apply to site column',
-    //ApplyToSiteColumnDialogConfirmButton: 'Save',
-    //ApplyToSiteColumnDialogCancelButton: 'Cancel',
-    //ApplyToSiteColumnLoading: 'Loading Site Columns...',
-    //ApplyToSiteColumnGroupLabel: 'Group',
-    //ApplyToSiteColumnFieldLabel: 'Column',
-    //ApplyToSiteColumnPushToListsOnLabel: 'Push changes to Lists',
-    //ApplyToSiteColumnPushToListsOffLabel: 'Site column only',
-    //ApplyToSiteColumnApplying: 'Applying to site column...',
-    //ApplyToSiteColumnLoadError: 'Error while loading site columns!',
-    //ApplyToSiteColumnApplyError: 'Error while applying! Verify you have permission to update site columns.',
-
-    //Apply To List Dialog
-    //ApplyToListDialogTitle: 'Auf lokales Listefeld anwenden',
-    //ApplyToListDialogConfirmButton: 'Speichern',
-    //ApplyToListDialogCancelButton: 'Abbrechen',
-    //ApplyToListLoading: 'Lade Listen...',
-    //ApplyToListListLabel: 'Lokale Liste',
-    //ApplyToListFieldLabel: 'Feld',
-    //ApplyToListApplying: 'Formatierung wird gesetzt...',
-    //ApplyToListLoadError: 'Fehler beim Laden der Listen!',
-    //ApplyToListApplyError: 'Fehler beim Setzen der Formatierung. Überprüfen Sie Ihre Berechtigungen auf der Liste.',
 
     //Copy
     CopyToClipboardError: 'Fehler beim Kopieren!',
@@ -263,9 +202,6 @@ define([], function() {
     DateTime_DTnextMonthAriaLabel: "Zu nächstem Monat",
     DateTime_DTprevYearAriaLabel: "Zu vorigem Jahr",
     DateTime_DTnextYearAriaLabel: "Zu nächstem Jahr",
-    //HourLabel: "Stunde",
-    //MinuteLabel: "Minute",
-    //SecondsLabel: "Sekunde",
 
     //Custom Formatting Error Strings
     CFS_ariaError: "Keine aria- Tags gefunden. Screen reader werden das Feld daher nicht erkennen können.",
@@ -357,15 +293,6 @@ define([], function() {
     //Wizard Data Bars
     WizardDataBars_Name: 'Datenbalken',
     WizardDataBars_Description: 'Fügt horizontale Balken hinzu deren Länge den Wert darstellt.',
-    //WizardDataBarsEmptyBarLabel: 'Nieder:',
-    //WizardDataBarsEmptyBarTooltip: 'Kleinst Wert auf der Skala\nWerte kleiner oder gleich werden als 0% dargestellt',
-    //WizardDataBarsFullBarLabel: 'Hoch:',
-    //WizardDataBarsFullBarTooltip: 'Größter Wert auf der Skala\nWerte größer oder gleich werden als 100% dargestellt',
-    //WizardDataBarsRangeGroupLabel: 'Bereich',
-    //WizardDataBarsValueDisplayGroupLabel: 'Anzeige Optionen',
-    //WizardDataBarsValueDisplayActual: 'Wert anzeigen',
-    //WizardDataBarsValueDisplayPercentage: 'Prozent anzeigen',
-    //WizardDataBarsValueDisplayNone: 'Keine',
 
     //Wizard Checkboxes
     WizardCheckboxes_Name: 'Checkboxen',
@@ -394,18 +321,12 @@ define([], function() {
     WizardSeverity_SevereWarning: 'Achtung',
     WizardSeverity_Blocked: 'Blockiert',
     WizardSeverity_Other: 'Anderer Wert',
-    //WizardSeverityGroupValues: 'Bedingter Wert',
     WizardSeverity_GoodLabel: 'Gut',
     WizardSeverity_LowLabel: 'Nieder',
     WizardSeverity_WarningLabel: 'Warnung',
     WizardSeverity_SevereWarningLabel: 'Letzte Warnung',
     WizardSeverity_BlockedLabel: 'Blockiert',
     WizardSeverity_DefaultSeverityLabel: 'Default Status',
-    //WizardSeverityGroupDisplay: 'Anzeige',
-    //WizardSeverityValueVisible: 'Wert sichtbar',
-    //WizardSeverityValueHidden: 'Wert nicht sichtbar',
-    //WizardSeverityIconVisible: 'Symbol sichtbar',
-    //WizardSeverityIconHidden: 'Symbol nicht sichtbar',
 
     //Wizard Current User
     WizardCurrentUser_Name: 'Aktueller Benutzer',
@@ -418,16 +339,12 @@ define([], function() {
     //Wizard Mail To
     WizardMailTo_Name: 'Email an',
     WizardMailTo_Description: 'Erstellt Link für neue Email',
-    //WizardMailToGroupDisplay: 'Anzeige',
-    //WizardMailToDisplayValue: 'Text',
-    //WizardMailToGroupParameters: 'Parameter',
     WizardMailTo_Subject: 'Betreff',
     WizardMailTo_DefaultSubject: 'Sachen',
     WizardMailTo_Body: 'Body',
     WizardMailTo_DefaultBody: 'Lieber Vesa,\r\nTeilen ist Kümmern.\r\nbuhbye!',
     WizardMailTo_BCC: 'bcc',
     WizardMailTo_CC: 'cc',
-    //WizardMailToIconName: 'Icon',
     WizardMailTo_IconLink: 'Symbol Link',
     WizardMailTo_TextLink: 'Text Link',
     WizardMailTo_DefaultText: 'E-Mail senden',
