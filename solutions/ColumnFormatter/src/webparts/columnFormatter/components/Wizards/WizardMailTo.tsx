@@ -272,15 +272,15 @@ export const WizardMailTo: IWizard = {
 		];
 	},
 	startingCode: (colType:columnTypes): string => {
-		return calculateCode(colType, (colType == columnTypes.person ? '@currentField.title' : 'Send Mail'), true, 'Hello There!', 'Yo, what up?\r\nWelp, talk to you later!', '', '', 'Mail');
+		return calculateCode(colType, (colType == columnTypes.person ? '@currentField.title' : strings.WizardMailTo_DefaultText), true, strings.WizardMailTo_DefaultSubject, strings.WizardMailTo_DefaultBody, '', '', 'Mail');
 	},
 	onWizardRender: (updateEditorString:(editorString:string) => void, colType:columnTypes): JSX.Element => {
 		return (
 			<WizardMailToPanel
-			 displayValue={colType == columnTypes.person ? '@currentField.title' : 'Send Mail'}
+			 displayValue={colType == columnTypes.person ? '@currentField.title' : strings.WizardMailTo_DefaultText}
 			 iconLink={true}
-			 subject='Hello There!'
-			 body='Yo, what up?\r\nWelp, talk to you later!'
+			 subject={strings.WizardMailTo_DefaultSubject}
+			 body={strings.WizardMailTo_DefaultBody}
 			 iconName='Mail'
 			 updateValues={(displayValue:string, iconLink:boolean, subject:string, body:string, cc:string, bcc:string, iconName:string) => {
 				updateEditorString(calculateCode(colType, displayValue, iconLink, subject, body, cc, bcc, iconName));

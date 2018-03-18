@@ -339,11 +339,14 @@ declare interface IColumnFormatterWebPartStrings {
   WizardMailTo_Name: string;
   WizardMailTo_Description: string;
   WizardMailTo_Subject: string;
+  WizardMailTo_DefaultSubject: string;
   WizardMailTo_Body: string;
+  WizardMailTo_DefaultBody: string;
   WizardMailTo_BCC: string;
   WizardMailTo_CC: string;
   WizardMailTo_IconLink: string;
   WizardMailTo_TextLink: string;
+  WizardMailTo_DefaultText: string;
 
   //Wizard Mini Map
   WizardMiniMap_Name: string;
