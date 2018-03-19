@@ -13,6 +13,7 @@ You can edit sub properties (such as a person's email address or a lookup id) by
 ## Related Items
 
 - **[Using the Editor](./index.md)** - Overview of the editing interface
+- **[Properties](./properties.md)** - Overview of the property pane options
 - **[Editing Code](./code-editor.md)** - Details of the Code editor and features
 - **[Save Options](./saving.md)** - Overview of the various save options
 - **[Elements Tree](./tree.md)** - Overview of what the Tree view provides

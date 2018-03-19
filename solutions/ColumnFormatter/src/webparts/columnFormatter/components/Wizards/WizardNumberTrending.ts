@@ -36,7 +36,6 @@ export const WizardNumberTending: IWizard = {
 		return [
 			'{',
 			'  "$schema": "http://columnformatting.sharepointpnp.com/columnFormattingSchema.json",',
-			'  "debugMode": true,',
 			'  "elmType": "div",',
 			'  "children": [',
 			'    {',

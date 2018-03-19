@@ -35,6 +35,7 @@ There are a lot of other great features, here are a few highlights:
 
 ## Related Items
 
+- **[Properties](./properties.md)** - Overview of the property pane options
 - **[Using the Editor](./index.md)** - Overview of the editing interface
 - **[Save Options](./saving.md)** - Overview of the various save options
 - **[Sample Data](./sample-data.md)** - Overview of how to customize your sample data

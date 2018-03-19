@@ -18,6 +18,21 @@
   - Shows values using a donut or pie chart
 - Twitter Wizard
   - Displays Twitter profile pictures from Twitter handles
+- Documentation
+  - [Properties](./docs/documentation/docs/editor/properties.md)
+  - [# Trending](./docs/documentation/docs/wizards/number-trending.md)
+  - [Action Link](./docs/documentation/docs/wizards/action-link.md)
+  - [Checkboxes](./docs/documentation/docs/wizards/checkboxes.md)
+  - [Current User](./docs/documentation/docs/wizards/current-user.md)
+  - [Data Bars](./docs/documentation/docs/wizards/data-bars.md)
+  - [Donut](./docs/documentation/docs/wizards/donut.md)
+  - [Mail To](./docs/documentation/docs/wizards/mail-to.md)
+  - [Overdue](./docs/documentation/docs/wizards/overdue.md)
+  - [Round Image](./docs/documentation/docs/wizards/round-image.md)
+  - [Severity](./docs/documentation/docs/wizards/severity.md)
+  - [Start Flow](./docs/documentation/docs/wizards/start-flow.md)
+  - [Tiny Map](./docs/documentation/docs/wizards/tiny-map.md)
+  - [Twitter Pic](./docs/documentation/docs/wizards/twitter-pic.md)
 
 ### Changed
 - Updated to [SharePoint Framework](https://github.com/SharePoint/sp-dev-docs/wiki/Release-Notes-for-SPFx-Package-Version-1.4.1) from 1.4.0 to 1.4.1
@@ -30,6 +45,16 @@
   - Ensures theme selection is remembered
 - Added Icon dropdown to the Mail To Wizard
 - Reorganized and standardized strings (localization)
+- Renamed the Mini Map wizard to Tiny Map to avoid confusion with editor Mini Map feature
+- Documentation
+  - Added support for emojis in mkdocs
+  - [Minimal Path to Awesome](./docs/projectguides/mpa.md)
+    - Added details about showing emojis in mkdocs
+  - [Setup](./docs/documentation/docs/setup.md)
+    - Updated deployment steps
+    - Added section for full-width columns
+  - [Wizards](./docs/documentation/docs/wizards/index.md)
+    - Added column coverage table
 
 ### Removed
 - Dependency on sp-pnp-js (through CDN)

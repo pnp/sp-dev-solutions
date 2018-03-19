@@ -48,6 +48,7 @@ Creating a new template is fairly simple just by implementing the necessary inte
 
 ## Related Items
 
+- **[Properties](./properties.md)** - Overview of the property pane options
 - **[Editing Code](./code-editor.md)** - Details of the Code editor and features
 - **[Save Options](./saving.md)** - Overview of the various save options
 - **[Sample Data](./sample-data.md)** - Overview of how to customize your sample data

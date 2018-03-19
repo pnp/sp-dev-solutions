@@ -9,11 +9,11 @@ import { WizardDataBars } from './WizardDataBars';
 import { WizardDonut } from './WizardDonut';
 import { WizardFlow } from './WizardFlow';
 import { WizardMailTo } from './WizardMailTo';
-import { WizardMiniMap } from './WizardMiniMap';
 import { WizardNumberTending } from './WizardNumberTrending';
 import { WizardOverdue } from './WizardOverdue';
 import { WizardRoundImage } from './WizardRoundImage';
 import { WizardSeverity } from './WizardSeverity';
+import { WizardMiniMap } from './WizardMiniMap';
 import { WizardTwitter } from './WizardTwitter';
 
 //** Implement this interface to create your own wizard/template */
