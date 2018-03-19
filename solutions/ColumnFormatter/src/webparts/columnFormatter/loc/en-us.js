@@ -350,7 +350,7 @@ define([], function() {
     WizardMailTo_DefaultText: 'Send Mail',
 
     //Wizard Mini Map
-    WizardMiniMap_Name: 'Mini Map',
+    WizardMiniMap_Name: 'Tiny Map',
     WizardMiniMap_Description: 'Displays a tiny map image for a location (be sure to use your own API key)',
 
     //Wizard Flow
