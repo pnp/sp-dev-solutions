@@ -325,7 +325,6 @@ const calculateCode = (colType:columnTypes, showValue:boolean, showIcon:boolean,
 	return [
 		'{',
 		'  "$schema": "http://columnformatting.sharepointpnp.com/columnFormattingSchema.json",',
-		'  "debugMode": true,',
 		'  "elmType": "div",',
 		...logic,
 		'}'

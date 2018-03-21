@@ -140,7 +140,6 @@ const calculateCode = (emptyBarValue:number, fullBarValue:number, valueDisplay:s
 	return [
 		'{',
 		'  "$schema": "http://columnformatting.sharepointpnp.com/columnFormattingSchema.json",',
-		'  "debugMode": true,',
 		'  "elmType": "div",',
 		txtContent,
 		'  "attributes": {',
