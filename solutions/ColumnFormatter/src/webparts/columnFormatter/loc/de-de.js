@@ -302,6 +302,13 @@ define([], function() {
     WizardOverdue_Name: 'Überfällig',
     WizardOverdue_Description: 'Färbt Feld Rot wenn Wert größer als heute.',
 
+    //Wizard Overdue Status
+    WizardOverdueStatus_Name: 'Überfällige Aufgabe',
+    WizardOverdueStatus_Description: 'Färbt das Feld rot, wenn das Datum größer als heute ist, wenn der Status nicht vollständig ist',
+    WizardOverdueStatus_StatusColumn: 'Status',
+    WizardOverdueStatus_Complete: 'Voll',
+    WizardOverdueStatus_InProgress: 'Unvollständig',
+
     //Wizard Number Trending
     WizardNumberTrending_Name: '# Trending',
     WizardNumberTrending_Description: 'Vergleicht Felder in der Zeile fügt Icon je nach Trend hinzu',

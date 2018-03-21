@@ -302,6 +302,13 @@ define([], function() {
     WizardOverdue_Name: 'Overdue',
     WizardOverdue_Description: 'Colors the field red once the date is greater than today',
 
+    //Wizard Overdue Status
+    WizardOverdueStatus_Name: 'Overdue Task',
+    WizardOverdueStatus_Description: 'Colors the field red once the date is greater than today if the Status is not Complete',
+    WizardOverdueStatus_StatusColumn: 'Status',
+    WizardOverdueStatus_Complete: 'Complete',
+    WizardOverdueStatus_InProgress: 'In Progress',
+
     //Wizard Number Trending
     WizardNumberTrending_Name: '# Trending',
     WizardNumberTrending_Description: 'Compares other fields in the row to provide an icon based on trending values',

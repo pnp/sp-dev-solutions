@@ -20,6 +20,7 @@ pages:
     - 'Donut': 'wizards/donut.md'
     - 'Mail To': 'wizards/mail-to.md'
     - 'Overdue': 'wizards/overdue.md'
+    - 'Overdue Task': 'wizards/overdue-task.md'
     - 'Round Image': 'wizards/round-image.md'
     - 'Severity': 'wizards/severity.md'
     - 'Start Flow': 'wizards/start-flow.md'

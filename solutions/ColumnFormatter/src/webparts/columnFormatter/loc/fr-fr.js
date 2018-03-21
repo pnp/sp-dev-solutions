@@ -302,6 +302,13 @@ define([], function() {
     WizardOverdue_Name: 'En retard',
     WizardOverdue_Description: 'Couleurs le champ rouge une fois que la date est plus grande qu\'aujourd\'hui',
 
+    //Wizard Overdue Status
+    WizardOverdueStatus_Name: 'Tâche en retard',
+    WizardOverdueStatus_Description: 'Colore le champ rouge une fois que la date est plus grande qu\'aujourd\'hui si l\'État n\'est pas complet',
+    WizardOverdueStatus_StatusColumn: 'Statut',
+    WizardOverdueStatus_Complete: 'Complet',
+    WizardOverdueStatus_InProgress: 'incomplète',
+
     //Wizard Number Trending
     WizardNumberTrending_Name: '# Tendance',
     WizardNumberTrending_Description: 'Compare les autres champs de la ligne pour fournir une icône basée sur les valeurs de tendance',

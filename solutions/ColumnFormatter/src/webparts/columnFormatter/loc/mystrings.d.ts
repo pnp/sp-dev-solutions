@@ -302,6 +302,13 @@ declare interface IColumnFormatterWebPartStrings {
   WizardOverdue_Name: string;
   WizardOverdue_Description: string;
 
+  //Wizard Overdue Status
+  WizardOverdueStatus_Name: string;
+  WizardOverdueStatus_Description: string;
+  WizardOverdueStatus_StatusColumn: string;
+  WizardOverdueStatus_Complete: string;
+  WizardOverdueStatus_InProgress: string;
+
   //Wizard Number Trending
   WizardNumberTrending_Name: string;
   WizardNumberTrending_Description: string;

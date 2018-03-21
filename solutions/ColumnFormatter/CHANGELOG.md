@@ -18,6 +18,8 @@
   - Shows values using a donut or pie chart
 - Twitter Wizard
   - Displays Twitter profile pictures from Twitter handles
+- Overdue Task Template
+  - Colors the field red once the date is greater than today if the Status is not Complete
 - Documentation
   - [Properties](./docs/documentation/docs/editor/properties.md)
   - [# Trending](./docs/documentation/docs/wizards/number-trending.md)
@@ -28,6 +30,7 @@
   - [Donut](./docs/documentation/docs/wizards/donut.md)
   - [Mail To](./docs/documentation/docs/wizards/mail-to.md)
   - [Overdue](./docs/documentation/docs/wizards/overdue.md)
+  - [Overdue Task](./docs/documentation/docs/wizards/overdue-task.md)
   - [Round Image](./docs/documentation/docs/wizards/round-image.md)
   - [Severity](./docs/documentation/docs/wizards/severity.md)
   - [Start Flow](./docs/documentation/docs/wizards/start-flow.md)
