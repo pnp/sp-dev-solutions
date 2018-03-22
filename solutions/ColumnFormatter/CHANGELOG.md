@@ -1,5 +1,5 @@
 # Releases
-## 1.2.0 - 2018-03-15
+## 1.2.0 - 2018-03-22
 ### Added
 - French (fr-fr) localization (thanks [PooLP](https://github.com/PooLP)!)
   - Added targeted styling for fr-fr locale to accomodate long strings

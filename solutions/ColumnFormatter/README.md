@@ -12,10 +12,17 @@ Modern listviews support the addition of [custom formatting](https://docs.micros
 
 Column Formatter is a client-side webpart for use within Office 365.
 
-Please see the [full documentation](./docs/documentation/docs/index.md) to get started!
+**Please see the [full documentation](./docs/documentation/docs/index.md) to get started!**
+
+- [Setup & Configuration](./docs/documentation/docs/setup.md)
+- [Getting Started](./docs/documentation/docs/getting-started.md)
+- [Using the Editor](./docs/documentation/docs/editor/index.md)
+- [Wizards & Templates](./docs/documentation/docs/wizards/index.md)
+- [About](./docs/documentation/docs/about/index.md)
+- [License](./docs/documentation/docs/about/license.md)
 
 ## Used SharePoint Framework Version 
-![drop](https://img.shields.io/badge/version-1.4-green.svg)
+![drop](https://img.shields.io/badge/version-1.4.1-green.svg)
 
 ## Applies to
 
@@ -36,7 +43,8 @@ Column Formatter | Chris Kent ([thechriskent.com](https://thechriskent.com), [@t
 
 Version|Date|Comments
 -------|----|--------
-1.1|January 8, 2018|See [Changelog](./CHANGELOG.md) for details
+1.2|March 22, 2018|See [Changelog](./CHANGELOG.md#120---2018-03-22) for details
+1.1|January 8, 2018|See [Changelog](./CHANGELOG.md#110---2018-01-08) for details
 1.0|December 12, 2017|Initial release
 
 ## Disclaimer
