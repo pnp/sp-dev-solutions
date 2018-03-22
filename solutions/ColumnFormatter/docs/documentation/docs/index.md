@@ -27,6 +27,39 @@ Not only do users have access to many of the features they would have had to ins
 
 Even more importantly, through the use of **wizards** it's possible that users won't have to touch or even see code at all to be able to take advantage of the powerful column formatting features of Office 365 modern listviews!
 
+## Documentation Table of Contents
+
+- [Setup & Configuration](./setup.md)
+- [Getting Started](./getting-started.md)
+- [Using the Editor](./editor/index.md)
+  - [Properties](./editor/properties.md)
+  - [Editing Code](./editor/code-editor.md)
+  - [Save Options](./editor/saving.md)
+  - [Sample Data](./editor/sample-data.md)
+  - [Elements Tree](./editor/tree.md)
+- [Wizards](./wizards/index.md)
+  - [# Trending](./wizards/number-trending.md)
+  - [Action Link](./wizards/action-link.md)
+  - [Checkboxes](./wizards/checkboxes.md)
+  - [Current User](./wizards/current-user.md)
+  - [Data Bars](./wizards/data-bars.md)
+  - [Donut](./wizards/donut.md)
+  - [Mail To](./wizards/mail-to.md)
+  - [Overdue](./wizards/overdue.md)
+  - [Overdue Task](./wizards/overdue-task.md)
+  - [Round Image](./wizards/round-image.md)
+  - [Severity](./wizards/severity.md)
+  - [Start Flow](./wizards/start-flow.md)
+  - [Tiny Map](./wizards/tiny-map.md)
+  - [Twitter Pic](./wizards/twitter-pic.md)
+- [About](./about/index.md)
+  - [Localization](./about/localization.md)
+  - [License](./about/license.md)
+- [Project Guidance](../../projectguides/index.md)
+  - [Minimal Path to Awesome](../../projectguides/mpa.md)
+  - [Contribution Guidelines](../../projectguides/contributing.md)
+  - [Submitting a Pull Request](../../projectguides/submitting-pr.md)
+
 ## Getting Started
 
 Installing Column Formatter is just a matter of uploading a package to your app catalog and adding it to a page in your site. You can find additional details in the [Setup & Configuration](./setup.md) section.
