@@ -4,7 +4,7 @@
 - French (fr-fr) localization (thanks [PooLP](https://github.com/PooLP)!)
   - Added targeted styling for fr-fr locale to accomodate long strings
 - Replaced sp-pnp-js with PnPJS
-- German (de-de) localization (thanks [Thomas Goelles](h\https://github.com/thomyg)!)
+- German (de-de) localization (thanks [Thomas Goelles](https://github.com/thomyg)!)
 - Column Formatter now supports Full-Width columns (full bleed)
 - Start Flow Wizard
   - Creates a button to easily launch a Flow for an item
