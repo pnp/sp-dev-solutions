@@ -2,19 +2,19 @@ import * as strings from 'ColumnFormatterWebPartStrings';
 
 export const LocalCustomFormatterStrings = {
 	default: {
-		ariaError: strings.CFSariaError,
-		elmTypeInvalid: strings.CFSelmTypeInvalid,
-		elmTypeMissing: strings.CFSelmTypeMissing,
-		invalidProtocol: strings.CFSinvalidProtocol,
-		invalidStyleAttribute: strings.CFSinvalidStyleAttribute,
-		invalidStyleValue: strings.CFSinvalidStyleValue,
-		nan: strings.CFSnan,
-		operandMissing: strings.CFSoperandMissing,
-		operandNOnly: strings.CFSoperandNOnly,
-		operatorInvalid: strings.CFSoperatorInvalid,
-		operatorMissing: strings.CFSoperatorMissing,
-		unsupportedType: strings.CFSunsupportedType,
-		userFieldError: strings.CFSuserFieldError
+		ariaError: strings.CFS_ariaError,
+		elmTypeInvalid: strings.CFS_elmTypeInvalid,
+		elmTypeMissing: strings.CFS_elmTypeMissing,
+		invalidProtocol: strings.CFS_invalidProtocol,
+		invalidStyleAttribute: strings.CFS_invalidStyleAttribute,
+		invalidStyleValue: strings.CFS_invalidStyleValue,
+		nan: strings.CFS_nan,
+		operandMissing: strings.CFS_operandMissing,
+		operandNOnly: strings.CFS_operandNOnly,
+		operatorInvalid: strings.CFS_operatorInvalid,
+		operatorMissing: strings.CFS_operatorMissing,
+		unsupportedType: strings.CFS_unsupportedType,
+		userFieldError: strings.CFS_userFieldError
 	}
 };
 

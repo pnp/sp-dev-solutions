@@ -11,7 +11,7 @@ export class ColumnFormatterDataPanel extends React.Component<IColumnFormatterDa
 	public render(): React.ReactElement<IColumnFormatterDataPanelProps> {
 		return (
 		  <div className={styles.panel}>
-				<span className={styles.panelHeader}>{strings.PanelHeaderData}</span>
+				<span className={styles.panelHeader}>{strings.PanelHeader_Data}</span>
 				<SampleData/>
 		  </div>
 		);

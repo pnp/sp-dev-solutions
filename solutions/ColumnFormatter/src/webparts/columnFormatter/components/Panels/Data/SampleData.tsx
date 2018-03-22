@@ -78,7 +78,7 @@ class SampleData_ extends React.Component<ISampleDataProps, {}> {
 							<td className={styles.addButton}>
 								<IconButton
 								 iconProps={{iconName:'AddTo'}}
-								 title={strings.AddColumn}
+								 title={strings.DataColumn_AddColumn}
 								 styles={buttonStyles}
 								 onClick={() => {this.props.addColumn();}}/>
 							</td>
@@ -92,7 +92,7 @@ class SampleData_ extends React.Component<ISampleDataProps, {}> {
 										<td className={styles.removeButton}>
 											<IconButton
 											 iconProps={{iconName:'Blocked2'}}
-											 title={strings.DeleteRow}
+											 title={strings.DataColumn_DeleteRow}
 											 styles={buttonStyles}
 											 onClick={() => {this.props.removeRow(rIndex);}}/>
 										</td>
@@ -119,7 +119,7 @@ class SampleData_ extends React.Component<ISampleDataProps, {}> {
 										<td key={index} className={styles.addButton}>
 											<IconButton
 											 iconProps={{iconName:'AddTo'}}
-											 title={strings.AddRow}
+											 title={strings.DataColumn_AddRow}
 											 styles={buttonStyles}
 											 onClick={() => {this.props.addRow();}}/>
 										</td>
@@ -129,7 +129,7 @@ class SampleData_ extends React.Component<ISampleDataProps, {}> {
 									<td key={index} className={styles.removeButton}>
 										<IconButton
 										iconProps={{iconName:'Blocked2'}}
-										title={strings.DeleteColumn}
+										title={strings.DataColumn_DeleteColumn}
 										styles={buttonStyles}
 										onClick={() => {this.props.removeColumn(index);}}/>
 									</td>

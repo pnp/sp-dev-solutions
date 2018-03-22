@@ -6,12 +6,16 @@ import { WizardActionLink } from './WizardActionLink';
 import { WizardCheckboxes } from './WizardCheckboxes';
 import { WizardCurrentUser } from './WizardCurrentUser';
 import { WizardDataBars } from './WizardDataBars';
+import { WizardDonut } from './WizardDonut';
+import { WizardFlow } from './WizardFlow';
 import { WizardMailTo } from './WizardMailTo';
 import { WizardMiniMap } from './WizardMiniMap';
 import { WizardNumberTending } from './WizardNumberTrending';
 import { WizardOverdue } from './WizardOverdue';
+import { WizardOverdueStatus } from './WizardOverdueStatus';
 import { WizardRoundImage } from './WizardRoundImage';
 import { WizardSeverity } from './WizardSeverity';
+import { WizardTwitter } from './WizardTwitter';
 
 //** Implement this interface to create your own wizard/template */
 export interface IWizard {
@@ -50,11 +54,15 @@ export const Wizards: Array<IWizard> = [
 	WizardCheckboxes,
 	WizardCurrentUser,
 	WizardDataBars,
+	WizardDonut,
+	WizardFlow,
 	WizardMailTo,
 	WizardMiniMap,
 	WizardOverdue,
+	WizardOverdueStatus,
 	WizardRoundImage,
-	WizardSeverity
+	WizardSeverity,
+	WizardTwitter
 ];
 
 

@@ -1,4 +1,5 @@
-import { columnTypes, editorThemes, ISaveDetails, uiState } from './State';
+import { IColumnFormatterWebPartProps } from '../ColumnFormatterWebPart';
+import { columnTypes, ISaveDetails, uiState } from './State';
 
 //** All the action interfaces */
 export type ActionTypes = 
@@ -18,8 +19,12 @@ export type ActionTypes =
 	| ISelectTabAction
 	| IPaneResizeAction
 	| IChooseThemeAction
+	| IToggleLineNumbersAction
+	| IToggleMiniMapAction
+	| IToggleIndentGuidesAction
 	| IUpdateEditorStringAction
 	| IUpdateFormatterErrorsAction
+	| ILoadedJSOMAction
 	| IOtherAction;
 
 //** Action keys (by using strings, TS can deduce the action interface in the reducer which is convienent)*/
@@ -42,9 +47,14 @@ export enum typeKeys {
 	SELECT_TAB = "SELECT_TAB",
 	PANE_RESIZE = "PANE_RESIZE",
 	CHOOSE_THEME = "CHOOSE_THEME",
+	TOGGLE_LINENUMBERS = "TOGGLE_LINENUMBERS",
+	TOGGLE_MINIMAP = "TOGGLE_MINIMAP",
+	TOGGLE_INDENTGUIDES = "TOGGLE_INDENTGUIDES",
 
 	UPDATE_EDITOR_STRING = "UPDATE_EDITOR_STRING",
 	UPDATE_FORMATTER_ERRORS = "UPDATE_FORMATTER_ERRORS",
+
+	LOADED_JSOM = "LOADED_JSOM",
 
 	OTHER_ACTION = "ANY_OTHER_ACTION"
 }
@@ -56,15 +66,15 @@ export interface ISetContextAction {
 	webAbsoluteUrl: string;
 	userDisplayName: string;
 	userEmail: string;
-	height: number;
+	properties: IColumnFormatterWebPartProps;
 }
-export const setContext = (isOnline:boolean, webAbsoluteUrl:string, userDisplayName:string, userEmail:string, height:number): ISetContextAction => ({
+export const setContext = (isOnline:boolean, webAbsoluteUrl:string, userDisplayName:string, userEmail:string, properties:IColumnFormatterWebPartProps): ISetContextAction => ({
 	type: typeKeys.SET_CONTEXT,
 	isOnline,
 	webAbsoluteUrl,
 	userDisplayName,
 	userEmail,
-	height
+	properties
 });
 
 export interface ISetHeightAction {
@@ -213,11 +223,38 @@ export const resizePane = (paneName:string, size:number): IPaneResizeAction => (
 
 export interface IChooseThemeAction {
 	type: typeKeys.CHOOSE_THEME;
-	theme: editorThemes;
+	theme: string;
 }
-export const chooseTheme = (theme:editorThemes): IChooseThemeAction => ({
+export const chooseTheme = (theme:string): IChooseThemeAction => ({
 	type: typeKeys.CHOOSE_THEME,
 	theme
+});
+
+export interface IToggleLineNumbersAction {
+	type: typeKeys.TOGGLE_LINENUMBERS;
+	showLineNumbers: boolean;
+}
+export const toggleLineNumbers = (showLineNumbers:boolean): IToggleLineNumbersAction => ({
+	type: typeKeys.TOGGLE_LINENUMBERS,
+	showLineNumbers
+});
+
+export interface IToggleMiniMapAction {
+	type: typeKeys.TOGGLE_MINIMAP;
+	showMiniMap: boolean;
+}
+export const toggleMiniMap = (showMiniMap:boolean): IToggleMiniMapAction => ({
+	type: typeKeys.TOGGLE_MINIMAP,
+	showMiniMap
+});
+
+export interface IToggleIndentGuidesAction {
+	type: typeKeys.TOGGLE_INDENTGUIDES;
+	showIndentGuides: boolean;
+}
+export const toggleIndentGuides = (showIndentGuides:boolean): IToggleIndentGuidesAction => ({
+	type: typeKeys.TOGGLE_INDENTGUIDES,
+	showIndentGuides
 });
 
 
@@ -239,6 +276,16 @@ export interface IUpdateFormatterErrorsAction {
 export const updateFormatterErrors = (formatterErrors:Array<string>): IUpdateFormatterErrorsAction => ({
 	type: typeKeys.UPDATE_FORMATTER_ERRORS,
 	formatterErrors
+});
+
+
+export interface ILoadedJSOMAction {
+	type: typeKeys.LOADED_JSOM;
+	jsomLoaded: boolean;
+}
+export const loadedJSOM = (jsomLoaded:boolean): ILoadedJSOMAction => ({
+	type: typeKeys.LOADED_JSOM,
+	jsomLoaded
 });
 
 

@@ -7,6 +7,7 @@ The tree pane is provided as a way to visualize the hierarchy of your html eleme
 ## Related Items
 
 - **[Using the Editor](./index.md)** - Overview of the editing interface
+- **[Properties](./properties.md)** - Overview of the property pane options
 - **[Editing Code](./code-editor.md)** - Details of the Code editor and features
 - **[Save Options](./saving.md)** - Overview of the various save options
 - **[Sample Data](./sample-data.md)** - Overview of how to customize your sample data

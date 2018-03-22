@@ -23,7 +23,7 @@ If you've already been working on SPFx, then you're good to go.
 
 Column Formatter uses [MkDocs](http://www.mkdocs.org) to publish documentation pages. See more information about installing MkDocs on your operating system at http://www.mkdocs.org/#installation.
 
-Also, the documentation uses a custom MkDocs theme that should be installed as well. See [Material theme for MkDocs](https://squidfunk.github.io/mkdocs-material/).
+Also, the documentation uses a custom MkDocs theme that should be installed as well. See [Material theme for MkDocs](https://squidfunk.github.io/mkdocs-material/) (`pip install mkdocs-material`). In addition, [PyMdown-extensions](https://squidfunk.github.io/mkdocs-material/extensions/pymdown/#installation) are used (to show those sweet emoji), so you'll want to install that too (`pip install pymdown-extensions`).
 
 Once you have MkDocs installed on your machine, in the command line:
 

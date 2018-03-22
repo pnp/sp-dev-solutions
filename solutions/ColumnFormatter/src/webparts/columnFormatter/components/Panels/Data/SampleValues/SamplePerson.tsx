@@ -63,12 +63,12 @@ export class SamplePerson extends React.Component<ISamplePersonProps, ISamplePer
 					 targetElement={this._container}
 					 hasCloseIcon={true}
 					 hasCondensedHeadline={true}
-					 headline={strings.SubPropertiesHeadline}
+					 headline={strings.DataColumn_SubPropertiesHeadline}
 					 onDismiss={this.subPropertiesButtonClick}>
 					 	<div className={styles.tbSpinButtonOverride}>
 							<SpinButton
 							value={this.props.value.id.toString()}
-							label={strings.DataColumnPersonIdLabel}
+							label={strings.DataColumn_PersonIdLabel + ':'}
 							labelPosition={Position.top}
 							onValidate={this.onIdValidate}
 							onIncrement={this.onIdIncrement}
@@ -81,19 +81,19 @@ export class SamplePerson extends React.Component<ISamplePersonProps, ISamplePer
 							<TextField
 							 value={this.props.value.email}
 							 onChanged={this.emailChanged}
-							 label={strings.DataColumnPersonEmailLabel}/>
+							 label={strings.DataColumn_PersonEmailLabel + ':'}/>
 						</div>
 						<div className={styles.tbTextFieldOverride}>
 							<TextField
 							 value={this.props.value.sip}
 							 onChanged={this.sipChanged}
-							 label={strings.DataColumnPersonSIPLabel}/>
+							 label={strings.DataColumn_PersonSIPLabel + ':'}/>
 						</div>
 						<div className={styles.tbTextFieldOverride}>
 							<TextField
 							 value={this.props.value.picture}
 							 onChanged={this.pictureChanged}
-							 label={strings.DataColumnPersonPictureLabel}/>
+							 label={strings.DataColumn_PersonPictureLabel + ':'}/>
 						</div>
 					</TeachingBubble>
 				)}

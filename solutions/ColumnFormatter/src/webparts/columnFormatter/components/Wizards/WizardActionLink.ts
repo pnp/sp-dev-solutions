@@ -4,8 +4,8 @@ import { columnTypes, IDataColumn } from '../../state/State';
 import { IWizard, standardWizardStartingColumns, standardWizardStartingRows } from './WizardCommon';
 
 export const WizardActionLink: IWizard = {
-	name: strings.WizardActionLinkName,
-	description: strings.WizardActionLinkDescription,
+	name: strings.WizardActionLink_Name,
+	description: strings.WizardActionLink_Description,
 	iconName: 'Lightbulb',
 	fieldTypes: [
 		columnTypes.link

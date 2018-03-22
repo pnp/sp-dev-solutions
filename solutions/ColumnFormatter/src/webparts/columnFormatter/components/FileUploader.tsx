@@ -31,7 +31,7 @@ export class FileUploader extends React.Component<IFileUploaderProps, IFileUploa
 	public render(): React.ReactElement<IFileUploaderProps> {
 		return (
 		  <div className={styles.uploadForm}>
-				<span className={styles.headerLabel}>{strings.WelcomeUploadHeader}</span>
+				<span className={styles.headerLabel}>{strings.Welcome_UploadHeader}</span>
 				<DropZone
 				 ref={(container) => this._uploadPanel = container!}
 				 accept='.json'
@@ -40,10 +40,10 @@ export class FileUploader extends React.Component<IFileUploaderProps, IFileUploa
 				 className={styles.dropZone}
 				 activeClassName={styles.dropZoneActive}
 				 rejectClassName={styles.dropZoneRejected}>
-					<p>{strings.WelcomeUploadInstructions1}</p>
-					<p>{strings.WelcomeUploadInstructions2}</p>
+					<p>{strings.Welcome_UploadInstructions1}</p>
+					<p>{strings.Welcome_UploadInstructions2}</p>
 				</DropZone>
-				<PrimaryButton text={strings.WelcomeUploadUploadButton} onClick={this.onChooseFileClick}/>
+				<PrimaryButton text={strings.Welcome_UploadUploadButton} onClick={this.onChooseFileClick}/>
 				<span className={styles.uploadError}>{this.state.uploadError}</span>
 		  </div>
 		);
@@ -67,7 +67,7 @@ export class FileUploader extends React.Component<IFileUploaderProps, IFileUploa
 					}
 				}
 				this.setState({
-					uploadError: strings.WelcomeUploadRejectError + ': ' + reject.name
+					uploadError: strings.Welcome_UploadRejectError + ': ' + reject.name
 				});
 			} else {
 				//Grab the accepted file
@@ -88,7 +88,7 @@ export class FileUploader extends React.Component<IFileUploaderProps, IFileUploa
 							});
 						} else {
 							this.setState({
-								uploadError: strings.WelcomeUploadEmptyFileError
+								uploadError: strings.Welcome_UploadEmptyFileError
 							});
 						}
 					};

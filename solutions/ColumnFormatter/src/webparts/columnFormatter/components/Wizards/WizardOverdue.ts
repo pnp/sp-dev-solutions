@@ -4,8 +4,8 @@ import { columnTypes, IDataColumn } from '../../state/State';
 import { IWizard, standardWizardStartingColumns } from './WizardCommon';
 
 export const WizardOverdue: IWizard = {
-	name: strings.WizardOverdueName,
-	description: strings.WizardOverdueDescription,
+	name: strings.WizardOverdue_Name,
+	description: strings.WizardOverdue_Description,
 	iconName: 'Warning',
 	fieldTypes: [
 		columnTypes.datetime

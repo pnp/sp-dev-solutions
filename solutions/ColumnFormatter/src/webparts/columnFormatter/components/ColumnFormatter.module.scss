@@ -14,7 +14,7 @@
 
     .welcomeBox {
       position: absolute;
-      width: 300px;
+      width: 325px;
       height: 300px;
       left: 50%;
       margin-left: -150px;
@@ -40,6 +40,10 @@
 
       .startButtons {
         margin-top: 18px;
+
+        &:lang(fr-fr) {
+          margin-top: 12px;
+        }
         
         .startButton {
           display: flex;
@@ -49,6 +53,10 @@
           padding: 10px;
           cursor: pointer;
           margin-bottom: 12px;
+
+          &:lang(fr-fr) {
+            margin-bottom: 8px;
+          }
 
           &:hover {
             background-color: $ms-color-themeLighter;
@@ -78,6 +86,7 @@
         }
 
       }
+      
 
       .newForm {
         .columnType {
