@@ -22,6 +22,7 @@
   - Colors the field red once the date is greater than today if the Status is not Complete
 - Documentation
   - [Properties](./docs/documentation/docs/editor/properties.md)
+  - [Localization](./docs/documentation/docs/about/localization.md)
   - [# Trending](./docs/documentation/docs/wizards/number-trending.md)
   - [Action Link](./docs/documentation/docs/wizards/action-link.md)
   - [Checkboxes](./docs/documentation/docs/wizards/checkboxes.md)
@@ -56,8 +57,13 @@
   - [Setup](./docs/documentation/docs/setup.md)
     - Updated deployment steps
     - Added section for full-width columns
+    - Added section for Updating Column Formatter
   - [Wizards](./docs/documentation/docs/wizards/index.md)
     - Added column coverage table
+  - [About](./docs/documentation/docs/about/index.md)
+    - Added actual content
+  - [Save Options](./docs/documentation/docs/editor/saving.md)
+    - Added section about Applying to site columns
 
 ### Removed
 - Dependency on sp-pnp-js (through CDN)

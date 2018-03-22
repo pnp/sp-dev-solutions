@@ -4,14 +4,14 @@ Conditionally applies the severity styles based on the field's value.
 
 ![Severity Wizard](../assets/WizardSeverity.png)
 
-## Supported field types
-- Text
-- Choice
-- Lookup
-
 ## How to use this wizard
 
 _Coming Soon_
+
+## Supported column types
+- Text
+- Choice
+- Lookup
 
 ## Icon
 

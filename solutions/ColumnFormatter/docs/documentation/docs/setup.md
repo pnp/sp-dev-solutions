@@ -47,6 +47,27 @@ Next, select Column Formatter from the full-width webpart choices.
 
 There are several [properties available in the property pane](./editor/properties.md) that can be adjusted at any time.
 
+
+## Updating Column Formatter
+
+If you've previously deployed Column Formatter but want all the new stuff - Good News! Column Formatter is super easy to update.
+
+Just like the initial deployment you'll need to upload the web part package to your app (or site) catalog. This will require administrator rights so you may have to hand it off to someone in IT for these steps.
+
+1. Upload or drag and drop the **[package](../../../assets/column-formatter.sppkg)** to the catalog:
+2. You will prompted to replace the existing solution, click **Replace it**:
+
+![Replace existing solution](./assets/UpdateReplaceSolution.png)
+
+2. The Trust Confirmation dialog will appear. Depending on how you've [setup/enabled the Public CDN](https://docs.microsoft.com/en-us/sharepoint/dev/spfx/web-parts/get-started/hosting-webpart-from-office-365-cdn#enable-cdn-in-your-office-365-tenant) in your environment, the listed domains may vary from those shown below.
+
+> All code and assets are included in the app package and nothing is loaded from external domains
+
+3. Check the box to **Make this solution available to all sites in the organization** (this will allow any site to add it to a page - leave this unchecked if you only want to add it to specific sites).
+4. Click **Deploy**:
+
+![Trust Confirmation](./assets/UpdateDeploy.png)
+
 ## Next Steps
 
 - [Getting Started](./getting-started.md)

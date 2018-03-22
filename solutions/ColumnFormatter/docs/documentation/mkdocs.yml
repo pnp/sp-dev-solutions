@@ -28,6 +28,7 @@ pages:
     - 'Twitter Pic': 'wizards/twitter-pic.md'
   - About: 
     - 'About': 'about/index.md'
+    - 'Localization': 'about/localization.md'
     - License: 'about/license.md'
 theme:
   name: 'material'

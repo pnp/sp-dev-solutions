@@ -4,13 +4,13 @@ Creates a link to launch an email.
 
 ![Mail To Wizard](../assets/WizardMailTo.png)
 
-## Supported field types
-- Person
-- Hyperlink
-
 ## How to use this wizard
 
 _Coming Soon_
+
+## Supported column types
+- Person
+- Hyperlink
 
 ## Icon
 
