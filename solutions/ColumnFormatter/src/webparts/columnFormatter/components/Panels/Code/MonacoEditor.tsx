@@ -2,15 +2,17 @@ import { autobind } from 'office-ui-fabric-react/lib/Utilities';
 import * as React from 'react';
 
 import { ColumnFormattingSchema, ColumnFormattingSchemaURI } from '../../../helpers/ColumnFormattingSchema';
-import { editorThemes } from '../../../state/State';
 import styles from '../../ColumnFormatter.module.scss';
 
 const monaco = require('../../../../../MonacoCustomBuild');
 
 export interface IMonacoEditorProps {
 	value: string;
-	theme: editorThemes;
+	theme: string;
 	readOnly: boolean;
+	showLineNumbers: boolean;
+	showMiniMap: boolean;
+	showIndentGuides: boolean;
 	onValueChange: (newValue:string, validationErrors:Array<string>) => void;
 }
 
@@ -37,6 +39,14 @@ export class MonacoEditor extends React.Component<IMonacoEditorProps, {}> {
 			});
 		});
 
+		this.createEditor();
+	}
+
+	private createEditor() {
+		if(this._editor) {
+			this._editor.dispose();
+		}
+
 		//Create the editor
 		this._editor = monaco.editor.create(this._container, {
 			value: this.props.value,
@@ -44,12 +54,12 @@ export class MonacoEditor extends React.Component<IMonacoEditorProps, {}> {
 			theme: this.props.theme,
 			language: 'json',
 			folding: true,
-			renderIndentGuides: true,
+			renderIndentGuides: this.props.showIndentGuides,
 			readOnly: this.props.readOnly,
-			lineNumbers: false,
-			//lineNumbersMinChars: 4,
+			lineNumbers: this.props.showLineNumbers,
+			lineNumbersMinChars: 4,
 			minimap: {
-				enabled: false
+				enabled: this.props.showMiniMap
 			}
 		});
 
@@ -65,6 +75,11 @@ export class MonacoEditor extends React.Component<IMonacoEditorProps, {}> {
 		}
 		if(this.props.theme !== prevProps.theme) {
 			monaco.editor.setTheme(this.props.theme);
+		}
+		if(this.props.showLineNumbers != prevProps.showLineNumbers ||
+			this.props.showMiniMap != prevProps.showMiniMap ||
+			this.props.showIndentGuides != prevProps.showIndentGuides) {
+			this.createEditor();
 		}
 		if(this._editor) {
 			this._editor.layout();

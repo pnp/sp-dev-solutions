@@ -124,7 +124,7 @@ class PreviewView_ extends React.Component<IPreviewViewProps, {}> {
 		let htmlString:string = formatter.evaluate();
 		let errorString:string = formatter.errors();
 		if(errorString.length) {
-			this._formatterErrors.push(strings.CFSRowLabel + ' ' + rIndex.toString() + ': ' + errorString);
+			this._formatterErrors.push(strings.CFS_RowLabel + ' ' + rIndex.toString() + ': ' + errorString);
 		}
 		let innerHtml:IHTMLmarkupObject = {
 			__html: htmlString

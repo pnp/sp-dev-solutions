@@ -5,8 +5,8 @@ import { generateRowValue } from '../../state/ValueGeneration';
 import { IWizard, standardWizardStartingColumns } from './WizardCommon';
 
 export const WizardCurrentUser: IWizard = {
-	name: strings.WizardCurrentUserName,
-	description: strings.WizardCurrentUserDescription,
+	name: strings.WizardCurrentUser_Name,
+	description: strings.WizardCurrentUser_Description,
 	iconName: 'ReminderPerson',
 	fieldTypes: [
 		columnTypes.person

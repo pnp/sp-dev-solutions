@@ -22,7 +22,8 @@ import {
     IUpdateDataColumnNameAction,
     IUpdateDataColumnTypeAction,
     IUpdateDataRowAction,
-    IUpdateEditorStringAction,
+	IUpdateEditorStringAction,
+	ILoadedJSOMAction,
     typeKeys,
 } from './Actions';
 import {
@@ -47,7 +48,10 @@ export const cfReducer = (state:IApplicationState = initialState, action:ActionT
 
 		case typeKeys.SET_CONTEXT:
 			newState.context = SetContextReducer(newState.context, action);
-			newState.ui.height = action.height;
+			newState.ui.height = action.properties.height;
+			newState.code.editorTheme = action.properties.editorTheme;
+			newState.code.showLineNumbers = action.properties.showLineNumbers;
+			newState.code.showIndentGuides = action.properties.showIndentGuides;
 			break;
 		
 		case typeKeys.SET_HEIGHT:
@@ -97,7 +101,16 @@ export const cfReducer = (state:IApplicationState = initialState, action:ActionT
 			newState.ui.panes = PaneResizeReducer(newState.ui.panes, action);
 			break;
 		case typeKeys.CHOOSE_THEME:
-			newState.code.theme = action.theme;
+			newState.code.editorTheme = action.theme;
+			break;
+		case typeKeys.TOGGLE_LINENUMBERS:
+			newState.code.showLineNumbers = action.showLineNumbers;
+			break;
+		case typeKeys.TOGGLE_MINIMAP:
+			newState.code.showMiniMap = action.showMiniMap;
+			break;
+		case typeKeys.TOGGLE_INDENTGUIDES:
+			newState.code.showIndentGuides = action.showIndentGuides;
 			break;
 
 		case typeKeys.UPDATE_EDITOR_STRING:
@@ -105,6 +118,10 @@ export const cfReducer = (state:IApplicationState = initialState, action:ActionT
 			break;
 		case typeKeys.UPDATE_FORMATTER_ERRORS:
 			newState.code.formatterErrors = action.formatterErrors;
+			break;
+		
+		case typeKeys.LOADED_JSOM:
+			newState.context.jsomLoaded = action.jsomLoaded;
 			break;
 
 		default:
@@ -120,7 +137,9 @@ function SetContextReducer(context:IContext, action:ISetContextAction): IContext
 		user: {
 			displayName: action.userDisplayName,
 			email: action.userEmail
-		}
+		},
+		jsomLoaded: context.jsomLoaded,
+		properties: action.properties
 	};
 }
 
@@ -264,12 +283,12 @@ function AddDataColumnReducer(data:IData, action:IAddDataColumnAction): IData {
 	//Ensure new column has a unique name
 	let isUnique:boolean = false;
 	let fieldCounter:number = 1;
-	let fieldName:string = strings.DataColumnDefaultName;
+	let fieldName:string = strings.DataColumn_DefaultName;
 	do {
 		for(var column of data.columns){
 			if(column.name == fieldName){
 				fieldCounter++;
-				fieldName = strings.DataColumnDefaultName + fieldCounter.toString();
+				fieldName = strings.DataColumn_DefaultName + fieldCounter.toString();
 				continue;
 			}
 		}

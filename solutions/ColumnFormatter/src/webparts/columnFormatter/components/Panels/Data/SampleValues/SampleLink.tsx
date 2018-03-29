@@ -46,13 +46,13 @@ export class SampleLink extends React.Component<ISampleLinkProps, ISampleLinkSta
 					 targetElement={this._container}
 					 hasCloseIcon={true}
 					 hasCondensedHeadline={true}
-					 headline={strings.SubPropertiesHeadline}
+					 headline={strings.DataColumn_SubPropertiesHeadline}
 					 onDismiss={this.subPropertiesButtonClick}>
 					 	<div className={styles.tbTextFieldOverride}>
 							<TextField
 							 value={this.props.value.desc}
 							 onChanged={this.linkDescChanged}
-							 label={strings.DataColumnLinkDescriptionLabel}/>
+							 label={strings.DataColumn_LinkDescriptionLabel + ':'}/>
 						</div>
 					</TeachingBubble>
 				)}

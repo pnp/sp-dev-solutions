@@ -5,8 +5,8 @@ import { generateRowValue } from '../../state/ValueGeneration';
 import { IWizard } from './WizardCommon';
 
 export const WizardNumberTending: IWizard = {
-	name: strings.WizardNumberTrendingName,
-	description: strings.WizardNumberTrendingDescription,
+	name: strings.WizardNumberTrending_Name,
+	description: strings.WizardNumberTrending_Description,
 	iconName: 'Sort',
 	fieldTypes: [
 		columnTypes.number
@@ -15,11 +15,11 @@ export const WizardNumberTending: IWizard = {
 	startingColumns: (colType:columnTypes): Array<IDataColumn> => {
 		return [
 			{
-				name: strings.WizardNumberTrendingCurrent,
+				name: strings.WizardNumberTrending_Current,
 				type: colType
 			},
 			{
-				name: strings.WizardNumberTrendingPrevious,
+				name: strings.WizardNumberTrending_Previous,
 				type: columnTypes.number
 			}
 		];
@@ -36,7 +36,6 @@ export const WizardNumberTending: IWizard = {
 		return [
 			'{',
 			'  "$schema": "http://columnformatting.sharepointpnp.com/columnFormattingSchema.json",',
-			'  "debugMode": true,',
 			'  "elmType": "div",',
 			'  "children": [',
 			'    {',
@@ -49,7 +48,7 @@ export const WizardNumberTending: IWizard = {
 			'              "operator": ">",',
 			'              "operands": [',
 			'                "@currentField",',
-			'                "[$' + strings.WizardNumberTrendingPrevious + ']"',
+			'                "[$' + strings.WizardNumberTrending_Previous + ']"',
 			'              ]',
 			'            },',
 			'            "sp-field-trending--up",',
@@ -60,7 +59,7 @@ export const WizardNumberTending: IWizard = {
 			'                  "operator": "<",',
 			'                  "operands": [',
 			'                    "@currentField",',
-			'                    "[$' + strings.WizardNumberTrendingPrevious + ']"',
+			'                    "[$' + strings.WizardNumberTrending_Previous + ']"',
 			'                  ]',
 			'                },',
 			'                "sp-field-trending--down",',
@@ -76,7 +75,7 @@ export const WizardNumberTending: IWizard = {
 			'              "operator": ">",',
 			'              "operands": [',
 			'                "@currentField",',
-			'                "[$' + strings.WizardNumberTrendingPrevious + ']"',
+			'                "[$' + strings.WizardNumberTrending_Previous + ']"',
 			'              ]',
 			'            },',
 			'            "SortUp",',
@@ -87,7 +86,7 @@ export const WizardNumberTending: IWizard = {
 			'                  "operator": "<",',
 			'                  "operands": [',
 			'                    "@currentField",',
-			'                    "[$' + strings.WizardNumberTrendingPrevious + ']"',
+			'                    "[$' + strings.WizardNumberTrending_Previous + ']"',
 			'                  ]',
 			'                },',
 			'                "SortDown",',
@@ -105,7 +104,7 @@ export const WizardNumberTending: IWizard = {
 			'              "operator": "==",',
 			'              "operands": [',
 			'                "@currentField",',
-			'                "[$' + strings.WizardNumberTrendingPrevious + ']"',
+			'                "[$' + strings.WizardNumberTrending_Previous + ']"',
 			'              ]',
 			'            },',
 			'            "12px",',

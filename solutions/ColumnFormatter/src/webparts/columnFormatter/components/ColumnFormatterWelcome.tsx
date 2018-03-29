@@ -25,6 +25,7 @@ export enum welcomeStage {
   open,
   upload,
   loadFromList,
+  loadFromSiteColumn,
   loadFromLibrary
 }
 
@@ -35,6 +36,7 @@ export interface IColumnFormatterWelcomeProps {
   launchEditorWithCode?: (wizardName:string, colType:columnTypes, editorString:string, validationErrors:Array<string>, saveDetails: ISaveDetails) => void;
 }
 
+
 export interface IColumnFormatterWelcomeState {
   stage: welcomeStage;
   columnTypeForNew?: columnTypes;
@@ -43,6 +45,12 @@ export interface IColumnFormatterWelcomeState {
   loadChoiceForOpen?: string;
   columnTypeForOpen?: columnTypes;
   fileChoiceForOpen?: string;
+  siteColumnsLoaded: boolean;
+  siteColumns: Array<any>;
+  selectedSiteColumnGroup?: string;
+  selectedSiteColumn?: string;
+  loadingFromSiteColumn: boolean;
+  loadFromSiteColumnError?: string;
   listsLoaded: boolean;
   lists: Array<any>;
   selectedList?: string;
@@ -70,6 +78,9 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
       listsLoaded: false,
       lists: new Array<any>(),
       loadingFromList: false,
+      siteColumnsLoaded: false,
+      siteColumns: new Array<any>(),
+      loadingFromSiteColumn: false,
       librariesLoaded: false,
       libraries: new Array<any>(),
       libraryFolderPath: '',
@@ -82,8 +93,9 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
 
     //TEMP (helpful for testing and skipping the welcome altogether)
     //this.props.launchEditor(undefined,columnTypes.text);
-    //this.props.launchEditor('Data Bars', columnTypes.number);
+    //this.props.launchEditor('Donut', columnTypes.number);
     //this.props.launchEditor('Severity', columnTypes.text);
+    //this.props.launchEditor('Start Flow', columnTypes.text);
 
     return (
       <div className={styles.welcome} style={{height: this.props.uiHeight + 'px'}}>
@@ -92,8 +104,8 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
           {this.state.stage == welcomeStage.start && (
             <div>
               <div className={styles.header}>
-                <h1>{strings.WelcomeTitle}</h1>
-                <span>{strings.WelcomeSubTitle}</span>
+                <h1>{strings.Welcome_Title}</h1>
+                <span>{strings.Welcome_SubTitle}</span>
               </div>
               <div className={styles.startButtons}>
                 <div className={styles.startButton} onClick={() => {this.gotoStage(welcomeStage.new);}}>
@@ -101,8 +113,8 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
                     <Icon iconName='Filters'/>
                   </div>
                   <div className={styles.words}>
-                    <h2>{strings.WelcomeNewHeader}</h2>
-                    <span>{strings.WelcomeNewDescription}</span>
+                    <h2>{strings.Welcome_NewHeader}</h2>
+                    <span>{strings.Welcome_NewDescription}</span>
                   </div>
                 </div>
                 <div className={styles.startButton} onClick={() => {this.gotoStage(welcomeStage.open);}}>
@@ -110,8 +122,8 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
                     <Icon iconName='OpenFolderHorizontal'/>
                   </div>
                   <div className={styles.words}>
-                    <h2>{strings.WelcomeOpenHeader}</h2>
-                    <span>{strings.WelcomeOpenDescription}</span>
+                    <h2>{strings.Welcome_OpenHeader}</h2>
+                    <span>{strings.Welcome_OpenDescription}</span>
                   </div>
                 </div>
               </div>
@@ -122,7 +134,7 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
           {this.state.stage == welcomeStage.new && (
             <div className={styles.newForm}>
               <div className={styles.columnType}>
-                <Label required={true}>{strings.WelcomeNewColumnTypeLabel}</Label>
+                <Label required={true}>{strings.Welcome_ColumnType}</Label>
                 <Dropdown
                  selectedKey={this.state.columnTypeForNew}
                  onChanged={this.onChangeColumnTypeForNew}
@@ -143,7 +155,7 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
                selectedKey={this.state.useWizardForNew ? 'wizard' : 'blank'}
                onChange={this.onNewStartWithChanged}
                options={[
-                 {key:'wizard', text:strings.WelcomeNewWizardOption, onRenderField: (props, render) => {
+                 {key:'wizard', text:strings.Welcome_NewWizardOption, onRenderField: (props, render) => {
                   return(
                     <div>
                       { render!(props) }
@@ -151,14 +163,14 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
                     </div>
                   );
                  }},
-                 {key:'blank', text:strings.WelcomeNewBlankOption}
+                 {key:'blank', text:strings.Welcome_NewBlankOption}
                ]}/>
               <div className={styles.navigationButtons}>
                 <div>
-                  <DefaultButton text={strings.WelcomeBackButton} onClick={() => {this.gotoStage(welcomeStage.start);}}/>
+                  <DefaultButton text={strings.Welcome_BackButton} onClick={() => {this.gotoStage(welcomeStage.start);}}/>
                 </div>
                 <div style={{textAlign: 'right'}}>
-                  <PrimaryButton text={strings.WelcomeOKButton} disabled={!this.okButtonEnabled()} onClick={this.onOkForNewClick}/>
+                  <PrimaryButton text={strings.Welcome_OKButton} disabled={!this.okButtonEnabled()} onClick={this.onOkForNewClick}/>
                 </div>
               </div>
             </div>
@@ -171,13 +183,14 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
                selectedKey={this.state.loadChoiceForOpen}
                onChange={this.onLoadChoiceForOpenChanged}
                options={[
-                {key:'list', text: strings.WelcomeOpenLoadList},
-                {key:'file', text: strings.WelcomeOpenLoadFile, onRenderField: (props, render) => {
+                {key:'list', text: strings.Welcome_OpenLoadList},
+                {key:'sitecolumn', text: strings.Welcome_OpenLoadSiteColumn},
+                {key:'file', text: strings.Welcome_OpenLoadFile, onRenderField: (props, render) => {
                   return (
                     <div>
                       { render!(props) }
                       <div className={styles.columnType}>
-                        <Label required={true}>{strings.WelcomeOpenColumnTypeLabel}</Label>
+                        <Label required={true}>{strings.Welcome_ColumnType}</Label>
                         <Dropdown
                          selectedKey={this.state.columnTypeForOpen}
                          onChanged={this.onChangeColumnTypeForOpen}
@@ -200,8 +213,8 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
                          onChange={this.onFileChoiceForOpenChanged}
                          disabled={this.state.loadChoiceForOpen !== 'file'}
                          options={[
-                           {key:'library', text: strings.WelcomeOpenLoadFileLibrary},
-                           {key:'upload', text: strings.WelcomeOpenLoadFileUpload}
+                           {key:'library', text: strings.Welcome_OpenLoadFileLibrary},
+                           {key:'upload', text: strings.Welcome_OpenLoadFileUpload}
                          ]}/>
                       </div>
                     </div>
@@ -210,10 +223,10 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
                ]}/>
               <div className={styles.navigationButtons}>
                 <div>
-                  <DefaultButton text={strings.WelcomeBackButton} onClick={() => {this.gotoStage(welcomeStage.start);}}/>
+                  <DefaultButton text={strings.Welcome_BackButton} onClick={() => {this.gotoStage(welcomeStage.start);}}/>
                 </div>
                 <div style={{textAlign: 'right'}}>
-                  <PrimaryButton text={strings.WelcomeNextButton} disabled={!this.okButtonEnabled()} onClick={this.onOkForOpenClick}/>
+                  <PrimaryButton text={strings.Welcome_NextButton} disabled={!this.okButtonEnabled()} onClick={this.onOkForOpenClick}/>
                 </div>
               </div>
             </div>
@@ -225,7 +238,7 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
               <FileUploader onTextLoaded={this.onFileTextReceived}/>
               <div className={styles.navigationButtons}>
                 <div>
-                  <DefaultButton text={strings.WelcomeBackButton} onClick={() => {this.gotoStage(welcomeStage.open);}}/>
+                  <DefaultButton text={strings.Welcome_BackButton} onClick={() => {this.gotoStage(welcomeStage.open);}}/>
                 </div>
               </div>
             </div>
@@ -238,18 +251,18 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
                 <span>{strings.FeatureUnavailableFromLocalWorkbench}</span>
               )}
               {!this.state.listsLoaded && this.props.context.isOnline && !this.state.loadingFromList && this.state.loadFromListError == undefined && (
-                <Spinner size={SpinnerSize.large} label={strings.WelcomeLoadFromListLoadingLists}/>
+                <Spinner size={SpinnerSize.large} label={strings.ListField_LoadingLists}/>
               )}
               {this.state.listsLoaded && this.props.context.isOnline && !this.state.loadingFromList && this.state.loadFromListError == undefined && (
                 <div>
                   <Dropdown
-                  label={strings.WelcomeLoadFromListListLabel}
+                  label={strings.ListField_List}
                   selectedKey={this.state.selectedList}
                   onChanged={(item:IDropdownOption)=> {this.setState({selectedList: item.key.toString(),selectedField: undefined});}}
                   required={true}
                   options={this.listsToOptions()} />
                   <Dropdown
-                  label={strings.WelcomeLoadFromListFieldLabel}
+                  label={strings.ListField_Field}
                   selectedKey={this.state.selectedField}
                   disabled={this.state.selectedList == undefined}
                   onChanged={(item:IDropdownOption)=> {this.setState({selectedField: item.key.toString()});}}
@@ -258,17 +271,60 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
                 </div>
               )}
               {this.state.loadingFromList && this.state.loadFromListError == undefined &&(
-                <Spinner size={SpinnerSize.large} label={strings.WelcomeLoadFromListLoading}/>
+                <Spinner size={SpinnerSize.large} label={strings.ListField_LoadingFromList}/>
               )}
               {this.state.loadFromListError !== undefined && (
                 <span className={styles.errorMessage}>{this.state.loadFromListError}</span>
               )}
               <div className={styles.navigationButtons}>
                 <div>
-                  <DefaultButton text={strings.WelcomeBackButton} onClick={() => {this.gotoStage(welcomeStage.open);}}/>
+                  <DefaultButton text={strings.Welcome_BackButton} onClick={() => {this.gotoStage(welcomeStage.open);}}/>
                 </div>
                 <div style={{textAlign: 'right'}}>
-                  <PrimaryButton text={strings.WelcomeOKButton} disabled={!this.okButtonEnabled()} onClick={this.onOkForLoadFromListClick}/>
+                  <PrimaryButton text={strings.Welcome_OKButton} disabled={!this.okButtonEnabled()} onClick={this.onOkForLoadFromListClick}/>
+                </div>
+              </div>
+            </div>
+          )}
+
+
+          {this.state.stage == welcomeStage.loadFromSiteColumn && (
+            <div>
+              {!this.props.context.isOnline && (
+                <span>{strings.FeatureUnavailableFromLocalWorkbench}</span>
+              )}
+              {!this.state.siteColumnsLoaded && this.props.context.isOnline && !this.state.loadingFromSiteColumn && this.state.loadFromSiteColumnError == undefined && (
+                <Spinner size={SpinnerSize.large} label={strings.SiteColumn_LoadingSiteColumns}/>
+              )}
+              {this.state.siteColumnsLoaded && this.props.context.isOnline && !this.state.loadingFromSiteColumn && this.state.loadFromSiteColumnError == undefined && (
+                <div>
+                  <Dropdown
+                   label={strings.SiteColumn_Group}
+                   selectedKey={this.state.selectedSiteColumnGroup}
+                   onChanged={(item:IDropdownOption)=> {this.setState({selectedSiteColumnGroup: item.key.toString(), selectedSiteColumn: undefined});}}
+                   required={true}
+                   options={this.siteColumnGroupsToOptions()} />
+                  <Dropdown
+                   label={strings.SiteColumn_Field}
+                   selectedKey={this.state.selectedSiteColumn}
+                   disabled={this.state.selectedSiteColumnGroup == undefined}
+                   onChanged={(item:IDropdownOption)=> {this.setState({selectedSiteColumn: item.key.toString()});}}
+                   required={true}
+                   options={this.siteColumnsToOptions()} />
+                </div>
+              )}
+              {this.state.loadingFromSiteColumn && this.state.loadFromSiteColumnError == undefined &&(
+                <Spinner size={SpinnerSize.large} label={strings.SiteColumn_LoadingFromSiteColumn}/>
+              )}
+              {this.state.loadFromSiteColumnError !== undefined && (
+                <span className={styles.errorMessage}>{this.state.loadFromSiteColumnError}</span>
+              )}
+              <div className={styles.navigationButtons}>
+                <div>
+                  <DefaultButton text={strings.Welcome_BackButton} onClick={() => {this.gotoStage(welcomeStage.open);}}/>
+                </div>
+                <div style={{textAlign: 'right'}}>
+                  <PrimaryButton text={strings.Welcome_OKButton} disabled={!this.okButtonEnabled()} onClick={this.onOkForLoadFromSiteColumnClick}/>
                 </div>
               </div>
             </div>
@@ -281,39 +337,39 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
                 <span>{strings.FeatureUnavailableFromLocalWorkbench}</span>
               )}
               {!this.state.librariesLoaded && this.props.context.isOnline && !this.state.loadingFromLibrary && this.state.loadFromLibraryError == undefined && (
-                <Spinner size={SpinnerSize.large} label={strings.WelcomeLoadFromLibraryLoadingLibraries}/>
+                <Spinner size={SpinnerSize.large} label={strings.Library_LoadingLibraries}/>
               )}
               {this.state.librariesLoaded && this.props.context.isOnline && !this.state.loadingFromLibrary && this.state.loadFromLibraryError == undefined && (
                 <div>
                   <Dropdown
-                   label={strings.WelcomeLoadFromLibraryLibraryLabel}
+                   label={strings.Library_Library}
                    selectedKey={this.state.selectedLibraryUrl}
                    onChanged={(item:IDropdownOption)=> {this.setState({selectedLibraryUrl: item.key.toString()});}}
                    required={true}
                    options={this.librariesToOptions()} />
                   <TextField
-                   label={strings.WelcomeLoadFromLibraryFolderPathLabel}
+                   label={strings.Library_FolderPath}
                    value={this.state.libraryFolderPath}
                    onChanged={(value:string) => {this.setState({libraryFolderPath: value});}}/>
                   <TextField
-                   label={strings.WelcomeLoadFromLibraryFilenameLabel}
+                   label={strings.Library_Filename}
                    required={true}
                    value={this.state.libraryFileName}
                    onChanged={(value:string) => {this.setState({libraryFileName: value});}}/>
                 </div>
               )}
               {this.state.loadingFromLibrary && this.state.loadFromLibraryError == undefined &&(
-                <Spinner size={SpinnerSize.large} label={strings.WelcomeLoadFromLibraryLoading}/>
+                <Spinner size={SpinnerSize.large} label={strings.Library_LoadingFromLibrary}/>
               )}
               {this.state.loadFromLibraryError !== undefined && (
                 <span className={styles.errorMessage}>{this.state.loadFromLibraryError}</span>
               )}
               <div className={styles.navigationButtons}>
                 <div>
-                  <DefaultButton text={strings.WelcomeBackButton} onClick={() => {this.gotoStage(welcomeStage.open);}}/>
+                  <DefaultButton text={strings.Welcome_BackButton} onClick={() => {this.gotoStage(welcomeStage.open);}}/>
                 </div>
                 <div style={{textAlign: 'right'}}>
-                  <PrimaryButton text={strings.WelcomeOKButton} disabled={!this.okButtonEnabled()} onClick={this.onOkForLoadFromLibraryClick}/>
+                  <PrimaryButton text={strings.Welcome_OKButton} disabled={!this.okButtonEnabled()} onClick={this.onOkForLoadFromLibraryClick}/>
                 </div>
               </div>
             </div>
@@ -341,12 +397,18 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
       case welcomeStage.open:
         return (
           this.state.loadChoiceForOpen == 'list' ||
+          this.state.loadChoiceForOpen == 'sitecolumn' ||
           (this.state.loadChoiceForOpen == 'file' && this.state.columnTypeForOpen !== undefined && this.state.fileChoiceForOpen !== undefined)
         );
       case welcomeStage.loadFromList:
         return (
           this.props.context.isOnline && this.state.selectedList !== undefined &&
             this.state.selectedField !== undefined && this.state.loadFromListError == undefined
+        );
+      case welcomeStage.loadFromSiteColumn:
+        return (
+          this.props.context.isOnline && this.state.selectedSiteColumnGroup !== undefined &&
+            this.state.selectedSiteColumn !== undefined && this.state.loadFromSiteColumnError == undefined
         );
       case welcomeStage.loadFromLibrary:
         return (
@@ -402,7 +464,7 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
           );
         })}
         {filteredWizards.length == 0 && (
-          <span className={styles.noWizards}>{strings.WelcomeNewNoTemplates}</span>
+          <span className={styles.noWizards}>{strings.Welcome_NewNoTemplates}</span>
         )}
       </div>
     </div>
@@ -447,14 +509,20 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
 
   @autobind
   private onOkForOpenClick(): void {
-    if(this.state.loadChoiceForOpen == 'list'){
-      this.gotoLoadFromList();
-    } else {
-      if(this.state.fileChoiceForOpen == 'library'){
-        this.gotoLoadFromLibrary();
-      } else {
-        this.gotoStage(welcomeStage.upload);
-      }
+    switch (this.state.loadChoiceForOpen) {
+      case 'list':
+        this.gotoLoadFromList();
+        break;
+      case 'sitecolumn':
+        this.gotoLoadFromSiteColumn();
+        break;
+      default:
+        if(this.state.fileChoiceForOpen == 'library'){
+          this.gotoLoadFromLibrary();
+        } else {
+          this.gotoStage(welcomeStage.upload);
+        }
+        break;
     }
   }
 
@@ -483,7 +551,9 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
       libraryFolderPath: (loadMethod == saveMethod.Library ? this.state.libraryFolderPath : ''),
       libraryFilename: (loadMethod == saveMethod.Library ? this.state.libraryFileName : ''),
       list: (loadMethod == saveMethod.ListField ? this.state.selectedList : undefined),
-      field: (loadMethod == saveMethod.ListField ? this.state.selectedField : undefined)
+      field: (loadMethod == saveMethod.ListField ? this.state.selectedField : undefined),
+      siteColumnGroup: (loadMethod == saveMethod.SiteColumn ? this.state.selectedSiteColumnGroup : undefined),
+      siteColumn: (loadMethod == saveMethod.SiteColumn ? this.state.selectedSiteColumn : undefined)
     };
     this.props.launchEditorWithCode(undefined, type, text, validationErrors, saveDetails);
   }
@@ -520,7 +590,7 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
           })
           .catch((error:any) => {
             this.setState({
-              loadFromListError: strings.WelcomeLoadFromListLoadingListsError + ' ' + strings.TechnicalDetailsErrorHeader + ': ' + error.message
+              loadFromListError: strings.ListField_ListLoadError + ' ' + strings.TechnicalDetailsErrorHeader + ': ' + error.message
             });
           });
       }
@@ -572,10 +642,100 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
       .catch((error:any) => {
         this.setState({
           loadingFromList: false,
-          loadFromListError: strings.WelcomeLoadFromListLoadingError + ' ' + strings.TechnicalDetailsErrorHeader + ': ' + error.message
+          loadFromListError: strings.Welcome_LoadingError + ' ' + strings.TechnicalDetailsErrorHeader + ': ' + error.message
         });
       });
   }
+
+
+  private gotoLoadFromSiteColumn(): void {
+    if(!this.state.siteColumnsLoaded) {
+      if(this.props.context.isOnline) {
+        sp.web.fields.filter('ReadOnlyField eq false and Hidden eq false').select('Id','Group','Title','InternalName','TypeAsString','DisplayFormat').orderBy('Group').get()
+          .then((data:any) => {
+            let groupdata:Array<any> = new Array<any>();
+            var curGroupName:string;
+            for(var i=0; i<data.length; i++){
+              let ftype = typeForTypeAsString(data[i].TypeAsString, data[i].DisplayFormat);
+              if(ftype !== undefined) {
+                if(curGroupName != data[i].Group) {
+                  groupdata.push({
+                    Group: data[i].Group,
+                    Fields: []
+                  });
+                  curGroupName = data[i].Group;
+                }
+                groupdata[groupdata.length-1].Fields.push({
+                  Id: data[i].Id,
+                  Title: data[i].Title,
+                  InternalName: data[i].InternalName,
+                  Type: ftype
+                });
+              }
+            }
+
+            this.setState({
+              siteColumnsLoaded: true,
+              siteColumns: groupdata
+            });
+          })
+          .catch((error:any) => {
+            this.setState({
+              loadFromSiteColumnError: strings.SiteColumn_SiteColumnsLoadError + ' ' + strings.TechnicalDetailsErrorHeader + ': ' + error.message
+            });
+          });
+      }
+    }
+    this.gotoStage(welcomeStage.loadFromSiteColumn);
+  }
+
+  private siteColumnGroupsToOptions(): Array<IDropdownOption> {
+    let items:Array<IDropdownOption> = new Array<IDropdownOption>();
+    for(var group of this.state.siteColumns) {
+      items.push({
+        key: group.Group,
+        text: group.Group
+      });
+    }
+    return items;
+  }
+
+  private siteColumnsToOptions(): Array<IDropdownOption> {
+    let items:Array<IDropdownOption> = new Array<IDropdownOption>();
+    for(var group of this.state.siteColumns) {
+      if(group.Group == this.state.selectedSiteColumnGroup) {
+        for(var field of group.Fields) {
+          items.push({
+            key: field.InternalName,
+            text: field.Title + ' [' + textForType(field.Type) + ']'
+          });
+        }
+      } 
+    }
+    return items;
+  }
+
+  @autobind
+  private onOkForLoadFromSiteColumnClick(): void {
+    this.setState({
+      loadingFromSiteColumn: true,
+      loadFromSiteColumnError: undefined
+    });
+    sp.web.fields.getByInternalNameOrTitle(this.state.selectedSiteColumn).select('CustomFormatter','TypeAsString','DisplayFormat').get()
+      .then((data)=>{
+        this.launchEditorFromText(data.CustomFormatter, typeForTypeAsString(data.TypeAsString, data.DisplayFormat), saveMethod.SiteColumn);
+        this.setState({
+          loadingFromSiteColumn: false,
+        });
+      })
+      .catch((error:any) => {
+        this.setState({
+          loadingFromSiteColumn: false,
+          loadFromSiteColumnError: strings.Welcome_LoadingError + ' ' + strings.TechnicalDetailsErrorHeader + ': ' + error.message
+        });
+      });
+  }
+
 
   private gotoLoadFromLibrary(): void {
     if(!this.state.librariesLoaded) {
@@ -589,7 +749,7 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
           })
           .catch((error:any) => {
             this.setState({
-              loadFromLibraryError: strings.WelcomeLoadFromLibraryLoadingLibrariesError + ' ' + strings.TechnicalDetailsErrorHeader + ': ' + error.message
+              loadFromLibraryError: strings.Library_LibrariesLoadError + ' ' + strings.TechnicalDetailsErrorHeader + ': ' + error.message
             });
           });
       }
@@ -626,7 +786,7 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
       .catch((error:any) => {
         this.setState({
           loadingFromLibrary: false,
-          loadFromLibraryError: strings.WelcomeLoadFromLibraryLoadingError + ' ' + strings.TechnicalDetailsErrorHeader + ': ' + error.message
+          loadFromLibraryError: strings.Welcome_LoadingError + ' ' + strings.TechnicalDetailsErrorHeader + ': ' + error.message
         });
       });
   }

@@ -42,12 +42,12 @@ class PreviewHeader_ extends React.Component<IPreviewHeaderProps, IPreviewHeader
 		return (
 		  <div className={styles.previewHeader}>
 			<div className={styles.mainBox}>
-		  		<span className={styles.panelHeader}>{strings.PanelHeaderPreview}</span>
+		  		<span className={styles.panelHeader}>{strings.PanelHeader_Preview}</span>
 			</div>
 			<div className={styles.buttonBox + ' ' + (isValid ? styles.valid : styles.invalid)}>
 				<Icon
 				 iconName={isValid ? 'Emoji2' : 'EmojiDisappointed'}
-				 title={isValid ? strings.PreviewValidationGood : strings.PreviewValidationBad + '\n' + this.props.validationErrors.join('\n') + this.props.formatterErrors.join('\n')}
+				 title={isValid ? strings.PreviewValidation_Good : strings.PreviewValidation_Bad + '\n' + this.props.validationErrors.join('\n') + this.props.formatterErrors.join('\n')}
 				 styles={iconStyles}/>
 			</div>
 		  </div>

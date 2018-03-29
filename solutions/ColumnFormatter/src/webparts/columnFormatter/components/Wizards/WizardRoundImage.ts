@@ -5,8 +5,8 @@ import { generatePictureLink } from '../../state/ValueGeneration';
 import { IWizard, standardWizardStartingColumns } from './WizardCommon';
 
 export const WizardRoundImage: IWizard = {
-	name: strings.WizardRoundImageName,
-	description: strings.WizardRoundImageDescription,
+	name: strings.WizardRoundImage_Name,
+	description: strings.WizardRoundImage_Description,
 	iconName: 'Soccer',
 	fieldTypes: [
 		columnTypes.picture,
@@ -52,7 +52,6 @@ export const WizardRoundImage: IWizard = {
 			'{',
 			'  "$schema": "http://columnformatting.sharepointpnp.com/columnFormattingSchema.json",',
 			'  "elmType": "div",',
-			'  "attributes": {},',
 			'  "children": [',
 			'    {',
 			'      "elmType": "div",',

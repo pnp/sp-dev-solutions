@@ -45,9 +45,9 @@ class ColumnFormatterViewPane_ extends React.Component<IColumnFormatterViewPaneP
 					</SplitPane>
 				</TabPanel>
 				<TabList style={{"textAlign":"right"}}>
-					<Tab><Icon iconName='RedEye'/><span>{strings.TabPreview}</span></Tab>
-					<Tab><Icon iconName='Embed'/><span>{strings.TabCode}</span></Tab>
-					<Tab><Icon iconName='DoubleColumn'/><span>{strings.TabSplit}</span></Tab>
+					<Tab><Icon iconName='RedEye'/><span>{strings.Tab_Preview}</span></Tab>
+					<Tab><Icon iconName='Embed'/><span>{strings.Tab_Code}</span></Tab>
+					<Tab><Icon iconName='DoubleColumn'/><span>{strings.Tab_Split}</span></Tab>
 				</TabList>
 		  </Tabs>
 		);

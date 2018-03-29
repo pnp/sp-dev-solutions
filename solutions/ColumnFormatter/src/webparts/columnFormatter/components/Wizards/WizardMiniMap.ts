@@ -4,8 +4,8 @@ import { columnTypes, IDataColumn } from '../../state/State';
 import { IWizard, standardWizardStartingColumns } from './WizardCommon';
 
 export const WizardMiniMap: IWizard = {
-	name: strings.WizardMiniMapName,
-	description: strings.WizardMiniMapDescription,
+	name: strings.WizardMiniMap_Name,
+	description: strings.WizardMiniMap_Description,
 	iconName: 'MapPin',
 	fieldTypes: [
 		columnTypes.text,

@@ -1,5 +1,10 @@
 import { Environment, EnvironmentType, Version } from '@microsoft/sp-core-library';
-import { BaseClientSideWebPart, IPropertyPaneConfiguration } from '@microsoft/sp-webpart-base';
+import {
+  BaseClientSideWebPart,
+  IPropertyPaneConfiguration,
+  PropertyPaneDropdown,
+  PropertyPaneToggle,
+} from '@microsoft/sp-webpart-base';
 import { sp } from '@pnp/sp';
 import { PropertyFieldSpinButton } from '@pnp/spfx-property-controls/lib/PropertyFieldSpinButton';
 import * as strings from 'ColumnFormatterWebPartStrings';
@@ -9,12 +14,16 @@ import { Provider, ProviderProps } from 'react-redux';
 import { createStore, Store } from 'redux';
 
 import { ColumnFormatter } from './components/ColumnFormatter';
-import { setContext, setHeight } from './state/Actions';
+import { chooseTheme, setContext, setHeight, toggleIndentGuides, toggleLineNumbers, toggleMiniMap } from './state/Actions';
 import { cfReducer } from './state/Reducers';
 import { IApplicationState } from './state/State';
 
 export interface IColumnFormatterWebPartProps {
   height: number; //Controls the height of the webpart
+  editorTheme: string; //Controls the colors used by the code editor
+  showLineNumbers: boolean; //Toggles the visibility of line numbers in the code editor
+  showMiniMap: boolean; //Toggles the visibility of the mini map in the code editor
+  showIndentGuides: boolean; //Toggle the visibility of the indent guides in the code editor
 }
 
 export default class ColumnFormatterWebPart extends BaseClientSideWebPart<IColumnFormatterWebPartProps> {
@@ -35,7 +44,7 @@ export default class ColumnFormatterWebPart extends BaseClientSideWebPart<IColum
         this.context.pageContext.web.absoluteUrl,
         this.context.pageContext.user.displayName,
         this.context.pageContext.user.email,
-        this.properties.height || 340
+        this.properties
       )
     );
 
@@ -69,11 +78,32 @@ export default class ColumnFormatterWebPart extends BaseClientSideWebPart<IColum
   }
 
   //** Intercepts property pane value changes and dispatches them to the store */
-  public onDispatchablePropertyChanged(propertyPath: string, oldValue: any, newValue: any): void {
-    if(propertyPath == 'height' && oldValue !== newValue) {
-      this.store.dispatch(setHeight(Math.max(340, newValue)));
-    }
+  /*public onDispatchablePropertyChanged(propertyPath: string, oldValue: any, newValue: any): void {
+    
+    
     this.onPropertyPaneFieldChanged(propertyPath, oldValue, newValue);
+  }*/
+
+  public onPropertyPaneFieldChanged(propertyPath: string, oldValue: any, newValue: any): void {
+    if(oldValue !== newValue) {
+      switch(propertyPath) {
+        case 'height':
+          this.store.dispatch(setHeight(Math.max(340, newValue)));
+          break;
+        case 'editorTheme':
+          this.store.dispatch(chooseTheme(newValue));
+          break;
+        case 'showLineNumbers':
+          this.store.dispatch(toggleLineNumbers(newValue));
+          break;
+        case 'showMiniMap':
+          this.store.dispatch(toggleMiniMap(newValue));
+          break;
+        case 'showIndentGuides':
+          this.store.dispatch(toggleIndentGuides(newValue));
+          break;
+      }
+    }
   }
 
   protected getPropertyPaneConfiguration(): IPropertyPaneConfiguration {
@@ -82,18 +112,47 @@ export default class ColumnFormatterWebPart extends BaseClientSideWebPart<IColum
         {
           groups: [
             {
-              groupName: strings.PropertyBasicGroupName,
+              groupName: strings.Property_BasicGroupName,
               groupFields: [
                 PropertyFieldSpinButton('height', {
-                  label: strings.PropertyHeightLabel,
+                  label: strings.Property_HeightLabel,
                   initialValue: this.properties.height,
-                  onPropertyChange: this.onDispatchablePropertyChanged.bind(this),
+                  onPropertyChange: this.onPropertyPaneFieldChanged.bind(this),
                   properties: this.properties,
                   suffix: ' px',
                   min: 340,
                   step: 10,
                   decimalPlaces: 0,
                   key: 'height'
+                })
+              ]
+            },
+            {
+              groupName: strings.Property_EditorGroupName,
+              groupFields: [
+                PropertyPaneDropdown('editorTheme', {
+                  label: strings.Property_EditorThemeLabel,
+                  selectedKey: this.properties.editorTheme,
+                  options: [
+                    { key: 'vs', text: 'vs' },
+                    { key: 'vs-dark', text: 'vs-dark' },
+                    { key: 'hc-black', text: 'hc-black' }
+                  ]
+                }),
+                PropertyPaneToggle('showLineNumbers', {
+                  label: strings.Property_LineNumbersLabel,
+                  onText: strings.Property_VisibleOn,
+                  offText: strings.Property_VisibleOff
+                }),
+                PropertyPaneToggle('showIndentGuides', {
+                  label: strings.Property_IndentGuidesLabel,
+                  onText: strings.Property_VisibleOn,
+                  offText: strings.Property_VisibleOff
+                }),
+                PropertyPaneToggle('showMiniMap', {
+                  label: strings.Property_MiniMapLabel,
+                  onText: strings.Property_VisibleOn,
+                  offText: strings.Property_VisibleOff
                 })
               ]
             }

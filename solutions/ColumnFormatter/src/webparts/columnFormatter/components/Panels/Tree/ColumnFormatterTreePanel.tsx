@@ -119,7 +119,7 @@ class ColumnFormatterTreePanel_ extends React.Component<IColumnFormatterTreePane
 	public render(): React.ReactElement<IColumnFormatterTreePanelProps> {
 		return (
 		  <div className={styles.panel}>
-				<span className={styles.panelHeader}>{strings.TreeViewHeader}</span>
+				<span className={styles.panelHeader}>{strings.TreeView_Header}</span>
 				{this.state.treeError == undefined && this.state.treeData !== undefined && (
 					<Treebeard
 					 data={this.state.treeData}
@@ -127,7 +127,7 @@ class ColumnFormatterTreePanel_ extends React.Component<IColumnFormatterTreePane
 					 style={treeStyles}/>
 				)}
 				{this.state.treeError !== undefined && (
-					<span className={styles.errorMessage}>{strings.TreeViewError + ' ' + strings.TechnicalDetailsErrorHeader + ': ' + this.state.treeError}</span>
+					<span className={styles.errorMessage}>{strings.TreeView_Error + ' ' + strings.TechnicalDetailsErrorHeader + ': ' + this.state.treeError}</span>
 				)}
 		  </div>
 		);
