@@ -1,9 +1,13 @@
-# title of the solution
+# Site Designs Studio
 
 ## Summary
-Short summary on functionality and used technologies.
+A SharePoint Framework WebPart allowing end-users to manage Site Designs and Site Scripts without the need to deal with JSON , PowerShell or REST
 
-[picture(s) of the solution in action]
+![List of Site Designs](./docs/assets/designs.png)
+
+![Edit properties of a Site Design](./docs/assets/edit-sitedesign.png)
+
+![Add a new Action](./docs/assets/add-action.png)
 
 ## Used SharePoint Framework Version 
 ![drop](https://img.shields.io/badge/version-GA-green.svg)
