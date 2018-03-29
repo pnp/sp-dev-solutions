@@ -13,8 +13,6 @@ Short summary on functionality and used technologies.
 * [SharePoint Framework](https://dev.office.com/sharepoint)
 * [Office 365 tenant](https://dev.office.com/sharepoint/docs/spfx/set-up-your-development-environment)
 
-> Update accordingly as needed.
-
 ## Solution
 
 Solution|Author(s)
@@ -41,8 +39,6 @@ Version|Date|Comments
   - `npm install`
   - `gulp serve`
 
-> Include any additional steps as needed.
-
 ## Features
 Description of the extension with possible additional details than in short summary.
 This extension illustrates the following concepts:
@@ -51,6 +47,5 @@ This extension illustrates the following concepts:
 - Create, Edit and Delete Site Scripts in the current Tenant
 - Edit Site Scripts with a user friendly GUI and save them directly in the current Tenant
 
-> Notice that better pictures and documentation will increase the sample usage and the value you are providing for others. Thanks for your submissions advance.
 
 <img src="https://telemetry.sharepointpnp.com/sp-dev-solutions/solutions/readme-template" />
