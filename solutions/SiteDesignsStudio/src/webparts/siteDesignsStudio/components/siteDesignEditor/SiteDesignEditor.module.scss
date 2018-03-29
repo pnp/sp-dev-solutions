@@ -1,0 +1,48 @@
+@import '~@microsoft/sp-office-ui-fabric-core/dist/sass/SPFabricCore.scss';
+
+.siteDesignEditor {
+	.imagePreview {
+		width: 90%;
+		margin: auto;
+		margin-top: 5px;
+		margin-bottom: 5px;
+    border: 1px solid $ms-color-themeDark;
+    padding: 3px;
+
+    .imagePreviewButton {
+      margin-top: 2px;
+    }
+
+    .imagePreviewUpdateLink {
+      font-size: larger;
+      padding-top: 20px;
+      padding-bottom: 20px;
+    }
+  }
+
+  .addScriptButton {
+    margin-top: 25px;
+  }
+
+	.siteScripts {
+    margin-top: 5px;
+		max-height: 60vh;
+		overflow-y: auto;
+		overflow-x: hidden;
+
+		.siteScript {
+			border: 1px solid $ms-color-themeDark;
+			width: 90%;
+      margin: 0;
+      margin-bottom: 5px;
+      margin-left: auto;
+      padding: 10px;
+      padding-top: 2px;
+      padding-bottom: 1px;
+    }
+
+    .siteScript:hover {
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    }
+	}
+}

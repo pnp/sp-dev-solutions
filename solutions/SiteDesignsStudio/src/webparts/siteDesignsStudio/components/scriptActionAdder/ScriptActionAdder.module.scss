@@ -1,0 +1,58 @@
+@import '~@microsoft/sp-office-ui-fabric-core/dist/sass/SPFabricCore.scss';
+
+.scriptActionAdder {
+	text-align: center;
+	min-height: 60px;
+	max-height: 300px;
+	overflow-y: auto;
+	overflow-x: hidden;
+	cursor: pointer;
+
+	.actionAddIcon {
+		display: block;
+		margin: auto;
+		font-size: 40px;
+  }
+
+  .actionAddIcon.subactions {
+		font-size: 30px;
+  }
+
+    .actionAddIcon:hover {
+		color: $ms-color-themeDark;
+	}
+}
+
+.actionButtonContainer {
+	display: flex;
+
+	.actionButton {
+		border: 1px solid $ms-color-themeDark;
+		padding: 3px;
+		margin: 2px;
+		display: block;
+		width: 100%;
+		min-height: 50px;
+    cursor: pointer;
+    overflow-x: hidden;
+
+		.actionIcon {
+			display: inline-block;
+      margin: auto;
+      margin-top: 10px;
+			font-size: 32px;
+		}
+
+		.actionButtonLabel {
+      display: inline-block;
+      vertical-align: top;
+      font-size: 20px;
+      margin-top: 3px;
+		}
+  }
+
+  .actionButton:hover {
+		background-color: $ms-color-themeDark;
+		@include ms-fontColor-white;
+	}
+}
