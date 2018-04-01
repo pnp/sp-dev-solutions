@@ -539,14 +539,12 @@ export default class SiteScriptEditor extends React.Component<ISiteScriptEditorP
 		};
 		let actionSchema = this.siteScriptSchemaService.getActionSchema(newAction);
     // Add default values for properties of the action
-    console.log('action schema :', actionSchema);
+
 		if (actionSchema && actionSchema.properties) {
-			Object.keys(actionSchema.properties).forEach(
+			Object.keys(actionSchema.properties).filter(p => p != 'verb').forEach(
 				(p) => (newAction[p] = this._getPropertyDefaultValueFromSchema(actionSchema, p))
 			);
     }
-
-    console.log('new action :' , newAction);
 
 		// TODO New item is expanded by default, all others go collapsed
 
