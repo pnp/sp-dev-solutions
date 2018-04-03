@@ -1,0 +1,8 @@
+{
+  "@microsoft/generator-sharepoint": {
+    "version": "1.4.1",
+    "libraryName": "column-formatter",
+    "libraryId": "f6303744-9308-4228-9465-a5c9ee30147c",
+    "environment": "spo"
+  }
+}

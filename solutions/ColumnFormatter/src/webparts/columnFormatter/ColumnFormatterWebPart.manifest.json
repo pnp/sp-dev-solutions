@@ -1,0 +1,32 @@
+{
+  "$schema": "https://dev.office.com/json-schemas/spfx/client-side-web-part-manifest.schema.json",
+  "id": "b6de9c85-d445-4497-af03-8970972a07ce",
+  "alias": "ColumnFormatterWebPart",
+  "componentType": "WebPart",
+
+  // The "*" signifies that the version should be taken from the package.json
+  "version": "*",
+  "manifestVersion": 2,
+
+  "supportsFullBleed": true,
+
+  // If true, the component can only be installed on sites where Custom Script is allowed.
+  // Components that allow authors to embed arbitrary script code should set this to true.
+  // https://support.office.com/en-us/article/Turn-scripting-capabilities-on-or-off-1f2c515f-5d7e-448a-9fd7-835da935584f
+  "requiresCustomScript": false,
+
+  "preconfiguredEntries": [{
+    "groupId": "5c03119e-3074-46fd-976b-c60198311f70", // Other
+    "group": { "default": "Other" },
+    "title": { "default": "Column Formatter" },
+    "description": { "default": "Enables easy editing of Display Formatting for modern listview columns" },
+    "officeFabricIconFontName": "Design",
+    "properties": {
+      "height": 340,
+      "editorTheme": "vs",
+      "showLineNumbers": false,
+      "showMiniMap": false,
+      "showIndentGuides": true
+    }
+  }]
+}

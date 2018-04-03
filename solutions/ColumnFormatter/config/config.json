@@ -1,0 +1,23 @@
+{
+  "$schema": "https://dev.office.com/json-schemas/spfx-build/config.2.0.schema.json",
+  "version": "2.0",
+  "bundles": {
+    "column-formatter-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/columnFormatter/ColumnFormatterWebPart.js",
+          "manifest": "./src/webparts/columnFormatter/ColumnFormatterWebPart.manifest.json"
+        }
+      ]
+    }
+  },
+  "externals": {
+    "monaco": {
+      "path": "/src/MonacoCustomBuild/index.js",
+      "globalName": "monaco"
+    }
+  },
+  "localizedResources": {
+    "ColumnFormatterWebPartStrings": "lib/webparts/columnFormatter/loc/{locale}.js"
+  }
+}

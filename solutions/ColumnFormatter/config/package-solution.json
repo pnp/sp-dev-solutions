@@ -1,0 +1,14 @@
+{
+  "$schema": "https://dev.office.com/json-schemas/spfx-build/package-solution.schema.json",
+  "solution": {
+    "name": "Column Formatter",
+    "id": "f6303744-9308-4228-9465-a5c9ee30147c",
+    "version": "1.2.0.0",
+    "includeClientSideAssets": true,
+    "skipFeatureDeployment": true,
+    "iconPath": "AppIcon.png"
+  },
+  "paths": {
+    "zippedPackage": "solution/column-formatter.sppkg"
+  }
+}
