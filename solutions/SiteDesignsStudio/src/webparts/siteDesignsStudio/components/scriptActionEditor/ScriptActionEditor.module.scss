@@ -1,0 +1,79 @@
+@import '~@microsoft/sp-office-ui-fabric-core/dist/sass/SPFabricCore.scss';
+
+.scriptActionEditor {
+	padding: 5px;
+	padding-top: 0;
+	border: 1px solid $ms-color-themeDark;
+	border-radius: 5px;
+	background-color: white;
+	margin: 5px;
+  cursor: pointer;
+
+	.title {
+		color: $ms-color-themeDark;
+		padding-top: 2px;
+		margin-top: 0;
+		margin-bottom: 0;
+	}
+
+	.commandButtonsContainer {
+		position: relative;
+
+		.commandButtons {
+			position: absolute;
+			right: 1px;
+		}
+	}
+
+	.subactions {
+		.scriptActionAdder {
+			.actionAddIcon {
+				font-size: 20px;
+			}
+		}
+	}
+}
+
+.designWorkspace {
+	@include ms-Grid-col;
+	@include ms-sm10;
+	@include ms-smOffset1;
+
+	.subactionsWorkspace {
+		@include ms-Grid-row;
+		border: 1px dashed darkgrey;
+		margin: 4px;
+
+		.subactionItem {
+			@include ms-Grid-col;
+			@include ms-sm10;
+			@include ms-smOffset1;
+		}
+	}
+}
+
+.actionButtonContainer {
+	display: flex;
+
+	.actionButton {
+		border: 1px solid darkblue;
+		padding: 3px;
+		margin: 2px;
+		display: block;
+		text-align: center;
+		width: 100%;
+		min-height: 100px;
+		cursor: pointer;
+
+		.actionIcon {
+			display: block;
+			margin: auto;
+			font-size: 72px;
+		}
+
+		.actionButtonLabel {
+			font-size: 24px;
+			display: block;
+		}
+	}
+}
