@@ -1,12 +1,9 @@
 import * as React from 'react';
 import { SortableContainer, SortableHandle, SortableElement } from 'react-sortable-hoc';
-import { Dropdown, TextField, Toggle, Link, IconButton } from 'office-ui-fabric-react';
+import { Toggle, IconButton } from 'office-ui-fabric-react';
 import styles from './ScriptActionEditor.module.scss';
-import { escape, assign } from '@microsoft/sp-lodash-subset';
-import * as strings from 'SiteDesignsStudioWebPartStrings';
 
 import { ISiteScriptAction } from '../../models/ISiteScript';
-import ScriptActionAdder from '../scriptActionAdder/ScriptActionAdder';
 import { IServiceConsumerComponentProps } from '../ISiteDesignsStudioProps';
 import {
 	ISiteScriptSchemaService,
@@ -31,13 +28,19 @@ interface ISortEndEventArgs {
 export interface IScriptActionCollectionEditorState {}
 
 export interface IScriptActionCollectionEditorProps extends IServiceConsumerComponentProps {
-  parentActionUI?: ISiteScriptActionUIWrapper;
+	parentActionUI?: ISiteScriptActionUIWrapper;
 	actionUIs: ISiteScriptActionUIWrapper[];
 	onActionChanged?: (actionKey: string, action: ISiteScriptAction) => void;
 	onActionRemoved?: (actionKey: string) => void;
-	onActionMoved?: (actionKey: string, oldActionIndex: number, newActionIndex: number, parentActionKey?:string) => void;
+	onActionMoved?: (
+		actionKey: string,
+		oldActionIndex: number,
+		newActionIndex: number,
+		parentActionKey?: string
+	) => void;
 	onExpandChanged?: (actionUI: ISiteScriptActionUIWrapper) => void;
-	getActionSchema?: (action: ISiteScriptAction) => any;
+  getActionSchema?: (action: ISiteScriptAction) => any;
+  useWizardPropertyEditors: boolean;
 }
 
 export default class ScriptActionCollectionEditor extends React.Component<
@@ -56,14 +59,8 @@ export default class ScriptActionCollectionEditor extends React.Component<
 		});
 	}
 
-	private _translateLabel(value: string): string {
-		const key = 'LABEL_' + value;
-		return strings[key] || value;
-	}
-
 	public render(): React.ReactElement<IScriptActionCollectionEditorProps> {
 		let { actionUIs, serviceScope, onActionChanged } = this.props;
-		console.log('ACTIONS= ', actionUIs);
 
 		const SortableListContainer = SortableContainer(({ items }) => {
 			return <div>{items.map((value, index) => this._renderActionEditorWithCommands(value, index))}</div>;
@@ -84,20 +81,22 @@ export default class ScriptActionCollectionEditor extends React.Component<
 	// private isSorting: boolean = null;
 	private _onSortStart(args: ISortStartEventArgs) {
 		// this.sortedItemIsExpanded = this._isExpanded(args.index);
-    // this.isSorting = true;
+		// this.isSorting = true;
 	}
 
 	private _onSortEnd(args: ISortEndEventArgs) {
-    let movedItem = this.props.actionUIs[args.oldIndex];
+		let movedItem = this.props.actionUIs[args.oldIndex];
 		this._moveAction(movedItem.key, args.oldIndex, args.newIndex);
 	}
 
 	private _renderActionEditorWithCommands(actionUI: ISiteScriptActionUIWrapper, actionIndex: number) {
-    let { getActionSchema } = this.props;
+		let { getActionSchema } = this.props;
 		let actionSchema = getActionSchema(actionUI.action);
 
 		const DragHandle = SortableHandle(() => (
-			<h2 className={styles.title}>{this._getActionNameFromActionSchema(actionSchema)}</h2>
+			<h2 className={styles.title} title={this._getActionDescription(actionSchema)}>
+				{this._getActionLabel(actionSchema)}
+			</h2>
 		));
 
 		let expandCollapseIcon = actionUI.isExpanded ? 'CollapseContentSingle' : 'ExploreContentSingle';
@@ -128,9 +127,11 @@ export default class ScriptActionCollectionEditor extends React.Component<
 							serviceScope={this.props.serviceScope}
 							actionUI={value}
 							schema={actionSchema}
-              onActionChanged={(updated) => this._onActionUpdated(actionUI.key, updated)}
-              onSubActionMoved={(actionKey, oldIndex, newIndex) => this._moveAction(actionKey, oldIndex, newIndex, actionUI.key)}
-							onExpandChanged={() => this._onActionExpandChanged(actionUI)}
+							onActionChanged={(updated) => this._onActionUpdated(actionUI.key, updated)}
+							onSubActionMoved={(actionKey, oldIndex, newIndex) =>
+								this._moveAction(actionKey, oldIndex, newIndex, actionUI.key)}
+              onExpandChanged={() => this._onActionExpandChanged(actionUI)}
+              useWizardPropertyEditors={this.props.useWizardPropertyEditors}
 						/>
 					)}
 				</div>
@@ -140,8 +141,22 @@ export default class ScriptActionCollectionEditor extends React.Component<
 		return <SortableItem key={`item-${actionIndex}`} index={actionIndex} value={actionUI} />;
 	}
 
-	private _getActionNameFromActionSchema(actionSchema: any): string {
-		return this._translateLabel(this._getVerbFromActionSchema(actionSchema));
+	private _getActionLabel(actionSchema: any): string {
+		let titleFromSchema = actionSchema.title;
+		if (!titleFromSchema) {
+			return this._getVerbFromActionSchema(actionSchema);
+		}
+
+		return titleFromSchema;
+	}
+
+	private _getActionDescription(actionSchema: any): string {
+		let descriptionFromSchema = actionSchema.description;
+		if (!descriptionFromSchema) {
+			return '';
+		}
+
+		return descriptionFromSchema;
 	}
 
 	private _getVerbFromActionSchema(actionDefinition: any): string {

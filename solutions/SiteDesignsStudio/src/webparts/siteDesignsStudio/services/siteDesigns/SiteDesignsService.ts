@@ -39,7 +39,6 @@ export class SiteDesignsService implements ISiteDesignsService {
 				'ODATA-VERSION': '4.0'
 			}
 		};
-		console.log('URL=', restUrl, ' REQUEST OPTIONS=', options);
 		return this.spHttpClient.post(restUrl, SPHttpClient.configurations.v1, options).then((response) => {
 			if (response.status == 204) {
 				return {};

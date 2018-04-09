@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as ReactDom from 'react-dom';
 import { Version, ServiceScope } from '@microsoft/sp-core-library';
-import { BaseClientSideWebPart, IPropertyPaneConfiguration, PropertyPaneTextField } from '@microsoft/sp-webpart-base';
+import { BaseClientSideWebPart, IPropertyPaneConfiguration, PropertyPaneTextField, PropertyPaneToggle } from '@microsoft/sp-webpart-base';
 
 import * as strings from 'SiteDesignsStudioWebPartStrings';
 import SiteDesignsStudio from './components/SiteDesignsStudio';
@@ -15,7 +15,9 @@ import {
 } from './services/siteScriptSchema/SiteScriptSchemaService';
 
 export interface ISiteDesignsStudioWebPartProps {
-	siteDesignSchema: string;
+  siteDesignSchema: string;
+  useWizardActionGenerators: boolean;
+  useWizardPropertyEditors: boolean;
 }
 
 export default class SiteDesignsStudioWebPart extends BaseClientSideWebPart<ISiteDesignsStudioWebPartProps> {
@@ -47,14 +49,16 @@ export default class SiteDesignsStudioWebPart extends BaseClientSideWebPart<ISit
 
 	public render(): void {
 		const element: React.ReactElement<ISiteDesignsStudioProps> = React.createElement(SiteDesignsStudio, {
-			serviceScope: this.usedServiceScope
+      serviceScope: this.usedServiceScope,
+      useWizardActionGenerators: this.properties.useWizardActionGenerators,
+      useWizardPropertyEditors: this.properties.useWizardPropertyEditors
 		});
 
 		ReactDom.render(element, this.domElement);
 	}
 
 	protected get dataVersion(): Version {
-		return Version.parse('1.0');
+		return Version.parse('1.1');
 	}
 
 	private onPropertyChanged(propertyPath: string, newValue: any): void {
@@ -90,7 +94,20 @@ export default class SiteDesignsStudioWebPart extends BaseClientSideWebPart<ISit
 									onSchemaPropertyChanged: (value) =>
 										this.onPropertyChanged('siteDesignSchema', value),
 									value: this.properties.siteDesignSchema,
-									serviceScope: this.usedServiceScope
+                  serviceScope: this.usedServiceScope
+								})
+							]
+            },
+            {
+							groupName: strings.WizardsPropertyGroup,
+							groupFields: [
+								PropertyPaneToggle('useWizardActionGenerators', {
+									label: strings.UseWizardActionGeneratorLabel,
+									checked: this.properties.useWizardActionGenerators
+                }),
+                PropertyPaneToggle('useWizardPropertyEditors', {
+									label: strings.UseWizardPropertyEditorLabel,
+									checked: this.properties.useWizardPropertyEditors
 								})
 							]
 						}

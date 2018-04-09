@@ -1,55 +1,31 @@
-# Site Designs Studio
+## site-designs-studio
 
-## Summary
-A SharePoint Framework WebPart allowing end-users to manage Site Designs and Site Scripts without the need to deal with JSON , PowerShell or REST
+This SPFx WebPart is currently in Beta version
+Please try it out and give some feedback.
 
-![List of Site Designs](./docs/assets/designs.png)
+The WebPart has only be tested in both local and hosted Workbenchs so far, not in real Modern Pages.
 
-![Edit properties of a Site Design](./docs/assets/edit-sitedesign.png)
+Upcoming features I plan to deliver
+- Ordering of associated Site Scripts in Site Designs
+- Check and proper handling of current user access rights
+- Improve user messages and use localized strings
+- Some UI fine-tuning
+- ...
 
-![Add a new Action](./docs/assets/add-action.png)
+Please submit any suggestions or report bugs in the issues
 
-## Used SharePoint Framework Version 
-![drop](https://img.shields.io/badge/version-GA-green.svg)
+## Install on a Modern Site
+To install this application, go to /package and execute install.ps1
+'''
+install.ps1 -Url https://yourtenant.sharepoint.com/sites/yoursite
+'''
 
-## Applies to
+### requirements
+- a recent version of PnP PowerShell should be installed
+- Office 365 CDN must be enabled on the target tenant
 
-* [SharePoint Framework](https://dev.office.com/sharepoint)
-* [Office 365 tenant](https://dev.office.com/sharepoint/docs/spfx/set-up-your-development-environment)
-
-## Solution
-
-Solution|Author(s)
---------|---------
-SiteDesignsStudio | Yannick Plenevaux (GitHub: @ypcode) (Twitter: @yp_code)
-
-## Version history
-
-Version|Date|Comments
--------|----|--------
-1.1|March 29, 2018|Update comment
-1.0|March 22, 2018|Initial release
-
-## Disclaimer
-**THIS CODE IS PROVIDED *AS IS* WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING ANY IMPLIED WARRANTIES OF FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.**
-
----
-
-## Minimal Path to Awesome
-
-- Clone this repository
-- Move to right solution folder 
-- in the command line run:
-  - `npm install`
-  - `gulp serve`
-
-## Features
-Description of the extension with possible additional details than in short summary.
-This extension illustrates the following concepts:
-
-- Create, Edit and Delete Site Designs in the current Tenant
-- Create, Edit and Delete Site Scripts in the current Tenant
-- Edit Site Scripts with a user friendly GUI and save them directly in the current Tenant
-
-
-<img src="https://telemetry.sharepointpnp.com/sp-dev-solutions/solutions/readme-template" />
+### Actions of this PowerShell script
+- adds the solution to the app catalog
+- deploys it tenant-wide
+- Create a Modern page on the target site
+- Adds the Site Designs Studio WebPart to the new page

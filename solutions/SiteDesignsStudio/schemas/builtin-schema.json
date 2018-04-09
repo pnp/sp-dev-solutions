@@ -1,0 +1,451 @@
+{
+  "$schema": "http://json-schema.org/draft-06/schema#",
+  "title": "SiteScript",
+  "description": "A SharePoint Site Script definition",
+  "definitions": {
+    "createSPList_setTitle": {
+      "type": "object",
+      "title": "Set the title",
+      "description": "Set the title of the list",
+      "properties": {
+        "verb": {
+          "enum": [
+            "setTitle"
+          ]
+        },
+        "title": {
+          "title": "Title",
+          "description": "Title of the list",
+          "type": "string"
+        }
+      },
+      "required": [
+        "verb",
+        "title"
+      ]
+    },
+    "createSPList_setDescription": {
+      "type": "object",
+      "title": "Set the description",
+      "description": "Set the description of the list",
+      "properties": {
+        "verb": {
+          "enum": [
+            "setDescription"
+          ]
+        },
+        "description": {
+          "title": "Description",
+          "description": "Description of the list",
+          "type": "string"
+        }
+      },
+      "required": [
+        "verb",
+        "description"
+      ]
+    },
+    "createSPList_addSPField": {
+      "type": "object",
+      "title": "Add a field",
+      "description": "Add a field to the list",
+      "properties": {
+        "verb": {
+          "enum": [
+            "addSPField"
+          ]
+        },
+        "fieldType": {
+          "title": "Field Type",
+          "description": "The type of the field",
+          "enum": [
+            "Text",
+            "Note",
+            "Number",
+            "Boolean",
+            "User",
+            "DateTime"
+          ]
+        },
+        "displayName": {
+          "title": "Display Name",
+          "description": "The displayed name of the field",
+          "type": "string"
+        },
+        "isRequired": {
+          "title": "Is required",
+          "description": "Is the field required",
+          "type": "boolean"
+        },
+        "addToDefaultView": {
+          "title": "Add to default view",
+          "description": "The field is added to default view",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "verb",
+        "fieldType",
+        "displayName"
+      ]
+    },
+    "createSPList_deleteSPField": {
+      "type": "object",
+      "title": "Delete a field",
+      "description": "Delete a field from the list",
+      "properties": {
+        "verb": {
+          "enum": [
+            "deleteSPField"
+          ]
+        },
+        "displayName": {
+          "title": "Display Name",
+          "description": "The displayed name of the field",
+          "type": "string"
+        }
+      },
+      "required": [
+        "verb",
+        "displayName"
+      ]
+    },
+    "createSPList_addContentType": {
+      "type": "object",
+      "title": "Add a Content Type",
+      "description": "Add an existing Site Content Type to the list",
+      "properties": {
+        "verb": {
+          "enum": [
+            "addContentType"
+          ]
+        },
+        "name": {
+          "title": "Content Type's name",
+          "description": "The name of an existing Site Content Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "verb",
+        "name"
+      ]
+    },
+    "createSPList_removeContentType": {
+      "type": "object",
+      "title": "Remove a Content Type",
+      "description": "Remove a Content Type from the list",
+      "properties": {
+        "verb": {
+          "enum": [
+            "removeContentType"
+          ]
+        },
+        "name": {
+          "title": "Content Type's name",
+          "description": "The name of the Content Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "verb",
+        "name"
+      ]
+    },
+    "createSPList_setSPFieldCustomFormatter": {
+      "type": "object",
+      "title": "Set a field custom formatter",
+      "description": "Set a custom formatter to the specified field",
+      "properties": {
+        "verb": {
+          "enum": [
+            "setSPFieldCustomFormatter"
+          ]
+        },
+        "fieldDisplayName": {
+          "title": "Field's display name",
+          "description": "The display name of the field to apply the formatting on",
+          "type": "string"
+        },
+        "formatterJSON": {
+          "title": "The formatter JSON",
+          "description": "The formatter rules expressed in JSON",
+          "type": "object"
+        }
+      },
+      "required": [
+        "verb",
+        "fieldDisplayName",
+        "formatterJSON"
+      ]
+    },
+    "createSPList": {
+      "type": "object",
+      "title": "Create a List",
+      "description": "Create a SharePoint List script",
+      "properties": {
+        "verb": {
+          "enum": [
+            "createSPList"
+          ]
+        },
+        "listName": {
+          "title": "List's name",
+          "description": "The name of the List",
+          "type": "string"
+        },
+        "templateType": {
+          "title": "List's Template Type",
+          "description": "The template type of the list",
+          "type": "number"
+        },
+        "subactions": {
+          "title": "Sub actions",
+          "description": "Define the sub actions of the Create List action",
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {
+                "type": "object",
+                "$ref": "#/definitions/createSPList_setTitle"
+              },
+              {
+                "type": "object",
+                "$ref": "#/definitions/createSPList_setDescription"
+              },
+              {
+                "type": "object",
+                "$ref": "#/definitions/createSPList_addSPField"
+              },
+              {
+                "type": "object",
+                "$ref": "#/definitions/createSPList_deleteSPField"
+              },
+              {
+                "type": "object",
+                "$ref": "#/definitions/createSPList_addContentType"
+              },
+              {
+                "type": "object",
+                "$ref": "#/definitions/createSPList_removeContentType"
+              },
+              {
+                "type": "object",
+                "$ref": "#/definitions/createSPList_setSPFieldCustomFormatter"
+              }
+            ]
+          }
+        }
+      },
+      "required": [
+        "verb",
+        "listName",
+        "templateType"
+      ]
+    },
+    "addNavLink": {
+      "title": "Add a navigation link",
+      "description": "Add a navigation link to the site",
+      "type": "object",
+      "properties": {
+        "verb": {
+          "enum": [
+            "addNavLink"
+          ]
+        },
+        "url": {
+          "title": "Link's URL",
+          "description": "The URL of the navigation Link",
+          "type": "string"
+        },
+        "displayName": {
+          "title": "Link's text",
+          "description": "The text of the navigation Link",
+          "type": "string"
+        },
+        "isWebRelative": {
+          "title": "Is Web Relative",
+          "description": "Is the URL of the link web-relative ?",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "verb",
+        "url",
+        "displayName",
+        "isWebRelative"
+      ]
+    },
+    "applyTheme": {
+      "title": "Apply a theme",
+      "description": "Apply a custom theme to the site",
+      "type": "object",
+      "properties": {
+        "verb": {
+          "enum": [
+            "applyTheme"
+          ]
+        },
+        "themeName": {
+          "title": "Theme's name",
+          "description": "The name of the custom theme to apply",
+          "type": "string"
+        }
+      },
+      "required": [
+        "verb",
+        "themeName"
+      ]
+    },
+    "setSiteLogo": {
+      "type": "object",
+      "title": "Set the Site Logo",
+      "description": "Set the logo of the site",
+      "properties": {
+        "verb": {
+          "enum": [
+            "setSiteLogo"
+          ]
+        },
+        "url": {
+          "title": "Site logo's URL",
+          "description": "The URL of the Site logo",
+          "type": "string"
+        }
+      },
+      "required": [
+        "verb",
+        "url"
+      ]
+    },
+    "joinHubSite": {
+      "type": "object",
+      "title": "Join a Hub Site",
+      "description": "Join the current site to a specified Hub Site",
+      "properties": {
+        "verb": {
+          "enum": [
+            "joinHubSite"
+          ]
+        },
+        "hubSiteId": {
+          "title": "Hub Site",
+          "description": "The identifier of the Hub Site",
+          "type": "string"
+        }
+      },
+      "required": [
+        "verb",
+        "hubSiteId"
+      ]
+    },
+    "triggerFlow": {
+      "title": "Trigger a Flow",
+      "description": "Trigger the specified Microsoft Flow with specified parameters",
+      "type": "object",
+      "properties": {
+        "verb": {
+          "enum": [
+            "triggerFlow"
+          ]
+        },
+        "url": {
+          "title": "Flow's URL",
+          "description": "The URL of the Flow to trigger",
+          "type": "string"
+        },
+        "name": {
+          "title": "Flow's name",
+          "description": "The name of the Flow to trigger",
+          "type": "string"
+        },
+        "parameters": {
+          "title": "Flow's parameters",
+          "description": "The set of parameters of the Flow",
+          "type": "object"
+        }
+      },
+      "required": [
+        "verb",
+        "url",
+        "name"
+      ]
+    },
+    "setSiteExternalSharingCapability": {
+      "type": "object",
+      "title": "Set site external sharing capability",
+      "description": "Set the external sharing capability of the site",
+      "properties": {
+        "verb": {
+          "enum": [
+            "setSiteExternalSharingCapability"
+          ]
+        },
+        "capability": {
+          "title": "External sharing capability",
+          "description": "The defined external sharing capability",
+          "enum": [
+            "Disabled",
+            "ExistingExternalUserSharingOnly",
+            "ExternalUserSharingOnly",
+            "ExternalUserAndGuestSharing"
+          ]
+        }
+      },
+      "required": [
+        "verb", "capability"
+      ]
+    }
+  },
+  "type": "object",
+  "properties": {
+    "actions": {
+      "type": "array",
+      "description": "The definition of the script actions",
+      "items": {
+        "anyOf": [
+          {
+            "type": "object",
+            "$ref": "#/definitions/createSPList"
+          },
+          {
+            "type": "object",
+            "$ref": "#/definitions/addNavLink"
+          },
+          {
+            "type": "object",
+            "$ref": "#/definitions/applyTheme"
+          },
+          {
+            "type": "object",
+            "$ref": "#/definitions/setSiteLogo"
+          },
+          {
+            "type": "object",
+            "$ref": "#/definitions/joinHubSite"
+          },
+          {
+            "type": "object",
+            "$ref": "#/definitions/triggerFlow"
+          },
+          {
+            "type": "object",
+            "$ref": "#/definitions/setSiteExternalSharingCapability"
+          }
+        ]
+      }
+    },
+    "bindata": {
+      "type": "object",
+      "additionalProperties": false
+    },
+    "version": {
+      "type": "number"
+    }
+  },
+  "required": [
+    "actions",
+    "bindata",
+    "version"
+  ]
+}

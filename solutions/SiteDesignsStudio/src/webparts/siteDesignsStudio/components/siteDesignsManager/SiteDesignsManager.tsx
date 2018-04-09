@@ -59,7 +59,6 @@ export default class SiteDesignsManager extends React.Component<ISiteDesignsMana
 
 	public componentWillMount() {
 		this._loadSiteDesigns().then((siteDesigns) => {
-			console.log('Get Site Designs ', siteDesigns);
 			this.setState({
 				siteDesigns: siteDesigns,
 				isLoading: false
@@ -147,7 +146,6 @@ export default class SiteDesignsManager extends React.Component<ISiteDesignsMana
 		let { siteDesignEdition } = this.state;
 
 		const onObjectChanged = (o) => {
-			console.log('Site Design Object has changed.');
 			this.setState({
 				siteDesignEdition: assign({}, siteDesignEdition, o)
 			});
@@ -247,7 +245,6 @@ export default class SiteDesignsManager extends React.Component<ISiteDesignsMana
 				this.siteDesignsService
 					.deleteSiteDesign(siteDesign)
 					.then(() => {
-						console.log('Deletion succeeded');
 						return this._loadSiteDesigns();
 					})
 					.then((siteDesigns) => {
@@ -260,7 +257,7 @@ export default class SiteDesignsManager extends React.Component<ISiteDesignsMana
 						});
 					})
 					.catch((error) => {
-						console.log(error);
+						console.error(error);
 						this.setState({
 							hasError: true,
 							userMessage: 'The Site Design cannot be deleted',
@@ -271,7 +268,7 @@ export default class SiteDesignsManager extends React.Component<ISiteDesignsMana
 					});
 			})
 			.catch(() => {
-				console.log('Deletion is canceled');
+				console.debug('Deletion is canceled');
 			});
 	}
 }

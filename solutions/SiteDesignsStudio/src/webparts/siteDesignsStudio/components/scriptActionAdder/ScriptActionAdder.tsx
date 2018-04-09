@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { IconButton, Icon, Panel, PanelType, Spinner, SpinnerSize } from 'office-ui-fabric-react';
 import styles from './ScriptActionAdder.module.scss';
-import * as strings from 'SiteDesignsStudioWebPartStrings';
 import { ISiteDesignsStudioProps, IServiceConsumerComponentProps } from '../ISiteDesignsStudioProps';
 import { escape, assign } from '@microsoft/sp-lodash-subset';
 
@@ -67,9 +66,10 @@ export default class ScriptActionAdder extends React.Component<IScriptActionAdde
 		this._onPanelDismiss();
 	}
 
-	private _translateLabel(value: string): string {
-		const key = 'LABEL_' + value;
-		return strings[key] || value;
+	private _getActionLabel(actionVerb: string): string {
+		let parentAction = this.props.parentAction;
+		// Specify the parent action verb if any
+		return this.siteScriptSchemaService.getActionTitleByVerb(actionVerb, parentAction && parentAction.verb);
 	}
 
 	public render(): React.ReactElement<ISiteDesignsStudioProps> {
@@ -107,7 +107,7 @@ export default class ScriptActionAdder extends React.Component<IScriptActionAdde
 											</div>
 											<div className="ms-Grid-col ms-sm8">
 												<div className={styles.actionButtonLabel}>
-													{this._translateLabel(a)}
+													{this._getActionLabel(a)}
 												</div>
 											</div>
 										</div>

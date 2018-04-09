@@ -1,8 +1,6 @@
 import * as React from 'react';
-import { Dropdown, TextField, Toggle, Link, IconButton } from 'office-ui-fabric-react';
 import styles from './ScriptActionEditor.module.scss';
-import { escape, assign, find } from '@microsoft/sp-lodash-subset';
-import * as strings from 'SiteDesignsStudioWebPartStrings';
+import { assign, find } from '@microsoft/sp-lodash-subset';
 import GenericObjectEditor from '../genericObjectEditor/GenericObjectEditor';
 
 import { ISiteScriptAction } from '../../models/ISiteScript';
@@ -15,6 +13,9 @@ import {
 import { ISiteDesignsService, SiteDesignsServiceKey } from '../../services/siteDesigns/SiteDesignsService';
 import ScriptActionCollectionEditor from './ScriptActionCollectionEditor';
 import { ISiteScriptActionUIWrapper } from '../../models/ISiteScriptActionUIWrapper';
+import ThemeInputField from '../wizards/inputFields/ThemeInputField';
+import HubSiteInputField from '../wizards/inputFields/HubSiteInputField';
+import ListTemplateInputField from '../wizards/inputFields/ListTemplateInputField';
 
 export interface IScriptActionEditorState {}
 
@@ -23,7 +24,8 @@ export interface IScriptActionEditorProps extends IServiceConsumerComponentProps
 	schema: any;
 	onActionChanged?: (action: ISiteScriptAction) => void;
 	onSubActionMoved?: (actionKey: string, oldIndex: number, newIndex: number) => void;
-	onExpandChanged?: (actionUI: ISiteScriptActionUIWrapper) => void;
+  onExpandChanged?: (actionUI: ISiteScriptActionUIWrapper) => void;
+  useWizardPropertyEditors: boolean;
 }
 
 export default class ScriptActionEditor extends React.Component<IScriptActionEditorProps, IScriptActionEditorState> {
@@ -59,14 +61,23 @@ export default class ScriptActionEditor extends React.Component<IScriptActionEdi
 		return actionDefinition.properties.verb.enum[0];
 	}
 
+	private _getLabelFromActionProperty(actionDefinition: any, propertyName: string): string {
+		let propertyMetadata = actionDefinition.properties[propertyName];
+		return (propertyMetadata && propertyMetadata.title) || propertyName;
+	}
+
+	private _getDescriptionFromActionProperty(actionDefinition: any, propertyName: string): string {
+		let propertyMetadata = actionDefinition.properties[propertyName];
+		if (!propertyMetadata) {
+			return '';
+		}
+
+		return propertyMetadata.description || propertyName;
+	}
+
 	private _getCurrentActionName(): string {
 		let { schema } = this.props;
 		return this._getVerbFromActionSchema(schema);
-	}
-
-	private _translateLabel(value: string): string {
-		const key = 'LABEL_' + value;
-		return strings[key] || value;
 	}
 
 	private _onSubActionAdded(parentAction: ISiteScriptAction, subAction: ISiteScriptAction) {
@@ -75,7 +86,7 @@ export default class ScriptActionEditor extends React.Component<IScriptActionEdi
 		this.props.onActionChanged(parentAction);
 	}
 
-	public render(): React.ReactElement<IScriptActionEditorProps> {
+	private _getCustomRenderers() {
 		let { actionUI, serviceScope, schema, onActionChanged } = this.props;
 
 		const subactionsRenderer = (subactions: ISiteScriptActionUIWrapper[]) => {
@@ -84,7 +95,7 @@ export default class ScriptActionEditor extends React.Component<IScriptActionEdi
 			}
 			return (
 				<div className={styles.subactions}>
-					<h3>{this._translateLabel('subactions')}</h3>
+					<h3>{this._getLabelFromActionProperty(schema, 'subactions')}</h3>
 					<div className={styles.subactionsWorkspace}>
 						<div>
 							<ScriptActionCollectionEditor
@@ -98,7 +109,8 @@ export default class ScriptActionEditor extends React.Component<IScriptActionEdi
 									this._onSubActionUpdated(actionUI, subActionKey, subAction)}
 								getActionSchema={(subAction) =>
 									this.siteScriptSchemaService.getSubActionSchema(actionUI.action, subAction)}
-								onExpandChanged={(expandedAction) => this._onActionExpandChanged(expandedAction)}
+                onExpandChanged={(expandedAction) => this._onActionExpandChanged(expandedAction)}
+                useWizardPropertyEditors={this.props.useWizardPropertyEditors}
 							/>
 						</div>
 						<div>
@@ -113,17 +125,58 @@ export default class ScriptActionEditor extends React.Component<IScriptActionEdi
 			);
 		};
 
+		let customRenderers = {
+			subactions: subactionsRenderer
+    };
+
+    if (this.props.useWizardPropertyEditors) {
+      let wizardEditors =  {
+        themeName: (value) => (
+          <ThemeInputField
+            serviceScope={serviceScope}
+            label={this._getLabelFromActionProperty(schema, 'themeName')}
+            value={value}
+            onValueChanged={(v) => this._onActionPropertyChanged('themeName', v)}
+          />
+        ),
+        hubSiteId: (value) => (
+          <HubSiteInputField
+            serviceScope={serviceScope}
+            label={this._getLabelFromActionProperty(schema, 'hubSiteId')}
+            value={value}
+            onValueChanged={(v) => this._onActionPropertyChanged('hubSiteId', v)}
+          />
+        ),
+        templateType: (value) => (
+          <ListTemplateInputField
+            serviceScope={serviceScope}
+            label={this._getLabelFromActionProperty(schema, 'templateType')}
+            value={value}
+            onValueChanged={(v) => this._onActionPropertyChanged('templateType', v)}
+          />
+        )
+      };
+      customRenderers = assign(customRenderers, wizardEditors);
+    }
+
+    return customRenderers;
+	}
+
+	public render(): React.ReactElement<IScriptActionEditorProps> {
+		let { actionUI, serviceScope, schema, onActionChanged } = this.props;
+
 		return (
 			<div className="ms-Grid-row">
 				<div className="ms-Grid-col ms-sm12">
 					<GenericObjectEditor
-						customRenderers={{ subactions: subactionsRenderer }}
+						customRenderers={this._getCustomRenderers()}
 						defaultValues={{ subactions: [] }}
 						object={actionUI.action}
 						schema={schema}
 						ignoredProperties={[ 'verb' ]}
 						onObjectChanged={onActionChanged.bind(this)}
 						updateOnBlur={true}
+						fieldLabelGetter={(f) => this._getLabelFromActionProperty(schema, f)}
 					/>
 				</div>
 			</div>
@@ -176,5 +229,14 @@ export default class ScriptActionEditor extends React.Component<IScriptActionEdi
 			(sa) => (sa.key == subActionKey ? subAction : sa.action)
 		);
 		this.props.onActionChanged(updatedParentAction);
+	}
+
+	private _onActionPropertyChanged(propertyName: string, value: any) {
+		let { actionUI, onActionChanged } = this.props;
+		if (onActionChanged) {
+			let updatedAction = assign({}, actionUI.action);
+			updatedAction[propertyName] = value;
+			onActionChanged(updatedAction);
+		}
 	}
 }

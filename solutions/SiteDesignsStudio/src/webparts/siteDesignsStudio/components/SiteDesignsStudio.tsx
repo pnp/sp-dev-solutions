@@ -94,6 +94,8 @@ export default class SiteDesignsStudio extends React.Component<ISiteDesignsStudi
 					<SiteScriptEditor
 						script={this.state.currentPageArgs as ISiteScript}
             serviceScope={this.props.serviceScope}
+            useWizardActionGenerators={this.props.useWizardActionGenerators}
+            useWizardPropertyEditors={this.props.useWizardPropertyEditors}
             onScriptUpdated={script => this._onCurrentSiteScriptUpdated(script) }
 					/>
 				);
@@ -171,8 +173,8 @@ private _onCurrentSiteScriptUpdated(script: ISiteScript) {
 			isCurrentItem: currentPage == ApplicationPage.ScriptsManagement
 		};
 
-		let currentSiteScript = currentPageArgs as ISiteScript;
-		let scriptEditionTitle = currentSiteScript ? currentSiteScript.Title : null;
+    let currentSiteScript = currentPageArgs as ISiteScript;
+    let scriptEditionTitle = currentSiteScript ? currentSiteScript.Title : null;
 		let scriptEdition = {
 			text: scriptEditionTitle || 'Edition',
 			key: ApplicationPage[ApplicationPage.ScriptEdition],
