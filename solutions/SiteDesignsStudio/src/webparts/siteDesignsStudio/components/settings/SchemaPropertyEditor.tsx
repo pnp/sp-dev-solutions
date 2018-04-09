@@ -8,7 +8,9 @@ import {
 	autobind,
 	Pivot,
 	PivotItem,
-	TextField
+	TextField,
+  Label,
+  Icon
 } from 'office-ui-fabric-react';
 import { BaseDialog, IDialogConfiguration } from '@microsoft/sp-dialog';
 import { MonacoEditor } from '../monacoEditor/MonacoEditor';
@@ -19,6 +21,7 @@ import styles from '../SiteDesignsStudio.module.scss';
 import * as strings from 'SiteDesignsStudioWebPartStrings';
 import { HttpClient } from '@microsoft/sp-http';
 import { IServiceConsumerComponentProps } from '../ISiteDesignsStudioProps';
+import { SiteScriptSchemaServiceKey, ISiteScriptSchemaService } from '../../services/siteScriptSchema/SiteScriptSchemaService';
 
 const jsonSchemaDraft06 = require('ajv/lib/refs/json-schema-draft-06.json');
 
@@ -36,36 +39,48 @@ export interface ISchemaPropertyEditorInternalProps extends ISchemaPropertyEdito
 
 interface ISchemaEditorDialogComponentState {
 	selectedTab: string;
-	jsonMetaSchema: any;
+  jsonMetaSchema: any;
+  useBuiltInSchema: boolean;
+  builtInSchemaString: string;
+  refreshKey: string;
 }
 class SchemaEditorDialogComponent extends React.Component<
 	ISchemaPropertyEditorDialogProps,
 	ISchemaEditorDialogComponentState
 > {
   private savedPropertyValue: string;
+  private schemaService: ISiteScriptSchemaService;
 
 	constructor(props: ISchemaPropertyEditorDialogProps) {
 		super(props);
 
 		this.state = {
-			selectedTab: this._isUrl(this.props.value) ? 'url' : 'direct',
-			jsonMetaSchema: {}
+      selectedTab: !props.value ? 'direct' : this._isUrl(props.value) ? 'url' : 'direct',
+      useBuiltInSchema: (!props.value || false) && true,
+      builtInSchemaString: null,
+      jsonMetaSchema: {},
+      refreshKey: null
 		};
 	}
 
 	public componentWillMount() {
+    this.schemaService = this.props.serviceScope.consume(SiteScriptSchemaServiceKey);
+    const builtInSchema = this.schemaService.getSiteScriptSchema();
+    console.log('Built in schema', builtInSchema);
 		setTimeout(() => {
 			this.setState({
-				jsonMetaSchema: jsonSchemaDraft06
+        jsonMetaSchema: jsonSchemaDraft06,
+        builtInSchemaString: JSON.stringify(builtInSchema, null, 2)
 			});
-		}, 100);
+    }, 100);
+
 	}
 
 	public render() {
 		let { value } = this.props;
-		let { selectedTab } = this.state;
-		let isUrl = this._isUrl(value);
-		let isJsonSchema = !isUrl && this._isJsonSchema(value);
+		let { selectedTab, useBuiltInSchema, builtInSchemaString } = this.state;
+		let isUrl = !useBuiltInSchema && this._isUrl(value);
+		let isCustomJsonSchema = !useBuiltInSchema && !isUrl && this._isJsonSchema(value);
 		return (
 			<DialogContent
 				title={strings.SchemaPropertyEditorDialogTitle}
@@ -92,24 +107,30 @@ class SchemaEditorDialogComponent extends React.Component<
 								<MonacoEditor
 									schemaUri="http://json-schema.org/draft-06/schema#"
 									schema={this.state.jsonMetaSchema}
-									value={isJsonSchema ? value : '{\n}'}
+									value={useBuiltInSchema ? builtInSchemaString : (isCustomJsonSchema ? value : '{\n}')}
 									onValueChange={(content, errors) => this._onValueChanged(content)}
 									readOnly={false}
 								/>
 							</div>
+              {useBuiltInSchema && <Label><Icon iconName="InfoSolid" /> The built-in schema is used.</Label>}
 						</div>
 					)}
 				</div>
 				<DialogFooter>
-        <DefaultButton
-						text={strings.SchemaPropertyEditorCancelButtonLabel}
-						title={strings.SchemaPropertyEditorCancelButtonLabel}
-						onClick={() => this._onClose()}
-					/>
-					<PrimaryButton
+          <PrimaryButton
 						text={strings.SchemaPropertyEditorOkButtonLabel}
 						title={strings.SchemaPropertyEditorOkButtonLabel}
 						onClick={() => this._onClose(true)}
+					/>
+           <DefaultButton
+						text={strings.SchemaPropertyEditorResetButtonLabel}
+						title={strings.SchemaPropertyEditorResetButtonLabel}
+						onClick={() => this._resetToDefault()}
+					/>
+					<DefaultButton
+						text={strings.SchemaPropertyEditorCancelButtonLabel}
+						title={strings.SchemaPropertyEditorCancelButtonLabel}
+						onClick={() => this._onClose()}
 					/>
 				</DialogFooter>
 			</DialogContent>
@@ -122,10 +143,19 @@ class SchemaEditorDialogComponent extends React.Component<
 		});
 	}
 
+  @autobind
+	private _resetToDefault() {
+		if (this.props.onSchemaPropertyChanged) {
+      this.props.onSchemaPropertyChanged(null);
+      this.setState({refreshKey: new Date().toString()});
+		}
+	}
+
 	@autobind
-	private _onClose(saveProperty: boolean=false) {
-    if (this.props.onSchemaPropertyChanged && saveProperty) {
-			this.props.onSchemaPropertyChanged(this.savedPropertyValue);
+	private _onClose(saveProperty: boolean = false) {
+		if (this.props.onSchemaPropertyChanged && saveProperty) {
+      this.props.onSchemaPropertyChanged(this.savedPropertyValue);
+      this.setState({refreshKey: new Date().toString()});
 		}
 		this.props.onClose();
 	}
@@ -139,7 +169,10 @@ class SchemaEditorDialogComponent extends React.Component<
 	}
 
 	private _onValueChanged(value: string) {
-		this.savedPropertyValue = value;
+    this.savedPropertyValue = value;
+    // if (value) {
+    //   this.setState({useBuiltInSchema: false});
+    // }
 	}
 }
 
@@ -154,8 +187,8 @@ export class SchemaEditorDialog extends BaseDialog {
 				onClose={() => this.close()}
 				onSchemaPropertyChanged={this.properties.onSchemaPropertyChanged}
 				label={this.properties.label}
-        value={this.properties.value}
-        serviceScope={this.properties.serviceScope}
+				value={this.properties.value}
+				serviceScope={this.properties.serviceScope}
 			/>,
 			this.domElement
 		);
@@ -196,8 +229,8 @@ export class PropertyPaneSchemaEditor implements IPropertyPaneField<ISchemaPrope
 			onSchemaPropertyChanged: properties.onSchemaPropertyChanged,
 			onRender: this.onRender.bind(this),
 			key: properties.label,
-      value: properties.value,
-      serviceScope: properties.serviceScope
+			value: properties.value,
+			serviceScope: properties.serviceScope
 		};
 	}
 
@@ -218,8 +251,8 @@ export class PropertyPaneSchemaEditor implements IPropertyPaneField<ISchemaPrope
 			<SchemaPropertyEditor
 				onSchemaPropertyChanged={(value) => this.onChanged(value)}
 				value={this.properties.value}
-        label={this.properties.label}
-        serviceScope={this.properties.serviceScope}
+				label={this.properties.label}
+				serviceScope={this.properties.serviceScope}
 				stateKey={new Date().toString()}
 			/>,
 			elem

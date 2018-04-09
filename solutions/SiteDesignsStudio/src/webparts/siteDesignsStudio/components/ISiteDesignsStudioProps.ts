@@ -5,4 +5,6 @@ export interface IServiceConsumerComponentProps {
 }
 
 export interface ISiteDesignsStudioProps extends IServiceConsumerComponentProps {
+  useWizardActionGenerators: boolean;
+  useWizardPropertyEditors: boolean;
 }

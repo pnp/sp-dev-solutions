@@ -19,6 +19,7 @@ export interface IGenericObjectEditorProps {
 	readOnlyProperties?: string[];
 	onObjectChanged?: (object: any) => void;
 	updateOnBlur?: boolean;
+	fieldLabelGetter?: (field: string) => string;
 }
 
 export default class GenericObjectEditor extends React.Component<IGenericObjectEditorProps, {}> {
@@ -127,9 +128,17 @@ export default class GenericObjectEditor extends React.Component<IGenericObjectE
 		onObjectChanged(newObject);
 	}
 
-	private _translateLabel(value: string): string {
-		const key = 'PROP_' + value;
-		return strings[key] || value;
+	private _getFieldLabel(field: string): string {
+		if (this.props.fieldLabelGetter) {
+      let foundLabel = this.props.fieldLabelGetter(field);
+      if (foundLabel) {
+        return foundLabel;
+      }
+		}
+
+		// Try translate from built-in resources
+		let key = 'PROP_' + field;
+		return strings[key] || field;
 	}
 
 	private editTextValues: any;
@@ -145,9 +154,11 @@ export default class GenericObjectEditor extends React.Component<IGenericObjectE
 	}
 
 	private _onTextFieldEdited(fieldName: string) {
-		let value = this.editTextValues[fieldName];
+		let value = this.editTextValues && this.editTextValues[fieldName];
 		this._onObjectPropertyChange(fieldName, value);
-		delete this.editTextValues[fieldName];
+		if (value) {
+			delete this.editTextValues[fieldName];
+		}
 	}
 
 	private _renderPropertyEditor(propertyName: string, property: ISchemaProperty) {
@@ -170,7 +181,7 @@ export default class GenericObjectEditor extends React.Component<IGenericObjectE
 			if (property.enum.length > 1 || !this._isPropertyReadOnly(propertyName)) {
 				return (
 					<Dropdown
-						label={this._translateLabel(propertyName)}
+						label={this._getFieldLabel(propertyName)}
 						selectedKey={object[propertyName]}
 						options={property.enum.map((p) => ({ key: p, text: p }))}
 						onChanged={(value) => this._onObjectPropertyChange(propertyName, value.key)}
@@ -179,7 +190,7 @@ export default class GenericObjectEditor extends React.Component<IGenericObjectE
 			} else {
 				return (
 					<TextField
-						label={this._translateLabel(propertyName)}
+						label={this._getFieldLabel(propertyName)}
 						value={object[propertyName]}
 						readOnly={true}
 						onChanged={(value) => this._onTextFieldValueChanged(propertyName, value)}
@@ -192,7 +203,7 @@ export default class GenericObjectEditor extends React.Component<IGenericObjectE
 				case 'boolean':
 					return (
 						<Toggle
-							label={this._translateLabel(propertyName)}
+							label={this._getFieldLabel(propertyName)}
 							checked={object[propertyName] as boolean}
 							disabled={this._isPropertyReadOnly(propertyName)}
 							onChanged={(value) => this._onObjectPropertyChange(propertyName, value)}
@@ -203,7 +214,7 @@ export default class GenericObjectEditor extends React.Component<IGenericObjectE
 						<div>
 							<div className="ms-Grid-row">
 								<div className="ms-Grid-col ms-sm12">
-									<Label>{this._translateLabel(propertyName)}</Label>
+									<Label>{this._getFieldLabel(propertyName)}</Label>
 								</div>
 							</div>
 							<div className="ms-Grid-row">
@@ -223,7 +234,7 @@ export default class GenericObjectEditor extends React.Component<IGenericObjectE
 				default:
 					return (
 						<TextField
-							label={this._translateLabel(propertyName)}
+							label={this._getFieldLabel(propertyName)}
 							value={object[propertyName]}
 							readOnly={this._isPropertyReadOnly(propertyName)}
 							onChanged={(value) => this._onTextFieldValueChanged(propertyName, value)}

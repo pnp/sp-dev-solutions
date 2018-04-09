@@ -8,6 +8,11 @@ export interface ISiteScriptSchemaService {
 	getNewSiteScript(): any;
 	getSiteScriptSchema(): any;
 	getActionSchema(action: ISiteScriptAction): any;
+	getActionTitle(action: ISiteScriptAction, parentAction?: ISiteScriptAction): string;
+	getActionTitleByVerb(actionVerb: string, parentActionVerb?: string): string;
+	getActionDescription(action: ISiteScriptAction, parentAction?: ISiteScriptAction): string;
+	getActionDescriptionByVerb(actionVerb: string, parentActionVerb?: string): string;
+	getSubActionSchemaByVerbs(parentActionVerb: string, subActionVerb: string): any;
 	getSubActionSchema(parentAction: ISiteScriptAction, subAction: ISiteScriptAction): any;
 	getAvailableActions(): string[];
 	getAvailableSubActions(parentAction: ISiteScriptAction): string[];
@@ -159,42 +164,68 @@ export class SiteScriptSchemaService implements ISiteScriptSchemaService {
 	}
 
 	public getActionSchema(action: ISiteScriptAction): any {
+		return this._getActionSchemaByVerb(action.verb);
+	}
+
+	private _getActionSchemaByVerb(actionVerb: string): any {
 		if (!this.isConfigured) {
 			throw new Error(
 				'The Schema Service is not properly configured. Make sure the configure() method has been called.'
 			);
 		}
 
-		let directResolvedSchema = this.availableActionSchemas[action.verb];
+		let directResolvedSchema = this.availableActionSchemas[actionVerb];
 		if (directResolvedSchema) {
 			return directResolvedSchema;
 		}
 
 		// Try to find the schema by case insensitive key
 		let availableActionKeys = Object.keys(this.availableActionSchemas);
-		let foundKeys = availableActionKeys.filter((k) => k.toUpperCase() == action.verb.toUpperCase());
+		let foundKeys = availableActionKeys.filter((k) => k.toUpperCase() == actionVerb.toUpperCase());
 		let actionSchemaKey = foundKeys.length == 1 ? foundKeys[0] : null;
 		return this.availableActionSchemas[actionSchemaKey];
 	}
 
-	public getSubActionSchema(parentAction: ISiteScriptAction, subAction: ISiteScriptAction): any {
+	public getActionTitle(action: ISiteScriptAction, parentAction: ISiteScriptAction): string {
+		return this.getActionTitleByVerb(action.verb, parentAction && parentAction.verb);
+	}
+	public getActionTitleByVerb(actionVerb: string, parentActionVerb: string): string {
+		let actionSchema = parentActionVerb
+			? this.getSubActionSchemaByVerbs(parentActionVerb, actionVerb)
+			: this._getActionSchemaByVerb(actionVerb);
+		return actionSchema.title;
+	}
+	public getActionDescription(action: ISiteScriptAction, parentAction: ISiteScriptAction): string {
+		return this.getActionDescriptionByVerb(action.verb, parentAction && parentAction.verb);
+	}
+	public getActionDescriptionByVerb(actionVerb: string, parentActionVerb: string): string {
+		let actionSchema = parentActionVerb
+			? this.getSubActionSchemaByVerbs(parentActionVerb, actionVerb)
+			: this._getActionSchemaByVerb(actionVerb);
+		return actionSchema.description;
+	}
+
+	public getSubActionSchemaByVerbs(parentActionVerb: string, subActionVerb: string): any {
 		if (!this.isConfigured) {
 			throw new Error(
 				'The Schema Service is not properly configured. Make sure the configure() method has been called.'
 			);
 		}
 
-		let availableSubActionSchemas = this.availableSubActionSchemasByVerb[parentAction.verb];
-		let directResolvedSchema = availableSubActionSchemas[subAction.verb];
+		let availableSubActionSchemas = this.availableSubActionSchemasByVerb[parentActionVerb];
+		let directResolvedSchema = availableSubActionSchemas[subActionVerb];
 		if (directResolvedSchema) {
 			return directResolvedSchema;
 		}
 
 		// Try to find the schema by case insensitive key
 		let availableSubActionKeys = Object.keys(availableSubActionSchemas);
-		let foundKeys = availableSubActionKeys.filter((k) => k.toUpperCase() == subAction.verb.toUpperCase());
+		let foundKeys = availableSubActionKeys.filter((k) => k.toUpperCase() == subActionVerb.toUpperCase());
 		let subActionSchemaKey = foundKeys.length == 1 ? foundKeys[0] : null;
 		return availableSubActionSchemas[subActionSchemaKey];
+	}
+	public getSubActionSchema(parentAction: ISiteScriptAction, subAction: ISiteScriptAction): any {
+		return this.getSubActionSchemaByVerbs(parentAction.verb, subAction.verb);
 	}
 
 	public getAvailableActions(): string[] {

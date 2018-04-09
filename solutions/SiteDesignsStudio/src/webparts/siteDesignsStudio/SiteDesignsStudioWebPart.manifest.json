@@ -16,7 +16,9 @@
     "description": { "default": "A WebPart allowing to build graphically and easily Site Designs scripts for any user" },
     "officeFabricIconFontName": "Design",
     "properties": {
-      "siteDesignSchema": null
+      "siteDesignSchema": null,
+      "useWizardActionGenerators": true,
+      "useWizardPropertyEditors": true
     }
   }]
 }
