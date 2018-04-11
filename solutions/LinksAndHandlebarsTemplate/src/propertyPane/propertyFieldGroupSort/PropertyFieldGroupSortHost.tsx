@@ -47,7 +47,7 @@ export default class PropertyFieldGroupSortHost extends React.Component<IPropert
         return;
         this.latestValidateValue = value;
 
-        var result: string | PromiseLike<string> = this.props.onGetErrorMessage(value.join(',') || '');
+        const result: string | PromiseLike<string> = this.props.onGetErrorMessage(value.join(',') || '');
         if (result !== undefined) {
         if (typeof result === 'string') {
             if (result === undefined || result === '')
@@ -84,8 +84,8 @@ export default class PropertyFieldGroupSortHost extends React.Component<IPropert
 
     private moveUp() {
         if(this.state.selectedIndex != undefined && this.state.selectedIndex > 0){
-            var cloneValue = JSON.parse(JSON.stringify(this.state.currentValue));
-            var tmp = cloneValue[this.state.selectedIndex];
+            const cloneValue = JSON.parse(JSON.stringify(this.state.currentValue));
+            const tmp = cloneValue[this.state.selectedIndex];
             cloneValue[this.state.selectedIndex] = cloneValue[this.state.selectedIndex - 1];
             cloneValue[this.state.selectedIndex - 1] = tmp;
             this.setState({selectedIndex: this.state.selectedIndex -1});
@@ -95,8 +95,8 @@ export default class PropertyFieldGroupSortHost extends React.Component<IPropert
 
     private moveDown() {
         if(this.state.selectedIndex != undefined && this.state.selectedIndex < this.state.currentValue.length - 1){
-            var cloneValue = JSON.parse(JSON.stringify(this.state.currentValue));
-            var tmp = cloneValue[this.state.selectedIndex];
+            const cloneValue = JSON.parse(JSON.stringify(this.state.currentValue));
+            const tmp = cloneValue[this.state.selectedIndex];
             cloneValue[this.state.selectedIndex] = cloneValue[this.state.selectedIndex + 1];
             cloneValue[this.state.selectedIndex + 1] = tmp;
             this.setState({selectedIndex: this.state.selectedIndex +1});

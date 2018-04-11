@@ -1,7 +1,6 @@
 import * as React from 'react';
 import * as ReactDom from 'react-dom';
 import { Version, DisplayMode } from '@microsoft/sp-core-library';
-import { SPHttpClient } from '@microsoft/sp-http';
 import {
   BaseClientSideWebPart,
   IPropertyPaneConfiguration,
@@ -9,7 +8,7 @@ import {
   PropertyPaneButton,
   PropertyPaneButtonType,
   PropertyPaneLink,
-  PropertyPaneLabel
+  PropertyPaneLabel,
 } from '@microsoft/sp-webpart-base';
 
 import * as strings from 'handlebarTemplateDisplayStrings';
@@ -19,6 +18,7 @@ import { IHandlebarTemplateDisplayWebPartProps } from './IHandlebarTemplateDispl
 import { PropertyFieldCamlQueryFieldMapping, PropertyFieldCamlQueryOrderBy } from "../../propertyPane/propertyFieldCamlQueryFieldMapping/PropertyFieldCamlQueryFieldMapping";
 import QueryStringParser from "../../utilities/urlparser/queryStringParser";
 import pnp from 'sp-pnp-js';
+import { SPHttpClient } from '@microsoft/sp-http';
 
 export default class HandlebarTemplateDisplayWebPart extends BaseClientSideWebPart<IHandlebarTemplateDisplayWebPartProps> {
   constructor(){

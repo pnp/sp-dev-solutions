@@ -67,7 +67,7 @@ export default class HubLinksWebPart extends BaseClientSideWebPart<IHubLinksWebP
   }
 
   private groupItems(items: IHubLinksItem[], groups?: string[]): IHubLinksGroupItem[]{
-    var retArray: Array<IHubLinksGroupItem> = [];
+    const retArray: Array<IHubLinksGroupItem> = [];
     var groupId: number = 1;
 
     if(groups){
@@ -80,7 +80,7 @@ export default class HubLinksWebPart extends BaseClientSideWebPart<IHubLinksWebP
 
     items.forEach((link, idx) => {
       link.index = idx.toString();
-      var newLink: IHubLinksItem = JSON.parse(JSON.stringify(link));
+      const newLink: IHubLinksItem = JSON.parse(JSON.stringify(link));
       var newGroup = true;
       newLink[groupingField] = link[groupingField] ? link[groupingField] : "Ungrouped";
       retArray.forEach(propLink =>{
@@ -121,8 +121,8 @@ export default class HubLinksWebPart extends BaseClientSideWebPart<IHubLinksWebP
 
           var isDoc = false;
           const docExtensions = ["pdf", "xls", "xlsx", "doc", "docx", "ppt", "pptx", "pptm", "dot"];
-          for(var i in docExtensions){
-            if(url.indexOf(docExtensions[i], url.length - docExtensions[i].length) !== -1)
+          for(const ext of docExtensions){
+            if(url.indexOf(ext, url.length - ext.length) !== -1)
               isDoc = true;
           }
 
@@ -147,11 +147,11 @@ export default class HubLinksWebPart extends BaseClientSideWebPart<IHubLinksWebP
         rearrangeItems: (newOrder: [number])=>{
           const newArr = new Array<HubLinksItem>();
           const currArr = this.properties.hubLinksItems;
-          for(var num in newOrder)
-            newArr.push(this.properties.hubLinksItems[newOrder[num]]);
+          for(const num of newOrder)
+            newArr.push(this.properties.hubLinksItems[num]);
           this.properties.hubLinksItems.length=0;
-          for(var val in newArr)
-            this.properties.hubLinksItems.push(newArr[val]);
+          for(const val of newArr)
+            this.properties.hubLinksItems.push(val);
           this.render();
         },
         setGroup: (index: string, group: string)=>{
@@ -175,7 +175,7 @@ export default class HubLinksWebPart extends BaseClientSideWebPart<IHubLinksWebP
       if(propData.selectedList.id){
         pnp.sp.web.lists.getById(propData.selectedList.id).getItemsByCAMLQuery({ ViewXml: QueryStringParser.ReplaceQueryStringParameters(this.properties.listQuery)}).then((response:any[])=>{
           response.forEach(value => {
-          var item: any = {};
+          const item: any = {};
           propData.fieldMappings.forEach(mapping => {
             switch(mapping.type){
               case SPFieldType.URL:
@@ -272,7 +272,7 @@ export default class HubLinksWebPart extends BaseClientSideWebPart<IHubLinksWebP
   }
 
   protected onPropertyPaneFieldChanged(propertyPath: string, oldValue: any, newValue: any): void{
-    var pathIdx = propertyPath.indexOf('.');
+    const pathIdx = propertyPath.indexOf('.');
     if(propertyPath.substring(pathIdx + 1) === "usesListMode" || propertyPath.substring(pathIdx + 1) == "listQuery"){
       //Reset grouping
       this.properties.groups.length = 0;
@@ -316,7 +316,7 @@ export default class HubLinksWebPart extends BaseClientSideWebPart<IHubLinksWebP
 
   public getBasicPropertyPane(): IPropertyPaneConfiguration{
     //Define base configuration
-    var config: IPropertyPaneConfiguration = {
+    const config: IPropertyPaneConfiguration = {
       pages: [
         {
           header: {
@@ -428,7 +428,7 @@ export default class HubLinksWebPart extends BaseClientSideWebPart<IHubLinksWebP
     //If usesListMode, the add advanced list mode group
     if(this.properties.usesListMode){
       //Build fieldMapping array.
-      var fieldMappings: Array<any> = [
+      const fieldMappings: Array<any> = [
                 { name: urlField,type: SPFieldType.URL, requiredLevel: SPFieldRequiredLevel.Required },
                 { name: iconField, type: SPFieldType.Text, requiredLevel: SPFieldRequiredLevel.Required },
                 { name: groupingField, type: SPFieldType.Text, requiredLevel: SPFieldRequiredLevel.Required },

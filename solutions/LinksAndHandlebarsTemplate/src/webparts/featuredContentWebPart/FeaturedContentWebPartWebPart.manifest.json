@@ -1,10 +1,10 @@
 {
-    "$schema": "../../../node_modules/@microsoft/sp-module-interfaces/lib/manifestSchemas/jsonSchemas/clientSideComponentManifestSchema.json",
+    "$schema": "https://dev.office.com/json-schemas/spfx/client-side-web-part-manifest.schema.json",
 
     "id": "6e7296cf-4ba1-4c8e-8d21-41fe5f23900b",
     "alias": "FeaturedContentWebPart",
     "componentType": "WebPart",
-    "version": "1.1.0",
+    "version": "*",
     "manifestVersion": 2,
 
     "preconfiguredEntries": [{

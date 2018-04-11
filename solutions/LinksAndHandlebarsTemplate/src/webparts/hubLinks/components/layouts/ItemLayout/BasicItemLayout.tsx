@@ -34,8 +34,8 @@ export default class BasicHorizontalTitleLayout implements IHubLinksLayout{
                     <p className={ilStyles["linkdescription"]}>{item.Description}</p>                    
                     {isEditMode &&
                       <div className={ilStyles["editControls"]}>
-                          <DefaultButton icon="Clear" onClick={this.webpart.deleteBox.bind(this.webpart)} className={ilStyles["right-button"]}/>
-                          <DefaultButton icon="Edit" onClick={this.webpart.editBox.bind(this.webpart)} className={ilStyles["right-button"]}/>
+                          <DefaultButton iconProps={{iconName:"Clear"}} onClick={this.webpart.deleteBox.bind(this.webpart)} className={ilStyles["right-button"]}/>
+                          <DefaultButton iconProps={{iconName:"Edit"}} onClick={this.webpart.editBox.bind(this.webpart)} className={ilStyles["right-button"]}/>
                           <i className={"ms-Icon ms-Icon--Move "+ilStyles["left-button"]} id="drag-handle" aria-hidden="true"></i>
                       </div>
                     }

@@ -1,10 +1,9 @@
 {
-    "$schema": "../../../node_modules/@microsoft/sp-module-interfaces/lib/manifestSchemas/jsonSchemas/clientSideComponentManifestSchema.json",
-
+    "$schema": "https://dev.office.com/json-schemas/spfx/client-side-web-part-manifest.schema.json",
     "id": "925b8fdb-3c50-4035-b15e-1baf4c15e994",
     "alias": "BoxButtonWebPart",
     "componentType": "WebPart",
-    "version": "1.0.0",
+    "version": "*",
     "manifestVersion": 2,
 
     "preconfiguredEntries": [{

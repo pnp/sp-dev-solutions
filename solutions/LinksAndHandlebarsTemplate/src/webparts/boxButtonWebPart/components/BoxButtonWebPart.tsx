@@ -7,6 +7,7 @@ import {
   IButtonProps
 } from 'office-ui-fabric-react/lib/Button';
 import { IBoxButtonWebPartProps } from './IBoxButtonWebPartProps';
+import { IBoxButtonState } from './IBoxButtonState';
 import styles from './BoxButtonWebPart.module.scss';
 import * as strings from 'boxButtonWebPartStrings';
 import { IBoxButton } from './IBoxButton';
@@ -19,7 +20,7 @@ const iconField = "Font Awesome Icon";
 const isBlueField = "Has Blue Background";
 const openNewTabField = "Open Link in New Tab";
 
-export default class BoxButtonWebPart extends React.Component<IBoxButtonWebPartProps,void> {
+export default class BoxButtonWebPart extends React.Component<IBoxButtonWebPartProps,IBoxButtonState> {
 
   constructor(){
     super();
@@ -160,7 +161,7 @@ export default class BoxButtonWebPart extends React.Component<IBoxButtonWebPartP
           { !this.props.isEdit && this.props.title && <span className={styles["view"]}>{this.props.title}</span> }          
         </div>
         { this.props.isEdit &&
-          <CommandButton className={styles["new-item"]} icon='Add' onClick={this.addBox.bind(this)}>{strings.AddNewButtonText}</CommandButton>
+          <CommandButton className={styles["new-item"]} iconProps={{iconName:'Add'}} onClick={this.addBox.bind(this)}>{strings.AddNewButtonText}</CommandButton>
          }
         { this.props.data.length > 0 && this.props.data.map((item)=>{
             return this.renderBasicDefaultLayout(item);
@@ -196,8 +197,8 @@ export default class BoxButtonWebPart extends React.Component<IBoxButtonWebPartP
         </a>
         {this.props.isEdit && 
           <div className={styles["edit-controls"]}>
-              <DefaultButton icon="Clear" onClick={this.deleteBox.bind(this)}/>
-              <DefaultButton icon="Edit" onClick={this.editBox.bind(this)}/>
+              <DefaultButton iconProps={{iconName:"Clear"}} onClick={this.deleteBox.bind(this)}/>
+              <DefaultButton iconProps={{iconName:"Edit"}} onClick={this.editBox.bind(this)}/>
               <i className="ms-Icon ms-Icon--Move" id="drag-handle" aria-hidden="true"></i>
           </div>
         }          
