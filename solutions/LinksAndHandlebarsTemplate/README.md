@@ -68,6 +68,7 @@ Note that you will need to download and host a CAMLJS javascript library (https:
 Version  | Date               | Comments
 -------- | ------------------ | --------
 1.0      | September 27, 2017 | Initial release
+1.1      | April 12, 2018 | Updated to use CDN and to use SPFx v1.4.1
 
 ## Disclaimer
 **THIS CODE IS PROVIDED *AS IS* WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING ANY IMPLIED WARRANTIES OF FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.**

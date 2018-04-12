@@ -52,4 +52,4 @@ This extension illustrates the following concepts:
 - Edit Site Scripts with a user friendly GUI and save them directly in the current Tenant
 
 
-<img src="https://telemetry.sharepointpnp.com/sp-dev-solutions/solutions/readme-template" />
+<img src="https://telemetry.sharepointpnp.com/sp-dev-solutions/solutions/SiteDesignStudio" />
