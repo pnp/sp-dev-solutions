@@ -51,7 +51,7 @@ A handlebars template web part that enables highly customized UI code to be appl
 ![Hub Template](./assets/hub_template.png "Hub Template")
 
 ## Used SharePoint Framework Version 
-![drop](https://img.shields.io/badge/version-1.1-green.svg)
+![drop](https://img.shields.io/badge/version-1.4.1-green.svg)
 
 ## Applies to
 
