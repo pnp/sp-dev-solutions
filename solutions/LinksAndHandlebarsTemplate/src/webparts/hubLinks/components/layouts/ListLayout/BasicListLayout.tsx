@@ -39,8 +39,8 @@ export default class BasicListLayout implements IHubLinksLayout{
                     }
                     {isEditMode &&
                       <div className={llStyles["editControls"]}>
-                          <DefaultButton icon="Clear" onClick={this.webpart.deleteBox.bind(this.webpart)} className={llStyles["right-button"]}/>
-                          <DefaultButton icon="Edit" onClick={this.webpart.editBox.bind(this.webpart)} className={llStyles["right-button"]}/>
+                          <DefaultButton iconProps={{iconName:"Clear"}} onClick={this.webpart.deleteBox.bind(this.webpart)} className={llStyles["right-button"]}/>
+                          <DefaultButton iconProps={{iconName:"Edit"}} onClick={this.webpart.editBox.bind(this.webpart)} className={llStyles["right-button"]}/>
                           <i className={"ms-Icon ms-Icon--Move "+llStyles["left-button"]} id="drag-handle" aria-hidden="true"></i>
                       </div>
                     }

@@ -1,30 +1,40 @@
 {
-    "entries": [{
-            "entry": "./lib/webparts/boxButtonWebPart/BoxButtonWebPartWebPart.js",
-            "manifest": "./src/webparts/boxButtonWebPart/BoxButtonWebPartWebPart.manifest.json",
-            "outputPath": "./dist/box-button-web-part.bundle.js"
+    "$schema": "https://dev.office.com/json-schemas/spfx-build/config.2.0.schema.json",
+    "version": "2.0",
+    "bundles": {
+        "box-button-web-part-bundle": {
+            "components": [{
+                "entrypoint": "./lib/webparts/boxButtonWebPart/BoxButtonWebPartWebPart.js",
+                "manifest": "./src/webparts/boxButtonWebPart/BoxButtonWebPartWebPart.manifest.json"
+            }]
         },
-        {
-            "entry": "./lib/webparts/featuredContentWebPart/FeaturedContentWebPartWebPart.js",
-            "manifest": "./src/webparts/featuredContentWebPart/FeaturedContentWebPartWebPart.manifest.json",
-            "outputPath": "./dist/featured-content-web-part.bundle.js"
+        "featured-content-web-part-bundle": {
+            "components": [{
+                "entrypoint": "./lib/webparts/featuredContentWebPart/FeaturedContentWebPartWebPart.js",
+                "manifest": "./src/webparts/featuredContentWebPart/FeaturedContentWebPartWebPart.manifest.json"
+            }]
         },
-        {
-            "entry": "./lib/webparts/hubLinks/HubLinksWebPart.js",
-            "manifest": "./src/webparts/hubLinks/HubLinksWebPart.manifest.json",
-            "outputPath": "./dist/hub-links.bundle.js"
+        "hub-links-bundle": {
+            "components": [{
+                "entrypoint": "./lib/webparts/hubLinks/HubLinksWebPart.js",
+                "manifest": "./src/webparts/hubLinks/HubLinksWebPart.manifest.json"
+            }]
         },
-        {
-            "entry": "./lib/webparts/handlebarTemplateDisplay/HandlebarTemplateDisplayWebPart.js",
-            "manifest": "./src/webparts/handlebarTemplateDisplay/HandlebarTemplateDisplayWebPart.manifest.json",
-            "outputPath": "./dist/handlebar-template-display.bundle.js"
+        "handlebar-template-display-bundle": {
+            "components": [{
+                "entrypoint": "./lib/webparts/handlebarTemplateDisplay/HandlebarTemplateDisplayWebPart.js",
+                "manifest": "./src/webparts/handlebarTemplateDisplay/HandlebarTemplateDisplayWebPart.manifest.json"
+            }]
         }
-    ],
+    },
+    "localizedResources": {
+        "boxButtonWebPartStrings": "lib/webparts/boxButtonWebPart/loc/{locale}.js",
+        "featuredContentWebPartStrings": "lib/webparts/featuredContentWebPart/loc/{locale}.js",
+        "propertyFieldStrings": "lib/propertyPane/loc/{locale}.js",
+        "hubLinksStrings": "lib/webparts/hubLinks/loc/{locale}.js",
+        "handlebarTemplateDisplayStrings": "lib/webparts/handlebarTemplateDisplay/loc/{locale}.js"
+    },
     "externals": {
-        "camljs": {
-            "path": "https://raw.githubusercontent.com/andrei-markeev/camljs/master/CamlJs/camljs.js", //Set URL to your caml.js file
-            "globalName": "camljs"
-        },
         "jquery": {
             "path": "https://code.jquery.com/jquery-1.12.3.min.js",
             "globalName": "jquery"
@@ -41,12 +51,5 @@
             "path": "https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js",
             "globalName": "moment"
         }
-    },
-    "localizedResources": {
-        "boxButtonWebPartStrings": "webparts/boxButtonWebPart/loc/{locale}.js",
-        "featuredContentWebPartStrings": "webparts/featuredContentWebPart/loc/{locale}.js",
-        "propertyFieldStrings": "propertyPane/loc/{locale}.js",
-        "hubLinksStrings": "webparts/hubLinks/loc/{locale}.js",
-        "handlebarTemplateDisplayStrings": "webparts/handlebarTemplateDisplay/loc/{locale}.js"
     }
 }

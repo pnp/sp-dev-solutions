@@ -305,7 +305,7 @@ class PropertyFieldCamlQueryBuilder implements IPropertyPaneField<IPropertyField
 export function PropertyFieldCamlQueryFieldMapping(targetProperty: string, properties: IPropertyFieldCamlQueryFieldMappingProps): IPropertyPaneField<IPropertyFieldCamlQueryFieldMappingPropsInternal> {
 
     //Create an internal properties object from the given properties
-    var newProperties: IPropertyFieldCamlQueryFieldMappingPropsInternal = {
+    const newProperties: IPropertyFieldCamlQueryFieldMappingPropsInternal = {
       label: properties.label,
       targetProperty: targetProperty,
       context: properties.context,

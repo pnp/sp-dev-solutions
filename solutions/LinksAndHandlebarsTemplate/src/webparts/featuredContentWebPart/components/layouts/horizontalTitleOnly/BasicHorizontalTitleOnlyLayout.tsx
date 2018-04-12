@@ -43,8 +43,8 @@ export default class BasicHorizontalTitleOnlyLayout implements IFeaturedContentL
                   <a className={styles["featured-content-link"]} href={item.URL} target={item.NewTab ? "_blank" : ""}></a>
                   {isEditMode &&
                     <div className={styles["edit-controls"]}>
-                        <DefaultButton icon="Clear" onClick={this.webpart.deleteBox.bind(this.webpart)} className={styles["right-button"]}/>
-                        <DefaultButton icon="Edit" onClick={this.webpart.editBox.bind(this.webpart)} className={styles["right-button"]}/>
+                        <DefaultButton iconProps={{iconName:"Clear"}} onClick={this.webpart.deleteBox.bind(this.webpart)} className={styles["right-button"]}/>
+                        <DefaultButton iconProps={{iconName:"Edit"}} onClick={this.webpart.editBox.bind(this.webpart)} className={styles["right-button"]}/>
                         <i className={"ms-Icon ms-Icon--Move "+styles["left-button"]} id="drag-handle" aria-hidden="true"></i>
                     </div>
                   }

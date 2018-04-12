@@ -32,7 +32,7 @@ import { Async } from 'office-ui-fabric-react/lib/Utilities';
 import styles from '../PropertyFields.module.scss';
 import * as strings from 'propertyFieldStrings';
 import pnp from 'sp-pnp-js';
-import 'camljs';
+import { Caml,CamlBuilder } from '../../utilities/caml/camljs';
 import { List } from 'linqts';
 
 /**
@@ -150,13 +150,14 @@ export default class PropertyFieldCamlQueryFieldMappingHost extends React.Compon
   private loadDefaultData(): void {
     if(this.props && this.props.properties[this.props.dataPropertyPath])
     {
-      var stateObj = JSON.parse(this.props.properties[this.props.dataPropertyPath]);
-      this.state.max = stateObj.max;
-      this.state.selectedList = stateObj.selectedList;
-      this.state.sort = stateObj.sort;
-      this.state.fieldMappings = stateObj.fieldMappings;
-      this.state.filterType = stateObj.filterType;
-      this.state.filters = stateObj.filters;
+      const stateObj = JSON.parse(this.props.properties[this.props.dataPropertyPath]);
+
+      this.setState({max: stateObj.max});
+      this.setState({selectedList: stateObj.selectedList});
+      this.setState({sort: stateObj.sort});
+      this.setState({fieldMappings: stateObj.fieldMappings});
+      this.setState({filterType: stateObj.filterType});
+      this.setState({filters: stateObj.filters});
     }
   }
 
@@ -166,7 +167,7 @@ export default class PropertyFieldCamlQueryFieldMappingHost extends React.Compon
    */
   private loadLists(): void {
     pnp.sp.web.lists.select("Title","Id","BaseTemplate").filter("Hidden eq false").get().then((lists: ISPList[]) => {
-      this.state.lists = [];
+      this.setState({lists: []});
       lists.map((list: ISPList) => {
         this.state.lists.push({
           id: list.Id,
@@ -174,15 +175,14 @@ export default class PropertyFieldCamlQueryFieldMappingHost extends React.Compon
           isDocLib: [101,109,119].indexOf(list.BaseTemplate) > -1
         });
       });
-      this.state.loadedList = true;
-      this.saveState();
+      this.setState({loadedList: true});
     });
   }
 
   private loadFields(updateView: boolean = false): void {
     if(this.state.selectedList && this.state.selectedList.id){
       pnp.sp.web.lists.getById(this.state.selectedList.id).fields.select("Title","InternalName","TypeAsString").filter("Hidden eq false").orderBy("Title").get().then((response: ISPField[]) => {
-        this.state.fields = new List<IField>();
+        this.setState({fields: new List<IField>()});
         response.map((field: ISPField) => {
           const option = {
             internalName: field.InternalName,
@@ -194,8 +194,7 @@ export default class PropertyFieldCamlQueryFieldMappingHost extends React.Compon
         //If list was just created, add all fields to the default view.
         if(updateView && this.state.fields.Count() > 0)
           this.addFieldsToView(0);
-        this.state.loadedFields = true;
-        this.saveState();
+        this.setState({loadedFields: true});
         this.saveQuery();
       });
     }
@@ -247,12 +246,8 @@ export default class PropertyFieldCamlQueryFieldMappingHost extends React.Compon
     return fields[0];
   }
 
-  private saveState(): void {
-      this.setState(this.state);
-  }
-
   private saveQuery(): void {
-      var listViewFields : string[] = [];
+      const listViewFields : string[] = [];
       if(this.state.fieldMappings.length===0){
         this.state.fields.ForEach(element => {
           listViewFields.push(element.internalName.trim().replace(' ','_x0020_'));
@@ -270,13 +265,13 @@ export default class PropertyFieldCamlQueryFieldMappingHost extends React.Compon
       if(this.state.selectedList.isDocLib){
         listViewFields.push('EncodedAbsUrl');
       }
-      const conditions : CamlBuilder.IExpression[] = [];
+      const conditions : Caml.IExpression[] = [];
       this.state.filters.forEach(element => {
         if(element.field == null || element.field == '' || element.operator == null || element.operator == '' || element.value == null)
           return;
         console.log('operator');
         
-        var field : IField = this.getFieldByInternalName(element.field as string);
+        const field : IField = this.getFieldByInternalName(element.field as string);
         console.log(field.kind);
 
         switch(field.kind){
@@ -584,20 +579,18 @@ export default class PropertyFieldCamlQueryFieldMappingHost extends React.Compon
       return;
     this.latestValidateValue = value;
 
-    var result: string | PromiseLike<string> = this.props.onGetErrorMessage(value || '');
+    const result: string | PromiseLike<string> = this.props.onGetErrorMessage(value || '');
     if (result !== undefined) {
       if (typeof result === 'string') {
         if (result === undefined || result === '')
           this.notifyAfterValidate(this.props.query, value);
-        this.state.errorMessage = result;
-        this.setState(this.state);
+        this.setState({errorMessage: result});
       }
       else {
         result.then((errorMessage: string) => {
           if (errorMessage === undefined || errorMessage === '')
             this.notifyAfterValidate(this.props.query, value);
-          this.state.errorMessage = errorMessage;
-          this.setState(this.state);
+          this.setState({errorMessage: errorMessage});
         });
       }
     }
@@ -639,87 +632,82 @@ export default class PropertyFieldCamlQueryFieldMappingHost extends React.Compon
       if(value.id==option.key)
         this.state.selectedList.isDocLib = value.isDocLib;
     });
-    
+    this.setState(this.state);    
     this.saveQuery();
-    this.saveState();
     this.loadFields();
   }
 
    private onChangedField(option: IDropdownOption, index?: number): void {
     this.state.sort.title =  option.key as string;
+    this.setState(this.state);
     this.saveQuery();
-    this.saveState();
   }
 
    private onChangedArranged(option: IDropdownOption, index?: number): void {
     this.state.sort.direction =  option.key as number;
+    this.setState(this.state);
     this.saveQuery();
-    this.saveState();
   }
 
   private onChangedMax(newValue?: number): void {
-    this.state.max = newValue;
+    this.setState({max: newValue});
     this.saveQuery();
-    this.saveState();
   }
 
   private onClickAddFilter(elm?: any): void {
     this.state.filters.push({});
-    this.saveState();
+    this.setState(this.state);
     this.saveQuery();
   }
 
   private onClickRemoveFilter(index: number): void {
     if (index > -1) {
       this.state.filters.splice(index, 1);
-      this.saveState();
+      this.setState(this.state);      
       this.saveQuery();
     }
   }
 
   private onChangedFilterField(option: IDropdownOption, index?: number, selectedIndex?: number): void {
     this.state.filters[selectedIndex].field = option.key as string;
-    this.saveState();
     this.saveQuery();
   }
 
   private onChangedFilterOperator(option: IDropdownOption, index?: number, selectedIndex?: number): void {
     this.state.filters[selectedIndex].operator = option.key as string;
-    this.saveState();
+    this.setState(this.state);    
     this.saveQuery();
   }
 
   private onChangedFilterValue(value?: string, index?: number): void {
     this.state.filters[index].value = value;
-    this.saveState();
+    this.setState(this.state);
     this.saveQuery();
   }
 
   private onChangedFieldMapping(option: IDropdownOption,  index?:number):void {
     this.state.fieldMappings[index].mappedTo = option.key.toString();
-    this.saveState();
+    this.setState(this.state);
     this.saveQuery();
   }
 
   private onChangedFilterType(option: IDropdownOption,  index?:number):void {
-    this.state.filterType = option.key.toString();
-    this.saveState();
+    this.setState({filterType: option.key.toString()});
     this.saveQuery();
   }
 
   private onChangedFieldMappingEnabled(sender: FormEvent<HTMLElement|HTMLInputElement>,checked?: boolean, index?:number){
     this.state.fieldMappings[index].enabled = checked;
-    this.saveState();
+    this.setState(this.state);
     this.saveQuery();
   }
 
   private openCreateNewListDialog(element?: any): void {
-    this.state.isCreateOpen = true;
-    this.saveState();
+    this.setState({isCreateOpen: true});
   }
 
   private createNewList(element?: any): void {
-    var title = document.getElementsByClassName(this.listElementId)[0]["value"];
+    const title = document.getElementsByClassName(this.listElementId)[0]["value"];
 
     const desc = 'List created by an SPFX webpart';
     pnp.sp.web.lists.add(title,desc,100).then((result)=>{
@@ -764,7 +752,7 @@ export default class PropertyFieldCamlQueryFieldMappingHost extends React.Compon
   }
 
   private saveAndReloadData(){
-    this.saveState();
+    this.setState(this.state);    
     this.saveQuery();
 
     this.loadDefaultData();
@@ -773,13 +761,12 @@ export default class PropertyFieldCamlQueryFieldMappingHost extends React.Compon
     this.loadFields(true);
     
     document.getElementsByClassName(this.listElementId)[0]["value"] = "";
-    this.state.isCreateOpen = false;
+    this.setState({isCreateOpen: false});
   }
 
   private cancelListCreate(element?: any): void {
-    this.state.isCreateOpen = false;
+    this.setState({isCreateOpen: false});
     document.getElementsByClassName(this.listElementId)[0]["value"] = "";
-    this.saveState();
   }
 
   private openListInNewTab(){
@@ -818,7 +805,7 @@ export default class PropertyFieldCamlQueryFieldMappingHost extends React.Compon
                   </div>
             </Dialog>
             <Button
-            icon="Add"
+            iconProps={{iconName: "Add"}}
             disabled={this.props.disabled}
             buttonType={ButtonType.command}
             onClick={this.openCreateNewListDialog}>
@@ -916,7 +903,7 @@ export default class PropertyFieldCamlQueryFieldMappingHost extends React.Compon
                   onChanged={(option: IDropdownOption, selectIndex?: number) => this.onChangedFilterOperator(option, selectIndex, index)}
                 />
                 <TextField disabled={this.props.disabled} defaultValue={value.value} onChanged={(value2: string) => this.onChangedFilterValue(value2, index)} />
-                <Button disabled={this.props.disabled} buttonType={ButtonType.command} onClick={() => this.onClickRemoveFilter(index)} icon="Delete">
+                <Button disabled={this.props.disabled} buttonType={ButtonType.command} onClick={() => this.onClickRemoveFilter(index)} iconProps={{iconName:"Delete"}}>
                   {strings.SPListQueryRemove}
                 </Button>
               </div>
@@ -927,7 +914,7 @@ export default class PropertyFieldCamlQueryFieldMappingHost extends React.Compon
 
         {this.props.showFilters != false ?
           <Button buttonType={ButtonType.command} onClick={this.onClickAddFilter}
-          disabled={this.props.disabled === false && this.state.selectedList != null && this.state.selectedList != '' ? false : true } icon="Add">
+          disabled={this.props.disabled === false && this.state.selectedList != null && this.state.selectedList != '' ? false : true } iconProps={{iconName:"Add"}}>
           {strings.SPListQueryAdd}
           </Button>
           : ''}

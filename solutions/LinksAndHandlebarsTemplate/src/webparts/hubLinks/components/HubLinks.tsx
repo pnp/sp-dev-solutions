@@ -2,6 +2,7 @@ import * as React from 'react';
 import styles from './HubLinks.module.scss';
 import * as strings from 'hubLinksStrings';
 import { IHubLinksProps } from './IHubLinksProps';
+import { IHubLinksState } from './IHubLinksState';
 import { HubLinksLayout } from './layouts/HubLinksLayout';
 import HubLinksFactory  from './layouts/HubLinksFactory';
 import { CommandButton, IButtonProps } from 'office-ui-fabric-react/lib/Button';
@@ -12,7 +13,7 @@ import LinkPickerPanel from '../../../components/LinkPickerPanel/LinkPickerPanel
 import { LinkType } from '../../../components/LinkPickerPanel/ILinkPickerPanelProps';
 import ElemUtil from "../../../utilities/element/elemUtil";
 
-export default class HubLinks extends React.Component<IHubLinksProps, void> {
+export default class HubLinks extends React.Component<IHubLinksProps, IHubLinksState> {
   constructor(){
     super();
   }
@@ -66,9 +67,9 @@ export default class HubLinks extends React.Component<IHubLinksProps, void> {
     //If Grouped Layout, update GroupBy field if group has changed
     if(this.props.layoutMode == HubLinksLayout.GroupedListLayout){
       const currentGroup = ElemUtil.closest(event.currentTarget,'[data-group]');
-      var groupProp = currentGroup.getAttribute('data-group');
+      const groupProp = currentGroup.getAttribute('data-group');
       if(groupProp.length > 0){
-        var group = groupProp.split("-")[1];
+        const group = groupProp.split("-")[1];
         if(group.length > 0)
           this.props.setGroup(event.currentTarget.getAttribute('data-index'), group);
       }
@@ -92,7 +93,7 @@ export default class HubLinks extends React.Component<IHubLinksProps, void> {
     if(event.target.tagName === 'A') return;
     event.stopPropagation();
     event.preventDefault();
-    var element = ElemUtil.closest(event.target,"[data-group]");
+    const element = ElemUtil.closest(event.target,"[data-group]");
     if(element.getAttributeNode('data-expanded')){
       element.removeAttribute('data-expanded');
     }else{
@@ -144,7 +145,7 @@ export default class HubLinks extends React.Component<IHubLinksProps, void> {
           { !this.props.isEdit && this.props.title && <span className={styles["view"]}>{this.props.title}</span> }          
         </div>
         { this.props.isEdit &&
-          <CommandButton icon='Add' onClick={this.addBox.bind(this)}>{strings.AddNewButtonText}</CommandButton>
+          <CommandButton iconProps={{iconName:'Add'}} onClick={this.addBox.bind(this)}>{strings.AddNewButtonText}</CommandButton>
         }
         { HubLinksFactory.getLayout(this.props.layoutMode,false,this).render(this.props.hubLinksItems,this.props.isEdit) }
         { this.props.isEdit &&

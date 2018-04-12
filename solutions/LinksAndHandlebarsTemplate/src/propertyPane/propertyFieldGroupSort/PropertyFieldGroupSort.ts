@@ -102,7 +102,7 @@ class PropertyFieldGroupSortBuilder implements IPropertyPaneField<IPropertyField
 }
 
 export function PropertyPaneGroupSort(targetProperty: string, properties: IPropertyFieldGroupSortProps):IPropertyPaneField<IPropertyFieldGroupSortPropsInternal>{
-    var newProperties: IPropertyFieldGroupSortPropsInternal = {
+    const newProperties: IPropertyFieldGroupSortPropsInternal = {
         label: properties.label,
         targetProperty: targetProperty,
         placeHolder: properties.placeHolder,
