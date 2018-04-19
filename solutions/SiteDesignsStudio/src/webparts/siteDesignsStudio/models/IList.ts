@@ -6,6 +6,7 @@ export interface IField {
   Group: string;
   CustomFormatter: any;
   Required: boolean;
+  Xml: string;
 }
 
 export interface IContentType {

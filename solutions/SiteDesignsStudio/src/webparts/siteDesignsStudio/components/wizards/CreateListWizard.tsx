@@ -13,6 +13,7 @@ import ScriptActionWizard, { IScriptActionWizardState, IScriptActionWizardProps 
 import { Dropdown, IDropdownOption, Label, autobind, TextField, Spinner, SpinnerType, Checkbox } from 'office-ui-fabric-react';
 import { IListsService, ListsServiceKey } from '../../services/lists/ListsService';
 import { IList, IField, IContentType } from '../../models/IList';
+import { CreateListSubActions } from '../../schema/siteActionConstants';
 
 export interface ICreateListWizardState extends IScriptActionWizardState {
 	availableLists: IList[];
@@ -30,14 +31,6 @@ interface ICreateListScriptAction extends ISiteScriptAction {
 	subactions: ISiteScriptAction[];
 }
 
-const createSPListAction = 'createSPList';
-const setTitle = 'setTitle';
-const setDescription = 'setDescription';
-const addSPField = 'addSPField';
-const deleteSPField = 'deleteSPField';
-const addContentType = 'addContentType';
-const removeContentType = 'removeContentType';
-const setSPFieldCustomFormatter = 'setSPFieldCustomFormatter';
 
 export default class CreateListWizard extends ScriptActionWizard<ICreateListWizardProps, ICreateListWizardState> {
 	private siteScriptSchemaService: ISiteScriptSchemaService;
@@ -137,10 +130,10 @@ export default class CreateListWizard extends ScriptActionWizard<ICreateListWiza
 			};
 
 			// Set the title
-			action.subactions.push({ verb: setTitle, title: selectedList.Title } as any);
+			action.subactions.push({ verb: CreateListSubActions.setTitle, title: selectedList.Title } as any);
 
 			// Set the description
-			action.subactions.push({ verb: setDescription, description: selectedList.Description } as any);
+			action.subactions.push({ verb: CreateListSubActions.setDescription, description: selectedList.Description } as any);
 
 			// If List fields are known
 			if (selectedListFields && selectedListFields.length) {
@@ -149,20 +142,26 @@ export default class CreateListWizard extends ScriptActionWizard<ICreateListWiza
 				selectedListFields.forEach((field) => {
 					// If the current field is not a built-in one
 					if (builtinFields.indexOf(field.InternalName) < 0) {
-						// Add the field
+						// // Add the field
+						// action.subactions.push({
+						// 	verb: CreateListSubActions.addSPField,
+						// 	fieldType: field.Type,
+						// 	displayName: field.Title,
+						// 	isRequired: field.Required,
+						// 	addToDefaultView: true
+            // } as any);
+
+            	// Add the field
 						action.subactions.push({
-							verb: addSPField,
-							fieldType: field.Type,
-							displayName: field.Title,
-							isRequired: field.Required,
-							addToDefaultView: true
+							verb: CreateListSubActions.addSPFieldXml,
+              schemaXml: field.Xml
 						} as any);
 					}
 
 					// set the custom formatter if any
 					if (field.CustomFormatter) {
 						action.subactions.push({
-							verb: setSPFieldCustomFormatter,
+							verb: CreateListSubActions.setSPFieldCustomFormatter,
 							fieldDisplayName: field.Title,
 							formatterJSON: JSON.parse(field.CustomFormatter)
 						} as any);
@@ -183,7 +182,7 @@ export default class CreateListWizard extends ScriptActionWizard<ICreateListWiza
 					if (builtinContentTypes.indexOf(ct.Name) < 0) {
 						// Add the content type
 						action.subactions.push({
-							verb: addContentType,
+							verb: CreateListSubActions.addContentType,
 							name: ct.Name
 						} as any);
 					}
@@ -192,11 +191,10 @@ export default class CreateListWizard extends ScriptActionWizard<ICreateListWiza
 				// Check if builtin Content Types are not present
 				builtinContentTypes.forEach((ctName) => {
 					let builtinContentType = find(selectedListContentTypes, (lct) => lct.Name == ctName);
-					console.log('BUiltin CT ', ctName, builtinContentType);
 					if (!builtinContentType) {
 						// Remove the content type
 						action.subactions.push({
-							verb: removeContentType,
+							verb: CreateListSubActions.removeContentType,
 							name: ctName
 						} as any);
 					}
@@ -215,7 +213,7 @@ export default class CreateListWizard extends ScriptActionWizard<ICreateListWiza
 		let { selectedList, selectedListFields, isLoading, isLoadingListDetails, selectedListContentTypes } = this
 			.state as ICreateListWizardState;
 
-// Note : snippet to add when Content Types and fields handling will be impoved
+// Note : snippet to add when Content Types and fields handling will be improved
 // ,
 // 					selectedListFields && (
 // 						<div className="ms-Grid-row">

@@ -16,6 +16,8 @@ import { ISiteScriptActionUIWrapper } from '../../models/ISiteScriptActionUIWrap
 import ThemeInputField from '../wizards/inputFields/ThemeInputField';
 import HubSiteInputField from '../wizards/inputFields/HubSiteInputField';
 import ListTemplateInputField from '../wizards/inputFields/ListTemplateInputField';
+import AppsInputField from '../wizards/inputFields/AppsInputField';
+import { SiteActions } from '../../schema/siteActionConstants';
 
 export interface IScriptActionEditorState {}
 
@@ -24,8 +26,8 @@ export interface IScriptActionEditorProps extends IServiceConsumerComponentProps
 	schema: any;
 	onActionChanged?: (action: ISiteScriptAction) => void;
 	onSubActionMoved?: (actionKey: string, oldIndex: number, newIndex: number) => void;
-  onExpandChanged?: (actionUI: ISiteScriptActionUIWrapper) => void;
-  useWizardPropertyEditors: boolean;
+	onExpandChanged?: (actionUI: ISiteScriptActionUIWrapper) => void;
+	useWizardPropertyEditors: boolean;
 }
 
 export default class ScriptActionEditor extends React.Component<IScriptActionEditorProps, IScriptActionEditorState> {
@@ -109,8 +111,8 @@ export default class ScriptActionEditor extends React.Component<IScriptActionEdi
 									this._onSubActionUpdated(actionUI, subActionKey, subAction)}
 								getActionSchema={(subAction) =>
 									this.siteScriptSchemaService.getSubActionSchema(actionUI.action, subAction)}
-                onExpandChanged={(expandedAction) => this._onActionExpandChanged(expandedAction)}
-                useWizardPropertyEditors={this.props.useWizardPropertyEditors}
+								onExpandChanged={(expandedAction) => this._onActionExpandChanged(expandedAction)}
+								useWizardPropertyEditors={this.props.useWizardPropertyEditors}
 							/>
 						</div>
 						<div>
@@ -127,39 +129,51 @@ export default class ScriptActionEditor extends React.Component<IScriptActionEdi
 
 		let customRenderers = {
 			subactions: subactionsRenderer
-    };
+		};
 
-    if (this.props.useWizardPropertyEditors) {
-      let wizardEditors =  {
-        themeName: (value) => (
-          <ThemeInputField
-            serviceScope={serviceScope}
-            label={this._getLabelFromActionProperty(schema, 'themeName')}
-            value={value}
-            onValueChanged={(v) => this._onActionPropertyChanged('themeName', v)}
-          />
-        ),
-        hubSiteId: (value) => (
-          <HubSiteInputField
-            serviceScope={serviceScope}
-            label={this._getLabelFromActionProperty(schema, 'hubSiteId')}
-            value={value}
-            onValueChanged={(v) => this._onActionPropertyChanged('hubSiteId', v)}
-          />
-        ),
-        templateType: (value) => (
-          <ListTemplateInputField
-            serviceScope={serviceScope}
-            label={this._getLabelFromActionProperty(schema, 'templateType')}
-            value={value}
-            onValueChanged={(v) => this._onActionPropertyChanged('templateType', v)}
-          />
-        )
-      };
-      customRenderers = assign(customRenderers, wizardEditors);
-    }
+		if (this.props.useWizardPropertyEditors) {
+			let wizardEditors = {
+				themeName: (value) => (
+					<ThemeInputField
+						serviceScope={serviceScope}
+						label={this._getLabelFromActionProperty(schema, 'themeName')}
+						value={value}
+						onValueChanged={(v) => this._onActionPropertyChanged('themeName', v)}
+					/>
+				),
+				hubSiteId: (value) => (
+					<HubSiteInputField
+						serviceScope={serviceScope}
+						label={this._getLabelFromActionProperty(schema, 'hubSiteId')}
+						value={value}
+						onValueChanged={(v) => this._onActionPropertyChanged('hubSiteId', v)}
+					/>
+				),
+				templateType: (value) => (
+					<ListTemplateInputField
+						serviceScope={serviceScope}
+						label={this._getLabelFromActionProperty(schema, 'templateType')}
+						value={value}
+						onValueChanged={(v) => this._onActionPropertyChanged('templateType', v)}
+					/>
+				)
+			};
 
-    return customRenderers;
+			if (actionUI.action.verb == SiteActions.installSPFXSolution) {
+				wizardEditors['id'] = (value) => (
+					<AppsInputField
+						serviceScope={serviceScope}
+						label={this._getLabelFromActionProperty(schema, 'id')}
+						value={value}
+						onValueChanged={(v) => this._onActionPropertyChanged('id', v)}
+					/>
+				);
+			}
+
+			customRenderers = assign(customRenderers, wizardEditors);
+		}
+
+		return customRenderers;
 	}
 
 	public render(): React.ReactElement<IScriptActionEditorProps> {
