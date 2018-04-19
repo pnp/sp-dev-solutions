@@ -1,3 +1,4 @@
+import { get } from '@microsoft/sp-lodash-subset';
 import { ISiteScriptAction } from '../../models/ISiteScript';
 import DefaultSchema from '../../schema/schema';
 import { ServiceScope, ServiceKey } from '@microsoft/sp-core-library';
@@ -31,11 +32,16 @@ export class SiteScriptSchemaService implements ISiteScriptSchemaService {
 	private _getElementSchema(object: any, property: string = null): any {
 		let value = !property ? object : object[property];
 		if (value['$ref']) {
-			let definitionKey = value['$ref'].replace('#/definitions/', '');
-			return this.schema.definitions[definitionKey];
+			let path = value['$ref'];
+			return this._getPropertyFromPath(this.schema, path);
 		}
 
 		return value;
+	}
+
+	private _getPropertyFromPath(object: any, path: string, separator: string = '/'): any {
+		path = path.replace('#/', '').replace('#', '').replace(new RegExp(separator, 'g'), '.');
+		return get(object, path);
 	}
 
 	private _getVerbFromActionSchema(actionDefinition: any): string {

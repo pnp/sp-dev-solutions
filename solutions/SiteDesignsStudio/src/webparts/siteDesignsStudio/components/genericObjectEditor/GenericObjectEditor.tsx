@@ -130,10 +130,10 @@ export default class GenericObjectEditor extends React.Component<IGenericObjectE
 
 	private _getFieldLabel(field: string): string {
 		if (this.props.fieldLabelGetter) {
-      let foundLabel = this.props.fieldLabelGetter(field);
-      if (foundLabel) {
-        return foundLabel;
-      }
+			let foundLabel = this.props.fieldLabelGetter(field);
+			if (foundLabel) {
+				return foundLabel;
+			}
 		}
 
 		// Try translate from built-in resources
@@ -209,7 +209,8 @@ export default class GenericObjectEditor extends React.Component<IGenericObjectE
 							onChanged={(value) => this._onObjectPropertyChange(propertyName, value)}
 						/>
 					);
-				case 'object':
+				case 'array': // TODO Render a ArrayEditor for compl
+				case 'object': // TODO If object is a simple dictionary (key/non-complex object values) => Display a custom control
 					return (
 						<div>
 							<div className="ms-Grid-row">

@@ -214,7 +214,8 @@ export class ListsService implements IListsService {
 				Title: f.Title,
 				InternalName: f.InternalName,
 				Type: this._getFieldTypeOrDefault(f.TypeAsString),
-				CustomFormatter: f.CustomFormatter,
+        CustomFormatter: f.CustomFormatter,
+        Xml: f.SchemaXml,
 				Group: f.Group,
 				Required: f.Required
 			})) as IField[];
