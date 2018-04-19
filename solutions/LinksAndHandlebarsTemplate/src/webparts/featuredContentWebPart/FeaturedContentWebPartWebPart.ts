@@ -66,12 +66,12 @@ export default class FeaturedContentWebPartWebPart extends BaseClientSideWebPart
   }
 
   public render(): void {
-    this.properties.featuredContentItems.forEach(element => {
-      if(element.Content===undefined){
-        element.Content = "";
+    this.properties.featuredContentItems.forEach(el => {
+      if(el.Content===undefined){
+        el.Content = "";
       }
-      if(element.ImageMode===undefined){
-        element.ImageMode=ImageDisplayType.Auto;
+      if(el.ImageMode===undefined){
+        el.ImageMode=ImageDisplayType.Auto;
       }
     });
 
@@ -101,7 +101,7 @@ export default class FeaturedContentWebPartWebPart extends BaseClientSideWebPart
       if(propData.selectedList.id){
         pnp.sp.web.lists.getById(propData.selectedList.id).getItemsByCAMLQuery({ ViewXml: QueryStringParser.ReplaceQueryStringParameters(this.properties.advancedCamlQuery)}).then((response:any[])=>{
           response.forEach(value => {
-          var link = {};
+          const link = {};
           propData.fieldMappings.forEach(mapping => {
             switch(mapping.type){
               case SPFieldType.URL:
@@ -361,11 +361,11 @@ export default class FeaturedContentWebPartWebPart extends BaseClientSideWebPart
   private rearrangeBasicItems(newOrder: number[]){
     const currArr = this.properties.featuredContentItems;
     const newArr = new Array<IFeaturedItem>();
-    for(var num in newOrder)
-      newArr.push(this.properties.featuredContentItems[newOrder[num]]);
+    for(const num of newOrder)
+      newArr.push(this.properties.featuredContentItems[num]);
     this.properties.featuredContentItems.length=0;
-    for(var val in newArr)
-      this.properties.featuredContentItems.push(newArr[val]);
+    for(const val of newArr)
+      this.properties.featuredContentItems.push(val);
     this.render();
   }
 
@@ -396,7 +396,7 @@ export default class FeaturedContentWebPartWebPart extends BaseClientSideWebPart
 
   //Function to validate previewUrl before setting Image property of item.
   private checkImage(imageSrc, success, failure) {
-      var img = new Image();
+      const img = new Image();
       img.onload = success; 
       img.onerror = failure;
       img.src = imageSrc;
@@ -421,7 +421,7 @@ export default class FeaturedContentWebPartWebPart extends BaseClientSideWebPart
 
     var isDoc = false;
     const docExtensions = ["pdf", "xls", "xlsx", "doc", "docx", "ppt", "pptx", "pptm", "dot"];
-    for(var i in docExtensions){
+    for(const i of docExtensions){
       if(urlString.indexOf(docExtensions[i], urlString.length - docExtensions[i].length) !== -1)
         isDoc = true;
     }
@@ -430,10 +430,10 @@ export default class FeaturedContentWebPartWebPart extends BaseClientSideWebPart
     this.properties.featuredContentItems[this.activeIndex].Title=name ? name : this.properties.featuredContentItems[this.activeIndex].Title;
     
     //If image is on host server
-    var url = new URL(urlString);
+    const url = new URL(urlString);
     if(url.host === window.location.host){
       //Generate preview urlString
-      var tmpPreviewUrl = urlString.indexOf("getpreview.ashx")>-1?urlString:this.context.pageContext.web.serverRelativeUrl+"/_layouts/15/getpreview.ashx?resolution=0&clientMode=modernWebPart&path="+encodeURIComponent(urlString);
+      const tmpPreviewUrl = urlString.indexOf("getpreview.ashx")>-1?urlString:this.context.pageContext.web.serverRelativeUrl+"/_layouts/15/getpreview.ashx?resolution=0&clientMode=modernWebPart&path="+encodeURIComponent(urlString);
       //Validate its an image
       this.checkImage(tmpPreviewUrl, () => {
         //Success function, set Image to preview urlString unless user has already set a custom image.

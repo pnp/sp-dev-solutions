@@ -18,9 +18,9 @@ export default class ElemUtil {
         if(element["oMatchesSelector"]) return element["oMatchesSelector"](selector);
         if(element["webkitMatchesSelector"]) return element["webkitMatchesSelector"](selector);			
 		
-		var matches = (element.document || element.ownerDocument).querySelectorAll(selector),
-                i = matches.length;
-            while (--i >= 0 && matches.item(i) !== element) {}
-            return i > -1;            
-        };
+		const matches = (element.document || element.ownerDocument).querySelectorAll(selector);
+		var i = matches.length;
+		while (--i >= 0 && matches.item(i) !== element) {}
+		return i > -1;            
+        }
 }

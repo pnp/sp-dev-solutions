@@ -1,9 +1,11 @@
 {
+    "$schema": "https://dev.office.com/json-schemas/spfx-build/package-solution.schema.json",
     "solution": {
         "name": "Sample Hub Web Parts",
         "id": "520c2090-be2a-4538-b2b0-fd3eeca0cea0",
-        "version": "1.0.3.9",
-        "skipFeatureDeployment": true
+        "version": "2.0.0.1",
+        "skipFeatureDeployment": true,
+        "includeClientSideAssets": true
     },
     "paths": {
         "zippedPackage": "solution/hub-web-parts.sppkg"

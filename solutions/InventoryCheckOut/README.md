@@ -64,4 +64,4 @@ Version  | Date               | Comments
 
 When you add the web part for the first time, a user will need to create the backing lists within the site that support storage of Time Away entries.  A user with list creation permissions within the site will need to click the "Create Lists" button that shows up within the web part.
 
-<img src="https://telemetry.sharepointpnp.com/sp-dev-solutions/solutions/inventorycheckout/readme" />
+<img src="https://telemetry.sharepointpnp.com/sp-dev-solutions/solutions/inventorycheckout" />

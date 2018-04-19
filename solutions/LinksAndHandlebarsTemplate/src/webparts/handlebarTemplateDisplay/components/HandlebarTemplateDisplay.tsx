@@ -6,6 +6,7 @@ import 'file-saver';
 import styles from './HandlebarTemplateDisplay.module.scss';
 import LinkPickerPanel from "../../../components/LinkPickerPanel/LinkPickerPanel";
 import { IHandlebarTemplateDisplayProps } from './IHandlebarTemplateDisplayProps';
+import { IHandlebarTemplateDisplayState } from './IHandlebarTemplateDisplayState';
 import { LinkType } from "../../../components/LinkPickerPanel/ILinkPickerPanelProps";
 import { Button, CommandButton } from "office-ui-fabric-react/lib/Button";
 import { Modal } from 'office-ui-fabric-react/lib/Modal';
@@ -16,7 +17,7 @@ const specialChar = "    ";
 //  return moment(date).format(format);
 //});
 
-export default class HandlebarTemplateDisplay extends React.Component<IHandlebarTemplateDisplayProps, void> {
+export default class HandlebarTemplateDisplay extends React.Component<IHandlebarTemplateDisplayProps, IHandlebarTemplateDisplayState> {
   private linkPickerPanel: LinkPickerPanel;
   
   private _templateExport : string;
@@ -127,14 +128,14 @@ export default class HandlebarTemplateDisplay extends React.Component<IHandlebar
   private buildExampleTemplate(obj, path = ""): string{
     var template = "";
     const separator = path ? "." : "";
-    for(var i in obj){
-      if(typeof obj[i] === 'object'){
+    for(const i of obj){
+      if(typeof i === 'object'){
         template+=this.getLeadingTab(path)+'<div style="margin-left:10px;">';
         template+='\n'+this.getLeadingTab(path)+'    <span style="font-weight:bold;">';
         template+=i+": ";
         template+="</span>";
         template+="\n"+this.getLeadingTab(path)+"    <span>";
-        template+=this.buildExampleTemplate(obj[i], path+separator+i);
+        template+=this.buildExampleTemplate(i, path+separator+obj.indexOf(i));
         template+="</span>";
         template+="\n"+this.getLeadingTab(path)+"</div>\n";
       }
