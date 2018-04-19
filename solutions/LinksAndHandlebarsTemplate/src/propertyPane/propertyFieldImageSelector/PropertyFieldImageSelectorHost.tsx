@@ -41,16 +41,15 @@ export default class PropertyFieldImageSelectorHost extends React.Component<IPro
 
     public changeImageType(ev: React.SyntheticEvent<HTMLElement>, option: IChoiceGroupOption){
         this.props.changeImageMode(Number(option.key) as ImageDisplayType);
-        this.state.imageMode = Number(option.key) as ImageDisplayType;
-        this.setState(this.state);
+        this.setState({imageMode: Number(option.key) as ImageDisplayType});
     }
 
     public getPropertyByString(o, s) {
         s = s.replace(/\[(\w+)\]/g, '.$1'); // convert indexes to properties
         s = s.replace(/^\./, '');           // strip a leading dot
-        var a = s.split('.');
+        const a = s.split('.');
         for (var i = 0, n = a.length; i < n; ++i) {
-            var k = a[i];
+            const k = a[i];
             if (k in o) {
                 o = o[k];
             } else {

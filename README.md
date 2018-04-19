@@ -19,9 +19,11 @@ We welcome your reported issues, pull requests, and new solution samples. Please
 | Solution           | Description                                                                        | Link  |
 | ------------------ |:-----------------------------------------------------------------------------------| -----:|
 | ChangeRequests     | Manage and close change requests opened by users.                                  | [Link](./solutions/ChangeRequests/README.md) |
+| Column Formatter | Easy editor for modern listview Column Formatting | [Link](./solutions/ColumnFormatter/README.md) |
 | ContactManagement  | Organize and manage contacts and organizations.                                    | [Link](./solutions/ContactManagement/README.md) |
 | LinksAndHandlebarsTemplate  | Different kinds of visuals for hosting sets of links on a page, including with custom Handlebars Templates | [Link](./solutions/LinksAndHandlebarsTemplate/README.md) | 
 | InventoryCheckOut  | Manage a list of items in an inventory, and let users check out and reserve items. | [Link](./solutions/InventoryCheckOut/README.md) | 
+| Site Designs Studio | Enables the management of Site Designs and Site Scripts directly in the browser | [Link](./solutions/SiteDesignsStudio/README.md) |
 | TimeAway           | Provides a simple out-of-office tracker for members of your team.                  | [Link](./solutions/TimeAway/README.md) | 
  
 ## Additional resources

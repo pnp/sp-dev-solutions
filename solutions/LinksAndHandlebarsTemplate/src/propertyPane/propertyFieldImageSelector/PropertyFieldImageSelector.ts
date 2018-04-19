@@ -70,7 +70,7 @@ class PropertyFieldImageSelectorBuilder implements IPropertyPaneField<IPropertyF
 }
 
 export function PropertyPaneImageSelector(targetProperty: string, properties: IPropertyFieldImageSelectorProps):IPropertyPaneField<IPropertyFieldImageSelectorPropsInternal>{
-    var newProperties: IPropertyFieldImageSelectorPropsInternal = {
+    const newProperties: IPropertyFieldImageSelectorPropsInternal = {
         onRender: null,
         properties: properties.properties,
         context: properties.context,

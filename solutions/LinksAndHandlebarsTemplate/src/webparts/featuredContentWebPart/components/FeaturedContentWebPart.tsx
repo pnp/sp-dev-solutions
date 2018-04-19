@@ -142,7 +142,7 @@ export default class FeaturedContentWebPart extends React.Component<IFeaturedCon
           { !this.props.isEdit && this.props.title && <span className={styles["view"]}>{this.props.title}</span> }          
         </div>
         { this.props.isEdit &&
-          <CommandButton className={styles["new-item"]} icon='Add' onClick={this.addBox.bind(this)}>{strings.AddNewButtonText}</CommandButton>
+          <CommandButton className={styles["new-item"]} iconProps={{iconName:'Add'}} onClick={this.addBox.bind(this)}>{strings.AddNewButtonText}</CommandButton>
          }
         { FeaturedContentFactory.getLayout(this.props.layoutMode,false,this).render(this.props.featuredContentItems,this.props.isEdit) }
         { this.props.isEdit &&

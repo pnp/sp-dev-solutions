@@ -115,7 +115,7 @@ export default class BoxButtonWebPartWebPart extends BaseClientSideWebPart<IBoxB
           // Figure out if it's a document
           var isDoc = false;
           const docExtensions = ["pdf", "xls", "xlsx", "doc", "docx", "ppt", "pptx", "pptm", "dot"];
-          for(var i in docExtensions){
+          for(const i of docExtensions){
             if(url.indexOf(docExtensions[i], url.length - docExtensions[i].length) !== -1)
               isDoc = true;
           }
@@ -156,11 +156,11 @@ export default class BoxButtonWebPartWebPart extends BaseClientSideWebPart<IBoxB
         rearrangeItems: (newOrder:number[])=>{
           const newArr = [];
           const currArr = this.properties.data;
-          for(var num in newOrder)
-            newArr.push(this.properties.data[newOrder[num]]);
+          for(const num of newOrder)
+            newArr.push(this.properties.data[num]);
           this.properties.data.length=0;
-          for(var val in newArr)
-            this.properties.data.push(newArr[val]);
+          for(const val of newArr)
+            this.properties.data.push(val);
           this.render();
         },
         context: this.context
@@ -174,7 +174,7 @@ export default class BoxButtonWebPartWebPart extends BaseClientSideWebPart<IBoxB
       if(propData.selectedList.id){
         pnp.sp.web.lists.getById(propData.selectedList.id).getItemsByCAMLQuery({ ViewXml: QueryStringParser.ReplaceQueryStringParameters(this.properties.advancedCamlQuery)}).then((response:any[])=>{
           response.forEach(value => {
-          var link = {};
+          const link = {};
           propData.fieldMappings.forEach(mapping => {
             switch(mapping.type){
               case SPFieldType.URL:
