@@ -41,7 +41,7 @@ export default class BasicStackedLayout implements IFeaturedContentLayout{
                         <a className={styles["featured-content-link"]} href={item.URL} target={item.NewTab ? "_blank" : ""}>{item.Title}</a>
                       </div>
                       <span className={styles["description"]}>{item.Description}</span>
-                      <span className={styles["rich-text-field"]}>{item.Content}></span>
+                      <span className={styles["rich-text-field"]} dangerouslySetInnerHTML={{__html:item.Content}}></span>
                     </div>
                   </div>
                   {isEditMode &&

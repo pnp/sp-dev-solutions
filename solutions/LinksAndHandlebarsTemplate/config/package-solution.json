@@ -3,7 +3,7 @@
     "solution": {
         "name": "Sample Hub Web Parts",
         "id": "520c2090-be2a-4538-b2b0-fd3eeca0cea0",
-        "version": "2.0.0.1",
+        "version": "2.1.0.0",
         "skipFeatureDeployment": true,
         "includeClientSideAssets": true
     },

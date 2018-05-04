@@ -197,6 +197,10 @@
     es6-promise "^4.1.0"
     superagent "^3.5.2"
 
+"@microsoft/microsoft-graph-types@1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@microsoft/microsoft-graph-types/-/microsoft-graph-types-1.1.0.tgz#08646e469247a4144c715161a1081387ade7cd3b"
+
 "@microsoft/node-core-library@0.3.16":
   version "0.3.16"
   resolved "https://registry.yarnpkg.com/@microsoft/node-core-library/-/node-core-library-0.3.16.tgz#cef3f30c0fcdd9f1af208b5cea15c22f377e7745"
@@ -821,9 +825,9 @@
     "@types/express-serve-static-core" "*"
     "@types/mime" "*"
 
-"@types/sharepoint@^2013.1.9":
-  version "2013.1.10"
-  resolved "https://registry.yarnpkg.com/@types/sharepoint/-/sharepoint-2013.1.10.tgz#e286f58606c82d9b30d6fdf08af7aa78f48c7567"
+"@types/sharepoint@2013.1.9":
+  version "2013.1.9"
+  resolved "https://registry.yarnpkg.com/@types/sharepoint/-/sharepoint-2013.1.9.tgz#8be62a1b6dbfe0bf9dfc8e0fed125199a36fb60d"
   dependencies:
     "@types/microsoft-ajax" "*"
 
@@ -9112,11 +9116,12 @@ source-map@~0.2.0:
   dependencies:
     amdefine ">=0.0.4"
 
-sp-pnp-js@^2.0.4:
-  version "2.0.8"
-  resolved "https://registry.yarnpkg.com/sp-pnp-js/-/sp-pnp-js-2.0.8.tgz#1da820c30cab03bcd04463a49c3f4873da77bb3a"
+sp-pnp-js@^3.0.7:
+  version "3.0.7"
+  resolved "https://registry.yarnpkg.com/sp-pnp-js/-/sp-pnp-js-3.0.7.tgz#94ebff53dbbd0974660ed6e6b616b30ccb449056"
   dependencies:
-    "@types/sharepoint" "^2013.1.9"
+    "@microsoft/microsoft-graph-types" "1.1.0"
+    "@types/sharepoint" "2013.1.9"
 
 sparkles@^1.0.0:
   version "1.0.0"
