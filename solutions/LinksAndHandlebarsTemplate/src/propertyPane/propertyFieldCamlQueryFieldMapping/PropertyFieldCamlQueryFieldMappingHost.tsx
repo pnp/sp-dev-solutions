@@ -6,11 +6,11 @@
  * Released under MIT licence
  *
  * Uses the PropertyFieldSPListQueryHost by Olivier Carpentier
- * 
+ *
  */
 import * as React from 'react';
 import { FormEvent } from 'react';
-import { 
+import {
   IPropertyFieldCamlQueryFieldMappingPropsInternal,
   IField,
   IList,
@@ -53,7 +53,7 @@ export interface IFilter {
 
 export interface IPropertyFieldCamlQueryFieldMappingHostState {
   lists: IList[];
-  fields: List<IField>;  
+  fields: List<IField>;
   arranged: IDropdownOption[];
   selectedList?: IList;
   sort?: ISort;
@@ -80,7 +80,14 @@ export default class PropertyFieldCamlQueryFieldMappingHost extends React.Compon
   private delayedValidate: (value: string) => void;
   private delayedMappingValidate: (value: IMapping[]) => void;
   private listElementId = "input-new-list";
-  private listIsDocLib = false;
+
+  private _stateCopy: IPropertyFieldCamlQueryFieldMappingHostState;
+  public get stateCopy(){
+    return this._stateCopy;
+  }
+  public set stateCopy(value: IPropertyFieldCamlQueryFieldMappingHostState){
+    this._stateCopy = value;
+  }
 
   /**
    * @function
@@ -102,14 +109,55 @@ export default class PropertyFieldCamlQueryFieldMappingHost extends React.Compon
     this.openCreateNewListDialog = this.openCreateNewListDialog.bind(this);
     this.cancelListCreate = this.cancelListCreate.bind(this);
 
-    this.state = {
+    var stateObj = {
+      max: 100,
+      selectedList: {},
+      sort: {},
+      fieldMappings: [],
+      filterType: "",
+      filters: []
+    };
+    if(this.props && this.props.properties[this.props.dataPropertyPath])
+    {
+      stateObj = JSON.parse(this.props.properties[this.props.dataPropertyPath]);
+
+      const currMappings = [...stateObj.fieldMappings];
+      stateObj.fieldMappings = [];
+
+      this.props.fieldMappings.map((item: IMapping, index?: number) => {
+        var mapping = '';
+        for(const map of currMappings){
+          if(item.name===map.name)
+            mapping = map.mappedTo;
+        }
+
+        stateObj.fieldMappings.push({
+          name: item.name,
+          type: item.type,
+          requiredLevel: item.requiredLevel,
+          enabled: item.requiredLevel===SPFieldRequiredLevel.Required,
+          mappedTo: mapping});
+      });
+
+      for(const i of this.props.fieldMappings){
+        var exists = false;
+        for(const j of stateObj.fieldMappings){
+          if(i.name===j.name)
+            exists=true;
+            continue;
+        }
+        if(!exists) {stateObj.fieldMappings.push(i);}
+      }
+    }
+
+    this.state = this.stateCopy = {
       loadedList: false,
       loadedFields: false,
 			lists: [],
       fields: new List<IField>(),
       arranged: [{key: SortDirection.Ascending, text: 'Ascending'}, {key: SortDirection.Descending, text: 'Descending'}],
-      selectedList: {},
-      sort: {},
+      selectedList: stateObj.selectedList ? stateObj.selectedList : {},
+      sort: stateObj.sort ? stateObj.sort : {},
       operators: [
         {key: 'Eq', text: strings.SPListQueryOperatorEq},
         {key: 'Ne', text: strings.SPListQueryOperatorNe},
@@ -120,26 +168,13 @@ export default class PropertyFieldCamlQueryFieldMappingHost extends React.Compon
         {key: 'Gt', text: strings.SPListQueryOperatorGt},
         {key: 'Ge', text: strings.SPListQueryOperatorGe}
       ],
-      filters: [],
-      filterType: strings.SPListFilterCompareAny,
-      fieldMappings: [],
-      max: 100,
+      filters: stateObj.filters,
+      filterType: stateObj.filterType ? stateObj.filterType :strings.SPListFilterCompareAll,
+      fieldMappings: stateObj.fieldMappings,
+      max: stateObj.max ? stateObj.max : 100,
       errorMessage: '',
       isCreateOpen: false
     };
-
-    this.props.fieldMappings.map((item: IMapping, index?: number) => {
-        this.state.fieldMappings.push({
-          name: item.name, 
-          type: item.type, 
-          requiredLevel: item.requiredLevel, 
-          enabled: item.requiredLevel===SPFieldRequiredLevel.Required, 
-          mappedTo: ''});
-      });
-
-    this.loadDefaultData();
-    this.loadLists();
-    this.loadFields();
 
     this.async = new Async(this);
     this.validate = this.validate.bind(this);
@@ -147,18 +182,9 @@ export default class PropertyFieldCamlQueryFieldMappingHost extends React.Compon
     this.delayedValidate = this.async.debounce(this.validate, this.props.deferredValidationTime);
   }
 
-  private loadDefaultData(): void {
-    if(this.props && this.props.properties[this.props.dataPropertyPath])
-    {
-      const stateObj = JSON.parse(this.props.properties[this.props.dataPropertyPath]);
-
-      this.setState({max: stateObj.max});
-      this.setState({selectedList: stateObj.selectedList});
-      this.setState({sort: stateObj.sort});
-      this.setState({fieldMappings: stateObj.fieldMappings});
-      this.setState({filterType: stateObj.filterType});
-      this.setState({filters: stateObj.filters});
-    }
+  public componentDidMount(){
+    this.loadLists();
+    this.loadFields(this.stateCopy.selectedList);
   }
 
   /**
@@ -167,34 +193,33 @@ export default class PropertyFieldCamlQueryFieldMappingHost extends React.Compon
    */
   private loadLists(): void {
     pnp.sp.web.lists.select("Title","Id","BaseTemplate").filter("Hidden eq false").get().then((lists: ISPList[]) => {
-      this.setState({lists: []});
+      const stateLists = [];
       lists.map((list: ISPList) => {
-        this.state.lists.push({
+        stateLists.push({
           id: list.Id,
-          title: list.Title,
-          isDocLib: [101,109,119].indexOf(list.BaseTemplate) > -1
+          title: list.Title
         });
       });
-      this.setState({loadedList: true});
+      this.stateCopy.lists = stateLists;
+      this.stateCopy.loadedList = true;
+      this.setState(this.stateCopy);
     });
   }
 
-  private loadFields(updateView: boolean = false): void {
-    if(this.state.selectedList && this.state.selectedList.id){
-      pnp.sp.web.lists.getById(this.state.selectedList.id).fields.select("Title","InternalName","TypeAsString").filter("Hidden eq false").orderBy("Title").get().then((response: ISPField[]) => {
-        this.setState({fields: new List<IField>()});
+  private loadFields(list: IList): void {
+    if(list && list.id){
+      pnp.sp.web.lists.getById(list.id).fields.select("Title","InternalName","TypeAsString").filter("((Hidden eq false) or (Title eq 'PromotedState'))").orderBy("Title").get().then((response: ISPField[]) => {
+        const fields = new List<IField>();
         response.map((field: ISPField) => {
           const option = {
             internalName: field.InternalName,
             name: field.Title,
             kind: this.getKindForType(field.TypeAsString)
           };
-          this.state.fields.Add(option);
+          fields.Add(option);
         });
-        //If list was just created, add all fields to the default view.
-        if(updateView && this.state.fields.Count() > 0)
-          this.addFieldsToView(0);
-        this.setState({loadedFields: true});
+        this.stateCopy.fields = fields;
+        this.stateCopy.loadedFields = true;
         this.saveQuery();
       });
     }
@@ -202,9 +227,9 @@ export default class PropertyFieldCamlQueryFieldMappingHost extends React.Compon
 
   private getKindForType(type:string):SPFieldType{
     switch(type){
-      case "URL": 
+      case "URL":
         return SPFieldType.URL;
-      case "Boolean": 
+      case "Boolean":
         return SPFieldType.Boolean;
       case "PublishingScheduleStartDateFieldType":
       case "PublishingScheduleEndDateFieldType":
@@ -231,7 +256,7 @@ export default class PropertyFieldCamlQueryFieldMappingHost extends React.Compon
   }
 
   private getFieldList(fieldType:SPFieldType): IDropdownOption[]{
-    const fields = this.state.fields.Where(f=>f.kind==fieldType).ToArray();
+    const fields = this.stateCopy.fields.Where(f=>f.kind==fieldType).ToArray();
     const options = [];
     fields.forEach(element => {
       options.push({key:element.internalName,text:element.name});
@@ -240,7 +265,7 @@ export default class PropertyFieldCamlQueryFieldMappingHost extends React.Compon
   }
 
   private getFieldByInternalName(fieldTypeName:string): IField{
-    const fields = this.state.fields.Where(f=>f.internalName==fieldTypeName).ToArray();
+    const fields = this.stateCopy.fields.Where(f=>f.internalName==fieldTypeName).ToArray();
     if(fields == null || fields.length == 0)
       return null;
     return fields[0];
@@ -248,38 +273,40 @@ export default class PropertyFieldCamlQueryFieldMappingHost extends React.Compon
 
   private saveQuery(): void {
       const listViewFields : string[] = [];
-      if(this.state.fieldMappings.length===0){
-        this.state.fields.ForEach(element => {
+      if(this.stateCopy.fieldMappings.length===0){
+        this.stateCopy.fields.ForEach(element => {
           listViewFields.push(element.internalName.trim().replace(' ','_x0020_'));
         });
       }
       else{
-        this.state.fieldMappings.map((mappedField: IMapping) => {
+        this.stateCopy.fieldMappings.map((mappedField: IMapping) => {
           if(typeof mappedField.mappedTo != 'undefined' && mappedField.enabled)
             listViewFields.push(mappedField.mappedTo.trim().replace(' ','_x0020_'));
         });
       }
-      if(listViewFields.indexOf("Title")==-1){
+      if(listViewFields.indexOf("Title")==-1 && listViewFields.length > 0){
         listViewFields.push("Title");
       }
-      if(this.state.selectedList.isDocLib){
-        listViewFields.push('EncodedAbsUrl');
-      }
       const conditions : Caml.IExpression[] = [];
-      this.state.filters.forEach(element => {
+      this.stateCopy.filters.forEach(element => {
         if(element.field == null || element.field == '' || element.operator == null || element.operator == '' || element.value == null)
           return;
         console.log('operator');
-        
+
         const field : IField = this.getFieldByInternalName(element.field as string);
+        if(field===null){
+          this.stateCopy.filters.splice(this.stateCopy.filters.indexOf(element),1);
+          return;
+        }
+
         console.log(field.kind);
 
         switch(field.kind){
           case SPFieldType.Boolean:
             if(element.operator==="Ne")
-              conditions.push(CamlBuilder.Expression().BooleanField(element.field).NotEqualTo(!!(element.value)));              
+              conditions.push(CamlBuilder.Expression().BooleanField(element.field).NotEqualTo(!!(element.value)));
             else
-              conditions.push(CamlBuilder.Expression().BooleanField(element.field).EqualTo(!!(element.value)));   
+              conditions.push(CamlBuilder.Expression().BooleanField(element.field).EqualTo(!!(element.value)));
             break;
           case SPFieldType.Integer:
             const integerValue = parseInt(element.value);
@@ -288,19 +315,19 @@ export default class PropertyFieldCamlQueryFieldMappingHost extends React.Compon
                   conditions.push(CamlBuilder.Expression().IntegerField(element.field).NotEqualTo(integerValue));
                   break;
                 case "Le":
-                  conditions.push(CamlBuilder.Expression().IntegerField(element.field).LessThanOrEqualTo(integerValue));                  
+                  conditions.push(CamlBuilder.Expression().IntegerField(element.field).LessThanOrEqualTo(integerValue));
                   break;
                 case "Lt":
-                  conditions.push(CamlBuilder.Expression().IntegerField(element.field).LessThan(integerValue));                  
+                  conditions.push(CamlBuilder.Expression().IntegerField(element.field).LessThan(integerValue));
                   break;
                 case "Ge":
-                  conditions.push(CamlBuilder.Expression().IntegerField(element.field).GreaterThanOrEqualTo(integerValue));                  
+                  conditions.push(CamlBuilder.Expression().IntegerField(element.field).GreaterThanOrEqualTo(integerValue));
                   break;
                 case "Gt":
-                  conditions.push(CamlBuilder.Expression().IntegerField(element.field).GreaterThan(integerValue));                
+                  conditions.push(CamlBuilder.Expression().IntegerField(element.field).GreaterThan(integerValue));
                   break;
                 default:
-                  conditions.push(CamlBuilder.Expression().IntegerField(element.field).EqualTo(integerValue));                  
+                  conditions.push(CamlBuilder.Expression().IntegerField(element.field).EqualTo(integerValue));
                   break;
             }
             break;
@@ -308,157 +335,161 @@ export default class PropertyFieldCamlQueryFieldMappingHost extends React.Compon
             const counterValue = parseInt(element.value);
             switch(element.operator){
                 case "Ne":
-                  conditions.push(CamlBuilder.Expression().CounterField(element.field).NotEqualTo(counterValue));                
+                  conditions.push(CamlBuilder.Expression().CounterField(element.field).NotEqualTo(counterValue));
                   break;
                 case "Le":
-                  conditions.push(CamlBuilder.Expression().CounterField(element.field).LessThanOrEqualTo(counterValue));                  
+                  conditions.push(CamlBuilder.Expression().CounterField(element.field).LessThanOrEqualTo(counterValue));
                   break;
                 case "Lt":
-                  conditions.push(CamlBuilder.Expression().CounterField(element.field).LessThan(counterValue));                  
+                  conditions.push(CamlBuilder.Expression().CounterField(element.field).LessThan(counterValue));
                   break;
                 case "Ge":
-                  conditions.push(CamlBuilder.Expression().CounterField(element.field).GreaterThanOrEqualTo(counterValue));                  
+                  conditions.push(CamlBuilder.Expression().CounterField(element.field).GreaterThanOrEqualTo(counterValue));
                   break;
                 case "Gt":
-                  conditions.push(CamlBuilder.Expression().CounterField(element.field).GreaterThan(counterValue));                
+                  conditions.push(CamlBuilder.Expression().CounterField(element.field).GreaterThan(counterValue));
                   break;
                 default:
-                  conditions.push(CamlBuilder.Expression().CounterField(element.field).EqualTo(counterValue));                  
+                  conditions.push(CamlBuilder.Expression().CounterField(element.field).EqualTo(counterValue));
                   break;
             }
             break;
           case SPFieldType.Date:
             switch(element.operator){
                 case "Ne":
-                  conditions.push(CamlBuilder.Expression().DateField(element.field).NotEqualTo(element.value));                
+                  conditions.push(CamlBuilder.Expression().DateField(element.field).NotEqualTo(element.value));
                   break;
                 case "Le":
-                  conditions.push(CamlBuilder.Expression().DateField(element.field).LessThanOrEqualTo(element.value));                  
+                  conditions.push(CamlBuilder.Expression().DateField(element.field).LessThanOrEqualTo(element.value));
                   break;
                 case "Lt":
-                  conditions.push(CamlBuilder.Expression().DateField(element.field).LessThan(element.value));                  
+                  conditions.push(CamlBuilder.Expression().DateField(element.field).LessThan(element.value));
                   break;
                 case "Ge":
-                  conditions.push(CamlBuilder.Expression().DateField(element.field).GreaterThanOrEqualTo(element.value));                  
+                  conditions.push(CamlBuilder.Expression().DateField(element.field).GreaterThanOrEqualTo(element.value));
                   break;
                 case "Gt":
-                  conditions.push(CamlBuilder.Expression().DateField(element.field).GreaterThan(element.value));                
+                  conditions.push(CamlBuilder.Expression().DateField(element.field).GreaterThan(element.value));
                   break;
                 default:
-                  conditions.push(CamlBuilder.Expression().DateField(element.field).EqualTo(element.value));                  
+                  conditions.push(CamlBuilder.Expression().DateField(element.field).EqualTo(element.value));
                   break;
               }
             break;
           case SPFieldType.DateTime:
             switch(element.operator){
                 case "Ne":
-                  conditions.push(CamlBuilder.Expression().DateTimeField(element.field).NotEqualTo(element.value));                
+                  conditions.push(CamlBuilder.Expression().DateTimeField(element.field).NotEqualTo(element.value));
                   break;
                 case "Le":
-                  conditions.push(CamlBuilder.Expression().DateTimeField(element.field).LessThanOrEqualTo(element.value));                  
+                  conditions.push(CamlBuilder.Expression().DateTimeField(element.field).LessThanOrEqualTo(element.value));
                   break;
                 case "Lt":
-                  conditions.push(CamlBuilder.Expression().DateTimeField(element.field).LessThan(element.value));                  
+                  conditions.push(CamlBuilder.Expression().DateTimeField(element.field).LessThan(element.value));
                   break;
                 case "Ge":
-                  conditions.push(CamlBuilder.Expression().DateTimeField(element.field).GreaterThanOrEqualTo(element.value));                  
+                  conditions.push(CamlBuilder.Expression().DateTimeField(element.field).GreaterThanOrEqualTo(element.value));
                   break;
                 case "Gt":
-                  conditions.push(CamlBuilder.Expression().DateTimeField(element.field).GreaterThan(element.value));                
+                  conditions.push(CamlBuilder.Expression().DateTimeField(element.field).GreaterThan(element.value));
                   break;
                 default:
-                  conditions.push(CamlBuilder.Expression().DateTimeField(element.field).EqualTo(element.value));                  
+                  conditions.push(CamlBuilder.Expression().DateTimeField(element.field).EqualTo(element.value));
                   break;
               }
             break;
           case SPFieldType.Lookup:
-            switch(element.operator){
-                case "Ne":
-                  conditions.push(CamlBuilder.Expression().LookupField(element.field).ValueAsText().NotEqualTo(element.value));                  
-                  break;
-                case "startsWith":
-                  conditions.push(CamlBuilder.Expression().LookupField(element.field).ValueAsText().BeginsWith(element.value));                
-                  break;
-                case "substringOf":
-                  conditions.push(CamlBuilder.Expression().LookupField(element.field).ValueAsText().Contains(element.value));      
-                  break;
-                default:
-                  conditions.push(CamlBuilder.Expression().LookupField(element.field).ValueAsText().EqualTo(element.value));                  
-                  break;
+            if(!isNaN(Number(element.value)))
+              conditions.push(CamlBuilder.Expression().LookupField(element.field).Id().EqualTo(Number(element.value)));
+            else{
+              switch(element.operator){
+                  case "Ne":
+                    conditions.push(CamlBuilder.Expression().LookupField(element.field).ValueAsText().NotEqualTo(element.value));
+                    break;
+                  case "startsWith":
+                    conditions.push(CamlBuilder.Expression().LookupField(element.field).ValueAsText().BeginsWith(element.value));
+                    break;
+                  case "substringOf":
+                    conditions.push(CamlBuilder.Expression().LookupField(element.field).ValueAsText().Contains(element.value));
+                    break;
+                  default:
+                    conditions.push(CamlBuilder.Expression().LookupField(element.field).ValueAsText().EqualTo(element.value));
+                    break;
+                }
               }
             break;
           case SPFieldType.Number:
             const numberValue = parseFloat(element.value);
             switch(element.operator){
                 case "Ne":
-                  conditions.push(CamlBuilder.Expression().NumberField(element.field).NotEqualTo(numberValue));                 
+                  conditions.push(CamlBuilder.Expression().NumberField(element.field).NotEqualTo(numberValue));
                   break;
                 case "Le":
-                  conditions.push(CamlBuilder.Expression().NumberField(element.field).LessThanOrEqualTo(numberValue));                   
+                  conditions.push(CamlBuilder.Expression().NumberField(element.field).LessThanOrEqualTo(numberValue));
                   break;
                 case "Lt":
-                  conditions.push(CamlBuilder.Expression().NumberField(element.field).LessThan(numberValue));                   
+                  conditions.push(CamlBuilder.Expression().NumberField(element.field).LessThan(numberValue));
                   break;
                 case "Ge":
-                  conditions.push(CamlBuilder.Expression().NumberField(element.field).GreaterThanOrEqualTo(numberValue));                   
+                  conditions.push(CamlBuilder.Expression().NumberField(element.field).GreaterThanOrEqualTo(numberValue));
                   break;
                 case "Gt":
-                  conditions.push(CamlBuilder.Expression().NumberField(element.field).GreaterThan(numberValue));                 
+                  conditions.push(CamlBuilder.Expression().NumberField(element.field).GreaterThan(numberValue));
                   break;
                 default:
-                  conditions.push(CamlBuilder.Expression().NumberField(element.field).EqualTo(numberValue));                   
+                  conditions.push(CamlBuilder.Expression().NumberField(element.field).EqualTo(numberValue));
                   break;
               }
             break;
           case SPFieldType.URL:
             switch(element.operator){
                 case "Ne":
-                  conditions.push(CamlBuilder.Expression().UrlField(element.field).NotEqualTo(element.value));                  
+                  conditions.push(CamlBuilder.Expression().UrlField(element.field).NotEqualTo(element.value));
                   break;
                 case "startsWith":
-                  conditions.push(CamlBuilder.Expression().UrlField(element.field).BeginsWith(element.value));                
+                  conditions.push(CamlBuilder.Expression().UrlField(element.field).BeginsWith(element.value));
                   break;
                 case "substringOf":
-                  conditions.push(CamlBuilder.Expression().UrlField(element.field).Contains(element.value));      
+                  conditions.push(CamlBuilder.Expression().UrlField(element.field).Contains(element.value));
                   break;
                 default:
-                  conditions.push(CamlBuilder.Expression().UrlField(element.field).EqualTo(element.value));                  
+                  conditions.push(CamlBuilder.Expression().UrlField(element.field).EqualTo(element.value));
                   break;
               }
             break;
           case SPFieldType.Choice:
             switch(element.operator){
                 case "Ne":
-                  conditions.push(CamlBuilder.Expression().TextField(element.field).NotEqualTo(element.value));                  
+                  conditions.push(CamlBuilder.Expression().TextField(element.field).NotEqualTo(element.value));
                   break;
                 case "startsWith":
-                  conditions.push(CamlBuilder.Expression().TextField(element.field).BeginsWith(element.value));                
+                  conditions.push(CamlBuilder.Expression().TextField(element.field).BeginsWith(element.value));
                   break;
                 case "substringOf":
-                  conditions.push(CamlBuilder.Expression().TextField(element.field).Contains(element.value));      
+                  conditions.push(CamlBuilder.Expression().TextField(element.field).Contains(element.value));
                   break;
                 default:
-                  conditions.push(CamlBuilder.Expression().TextField(element.field).EqualTo(element.value));                  
+                  conditions.push(CamlBuilder.Expression().TextField(element.field).EqualTo(element.value));
                   break;
               }
             break;
           case SPFieldType.User:
             if(element.value==="Me"){
-              conditions.push(CamlBuilder.Expression().UserField(element.field).EqualToCurrentUser());               
+              conditions.push(CamlBuilder.Expression().UserField(element.field).EqualToCurrentUser());
             }
             else{
               switch(element.operator){
                   case "Ne":
-                  conditions.push(CamlBuilder.Expression().UserField(element.field).ValueAsText().NotEqualTo(element.value));                  
+                  conditions.push(CamlBuilder.Expression().UserField(element.field).ValueAsText().NotEqualTo(element.value));
                   break;
                 case "startsWith":
-                  conditions.push(CamlBuilder.Expression().UserField(element.field).ValueAsText().BeginsWith(element.value));                
+                  conditions.push(CamlBuilder.Expression().UserField(element.field).ValueAsText().BeginsWith(element.value));
                   break;
                 case "substringOf":
-                  conditions.push(CamlBuilder.Expression().UserField(element.field).ValueAsText().Contains(element.value));      
+                  conditions.push(CamlBuilder.Expression().UserField(element.field).ValueAsText().Contains(element.value));
                   break;
                 default:
-                  conditions.push(CamlBuilder.Expression().UserField(element.field).ValueAsText().EqualTo(element.value));                  
+                  conditions.push(CamlBuilder.Expression().UserField(element.field).ValueAsText().EqualTo(element.value));
                   break;
                 }
             }
@@ -466,50 +497,50 @@ export default class PropertyFieldCamlQueryFieldMappingHost extends React.Compon
           default:
             switch(element.operator){
               case "Ne":
-                  conditions.push(CamlBuilder.Expression().TextField(element.field).NotEqualTo(element.value));                  
+                  conditions.push(CamlBuilder.Expression().TextField(element.field).NotEqualTo(element.value));
                   break;
                 case "startsWith":
-                  conditions.push(CamlBuilder.Expression().TextField(element.field).BeginsWith(element.value));                
+                  conditions.push(CamlBuilder.Expression().TextField(element.field).BeginsWith(element.value));
                   break;
                 case "substringof":
-                  conditions.push(CamlBuilder.Expression().TextField(element.field).Contains(element.value));      
+                  conditions.push(CamlBuilder.Expression().TextField(element.field).Contains(element.value));
                   break;
                 default:
-                  conditions.push(CamlBuilder.Expression().TextField(element.field).EqualTo(element.value));                  
+                  conditions.push(CamlBuilder.Expression().TextField(element.field).EqualTo(element.value));
                   break;
             }
             break;
         }
       });
-      
+
       var queryXml:string = '';
-      if(this.state.filterType===strings.SPListFilterCompareAny){
-        if(this.state.sort && this.state.sort.title){
-          if(this.state.sort.direction===SortDirection.Descending){
+      if(this.stateCopy.filterType===strings.SPListFilterCompareAny){
+        if(this.stateCopy.sort && this.stateCopy.sort.title){
+          if(this.stateCopy.sort.direction===SortDirection.Descending){
             queryXml = new CamlBuilder() //Any orderby at this
                 .View(listViewFields)
-                .RowLimit(this.state.max)
+                .RowLimit(this.stateCopy.max)
                 .Query()
                 .Where()
                 .Any(conditions)
-                .OrderByDesc(this.state.sort.title)
+                .OrderByDesc(this.stateCopy.sort.title)
                 .ToString();
           }
           else{
             queryXml = new CamlBuilder() //Any orderby at this
                 .View(listViewFields)
-                .RowLimit(this.state.max)
+                .RowLimit(this.stateCopy.max)
                 .Query()
                 .Where()
                 .Any(conditions)
-                .OrderBy(this.state.sort.title)
+                .OrderBy(this.stateCopy.sort.title)
                 .ToString();
             }
         }
         else{
           queryXml = new CamlBuilder() //Any orderby at this
               .View(listViewFields)
-              .RowLimit(this.state.max)
+              .RowLimit(this.stateCopy.max)
               .Query()
               .Where()
               .Any(conditions)
@@ -517,32 +548,32 @@ export default class PropertyFieldCamlQueryFieldMappingHost extends React.Compon
         }
       }
       else{
-        if(this.state.sort && this.state.sort.title){
-          if(this.state.sort.direction===SortDirection.Descending){
+        if(this.stateCopy.sort && this.stateCopy.sort.title){
+          if(this.stateCopy.sort.direction===SortDirection.Descending){
             queryXml = new CamlBuilder() //Any orderby at this
                 .View(listViewFields)
-                .RowLimit(this.state.max)
+                .RowLimit(this.stateCopy.max)
                 .Query()
                 .Where()
                 .All(conditions)
-                .OrderByDesc(this.state.sort.title)
+                .OrderByDesc(this.stateCopy.sort.title)
                 .ToString();
           }
           else{
             queryXml = new CamlBuilder() //Any orderby at this
                 .View(listViewFields)
-                .RowLimit(this.state.max)
+                .RowLimit(this.stateCopy.max)
                 .Query()
                 .Where()
                 .All(conditions)
-                .OrderBy(this.state.sort.title)
+                .OrderBy(this.stateCopy.sort.title)
                 .ToString();
             }
         }
         else{
           queryXml = new CamlBuilder() //Any orderby at this
               .View(listViewFields)
-              .RowLimit(this.state.max)
+              .RowLimit(this.stateCopy.max)
               .Query()
               .Where()
               .All(conditions)
@@ -552,17 +583,21 @@ export default class PropertyFieldCamlQueryFieldMappingHost extends React.Compon
 
       //Order
 
+
+
+
       console.log(queryXml);
       this.props.properties[this.props.dataPropertyPath] = JSON.stringify({
-        filters: this.state.filters,
-        max: this.state.max,
-        selectedList: this.state.selectedList,
-        sort: this.state.sort,
-        fieldMappings: this.state.fieldMappings
+        filters: this.stateCopy.filters,
+        max: this.stateCopy.max,
+        selectedList: this.stateCopy.selectedList,
+        sort: this.stateCopy.sort,
+        fieldMappings: this.stateCopy.fieldMappings
       });
       if (this.delayedValidate !== null && this.delayedValidate !== undefined) {
         this.delayedValidate(queryXml);
       }
+      this.setState(this.stateCopy);
   }
 
   /**
@@ -625,85 +660,89 @@ export default class PropertyFieldCamlQueryFieldMappingHost extends React.Compon
    * Raises when a list has been selected
    */
   private onChangedList(option: IDropdownOption, index?: number): void {
-    this.state.selectedList.id = option.key as string;
-    this.state.selectedList.title =  option.text as string;
-    
-    this.state.lists.forEach(value=>{
-      if(value.id==option.key)
-        this.state.selectedList.isDocLib = value.isDocLib;
-    });
-    this.setState(this.state);    
-    this.saveQuery();
-    this.loadFields();
+    const selectedList: IList = {
+        id: option.key as string,
+        title: option.text as string,
+    };
+    this.stateCopy.selectedList=selectedList;
+    //this.saveQuery();
+    this.loadFields(selectedList);
   }
 
    private onChangedField(option: IDropdownOption, index?: number): void {
-    this.state.sort.title =  option.key as string;
-    this.setState(this.state);
+    const sort = JSON.parse(JSON.stringify(this.stateCopy.sort));
+    sort.title = option.key as string;
+    this.stateCopy.sort = sort;
     this.saveQuery();
   }
 
    private onChangedArranged(option: IDropdownOption, index?: number): void {
-    this.state.sort.direction =  option.key as number;
-    this.setState(this.state);
+    const sort = JSON.parse(JSON.stringify(this.stateCopy.sort));
+    sort.direction = option.key as number;
+    this.stateCopy.sort = sort;
     this.saveQuery();
   }
 
   private onChangedMax(newValue?: number): void {
-    this.setState({max: newValue});
+    this.stateCopy.max = newValue;
     this.saveQuery();
   }
 
   private onClickAddFilter(elm?: any): void {
-    this.state.filters.push({});
-    this.setState(this.state);
+    this.stateCopy.filters = [...this.stateCopy.filters,{}];
     this.saveQuery();
   }
 
   private onClickRemoveFilter(index: number): void {
     if (index > -1) {
-      this.state.filters.splice(index, 1);
-      this.setState(this.state);      
+      this.stateCopy.filters= [...this.stateCopy.filters.splice(index, 1)];
       this.saveQuery();
     }
   }
 
+  private onChangedFilterType(option: IDropdownOption,  index?:number):void {
+    this.stateCopy.filterType= option.key.toString();
+    this.saveQuery();
+  }
+
   private onChangedFilterField(option: IDropdownOption, index?: number, selectedIndex?: number): void {
-    this.state.filters[selectedIndex].field = option.key as string;
+    const filters = JSON.parse(JSON.stringify(this.stateCopy.filters));
+    filters[selectedIndex].field = option.key as string;
+    this.stateCopy.filters= filters;
     this.saveQuery();
   }
 
   private onChangedFilterOperator(option: IDropdownOption, index?: number, selectedIndex?: number): void {
-    this.state.filters[selectedIndex].operator = option.key as string;
-    this.setState(this.state);    
+    const filters = JSON.parse(JSON.stringify(this.stateCopy.filters));
+    filters[selectedIndex].operator = option.key as string;
+    this.stateCopy.filters= filters;
     this.saveQuery();
   }
 
   private onChangedFilterValue(value?: string, index?: number): void {
-    this.state.filters[index].value = value;
-    this.setState(this.state);
+    const filters = JSON.parse(JSON.stringify(this.stateCopy.filters));
+    filters[index].value = value;
+    this.stateCopy.filters= filters;
     this.saveQuery();
   }
 
   private onChangedFieldMapping(option: IDropdownOption,  index?:number):void {
-    this.state.fieldMappings[index].mappedTo = option.key.toString();
-    this.setState(this.state);
-    this.saveQuery();
-  }
-
-  private onChangedFilterType(option: IDropdownOption,  index?:number):void {
-    this.setState({filterType: option.key.toString()});
+    const fieldMappings = JSON.parse(JSON.stringify(this.stateCopy.fieldMappings));
+    fieldMappings[index].mappedTo = option.key.toString();
+    this.stateCopy.fieldMappings= fieldMappings;
     this.saveQuery();
   }
 
   private onChangedFieldMappingEnabled(sender: FormEvent<HTMLElement|HTMLInputElement>,checked?: boolean, index?:number){
-    this.state.fieldMappings[index].enabled = checked;
-    this.setState(this.state);
+    const fieldMappings = JSON.parse(JSON.stringify(this.stateCopy.fieldMappings));
+    fieldMappings[index].enabled = checked;
+    this.stateCopy.fieldMappings= fieldMappings;
     this.saveQuery();
   }
 
   private openCreateNewListDialog(element?: any): void {
-    this.setState({isCreateOpen: true});
+    this.stateCopy.isCreateOpen = true;
+    this.setState(this.stateCopy);
   }
 
   private createNewList(element?: any): void {
@@ -711,14 +750,14 @@ export default class PropertyFieldCamlQueryFieldMappingHost extends React.Compon
 
     const desc = 'List created by an SPFX webpart';
     pnp.sp.web.lists.add(title,desc,100).then((result)=>{
-      this.state.selectedList.id = result.data['Id'];
-      this.state.selectedList.title = result.data['Title'];
+      this.stateCopy.selectedList.id = result.data['Id'];
+      this.stateCopy.selectedList.title = result.data['Title'];
       if(this.props.createTitleRequired)
         this.setTitleOptional(result.list);
       else
         this.createField(result.list,this.props.createFields,0);
     });
-    
+
   }
 
   private setTitleOptional(list:any){
@@ -731,6 +770,7 @@ export default class PropertyFieldCamlQueryFieldMappingHost extends React.Compon
 
   private createField(list:any,fieldXmls:string[],currentIndex:number){
       list.fields.createFieldAsXml(fieldXmls[currentIndex]).then(result=>{
+        this.addFieldsToView(result.InternalName);
         currentIndex++;
         if(currentIndex < fieldXmls.length)
           this.createField(list,fieldXmls,currentIndex);
@@ -739,38 +779,33 @@ export default class PropertyFieldCamlQueryFieldMappingHost extends React.Compon
       });
   }
 
-  private addFieldsToView(idx: number){
+  private addFieldsToView(name){
     //Skip adding the Title, already in view by default.
-    if(this.state.fields.ElementAt(idx).internalName == 'Title' && this.state.fields.Count() > idx+1) {
-      this.addFieldsToView(idx+1);
-    }else{
-      pnp.sp.web.lists.getById(this.state.selectedList.id).views.getByTitle("All Items").fields.add(this.state.fields.ElementAt(idx).internalName).then(_ =>{
-        if(this.state.fields.Count() > idx+1)
-          this.addFieldsToView(idx+1);
-      });
+    if(name!=="Title"){
+      pnp.sp.web.lists.getById(this.stateCopy.selectedList.id).defaultView.fields.add(name).then(_ =>{});
     }
   }
 
   private saveAndReloadData(){
-    this.setState(this.state);    
     this.saveQuery();
 
-    this.loadDefaultData();
     this.loadLists();
     //Added boolean to trigger updating the default view.
-    this.loadFields(true);
-    
+    this.loadFields(this.stateCopy.selectedList);
+
     document.getElementsByClassName(this.listElementId)[0]["value"] = "";
-    this.setState({isCreateOpen: false});
+    this.stateCopy.isCreateOpen = false;
+    this.setState(this.stateCopy);
   }
 
   private cancelListCreate(element?: any): void {
-    this.setState({isCreateOpen: false});
+    this.stateCopy.isCreateOpen = false;
+    this.setState(this.stateCopy);
     document.getElementsByClassName(this.listElementId)[0]["value"] = "";
   }
 
   private openListInNewTab(){
-    pnp.sp.web.lists.getById(this.state.selectedList.id).defaultView.get().then((data)=>{
+    pnp.sp.web.lists.getById(this.stateCopy.selectedList.id).defaultView.get().then((data)=>{
       window.open(data.ServerRelativeUrl);
     });
   }
@@ -782,7 +817,7 @@ export default class PropertyFieldCamlQueryFieldMappingHost extends React.Compon
    */
   public render(): JSX.Element {
 
-    if (this.state.loadedList === false){//} || this.state.loadedFields === false) {
+    if (this.stateCopy.loadedList === false){//} || this.state.loadedFields === false) {
       return (
         <div>
           <Label>{this.props.label}</Label>
@@ -790,13 +825,13 @@ export default class PropertyFieldCamlQueryFieldMappingHost extends React.Compon
         </div>
       );
     }
-    
+
     //Renders content
     return (
       <div>
         {this.props.showCreate &&
           <div>
-            <Dialog type={DialogType.close} isOpen={this.state.isCreateOpen} title={strings.SPListCreate} 
+            <Dialog type={DialogType.close} isOpen={this.state.isCreateOpen} title={strings.SPListCreate}
               containerClassName={styles.msDialogMainCustom} onDismiss={this.cancelListCreate} isDarkOverlay={true} isBlocking={false}>
                 <TextField placeholder={strings.SPListCreatePlaceholder} inputClassName={this.listElementId} required={true}></TextField>
                 <div style={{marginTop: '30px', marginBottom: '30px'}}>
@@ -805,7 +840,7 @@ export default class PropertyFieldCamlQueryFieldMappingHost extends React.Compon
                   </div>
             </Dialog>
             <Button
-            iconProps={{iconName: "Add"}}
+            iconProps={{iconName:"Add"}}
             disabled={this.props.disabled}
             buttonType={ButtonType.command}
             onClick={this.openCreateNewListDialog}>
@@ -875,15 +910,15 @@ export default class PropertyFieldCamlQueryFieldMappingHost extends React.Compon
               label={strings.SPListFilterCompareType}
               disabled={this.props.disabled}
               options={[
-                {key: strings.SPListFilterCompareAny, text: strings.SPListFilterCompareAny},
-                {key: strings.SPListFilterCompareAll, text: strings.SPListFilterCompareAll}
+                {key: strings.SPListFilterCompareAll, text: strings.SPListFilterCompareAll, selected:true},
+                {key: strings.SPListFilterCompareAny, text: strings.SPListFilterCompareAny}
               ]}
               selectedKey={this.state.filterType}
               onChanged={this.onChangedFilterType.bind(this)}
             />
           : ''}
 
-        {this.state.filters != null && this.state.filters.length > 0 ? 
+        {this.state.filters != null && this.state.filters.length > 0 ?
           this.state.filters.map((value: IFilter, index: number) => {
             return (
               <div>
@@ -909,7 +944,7 @@ export default class PropertyFieldCamlQueryFieldMappingHost extends React.Compon
               </div>
             );
           })
-          
+
         : ''}
 
         {this.props.showFilters != false ?

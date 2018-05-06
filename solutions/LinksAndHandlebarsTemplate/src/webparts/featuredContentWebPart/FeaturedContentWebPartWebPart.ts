@@ -22,6 +22,7 @@ import { IFeaturedContentWebPartWebPartProps } from './IFeaturedContentWebPartWe
 import { FeaturedContentLayout } from './components/layouts/FeatureContentLayout';
 import { PropertyFieldCamlQueryFieldMapping, SPFieldType, SPFieldRequiredLevel, PropertyFieldCamlQueryOrderBy } from '../../propertyPane/propertyFieldCamlQueryFieldMapping/PropertyFieldCamlQueryFieldMapping';
 import pnp from 'sp-pnp-js';
+import { PropertyPaneRichText } from '../../propertyPane/propertyFieldRichText/PropertyFieldRichText';
 import { PropertyPaneImageSelector, ImageDisplayType } from "../../propertyPane/propertyFieldImageSelector/PropertyFieldImageSelector";
 import QueryStringParser from "../../utilities/urlparser/queryStringParser";
 
@@ -280,10 +281,11 @@ export default class FeaturedContentWebPartWebPart extends BaseClientSideWebPart
                   description: strings.EditItemGeneralDescriptionPreCountLabel+(130-(this.properties.featuredContentItems[this.activeIndex].Description ? this.properties.featuredContentItems[this.activeIndex].Description.length : 0))+strings.EditItemGeneralDescriptionPostCountLabel,
                   onGetErrorMessage: this.itemValidation.bind(this, 130, false, strings.EditItemGeneralDescriptionErrorText)
                 }),
-                PropertyPaneTextField("featuredContentItems["+this.activeIndex+"].Content",{
-                    label: strings.EditItemGeneralContentLabel,
-                    multiline:true
-                  }),
+                PropertyPaneRichText("featuredContentItems["+this.activeIndex+"].Content",{
+                  label: strings.EditItemGeneralContentLabel,
+                  properties: this.properties,
+                  onChange: this.onContentChange.bind(this)
+                }),
                 PropertyPaneLabel("itemLinkLabel",{
                   text: strings.EditItemGeneralSelectLinkLabel
                 }),

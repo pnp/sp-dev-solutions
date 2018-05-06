@@ -45,6 +45,8 @@ define([], function() {
         "RichTextModalHTMLPivotLabel": "HTML",
         "RichTextModalSaveText": "OK",
         "RichTextModalCancelText": "Cancel",
-        "GroupSortMessageSegment1": "Choose sort order for groups."
+        "GroupSortMessageSegment1": "Choose sort order for groups.",
+
+        "RichTextCreateLinkTitle": "Create link"
     }
 });

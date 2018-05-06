@@ -53,6 +53,8 @@ declare interface IPropertyFieldStrings {
   RichTextModalSaveText: string;
   RichTextModalCancelText: string;
   GroupSortMessageSegment1: string;
+
+  RichTextCreateLinkTitle: string;
 }
 
 declare module 'propertyFieldStrings' {

@@ -203,3 +203,30 @@
         font-size: 1.5em;
     }
 }
+
+//Rich editor
+.rte {
+    button {
+        display: inline-block !important;
+        width: 29px;
+        &.on {
+            border: 1px solid #a3bde3;
+            background-color: #d5e1f2;
+            outline: 2px dashed transparent;
+        }
+    }
+    p {
+        margin: 0;
+    }
+    blockquote {
+        font-size: 1em;
+    }
+    .rte-editor {
+        min-height: 100px;
+        max-height: 200px;
+        border: 1px #aaaaaa solid;
+        padding: 6px;
+        margin-top: 5px;
+        overflow: scroll;
+    }
+}

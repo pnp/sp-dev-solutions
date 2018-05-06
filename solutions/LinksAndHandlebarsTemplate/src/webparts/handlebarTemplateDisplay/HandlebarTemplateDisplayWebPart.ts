@@ -1,6 +1,7 @@
 import * as React from 'react';
 import * as ReactDom from 'react-dom';
 import { Version, DisplayMode } from '@microsoft/sp-core-library';
+import { SPHttpClient } from '@microsoft/sp-http';
 import {
   BaseClientSideWebPart,
   IPropertyPaneConfiguration,
@@ -8,7 +9,7 @@ import {
   PropertyPaneButton,
   PropertyPaneButtonType,
   PropertyPaneLink,
-  PropertyPaneLabel,
+  PropertyPaneLabel
 } from '@microsoft/sp-webpart-base';
 
 import * as strings from 'handlebarTemplateDisplayStrings';
@@ -18,23 +19,22 @@ import { IHandlebarTemplateDisplayWebPartProps } from './IHandlebarTemplateDispl
 import { PropertyFieldCamlQueryFieldMapping, PropertyFieldCamlQueryOrderBy } from "../../propertyPane/propertyFieldCamlQueryFieldMapping/PropertyFieldCamlQueryFieldMapping";
 import QueryStringParser from "../../utilities/urlparser/queryStringParser";
 import pnp from 'sp-pnp-js';
-import { SPHttpClient } from '@microsoft/sp-http';
 
 export default class HandlebarTemplateDisplayWebPart extends BaseClientSideWebPart<IHandlebarTemplateDisplayWebPartProps> {
   constructor(){
     super();
     this.onPropertyPaneFieldChanged = this.onPropertyPaneFieldChanged.bind(this);
   }
-  
+
   public onInit(): Promise<void> {
     return super.onInit().then(_ => {
       pnp.setup({
         spfxContext: this.context
       });
-      
+
     });
   }
-  
+
   private _fields : any[];
   public get fields() : any[] {
     return this._fields;
@@ -42,7 +42,7 @@ export default class HandlebarTemplateDisplayWebPart extends BaseClientSideWebPa
   public set fields(v : any[]) {
     this._fields = v;
   }
-  
+
 
   private _webpart : any;
   public get webpart() : any {
@@ -54,7 +54,7 @@ export default class HandlebarTemplateDisplayWebPart extends BaseClientSideWebPa
 
   public render(): void {
     const propData = this.properties.listQueryData ? JSON.parse(this.properties.listQueryData) : {fieldMappings:[], selectedList:{}};
-    const element: React.ReactElement<IHandlebarTemplateDisplayProps > = React.createElement(
+    const element: React.ReactElement<IHandlebarTemplateDisplayProps> = React.createElement(
       HandlebarTemplateDisplay,
       {
         isEdit: this.displayMode===DisplayMode.Edit,
@@ -75,11 +75,29 @@ export default class HandlebarTemplateDisplayWebPart extends BaseClientSideWebPa
     );
 
     if(propData.selectedList.id){
-      pnp.sp.web.lists.getById(propData.selectedList.id).getItemsByCAMLQuery({ ViewXml: QueryStringParser.ReplaceQueryStringParameters(this.properties.listQuery)}).then((response:any[])=>{
-        response.forEach(value => {
+      pnp.sp.web.lists.getById(propData.selectedList.id).renderListDataAsStream({ ViewXml: QueryStringParser.ReplaceQueryStringParameters(this.properties.listQuery), AllowMultipleValueFilterForTaxonomyFields: true},{}).then((response:any)=>{
+        response.Row.forEach(value => {
+          for(const prop of Object.keys(value)){
+            if(Object.keys(value).indexOf(prop+".desc") > -1){
+              const propVal = value[prop];
+              delete value[prop];
+              value[prop] = {
+                Url: propVal
+              };
+            }
+            else{
+              const split = prop.split('.');
+              if(split.length===2 && split[1]==="desc"){
+                const propReplace = prop.substring(0,prop.indexOf('.desc'));
+                value[propReplace].Description = value[prop];
+                delete value[prop];
+              }
+            }
+          }
+
           element.props.items.push(value);
         });
-        
+
         this.context.spHttpClient.get(this.properties.handlebarTemplateUrl, SPHttpClient.configurations.v1).then((templateResponse)=>{
           templateResponse.text().then((s)=>{
             element.props.template = s;
@@ -87,7 +105,7 @@ export default class HandlebarTemplateDisplayWebPart extends BaseClientSideWebPa
           });
         }).catch((error)=>{
           this.webpart = ReactDom.render(element, this.domElement);
-        });        
+        });
       }).catch((error)=>{
         this.webpart = ReactDom.render(element, this.domElement);
       });

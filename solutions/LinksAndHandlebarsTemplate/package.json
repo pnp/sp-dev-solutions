@@ -20,7 +20,7 @@
         "linqts": "^1.8.2",
         "react": "15.6.2",
         "react-dom": "15.6.2",
-        "sp-pnp-js": "^2.0.4"
+        "sp-pnp-js": "^3.0.7"
     },
     "devDependencies": {
         "@microsoft/sp-build-web": "~1.4.1",

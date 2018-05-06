@@ -6,10 +6,10 @@ import 'file-saver';
 import styles from './HandlebarTemplateDisplay.module.scss';
 import LinkPickerPanel from "../../../components/LinkPickerPanel/LinkPickerPanel";
 import { IHandlebarTemplateDisplayProps } from './IHandlebarTemplateDisplayProps';
-import { IHandlebarTemplateDisplayState } from './IHandlebarTemplateDisplayState';
 import { LinkType } from "../../../components/LinkPickerPanel/ILinkPickerPanelProps";
 import { Button, CommandButton } from "office-ui-fabric-react/lib/Button";
 import { Modal } from 'office-ui-fabric-react/lib/Modal';
+import { IHandlebarDisplayTemplateState } from './IHandlebarTemplateDisplayState';
 
 const specialChar = "    ";
 
@@ -17,9 +17,9 @@ const specialChar = "    ";
 //  return moment(date).format(format);
 //});
 
-export default class HandlebarTemplateDisplay extends React.Component<IHandlebarTemplateDisplayProps, IHandlebarTemplateDisplayState> {
+export default class HandlebarTemplateDisplay extends React.Component<IHandlebarTemplateDisplayProps, IHandlebarDisplayTemplateState> {
   private linkPickerPanel: LinkPickerPanel;
-  
+
   private _templateExport : string;
   public get templateExport() : string {
     return this._templateExport;
@@ -27,7 +27,7 @@ export default class HandlebarTemplateDisplay extends React.Component<IHandlebar
   public set templateExport(v : string) {
     this._templateExport = v;
   }
-  
+
   public setTitle(event){
     this.props.setTitle(event.target.value);
   }
@@ -67,27 +67,27 @@ export default class HandlebarTemplateDisplay extends React.Component<IHandlebar
   public componentDidMount() {
     if(this.props.jsUrl){
       const script = document.createElement("script");
-      script.src = this.props.jsUrl+"?v=1.0";
+      script.src = this.props.jsUrl;
       script.async = true;
       document.body.appendChild(script);
     }
 
     if(this.props.cssUrl){
       const link = document.createElement("link");
-      link.href = this.props.cssUrl+"?v=1.0";
+      link.href = this.props.cssUrl;
       link.rel = "stylesheet";
       link.type = "text/css";
       document.head.appendChild(link);
     }
   }
-  
+
   public render(): React.ReactElement<IHandlebarTemplateDisplayProps> {
     const template = Handlebars.compile(this.props.template);
     return (
       <div>
         <div className={styles["webpart-header"]}>
           { this.props.isEdit && <textarea onChange={this.setTitle.bind(this)} className={styles["edit"]} placeholder={strings.TitlePlaceholder} aria-label="Add a title" defaultValue={this.props.title}></textarea> }
-          { !this.props.isEdit && this.props.title && <span className={styles["view"]}>{this.props.title}</span> }          
+          { !this.props.isEdit && this.props.title && <span className={styles["view"]}>{this.props.title}</span> }
         </div>
         <div className={this.props.containerClass}>
           {this.props.items.length > 0 && this.props.templateUrl && this.props.items.map((item) =>  this.templateRender(item, template) )}
@@ -128,26 +128,29 @@ export default class HandlebarTemplateDisplay extends React.Component<IHandlebar
   private buildExampleTemplate(obj, path = ""): string{
     var template = "";
     const separator = path ? "." : "";
-    for(const i of obj){
-      if(typeof i === 'object'){
-        template+=this.getLeadingTab(path)+'<div style="margin-left:10px;">';
-        template+='\n'+this.getLeadingTab(path)+'    <span style="font-weight:bold;">';
-        template+=i+": ";
-        template+="</span>";
-        template+="\n"+this.getLeadingTab(path)+"    <span>";
-        template+=this.buildExampleTemplate(i, path+separator+obj.indexOf(i));
-        template+="</span>";
-        template+="\n"+this.getLeadingTab(path)+"</div>\n";
-      }
-      else{
-       template+=this.getLeadingTab(path)+'<div style="margin-left:10px;">';
-        template+='\n'+this.getLeadingTab(path)+'    <span style="font-weight:bold;">';
-        template+=i+": ";
-        template+="</span>";
-        template+="\n"+this.getLeadingTab(path)+'    <span style="word-wrap:break-word;">';
-        template+="{{"+path+separator+i+"}}";
-        template+="</span>";
-        template+=this.getLeadingTab(path)+"\n</div>\n";
+    for(const key of Object.keys(obj).sort()){
+      const o = obj[key];
+      if(key.indexOf(".")!==key.length-1){
+        if(typeof o === 'object'){
+          template+=this.getLeadingTab(path)+'<div style="margin-left:10px;">';
+          template+='\n'+this.getLeadingTab(path)+'    <span style="font-weight:bold;">';
+          template+=key+": ";
+          template+="</span>";
+          template+="\n"+this.getLeadingTab(path)+"    <span>";
+          template+=this.buildExampleTemplate(o, path+separator+key);
+          template+="</span>";
+          template+="\n"+this.getLeadingTab(path)+"</div>\n";
+        }
+        else{
+          template+=this.getLeadingTab(path)+'<div style="margin-left:10px;">';
+          template+='\n'+this.getLeadingTab(path)+'    <span style="font-weight:bold;">';
+          template+=key+": ";
+          template+="</span>";
+          template+="\n"+this.getLeadingTab(path)+'    <span style="word-wrap:break-word;">';
+          template+="{{"+path+separator+key+"}}";
+          template+="</span>";
+          template+=this.getLeadingTab(path)+"\n</div>\n";
+        }
       }
     }
 
