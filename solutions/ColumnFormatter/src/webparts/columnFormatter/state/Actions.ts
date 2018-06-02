@@ -1,5 +1,5 @@
-import { IColumnFormatterWebPartProps } from '../ColumnFormatterWebPart';
-import { columnTypes, ISaveDetails, uiState } from './State';
+import { IColumnFormatterWebPartProps } from "../ColumnFormatterWebPart";
+import { columnTypes, formatterType, ISaveDetails, uiState } from "./State";
 
 //** All the action interfaces */
 export type ActionTypes = 
@@ -90,11 +90,13 @@ export interface ILaunchEditorAction {
 	type: typeKeys.LAUNCH_EDITOR;
 	wizardName: string;
 	colType: columnTypes;
+	formatType: formatterType;
 }
-export const launchEditor = (wizardName:string, colType:columnTypes): ILaunchEditorAction => ({
+export const launchEditor = (wizardName:string, colType:columnTypes, formatType:formatterType): ILaunchEditorAction => ({
 	type: typeKeys.LAUNCH_EDITOR,
 	wizardName,
-	colType
+	colType,
+	formatType
 });
 
 export interface ILaunchEditorWithCodeAction {
@@ -104,14 +106,16 @@ export interface ILaunchEditorWithCodeAction {
 	editorString: string;
 	validationErrors: Array<string>;
 	saveDetails: ISaveDetails;
+	formatType: formatterType;
 }
-export const launchEditorWithCode = (wizardName:string, colType:columnTypes, editorString:string, validationErrors:Array<string>, saveDetails:ISaveDetails): ILaunchEditorWithCodeAction => ({
+export const launchEditorWithCode = (wizardName:string, colType:columnTypes, editorString:string, validationErrors:Array<string>, saveDetails:ISaveDetails, formatType:formatterType): ILaunchEditorWithCodeAction => ({
 	type: typeKeys.LAUNCH_EDITOR_WITH_CODE,
 	wizardName,
 	colType,
 	editorString,
 	validationErrors,
-	saveDetails
+	saveDetails,
+	formatType
 });
 
 export interface IChangeUIStateAction {

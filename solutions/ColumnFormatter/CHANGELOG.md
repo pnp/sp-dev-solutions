@@ -1,4 +1,18 @@
 # Releases
+## 2.0,0 - 2018-06-07
+### Added
+- Beta support for Row Formatting
+  - Ability to save row formats directly to list views
+
+### Changed
+- Renamed from Column Formatter to List Formatter
+  - Reflects support for both column and row formatters
+
+### Removed
+
+### Fixed
+
+# Releases
 ## 1.2.0 - 2018-03-22
 ### Added
 - French (fr-fr) localization (thanks [PooLP](https://github.com/PooLP)!)

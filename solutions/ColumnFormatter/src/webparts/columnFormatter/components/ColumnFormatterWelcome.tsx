@@ -1,23 +1,23 @@
-import { sp } from '@pnp/sp';
-import * as strings from 'ColumnFormatterWebPartStrings';
-import { DefaultButton, PrimaryButton } from 'office-ui-fabric-react/lib/Button';
-import { ChoiceGroup } from 'office-ui-fabric-react/lib/ChoiceGroup';
-import { Dropdown, IDropdownOption } from 'office-ui-fabric-react/lib/Dropdown';
-import { Icon } from 'office-ui-fabric-react/lib/Icon';
-import { Label } from 'office-ui-fabric-react/lib/Label';
-import { Spinner, SpinnerSize } from 'office-ui-fabric-react/lib/Spinner';
-import { TextField } from 'office-ui-fabric-react/lib/TextField';
-import { autobind } from 'office-ui-fabric-react/lib/Utilities';
-import * as React from 'react';
-import { connect } from 'react-redux';
-import { Dispatch } from 'redux';
+import { sp } from "@pnp/sp";
+import * as strings from "ColumnFormatterWebPartStrings";
+import { DefaultButton, PrimaryButton } from "office-ui-fabric-react/lib/Button";
+import { ChoiceGroup } from "office-ui-fabric-react/lib/ChoiceGroup";
+import { Dropdown, IDropdownOption } from "office-ui-fabric-react/lib/Dropdown";
+import { Icon } from "office-ui-fabric-react/lib/Icon";
+import { Label } from "office-ui-fabric-react/lib/Label";
+import { Spinner, SpinnerSize } from "office-ui-fabric-react/lib/Spinner";
+import { TextField } from "office-ui-fabric-react/lib/TextField";
+import { autobind } from "office-ui-fabric-react/lib/Utilities";
+import * as React from "react";
+import { connect } from "react-redux";
+import { Dispatch } from "redux";
 
-import { textForType, typeForTypeAsString } from '../helpers/ColumnTypeHelpers';
-import { launchEditor, launchEditorWithCode } from '../state/Actions';
-import { columnTypes, IApplicationState, IContext, ISaveDetails, saveMethod } from '../state/State';
-import styles from './ColumnFormatter.module.scss';
-import { FileUploader } from './FileUploader';
-import { getWizardByName, getWizardsForColumnType, IWizard, standardWizardStartingCode } from './Wizards/WizardCommon';
+import { textForType, typeForTypeAsString } from "../helpers/ColumnTypeHelpers";
+import { launchEditor, launchEditorWithCode } from "../state/Actions";
+import { columnTypes, formatterType, IApplicationState, IContext, ISaveDetails, saveMethod } from "../state/State";
+import styles from "./ColumnFormatter.module.scss";
+import { FileUploader } from "./FileUploader";
+import { getWizardByName, getWizardsForColumnType, IWizard, standardWizardStartingCode } from "./Wizards/WizardCommon";
 
 export enum welcomeStage {
   start,
@@ -32,8 +32,8 @@ export enum welcomeStage {
 export interface IColumnFormatterWelcomeProps {
   context?: IContext;
   uiHeight?: number;
-  launchEditor?: (wizardName:string, colType:columnTypes) => void;
-  launchEditorWithCode?: (wizardName:string, colType:columnTypes, editorString:string, validationErrors:Array<string>, saveDetails: ISaveDetails) => void;
+  launchEditor?: (wizardName:string, colType:columnTypes, formatType:formatterType) => void;
+  launchEditorWithCode?: (wizardName:string, colType:columnTypes, editorString:string, validationErrors:Array<string>, saveDetails:ISaveDetails, formatType:formatterType) => void;
 }
 
 
@@ -64,6 +64,7 @@ export interface IColumnFormatterWelcomeState {
   libraryFileName: string;
   loadingFromLibrary: boolean;
   loadFromLibraryError?: string;
+  formatType: formatterType;
 }
 
 class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomeProps, IColumnFormatterWelcomeState> {
@@ -85,7 +86,8 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
       libraries: new Array<any>(),
       libraryFolderPath: '',
       libraryFileName: strings.WizardDefaultField + '.json',
-      loadingFromLibrary: false
+      loadingFromLibrary: false,
+      formatType: formatterType.Column,
     };
   }
 
@@ -96,6 +98,7 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
     //this.props.launchEditor('Donut', columnTypes.number);
     //this.props.launchEditor('Severity', columnTypes.text);
     //this.props.launchEditor('Start Flow', columnTypes.text);
+    //this.props.launchEditor(undefined, columnTypes.text, formatterType.Row);
 
     return (
       <div className={styles.welcome} style={{height: this.props.uiHeight + 'px'}}>
@@ -482,7 +485,7 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
 
   @autobind
   private onOkForNewClick(): void {
-    this.props.launchEditor(this.state.useWizardForNew ? this.state.ChoosenWizardName : undefined, this.state.columnTypeForNew);
+    this.props.launchEditor(this.state.useWizardForNew ? this.state.ChoosenWizardName : undefined, this.state.columnTypeForNew, this.state.formatType);
   }
 
 
@@ -555,7 +558,7 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
       siteColumnGroup: (loadMethod == saveMethod.SiteColumn ? this.state.selectedSiteColumnGroup : undefined),
       siteColumn: (loadMethod == saveMethod.SiteColumn ? this.state.selectedSiteColumn : undefined)
     };
-    this.props.launchEditorWithCode(undefined, type, text, validationErrors, saveDetails);
+    this.props.launchEditorWithCode(undefined, type, text, validationErrors, saveDetails, this.state.formatType);
   }
   
   private gotoLoadFromList(): void {
@@ -802,11 +805,11 @@ function mapStateToProps(state: IApplicationState): IColumnFormatterWelcomeProps
 
 function mapDispatchToProps(dispatch: Dispatch<IColumnFormatterWelcomeProps>): IColumnFormatterWelcomeProps{
 	return {
-    launchEditor: (wizardName:string, colType:columnTypes) => {
-      dispatch(launchEditor(wizardName, colType));
+    launchEditor: (wizardName:string, colType:columnTypes, formatType:formatterType) => {
+      dispatch(launchEditor(wizardName, colType, formatType));
     },
-    launchEditorWithCode: (wizardName:string, colType:columnTypes, editorString:string, validationErrors:Array<string>, saveDetails:ISaveDetails) => {
-      dispatch(launchEditorWithCode(wizardName, colType, editorString, validationErrors, saveDetails));
+    launchEditorWithCode: (wizardName:string, colType:columnTypes, editorString:string, validationErrors:Array<string>, saveDetails:ISaveDetails, formatType:formatterType) => {
+      dispatch(launchEditorWithCode(wizardName, colType, editorString, validationErrors, saveDetails, formatType));
     }
 	};
 }

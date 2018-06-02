@@ -32,6 +32,7 @@ declare interface IColumnFormatterWebPartStrings {
   Welcome_NextButton: string;
   Welcome_OpenLoadList: string;
   Welcome_OpenLoadSiteColumn: string;
+  Welcome_OpenLoadListView: string;
   Welcome_OpenLoadFile: string;
   Welcome_OpenLoadFileLibrary: string;
   Welcome_OpenLoadFileUpload: string;
@@ -64,6 +65,16 @@ declare interface IColumnFormatterWebPartStrings {
   SiteColumn_PushToListsOff: string;
   SiteColumn_Saving: string;
   SiteColumn_SaveError: string;
+
+  //List View (Load/Apply)
+  ListView_LoadingListViews: string;
+  ListView_List: string;
+  ListView_View: string;
+  ListView_LoadingFromView: string;
+  ListView_ListViewLoadError: string;
+  ListView_SaveDialogTitle: string;
+  ListView_Saving: string;
+  ListView_SaveError: string;
 
   //Library (Load/Save)
   Library_LoadingLibraries: string;
@@ -101,6 +112,7 @@ declare interface IColumnFormatterWebPartStrings {
   Command_ApplyToSiteColumn: string;
   Command_ApplyToList: string;
   Command_Save: string;
+  Command_ApplyToListView: string;
 
   //Dialogs Shared
   Dialog_Yes: string;

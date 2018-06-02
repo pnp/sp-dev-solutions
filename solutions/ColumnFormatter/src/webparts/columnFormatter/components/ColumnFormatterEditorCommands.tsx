@@ -1,23 +1,23 @@
-import { sp } from '@pnp/sp';
-import * as strings from 'ColumnFormatterWebPartStrings';
-import { DefaultButton, PrimaryButton } from 'office-ui-fabric-react/lib/Button';
-import { CommandBar } from 'office-ui-fabric-react/lib/CommandBar';
-import { IContextualMenuItem } from 'office-ui-fabric-react/lib/ContextualMenu';
-import { Dialog, DialogFooter, DialogType } from 'office-ui-fabric-react/lib/Dialog';
-import { Dropdown, IDropdownOption } from 'office-ui-fabric-react/lib/Dropdown';
-import { Spinner, SpinnerSize } from 'office-ui-fabric-react/lib/Spinner';
-import { TextField } from 'office-ui-fabric-react/lib/TextField';
-import { Toggle } from 'office-ui-fabric-react/lib/Toggle';
-import { autobind } from 'office-ui-fabric-react/lib/Utilities';
-import * as React from 'react';
-import { connect } from 'react-redux';
-import { Dispatch } from 'redux';
+import { sp } from "@pnp/sp";
+import * as strings from "ColumnFormatterWebPartStrings";
+import { DefaultButton, PrimaryButton } from "office-ui-fabric-react/lib/Button";
+import { CommandBar } from "office-ui-fabric-react/lib/CommandBar";
+import { IContextualMenuItem } from "office-ui-fabric-react/lib/ContextualMenu";
+import { Dialog, DialogFooter, DialogType } from "office-ui-fabric-react/lib/Dialog";
+import { Dropdown, IDropdownOption } from "office-ui-fabric-react/lib/Dropdown";
+import { Spinner, SpinnerSize } from "office-ui-fabric-react/lib/Spinner";
+import { TextField } from "office-ui-fabric-react/lib/TextField";
+import { Toggle } from "office-ui-fabric-react/lib/Toggle";
+import { autobind } from "office-ui-fabric-react/lib/Utilities";
+import * as React from "react";
+import { connect } from "react-redux";
+import { Dispatch } from "redux";
 
-import { textForType, typeForTypeAsString } from '../helpers/ColumnTypeHelpers';
-import { loadJSOM } from '../helpers/jsomLoader';
-import { changeUIState, disconnectWizard, loadedJSOM } from '../state/Actions';
-import { columnTypes, IApplicationState, IContext, ISaveDetails, saveMethod, uiState } from '../state/State';
-import styles from './ColumnFormatter.module.scss';
+import { textForType, typeForTypeAsString } from "../helpers/ColumnTypeHelpers";
+import { loadJSOM } from "../helpers/jsomLoader";
+import { changeUIState, disconnectWizard, loadedJSOM } from "../state/Actions";
+import { columnTypes, formatterType, IApplicationState, IContext, ISaveDetails, saveMethod, uiState } from "../state/State";
+import styles from "./ColumnFormatter.module.scss";
 
 var fileDownload = require('js-file-download');
 
@@ -34,6 +34,7 @@ export interface IColumnFormatterEditorCommandsProps {
   saveDetailsFromLoad?: ISaveDetails;
   jsomLoaded?: boolean;
   loadedJSOM?: (jsomLoaded:boolean) => void;
+  formatType?: formatterType;
 }
 
 export interface IColumnFormatterEditorCommandsState {
@@ -62,6 +63,13 @@ export interface IColumnFormatterEditorCommandsState {
   siteColumnIsApplying: boolean;
   siteColumnSaveError?: string;
   siteColumnPushToLists: boolean;
+  applyToListViewDialogVisible: boolean;
+  listViewsLoaded: boolean;
+  listViews: Array<any>;
+  selectedListViewList?: string;
+  selectedListView?: string;
+  listViewIsApplying: boolean;
+  listViewSaveError?: string; 
   activeSaveMethod?: saveMethod;
 }
 
@@ -93,6 +101,12 @@ class ColumnFormatterEditorCommands_ extends React.Component<IColumnFormatterEdi
       siteColumnPushToLists: true,
       selectedSiteColumnGroup: (props.saveDetailsFromLoad.activeSaveMethod == saveMethod.SiteColumn ? props.saveDetailsFromLoad.siteColumnGroup : undefined),
       selectedSiteColumn: (props.saveDetailsFromLoad.activeSaveMethod == saveMethod.SiteColumn ? props.saveDetailsFromLoad.siteColumn : undefined),
+      applyToListViewDialogVisible: false,
+      listViewsLoaded: false,
+      listViews: new Array<any>(),
+      listViewIsApplying: false,
+      selectedListViewList: (props.saveDetailsFromLoad.activeSaveMethod == saveMethod.ListView ? props.saveDetailsFromLoad.listViewList : undefined),
+      selectedListView: (props.saveDetailsFromLoad.activeSaveMethod == saveMethod.ListView ? props.saveDetailsFromLoad.listView : undefined),
       activeSaveMethod: props.saveDetailsFromLoad.activeSaveMethod
     };
   }
@@ -273,6 +287,49 @@ class ColumnFormatterEditorCommands_ extends React.Component<IColumnFormatterEdi
           </DialogFooter>
         </Dialog>
 
+
+        <Dialog
+         hidden={!this.state.applyToListViewDialogVisible}
+         onDismiss={this.closeDialog}
+         dialogContentProps={{
+          type: DialogType.largeHeader,
+          title: strings.ListView_SaveDialogTitle
+        }}>
+         {!this.props.context.isOnline && (
+           <span>{strings.FeatureUnavailableFromLocalWorkbench}</span>
+         )}
+         {!this.state.listViewsLoaded && this.props.context.isOnline && !this.state.listViewIsApplying && this.state.listViewSaveError == undefined && (
+           <Spinner size={SpinnerSize.large} label={strings.ListView_LoadingListViews}/>
+         )}
+         {this.state.listViewsLoaded && this.props.context.isOnline && !this.state.listViewIsApplying && this.state.listViewSaveError == undefined && (
+           <div>
+             <Dropdown
+              label={strings.ListView_List}
+              selectedKey={this.state.selectedListViewList}
+              onChanged={(item:IDropdownOption)=> {this.setState({selectedListViewList: item.key.toString(), selectedListView: undefined,});}}
+              required={true}
+              options={this.listViewListsToOptions()} />
+             <Dropdown
+              label={strings.ListView_View}
+              selectedKey={this.state.selectedListView}
+              disabled={this.state.selectedListViewList == undefined}
+              onChanged={(item:IDropdownOption)=> {this.setState({selectedListView: item.key.toString()});}}
+              required={true}
+              options={this.listViewsToOptions()} />
+           </div>
+         )}
+         {this.state.listViewIsApplying && this.state.listViewSaveError == undefined &&(
+           <Spinner size={SpinnerSize.large} label={strings.ListView_Saving}/>
+         )}
+         {this.state.listViewSaveError !== undefined && (
+           <span className={styles.errorMessage}>{this.state.listViewSaveError}</span>
+         )}
+          <DialogFooter>
+            <PrimaryButton text={strings.Dialog_Save} disabled={!this.applyToListViewSaveButtonEnabled()} onClick={this.onApplyToListViewSaveButtonClick}/>
+            <DefaultButton text={strings.Dialog_Cancel} onClick={this.closeDialog}/>
+          </DialogFooter>
+        </Dialog>
+
       </div>
     );
   }
@@ -324,26 +381,48 @@ class ColumnFormatterEditorCommands_ extends React.Component<IColumnFormatterEdi
                 iconProps: { iconName: this.saveMethodIcon(saveMethod.Library) },
                 onClick: this.onSaveToLibraryClick
               },
-              {
-                key: 'saveas-sitecolumn',
-                name: this.saveMethodTitle(saveMethod.SiteColumn),
-                iconProps: { iconName: this.saveMethodIcon(saveMethod.SiteColumn) },
-                onClick: this.onApplyToSiteColumnClick
-              },
-              {
-                key: 'saveas-listfield',
-                name: this.saveMethodTitle(saveMethod.ListField),
-                iconProps: { iconName: this.saveMethodIcon(saveMethod.ListField) },
-                onClick: this.onApplyToListClick
-              }
             ]
           }
         }
     );
+
+    // Column Formatting specific save methods
+    if (this.props.formatType == formatterType.Column) {
+      items[0].subMenuProps.items.push(
+        {
+          key: 'saveas-sitecolumn',
+          name: this.saveMethodTitle(saveMethod.SiteColumn),
+          iconProps: { iconName: this.saveMethodIcon(saveMethod.SiteColumn) },
+          onClick: this.onApplyToSiteColumnClick
+        },
+        {
+          key: 'saveas-listfield',
+          name: this.saveMethodTitle(saveMethod.ListField),
+          iconProps: { iconName: this.saveMethodIcon(saveMethod.ListField) },
+          onClick: this.onApplyToListClick
+        },
+      );
+    }
+
+    // Row Formatting specific save methods
+    if (this.props.formatType == formatterType.Row) {
+      items[0].subMenuProps.items.push(
+        {
+          key: 'saveas-listview',
+          name: this.saveMethodTitle(saveMethod.ListView),
+          iconProps: { iconName: this.saveMethodIcon(saveMethod.ListView) },
+          onClick: this.onApplyToListViewClick
+        },
+      );
+    }
+
+
+
     if(this.state.activeSaveMethod !== undefined &&
       ((this.state.activeSaveMethod == saveMethod.Library && this.saveToLibrarySaveButtonEnabled()) || this.state.activeSaveMethod !== saveMethod.Library) &&
       ((this.state.activeSaveMethod == saveMethod.ListField && this.applyToListSaveButtonEnabled()) || this.state.activeSaveMethod !== saveMethod.ListField) &&
-      ((this.state.activeSaveMethod == saveMethod.SiteColumn && this.applyToSiteColumnSaveButtonEnabled()) || this.state.activeSaveMethod !== saveMethod.SiteColumn)) {
+      ((this.state.activeSaveMethod == saveMethod.SiteColumn && this.applyToSiteColumnSaveButtonEnabled()) || this.state.activeSaveMethod !== saveMethod.SiteColumn) &&
+      ((this.state.activeSaveMethod == saveMethod.ListView && this.applyToListViewSaveButtonEnabled()) || this.state.activeSaveMethod !== saveMethod.ListView)) {
       items.push({
         key: 'save',
         name: strings.Command_Save,
@@ -367,6 +446,8 @@ class ColumnFormatterEditorCommands_ extends React.Component<IColumnFormatterEdi
         return 'Redeploy';
       case saveMethod.ListField:
         return 'Deploy';
+      case saveMethod.ListView:
+        return 'ReceiptForward';
       default:
         return 'Save';
     }
@@ -384,6 +465,8 @@ class ColumnFormatterEditorCommands_ extends React.Component<IColumnFormatterEdi
         return strings.Command_ApplyToSiteColumn;
       case saveMethod.ListField:
         return strings.Command_ApplyToList;
+      case saveMethod.ListView:
+        return strings.Command_ApplyToListView;
       default:
         return strings.Command_Save;
     }
@@ -404,7 +487,7 @@ class ColumnFormatterEditorCommands_ extends React.Component<IColumnFormatterEdi
   @autobind
   private onCustomizeClick(ev?:React.MouseEvent<HTMLElement>, item?:IContextualMenuItem): void {
     this.setState({
-      customizeConfirmationDialogVisible: true
+      customizeConfirmationDialogVisible: true,
     });
   }
 
@@ -412,7 +495,7 @@ class ColumnFormatterEditorCommands_ extends React.Component<IColumnFormatterEdi
   private onCustomizeConfirmationClick(): void {
     this.props.disconnectWizard();
     this.setState({
-      customizeConfirmationDialogVisible: false
+      customizeConfirmationDialogVisible: false,
     });
   }
 
@@ -424,7 +507,8 @@ class ColumnFormatterEditorCommands_ extends React.Component<IColumnFormatterEdi
       saveToLibraryDialogVisible: false,
       librarySaveError: undefined,
       applyToListDialogVisible: false,
-      applyToSiteColumnDialogVisible: false
+      applyToSiteColumnDialogVisible: false,
+      applyToListViewDialogVisible: false,
     });
   }
 
@@ -442,6 +526,9 @@ class ColumnFormatterEditorCommands_ extends React.Component<IColumnFormatterEdi
         break;
       case saveMethod.ListField:
         this.onApplyToListSaveButtonClick();
+        break;
+      case saveMethod.ListView:
+        this.onApplyToListViewSaveButtonClick();
         break;
     }
   }
@@ -800,6 +887,119 @@ class ColumnFormatterEditorCommands_ extends React.Component<IColumnFormatterEdi
         });
       });
   }
+
+
+  @autobind
+  private onApplyToListViewClick(ev?:React.MouseEvent<HTMLElement>, item?:IContextualMenuItem): void {
+    if(!this.state.listViewsLoaded) {
+      if(this.props.context.isOnline) {
+        sp.web.lists.filter('Hidden eq false').select('Id','Title','Views/Id','Views/Title','Views/Hidden','Views/DefaultView').expand('Views').get()
+          .then((data:any) => {
+            let listdata:Array<any> = new Array<any>();
+            for(var i=0; i<data.length; i++){
+              listdata.push({
+                Id: data[i].Id,
+                Title: data[i].Title,
+                Views: data[i].Views.map((view:any, index:number) => {
+                  if(!view.Hidden) {
+                      return {
+                        Title: view.Title,
+                        Id: view.Id,
+                        IsDefault: view.DefaultView
+                      };
+                  }
+                })
+                .filter((view:any, index:number) => {return view !== undefined;})
+                .sort((v1:any, v2:any): number => {
+                  if (v1.IsDefault) { 
+                    return -1;
+                  }
+                  if (v2.IsDefault) {
+                    return 1;
+                  }
+                  return 0;
+                })
+              });
+            }
+
+            this.setState({
+              listViewsLoaded: true,
+              listViews: listdata
+            });
+          })
+          .catch((error:any) => {
+            this.setState({
+              listViewSaveError: strings.ListView_ListViewLoadError + ' ' + strings.TechnicalDetailsErrorHeader + ': ' + error.message
+            });
+          });
+      }
+
+      this.setState({
+        applyToListViewDialogVisible: true
+      });
+    }
+  }
+
+  private listViewListsToOptions(): Array<IDropdownOption> {
+    let items:Array<IDropdownOption> = new Array<IDropdownOption>();
+    for(var list of this.state.listViews) {
+      items.push({
+        key: list.Id,
+        text: list.Title,
+      });
+    }
+    return items;
+  }
+
+  private listViewsToOptions(): Array<IDropdownOption> {
+    let items:Array<IDropdownOption> = new Array<IDropdownOption>();
+    for(var list of this.state.listViews) {
+      if(list.Id == this.state.selectedListViewList) {
+        for(var view of list.Views) {
+          items.push({
+              key: view.Id,
+              text: view.Title,
+            });    
+        }
+        break;
+      } 
+    }
+    return items;
+  }
+
+  private applyToListViewSaveButtonEnabled(): boolean{
+    return (
+      this.props.context.isOnline && this.state.selectedListViewList !== undefined &&
+        this.state.selectedListView !== undefined && this.state.listViewSaveError == undefined
+    );
+  }
+
+  @autobind
+  private onApplyToListViewSaveButtonClick(): void {
+    this.setState({
+      listViewIsApplying: true,
+      listViewSaveError: undefined,
+      applyToListViewDialogVisible: true
+    });
+    sp.web.lists.getById(this.state.selectedListViewList)
+      .views.getById(this.state.selectedListView).update({
+        CustomFormatter: this.props.editorString
+      })
+      .then(()=>{
+        this.setState({
+          listViewIsApplying: false,
+          applyToListViewDialogVisible: false,
+          activeSaveMethod: saveMethod.ListView
+        });
+      })
+      .catch((error:any) => {
+        this.setState({
+          listViewIsApplying: false,
+          listViewSaveError: strings.ListView_SaveError + ' ' + strings.TechnicalDetailsErrorHeader + ': ' + error.message,
+          activeSaveMethod: undefined
+        });
+      });
+  }
 }
 
 function mapStateToProps(state: IApplicationState): IColumnFormatterEditorCommandsProps{
@@ -811,7 +1011,8 @@ function mapStateToProps(state: IApplicationState): IColumnFormatterEditorComman
     fieldType: state.data.columns[0].type,
     viewTab: state.ui.tabs.viewTab,
     saveDetailsFromLoad: state.ui.saveDetails,
-    jsomLoaded: state.context.jsomLoaded
+    jsomLoaded: state.context.jsomLoaded,
+    formatType: state.code.formatType,
 	};
 }
 

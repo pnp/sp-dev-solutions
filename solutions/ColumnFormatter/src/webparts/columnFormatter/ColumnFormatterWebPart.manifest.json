@@ -18,8 +18,8 @@
   "preconfiguredEntries": [{
     "groupId": "5c03119e-3074-46fd-976b-c60198311f70", // Other
     "group": { "default": "Other" },
-    "title": { "default": "Column Formatter" },
-    "description": { "default": "Enables easy editing of Display Formatting for modern listview columns" },
+    "title": { "default": "List Formatter" },
+    "description": { "default": "Enables easy editing of Display Formatting for modern listviews" },
     "officeFabricIconFontName": "Design",
     "properties": {
       "height": 340,

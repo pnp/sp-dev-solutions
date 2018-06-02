@@ -10,12 +10,12 @@ export enum columnTypes {
 	link,
 	picture,
 	datetime,
-	lookup
+	lookup,
 }
 
 export enum uiState {
 	welcome,
-	editing
+	editing,
 }
 
 export enum saveMethod {
@@ -23,7 +23,13 @@ export enum saveMethod {
 	Copy,
 	Library,
 	ListField,
-	SiteColumn
+	SiteColumn,
+	ListView,
+}
+
+export enum formatterType {
+	Column,
+	Row,
 }
 //#endregion
 
@@ -75,6 +81,8 @@ export interface ISaveDetails {
 	field?: string;
 	siteColumnGroup?: string;
 	siteColumn?: string;
+	listViewList?: string;
+	listView?: string;
 }
 
 export interface IUI {
@@ -95,6 +103,7 @@ export interface ICode {
 	showLineNumbers: boolean;
 	showMiniMap: boolean;
 	showIndentGuides: boolean;
+	formatType: formatterType;
 }
 
 export interface IUserContext {
@@ -126,12 +135,12 @@ export const initialState: IApplicationState = {
 		state: uiState.welcome,
 		panes: {
 			main: 0,
-			split: 0
+			split: 0,
 		},
 		tabs: {
 			propertyTab: 0,
 			viewTab: 0,
-			wizardTabVisible: true
+			wizardTabVisible: true,
 		},
 		height: 340,
 		saveDetails: {
@@ -140,7 +149,7 @@ export const initialState: IApplicationState = {
 			libraryFolderPath: '',
 			libraryFilename: '',
 			list: undefined,
-			field: undefined
+			field: undefined,
 		}
 	},
 	code: {
@@ -152,15 +161,16 @@ export const initialState: IApplicationState = {
 		editorTheme: 'vs',
 		showLineNumbers: false,
 		showMiniMap: false,
-		showIndentGuides: false
+		showIndentGuides: false,
+		formatType: formatterType.Column,
 	},
 	context: {
 		isOnline: false,
 		webAbsoluteUrl:'',
 		user: {
 			displayName: undefined,
-			email: undefined
+			email: undefined,
 		},
-		jsomLoaded: false
+		jsomLoaded: false,
 	}
 };

@@ -148,7 +148,7 @@ function LaunchEditorReducer(state:IApplicationState, action:ILaunchEditorAction
 	return {
 		data: {
 			columns: wizard !== undefined ? wizard.startingColumns(action.colType) : standardWizardStartingColumns(action.colType),
-			rows: wizard !== undefined ? wizard.startingRows(action.colType, state.context.user) : standardWizardStartingRows(action.colType)
+			rows: wizard !== undefined ? wizard.startingRows(action.colType, state.context.user) : standardWizardStartingRows(action.colType),
 		},
 		ui: {
 			...state.ui,
@@ -156,7 +156,7 @@ function LaunchEditorReducer(state:IApplicationState, action:ILaunchEditorAction
 			tabs: {
 				...state.ui.tabs,
 				viewTab: (wizard !== undefined && !wizard.isTemplate) ? 0 : 2,
-				wizardTabVisible: (wizard !== undefined && !wizard.isTemplate)
+				wizardTabVisible: (wizard !== undefined && !wizard.isTemplate),
 			},
 			saveDetails: {
 				activeSaveMethod: undefined,
@@ -164,7 +164,7 @@ function LaunchEditorReducer(state:IApplicationState, action:ILaunchEditorAction
 				libraryFolderPath: '',
 				libraryFilename: '',
 				list: undefined,
-				field: undefined
+				field: undefined,
 			}
 		},
 		code: {
@@ -173,9 +173,10 @@ function LaunchEditorReducer(state:IApplicationState, action:ILaunchEditorAction
 			formatterErrors: [],
 			formatterString: wizard !== undefined ? wizard.startingCode(action.colType) : standardWizardStartingCode(action.colType),
 			editorString: wizard !== undefined ? wizard.startingCode(action.colType) : standardWizardStartingCode(action.colType),
-			wizardName: wizard !== undefined ? wizard.name : undefined
+			wizardName: wizard !== undefined ? wizard.name : undefined,
+			formatType: action.formatType,
 		},
-		context: state.context
+		context: state.context,
 	};
 }
 
@@ -184,7 +185,7 @@ function LaunchEditorWithCodeReducer(state:IApplicationState, action:ILaunchEdit
 	return {
 		data: {
 			columns: wizard !== undefined ? wizard.startingColumns(action.colType) : standardWizardStartingColumns(action.colType),
-			rows: wizard !== undefined ? wizard.startingRows(action.colType) : standardWizardStartingRows(action.colType)
+			rows: wizard !== undefined ? wizard.startingRows(action.colType) : standardWizardStartingRows(action.colType),
 		},
 		ui: {
 			...state.ui,
@@ -192,7 +193,7 @@ function LaunchEditorWithCodeReducer(state:IApplicationState, action:ILaunchEdit
 			tabs: {
 				...state.ui.tabs,
 				viewTab: (wizard !== undefined && !wizard.isTemplate) ? 0 : 2,
-				wizardTabVisible: (wizard !== undefined && !wizard.isTemplate)
+				wizardTabVisible: (wizard !== undefined && !wizard.isTemplate),
 			},
 			saveDetails: {
 				...action.saveDetails
@@ -204,9 +205,10 @@ function LaunchEditorWithCodeReducer(state:IApplicationState, action:ILaunchEdit
 			formatterErrors: [],
 			formatterString: action.editorString,
 			editorString: action.editorString,
-			wizardName: wizard !== undefined ? wizard.name : undefined
+			wizardName: wizard !== undefined ? wizard.name : undefined,
+			formatType: action.formatType,
 		},
-		context: state.context
+		context: state.context,
 	};
 }
 

@@ -32,6 +32,7 @@ define([], function() {
     Welcome_NextButton: 'Next',
     Welcome_OpenLoadList: 'Load from a local list',
     Welcome_OpenLoadSiteColumn: 'Load from a site column',
+    Welcome_OpenLoadListView: 'Load from a local list view',
     Welcome_OpenLoadFile: 'Load from a file:',
     Welcome_OpenLoadFileLibrary: 'Open a file from a local library',
     Welcome_OpenLoadFileUpload: 'Upload a file',
@@ -64,6 +65,16 @@ define([], function() {
     SiteColumn_PushToListsOff: 'Site column only',
     SiteColumn_Saving: 'Applying to site column...',
     SiteColumn_SaveError: 'Error while applying! Verify you have permission to update site columns.',
+
+    //List View (Load/Apply)
+    ListView_LoadingListViews: 'Loading list views...',
+    ListView_List: 'Local list',
+    ListView_View: 'View',
+    ListView_LoadingFromView: 'Loading from view...',
+    ListView_ListViewLoadError: 'Error while loading list views!',
+    ListView_SaveDialogTitle: 'Apply to local list view',
+    ListView_Saving: 'Applying to list view...',
+    ListView_SaveError: 'Error while applying! Verify you have permission to update this list view\'s settings.',
 
     //Library (Load/Save)
     Library_LoadingLibraries: 'Loading libraries...',
@@ -101,6 +112,7 @@ define([], function() {
     Command_ApplyToSiteColumn: 'Apply to site column',
     Command_ApplyToList: 'Apply to local list field',
     Command_Save: 'Save',
+    Command_ApplyToListView: 'Apply to local list view',
 
     //Dialogs Shared
     Dialog_Yes: 'Yes',
@@ -380,6 +392,6 @@ define([], function() {
     WizardTwitter_Description: 'Displays Twitter profile pictures from Twitter handles',
     WizardTwitter_Rounding: 'Rounding',
     WizardTwitter_LinkOn: 'Link to profile',
-    WizardTwitter_LinkOff: 'No link'
+    WizardTwitter_LinkOff: 'No link',
   }
 });
