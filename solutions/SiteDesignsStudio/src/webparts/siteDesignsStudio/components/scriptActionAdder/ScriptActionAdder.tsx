@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { IconButton, Icon, Panel, PanelType, Spinner, SpinnerSize } from 'office-ui-fabric-react';
+import { IconButton, Icon, Panel, PanelType, Spinner, SpinnerSize, SearchBox } from 'office-ui-fabric-react';
 import styles from './ScriptActionAdder.module.scss';
 import { ISiteDesignsStudioProps, IServiceConsumerComponentProps } from '../ISiteDesignsStudioProps';
 import { escape, assign } from '@microsoft/sp-lodash-subset';
@@ -14,6 +14,7 @@ import {
 export interface IScriptActionAdderState {
 	isAdding: boolean;
 	isLoading: boolean;
+	filterBy: string;
 	availableActions: string[];
 }
 
@@ -31,6 +32,7 @@ export default class ScriptActionAdder extends React.Component<IScriptActionAdde
 		this.state = {
 			isAdding: false,
 			isLoading: true,
+			filterBy: null,
 			availableActions: []
 		};
 	}
@@ -58,7 +60,7 @@ export default class ScriptActionAdder extends React.Component<IScriptActionAdde
 	}
 
 	private _onPanelDismiss() {
-		this.setState({ isAdding: false });
+		this.setState({ isAdding: false, filterBy: null });
 	}
 
 	private _onActionAdded(action: string) {
@@ -71,6 +73,33 @@ export default class ScriptActionAdder extends React.Component<IScriptActionAdde
 		// Specify the parent action verb if any
 		return this.siteScriptSchemaService.getActionTitleByVerb(actionVerb, parentAction && parentAction.verb);
 	}
+
+	private _filterAction(criteria: string) {
+		this.setState({ filterBy: criteria });
+	}
+
+	private cachedFilteredActions: string[] = null;
+	private _getFilteredActions() {
+		let { filterBy, availableActions } = this.state;
+
+		if (filterBy) {
+			let lowerFilter = filterBy.toLowerCase();
+			this.cachedFilteredActions = availableActions.filter((a) => {
+				let actionLabel = this._getActionLabel(a);
+				return actionLabel && actionLabel.toLowerCase().indexOf(lowerFilter) > -1;
+			});
+		} else {
+			this.cachedFilteredActions = availableActions;
+		}
+		return this.cachedFilteredActions;
+	}
+
+	private _tryQuickAdd() {
+    let filtered = this.cachedFilteredActions || this._getFilteredActions();
+    if (filtered.length == 1) {
+      this._onActionAdded(filtered[0]);
+    }
+  }
 
 	public render(): React.ReactElement<ISiteDesignsStudioProps> {
 		let { isLoading } = this.state;
@@ -96,7 +125,15 @@ export default class ScriptActionAdder extends React.Component<IScriptActionAdde
 						</div>
 					) : (
 						<div className="ms-Grid-row">
-							{this.state.availableActions.map((a, index) => (
+							<div key={'filter'} className="ms-Grid-col ms-sm12">
+								<SearchBox
+									placeholder="Search"
+									onChange={(v) => this._filterAction(v)}
+									onSearch={() => this._tryQuickAdd()}
+									underlined={true}
+								/>
+							</div>
+							{this._getFilteredActions().map((a, index) => (
 								<div key={index} className="ms-Grid-col ms-sm12">
 									<div className={styles.actionButtonContainer}>
 										<div className={styles.actionButton} onClick={() => this._onActionAdded(a)}>
