@@ -1,3 +1,8 @@
+var esprima = require("esprima");
+
+/**
+ * Id used for the FormatScript language in the monaco editor
+ */
 export const formatScriptId: string = "FormatScript";
 
 /**
@@ -198,4 +203,245 @@ export const formatScriptConfig = ():any => {
 		],
 		brackets: [["(", ")"]],
 	};
+};
+
+
+export interface IFormatOperation {
+	operation: string;
+	operands: Array<string|any|boolean|number>;
+}
+
+export interface IFSParseError {
+	message: string;
+	loc?: {
+		start: {
+			line: number;
+			column: number;
+		},
+		end: {
+			line: number;
+			column: number;
+		}
+	};
+}
+
+export interface IFSParseResult {
+	result?: IFormatOperation;
+	errors: Array<IFSParseError>;
+}
+
+const CF:string = "__CURRENTFIELD__";
+const ME:string = "__ME__";
+const NOW:string = "__NOW__";
+
+const fsKeywordToOperation = (keyword:string): string | undefined => {
+	switch (keyword.toLowerCase()) {
+		case "concatenate":
+		case "concat":
+		case "&":
+		case "+":
+			return "+";
+		case "and":
+		case "&&":
+			return "&&";
+		case "or":
+		case "||":
+			return "||";
+		case "if":
+		case "switch":
+		case "?":
+			return "?";
+		case "tostring":
+			return "toString()";
+		case "number":
+			return "Number()";
+		case "date":
+			return "Date()";
+		case "tolocalestring":
+			return "toLocaleString()";
+		case "tolocaledatestring":
+			return "toLocaleDateString()";
+		case "tolocaletimestring":
+			return "toLocaleTimeString()";
+		case "-":
+		case "/":
+		case "*":
+		case "<":
+		case "<=":
+		case ">":
+		case ">=":
+		case "==":
+		case "!=":
+		case "cos":
+		case "sin":
+			return keyword;
+		default:
+			return undefined;
+	}
+};
+
+/**
+ * Returns the minimum number of arguments for the given operation
+ * when used as a callexpression (function)
+ * @param operation The operation (assumes valid and translated)
+ */
+const callExpressionMinArgCount = (operation:string): number => {
+	switch (operation) {
+		case "+":
+		case "?":
+		case "&&":
+		case "||":
+			return 2;
+		default:
+			return 1;
+	}
+};
+
+/**
+ * Returns the maximum number of arguments for the given operation
+ * when used as a callexpression (function)
+ * @param operation The operation (assumes valid and translated)
+ */
+const callExpressionMaxArgCount = (operation:string): number => {
+	switch (operation) {
+		case "+":
+		case "?":
+		case "&&":
+		case "||":
+			return -1; //unlimited
+		default:
+			return 1;
+	}
+};
+
+const parseFormatScript = (expression:any): IFSParseResult => {
+	let parseResult: IFSParseResult = {
+		errors: new Array<IFSParseError>(),
+	};
+
+	try {
+		switch (expression.type) {
+			case "CallExpression":
+				//Figure out the operation
+				const ceOperation = fsKeywordToOperation(expression.callee.name);
+				if (typeof ceOperation == "undefined") {
+					parseResult.errors.push({
+						message: "Unknown Function: " + expression.callee.name,
+						loc: expression.callee.loc,
+					});
+					return parseResult;
+				}
+
+				//Validate the minimum number of args are supplied
+				const minArgs = callExpressionMinArgCount(ceOperation);
+				const maxArgs = callExpressionMaxArgCount(ceOperation);
+				if (minArgs > expression.arguments.length || (maxArgs !== -1 && maxArgs < expression.arguments.length)) {
+					parseResult.errors.push({
+						message: expression.callee.name + " expects " + (maxArgs == -1 ? "at least " + minArgs + " arguments" : (minArgs==maxArgs ? minArgs + (minArgs == 1 ? " argument" : " arguments") : minArgs + "-" + maxArgs + " arguments")),
+						loc: expression.loc,
+					});
+					return parseResult;
+				}
+
+				parseResult.result = {
+					operation: ceOperation,
+					operands: new Array<string|any|boolean|number>(),
+				};
+
+				//Process each operand
+				expression.arguments.forEach((arg:any) => {
+					const operandResult = parseFormatScript(arg);
+					if(typeof operandResult.result !== "undefined") {
+						parseResult.result.operands.push(operandResult.result);
+					}
+					if(operandResult.errors.length > 0) {
+						parseResult.errors.push(...operandResult.errors);
+					}
+				});
+
+				break;
+			case "BinaryExpression":
+				//Figure out the operation
+				const beOperation = fsKeywordToOperation(expression.operator);
+				if (typeof beOperation == "undefined") {
+					parseResult.errors.push({
+						message: "Unknown Operator: " + expression.operator,
+						loc: expression.loc,
+					});
+					return parseResult;
+				}
+
+				parseResult.result = {
+					operation: beOperation,
+					operands: new Array<string|any|boolean|number>(),
+				};
+
+				//Process the left operand
+				const leftResult = parseFormatScript(expression.left);
+				if(typeof leftResult.result !== "undefined") {
+					parseResult.result.operands.push(leftResult.result);
+				}
+				if(leftResult.errors.length > 0) {
+					parseResult.errors.push(...leftResult.errors);
+				}
+
+				//Process the right operand
+				const rightResult = parseFormatScript(expression.right);
+				if(typeof rightResult.result !== "undefined") {
+					parseResult.result.operands.push(rightResult.result);
+				}
+				if(rightResult.errors.length > 0) {
+					parseResult.errors.push(...rightResult.errors);
+				}
+
+				break;
+			case "Literal":
+				parseResult.result = expression.value;
+				break;
+			default:
+				parseResult.errors.push({
+					message: "Unknown Syntax",
+					loc: expression.loc,
+				});
+		}
+	} catch (error) {
+		parseResult.errors.push({
+			message: error,
+			loc: expression.loc,
+		});
+	}
+
+	return parseResult;
+};
+
+export const formatScriptToJSON = (fs:string, startingIndentation:string): IFSParseResult => {
+	//preprocess FormatScript to remove @ keywords (esprima will error out otherwise)
+	const tokenFS = fs.replace("@currentField", CF).replace("@me", ME).replace("@now", NOW);
+
+	let result: IFSParseResult = {
+		errors: new Array<IFSParseError>(),
+	};
+
+	try {
+		const syntaxTree = esprima.parseScript(tokenFS, { loc: true });
+		console.log(syntaxTree);
+		if (syntaxTree.body.length > 1) {
+			result.errors.push({
+				message: "You can only have 1 top level function! (feel free to nest them though)",
+				loc: syntaxTree.body[1].expression.loc,
+			});
+		} else {
+			result = parseFormatScript(syntaxTree.body[0].expression);
+		}
+	} catch (error) {
+		result.errors.push({
+			message: error,
+		});
+	}
+
+	console.log(result);
+	if(result.errors.length == 0) {
+		console.log(JSON.stringify(result.result));
+	}
+	return result;
 };

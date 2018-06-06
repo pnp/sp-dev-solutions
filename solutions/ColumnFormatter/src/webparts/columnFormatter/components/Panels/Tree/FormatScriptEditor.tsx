@@ -1,8 +1,14 @@
-import { autobind } from 'office-ui-fabric-react/lib/Utilities';
-import * as React from 'react';
+import { autobind } from "office-ui-fabric-react/lib/Utilities";
+import * as React from "react";
 
-import styles from '../../ColumnFormatter.module.scss';
-import { formatScriptId, formatScriptTokens, formatScriptTheme, formatScriptConfig } from './FormatScript';
+import styles from "../../ColumnFormatter.module.scss";
+import {
+    formatScriptConfig,
+    formatScriptId,
+    formatScriptTheme,
+    formatScriptToJSON,
+    formatScriptTokens,
+} from "./FormatScript";
 
 const monaco = require('../../../../../MonacoCustomBuild');
 
@@ -97,6 +103,7 @@ export class FormatScriptEditor extends React.Component<IFormatScriptEditorProps
 		if(this._editor) {
 			let curVal:string = this._editor.getValue();
 			// Attempt Transpile
+			formatScriptToJSON(curVal,"");
 		}
 	}
 }
