@@ -55,7 +55,7 @@ export const formatScriptTokens = ():any => {
 				{ include: '@whitespace' },
 
 				// delimiters and operators
-				[/[{}()\[\]]/, '@brackets'],
+				[/[()]/, '@brackets'],
 				[/[,.]/, 'delimiter'],
 				[/@symbols/, {
 					cases: {
@@ -189,7 +189,11 @@ export const formatScriptConfig = ():any => {
 			{
 				open: '"',
 				close: '"',
-			}
+			},
+			{
+				open: '[',
+				close: ']',
+			},
 		],
 		surroundingPairs: [
 			{
@@ -199,7 +203,11 @@ export const formatScriptConfig = ():any => {
 			{
 				open: '"',
 				close: '"',
-			}
+			},
+			{
+				open: '[',
+				close: ']',
+			},
 		],
 		brackets: [["(", ")"]],
 	};
@@ -226,7 +234,7 @@ export interface IFSParseError {
 }
 
 export interface IFSParseResult {
-	result?: IFormatOperation;
+	result?: IFormatOperation | any;
 	errors: Array<IFSParseError>;
 }
 
@@ -360,6 +368,7 @@ const parseFormatScript = (expression:any): IFSParseResult => {
 				});
 
 				break;
+
 			case "BinaryExpression":
 				//Figure out the operation
 				const beOperation = fsKeywordToOperation(expression.operator);
@@ -395,9 +404,108 @@ const parseFormatScript = (expression:any): IFSParseResult => {
 				}
 
 				break;
+
+			case "ConditionalExpression":
+
+				parseResult.result = {
+					operation: "?",
+					operands: new Array<string|any|boolean|number>(),
+				};
+
+				//Process the Test
+				const testResult = parseFormatScript(expression.test);
+				if(typeof testResult.result !== "undefined") {
+					parseResult.result.operands.push(testResult.result);
+				}
+				if(testResult.errors.length > 0) {
+					parseResult.errors.push(...testResult.errors);
+				}
+
+				const consequentResult = parseFormatScript(expression.consequent);
+				if(typeof consequentResult.result !== "undefined") {
+					parseResult.result.operands.push(consequentResult.result);
+				}
+				if(consequentResult.errors.length > 0) {
+					parseResult.errors.push(...consequentResult.errors);
+				}
+
+				const alternateResult = parseFormatScript(expression.alternate);
+				if(typeof alternateResult.result !== "undefined") {
+					parseResult.result.operands.push(alternateResult.result);
+				}
+				if(alternateResult.errors.length > 0) {
+					parseResult.errors.push(...alternateResult.errors);
+				}
+
+				break;
+
+			case "Identifier":
+				switch(expression.name) {
+					case ME:
+						parseResult.result = "@me";
+						break;
+					case NOW:
+						parseResult.result = "@now";
+						break;
+					case CF:
+						parseResult.result = "@currentField";
+						break;
+					default:
+						parseResult.errors.push({
+							message: "Unknown Identifier: " + expression.name,
+							loc: expression.loc,
+						});
+				}
+
+				break;
+
+			case "MemberExpression":
+			//TODO: add support for field refs
+				if(expression.object.name == CF) {
+					switch(expression.property.name) {
+						case "desc":
+							parseResult.result = "@currentField.desc";
+							break;
+						case "id":
+							parseResult.result = "@currentField.id";
+							break;
+						case "email":
+							parseResult.result = "@currentField.email";
+							break;
+						case "title":
+							parseResult.result = "@currentField.title";
+							break;
+						case "picture":
+							parseResult.result = "@currentField.picture";
+							break;
+						case "sip":
+							parseResult.result = "@currentField.sip";
+							break;
+						case "lookupValue":
+							parseResult.result = "@currentField.lookupValue";
+							break;
+						case "lookupId":
+							parseResult.result = "@currentField.lookupId";
+							break;
+						default:
+							parseResult.errors.push({
+								message: "Unknown Property: " + expression.property.name,
+								loc: expression.loc,
+							});
+					}
+				} else {
+					parseResult.errors.push({
+						message: "Unknown Identifier: " + expression.object.name,
+						loc: expression.object.loc,
+					});
+				}
+				
+				break;
+
 			case "Literal":
 				parseResult.result = expression.value;
 				break;
+
 			default:
 				parseResult.errors.push({
 					message: "Unknown Syntax",
