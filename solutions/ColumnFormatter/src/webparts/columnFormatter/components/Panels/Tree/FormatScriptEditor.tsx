@@ -2,7 +2,7 @@ import { autobind } from 'office-ui-fabric-react/lib/Utilities';
 import * as React from 'react';
 
 import styles from '../../ColumnFormatter.module.scss';
-import { formatScriptTokens, formatScriptThemeRules } from './FormatScript';
+import { formatScriptId, formatScriptTokens, formatScriptTheme, formatScriptConfig } from './FormatScript';
 
 const monaco = require('../../../../../MonacoCustomBuild');
 
@@ -21,18 +21,16 @@ export class FormatScriptEditor extends React.Component<IFormatScriptEditorProps
 
 		//Register the FormatScript language
 		monaco.languages.register({
-			id: 'FormatScript'
+			id: formatScriptId,
 		});
 
 		//Register custom tokens for FormatScript
-		monaco.languages.setMonarchTokensProvider('FormatScript', formatScriptTokens());
+		monaco.languages.setMonarchTokensProvider(formatScriptId, formatScriptTokens());
 
 		//Customize theme for FormatScript
-		monaco.editor.defineTheme('FormatScriptTheme', {
-			base: this.props.theme,
-			inherit: true,
-			rules: formatScriptThemeRules()
-		});
+		monaco.editor.defineTheme(formatScriptId + 'Theme', formatScriptTheme(this.props.theme!=='vs'));
+
+		monaco.languages.setLanguageConfiguration(formatScriptId, formatScriptConfig());
 
 		//Adjust tab size once things are ready
 		monaco.editor.onDidCreateModel((m:any) => {
@@ -53,8 +51,8 @@ export class FormatScriptEditor extends React.Component<IFormatScriptEditorProps
 		this._editor = monaco.editor.create(this._container, {
 			value: this.props.value,
 			scrollBeyondLastLine: false,
-			theme: 'FormatScriptTheme',
-			language: 'FormatScript',
+			theme: formatScriptId + 'Theme',
+			language: formatScriptId,
 			renderIndentGuides: false,
 			lineNumbers: false,
 			minimap: {
