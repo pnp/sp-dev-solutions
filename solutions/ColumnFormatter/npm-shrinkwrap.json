@@ -3400,9 +3400,8 @@
     },
     "esprima": {
       "version": "4.0.0",
-      "from": "esprima@>=4.0.0 <5.0.0",
-      "resolved": "https://registry.npmjs.org/esprima/-/esprima-4.0.0.tgz",
-      "dev": true
+      "from": "https://registry.npmjs.org/esprima/-/esprima-4.0.0.tgz",
+      "resolved": "https://registry.npmjs.org/esprima/-/esprima-4.0.0.tgz"
     },
     "esrecurse": {
       "version": "4.2.1",

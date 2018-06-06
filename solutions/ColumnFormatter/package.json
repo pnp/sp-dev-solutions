@@ -23,6 +23,7 @@
     "@types/react": "15.6.6",
     "@types/react-dom": "15.5.6",
     "@types/webpack-env": ">=1.12.1 <1.14.0",
+    "esprima": "https://registry.npmjs.org/esprima/-/esprima-4.0.0.tgz",
     "js-file-download": "^0.4.1",
     "react": "15.6.2",
     "react-dom": "15.6.2",
