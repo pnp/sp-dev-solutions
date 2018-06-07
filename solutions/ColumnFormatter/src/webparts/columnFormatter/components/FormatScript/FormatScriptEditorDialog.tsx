@@ -87,8 +87,8 @@ export class FormatScriptEditorDialog extends React.Component<IFormatScriptEdito
 				}}
 				modalProps={{
 					isBlocking: true,
-				}}
-				className={styles.formatScriptDialog}>
+					className: styles.formatScriptDialog
+				}}>
 
 				<FormatScriptEditor
 				 initialValue={this.props.initialValue}

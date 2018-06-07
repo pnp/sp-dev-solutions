@@ -1,19 +1,17 @@
 import { autobind } from "office-ui-fabric-react/lib/Utilities";
 import * as React from "react";
-import * as strings from 'ColumnFormatterWebPartStrings';
+
 import styles from "../ColumnFormatter.module.scss";
 import {
+    formatScriptCompletionProvider,
     formatScriptConfig,
     formatScriptId,
     formatScriptTheme,
     formatScriptToJSON,
-	formatScriptTokens,
-	IFSParseResult,
-	IFSParseError
+    formatScriptTokens,
+    IFSParseError,
+    IFSParseResult,
 } from "./FormatScript";
-
-import { Dialog, DialogFooter, DialogType } from "office-ui-fabric-react/lib/Dialog";
-import { DefaultButton, IButtonProps, Button, PrimaryButton } from 'office-ui-fabric-react/lib/Button';
 
 const monaco = require('../../../../MonacoCustomBuild');
 
@@ -41,7 +39,11 @@ export class FormatScriptEditor extends React.Component<IFormatScriptEditorProps
 		//Customize theme for FormatScript
 		monaco.editor.defineTheme(formatScriptId + 'Theme', formatScriptTheme(this.props.theme!=='vs'));
 
+		//Provide configuration for FormatScript
 		monaco.languages.setLanguageConfiguration(formatScriptId, formatScriptConfig());
+
+		//Register Completion Provider FormatScript
+		monaco.languages.registerCompletionItemProvider(formatScriptId, formatScriptCompletionProvider());
 
 		//Adjust tab size once things are ready
 		monaco.editor.onDidCreateModel((m:any) => {

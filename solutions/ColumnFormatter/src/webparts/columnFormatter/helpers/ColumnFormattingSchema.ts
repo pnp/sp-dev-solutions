@@ -1274,6 +1274,7 @@ export const ColumnFormattingSchema = {
                         "@currentField.picture",
                         "@currentField.lookupValue",
                         "@currentField.lookupId",
+                        "@currentField.desc",
                         "@me",
                         "@now"
                     ]

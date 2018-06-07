@@ -165,7 +165,7 @@ export const formatScriptTheme = (useDark:boolean):any => {
 		colors: {
 			"editor.background": "#" + background,
 			"editor.foreground": "#" + foreground,
-			"editorCursor.foreground": '#00bcf2', //blueLight
+			"editorCursor.foreground": "#00bcf2", //blueLight
 			"editor.lineHighlightBorder": useDark ? "#666666" : "#f4f4f4", //neutralSecondary or neutralLighter
 			"editor.lineHighlightBackground": "#" + background,
 			"editor.selectionBackground": useDark ? "#666666" : "#eaeaea", //neutralSecondary or neutralLight
@@ -173,6 +173,11 @@ export const formatScriptTheme = (useDark:boolean):any => {
 			"editorBracketMatch.background": useDark ? "#5c2d91" : "#b4a0ff", //purple or purpleLight
 			"editorBracketMatch.border": "#" + background,
 			"editorHoverWidget.background": useDark ? "#666666" : "#f4f4f4", //neutralSecondary or neutralLighter
+			"list.focusBackground": useDark ? "#666666" : "#f4f4f4", //neutralSecondary or neutralLighter
+			"list.highlightForeground": "#00bcf2", //blueLight
+			"list.hoverBackground": useDark ? "#a6a6a6" : "#dadada", //neutralTertiary or neutralQuaternaryAlt
+			"editorWidget.background": useDark ? "#3c3c3c" : "#eaeaea", //neutralPrimaryAlt or neutralLight
+			"editorWidget.border": useDark ? "#a6a6a6" : "#dadada", //neutralTertiary or neutralQuaternaryAlt
 		}
 	};
 };
@@ -211,6 +216,245 @@ export const formatScriptConfig = ():any => {
 			},
 		],
 		brackets: [["(", ")"]],
+	};
+};
+
+export const formatScriptCompletionProvider = ():any => {
+	return {
+		//triggerCharacters: ["."],
+		provideCompletionItems: () => {
+			return [
+				{
+					label: 'CONCATENATE',
+					kind: 1, //method
+					insertText: {
+						value: 'CONCATENATE(${1:@currentField},${2:"%"})'
+					},
+					documentation: "Add 2 or more strings together",
+				},
+				{
+					label: 'COS',
+					kind: 1, //method
+					insertText: {
+						value: 'COS(${1:@currentField})',
+					},
+				},
+				{
+					label: 'SIN',
+					kind: 1, //method
+					insertText: {
+						value: 'SIN(${1:@currentField})',
+					},
+				},
+				{
+					label: 'TOSTRING',
+					kind: 1, //method
+					insertText: {
+						value: 'TOSTRING(${1:@currentField})',
+					},
+				},
+				{
+					label: 'NUMBER',
+					kind: 1, //method
+					insertText: {
+						value: 'NUMBER(${1:@currentField})',
+					},
+				},
+				{
+					label: 'DATE',
+					kind: 1, //method
+					insertText: {
+						value: 'DATE(${1:@currentField})',
+					},
+				},
+				{
+					label: 'TOLOCALESTRING',
+					kind: 1, //method
+					insertText: {
+						value: 'TOLOCALESTRING(${1:@currentField})',
+					},
+				},
+				{
+					label: 'TOLOCALEDATESTRING',
+					kind: 1, //method
+					insertText: {
+						value: 'TOLOCALEDATESTRING(${1:@currentField})',
+					},
+				},
+				{
+					label: 'TOLOCALETIMESTRING',
+					kind: 1, //method
+					insertText: {
+						value: 'TOLOCALETIMESTRING(${1:@currentField})',
+					},
+				},
+				{
+					label: 'OR',
+					kind: 1, //method
+					insertText: {
+						value: 'OR(${1:@currentField},${2:true})',
+					},
+				},
+				{
+					label: 'AND',
+					kind: 1, //method
+					insertText: {
+						value: 'AND(${1:@currentField},${2:true})',
+					},
+				},
+				{
+					label: 'IF',
+					kind: 1, //method
+					insertText: {
+						value: 'IF(${1:@currentField},${2:true},${3:false})'
+					}
+				},
+				{
+					label: 'SWITCH',
+					kind: 1, //method
+					insertText: {
+						value: 'SWITCH(${1:@currentField},${2:"case1"},${3:"result1"},${4:"case2"},${5:"result2"},${6:"default"})',
+					},
+				},
+				{
+					label: '@now',
+					kind: 4, //field
+					filterText: 'now',
+				},
+				{
+					label: '@me',
+					kind: 4, //field
+					filterText: 'me',
+				},
+				{
+					label: '@currentField',
+					kind: 4, //field
+					filterText: 'currentField',
+				},
+				{
+					label: '@currentField.desc',
+					kind: 4, //field
+					filterText: 'currentField',
+				},
+				{
+					label: 'desc',
+					kind: 9, //property
+				},
+				{
+					label: '@currentField.id',
+					kind: 4, //field
+					filterText: 'currentField',
+				},
+				{
+					label: 'id',
+					kind: 9, //property
+				},
+				{
+					label: '@currentField.title',
+					kind: 4, //field
+					filterText: 'currentField',
+				},
+				{
+					label: 'title',
+					kind: 9, //property
+				},
+				{
+					label: '@currentField.email',
+					kind: 4, //field
+					filterText: 'currentField',
+				},
+				{
+					label: 'email',
+					kind: 9, //property
+				},
+				{
+					label: '@currentField.picture',
+					kind: 4, //field
+					filterText: 'currentField',
+				},
+				{
+					label: 'picture',
+					kind: 9, //property
+				},
+				{
+					label: '@currentField.sip',
+					kind: 4, //field
+					filterText: 'currentField',
+				},
+				{
+					label: 'sip',
+					kind: 9, //property
+				},
+				{
+					label: '@currentField.lookupValue',
+					kind: 4, //field
+					filterText: 'currentField',
+				},
+				{
+					label: 'lookupValue',
+					kind: 9, //property
+				},
+				{
+					label: '@currentField.lookupId',
+					kind: 4, //field
+					filterText: 'currentField',
+				},
+				{
+					label: 'lookupId',
+					kind: 9, //property
+				},
+				{
+					label: 'sp-field-severity--good',
+					kind: 15, //color
+					insertText: '"sp-field-severity--good"',
+				},
+				{
+					label: 'sp-field-severity--low',
+					kind: 15, //color
+					insertText: '"sp-field-severity--low"',
+				},
+				{
+					label: 'sp-field-severity--warning',
+					kind: 15, //color
+					insertText: '"sp-field-severity--warning"',
+				},
+				{
+					label: 'sp-field-severity--severeWarning',
+					kind: 15, //color
+					insertText: '"sp-field-severity--severeWarning"',
+				},
+				{
+					label: 'sp-field-severity--blocked',
+					kind: 15, //color
+					insertText: '"sp-field-severity--blocked"',
+				},
+				{
+					label: 'sp-field-dataBars',
+					kind: 15, //color
+					insertText: '"sp-field-dataBars"',
+				},
+				{
+					label: 'sp-field-trending--up',
+					kind: 15, //color
+					insertText: '"sp-field-trending--up"',
+				},
+				{
+					label: 'sp-field-trending--down',
+					kind: 15, //color
+					insertText: '"sp-field-trending--down"',
+				},
+				{
+					label: 'sp-field-quickAction',
+					kind: 15, //color
+					insertText: '"sp-field-quickAction"',
+				},
+				{
+					label: 'sp-field-customFormatBackground',
+					kind: 15, //color
+					insertText: '"sp-field-customFormatBackground"',
+				},
+			];
+		}
 	};
 };
 
