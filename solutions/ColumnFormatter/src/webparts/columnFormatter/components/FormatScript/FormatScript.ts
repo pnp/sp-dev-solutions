@@ -172,6 +172,7 @@ export const formatScriptTheme = (useDark:boolean):any => {
 			"editor.selectionHighlightBackground": useDark ? "#3c3c3c" : "#f4f4f4", //neutralPrimaryAlt or neutralLighter
 			"editorBracketMatch.background": useDark ? "#5c2d91" : "#b4a0ff", //purple or purpleLight
 			"editorBracketMatch.border": "#" + background,
+			"editorHoverWidget.background": useDark ? "#666666" : "#f4f4f4", //neutralSecondary or neutralLighter
 		}
 	};
 };

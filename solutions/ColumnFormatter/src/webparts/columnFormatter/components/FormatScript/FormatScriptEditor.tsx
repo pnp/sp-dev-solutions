@@ -109,15 +109,25 @@ export class FormatScriptEditor extends React.Component<IFormatScriptEditorProps
 			const curVal:string = this._editor.getValue();
 			// Attempt Transpile
 			const parseResult:IFSParseResult = formatScriptToJSON(curVal);
+			const editorErrors = new Array<any>();
 			if (parseResult.errors.length > 0) {
-
-				//Process Editor Errors
+				//Build Editor Errors
 				parseResult.errors.forEach((val:IFSParseError) => {
 					if (typeof val.loc !== "undefined") {
-
+						editorErrors.push({
+							severity: 8, //Error
+							startLineNumber: val.loc.start.line,
+							startColumn: val.loc.start.column,
+							endLineNumber: val.loc.end.line,
+							endColumn: val.loc.end.column,
+							message: val.message,
+						});
 					}
 				});
 			}
+			// Will either create errors, or remove (by sending empty array)
+			monaco.editor.setModelMarkers(this._editor.getModel(), "FS", editorErrors);
+
 			this.props.onValueChanged(parseResult);
 		}
 	}

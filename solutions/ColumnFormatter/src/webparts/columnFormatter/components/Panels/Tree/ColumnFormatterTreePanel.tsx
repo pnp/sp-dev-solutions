@@ -8,7 +8,7 @@ import { Dialog, DialogFooter, DialogType } from "office-ui-fabric-react/lib/Dia
 
 import { IApplicationState } from '../../../state/State';
 import styles from '../../ColumnFormatter.module.scss';
-import { FormatScriptEditor } from './FormatScriptEditor';
+import { FormatScriptEditorDialog } from '../../FormatScript/FormatScriptEditorDialog';
 
 export interface ITreeNode {
 	name: string;
@@ -135,26 +135,14 @@ class ColumnFormatterTreePanel_ extends React.Component<IColumnFormatterTreePane
 					<span className={styles.errorMessage}>{strings.TreeView_Error + ' ' + strings.TechnicalDetailsErrorHeader + ': ' + this.state.treeError}</span>
 				)}
 				<DefaultButton text="fx" onClick={this.onFxButtonClick}/>
-				<Dialog
-				 hidden={!this.state.formatScriptDialogVisible}
-				 onDismiss={()=>{this.setState({formatScriptDialogVisible: false,});}}
-				 dialogContentProps={{
-					type: DialogType.normal,
-					title: "Format Script",
-				}}
-				modalProps={{
-					isBlocking: true,
-				}}
-				className={styles.formatScriptDialog}>
-					<FormatScriptEditor
-					 value='SWITCH(@currentField + 45,"Done","sp-field-severity--good","In Progress","sp-field-severity--low","sp-field-severity--blocked")'
-					 theme="vs"
-					/>
-				<DialogFooter>
-					<PrimaryButton text={strings.Dialog_Save} onClick={()=>{this.setState({formatScriptDialogVisible: false,});}}/>
-					<DefaultButton text={strings.Dialog_Cancel} onClick={()=>{this.setState({formatScriptDialogVisible: false,});}}/>
-				</DialogFooter>
-				</Dialog>
+				<FormatScriptEditorDialog
+				 initialValue='@currentField + "%"'
+				 theme="vs-dark"
+				 visible={this.state.formatScriptDialogVisible}
+				 dialogTitle="Format Script"
+				 onCancel={()=>{this.setState({formatScriptDialogVisible:false});}}
+				 onSave={this.onFormatScriptEditorSave}
+				/>
 		  </div>
 		);
 	}
@@ -228,6 +216,17 @@ class ColumnFormatterTreePanel_ extends React.Component<IColumnFormatterTreePane
 	private onFxButtonClick(): void {
 		this.setState({
 			formatScriptDialogVisible: true,
+		});
+	}
+
+	@autobind
+	private onFormatScriptEditorSave(result:any): void {
+		//TODO add node ref to properly map changes to virtualFormat
+		console.log('Saved!');
+		console.log(JSON.stringify(result));
+
+		this.setState({
+			formatScriptDialogVisible: false,
 		});
 	}
 
