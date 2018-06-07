@@ -522,7 +522,7 @@ const parseFormatScript = (expression:any): IFSParseResult => {
 	return parseResult;
 };
 
-export const formatScriptToJSON = (fs:string, startingIndentation:string): IFSParseResult => {
+export const formatScriptToJSON = (fs:string): IFSParseResult => {
 	//preprocess FormatScript to remove @ keywords (esprima will error out otherwise)
 	const tokenFS = fs.replace("@currentField", CF).replace("@me", ME).replace("@now", NOW);
 

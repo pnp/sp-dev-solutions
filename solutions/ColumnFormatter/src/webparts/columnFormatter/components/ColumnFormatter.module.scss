@@ -1451,6 +1451,17 @@
     }
   }
 
+  button.valid {
+    color: $ms-color-green;
+  }
+  button.invalid {
+    color: $ms-color-redDark;
+
+    &:hover {
+      color: $ms-color-red;
+    }
+  }
+
   .formatScriptEditor {
     width: 100%;
     height: 200px;

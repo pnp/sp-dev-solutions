@@ -235,6 +235,10 @@ declare interface IColumnFormatterWebPartStrings {
   PreviewValidation_Good: string;
   PreviewValidation_Bad: string;
 
+  //FormatScript Editor
+  FormatScriptValidation_Good: string;
+  FormatScriptValidation_Bad: string;
+
   //Tree View
   TreeView_Header: string;
   TreeView_Error: string;

@@ -235,6 +235,10 @@ define([], function() {
     PreviewValidation_Good: 'Validation passed!',
     PreviewValidation_Bad: 'Invalid JSON (code):',
 
+    //FormatScript Editor
+    FormatScriptValidation_Good: 'Validation passed!',
+    FormatScriptValidation_Bad: 'Errors:',
+
     //Tree View
     TreeView_Header: 'Elements tree',
     TreeView_Error: 'Error loading tree!',

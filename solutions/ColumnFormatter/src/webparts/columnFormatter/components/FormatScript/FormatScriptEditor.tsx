@@ -1,28 +1,33 @@
 import { autobind } from "office-ui-fabric-react/lib/Utilities";
 import * as React from "react";
-
-import styles from "../../ColumnFormatter.module.scss";
+import * as strings from 'ColumnFormatterWebPartStrings';
+import styles from "../ColumnFormatter.module.scss";
 import {
     formatScriptConfig,
     formatScriptId,
     formatScriptTheme,
     formatScriptToJSON,
-    formatScriptTokens,
+	formatScriptTokens,
+	IFSParseResult,
+	IFSParseError
 } from "./FormatScript";
 
-const monaco = require('../../../../../MonacoCustomBuild');
+import { Dialog, DialogFooter, DialogType } from "office-ui-fabric-react/lib/Dialog";
+import { DefaultButton, IButtonProps, Button, PrimaryButton } from 'office-ui-fabric-react/lib/Button';
+
+const monaco = require('../../../../MonacoCustomBuild');
 
 export interface IFormatScriptEditorProps {
-	value: string;
+	initialValue: string;
 	theme: string;
-	//onValueChange: (newValue:string, validationErrors:Array<string>) => void;
+	onValueChanged: (IFSParseResult) => void;
 }
 
 export class FormatScriptEditor extends React.Component<IFormatScriptEditorProps, {}> {
 
 	private _container: HTMLElement;
 	private _editor: any;
-
+	
 	public componentDidMount(): void {
 
 		//Register the FormatScript language
@@ -55,7 +60,7 @@ export class FormatScriptEditor extends React.Component<IFormatScriptEditorProps
 
 		//Create the editor
 		this._editor = monaco.editor.create(this._container, {
-			value: this.props.value,
+			value: this.props.initialValue,
 			scrollBeyondLastLine: false,
 			theme: formatScriptId + 'Theme',
 			language: formatScriptId,
@@ -72,11 +77,11 @@ export class FormatScriptEditor extends React.Component<IFormatScriptEditorProps
 	}
 
 	public componentDidUpdate(prevProps:IFormatScriptEditorProps) {
-		if(this.props.value !== prevProps.value) {
+		/*if(this.props.value !== prevProps.value) {
 			if(this._editor) {
 				this._editor.setValue(this.props.value);
 			}
-		}
+		}*/
 		if(this.props.theme !== prevProps.theme) {
 			monaco.editor.setTheme(this.props.theme);
 		}
@@ -94,16 +99,26 @@ export class FormatScriptEditor extends React.Component<IFormatScriptEditorProps
 
 	public render(): React.ReactElement<IFormatScriptEditorProps> {
 		return (
-		  <div ref={(container) => this._container = container!} className={styles.formatScriptEditor} />
+			<div ref={(container) => this._container = container!} className={styles.formatScriptEditor} />
 		);
 	}
 
 	@autobind
 	private onDidChangeModelContent(e:any): void {
 		if(this._editor) {
-			let curVal:string = this._editor.getValue();
+			const curVal:string = this._editor.getValue();
 			// Attempt Transpile
-			formatScriptToJSON(curVal,"");
+			const parseResult:IFSParseResult = formatScriptToJSON(curVal);
+			if (parseResult.errors.length > 0) {
+
+				//Process Editor Errors
+				parseResult.errors.forEach((val:IFSParseError) => {
+					if (typeof val.loc !== "undefined") {
+
+					}
+				});
+			}
+			this.props.onValueChanged(parseResult);
 		}
 	}
 }
