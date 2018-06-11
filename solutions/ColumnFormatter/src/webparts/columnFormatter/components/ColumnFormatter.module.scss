@@ -8,6 +8,25 @@
     position: relative;
   }
 
+  .betaLabel {
+    color: $ms-color-magentaLight;
+    position: absolute;
+    font-style: italic;
+    padding-left: 4px;
+    margin-top: 3px;
+
+    i {
+      position: absolute;
+      margin-left: -2px;
+      font-size: 8px;
+      top: -3px;
+    }
+
+    span {
+      padding: 2px;
+    }
+  }
+
   .welcome {
     position: relative;
     background-color: $ms-color-themeDark;

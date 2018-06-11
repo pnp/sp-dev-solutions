@@ -136,7 +136,7 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
                     <Icon iconName='BucketColor'/>
                   </div>
                   <div className={styles.words}>
-                    <h2>{strings.Welcome_NewVFHeader}</h2>
+                    <h2>{strings.Welcome_NewVFHeader} <span className={styles.betaLabel}><Icon iconName="Glimmer"/><span>Beta</span></span></h2>
                     <span>{strings.Welcome_NewVFDescription}</span>
                   </div>
                 </div>
