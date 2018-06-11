@@ -1,22 +1,23 @@
-import * as UIFabric from '@uifabric/styling/lib';
-import * as strings from 'ColumnFormatterWebPartStrings';
-import { ColumnActionsMode, DetailsList, IColumn } from 'office-ui-fabric-react/lib/DetailsList';
-import * as React from 'react';
-import { connect } from 'react-redux';
-import { Dispatch } from 'redux';
-import * as tslib from 'tslib';
+import * as UIFabric from "@uifabric/styling/lib";
+import * as strings from "ColumnFormatterWebPartStrings";
+import { ColumnActionsMode, DetailsList, IColumn, SelectionMode } from "office-ui-fabric-react/lib/DetailsList";
+import * as React from "react";
+import { connect } from "react-redux";
+import { Dispatch } from "redux";
+import * as tslib from "tslib";
 
-import { LocalCustomFormatter, LocalHtmlEncoding } from '../../../../../CustomFormatter/LocalCustomFormatter';
-import { IFormatterFieldInfo, LocalCustomFormatterStrings } from '../../../../../CustomFormatter/LocalFieldRendererFormat';
-import { updateFormatterErrors } from '../../../state/Actions';
-import { columnTypes, IApplicationState, IDataColumn } from '../../../state/State';
-import styles from '../../ColumnFormatter.module.scss';
+import { LocalCustomFormatter, LocalHtmlEncoding } from "../../../../../CustomFormatter/LocalCustomFormatter";
+import { IFormatterFieldInfo, LocalCustomFormatterStrings } from "../../../../../CustomFormatter/LocalFieldRendererFormat";
+import { updateFormatterErrors } from "../../../state/Actions";
+import { columnTypes, formatterType, IApplicationState, IDataColumn } from "../../../state/State";
+import styles from "../../ColumnFormatter.module.scss";
 
 export interface IPreviewViewProps {
 	columns?: Array<IDataColumn>;
 	rows?: Array<Array<any>>;
 	formatterString?: string;
 	userEmail?: string;
+	formatType?: formatterType;
 	updateFormatterErrors?: (formatterErrors:Array<string>) => void;
 }
 
@@ -45,10 +46,12 @@ class PreviewView_ extends React.Component<IPreviewViewProps, {}> {
 
 		return (
 			<div className={styles.previewView}>
-			<DetailsList
-			 items={this.buildItems()}
-			 columns={this.buildColumns()}/>
-			 </div>
+				<DetailsList
+					items={this.buildItems()}
+					columns={this.buildColumns()}
+					selectionMode={this.selectionMode()}
+					/>
+			</div>
 		);
 	}
 
@@ -62,6 +65,20 @@ class PreviewView_ extends React.Component<IPreviewViewProps, {}> {
 
 	private evaluateFormatterErrors(): void {
 		this.props.updateFormatterErrors(this._formatterErrors);
+	}
+
+	private selectionMode(): SelectionMode {
+		if (this.props.formatType == formatterType.View) {
+			try {
+				const curObj:any = JSON.parse(this.props.formatterString);
+				if (curObj.hideSelection) {
+					return SelectionMode.none;
+				}
+			} catch (error) {
+				//Ignore
+			}
+		}
+		return SelectionMode.multiple;
 	}
 
 	private buildItems(): Array<any> {
@@ -86,9 +103,13 @@ class PreviewView_ extends React.Component<IPreviewViewProps, {}> {
 			minWidth: 130,
 			maxWidth: 130,
 			className: 'od-DetailsRow-cell--' + this.colTypeFromEnum(this.props.columns[0].type),
+			columnActionsMode: ColumnActionsMode.hasDropdown,
 			onRender: (item?: any, index?: number) => {
-				return this.formattedMarkup(index);
-			}
+				if (this.props.formatType == formatterType.Column) {
+					return this.formattedMarkup(index);
+				}
+				return this.previewElement(this.props.rows[index][0], index, 0);
+			},
 		});
 		//Any extra columns
 		for(var c = 1; c<this.props.columns.length; c++) {
@@ -100,9 +121,10 @@ class PreviewView_ extends React.Component<IPreviewViewProps, {}> {
 				minWidth: 130,
 				maxWidth: 130,
 				className: 'od-DetailsRow-cell--' + this.colTypeFromEnum(this.props.columns[c].type),
+				columnActionsMode: ColumnActionsMode.hasDropdown,
 				onRender: (item:any, index:number) => {
 					return this.previewElement(this.props.rows[index][cIndex], index, cIndex);
-				}
+				},
 			});
 		}
 		//Final spacer (used normally for newcolumn commands, but also prevents huge widths for last column)
@@ -287,7 +309,8 @@ function mapStateToProps(state: IApplicationState): IPreviewViewProps{
 		columns: state.data.columns,
 		rows: state.data.rows,
 		formatterString: state.code.formatterString,
-		userEmail: state.context.user.email
+		userEmail: state.context.user.email,
+		formatType: state.code.formatType,
 	};
 }
 
@@ -295,7 +318,7 @@ function mapDispatchToProps(dispatch: Dispatch<IPreviewViewProps>): IPreviewView
 	return {
 		updateFormatterErrors: (formatterErrors:Array<string>) => {
 			dispatch(updateFormatterErrors(formatterErrors));
-		}
+		},
     };
 }
 

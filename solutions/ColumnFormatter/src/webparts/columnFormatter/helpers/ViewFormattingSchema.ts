@@ -21,7 +21,14 @@ export const ViewFormattingSchema = {
         },
         "additionalRowClass": {
             "description": "An expression whose output is a class name to be applied to the list row.",
-            "$ref": `${ColumnFormattingSchemaURI}#definitions/expression`
+            "anyOf": [
+                {
+                    "$ref": `${ColumnFormattingSchemaURI}#definitions/expression`
+                },
+                {
+                    "type": "string"
+                }
+            ]
         }
     }
 };

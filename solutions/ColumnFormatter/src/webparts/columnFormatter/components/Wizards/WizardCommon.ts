@@ -118,7 +118,7 @@ export const standardWizardStartingCode = (colType:columnTypes, formatType:forma
 			'  "hideColumnHeaders": false,',
 			'  "rowFormatter": {',
 			'    "elmType": "div",',
-			'    "txtContent": "[$Title$]"',
+			'    "txtContent": "[$Title]"',
 			'  }',
 			'}'
 		].join('\n');

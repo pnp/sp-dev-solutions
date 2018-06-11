@@ -8,6 +8,7 @@
 - Screen headers for all open screens
 - Ensure Schema action to the main editor
   - Intellisense only works when the schema is set correctly, so now you can right-click in the editor window and choose Ensure Schema to correct missing/incorrect schema entries
+- Preview Columns now show dropdown (doesn't do anything, but better matches true listview)
 
 ### Changed
 - Renamed from Column Formatter to List Formatter
