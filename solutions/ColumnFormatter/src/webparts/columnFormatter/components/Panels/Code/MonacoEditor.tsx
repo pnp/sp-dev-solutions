@@ -2,6 +2,7 @@ import { autobind } from 'office-ui-fabric-react/lib/Utilities';
 import * as React from 'react';
 
 import { ColumnFormattingSchema, ColumnFormattingSchemaURI } from '../../../helpers/ColumnFormattingSchema';
+import { ViewFormattingSchema, ViewFormattingSchemaURI } from '../../../helpers/ViewFormattingSchema';
 import styles from '../../ColumnFormatter.module.scss';
 
 const monaco = require('../../../../../MonacoCustomBuild');
@@ -24,10 +25,16 @@ export class MonacoEditor extends React.Component<IMonacoEditorProps, {}> {
 	public componentDidMount(): void {
 		//Add Column Formatter Schema for validation
 		monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
-			schemas: [{
-				uri: ColumnFormattingSchemaURI,
-				schema: ColumnFormattingSchema
-			}],
+			schemas: [
+				{
+					uri: ColumnFormattingSchemaURI,
+					schema: ColumnFormattingSchema
+				},
+				{
+					uri: ViewFormattingSchemaURI,
+					schema: ViewFormattingSchema
+				},
+			],
 			validate: true,
 			allowComments: false
 		});

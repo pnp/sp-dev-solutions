@@ -2,7 +2,7 @@ export const ColumnFormattingSchemaURI: string = "http://columnformatting.sharep
 
 export const ColumnFormattingSchema = {
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "title": "CustomtFormatter JSON",
+    "title": "CustomFormatter JSON",
     "description": "CustomFormatter renderer for SharePoint lists",
     "definitions": {
         "customAction": {
