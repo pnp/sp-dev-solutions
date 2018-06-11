@@ -27,6 +27,7 @@ export enum welcomeStage {
   upload,
   loadFromList,
   loadFromSiteColumn,
+  loadFromListView,
   loadFromLibrary
 }
 
@@ -232,9 +233,9 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
                selectedKey={this.state.loadChoiceForOpen}
                onChange={this.onLoadChoiceForOpenChanged}
                options={[
-                {key:'list', text: strings.Welcome_OpenLoadList},
-                {key:'sitecolumn', text: strings.Welcome_OpenLoadSiteColumn},
-                {key:'listview', text: strings.Welcome_OpenLoadListView},
+                {key:'list', text: strings.Welcome_OpenLoadList + ` (${strings.ColumnFormatter})`},
+                {key:'sitecolumn', text: strings.Welcome_OpenLoadSiteColumn + ` (${strings.ColumnFormatter})`},
+                {key:'listview', text: strings.Welcome_OpenLoadListView + ` (${strings.ViewFormatter})`},
                 {key:'file', text: strings.Welcome_OpenLoadFile, onRenderField: (props, render) => {
                   return (
                     <div>
@@ -279,6 +280,7 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
 
           {this.state.stage == welcomeStage.loadFromList && (
             <div>
+              <span className={styles.headerLabel}>{strings.Welcome_OpenLoadList}</span>
               {!this.props.context.isOnline && (
                 <span>{strings.FeatureUnavailableFromLocalWorkbench}</span>
               )}
@@ -322,6 +324,7 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
 
           {this.state.stage == welcomeStage.loadFromSiteColumn && (
             <div>
+              <span className={styles.headerLabel}>{strings.Welcome_OpenLoadSiteColumn}</span>
               {!this.props.context.isOnline && (
                 <span>{strings.FeatureUnavailableFromLocalWorkbench}</span>
               )}
@@ -363,8 +366,53 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
           )}
 
 
+          {this.state.stage == welcomeStage.loadFromListView && (
+            <div>
+              <span className={styles.headerLabel}>{strings.Welcome_OpenLoadListView}</span>
+              {!this.props.context.isOnline && (
+                <span>{strings.FeatureUnavailableFromLocalWorkbench}</span>
+              )}
+              {!this.state.listViewsLoaded && this.props.context.isOnline && !this.state.loadingFromListView && this.state.loadFromListViewError == undefined && (
+                <Spinner size={SpinnerSize.large} label={strings.ListView_LoadingListViews}/>
+              )}
+              {this.state.listViewsLoaded && this.props.context.isOnline && !this.state.loadingFromListView && this.state.loadFromListViewError == undefined && (
+                <div>
+                  <Dropdown
+                  label={strings.ListView_List}
+                  selectedKey={this.state.selectedListViewList}
+                  onChanged={(item:IDropdownOption)=> {this.setState({selectedListViewList: item.key.toString(),selectedListView: undefined});}}
+                  required={true}
+                  options={this.listViewListsToOptions()} />
+                  <Dropdown
+                  label={strings.ListView_View}
+                  selectedKey={this.state.selectedListView}
+                  disabled={this.state.selectedListViewList == undefined}
+                  onChanged={(item:IDropdownOption)=> {this.setState({selectedListView: item.key.toString()});}}
+                  required={true}
+                  options={this.listViewsToOptions()} />
+                </div>
+              )}
+              {this.state.loadingFromListView && this.state.loadFromListViewError == undefined &&(
+                <Spinner size={SpinnerSize.large} label={strings.ListView_LoadingFromListView}/>
+              )}
+              {this.state.loadFromListViewError !== undefined && (
+                <span className={styles.errorMessage}>{this.state.loadFromListViewError}</span>
+              )}
+              <div className={styles.navigationButtons}>
+                <div>
+                  <DefaultButton text={strings.Welcome_BackButton} onClick={() => {this.gotoStage(welcomeStage.open);}}/>
+                </div>
+                <div style={{textAlign: 'right'}}>
+                  <PrimaryButton text={strings.Welcome_OKButton} disabled={!this.okButtonEnabled()} onClick={this.onOkForLoadFromListViewClick}/>
+                </div>
+              </div>
+            </div>
+          )}
+
+
           {this.state.stage == welcomeStage.loadFromLibrary && (
             <div>
+              <span className={styles.headerLabel}>{strings.Welcome_OpenLoadFileLibrary}</span>
               {!this.props.context.isOnline && (
                 <span>{strings.FeatureUnavailableFromLocalWorkbench}</span>
               )}
@@ -447,6 +495,11 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
         return (
           this.props.context.isOnline && this.state.selectedSiteColumnGroup !== undefined &&
             this.state.selectedSiteColumn !== undefined && this.state.loadFromSiteColumnError == undefined
+        );
+      case welcomeStage.loadFromListView:
+        return (
+          this.props.context.isOnline && this.state.selectedListViewList !== undefined &&
+            this.state.selectedListView !== undefined && this.state.loadFromListViewError == undefined
         );
       case welcomeStage.loadFromLibrary:
         return (
@@ -599,6 +652,9 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
       case 'sitecolumn':
         this.gotoLoadFromSiteColumn();
         break;
+      case 'listview':
+        this.gotoLoadFromListView();
+        break;
       default:
         if(this.state.fileChoiceForOpen == 'library'){
           this.gotoLoadFromLibrary();
@@ -693,26 +749,26 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
     this.gotoStage(welcomeStage.loadFromList);
   }
 
-  private listsToOptions(): Array<IDropdownOption> {
+  private listViewListsToOptions(): Array<IDropdownOption> {
     let items:Array<IDropdownOption> = new Array<IDropdownOption>();
-    for(var list of this.state.lists) {
+    for(var list of this.state.listViews) {
       items.push({
         key: list.Id,
-        text: list.Title
+        text: list.Title,
       });
     }
     return items;
   }
 
-  private fieldsToOptions(): Array<IDropdownOption> {
+  private listViewsToOptions(): Array<IDropdownOption> {
     let items:Array<IDropdownOption> = new Array<IDropdownOption>();
-    for(var list of this.state.lists) {
-      if(list.Id == this.state.selectedList) {
-        for(var field of list.Fields) {
+    for(var list of this.state.listViews) {
+      if(list.Id == this.state.selectedListViewList) {
+        for(var view of list.Views) {
           items.push({
-            key: field.InternalName,
-            text: field.Title + ' [' + textForType(field.Type) + ']'
-          });
+              key: view.Id,
+              text: view.Title,
+            });    
         }
         break;
       } 
@@ -721,23 +777,23 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
   }
 
   @autobind
-  private onOkForLoadFromListClick(): void {
+  private onOkForLoadFromListViewClick(): void {
     this.setState({
-      loadingFromList: true,
-      loadFromListError: undefined
+      loadingFromListView: true,
+      loadFromListViewError: undefined
     });
-    sp.web.lists.getById(this.state.selectedList)
-      .fields.getByInternalNameOrTitle(this.state.selectedField).select('CustomFormatter','TypeAsString','DisplayFormat').get()
+    sp.web.lists.getById(this.state.selectedListViewList)
+      .views.getById(this.state.selectedListView).select('CustomFormatter').get()
       .then((data)=>{
-        this.launchEditorFromText(data.CustomFormatter, typeForTypeAsString(data.TypeAsString, data.DisplayFormat), saveMethod.ListField);
+        this.launchEditorFromText(data.CustomFormatter, columnTypes.text, saveMethod.ListView);
         this.setState({
-          loadingFromList: false,
+          loadingFromListView: false,
         });
       })
       .catch((error:any) => {
         this.setState({
-          loadingFromList: false,
-          loadFromListError: strings.Welcome_LoadingError + ' ' + strings.TechnicalDetailsErrorHeader + ': ' + error.message
+          loadingFromListView: false,
+          loadFromListViewError: strings.Welcome_LoadingError + ' ' + strings.TechnicalDetailsErrorHeader + ': ' + error.message
         });
       });
   }
@@ -827,6 +883,103 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
         this.setState({
           loadingFromSiteColumn: false,
           loadFromSiteColumnError: strings.Welcome_LoadingError + ' ' + strings.TechnicalDetailsErrorHeader + ': ' + error.message
+        });
+      });
+  }
+
+
+  private gotoLoadFromListView(): void {
+    if(!this.state.listViewsLoaded) {
+      if(this.props.context.isOnline) {
+        sp.web.lists.filter('Hidden eq false').select('Id','Title','Views/Id','Views/Title','Views/Hidden','Views/DefaultView').expand('Views').get()
+          .then((data:any) => {
+            let listdata:Array<any> = new Array<any>();
+            for(var i=0; i<data.length; i++){
+              listdata.push({
+                Id: data[i].Id,
+                Title: data[i].Title,
+                Views: data[i].Views.map((view:any, index:number) => {
+                  if(!view.Hidden) {
+                      return {
+                        Title: view.Title,
+                        Id: view.Id,
+                        IsDefault: view.DefaultView
+                      };
+                  }
+                })
+                .filter((view:any, index:number) => {return view !== undefined;})
+                .sort((v1:any, v2:any): number => {
+                  if (v1.IsDefault) { 
+                    return -1;
+                  }
+                  if (v2.IsDefault) {
+                    return 1;
+                  }
+                  return 0;
+                })
+              });
+            }
+
+            this.setState({
+              listViewsLoaded: true,
+              listViews: listdata
+            });
+          })
+          .catch((error:any) => {
+            this.setState({
+              loadFromListViewError: strings.ListView_ListViewLoadError + ' ' + strings.TechnicalDetailsErrorHeader + ': ' + error.message
+            });
+          });
+      }
+    }
+    this.gotoStage(welcomeStage.loadFromListView);
+  }
+
+  private listsToOptions(): Array<IDropdownOption> {
+    let items:Array<IDropdownOption> = new Array<IDropdownOption>();
+    for(var list of this.state.lists) {
+      items.push({
+        key: list.Id,
+        text: list.Title
+      });
+    }
+    return items;
+  }
+
+  private fieldsToOptions(): Array<IDropdownOption> {
+    let items:Array<IDropdownOption> = new Array<IDropdownOption>();
+    for(var list of this.state.lists) {
+      if(list.Id == this.state.selectedList) {
+        for(var field of list.Fields) {
+          items.push({
+            key: field.InternalName,
+            text: field.Title + ' [' + textForType(field.Type) + ']'
+          });
+        }
+        break;
+      } 
+    }
+    return items;
+  }
+
+  @autobind
+  private onOkForLoadFromListClick(): void {
+    this.setState({
+      loadingFromList: true,
+      loadFromListError: undefined
+    });
+    sp.web.lists.getById(this.state.selectedList)
+      .fields.getByInternalNameOrTitle(this.state.selectedField).select('CustomFormatter','TypeAsString','DisplayFormat').get()
+      .then((data)=>{
+        this.launchEditorFromText(data.CustomFormatter, typeForTypeAsString(data.TypeAsString, data.DisplayFormat), saveMethod.ListField);
+        this.setState({
+          loadingFromList: false,
+        });
+      })
+      .catch((error:any) => {
+        this.setState({
+          loadingFromList: false,
+          loadFromListError: strings.Welcome_LoadingError + ' ' + strings.TechnicalDetailsErrorHeader + ': ' + error.message
         });
       });
   }

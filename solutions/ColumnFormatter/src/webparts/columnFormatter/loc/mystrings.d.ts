@@ -74,7 +74,7 @@ declare interface IColumnFormatterWebPartStrings {
   ListView_LoadingListViews: string;
   ListView_List: string;
   ListView_View: string;
-  ListView_LoadingFromView: string;
+  ListView_LoadingFromListView: string;
   ListView_ListViewLoadError: string;
   ListView_SaveDialogTitle: string;
   ListView_Saving: string;

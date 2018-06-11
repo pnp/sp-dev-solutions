@@ -1,9 +1,11 @@
 # Releases
 ## 2.0,0 - 2018-06-07
 ### Added
-- Beta support for Row Formatting
-  - Ability to save row formats directly to list views
-- Formatter Type label in Editor to indicate the type of format currently being worked on
+- Beta support for View Formatting
+  - Ability to save view formatters directly to list views
+  - Ability to load view formatters directly from list views
+- Formatter Type label in editor to indicate the type of format currently being worked on
+- Screen headers for all open screens
 
 ### Changed
 - Renamed from Column Formatter to List Formatter

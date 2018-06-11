@@ -38,6 +38,13 @@
         }
       }
 
+      .headerLabel {
+        font-weight: bold;
+        font-size: 18px;
+        text-align: center;
+        display: inherit;
+      }
+
       .startButtons {
         margin-top: 18px;
 
@@ -129,11 +136,6 @@
 
       .uploadForm {
         text-align: center;
-
-        .headerLabel {
-          font-weight: bold;
-          font-size: 18px;
-        }
 
         .dropZone {
           width: 100%;
