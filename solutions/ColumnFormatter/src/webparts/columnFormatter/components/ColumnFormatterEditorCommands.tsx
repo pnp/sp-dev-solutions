@@ -405,7 +405,7 @@ class ColumnFormatterEditorCommands_ extends React.Component<IColumnFormatterEdi
     }
 
     // Row Formatting specific save methods
-    if (this.props.formatType == formatterType.Row) {
+    if (this.props.formatType == formatterType.View) {
       items[0].subMenuProps.items.push(
         {
           key: 'saveas-listview',

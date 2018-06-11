@@ -3,12 +3,15 @@
 ### Added
 - Beta support for Row Formatting
   - Ability to save row formats directly to list views
+- Formatter Type label in Editor to indicate the type of format currently being worked on
 
 ### Changed
 - Renamed from Column Formatter to List Formatter
-  - Reflects support for both column and row formatters
+  - Reflects support for both column and view (row) formatters
+- Renamed editor theme options to use more meaningful names
 
 ### Removed
+- Choice of Column Type when opening files
 
 ### Fixed
 

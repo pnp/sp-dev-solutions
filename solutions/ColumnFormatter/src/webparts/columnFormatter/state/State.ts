@@ -29,7 +29,7 @@ export enum saveMethod {
 
 export enum formatterType {
 	Column,
-	Row,
+	View,
 }
 //#endregion
 

@@ -1,6 +1,6 @@
 import * as strings from 'ColumnFormatterWebPartStrings';
 
-import { columnTypes, IDataColumn, IUserContext } from '../../state/State';
+import { columnTypes, IDataColumn, IUserContext, formatterType } from '../../state/State';
 import { generateRowValue } from '../../state/ValueGeneration';
 import { WizardActionLink } from './WizardActionLink';
 import { WizardCheckboxes } from './WizardCheckboxes';
@@ -16,6 +16,7 @@ import { WizardOverdueStatus } from './WizardOverdueStatus';
 import { WizardRoundImage } from './WizardRoundImage';
 import { WizardSeverity } from './WizardSeverity';
 import { WizardTwitter } from './WizardTwitter';
+import { format } from '@uifabric/utilities';
 
 //** Implement this interface to create your own wizard/template */
 export interface IWizard {
@@ -48,7 +49,7 @@ export interface IWizard {
 }
 
 //** The actual array of wizards/templates. Add yours here */
-export const Wizards: Array<IWizard> = [
+export const WizardsCF: Array<IWizard> = [
 	WizardNumberTending,
 	WizardActionLink,
 	WizardCheckboxes,
@@ -63,6 +64,10 @@ export const Wizards: Array<IWizard> = [
 	WizardRoundImage,
 	WizardSeverity,
 	WizardTwitter
+];
+
+export const WizardsVF: Array<IWizard> = [
+
 ];
 
 
@@ -84,33 +89,58 @@ export const standardWizardStartingColumns = (colType:columnTypes): Array<IDataC
 };
 
 //** Helper function that generates the most basic json */
-export const standardWizardStartingCode = (colType:columnTypes): string => {
-	let currentField:string = '@currentField';
-	switch(colType) {
-		case columnTypes.lookup:
-			currentField = '@currentField.lookupValue';
-			break;
-		case columnTypes.person:
-			currentField = '@currentField.title';
-			break;
-		default:
-			break;
+export const standardWizardStartingCode = (colType:columnTypes, formatType:formatterType): string => {
+	if (formatType == formatterType.Column) {
+		let currentField:string = '@currentField';
+		switch(colType) {
+			case columnTypes.lookup:
+				currentField = '@currentField.lookupValue';
+				break;
+			case columnTypes.person:
+				currentField = '@currentField.title';
+				break;
+			default:
+				break;
+		}
+		return [
+			'{',
+			'  "$schema": "http://columnformatting.sharepointpnp.com/columnFormattingSchema.json",',
+			'  "elmType": "div",',
+			'  "txtContent": "' + currentField + '"',
+			'}'
+		].join('\n');
 	}
-	return [
-		'{',
-		'  "$schema": "http://columnformatting.sharepointpnp.com/columnFormattingSchema.json",',
-		'  "elmType": "div",',
-		'  "txtContent": "' + currentField + '"',
-		'}'
-	].join('\n');
+	if (formatType == formatterType.View) {
+		return [
+			'{',
+			'  "$schema": "http://viewformatting.sharepointpnp.com/viewFormattingSchema.json",',
+			'  "hideSelection": false,',
+			'  "hideColumnHeaders": false,',
+			'  "rowFormatter": {',
+			'    "elmType": "div",',
+			'    "txtContent": "[$Title$]"',
+			'  },',
+			'  "additionalRowClass": ""',
+			'}'
+		].join('\n');
+	}
+	return "";
 };
 
-
 //** Helper function used to get a wizard from the wizards array by name */
-export const getWizardByName = (name:string): IWizard | undefined => {
-	for(var wizard of Wizards) {
-		if(wizard.name == name) {
-			return wizard;
+export const getWizardByName = (name:string, formatType: formatterType): IWizard | undefined => {
+	if (formatType == formatterType.Column) {
+		for(var wizardCF of WizardsCF) {
+			if(wizardCF.name == name) {
+				return wizardCF;
+			}
+		}
+	}
+	if (formatType == formatterType.View) {
+		for(var wizardVF of WizardsVF) {
+			if(wizardVF.name == name) {
+				return wizardVF;
+			}
 		}
 	}
 	return undefined;
@@ -118,7 +148,7 @@ export const getWizardByName = (name:string): IWizard | undefined => {
 
 //** Helper function used to filter the wizards by supported field types */
 export const getWizardsForColumnType = (colType: columnTypes): Array<IWizard> => {
-	return Wizards.filter((value: IWizard, index:number) => {
+	return WizardsCF.filter((value: IWizard, index:number) => {
 		if(colType !== undefined) {
 			if(value.fieldTypes.length == 0 || value.fieldTypes.indexOf(colType) >= 0) {
 				return true;

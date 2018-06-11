@@ -134,9 +134,9 @@ export default class ColumnFormatterWebPart extends BaseClientSideWebPart<IColum
                   label: strings.Property_EditorThemeLabel,
                   selectedKey: this.properties.editorTheme,
                   options: [
-                    { key: 'vs', text: 'vs' },
-                    { key: 'vs-dark', text: 'vs-dark' },
-                    { key: 'hc-black', text: 'hc-black' }
+                    { key: 'vs', text: 'Visual Studio' },
+                    { key: 'vs-dark', text: 'Visual Studio Dark' },
+                    { key: 'hc-black', text: 'High Contrast Dark' }
                   ]
                 }),
                 PropertyPaneToggle('showLineNumbers', {

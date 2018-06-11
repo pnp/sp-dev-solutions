@@ -14,10 +14,10 @@
 
     .welcomeBox {
       position: absolute;
-      width: 325px;
+      width: 340px;
       height: 300px;
       left: 50%;
-      margin-left: -150px;
+      margin-left: -170px;
       top: 20px;
       border-radius: 15px;
       background-color: $ms-color-white;
@@ -50,9 +50,9 @@
           border: 2px solid;
           border-color: $ms-color-neutralDark;
           border-radius: 15px;
-          padding: 10px;
+          padding: 6px;
           cursor: pointer;
-          margin-bottom: 12px;
+          margin-bottom: 8px;
 
           &:lang(fr-fr) {
             margin-bottom: 8px;
@@ -68,11 +68,11 @@
 
           .icon {
             color: $ms-color-themeDark;
-            font-size: 48px;
-            margin-right: 14px;
+            font-size: 38px;
+            margin-right: 10px;
             margin-left: 4px;
-            margin-top: 4px;
-            height: 56px;
+            margin-top: 0;
+            height: 44px;
           }
 
           .words {
@@ -80,6 +80,11 @@
 
             h2 {
               margin: 0;
+              font-size: 18px;
+            }
+
+            span {
+              font-size: 12px;
             }
           }
 
@@ -173,7 +178,7 @@
         padding-left: 26px;
         overflow-y: hidden;
         overflow-x: auto;
-        width: 261px;
+        width: 308px;
         box-sizing: border-box;
 
         .wizardChoices {
@@ -251,6 +256,17 @@
         }
       }
     }
+  }
+
+  .formatLabel {
+    position: absolute;
+    z-index: 100;
+    left: 8px;
+    text-align: center;
+    width: calc(100% - 16px);
+    line-height: 40px;
+    color: $ms-color-neutralQuaternary;
+    pointer-events: none;
   }
 
 //***************

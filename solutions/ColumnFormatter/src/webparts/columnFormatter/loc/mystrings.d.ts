@@ -15,12 +15,16 @@ declare interface IColumnFormatterWebPartStrings {
   FeatureUnavailableFromLocalWorkbench: string;
   TechnicalDetailsErrorHeader: string;
   WizardDefaultField: string;
+  ColumnFormatter: string;
+  ViewFormatter: string;
 
   //Welcome
   Welcome_Title: string;
   Welcome_SubTitle: string;
-  Welcome_NewHeader: string;
-  Welcome_NewDescription: string;
+  Welcome_NewCFHeader: string;
+  Welcome_NewCFDescription: string;
+  Welcome_NewVFHeader: string;
+  Welcome_NewVFDescription: string;
   Welcome_OpenHeader: string;
   Welcome_OpenDescription: string;
   Welcome_ColumnType: string;

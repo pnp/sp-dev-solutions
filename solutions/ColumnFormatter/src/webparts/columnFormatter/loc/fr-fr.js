@@ -19,8 +19,8 @@ define([], function() {
     //Welcome
     Welcome_Title: 'Column Formatter',
     Welcome_SubTitle: 'Éditeur simplifier pour la mise en forme de colonne pour l\'expérience moderne',
-    Welcome_NewHeader: 'Nouveau',
-    Welcome_NewDescription: 'Commencez à partir de zéro ou choisissez un modèle',
+    Welcome_NewCFHeader: 'Nouveau',
+    Welcome_NewCFDescription: 'Commencez à partir de zéro ou choisissez un modèle',
     Welcome_OpenHeader: 'Ouvrir',
     Welcome_OpenDescription: 'Charger depuis une bibliothèque ou récupéré d\'une liste locale',
     Welcome_ColumnType: 'Type de colonne',

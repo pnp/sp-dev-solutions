@@ -1,7 +1,7 @@
 {
   "$schema": "https://dev.office.com/json-schemas/spfx-build/package-solution.schema.json",
   "solution": {
-    "name": "Column Formatter",
+    "name": "List Formatter",
     "id": "f6303744-9308-4228-9465-a5c9ee30147c",
     "version": "2.0.0",
     "includeClientSideAssets": true,
@@ -9,6 +9,6 @@
     "iconPath": "AppIcon.png"
   },
   "paths": {
-    "zippedPackage": "solution/column-formatter.sppkg"
+    "zippedPackage": "solution/list-formatter.sppkg"
   }
 }

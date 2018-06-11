@@ -17,11 +17,12 @@ import { launchEditor, launchEditorWithCode } from "../state/Actions";
 import { columnTypes, formatterType, IApplicationState, IContext, ISaveDetails, saveMethod } from "../state/State";
 import styles from "./ColumnFormatter.module.scss";
 import { FileUploader } from "./FileUploader";
-import { getWizardByName, getWizardsForColumnType, IWizard, standardWizardStartingCode } from "./Wizards/WizardCommon";
+import { getWizardByName, getWizardsForColumnType, IWizard, standardWizardStartingCode, WizardsVF } from "./Wizards/WizardCommon";
 
 export enum welcomeStage {
   start,
-  new,
+  newCF,
+  newVF,
   open,
   upload,
   loadFromList,
@@ -40,10 +41,11 @@ export interface IColumnFormatterWelcomeProps {
 export interface IColumnFormatterWelcomeState {
   stage: welcomeStage;
   columnTypeForNew?: columnTypes;
-  useWizardForNew: boolean;
-  ChoosenWizardName?: string;
+  useWizardForNewCF: boolean;
+  ChoosenWizardNameCF?: string;
+  useWizardForNewVF: boolean;
+  ChoosenWizardNameVF?: string;
   loadChoiceForOpen?: string;
-  columnTypeForOpen?: columnTypes;
   fileChoiceForOpen?: string;
   siteColumnsLoaded: boolean;
   siteColumns: Array<any>;
@@ -57,6 +59,12 @@ export interface IColumnFormatterWelcomeState {
   selectedField?: string;
   loadingFromList: boolean;
   loadFromListError?: string;
+  listViewsLoaded: boolean;
+  listViews: Array<any>;
+  selectedListViewList?: string;
+  selectedListView?: string;
+  loadingFromListView: boolean;
+  loadFromListViewError?: string;
   librariesLoaded: boolean;
   libraries: Array<any>;
   selectedLibraryUrl?: string;
@@ -64,7 +72,6 @@ export interface IColumnFormatterWelcomeState {
   libraryFileName: string;
   loadingFromLibrary: boolean;
   loadFromLibraryError?: string;
-  formatType: formatterType;
 }
 
 class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomeProps, IColumnFormatterWelcomeState> {
@@ -74,7 +81,8 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
 
     this.state = {
       stage: welcomeStage.start,
-      useWizardForNew: true,
+      useWizardForNewCF: true,
+      useWizardForNewVF: true,
       loadChoiceForOpen: 'list',
       listsLoaded: false,
       lists: new Array<any>(),
@@ -82,19 +90,21 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
       siteColumnsLoaded: false,
       siteColumns: new Array<any>(),
       loadingFromSiteColumn: false,
+      listViewsLoaded: false,
+      listViews: new Array<any>(),
+      loadingFromListView: false,
       librariesLoaded: false,
       libraries: new Array<any>(),
       libraryFolderPath: '',
       libraryFileName: strings.WizardDefaultField + '.json',
       loadingFromLibrary: false,
-      formatType: formatterType.Column,
     };
   }
 
   public render(): React.ReactElement<IColumnFormatterWelcomeProps> {
 
     //TEMP (helpful for testing and skipping the welcome altogether)
-    //this.props.launchEditor(undefined,columnTypes.text);
+    //this.props.launchEditor(undefined,columnTypes.text, formatterType.Column);
     //this.props.launchEditor('Donut', columnTypes.number);
     //this.props.launchEditor('Severity', columnTypes.text);
     //this.props.launchEditor('Start Flow', columnTypes.text);
@@ -111,13 +121,22 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
                 <span>{strings.Welcome_SubTitle}</span>
               </div>
               <div className={styles.startButtons}>
-                <div className={styles.startButton} onClick={() => {this.gotoStage(welcomeStage.new);}}>
+                <div className={styles.startButton} onClick={() => {this.gotoStage(welcomeStage.newCF);}}>
                   <div className={styles.icon}>
                     <Icon iconName='Filters'/>
                   </div>
                   <div className={styles.words}>
-                    <h2>{strings.Welcome_NewHeader}</h2>
-                    <span>{strings.Welcome_NewDescription}</span>
+                    <h2>{strings.Welcome_NewCFHeader}</h2>
+                    <span>{strings.Welcome_NewCFDescription}</span>
+                  </div>
+                </div>
+                <div className={styles.startButton} onClick={() => {this.gotoStage(welcomeStage.newVF);}}>
+                  <div className={styles.icon}>
+                    <Icon iconName='BucketColor'/>
+                  </div>
+                  <div className={styles.words}>
+                    <h2>{strings.Welcome_NewVFHeader}</h2>
+                    <span>{strings.Welcome_NewVFDescription}</span>
                   </div>
                 </div>
                 <div className={styles.startButton} onClick={() => {this.gotoStage(welcomeStage.open);}}>
@@ -134,7 +153,7 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
           )}
 
 
-          {this.state.stage == welcomeStage.new && (
+          {this.state.stage == welcomeStage.newCF && (
             <div className={styles.newForm}>
               <div className={styles.columnType}>
                 <Label required={true}>{strings.Welcome_ColumnType}</Label>
@@ -155,14 +174,14 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
               </div>
               <ChoiceGroup
                disabled={this.state.columnTypeForNew == undefined}
-               selectedKey={this.state.useWizardForNew ? 'wizard' : 'blank'}
-               onChange={this.onNewStartWithChanged}
+               selectedKey={this.state.useWizardForNewCF ? 'wizard' : 'blank'}
+               onChange={this.onNewStartWithChangedCF}
                options={[
                  {key:'wizard', text:strings.Welcome_NewWizardOption, onRenderField: (props, render) => {
                   return(
                     <div>
                       { render!(props) }
-                      {this.wizardOptions()}
+                      {this.wizardOptionsCF()}
                     </div>
                   );
                  }},
@@ -173,7 +192,34 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
                   <DefaultButton text={strings.Welcome_BackButton} onClick={() => {this.gotoStage(welcomeStage.start);}}/>
                 </div>
                 <div style={{textAlign: 'right'}}>
-                  <PrimaryButton text={strings.Welcome_OKButton} disabled={!this.okButtonEnabled()} onClick={this.onOkForNewClick}/>
+                  <PrimaryButton text={strings.Welcome_OKButton} disabled={!this.okButtonEnabled()} onClick={this.onOkForNewCFClick}/>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {this.state.stage == welcomeStage.newVF && (
+            <div className={styles.newForm}>
+              <ChoiceGroup
+               selectedKey={this.state.useWizardForNewVF ? 'wizard' : 'blank'}
+               onChange={this.onNewStartWithChangedVF}
+               options={[
+                 {key:'wizard', text:strings.Welcome_NewWizardOption, onRenderField: (props, render) => {
+                  return(
+                    <div>
+                      { render!(props) }
+                      {this.wizardOptionsVF()}
+                    </div>
+                  );
+                 }},
+                 {key:'blank', text:strings.Welcome_NewBlankOption}
+               ]}/>
+              <div className={styles.navigationButtons}>
+                <div>
+                  <DefaultButton text={strings.Welcome_BackButton} onClick={() => {this.gotoStage(welcomeStage.start);}}/>
+                </div>
+                <div style={{textAlign: 'right'}}>
+                  <PrimaryButton text={strings.Welcome_OKButton} disabled={!this.okButtonEnabled()} onClick={this.onOkForNewVFClick}/>
                 </div>
               </div>
             </div>
@@ -188,28 +234,11 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
                options={[
                 {key:'list', text: strings.Welcome_OpenLoadList},
                 {key:'sitecolumn', text: strings.Welcome_OpenLoadSiteColumn},
+                {key:'listview', text: strings.Welcome_OpenLoadListView},
                 {key:'file', text: strings.Welcome_OpenLoadFile, onRenderField: (props, render) => {
                   return (
                     <div>
                       { render!(props) }
-                      <div className={styles.columnType}>
-                        <Label required={true}>{strings.Welcome_ColumnType}</Label>
-                        <Dropdown
-                         selectedKey={this.state.columnTypeForOpen}
-                         onChanged={this.onChangeColumnTypeForOpen}
-                         disabled={this.state.loadChoiceForOpen !== 'file'}
-                         options={[
-                          {key: columnTypes.choice, text: textForType(columnTypes.choice)},
-                          {key: columnTypes.datetime, text: textForType(columnTypes.datetime)},
-                          {key: columnTypes.link, text: textForType(columnTypes.link)},
-                          {key: columnTypes.lookup, text: textForType(columnTypes.lookup)},
-                          {key: columnTypes.number, text: textForType(columnTypes.number)},
-                          {key: columnTypes.person, text: textForType(columnTypes.person)},
-                          {key: columnTypes.picture, text: textForType(columnTypes.picture)},
-                          {key: columnTypes.text, text: textForType(columnTypes.text)},
-                          {key: columnTypes.boolean, text: textForType(columnTypes.boolean)}
-                        ]}/>
-                      </div>
                       <div className={styles.subChoice}>
                         <ChoiceGroup
                          selectedKey={this.state.fileChoiceForOpen}
@@ -392,16 +421,22 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
 
   private okButtonEnabled(): boolean {
     switch(this.state.stage) {
-      case welcomeStage.new:
+      case welcomeStage.newCF:
         return (
           this.state.columnTypeForNew !== undefined &&
-          (!this.state.useWizardForNew || (this.state.useWizardForNew && this.state.ChoosenWizardName !== undefined))
+          (!this.state.useWizardForNewCF || (this.state.useWizardForNewCF && this.state.ChoosenWizardNameCF !== undefined))
+        );
+      case welcomeStage.newVF:
+        return (
+          
+          (!this.state.useWizardForNewVF || (this.state.useWizardForNewVF && this.state.ChoosenWizardNameVF !== undefined))
         );
       case welcomeStage.open:
         return (
           this.state.loadChoiceForOpen == 'list' ||
           this.state.loadChoiceForOpen == 'sitecolumn' ||
-          (this.state.loadChoiceForOpen == 'file' && this.state.columnTypeForOpen !== undefined && this.state.fileChoiceForOpen !== undefined)
+          this.state.loadChoiceForOpen == 'listview' ||
+          (this.state.loadChoiceForOpen == 'file' && this.state.fileChoiceForOpen !== undefined)
         );
       case welcomeStage.loadFromList:
         return (
@@ -425,26 +460,26 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
 
   @autobind
   private onChangeColumnTypeForNew(item: IDropdownOption): void {
-    let selectedWizard: IWizard = getWizardByName(this.state.ChoosenWizardName);
+    let selectedWizard: IWizard = getWizardByName(this.state.ChoosenWizardNameCF, formatterType.Column);
     let wizardName:string = undefined;
     if(selectedWizard !== undefined && (selectedWizard.fieldTypes.length == 0 || selectedWizard.fieldTypes.indexOf(+item.key) >= 0)) {
       wizardName = selectedWizard.name;
     }
     this.setState({
       columnTypeForNew: +item.key,
-      ChoosenWizardName: wizardName,
-      useWizardForNew: (getWizardsForColumnType(+item.key).length > 0 && this.state.useWizardForNew)
+      ChoosenWizardNameCF: wizardName,
+      useWizardForNewCF: (getWizardsForColumnType(+item.key).length > 0 && this.state.useWizardForNewCF)
     });
   }
 
   @autobind
-	private onNewStartWithChanged(ev: React.FormEvent<HTMLInputElement>, option: any) {
+	private onNewStartWithChangedCF(ev: React.FormEvent<HTMLInputElement>, option: any) {
     this.setState({
-      useWizardForNew: option.key == 'wizard'
+      useWizardForNewCF: option.key == 'wizard'
     });
 	}
 
-  private wizardOptions(): JSX.Element {
+  private wizardOptionsCF(): JSX.Element {
 
     let filteredWizards = getWizardsForColumnType(this.state.columnTypeForNew);
 
@@ -452,14 +487,14 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
     let choicesWidth:number = Math.max(topRowItemCount * 64 + topRowItemCount * 4, 204);
 
     return (
-    <div className={styles.wizardChoiceSelection + (this.state.useWizardForNew && this.state.columnTypeForNew !== undefined ? '' : ' ' + styles.disabled)}>
+    <div className={styles.wizardChoiceSelection + (this.state.useWizardForNewCF && this.state.columnTypeForNew !== undefined ? '' : ' ' + styles.disabled)}>
       <div className={styles.wizardChoices} style={{width: choicesWidth.toString() + 'px'}}>
         {filteredWizards.map((value:IWizard, index: number) => {
           return (
             <div
-             className={styles.wizardChoiceBox + (this.state.useWizardForNew && this.state.ChoosenWizardName == value.name ? ' ' + styles.choosenWizard : '')}
-             title={this.state.useWizardForNew ? value.description : ''}
-             onClick={()=>{this.onWizardClick(value.name);}}
+             className={styles.wizardChoiceBox + (this.state.useWizardForNewCF && this.state.ChoosenWizardNameCF == value.name ? ' ' + styles.choosenWizard : '')}
+             title={this.state.useWizardForNewCF ? value.description : ''}
+             onClick={()=>{this.onWizardClickCF(value.name);}}
              key={value.name}>
               <Icon iconName={value.iconName}/>
               <span>{value.name}</span>
@@ -475,17 +510,69 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
   }
 
   @autobind
-  private onWizardClick(wizardName:string){
-    if(this.state.useWizardForNew){
+  private onWizardClickCF(wizardName:string){
+    if(this.state.useWizardForNewCF){
       this.setState({
-        ChoosenWizardName: wizardName
+        ChoosenWizardNameCF: wizardName
       });
     }
   }
 
   @autobind
-  private onOkForNewClick(): void {
-    this.props.launchEditor(this.state.useWizardForNew ? this.state.ChoosenWizardName : undefined, this.state.columnTypeForNew, this.state.formatType);
+  private onOkForNewCFClick(): void {
+    this.props.launchEditor(this.state.useWizardForNewCF ? this.state.ChoosenWizardNameCF : undefined, this.state.columnTypeForNew, formatterType.Column);
+  }
+
+
+  @autobind
+	private onNewStartWithChangedVF(ev: React.FormEvent<HTMLInputElement>, option: any) {
+    this.setState({
+      useWizardForNewVF: option.key == 'wizard'
+    });
+	}
+
+  private wizardOptionsVF(): JSX.Element {
+
+    let filteredWizards = WizardsVF;
+
+    let topRowItemCount:number = filteredWizards.length > 0 ? Math.ceil(filteredWizards.length/2) : 0;
+    let choicesWidth:number = Math.max(topRowItemCount * 64 + topRowItemCount * 4, 204);
+
+    return (
+    <div className={styles.wizardChoiceSelection + (this.state.useWizardForNewVF ? '' : ' ' + styles.disabled)}>
+      <div className={styles.wizardChoices} style={{width: choicesWidth.toString() + 'px'}}>
+        {filteredWizards.map((value:IWizard, index: number) => {
+          return (
+            <div
+             className={styles.wizardChoiceBox + (this.state.useWizardForNewVF && this.state.ChoosenWizardNameVF == value.name ? ' ' + styles.choosenWizard : '')}
+             title={this.state.useWizardForNewVF ? value.description : ''}
+             onClick={()=>{this.onWizardClickVF(value.name);}}
+             key={value.name}>
+              <Icon iconName={value.iconName}/>
+              <span>{value.name}</span>
+            </div>
+          );
+        })}
+        {filteredWizards.length == 0 && (
+          <span className={styles.noWizards}>{strings.Welcome_NewNoTemplates}</span>
+        )}
+      </div>
+    </div>
+    );
+  }
+
+  @autobind
+  private onWizardClickVF(wizardName:string){
+    if(this.state.useWizardForNewCF){
+      this.setState({
+        ChoosenWizardNameCF: wizardName
+      });
+    }
+  }
+
+  @autobind
+  private onOkForNewVFClick(): void {
+    this.props.launchEditor(this.state.useWizardForNewVF ? this.state.ChoosenWizardNameVF : undefined, columnTypes.text, formatterType.View);
   }
 
 
@@ -495,13 +582,6 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
       loadChoiceForOpen: option.key
     });
 	}
-
-  @autobind
-  private onChangeColumnTypeForOpen(item: IDropdownOption): void {
-    this.setState({
-      columnTypeForOpen: +item.key
-    });
-  }
 
   @autobind
 	private onFileChoiceForOpenChanged(ev: React.FormEvent<HTMLInputElement>, option: any) {
@@ -531,17 +611,27 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
 
   @autobind
 	private onFileTextReceived(fileText:string) {
-    this.launchEditorFromText(fileText, this.state.columnTypeForOpen || columnTypes.text);
+    this.launchEditorFromText(fileText, columnTypes.text);
   }
 
   private launchEditorFromText(text:string, type:columnTypes, loadMethod?:saveMethod): void {
     if(text == undefined || text.length == 0) {
-      text = standardWizardStartingCode(type);
+      text = standardWizardStartingCode(type, formatterType.Column);
     }
     //TODO: Check for wizard details in file
+    let formatType:formatterType = formatterType.Column;
     let validationErrors:Array<string> = new Array<string>();
     try {
       let curObj:any = JSON.parse(text);
+
+      // Check the format type (assume Column unless these properties exist)
+      if (curObj.hasOwnProperty("hideSelection") ||
+          curObj.hasOwnProperty("hideColumnHeaders") ||
+          curObj.hasOwnProperty("rowFormatter") ||
+          curObj.hasOwnProperty("additionalRowClass")) {
+        formatType = formatterType.View;
+      }
+
     } catch (e) {
       validationErrors.push(e.message);
     }
@@ -556,9 +646,11 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
       list: (loadMethod == saveMethod.ListField ? this.state.selectedList : undefined),
       field: (loadMethod == saveMethod.ListField ? this.state.selectedField : undefined),
       siteColumnGroup: (loadMethod == saveMethod.SiteColumn ? this.state.selectedSiteColumnGroup : undefined),
-      siteColumn: (loadMethod == saveMethod.SiteColumn ? this.state.selectedSiteColumn : undefined)
+      siteColumn: (loadMethod == saveMethod.SiteColumn ? this.state.selectedSiteColumn : undefined),
+      listViewList: (loadMethod == saveMethod.ListView ? this.state.selectedListViewList : undefined),
+      listView: (loadMethod == saveMethod.ListView ? this.state.selectedListView : undefined),
     };
-    this.props.launchEditorWithCode(undefined, type, text, validationErrors, saveDetails, this.state.formatType);
+    this.props.launchEditorWithCode(undefined, type, text, validationErrors, saveDetails, formatType);
   }
   
   private gotoLoadFromList(): void {
@@ -781,7 +873,7 @@ class ColumnFormatterWelcome_ extends React.Component<IColumnFormatterWelcomePro
     sp.web.getFileByServerRelativeUrl(this.state.selectedLibraryUrl + (this.state.libraryFolderPath.length > 0 ? '/' + this.state.libraryFolderPath : '') + '/' + this.state.libraryFileName)
       .getText()
       .then((text:string)=>{
-        this.launchEditorFromText(text, this.state.columnTypeForOpen, saveMethod.Library);
+        this.launchEditorFromText(text, columnTypes.text, saveMethod.Library);
         this.setState({
           loadingFromLibrary: false
         });

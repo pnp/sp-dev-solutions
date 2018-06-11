@@ -19,8 +19,8 @@ define([], function() {
     //Welcome
     Welcome_Title: 'Column Formatter',
     Welcome_SubTitle: 'Editor zur einfachen Konfiguration von Spaltenformatierungen in modernen Listen',
-    Welcome_NewHeader: 'Neu',
-    Welcome_NewDescription: 'Neue Formatierung erstellen.',
+    Welcome_NewCFHeader: 'Neu',
+    Welcome_NewCFDescription: 'Neue Formatierung erstellen.',
     Welcome_OpenHeader: 'Öffnen',
     Welcome_OpenDescription: 'Vorhande Formatierung aus einer Liste laden.',
     Welcome_ColumnType: 'Spaltentyp',

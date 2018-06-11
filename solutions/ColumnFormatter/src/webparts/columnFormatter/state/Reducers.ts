@@ -37,6 +37,7 @@ import {
     IPaneState,
     ITabState,
     uiState,
+	formatterType,
 } from './State';
 import { generateRowValue } from './ValueGeneration';
 
@@ -144,7 +145,7 @@ function SetContextReducer(context:IContext, action:ISetContextAction): IContext
 }
 
 function LaunchEditorReducer(state:IApplicationState, action:ILaunchEditorAction): IApplicationState {
-	let wizard:IWizard = getWizardByName(action.wizardName);
+	let wizard:IWizard = getWizardByName(action.wizardName, action.formatType);
 	return {
 		data: {
 			columns: wizard !== undefined ? wizard.startingColumns(action.colType) : standardWizardStartingColumns(action.colType),
@@ -171,8 +172,8 @@ function LaunchEditorReducer(state:IApplicationState, action:ILaunchEditorAction
 			...state.code,
 			validationErrors: [],
 			formatterErrors: [],
-			formatterString: wizard !== undefined ? wizard.startingCode(action.colType) : standardWizardStartingCode(action.colType),
-			editorString: wizard !== undefined ? wizard.startingCode(action.colType) : standardWizardStartingCode(action.colType),
+			formatterString: wizard !== undefined ? wizard.startingCode(action.colType) : standardWizardStartingCode(action.colType, action.formatType),
+			editorString: wizard !== undefined ? wizard.startingCode(action.colType) : standardWizardStartingCode(action.colType, action.formatType),
 			wizardName: wizard !== undefined ? wizard.name : undefined,
 			formatType: action.formatType,
 		},
@@ -181,7 +182,7 @@ function LaunchEditorReducer(state:IApplicationState, action:ILaunchEditorAction
 }
 
 function LaunchEditorWithCodeReducer(state:IApplicationState, action:ILaunchEditorWithCodeAction): IApplicationState {
-	let wizard:IWizard = getWizardByName(action.wizardName);
+	let wizard:IWizard = getWizardByName(action.wizardName, action.formatType);
 	return {
 		data: {
 			columns: wizard !== undefined ? wizard.startingColumns(action.colType) : standardWizardStartingColumns(action.colType),
