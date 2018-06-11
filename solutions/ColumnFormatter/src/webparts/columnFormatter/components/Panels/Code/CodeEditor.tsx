@@ -1,10 +1,10 @@
-import * as React from 'react';
-import { connect } from 'react-redux';
-import { Dispatch } from 'redux';
+import * as React from "react";
+import { connect } from "react-redux";
+import { Dispatch } from "redux";
 
-import { IApplicationState } from '../../../state/State';
-import { updateEditorString } from './../../../state/Actions';
-import { MonacoEditor } from './MonacoEditor';
+import { formatterType, IApplicationState } from "../../../state/State";
+import { updateEditorString } from "./../../../state/Actions";
+import { MonacoEditor } from "./MonacoEditor";
 
 export interface ICodeEditorProps {
 	theme?:string;
@@ -13,6 +13,7 @@ export interface ICodeEditorProps {
 	showLineNumbers?: boolean;
 	showMiniMap?: boolean;
 	showIndentGuides?: boolean;
+	formatType?: formatterType;
 
 	updateEditorString?: (editorString:string, validationErrors:Array<string>) => void;
 
@@ -43,6 +44,7 @@ class CodeEditor_ extends React.Component<ICodeEditorProps, ICodeEditorState> {
 				showLineNumbers={this.props.showLineNumbers}
 				showMiniMap={this.props.showMiniMap}
 				showIndentGuides={this.props.showIndentGuides}
+				formatType={this.props.formatType}
 			/>
 		);
 	}
@@ -58,7 +60,8 @@ function mapStateToProps(state: IApplicationState): ICodeEditorProps{
 		uiHeight: state.ui.height,
 		showLineNumbers: state.code.showLineNumbers,
 		showMiniMap: state.code.showMiniMap,
-		showIndentGuides: state.code.showIndentGuides
+		showIndentGuides: state.code.showIndentGuides,
+		formatType: state.code.formatType,
 	};
 }
 
@@ -66,7 +69,7 @@ function mapDispatchToProps(dispatch: Dispatch<ICodeEditorProps>): ICodeEditorPr
 	return {
 		updateEditorString: (editorString:string, validationErrors:Array<string>) => {
 			dispatch(updateEditorString(editorString, validationErrors));
-		}
+		},
     };
 }
 

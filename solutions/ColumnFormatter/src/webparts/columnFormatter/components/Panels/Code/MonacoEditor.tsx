@@ -1,9 +1,11 @@
-import { autobind } from 'office-ui-fabric-react/lib/Utilities';
-import * as React from 'react';
+import * as strings from "ColumnFormatterWebPartStrings";
+import { autobind } from "office-ui-fabric-react/lib/Utilities";
+import * as React from "react";
 
-import { ColumnFormattingSchema, ColumnFormattingSchemaURI } from '../../../helpers/ColumnFormattingSchema';
-import { ViewFormattingSchema, ViewFormattingSchemaURI } from '../../../helpers/ViewFormattingSchema';
-import styles from '../../ColumnFormatter.module.scss';
+import { ColumnFormattingSchema, ColumnFormattingSchemaURI } from "../../../helpers/ColumnFormattingSchema";
+import { ViewFormattingSchema, ViewFormattingSchemaURI } from "../../../helpers/ViewFormattingSchema";
+import { formatterType } from "../../../state/State";
+import styles from "../../ColumnFormatter.module.scss";
 
 const monaco = require('../../../../../MonacoCustomBuild');
 
@@ -14,6 +16,7 @@ export interface IMonacoEditorProps {
 	showLineNumbers: boolean;
 	showMiniMap: boolean;
 	showIndentGuides: boolean;
+	formatType: formatterType;
 	onValueChange: (newValue:string, validationErrors:Array<string>) => void;
 }
 
@@ -70,6 +73,16 @@ export class MonacoEditor extends React.Component<IMonacoEditorProps, {}> {
 			}
 		});
 
+		//Add Ensure Schema Action
+		this._editor.addAction({
+			id: 'ensure-schema',
+			label: strings.Editor_EnsureSchemaCommand,
+			contextMenuGroupId: 'navigation',
+			contextMenuOrder: 0,
+			precondition: '!editorReadOnly',
+			run: this.ensureSchema,
+		});
+
 		//Subscribe to changes
 		this._editor.onDidChangeModelContent(this.onDidChangeModelContent);
 	}
@@ -119,5 +132,42 @@ export class MonacoEditor extends React.Component<IMonacoEditorProps, {}> {
 				this.props.onValueChange(curVal, validationErrors);
 			}
 		}
+	}
+
+	@autobind
+	private ensureSchema(ed:any): null {
+		try {
+			const schemaVal:string = this.props.formatType == formatterType.Column ? ColumnFormattingSchemaURI : ViewFormattingSchemaURI;
+			let curVal:string = ed.getValue();
+			curVal = curVal.trimStart();
+			const curObj:any = JSON.parse(curVal);
+
+			if (!curObj.hasOwnProperty("$schema")) {
+				// Missing the schema, so add it
+				curVal = `{\n  "$schema": "${schemaVal}",\n  ` +
+						  curVal.substring(curVal.indexOf('"'));
+				ed.setValue(curVal);
+			} else {
+				// Schema is wrong, so fix it
+				if (curObj.$schema !== schemaVal) {
+
+					//webpack is throwing up whenever I use look aheads/behinds. Ugh.
+					//curVal.replace(/(?<="\$schema"\s*?:\s*?")[^"]*?(?=")/, schemaVal);
+
+					//Replaces the schema value regardless of weird tabs/spaces or where it is in the object
+					const sMatch:RegExpMatchArray = curVal.match(/"\$schema"\s*?:\s*?"/);
+					if (sMatch) {
+						curVal = curVal.substring(0,sMatch.index) +
+								 sMatch[0] +
+								 schemaVal + 
+								 curVal.substring(sMatch.index + sMatch[0].length + curObj.$schema.length);
+						ed.setValue(curVal);
+					}
+				}
+			}
+		} catch (e) {
+			//Don't do anything if the object isn't valid
+		}
+		return null;
 	}
 }

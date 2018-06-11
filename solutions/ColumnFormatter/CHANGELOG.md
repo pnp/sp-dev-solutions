@@ -6,6 +6,8 @@
   - Ability to load view formatters directly from list views
 - Formatter Type label in editor to indicate the type of format currently being worked on
 - Screen headers for all open screens
+- Ensure Schema action to the main editor
+  - Intellisense only works when the schema is set correctly, so now you can right-click in the editor window and choose Ensure Schema to correct missing/incorrect schema entries
 
 ### Changed
 - Renamed from Column Formatter to List Formatter

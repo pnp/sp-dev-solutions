@@ -48,6 +48,9 @@ declare interface IColumnFormatterWebPartStrings {
   Welcome_UploadEmptyFileError: string;
   Welcome_LoadingError: string;
 
+  //Editor
+  Editor_EnsureSchemaCommand: string;
+
   //List Field (Load/Apply)
   ListField_LoadingLists: string;
   ListField_List: string;

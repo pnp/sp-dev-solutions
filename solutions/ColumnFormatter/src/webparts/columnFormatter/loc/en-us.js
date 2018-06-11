@@ -48,6 +48,9 @@ define([], function() {
     Welcome_UploadEmptyFileError: 'File is empty!',
     Welcome_LoadingError: 'Error while loading!',
 
+    //Editor
+    Editor_EnsureSchemaCommand: 'Ensure Schema',
+
     //List Field (Load/Apply)
     ListField_LoadingLists: 'Loading lists...',
     ListField_List: 'Local list',
