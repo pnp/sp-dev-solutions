@@ -12,7 +12,7 @@ export const ViewFormattingSchema = {
             "description": "If true, then selection UX in this view will be disabled.",
             "type": "boolean"
         },
-        "hideColumnHeaders": {
+        "hideListHeader": {
             "description": "If true, then the list column header UX in this view will be hidden",
             "type": "boolean"
         },

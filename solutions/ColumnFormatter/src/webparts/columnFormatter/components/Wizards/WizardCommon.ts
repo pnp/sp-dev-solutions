@@ -81,9 +81,9 @@ export const standardWizardStartingRows = (colType:columnTypes): Array<Array<any
 };
 
 //** Helper function that generates a single column, use it for simple wizards/templates */
-export const standardWizardStartingColumns = (colType:columnTypes): Array<IDataColumn> => {
+export const standardWizardStartingColumns = (colType:columnTypes, name:string = strings.WizardDefaultField): Array<IDataColumn> => {
 	return [{
-		name: strings.WizardDefaultField,
+		name: name,
 		type: colType
 	}];
 };
@@ -115,7 +115,7 @@ export const standardWizardStartingCode = (colType:columnTypes, formatType:forma
 			'{',
 			'  "$schema": "http://viewformatting.sharepointpnp.com/viewFormattingSchema.json",',
 			'  "hideSelection": false,',
-			'  "hideColumnHeaders": false,',
+			'  "hideListHeader": false,',
 			'  "rowFormatter": {',
 			'    "elmType": "div",',
 			'    "txtContent": "[$Title]"',

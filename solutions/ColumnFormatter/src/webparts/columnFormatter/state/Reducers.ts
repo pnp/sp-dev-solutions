@@ -148,7 +148,7 @@ function LaunchEditorReducer(state:IApplicationState, action:ILaunchEditorAction
 	let wizard:IWizard = getWizardByName(action.wizardName, action.formatType);
 	return {
 		data: {
-			columns: wizard !== undefined ? wizard.startingColumns(action.colType) : standardWizardStartingColumns(action.colType),
+			columns: wizard !== undefined ? wizard.startingColumns(action.colType) : (action.formatType == formatterType.Column ? standardWizardStartingColumns(action.colType) :  standardWizardStartingColumns(action.colType, "Title")),
 			rows: wizard !== undefined ? wizard.startingRows(action.colType, state.context.user) : standardWizardStartingRows(action.colType),
 		},
 		ui: {
@@ -185,7 +185,7 @@ function LaunchEditorWithCodeReducer(state:IApplicationState, action:ILaunchEdit
 	let wizard:IWizard = getWizardByName(action.wizardName, action.formatType);
 	return {
 		data: {
-			columns: wizard !== undefined ? wizard.startingColumns(action.colType) : standardWizardStartingColumns(action.colType),
+			columns: wizard !== undefined ? wizard.startingColumns(action.colType) : (action.formatType == formatterType.Column ? standardWizardStartingColumns(action.colType) :  standardWizardStartingColumns(action.colType, "Title")),
 			rows: wizard !== undefined ? wizard.startingRows(action.colType) : standardWizardStartingRows(action.colType),
 		},
 		ui: {

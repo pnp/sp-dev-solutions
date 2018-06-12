@@ -648,6 +648,9 @@
           color:$ms-color-green;
           margin-right:3px;
         }
+        .ms-DetailsList .ms-List-page .ms-List-cell {
+          min-height: 0;
+        }
         .ms-DetailsList BUTTON.od-FieldRenderer-dot{
           display:block;
           position:relative;

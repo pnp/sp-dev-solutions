@@ -1,6 +1,14 @@
 import * as UIFabric from "@uifabric/styling/lib";
+import { autobind } from "@uifabric/utilities";
 import * as strings from "ColumnFormatterWebPartStrings";
-import { ColumnActionsMode, DetailsList, IColumn, SelectionMode } from "office-ui-fabric-react/lib/DetailsList";
+import {
+    ColumnActionsMode,
+    DetailsList,
+    DetailsRow,
+    IColumn,
+    IDetailsRowProps,
+    SelectionMode,
+} from "office-ui-fabric-react/lib/DetailsList";
 import * as React from "react";
 import { connect } from "react-redux";
 import { Dispatch } from "redux";
@@ -32,6 +40,9 @@ class PreviewView_ extends React.Component<IPreviewViewProps, {}> {
 
 	private _formatterErrors: Array<string>;
 
+	private _rowFormatter: string;
+	private _additionalRowClass: string;
+
 	constructor(props:IPreviewViewProps){
 		super(props);
 
@@ -43,14 +54,42 @@ class PreviewView_ extends React.Component<IPreviewViewProps, {}> {
 
 	public render(): React.ReactElement<IPreviewViewProps> {
 		this._formatterErrors = new Array<string>();
+		this._rowFormatter = undefined;
+		this._additionalRowClass = undefined;
+
+		let selectionMode: SelectionMode = SelectionMode.multiple;
+		let isHeaderVisible: boolean = true;
+		let customRowRender: boolean = false;
+		if (this.props.formatType == formatterType.View) {
+			try {
+				const curObj:any = JSON.parse(this.props.formatterString);
+				if (curObj.hideSelection) {
+					selectionMode = SelectionMode.none;
+				}
+				if (curObj.hideListHeader) {
+					isHeaderVisible = false;
+				}
+				if (curObj.rowFormatter) {
+					customRowRender = true;
+					this._rowFormatter = JSON.stringify(curObj.rowFormatter);
+				}
+				if (curObj.additionalRowClass) {
+					customRowRender = true;
+					this._additionalRowClass = JSON.stringify(curObj.additionalRowClass);
+				}
+			} catch (error) {
+				//Ignore
+			}
+		}
 
 		return (
 			<div className={styles.previewView}>
 				<DetailsList
 					items={this.buildItems()}
 					columns={this.buildColumns()}
-					selectionMode={this.selectionMode()}
-					/>
+					selectionMode={selectionMode}
+					isHeaderVisible={isHeaderVisible}
+					onRenderRow={customRowRender ? this.renderFormattedRow : undefined}/>
 			</div>
 		);
 	}
@@ -65,20 +104,6 @@ class PreviewView_ extends React.Component<IPreviewViewProps, {}> {
 
 	private evaluateFormatterErrors(): void {
 		this.props.updateFormatterErrors(this._formatterErrors);
-	}
-
-	private selectionMode(): SelectionMode {
-		if (this.props.formatType == formatterType.View) {
-			try {
-				const curObj:any = JSON.parse(this.props.formatterString);
-				if (curObj.hideSelection) {
-					return SelectionMode.none;
-				}
-			} catch (error) {
-				//Ignore
-			}
-		}
-		return SelectionMode.multiple;
 	}
 
 	private buildItems(): Array<any> {
@@ -153,7 +178,7 @@ class PreviewView_ extends React.Component<IPreviewViewProps, {}> {
 		};
 		return (
 			<div
-			 className='od-FieldRenderer-customFormatter'
+			 className={this.props.formatType == formatterType.Column ? 'od-FieldRenderer-customFormatter' : undefined}
 			 dangerouslySetInnerHTML={innerHtml}/>
 		);
 	}
@@ -270,8 +295,8 @@ class PreviewView_ extends React.Component<IPreviewViewProps, {}> {
 		}
 		
 		return {
-			currentFieldName: this.props.columns[0].name,
-			fieldRendererFormat: this.props.formatterString,
+			currentFieldName: this.props.formatType == formatterType.Column ? this.props.columns[0].name : "Title",
+			fieldRendererFormat: this.props.formatType == formatterType.Column ? this.props.formatterString : this._rowFormatter,
 			pageContextInfo: {
 				userLoginName: this.props.userEmail
 			},
@@ -301,6 +326,23 @@ class PreviewView_ extends React.Component<IPreviewViewProps, {}> {
 			default:
 				return "Text";
 		}
+	}
+
+	@autobind
+	private renderFormattedRow(rowProps:IDetailsRowProps): JSX.Element {
+		try {
+			if (typeof this._rowFormatter !== "undefined") {
+				return this.formattedMarkup(0);
+			} else if (typeof this._additionalRowClass !== "undefined") {
+				//Only apply additionalRowClass if rowFormatter is NOT specified
+				return (
+					<DetailsRow {...rowProps} className={'sp-field-severity--good'}/>
+				);
+			}
+		} catch (error) {
+			//Ignore
+		}
+		return undefined;
 	}
 }
 
