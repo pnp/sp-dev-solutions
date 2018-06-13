@@ -14,6 +14,9 @@
 - Renamed from Column Formatter to List Formatter
   - Reflects support for both column and view (row) formatters
 - Renamed editor theme options to use more meaningful names
+- Updated internal CustomFormatter & schema to match real formatter
+  - Includes support for @window.innerHeight & @window.innerWidth special strings
+  - Includes support for delete, editProps, & share custom row actions
 
 ### Removed
 - Choice of Column Type when opening files

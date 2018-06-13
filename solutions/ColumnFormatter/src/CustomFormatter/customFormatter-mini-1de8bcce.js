@@ -1,4 +1,11 @@
-define("a", ["require", "exports", "au", "at", "ab", "aa", "Z", "d", "b"], function(e, t, r, o, i, n, c, m) {
+define("a", ["require", "exports", "b"], function(e, t, r) {
+    "use strict";
+    Object.defineProperty(t, "__esModule", {
+        value: !0
+    });
+    t.CustomFormatter = r.CustomFormatter
+});
+define("b", ["require", "exports", "av", "au", "at", "as", "aa", "e", "c"], function(e, t, r, o, n, c, i, m) {
     "use strict";
     Object.defineProperty(t, "__esModule", {
         value: !0
@@ -49,7 +56,10 @@ define("a", ["require", "exports", "au", "at", "ab", "aa", "Z", "d", "b"], funct
     u.alt = !0,
     u), x = {
         defaultClick: !0,
-        executeFlow: !0
+        executeFlow: !0,
+        delete: !0,
+        share: !0,
+        editProps: !0
     }, M = {
         "background-color": !0,
         fill: !0,
@@ -183,20 +193,22 @@ define("a", ["require", "exports", "au", "at", "ab", "aa", "Z", "d", "b"], funct
         "text-wrap": !0,
         "word-break": !0,
         "word-wrap": !0
-    }, P = ["http://", "https://", "mailto:"], I = "Number", O = "Text", T = "Title", D = "DateTime", A = "User", R = "Choice", E = "Boolean", N = "Note", B = "Lookup", W = "Image", j = "Hyperlink", z = "_IsRecord", V = "Name", U = ((d = {})[I] = !0,
-    d[O] = !0,
+    }, P = ["http://", "https://", "mailto:"], I = "Number", O = "Text", T = "Counter", D = "Title", A = "DateTime", R = "User", E = "Choice", N = "Boolean", B = "Note", W = "Lookup", j = "Image", z = "Hyperlink", V = "_IsRecord", U = ((d = {})[I] = !0,
     d[T] = !0,
+    d[O] = !0,
     d[D] = !0,
     d[A] = !0,
     d[R] = !0,
     d[E] = !0,
     d[N] = !0,
-    d[W] = !0,
-    d[j] = !0,
     d[B] = !0,
+    d[j] = !0,
     d[z] = !0,
+    d.URL = !0,
+    d[W] = !0,
     d[V] = !0,
-    d), q = "@currentField", H = function() {
+    d.Name = !0,
+    d), H = "@currentField", q = function() {
         function e(e) {
             this._params = e;
             this._errorStrings = e.errorStrings || o.default
@@ -215,7 +227,7 @@ define("a", ["require", "exports", "au", "at", "ab", "aa", "Z", "d", "b"], funct
                 var o = "Failure: " + ("string" == typeof e ? e : e.message);
                 this._cfr.debugMode && console.error(o);
                 t = [];
-                this._cfr && this._cfr.debugMode && t.push(c.default.encodeText(o));
+                this._cfr && this._cfr.debugMode && t.push(c.encodeText(o));
                 this._error = o
             }
             return t.join("")
@@ -321,7 +333,7 @@ define("a", ["require", "exports", "au", "at", "ab", "aa", "Z", "d", "b"], funct
             null == n && (n = "");
             var a = "<br/>"
               , l = n instanceof Date ? n.toLocaleString() : n.toString()
-              , s = c.default.encodeText(l);
+              , s = c.encodeText(l);
             if (r) {
                 this._validateUrl(s) || this._err("invalidProtocol");
                 a = "%0D%0A"
@@ -355,17 +367,21 @@ define("a", ["require", "exports", "au", "at", "ab", "aa", "Z", "d", "b"], funct
                 if (null === e)
                     return null;
                 if ("string" == typeof e) {
-                    if (0 === e.indexOf(q)) {
+                    if (0 === e.indexOf(H)) {
                         var r = this._params.currentFieldName;
-                        if (e === q)
-                            return t && this._params.rowSchema && r && (this._params.rowSchema[r] === D || this._params.rowSchema[r] === z) ? this._params.row[r] : this._evalJsonPath(this._params.row, r || "");
-                        if (e.indexOf(".") !== q.length)
+                        if (e === H)
+                            return t && this._params.rowSchema && r && (this._params.rowSchema[r] === A || this._params.rowSchema[r] === V) ? this._params.row[r] : this._evalJsonPath(this._params.row, r || "");
+                        if (e.indexOf(".") !== H.length)
                             return e;
-                        var o = r + e.substr(q.length);
+                        var o = r + e.substr(H.length);
                         return this._evalJsonPath(this._params.row, o)
                     }
-                    if ("@me" === e && this._params.pageContextInfo.userEmail)
+                    if ("@me" === e && this._params.pageContextInfo && this._params.pageContextInfo.userEmail)
                         return this._params.pageContextInfo.userEmail;
+                    if ("@window.innerWidth" === e)
+                        return window.innerWidth;
+                    if ("@window.innerHeight" === e)
+                        return window.innerHeight;
                     if ("@now" === e)
                         return new Date;
                     if (0 === e.indexOf("[$") && "]" === e[e.length - 1]) {
@@ -499,15 +515,15 @@ define("a", ["require", "exports", "au", "at", "ab", "aa", "Z", "d", "b"], funct
                   , n = this._params.rowSchema || {}
                   , a = n[i[0]];
                 r = i.length;
-                if (a === I || a === D || a === E || a === z) {
-                    var l = a === E ? ".value" : "."
+                if (a === I || a === A || a === N || a === V) {
+                    var l = a === N ? ".value" : "."
                       , s = i[0] + l;
                     null != o[s] && void 0 !== o[s] && (i[0] = s)
                 }
-                if ((a === j || a === W) && 2 === r && "desc" === i[1])
+                if ((a === z || a === j || "URL" === a) && 2 === r && "desc" === i[1])
                     return o[t];
                 n && a && (U[a] || this._err("unsupportedType", t));
-                for (var c = a === A, u = a === B, d = 0; d < r; d++) {
+                for (var c = a === R, u = a === W, d = 0; d < r; d++) {
                     o = o[i[d]];
                     (c || u) && 0 === d && this.isArray(o) && (o = o[0])
                 }
@@ -530,24 +546,26 @@ define("a", ["require", "exports", "au", "at", "ab", "aa", "Z", "d", "b"], funct
                 return e;
             switch (r[t]) {
             case O:
-            case T:
-            case N:
-            case R:
-            case W:
-            case j:
+            case D:
             case B:
-            case z:
-            case V:
-                return e;
             case E:
+            case j:
+            case z:
+            case "URL":
+            case W:
+            case V:
+            case T:
+            case "Name":
+                return e;
+            case N:
                 return "1" === e || "0" !== e && e;
             case I:
                 var o = void 0;
                 o = "string" == typeof e ? parseFloat(e.replace(/,/g, "")) : Number(e);
                 return isNaN(o) ? "" : o;
-            case D:
-                return "string" == typeof e ? Boolean(e) ? new Date(e) : null : e;
             case A:
+                return "string" == typeof e ? Boolean(e) ? new Date(e) : null : e;
+            case R:
                 this._err("userFieldError", t);
                 break;
             default:
@@ -573,7 +591,7 @@ define("a", ["require", "exports", "au", "at", "ab", "aa", "Z", "d", "b"], funct
         ;
         return e
     }();
-    t.CustomFormatter = H
+    t.CustomFormatter = q
 });
 /*! *****************************************************************************
 Copyright (c) Microsoft Corporation. All rights reserved.
@@ -592,7 +610,7 @@ and limitations under the License.
 var __extends, __rest, __decorate, __param, __metadata, __awaiter, __generator, __exportStar, __values, __read, __spread, __await, __asyncGenerator, __asyncDelegator, __asyncValues;
 !function(t) {
     var r = "object" == typeof global ? global : "object" == typeof self ? self : "object" == typeof this ? this : {};
-    "function" == typeof define && define.amd ? define("au", ["exports"], function(e) {
+    "function" == typeof define && define.amd ? define("av", ["exports"], function(e) {
         t(o(r, o(e)))
     }) : "object" == typeof module && "object" == typeof module.exports ? t(o(r, o(module.exports))) : t(o(r));
     function o(r, o) {
@@ -928,7 +946,164 @@ var __extends, __rest, __decorate, __param, __metadata, __awaiter, __generator, 
     e("__asyncDelegator", __asyncDelegator);
     e("__asyncValues", __asyncValues)
 });
-define("ab", ["require", "exports", "as", "ar", "aq", "ap", "ao", "an", "am", "al", "ak", "aj", "ai", "ah", "ag", "af", "ae", "ad", "ac"], function(e, t, o, i, n, a, l, s, c, u, d, f, g, p, h, m, v, y) {
+define("at", ["require", "exports"], function(e, t) {
+    "use strict";
+    Object.defineProperty(t, "__esModule", {
+        value: !0
+    });
+    var s = /\{(\d+)\}/g;
+    function o(e) {
+        for (var o = [], t = 1; t < arguments.length; t++)
+            o[t - 1] = arguments[t];
+        return e.replace(s, function(e, t) {
+            var r = o[Number(t)];
+            return null === r ? "" : "" + r
+        })
+    }
+    t.format = o;
+    t.formatToArray = function(e) {
+        for (var t = [], r = 1; r < arguments.length; r++)
+            t[r - 1] = arguments[r];
+        for (var o, i = [], n = 0; o = s.exec(e); ) {
+            var a = o[0]
+              , l = t[parseInt(a.replace(/\{|\}+/g, ""), 10)];
+            o.index > n && i.push(e.substring(n, o.index));
+            n = s.lastIndex;
+            i.push(l)
+        }
+        n !== e.length && i.push(e.substring(n, e.length));
+        return i
+    }
+    ;
+    t.doesStringEndWith = function(e, t) {
+        return e.substr(e.length - t.length) === t
+    }
+    ;
+    t.doesStringStartWith = function(e, t) {
+        return e.substr(0, t.length) === t
+    }
+    ;
+    t.rightPad = function(e, t) {
+        for (var r = e.toString(); r.length < t; )
+            r += "0";
+        return r
+    }
+    ;
+    t.leftPad = function(e, t) {
+        for (var r = e.toString(); r.length < t; )
+            r = "0" + r;
+        return r
+    }
+    ;
+    t.findOneOf = function(e, t) {
+        for (var r = 0; r < e.length; r++)
+            if (0 <= t.indexOf(e[r]))
+                return r;
+        return -1
+    }
+    ;
+    t.equalsCaseInsensitive = function(e, t) {
+        return e && t ? e.toUpperCase() === t.toUpperCase() : e === t
+    }
+    ;
+    t.capitalize = function(e) {
+        return e ? e[0].toUpperCase() + e.substr(1) : e
+    }
+    ;
+    t.decapitalize = function(e) {
+        return e ? e[0].toLowerCase() + e.substr(1) : e
+    }
+    ;
+    t.pluralSelect = function(e, t, r) {
+        return 1 === e ? t : r
+    }
+    ;
+    function i(e, t, r) {
+        r = Number(r);
+        if (void 0 === e || void 0 === t || void 0 === r)
+            return "";
+        for (var o = "", i = -1, n = t.split("||"), a = 0, l = n.length; a < l; a++) {
+            var s = n[a];
+            if (s) {
+                for (var c = 0, u = s.split(","); c < u.length; c++) {
+                    var d = u[c];
+                    if (d)
+                        if (isNaN(Number(d))) {
+                            if (-1 !== d.indexOf("-")) {
+                                var f = d.split("-");
+                                if (2 !== f.length)
+                                    continue;
+                                var g = void 0;
+                                if ("" === f[0])
+                                    g = 0;
+                                else {
+                                    if (isNaN(Number(f[0])))
+                                        continue;
+                                    g = parseInt(f[0], 10)
+                                }
+                                if (g <= r) {
+                                    if ("" === f[1]) {
+                                        i = a;
+                                        break
+                                    }
+                                    if (isNaN(Number(f[1])))
+                                        continue;
+                                    if (r <= parseInt(f[1], 10)) {
+                                        i = a;
+                                        break
+                                    }
+                                }
+                            } else if (-1 !== d.indexOf("*")) {
+                                var p = d.trim().replace(/\*/g, "[0-9]*");
+                                if (new RegExp("^" + p + "$").test(r.toString())) {
+                                    i = a;
+                                    break
+                                }
+                            }
+                        } else {
+                            if (r === parseInt(d, 10)) {
+                                i = a;
+                                break
+                            }
+                        }
+                }
+                if (-1 !== i)
+                    break
+            }
+        }
+        if (-1 !== i) {
+            var h = e.split("||");
+            h[i] && (o = h[i])
+        }
+        return o
+    }
+    t.getLocalizedCountValue = i;
+    t.formatWithLocalizedCountValue = function(e, t, r) {
+        return o(i(e, t, r) || "", r.toString())
+    }
+});
+define("as", ["require", "exports"], function(e, t) {
+    "use strict";
+    Object.defineProperty(t, "__esModule", {
+        value: !0
+    });
+    var r = /[<>&'"\\]/g
+      , o = {
+        "<": "&lt;",
+        ">": "&gt;",
+        "&": "&amp;",
+        '"': "&quot;",
+        "'": "&#39;",
+        "\\": "&#92;"
+    };
+    function i(e) {
+        return o[e]
+    }
+    t.encodeText = function(e) {
+        return e ? e.replace(r, i) : ""
+    }
+});
+define("aa", ["require", "exports", "ar", "aq", "ap", "ao", "an", "am", "al", "ak", "aj", "ai", "ah", "ag", "af", "ae", "ad", "ac", "ab"], function(e, t, o, i, n, a, l, s, c, u, d, f, g, p, h, m, v, y) {
     "use strict";
     Object.defineProperty(t, "__esModule", {
         value: !0
@@ -940,7 +1115,7 @@ define("ab", ["require", "exports", "as", "ar", "aq", "ap", "ao", "an", "am", "a
         })
     }
 });
-define("as", ["require", "exports", "e"], function(e, t, o) {
+define("ar", ["require", "exports", "f"], function(e, t, o) {
     "use strict";
     Object.defineProperty(t, "__esModule", {
         value: !0
@@ -1022,7 +1197,7 @@ define("as", ["require", "exports", "e"], function(e, t, o) {
         o.registerIcons(r, t)
     }
 });
-define("e", ["require", "exports", "au", "V", "A", "u", "f"], function(e, t, r, o, i, n, a) {
+define("f", ["require", "exports", "av", "W", "B", "v", "g"], function(e, t, r, o, i, n, a) {
     "use strict";
     Object.defineProperty(t, "__esModule", {
         value: !0
@@ -1032,7 +1207,7 @@ define("e", ["require", "exports", "au", "V", "A", "u", "f"], function(e, t, r, 
     r.__exportStar(n, t);
     r.__exportStar(a, t)
 });
-define("V", ["require", "exports", "Y", "X", "W"], function(e, t, r, o, i) {
+define("W", ["require", "exports", "Z", "Y", "X"], function(e, t, r, o, i) {
     "use strict";
     Object.defineProperty(t, "__esModule", {
         value: !0
@@ -1041,14 +1216,14 @@ define("V", ["require", "exports", "Y", "X", "W"], function(e, t, r, o, i) {
     t.FontClassNames = o.FontClassNames;
     t.ColorClassNames = i.ColorClassNames
 });
-define("Y", ["require", "exports", "u", "A"], function(e, t, r, o) {
+define("Z", ["require", "exports", "v", "B"], function(e, t, r, o) {
     "use strict";
     Object.defineProperty(t, "__esModule", {
         value: !0
     });
     t.AnimationClassNames = r.buildClassMap(o.AnimationStyles)
 });
-define("u", ["require", "exports", "z", "w", "v"], function(e, t, r, o, i) {
+define("v", ["require", "exports", "A", "x", "w"], function(e, t, r, o, i) {
     "use strict";
     Object.defineProperty(t, "__esModule", {
         value: !0
@@ -1060,7 +1235,7 @@ define("u", ["require", "exports", "z", "w", "v"], function(e, t, r, o, i) {
     t.setIconOptions = o.setIconOptions;
     t.getIconClassName = i.getIconClassName
 });
-define("z", ["require", "exports", "f"], function(e, t, i) {
+define("A", ["require", "exports", "g"], function(e, t, i) {
     "use strict";
     Object.defineProperty(t, "__esModule", {
         value: !0
@@ -1085,7 +1260,7 @@ define("z", ["require", "exports", "f"], function(e, t, i) {
         return o
     }
 });
-define("f", ["require", "exports", "g"], function(e, t, r) {
+define("g", ["require", "exports", "h"], function(e, t, r) {
     "use strict";
     Object.defineProperty(t, "__esModule", {
         value: !0
@@ -1098,7 +1273,7 @@ define("f", ["require", "exports", "g"], function(e, t, r) {
     t.mergeStyleSets = r.mergeStyleSets;
     t.mergeStyles = r.mergeStyles
 });
-define("g", ["require", "exports", "t", "r", "q", "p", "i", "h"], function(e, t, r, o, i, n, a, l) {
+define("h", ["require", "exports", "u", "s", "r", "q", "j", "i"], function(e, t, r, o, i, n, a, l) {
     "use strict";
     Object.defineProperty(t, "__esModule", {
         value: !0
@@ -1111,7 +1286,7 @@ define("g", ["require", "exports", "t", "r", "q", "p", "i", "h"], function(e, t,
     t.InjectionMode = l.InjectionMode;
     t.Stylesheet = l.Stylesheet
 });
-define("t", ["require", "exports", "j", "s"], function(e, t, n, a) {
+define("u", ["require", "exports", "k", "t"], function(e, t, n, a) {
     "use strict";
     Object.defineProperty(t, "__esModule", {
         value: !0
@@ -1126,7 +1301,7 @@ define("t", ["require", "exports", "j", "s"], function(e, t, n, a) {
         return o.join(" ")
     }
 });
-define("j", ["require", "exports", "h", "o", "m", "l", "k"], function(e, t, p, i, n, a, l) {
+define("k", ["require", "exports", "i", "p", "n", "m", "l"], function(e, t, p, i, n, a, l) {
     "use strict";
     Object.defineProperty(t, "__esModule", {
         value: !0
@@ -1256,7 +1431,7 @@ define("j", ["require", "exports", "h", "o", "m", "l", "k"], function(e, t, p, i
         return ""
     }
 });
-define("h", ["require", "exports", "au"], function(e, t, o) {
+define("i", ["require", "exports", "av"], function(e, t, o) {
     "use strict";
     Object.defineProperty(t, "__esModule", {
         value: !0
@@ -1374,7 +1549,7 @@ define("h", ["require", "exports", "au"], function(e, t, o) {
     }();
     t.Stylesheet = r
 });
-define("o", ["require", "exports"], function(e, t) {
+define("p", ["require", "exports"], function(e, t) {
     "use strict";
     Object.defineProperty(t, "__esModule", {
         value: !0
@@ -1383,7 +1558,7 @@ define("o", ["require", "exports"], function(e, t) {
         e[t] = e[t].replace(/([A-Z])/g, "-$1").toLowerCase()
     }
 });
-define("m", ["require", "exports", "n"], function(e, t, n) {
+define("n", ["require", "exports", "o"], function(e, t, n) {
     "use strict";
     Object.defineProperty(t, "__esModule", {
         value: !0
@@ -1405,7 +1580,7 @@ define("m", ["require", "exports", "n"], function(e, t, n) {
         }
     }
 });
-define("n", ["require", "exports"], function(e, t) {
+define("o", ["require", "exports"], function(e, t) {
     "use strict";
     Object.defineProperty(t, "__esModule", {
         value: !0
@@ -1435,7 +1610,7 @@ define("n", ["require", "exports"], function(e, t) {
         o = e
     }
 });
-define("l", ["require", "exports"], function(e, t) {
+define("m", ["require", "exports"], function(e, t) {
     "use strict";
     Object.defineProperty(t, "__esModule", {
         value: !0
@@ -1450,7 +1625,7 @@ define("l", ["require", "exports"], function(e, t) {
         }
     }
 });
-define("k", ["require", "exports", "h"], function(e, t, r) {
+define("l", ["require", "exports", "i"], function(e, t, r) {
     "use strict";
     Object.defineProperty(t, "__esModule", {
         value: !0
@@ -1518,7 +1693,7 @@ define("k", ["require", "exports", "h"], function(e, t, r) {
         }
     }
 });
-define("s", ["require", "exports", "h"], function(e, t, r) {
+define("t", ["require", "exports", "i"], function(e, t, r) {
     "use strict";
     Object.defineProperty(t, "__esModule", {
         value: !0
@@ -1550,7 +1725,7 @@ define("s", ["require", "exports", "h"], function(e, t, r) {
         }
     }
 });
-define("r", ["require", "exports", "s", "q", "j"], function(e, t, p, h, m) {
+define("s", ["require", "exports", "t", "r", "k"], function(e, t, p, h, m) {
     "use strict";
     Object.defineProperty(t, "__esModule", {
         value: !0
@@ -1585,7 +1760,7 @@ define("r", ["require", "exports", "s", "q", "j"], function(e, t, p, h, m) {
         return r
     }
 });
-define("q", ["require", "exports"], function(e, t) {
+define("r", ["require", "exports"], function(e, t) {
     "use strict";
     Object.defineProperty(t, "__esModule", {
         value: !0
@@ -1606,7 +1781,7 @@ define("q", ["require", "exports"], function(e, t) {
         return r
     }
 });
-define("p", ["require", "exports", "h", "j"], function(e, t, r, o) {
+define("q", ["require", "exports", "i", "k"], function(e, t, r, o) {
     "use strict";
     Object.defineProperty(t, "__esModule", {
         value: !0
@@ -1615,7 +1790,7 @@ define("p", ["require", "exports", "h", "j"], function(e, t, r, o) {
         r.Stylesheet.getInstance().insertRule("@font-face{" + o.serializeRuleEntries(e) + "}")
     }
 });
-define("i", ["require", "exports", "h", "j"], function(e, t, a, l) {
+define("j", ["require", "exports", "i", "k"], function(e, t, a, l) {
     "use strict";
     Object.defineProperty(t, "__esModule", {
         value: !0
@@ -1632,7 +1807,7 @@ define("i", ["require", "exports", "h", "j"], function(e, t, a, l) {
         return r
     }
 });
-define("w", ["require", "exports", "au", "y", "x", "g"], function(e, t, l, s, r, i) {
+define("x", ["require", "exports", "av", "z", "y", "h"], function(e, t, l, s, r, i) {
     "use strict";
     Object.defineProperty(t, "__esModule", {
         value: !0
@@ -1691,7 +1866,7 @@ define("w", ["require", "exports", "au", "y", "x", "g"], function(e, t, l, s, r,
         c.__options = l.__assign({}, c.__options, e)
     }
 });
-define("y", ["require", "exports"], function(e, t) {
+define("z", ["require", "exports"], function(e, t) {
     "use strict";
     Object.defineProperty(t, "__esModule", {
         value: !0
@@ -1731,7 +1906,7 @@ define("y", ["require", "exports"], function(e, t) {
         r = e
     }
 });
-define("x", ["require", "exports"], function(e, t) {
+define("y", ["require", "exports"], function(e, t) {
     "use strict";
     Object.defineProperty(t, "__esModule", {
         value: !0
@@ -1780,7 +1955,7 @@ define("x", ["require", "exports"], function(e, t) {
     }();
     t.GlobalSettings = c
 });
-define("v", ["require", "exports", "g", "w"], function(e, t, o, i) {
+define("w", ["require", "exports", "h", "x"], function(e, t, o, i) {
     "use strict";
     Object.defineProperty(t, "__esModule", {
         value: !0
@@ -1801,7 +1976,7 @@ define("v", ["require", "exports", "g", "w"], function(e, t, o, i) {
         return t
     }
 });
-define("A", ["require", "exports", "au", "U", "T", "Q", "P", "L", "K", "J", "I", "E", "D", "C", "B"], function(e, t, r, o, i, n, a, l, s, c, u, d, f, g, p) {
+define("B", ["require", "exports", "av", "V", "U", "R", "Q", "M", "L", "K", "J", "F", "E", "D", "C"], function(e, t, r, o, i, n, a, l, s, c, u, d, f, g, p) {
     "use strict";
     Object.defineProperty(t, "__esModule", {
         value: !0
@@ -1830,7 +2005,7 @@ define("A", ["require", "exports", "au", "U", "T", "Q", "P", "L", "K", "J", "I",
     r.__exportStar(g, t);
     r.__exportStar(p, t)
 });
-define("U", ["require", "exports", "g"], function(e, t, r) {
+define("V", ["require", "exports", "h"], function(e, t, r) {
     "use strict";
     Object.defineProperty(t, "__esModule", {
         value: !0
@@ -1869,18 +2044,18 @@ define("U", ["require", "exports", "g"], function(e, t, r) {
       , b = U(20)
       , _ = U(-10)
       , C = U(-20)
-      , w = q(10)
-      , L = q(20)
-      , k = q(40)
-      , F = q(400)
-      , x = q(-10)
-      , M = q(-20)
-      , P = q(-40)
-      , I = q(-400)
-      , O = H(-10)
-      , T = H(-20)
-      , D = H(10)
-      , A = H(20)
+      , w = H(10)
+      , L = H(20)
+      , k = H(40)
+      , F = H(400)
+      , x = H(-10)
+      , M = H(-20)
+      , P = H(-40)
+      , I = H(-400)
+      , O = q(-10)
+      , T = q(-20)
+      , D = q(10)
+      , A = q(20)
       , R = r.keyframes({
         from: {
             transform: "scale3d(.98,.98,1)"
@@ -2005,7 +2180,7 @@ define("U", ["require", "exports", "g"], function(e, t, r) {
             }
         })
     }
-    function q(e) {
+    function H(e) {
         return r.keyframes({
             from: {
                 transform: "translate3d(0,0,0)"
@@ -2015,7 +2190,7 @@ define("U", ["require", "exports", "g"], function(e, t, r) {
             }
         })
     }
-    function H(e) {
+    function q(e) {
         return r.keyframes({
             from: {
                 transform: "translate3d(0,0,0)"
@@ -2026,7 +2201,7 @@ define("U", ["require", "exports", "g"], function(e, t, r) {
         })
     }
 });
-define("T", ["require", "exports"], function(e, t) {
+define("U", ["require", "exports"], function(e, t) {
     "use strict";
     Object.defineProperty(t, "__esModule", {
         value: !0
@@ -2082,7 +2257,7 @@ define("T", ["require", "exports"], function(e, t) {
         greenLight: "#bad80a"
     }
 });
-define("Q", ["require", "exports", "g", "P", "R"], function(e, t, n, a, r) {
+define("R", ["require", "exports", "h", "Q", "S"], function(e, t, n, a, r) {
     "use strict";
     Object.defineProperty(t, "__esModule", {
         value: !0
@@ -2126,7 +2301,7 @@ define("Q", ["require", "exports", "g", "P", "R"], function(e, t, n, a, r) {
     (t.registerDefaultFontFaces = c)((o = "undefined" != typeof window ? window : void 0,
     (i = o ? o.FabricConfig : void 0) && void 0 !== i.fontBaseUrl ? i.fontBaseUrl : "https://static2.sharepointonline.com/files/fabric/assets"))
 });
-define("P", ["require", "exports"], function(e, t) {
+define("Q", ["require", "exports"], function(e, t) {
     "use strict";
     Object.defineProperty(t, "__esModule", {
         value: !0
@@ -2250,7 +2425,7 @@ define("P", ["require", "exports"], function(e, t) {
         }
     }
 });
-define("R", ["require", "exports", "O", "S"], function(e, t, o, i) {
+define("S", ["require", "exports", "P", "T"], function(e, t, o, i) {
     "use strict";
     Object.defineProperty(t, "__esModule", {
         value: !0
@@ -2275,7 +2450,7 @@ define("R", ["require", "exports", "O", "S"], function(e, t, o, i) {
         n = e
     }
 });
-define("O", ["require", "exports"], function(e, t) {
+define("P", ["require", "exports"], function(e, t) {
     "use strict";
     Object.defineProperty(t, "__esModule", {
         value: !0
@@ -2381,7 +2556,7 @@ define("O", ["require", "exports"], function(e, t) {
         return e && !!e._virtual
     }
 });
-define("S", ["require", "exports"], function(e, t) {
+define("T", ["require", "exports"], function(e, t) {
     "use strict";
     Object.defineProperty(t, "__esModule", {
         value: !0
@@ -2400,7 +2575,7 @@ define("S", ["require", "exports"], function(e, t) {
         } catch (e) {}
     }
 });
-define("L", ["require", "exports", "D", "M", "B"], function(e, t, a, l, s) {
+define("M", ["require", "exports", "E", "N", "C"], function(e, t, a, l, s) {
     "use strict";
     Object.defineProperty(t, "__esModule", {
         value: !0
@@ -2449,7 +2624,7 @@ define("L", ["require", "exports", "D", "M", "B"], function(e, t, a, l, s) {
         }
     }
 });
-define("D", ["require", "exports"], function(e, t) {
+define("E", ["require", "exports"], function(e, t) {
     "use strict";
     Object.defineProperty(t, "__esModule", {
         value: !0
@@ -2470,7 +2645,7 @@ define("D", ["require", "exports"], function(e, t) {
         return "@media only screen and (min-width: " + e + "px) and (max-width: " + t + "px)"
     }
 });
-define("M", ["require", "exports", "O", "N"], function(e, o, i, n) {
+define("N", ["require", "exports", "P", "O"], function(e, o, i, n) {
     "use strict";
     Object.defineProperty(o, "__esModule", {
         value: !0
@@ -2500,7 +2675,7 @@ define("M", ["require", "exports", "O", "N"], function(e, o, i, n) {
         }
     }
 });
-define("N", ["require", "exports"], function(e, t) {
+define("O", ["require", "exports"], function(e, t) {
     "use strict";
     Object.defineProperty(t, "__esModule", {
         value: !0
@@ -2519,7 +2694,7 @@ define("N", ["require", "exports"], function(e, t) {
         return !!o[e]
     }
 });
-define("B", ["require", "exports"], function(e, t) {
+define("C", ["require", "exports"], function(e, t) {
     "use strict";
     Object.defineProperty(t, "__esModule", {
         value: !0
@@ -2533,7 +2708,7 @@ define("B", ["require", "exports"], function(e, t) {
         e.KeytipLayer = 1000001
     }(t.ZIndexes || (t.ZIndexes = {}))
 });
-define("K", ["require", "exports"], function(e, t) {
+define("L", ["require", "exports"], function(e, t) {
     "use strict";
     Object.defineProperty(t, "__esModule", {
         value: !0
@@ -2548,7 +2723,7 @@ define("K", ["require", "exports"], function(e, t) {
         overflow: "hidden"
     }
 });
-define("J", ["require", "exports", "au", "g"], function(e, t, r, n) {
+define("K", ["require", "exports", "av", "h"], function(e, t, r, n) {
     "use strict";
     Object.defineProperty(t, "__esModule", {
         value: !0
@@ -2630,7 +2805,7 @@ define("J", ["require", "exports", "au", "g"], function(e, t, r, n) {
         }
     }
 });
-define("I", ["require", "exports"], function(e, t) {
+define("J", ["require", "exports"], function(e, t) {
     "use strict";
     Object.defineProperty(t, "__esModule", {
         value: !0
@@ -2639,7 +2814,7 @@ define("I", ["require", "exports"], function(e, t) {
         return t.disableGlobalClassNames ? {} : e
     }
 });
-define("E", ["require", "exports", "au", "F", "Q", "T", "c"], function(e, o, i, n, a, l, s) {
+define("F", ["require", "exports", "av", "G", "R", "U", "d"], function(e, o, i, n, a, l, s) {
     "use strict";
     Object.defineProperty(o, "__esModule", {
         value: !0
@@ -2761,7 +2936,7 @@ define("E", ["require", "exports", "au", "F", "Q", "T", "c"], function(e, o, i, 
         }, r)
     }
 });
-define("F", ["require", "exports", "au", "x", "G"], function(e, t, o, r, i) {
+define("G", ["require", "exports", "av", "y", "H"], function(e, t, o, r, i) {
     "use strict";
     Object.defineProperty(t, "__esModule", {
         value: !0
@@ -2817,7 +2992,7 @@ define("F", ["require", "exports", "au", "x", "G"], function(e, t, o, r, i) {
     }();
     t.Customizations = a
 });
-define("G", ["require", "exports", "H"], function(e, t, p) {
+define("H", ["require", "exports", "I"], function(e, t, p) {
     "use strict";
     Object.defineProperty(t, "__esModule", {
         value: !0
@@ -2979,7 +3154,7 @@ define("G", ["require", "exports", "H"], function(e, t, p) {
     }();
     t.EventGroup = r
 });
-define("H", ["require", "exports"], function(e, t) {
+define("I", ["require", "exports"], function(e, t) {
     "use strict";
     Object.defineProperty(t, "__esModule", {
         value: !0
@@ -3045,7 +3220,7 @@ var __assign = this && this.__assign || Object.assign || function(e) {
     return e
 }
 ;
-define("c", ["require", "exports"], function(e, t) {
+define("d", ["require", "exports"], function(e, t) {
     "use strict";
     Object.defineProperty(t, "__esModule", {
         value: !0
@@ -3249,7 +3424,7 @@ define("c", ["require", "exports"], function(e, t) {
     }
     t.splitStyles = h
 });
-define("C", ["require", "exports"], function(e, t) {
+define("D", ["require", "exports"], function(e, t) {
     "use strict";
     Object.defineProperty(t, "__esModule", {
         value: !0
@@ -3266,14 +3441,14 @@ define("C", ["require", "exports"], function(e, t) {
         whiteSpace: "nowrap"
     }
 });
-define("X", ["require", "exports", "u", "A"], function(e, t, r, o) {
+define("Y", ["require", "exports", "v", "B"], function(e, t, r, o) {
     "use strict";
     Object.defineProperty(t, "__esModule", {
         value: !0
     });
     t.FontClassNames = r.buildClassMap(o.DefaultFontStyles)
 });
-define("W", ["require", "exports", "g", "T", "A"], function(e, t, n, r, a) {
+define("X", ["require", "exports", "h", "U", "B"], function(e, t, n, r, a) {
     "use strict";
     Object.defineProperty(t, "__esModule", {
         value: !0
@@ -3304,7 +3479,7 @@ define("W", ["require", "exports", "g", "T", "A"], function(e, t, n, r, a) {
         })
     }
 });
-define("ar", ["require", "exports", "e"], function(e, t, o) {
+define("aq", ["require", "exports", "f"], function(e, t, o) {
     "use strict";
     Object.defineProperty(t, "__esModule", {
         value: !0
@@ -3429,7 +3604,7 @@ define("ar", ["require", "exports", "e"], function(e, t, o) {
         o.registerIcons(r, t)
     }
 });
-define("aq", ["require", "exports", "e"], function(e, t, o) {
+define("ap", ["require", "exports", "f"], function(e, t, o) {
     "use strict";
     Object.defineProperty(t, "__esModule", {
         value: !0
@@ -3554,7 +3729,7 @@ define("aq", ["require", "exports", "e"], function(e, t, o) {
         o.registerIcons(r, t)
     }
 });
-define("ap", ["require", "exports", "e"], function(e, t, o) {
+define("ao", ["require", "exports", "f"], function(e, t, o) {
     "use strict";
     Object.defineProperty(t, "__esModule", {
         value: !0
@@ -3679,7 +3854,7 @@ define("ap", ["require", "exports", "e"], function(e, t, o) {
         o.registerIcons(r, t)
     }
 });
-define("ao", ["require", "exports", "e"], function(e, t, o) {
+define("an", ["require", "exports", "f"], function(e, t, o) {
     "use strict";
     Object.defineProperty(t, "__esModule", {
         value: !0
@@ -3804,7 +3979,7 @@ define("ao", ["require", "exports", "e"], function(e, t, o) {
         o.registerIcons(r, t)
     }
 });
-define("an", ["require", "exports", "e"], function(e, t, o) {
+define("am", ["require", "exports", "f"], function(e, t, o) {
     "use strict";
     Object.defineProperty(t, "__esModule", {
         value: !0
@@ -3929,7 +4104,7 @@ define("an", ["require", "exports", "e"], function(e, t, o) {
         o.registerIcons(r, t)
     }
 });
-define("am", ["require", "exports", "e"], function(e, t, o) {
+define("al", ["require", "exports", "f"], function(e, t, o) {
     "use strict";
     Object.defineProperty(t, "__esModule", {
         value: !0
@@ -4054,7 +4229,7 @@ define("am", ["require", "exports", "e"], function(e, t, o) {
         o.registerIcons(r, t)
     }
 });
-define("al", ["require", "exports", "e"], function(e, t, o) {
+define("ak", ["require", "exports", "f"], function(e, t, o) {
     "use strict";
     Object.defineProperty(t, "__esModule", {
         value: !0
@@ -4179,7 +4354,7 @@ define("al", ["require", "exports", "e"], function(e, t, o) {
         o.registerIcons(r, t)
     }
 });
-define("ak", ["require", "exports", "e"], function(e, t, o) {
+define("aj", ["require", "exports", "f"], function(e, t, o) {
     "use strict";
     Object.defineProperty(t, "__esModule", {
         value: !0
@@ -4304,7 +4479,7 @@ define("ak", ["require", "exports", "e"], function(e, t, o) {
         o.registerIcons(r, t)
     }
 });
-define("aj", ["require", "exports", "e"], function(e, t, o) {
+define("ai", ["require", "exports", "f"], function(e, t, o) {
     "use strict";
     Object.defineProperty(t, "__esModule", {
         value: !0
@@ -4429,7 +4604,7 @@ define("aj", ["require", "exports", "e"], function(e, t, o) {
         o.registerIcons(r, t)
     }
 });
-define("ai", ["require", "exports", "e"], function(e, t, o) {
+define("ah", ["require", "exports", "f"], function(e, t, o) {
     "use strict";
     Object.defineProperty(t, "__esModule", {
         value: !0
@@ -4554,7 +4729,7 @@ define("ai", ["require", "exports", "e"], function(e, t, o) {
         o.registerIcons(r, t)
     }
 });
-define("ah", ["require", "exports", "e"], function(e, t, o) {
+define("ag", ["require", "exports", "f"], function(e, t, o) {
     "use strict";
     Object.defineProperty(t, "__esModule", {
         value: !0
@@ -4679,7 +4854,7 @@ define("ah", ["require", "exports", "e"], function(e, t, o) {
         o.registerIcons(r, t)
     }
 });
-define("ag", ["require", "exports", "e"], function(e, t, o) {
+define("af", ["require", "exports", "f"], function(e, t, o) {
     "use strict";
     Object.defineProperty(t, "__esModule", {
         value: !0
@@ -4804,7 +4979,7 @@ define("ag", ["require", "exports", "e"], function(e, t, o) {
         o.registerIcons(r, t)
     }
 });
-define("af", ["require", "exports", "e"], function(e, t, o) {
+define("ae", ["require", "exports", "f"], function(e, t, o) {
     "use strict";
     Object.defineProperty(t, "__esModule", {
         value: !0
@@ -4929,7 +5104,7 @@ define("af", ["require", "exports", "e"], function(e, t, o) {
         o.registerIcons(r, t)
     }
 });
-define("ae", ["require", "exports", "e"], function(e, t, o) {
+define("ad", ["require", "exports", "f"], function(e, t, o) {
     "use strict";
     Object.defineProperty(t, "__esModule", {
         value: !0
@@ -5054,7 +5229,7 @@ define("ae", ["require", "exports", "e"], function(e, t, o) {
         o.registerIcons(r, t)
     }
 });
-define("ad", ["require", "exports", "e"], function(e, t, o) {
+define("ac", ["require", "exports", "f"], function(e, t, o) {
     "use strict";
     Object.defineProperty(t, "__esModule", {
         value: !0
@@ -5117,7 +5292,7 @@ define("ad", ["require", "exports", "e"], function(e, t, o) {
         o.registerIcons(r, t)
     }
 });
-define("ac", ["require", "exports", "e"], function(e, t, r) {
+define("ab", ["require", "exports", "f"], function(e, t, r) {
     "use strict";
     Object.defineProperty(t, "__esModule", {
         value: !0
@@ -5125,171 +5300,14 @@ define("ac", ["require", "exports", "e"], function(e, t, r) {
     r.registerIconAlias("trash", "delete");
     r.registerIconAlias("onedrive", "onedrivelogo")
 });
-define("aa", ["require", "exports"], function(e, t) {
-    "use strict";
-    Object.defineProperty(t, "__esModule", {
-        value: !0
-    });
-    var s = /\{(\d+)\}/g;
-    function o(e) {
-        for (var o = [], t = 1; t < arguments.length; t++)
-            o[t - 1] = arguments[t];
-        return e.replace(s, function(e, t) {
-            var r = o[t];
-            return null === r ? "" : r
-        })
-    }
-    t.format = o;
-    t.formatToArray = function(e) {
-        for (var t = [], r = 1; r < arguments.length; r++)
-            t[r - 1] = arguments[r];
-        for (var o, i = [], n = 0; o = s.exec(e); ) {
-            var a = o[0]
-              , l = t[parseInt(a.replace(/\{|\}+/g, ""), 10)];
-            o.index > n && i.push(e.substring(n, o.index));
-            n = s.lastIndex;
-            i.push(l)
-        }
-        n !== e.length && i.push(e.substring(n, e.length));
-        return i
-    }
-    ;
-    t.doesStringEndWith = function(e, t) {
-        return e.substr(e.length - t.length) === t
-    }
-    ;
-    t.doesStringStartWith = function(e, t) {
-        return e.substr(0, t.length) === t
-    }
-    ;
-    t.rightPad = function(e, t) {
-        for (var r = e.toString(); r.length < t; )
-            r += "0";
-        return r
-    }
-    ;
-    t.findOneOf = function(e, t) {
-        for (var r = 0; r < e.length; r++)
-            if (0 <= t.indexOf(e[r]))
-                return r;
-        return -1
-    }
-    ;
-    t.equalsCaseInsensitive = function(e, t) {
-        return e && t ? e.toUpperCase() === t.toUpperCase() : e === t
-    }
-    ;
-    t.capitalize = function(e) {
-        return e ? e[0].toUpperCase() + e.substr(1) : e
-    }
-    ;
-    t.decapitalize = function(e) {
-        return e ? e[0].toLowerCase() + e.substr(1) : e
-    }
-    ;
-    t.pluralSelect = function(e, t, r) {
-        return 1 === e ? t : r
-    }
-    ;
-    function i(e, t, r) {
-        r = Number(r);
-        if (void 0 === e || void 0 === t || void 0 === r)
-            return null;
-        for (var o = "", i = -1, n = t.split("||"), a = 0, l = n.length; a < l; a++) {
-            var s = n[a];
-            if (s) {
-                for (var c = 0, u = s.split(","); c < u.length; c++) {
-                    var d = u[c];
-                    if (d)
-                        if (isNaN(Number(d))) {
-                            if (-1 !== d.indexOf("-")) {
-                                var f = d.split("-");
-                                if (2 !== f.length)
-                                    continue;
-                                var g = void 0;
-                                if ("" === f[0])
-                                    g = 0;
-                                else {
-                                    if (isNaN(Number(f[0])))
-                                        continue;
-                                    g = parseInt(f[0], 10)
-                                }
-                                if (g <= r) {
-                                    if ("" === f[1]) {
-                                        i = a;
-                                        break
-                                    }
-                                    if (isNaN(Number(f[1])))
-                                        continue;
-                                    if (r <= parseInt(f[1], 10)) {
-                                        i = a;
-                                        break
-                                    }
-                                }
-                            } else if (-1 !== d.indexOf("*")) {
-                                var p = d.trim().replace(/\*/g, "[0-9]*");
-                                if (new RegExp("^" + p + "$").test(r.toString())) {
-                                    i = a;
-                                    break
-                                }
-                            }
-                        } else {
-                            if (r === parseInt(d, 10)) {
-                                i = a;
-                                break
-                            }
-                        }
-                }
-                if (-1 !== i)
-                    break
-            }
-        }
-        if (-1 !== i) {
-            var h = e.split("||");
-            h[i] && (o = h[i])
-        }
-        return o
-    }
-    t.getLocalizedCountValue = i;
-    t.formatWithLocalizedCountValue = function(e, t, r) {
-        return o(i(e, t, r), r.toString())
-    }
-});
-define("Z", ["require", "exports"], function(e, t) {
-    "use strict";
-    Object.defineProperty(t, "__esModule", {
-        value: !0
-    });
-    var r = /[<>&'"\\]/g
-      , o = {
-        "<": "&lt;",
-        ">": "&gt;",
-        "&": "&amp;",
-        '"': "&quot;",
-        "'": "&#39;",
-        "\\": "&#92;"
-    };
-    function i(e) {
-        return o[e]
-    }
-    var n = function() {
-        function e() {}
-        e.encodeText = function(e) {
-            return e ? e.replace(r, i) : ""
-        }
-        ;
-        return e
-    }();
-    t.default = n
-});
-define("d", ["require", "exports", "au", "e"], function(e, t, r, o) {
+define("e", ["require", "exports", "av", "f"], function(e, t, r, o) {
     "use strict";
     Object.defineProperty(t, "__esModule", {
         value: !0
     });
     r.__exportStar(o, t)
 });
-define("b", ["require", "exports", "c", "aT"], function(e, t, r, o) {
+define("c", ["require", "exports", "d", "aU"], function(e, t, r, o) {
     "use strict";
     Object.defineProperty(t, "__esModule", {
         value: !0
@@ -5330,16 +5348,11 @@ define("b", ["require", "exports", "c", "aT"], function(e, t, r, o) {
         theme: "neutralPrimary",
         defaultValue: "#333333"
     }, {
-        rawString: ";padding:0 8px}.sp-field-trending--up{color:"
-    }, {
-        theme: "green",
-        defaultValue: "#107c10"
-    }, {
-        rawString: "}.sp-field-trending--down{color:"
+        rawString: ";padding:0 8px}.sp-field-trending--up{color:#107c10}.sp-field-trending--down{color:"
     }, {
         theme: "error",
         defaultValue: "#a80000"
     }, {
-        rawString: "}.sp-field-quickAction{font-size:14px;font-weight:400;padding:0}[dir=ltr] .sp-field-quickAction{padding-left:8px}[dir=rtl] .sp-field-quickAction{padding-right:8px}"
+        rawString: '}.sp-field-quickAction{font-family:"Segoe UI Regular WestEuropean","Segoe UI",Tahoma,Arial,sans-serif;font-size:14px;font-weight:400;padding:0}[dir=ltr] .sp-field-quickAction{padding-left:8px}[dir=rtl] .sp-field-quickAction{padding-right:8px}'
     }])
 });

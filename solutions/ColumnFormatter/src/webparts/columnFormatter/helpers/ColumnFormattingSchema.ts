@@ -15,7 +15,10 @@ export const ColumnFormattingSchema = {
                     "description": "Name of the action that the custom action button will execute",
                     "enum": [
                         "defaultClick",
-                        "executeFlow"
+                        "executeFlow",
+                        "delete",
+                        "share",
+                        "editProps"
                     ]
                 },
                 "actionParams": {
@@ -1276,7 +1279,9 @@ export const ColumnFormattingSchema = {
                         "@currentField.lookupId",
                         "@currentField.desc",
                         "@me",
-                        "@now"
+                        "@now",
+                        "@window.innerHeight",
+                        "@window.innerWidth"
                     ]
                 }
             ]

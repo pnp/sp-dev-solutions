@@ -1,37 +1,44 @@
+/*
+    Previous version of local formatter (obviously in source control, but easier to compare as is)
+*/
+
 import styles from './LocalCustomFormatter.module.scss';
 
 /* tslint:disable */
-export const LocalCustomFormatter = (e, t, r, o, n, c, i, m) => {
+export const LocalCustomFormatter = (e, t, r, n, i, a, o) => {
     "use strict";
     Object.defineProperty(t, "__esModule", {
         value: !0
     });
-    i.initializeIcons(void 0, {
-        disableWarnings: !0
-    });
-    var a, l, s, u, d, f = "toString()", g = "Number()", p = "Date()", h = "||", v = "&&", y = "toLocaleString()", S = "toLocaleDateString()", b = "toLocaleTimeString()", _ = ((a = {})[y] = !0,
-    a[S] = !0,
-    a[b] = !0,
-    a), C = r.__assign(((l = {})[f] = !0,
-    l.cos = !0,
-    l.sin = !0,
-    l[p] = !0,
-    l[g] = !0,
-    l), _), w = r.__assign({}, C, ((s = {})["=="] = !0,
-    s["!="] = !0,
-    s[">="] = !0,
-    s["<="] = !0,
-    s[">"] = !0,
-    s["<"] = !0,
-    s["+"] = !0,
-    s["-"] = !0,
-    s["*"] = !0,
-    s["/"] = !0,
-    s[":"] = !0,
-    s["?"] = !0,
-    s[h] = !0,
-    s[v] = !0,
-    s)), L = {
+    var s = (b = {},
+    b["toLocaleString()"] = !0,
+    b["toLocaleDateString()"] = !0,
+    b["toLocaleTimeString()"] = !0,
+    b)
+      , l = r.__assign((_ = {},
+    _["toString()"] = !0,
+    _.cos = !0,
+    _.sin = !0,
+    _["Date()"] = !0,
+    _["Number()"] = !0,
+    _), s)
+      , u = r.__assign({}, l, (S = {},
+    S["=="] = !0,
+    S["!="] = !0,
+    S[">="] = !0,
+    S["<="] = !0,
+    S[">"] = !0,
+    S["<"] = !0,
+    S["+"] = !0,
+    S["-"] = !0,
+    S["*"] = !0,
+    S["/"] = !0,
+    S[":"] = !0,
+    S["?"] = !0,
+    S["||"] = !0,
+    S["&&"] = !0,
+    S))
+      , c = {
         div: !0,
         span: !0,
         a: !0,
@@ -39,7 +46,8 @@ export const LocalCustomFormatter = (e, t, r, o, n, c, i, m) => {
         svg: !0,
         button: !0,
         path: !0
-    }, k = "iconName", F = ((u = {
+    }
+      , f = (w = {
         href: !0,
         rel: !0,
         src: !0,
@@ -47,16 +55,16 @@ export const LocalCustomFormatter = (e, t, r, o, n, c, i, m) => {
         target: !0,
         title: !0,
         role: !0
-    })[k] = !0,
-    u.d = !0,
-    u.alt = !0,
-    u), x = {
+    },
+    w.iconName = !0,
+    w.d = !0,
+    w.alt = !0,
+    w)
+      , d = {
         defaultClick: !0,
-        executeFlow: !0,
-        delete: !0,
-        share: !0,
-        editProps: !0
-    }, M = {
+        executeFlow: !0
+    }
+      , g = {
         "background-color": !0,
         fill: !0,
         "background-image": !0,
@@ -189,25 +197,28 @@ export const LocalCustomFormatter = (e, t, r, o, n, c, i, m) => {
         "text-wrap": !0,
         "word-break": !0,
         "word-wrap": !0
-    }, P = ["http://", "https://", "mailto:"], I = "Number", O = "Text", T = "Counter", D = "Title", A = "DateTime", R = "User", E = "Choice", N = "Boolean", B = "Note", W = "Lookup", j = "Image", z = "Hyperlink", V = "_IsRecord", U = ((d = {})[I] = !0,
-    d[T] = !0,
-    d[O] = !0,
-    d[D] = !0,
-    d[A] = !0,
-    d[R] = !0,
-    d[E] = !0,
-    d[N] = !0,
-    d[B] = !0,
-    d[j] = !0,
-    d[z] = !0,
-    d.URL = !0,
-    d[W] = !0,
-    d[V] = !0,
-    d.Name = !0,
-    d), H = "@currentField", q = function() {
+    }
+      , p = ["http://", "https://", "mailto:"]
+      , m = "DateTime"
+      , h = "Boolean"
+      , y = (x = {},
+    x.Number = !0,
+    x.Text = !0,
+    x.Title = !0,
+    x[m] = !0,
+    x.User = !0,
+    x.Choice = !0,
+    x[h] = !0,
+    x.Note = !0,
+    x.Image = !0,
+    x.Hyperlink = !0,
+    x.Lookup = !0,
+    x._IsRecord = !0,
+    x)
+      , v = function() {
         function e(e) {
             this._params = e;
-            this._errorStrings = e.errorStrings || o.default
+            this._errorStrings = e.errorStrings || n.default
         }
         e.prototype.evaluate = function() {
             var e, t = [];
@@ -217,14 +228,14 @@ export const LocalCustomFormatter = (e, t, r, o, n, c, i, m) => {
                 this._createElementHtml(e, t, 0);
                 if (!this._fAria) {
                     var r = this._errorStrings.ariaError || "ariaError";
-                    this._cfr.debugMode && console.error(r)
+                    console.error(r)
                 }
-            } catch (e) {
-                var o = "Failure: " + ("string" == typeof e ? e : e.message);
-                this._cfr.debugMode && console.error(o);
+            } catch (r) {
+                var n = "Failure: " + ("string" == typeof r ? r : r.message);
+                console.error(n);
                 t = [];
-                this._cfr && this._cfr.debugMode && t.push(c.encodeText(o));
-                this._error = o
+                e && e.debugMode && t.push(a.default.encodeText(n));
+                this._error = n
             }
             return t.join("")
         }
@@ -233,66 +244,60 @@ export const LocalCustomFormatter = (e, t, r, o, n, c, i, m) => {
             return this._error || ""
         }
         ;
-        e.prototype.evalExpression = function(e) {
-            var t = [];
-            this._createValue(e, t, !1, !1, !1);
-            return t.join()
-        }
-        ;
         e.prototype._createElementHtml = function(e, t, r) {
             e.elmType || this._err("elmTypeMissing");
-            var o = e.elmType.toLowerCase()
-              , i = "a" === o;
-            if (!L[o]) {
-                var n = "";
-                for (var a in L)
-                    n += a + " ";
-                this._err("elmTypeInvalid", o, n)
+            var n = e.elmType.toLowerCase()
+              , i = "a" === n;
+            if (!c[n]) {
+                var a = "";
+                for (var s in c)
+                    a += s + " ";
+                this._err("elmTypeInvalid", n, a)
             }
-            t.push("<" + o + " ");
+            t.push("<" + n + " ");
             if (e.style) {
                 t.push('style="');
                 for (var l in e.style)
                     this._createStyleAttr(l, e.style[l], t);
                 t.push('" ')
             }
-            var s = e.attributes;
+            var u = e.attributes;
             if (0 === r) {
-                s || (s = {});
-                if (s.class) {
-                    var c = s.class;
-                    c === String(c) ? s.class = "sp-field-customFormatter " + c : s.class = {
+                u || (u = {});
+                if (u.class) {
+                    var f = u.class;
+                    f === String(f) ? u.class = "sp-field-customFormatter " + f : u.class = {
                         operator: "+",
-                        operands: ["sp-field-customFormatter ", c]
+                        operands: ["sp-field-customFormatter ", f]
                     }
                 } else
-                    s.class = "sp-field-customFormatter"
+                    u.class = "sp-field-customFormatter"
             }
-            if (s) {
+            if (u) {
                 if (i) {
-                    var u = s.rel;
-                    s.rel = "noopener noreferrer " + (u || "")
+                    var g = u.rel;
+                    u.rel = "noopener noreferrer " + (g || "")
                 }
-                s[k] && !s.class && (s.class = "");
-                for (var d in s)
-                    if (this._isValidAttr(d)) {
-                        t.push(" " + d + '="');
-                        var f = s[d];
-                        this._createValue(f, t, "href" === d || "src" === d);
-                        if ("class" === d.toLowerCase()) {
-                            var g = s[k];
-                            if (g) {
+                u.iconName && !u.class && (u.class = "");
+                for (var p in u)
+                    if (this._isValidAttr(p)) {
+                        t.push(" " + p + '="');
+                        var m = u[p];
+                        this._createValue(m, t, "href" === p || "src" === p);
+                        if ("class" === p.toLowerCase()) {
+                            var h = u.iconName;
+                            if (h) {
                                 t.push(" ");
-                                var p = [];
-                                this._createValue(g, p, !1);
-                                p[0] && t.push(m.getIconClassName(p[0]))
+                                var y = [];
+                                this._createValue(h, y, !1);
+                                y[0] && t.push(o.getIconClassName(y[0]))
                             }
                         }
                         t.push('" ')
                     } else
-                        this._cfr.debugMode && console.log("ignoring non-approved attribute " + d)
+                        console.log("ignoring non-approved attribute " + p)
             }
-            if ("button" === o && e.customRowAction && x[e.customRowAction.action]) {
+            if ("button" === n && e.customRowAction && d[e.customRowAction.action]) {
                 t.push(' data-iscustomformatter="true" ');
                 t.push(' data-actionname="' + e.customRowAction.action + '" ');
                 t.push(' data-actionparams="');
@@ -303,45 +308,45 @@ export const LocalCustomFormatter = (e, t, r, o, n, c, i, m) => {
             if (e.txtContent)
                 this._createValue(e.txtContent, t, !1, !1, !0);
             else if (e.children)
-                for (var h = 0; h < e.children.length; h++)
-                    this._createElementHtml(e.children[h], t, r + 1);
-            t.push("</" + o + ">")
+                for (var v = 0; v < e.children.length; v++)
+                    this._createElementHtml(e.children[v], t, r + 1);
+            t.push("</" + n + ">")
         }
         ;
         e.prototype._isValidAttr = function(e) {
-            var t = Boolean(F[e])
+            var t = Boolean(f[e])
               , r = Boolean(new RegExp("^aria-[a-z]+$","g").exec(e));
             r && (this._fAria = !0);
             return t || r
         }
         ;
         e.prototype._createStyleAttr = function(e, t, r) {
-            if (M[e]) {
+            if (g[e]) {
                 r.push(e + ":");
                 this._createValue(t, r, !1, !0);
                 r.push(";")
             } else
-                this._cfr.debugMode && console.log("Unsupported style attribute: " + e)
+                console.log("Unsupported style attribute: " + e)
         }
         ;
-        e.prototype._createValue = function(e, t, r, o, i) {
-            var n = this._eval(e, i);
-            null == n && (n = "");
-            var a = "<br/>"
-              , l = n instanceof Date ? n.toLocaleString() : n.toString()
-              , s = c.encodeText(l);
+        e.prototype._createValue = function(e, t, r, n, i) {
+            var o = this._eval(e, i);
+            null !== o && void 0 !== o || (o = "");
+            var s = "<br/>"
+              , l = o instanceof Date ? o.toLocaleString() : o.toString()
+              , u = a.default.encodeText(l);
             if (r) {
-                this._validateUrl(s) || this._err("invalidProtocol");
-                a = "%0D%0A"
+                this._validateUrl(u) || this._err("invalidProtocol");
+                s = "%0D%0A"
             }
-            o && !this._validateStyleValue(s) && this._err("invalidStyleValue", s);
-            s = s.replace(/\r\n|\r|\n/g, a);
-            t.push(s)
+            n && !this._validateStyleValue(u) && this._err("invalidStyleValue", u);
+            u = u.replace(/\r\n|\r|\n/g, s);
+            t.push(u)
         }
         ;
         e.prototype._validateStyleValue = function(e) {
-            for (var t = ["(", ":", "&", ";", "!"], r = "rgba(" === (e = e.toLowerCase()).substr(0, 5) ? 5 : 0, o = 0; o < t.length; o++)
-                if (0 <= e.indexOf(t[o], r))
+            for (var t = ["(", ":", "&", ";", "!"], r = "rgba(" === (e = e.toLowerCase()).substr(0, 5) ? 5 : 0, n = 0; n < t.length; n++)
+                if (e.indexOf(t[n], r) >= 0)
                     return !1;
             return !0
         }
@@ -350,12 +355,12 @@ export const LocalCustomFormatter = (e, t, r, o, n, c, i, m) => {
             if (!e)
                 return !0;
             e = e.trim().toLowerCase();
-            for (var t = 0; t < P.length; t++) {
-                var r = P[t];
+            for (var t = 0; t < p.length; t++) {
+                var r = p[t];
                 if (e.substr(0, r.length) === r)
                     return !0
             }
-            return !(0 <= e.indexOf(":") || 0 <= e.indexOf("\\") || 0 <= e.indexOf("&#92"))
+            return !(e.indexOf(":") >= 0 || e.indexOf("\\") >= 0 || e.indexOf("&#92") >= 0)
         }
         ;
         e.prototype._eval = function(e, t) {
@@ -363,21 +368,17 @@ export const LocalCustomFormatter = (e, t, r, o, n, c, i, m) => {
                 if (null === e)
                     return null;
                 if ("string" == typeof e) {
-                    if (0 === e.indexOf(H)) {
+                    if (0 === e.indexOf("@currentField")) {
                         var r = this._params.currentFieldName;
-                        if (e === H)
-                            return t && this._params.rowSchema && r && (this._params.rowSchema[r] === A || this._params.rowSchema[r] === V) ? this._params.row[r] : this._evalJsonPath(this._params.row, r || "");
-                        if (e.indexOf(".") !== H.length)
+                        if ("@currentField" === e)
+                            return !t || this._params.rowSchema[r] !== m && "_IsRecord" !== this._params.rowSchema[r] ? this._evalJsonPath(this._params.row, r) : this._params.row[r];
+                        if (e.indexOf(".") !== "@currentField".length)
                             return e;
-                        var o = r + e.substr(H.length);
-                        return this._evalJsonPath(this._params.row, o)
+                        var n = r + e.substr("@currentField".length);
+                        return this._evalJsonPath(this._params.row, n)
                     }
-                    if ("@me" === e && this._params.pageContextInfo && this._params.pageContextInfo.userEmail)
-                        return this._params.pageContextInfo.userEmail;
-                    if ("@window.innerWidth" === e)
-                        return window.innerWidth;
-                    if ("@window.innerHeight" === e)
-                        return window.innerHeight;
+                    if ("@me" === e && this._params.pageContextInfo)
+                        return this._params.pageContextInfo.userLoginName;
                     if ("@now" === e)
                         return new Date;
                     if (0 === e.indexOf("[$") && "]" === e[e.length - 1]) {
@@ -388,116 +389,116 @@ export const LocalCustomFormatter = (e, t, r, o, n, c, i, m) => {
                 }
                 if ("number" == typeof e || "boolean" == typeof e)
                     return e;
-                var n = e
-                  , a = n.operator
-                  , l = n.operands;
-                a || this._err("operatorMissing", JSON.stringify(n));
-                if (!w[a]) {
-                    var s = "";
-                    for (var c in w)
-                        s += c + " ";
-                    this._err("operatorInvalid", a, s, JSON.stringify(n))
+                var a = e
+                  , o = a.operator
+                  , c = a.operands;
+                o || this._err("operatorMissing", JSON.stringify(a));
+                if (!u[o]) {
+                    var f = "";
+                    for (var d in u)
+                        f += d + " ";
+                    this._err("operatorInvalid", o, f, JSON.stringify(a))
                 }
-                void 0 !== l && void 0 !== l[0] || this._err("operandMissing", JSON.stringify(n));
-                if (!C[a])
-                    return ":" === a || "?" === a ? this._ternaryEval(n, this._eval(l[1]), this._eval(l[2]), this._eval(l[0])) : "+" === a || "*" === a || a === h || a === v ? this._multiOpEval(n) : this._twoOpEval(n, this._eval(l[0]), a, this._eval(l[1]));
-                1 !== l.length && this._err("operandNOnly", 1..toString(), JSON.stringify(e));
-                if (a === f)
-                    return this._toString(this._eval(l[0]));
-                if (a === g) {
-                    var u = this._eval(l[0]);
-                    return Number(u)
+                void 0 !== c && void 0 !== c[0] || this._err("operandMissing", JSON.stringify(a));
+                if (!l[o])
+                    return ":" === o || "?" === o ? this._ternaryEval(a, this._eval(c[1]), this._eval(c[2]), this._eval(c[0])) : "+" === o || "*" === o || "||" === o || "&&" === o ? this._multiOpEval(a) : this._twoOpEval(a, this._eval(c[0]), o, this._eval(c[1]));
+                1 !== c.length && this._err("operandNOnly", 1..toString(), JSON.stringify(e));
+                if ("toString()" === o)
+                    return this._toString(this._eval(c[0]));
+                if ("Number()" === o) {
+                    g = this._eval(c[0]);
+                    return Number(g)
                 }
-                if (a === p) {
-                    u = this._eval(l[0]);
-                    return new Date(u)
+                if ("Date()" === o) {
+                    g = this._eval(c[0]);
+                    return new Date(g)
                 }
-                if ("cos" === a)
-                    return Math.cos(this._eval(l[0]));
-                if ("sin" === a)
-                    return Math.sin(this._eval(l[0]));
-                if (_[a]) {
-                    u = this._eval(l[0]);
-                    if (!Boolean(u))
+                if ("cos" === o)
+                    return Math.cos(this._eval(c[0]));
+                if ("sin" === o)
+                    return Math.sin(this._eval(c[0]));
+                if (s[o]) {
+                    var g = this._eval(c[0]);
+                    if (!Boolean(g))
                         return "";
-                    var d = new Date(u);
-                    if (a === y)
-                        return d.toLocaleString();
-                    if (a === S)
-                        return d.toLocaleDateString();
-                    if (a === b)
-                        return d.toLocaleTimeString()
+                    var p = new Date(g);
+                    if ("toLocaleString()" === o)
+                        return p.toLocaleString();
+                    if ("toLocaleDateString()" === o)
+                        return p.toLocaleDateString();
+                    if ("toLocaleTimeString()" === o)
+                        return p.toLocaleTimeString()
                 }
             }
         }
         ;
         e.prototype._toString = function(e) {
-            return null == e ? "" : e.toString()
+            return null === e || void 0 === e ? "" : e.toString()
         }
         ;
-        e.prototype._ternaryEval = function(e, t, r, o) {
-            void 0 !== t && void 0 !== r && void 0 !== o || this._err("operandNOnly", 3..toString(), JSON.stringify(e));
-            return o ? t : r
+        e.prototype._ternaryEval = function(e, t, r, n) {
+            void 0 !== t && void 0 !== r && void 0 !== n || this._err("operandNOnly", 3..toString(), JSON.stringify(e));
+            return n ? t : r
         }
         ;
         e.prototype._multiOpEval = function(e) {
             var t = e.operator
               , r = e.operands;
             (void 0 === r || r.length < 2) && this._err("operandNOnly", 2..toString(), JSON.stringify(e));
-            for (var o = this._eval(r[0]), i = 1; i < r.length; i++) {
-                var n = this._eval(r[i]);
-                o = this._twoOpEval(e, o, t, n)
+            for (var n = this._eval(r[0]), i = 1; i < r.length; i++) {
+                var a = this._eval(r[i]);
+                n = this._twoOpEval(e, n, t, a)
             }
-            return o
+            return n
         }
         ;
-        e.prototype._twoOpEval = function(e, t, r, o) {
-            void 0 !== t && void 0 !== o || this._err("operandNOnly", 2..toString(), JSON.stringify(e));
+        e.prototype._twoOpEval = function(e, t, r, n) {
+            void 0 !== t && void 0 !== n || this._err("operandNOnly", 2..toString(), JSON.stringify(e));
             if ("==" === r)
-                return t === o;
+                return t === n;
             if ("!=" === r)
-                return t !== o;
+                return t !== n;
             if (">=" === r)
-                return o <= t;
+                return t >= n;
             if ("<=" === r)
-                return t <= o;
+                return t <= n;
             if (">" === r)
-                return o < t;
+                return t > n;
             if ("<" === r)
-                return t < o;
-            if (r === h)
-                return t || o;
-            if (r === v)
-                return t && o;
+                return t < n;
+            if ("||" === r)
+                return t || n;
+            if ("&&" === r)
+                return t && n;
             if ("+" === r)
-                return this._doAddOrSubstract(e, t, o, !0);
+                return this._doAddOrSubstract(e, t, n, !0);
             if ("-" === r)
-                return this._doAddOrSubstract(e, t, o, !1);
+                return this._doAddOrSubstract(e, t, n, !1);
             if ("*" === r) {
                 this._validateIsNum(e, t);
-                this._validateIsNum(e, o);
-                return t * o
+                this._validateIsNum(e, n);
+                return t * n
             }
             if ("/" === r) {
                 this._validateIsNum(e, t);
-                this._validateIsNum(e, o);
-                return t / o
+                this._validateIsNum(e, n);
+                return t / n
             }
             throw ""
         }
         ;
-        e.prototype._doAddOrSubstract = function(e, t, r, o) {
-            var i, n = t instanceof Date || r instanceof Date;
-            if (o)
+        e.prototype._doAddOrSubstract = function(e, t, r, n) {
+            var i, a = t instanceof Date || r instanceof Date;
+            if (n)
                 i = t.valueOf() + r.valueOf();
             else {
-                if (!n) {
+                if (!a) {
                     this._validateIsNum(e, t);
                     this._validateIsNum(e, r)
                 }
                 i = t.valueOf() - r.valueOf()
             }
-            return n ? new Date(i) : i
+            return a ? new Date(i) : i
         }
         ;
         e.prototype._validateIsNum = function(e, t) {
@@ -505,35 +506,35 @@ export const LocalCustomFormatter = (e, t, r, o, n, c, i, m) => {
         }
         ;
         e.prototype._evalJsonPath = function(e, t) {
-            var r, o = e;
+            var r, n = e;
             try {
                 var i = t.split(".")
-                  , n = this._params.rowSchema || {}
-                  , a = n[i[0]];
+                  , a = this._params.rowSchema
+                  , o = a[i[0]];
                 r = i.length;
-                if (a === I || a === A || a === N || a === V) {
-                    var l = a === N ? ".value" : "."
-                      , s = i[0] + l;
-                    null != o[s] && void 0 !== o[s] && (i[0] = s)
+                if ("Number" === o || o === m || o === h || "_IsRecord" === o) {
+                    var s = o === h ? ".value" : "."
+                      , l = i[0] + s;
+                    null != n[l] && void 0 !== n[l] && (i[0] = l)
                 }
-                if ((a === z || a === j || "URL" === a) && 2 === r && "desc" === i[1])
-                    return o[t];
-                n && a && (U[a] || this._err("unsupportedType", t));
-                for (var c = a === R, u = a === W, d = 0; d < r; d++) {
-                    o = o[i[d]];
-                    (c || u) && 0 === d && this.isArray(o) && (o = o[0])
+                if (("Hyperlink" === o || "Image" === o) && 2 === r && "desc" === i[1])
+                    return n[t];
+                a && o && (y[o] || this._err("unsupportedType", t));
+                for (var u = "User" === o, c = "Lookup" === o, f = 0; f < r; f++) {
+                    n = n[i[f]];
+                    (u || c) && 0 === f && this.isArray(n) && (n = n[0])
                 }
             } catch (e) {
-                this._cfr.debugMode && console.log("could not evaluate " + t);
+                console.log("could not evaluate " + t);
                 return null
             }
-            if (void 0 === o) {
-                var f = t + " was not found on the data object.";
-                this._cfr.debugMode && console.log(f);
+            if (void 0 === n) {
+                var d = t + " was not found on the data object.";
+                console.log(d);
                 if (this._cfr.debugMode)
-                    throw f
+                    throw d
             }
-            return 1 === r ? this._convertValue(o, t) : o
+            return 1 === r ? this._convertValue(n, t) : n
         }
         ;
         e.prototype._convertValue = function(e, t) {
@@ -541,27 +542,24 @@ export const LocalCustomFormatter = (e, t, r, o, n, c, i, m) => {
             if (!r || !r[t])
                 return e;
             switch (r[t]) {
-            case O:
-            case D:
-            case B:
-            case E:
-            case j:
-            case z:
-            case "URL":
-            case W:
-            case V:
-            case T:
-            case "Name":
+            case "Text":
+            case "Title":
+            case "Note":
+            case "Choice":
+            case "Image":
+            case "Hyperlink":
+            case "Lookup":
+            case "_IsRecord":
                 return e;
-            case N:
+            case h:
                 return "1" === e || "0" !== e && e;
-            case I:
-                var o = void 0;
-                o = "string" == typeof e ? parseFloat(e.replace(/,/g, "")) : Number(e);
-                return isNaN(o) ? "" : o;
-            case A:
+            case "Number":
+                var n = void 0;
+                n = "string" == typeof e ? parseFloat(e.replace(/,/g, "")) : Number(e);
+                return isNaN(n) ? "" : n;
+            case m:
                 return "string" == typeof e ? Boolean(e) ? new Date(e) : null : e;
-            case R:
+            case "User":
                 this._err("userFieldError", t);
                 break;
             default:
@@ -576,18 +574,19 @@ export const LocalCustomFormatter = (e, t, r, o, n, c, i, m) => {
         e.prototype._err = function(e) {
             for (var t = [], r = 1; r < arguments.length; r++)
                 t[r - 1] = arguments[r];
-            var o = "";
+            var n = "";
             if (this._errorStrings && e && this._errorStrings[e]) {
-                var i = this._errorStrings[e];
-                o = n.format.apply(n, [i].concat(t))
+                var a = this._errorStrings[e];
+                n = i.format.apply(i, [a].concat(t))
             } else
-                e && (o = "FieldRenderer Error: " + e);
-            throw o
+                e && (n = "FieldRenderer Error: " + e);
+            throw n
         }
         ;
         return e
     }();
-    t.CustomFormatter = q
+    t.CustomFormatter = v;
+    var b, _, S, w, x
 };
 /*! *****************************************************************************
 Copyright (c) Microsoft Corporation. All rights reserved.
@@ -606,22 +605,31 @@ and limitations under the License.
 
 export const LocalHtmlEncoding = (e, t) => {
     "use strict";
+    function r(e) {
+        return i[e]
+    }
     Object.defineProperty(t, "__esModule", {
         value: !0
     });
-    var r = /[<>&'"\\]/g
-      , o = {
+    var n = /[<>&'"\\]/g
+      , i = {
         "<": "&lt;",
         ">": "&gt;",
         "&": "&amp;",
         '"': "&quot;",
         "'": "&#39;",
         "\\": "&#92;"
-    };
-    function i(e) {
-        return o[e]
     }
-    t.encodeText = function(e) {
-        return e ? e.replace(r, i) : ""
-    }
+      , a = function() {
+		var e: { (): any; encodeText: any; };
+		e =(() => {
+			var _e: any = function() {};
+			_e.encodeText = function(e) {
+				return e ? e.replace(n, r) : ""
+			};
+			return _e;
+		})();
+        return e
+    }();
+    t.default = a
 };

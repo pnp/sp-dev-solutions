@@ -48,8 +48,12 @@ class PreviewView_ extends React.Component<IPreviewViewProps, {}> {
 
 		//Build the HTMLEncoding Object
 		LocalHtmlEncoding(null,this._heContainer);
+		//Build the icon initializer Object
+		const iconInitializer: any = {
+			initializeIcons: ():void => {}
+		};
 		//Build the CustomFormatter Object
-		LocalCustomFormatter(null,this._cfContainer,tslib,LocalCustomFormatterStrings,null,this._heContainer,UIFabric);
+		LocalCustomFormatter(null,this._cfContainer,tslib,LocalCustomFormatterStrings,null,this._heContainer,iconInitializer,UIFabric);
 	}
 
 	public render(): React.ReactElement<IPreviewViewProps> {

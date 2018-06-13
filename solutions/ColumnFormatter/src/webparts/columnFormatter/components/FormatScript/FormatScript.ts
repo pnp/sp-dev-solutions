@@ -50,6 +50,7 @@ export const formatScriptTokens = ():any => {
 				// Special String values
 				['(?<![\w"])[@]currentField(\.email|\.id|\.title|\.sip|\.picture|\.lookupId|\.lookupValue|\.desc)*(?![\w"])', "magic"],
 				['(?<![\w"])[@](now|me)(?![\w"])', "magic"],
+				['(?<![\w"])[@]window(\.innerHeight|\.innerWidth)(?![\w"])', "magic"],
 
 				// whitespace
 				{ include: '@whitespace' },
@@ -404,6 +405,24 @@ export const formatScriptCompletionProvider = ():any => {
 					kind: 9, //property
 				},
 				{
+					label: '@window.innerHeight',
+					kind: 4, //field
+					filterText: 'window',
+				},
+				{
+					label: 'innerHeight',
+					kind: 9, //property
+				},
+				{
+					label: '@window.innerWidth',
+					kind: 4, //field
+					filterText: 'window',
+				},
+				{
+					label: 'innerWidth',
+					kind: 9, //property
+				},
+				{
 					label: 'sp-field-severity--good',
 					kind: 15, //color
 					insertText: '"sp-field-severity--good"',
@@ -486,6 +505,7 @@ export interface IFSParseResult {
 const CF:string = "__CURRENTFIELD__";
 const ME:string = "__ME__";
 const NOW:string = "__NOW__";
+const WINDOW:string = "__WINDOW__";
 
 const fsKeywordToOperation = (keyword:string): string | undefined => {
 	switch (keyword.toLowerCase()) {
@@ -706,43 +726,62 @@ const parseFormatScript = (expression:any): IFSParseResult => {
 
 			case "MemberExpression":
 			//TODO: add support for field refs
-				if(expression.object.name == CF) {
-					switch(expression.property.name) {
-						case "desc":
-							parseResult.result = "@currentField.desc";
-							break;
-						case "id":
-							parseResult.result = "@currentField.id";
-							break;
-						case "email":
-							parseResult.result = "@currentField.email";
-							break;
-						case "title":
-							parseResult.result = "@currentField.title";
-							break;
-						case "picture":
-							parseResult.result = "@currentField.picture";
-							break;
-						case "sip":
-							parseResult.result = "@currentField.sip";
-							break;
-						case "lookupValue":
-							parseResult.result = "@currentField.lookupValue";
-							break;
-						case "lookupId":
-							parseResult.result = "@currentField.lookupId";
-							break;
-						default:
-							parseResult.errors.push({
-								message: "Unknown Property: " + expression.property.name,
-								loc: expression.loc,
-							});
-					}
-				} else {
-					parseResult.errors.push({
-						message: "Unknown Identifier: " + expression.object.name,
-						loc: expression.object.loc,
-					});
+				switch(expression.object.name) {
+					case CF:
+						switch(expression.property.name) {
+							case "desc":
+								parseResult.result = "@currentField.desc";
+								break;
+							case "id":
+								parseResult.result = "@currentField.id";
+								break;
+							case "email":
+								parseResult.result = "@currentField.email";
+								break;
+							case "title":
+								parseResult.result = "@currentField.title";
+								break;
+							case "picture":
+								parseResult.result = "@currentField.picture";
+								break;
+							case "sip":
+								parseResult.result = "@currentField.sip";
+								break;
+							case "lookupValue":
+								parseResult.result = "@currentField.lookupValue";
+								break;
+							case "lookupId":
+								parseResult.result = "@currentField.lookupId";
+								break;
+							default:
+								parseResult.errors.push({
+									message: "Unknown Property: " + expression.property.name,
+									loc: expression.loc,
+								});
+						}
+						break;
+						
+					case WINDOW:
+						switch(expression.property.name) {
+							case "innerHeight":
+								parseResult.result = "@window.innerHeight";
+								break;
+							case "innerWidth":
+								parseResult.result = "@window.innerWidth";
+								break;
+							default:
+								parseResult.errors.push({
+									message: "Unknown Property: " + expression.property.name,
+									loc: expression.loc,
+								});
+						}
+						break;
+
+					default:
+						parseResult.errors.push({
+							message: "Unknown Identifier: " + expression.object.name,
+							loc: expression.object.loc,
+						});
 				}
 				
 				break;
@@ -769,7 +808,7 @@ const parseFormatScript = (expression:any): IFSParseResult => {
 
 export const formatScriptToJSON = (fs:string): IFSParseResult => {
 	//preprocess FormatScript to remove @ keywords (esprima will error out otherwise)
-	const tokenFS = fs.replace("@currentField", CF).replace("@me", ME).replace("@now", NOW);
+	const tokenFS = fs.replace("@currentField", CF).replace("@me", ME).replace("@now", NOW).replace("@window", WINDOW);
 
 	let result: IFSParseResult = {
 		errors: new Array<IFSParseError>(),
