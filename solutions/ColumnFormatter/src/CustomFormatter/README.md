@@ -42,6 +42,10 @@ The result is a hard to follow, but working set of code. The goal is to eventual
 |1106-5309| Removed|
 |5310|Took styles and moved them to local SCSS file|
 
+>Style changes in this version: webkit flex props removed from `.sp-field-customFormatter` and font-family prop added to `.sp-field-quickAction`
+
+>Notable changes are support for `@window.innerHeight` & `@window.innerWidth`, removal of extra console messages, and inclusion of delete, editProps, & share as customRowAction values.
+
 # Parameters (Dependencies)
 
 ### 4df54baa

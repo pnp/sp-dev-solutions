@@ -17,6 +17,7 @@
 - Updated internal CustomFormatter & schema to match real formatter
   - Includes support for @window.innerHeight & @window.innerWidth special strings
   - Includes support for delete, editProps, & share custom row actions
+  - Minor formatting class updates
 
 ### Removed
 - Choice of Column Type when opening files
