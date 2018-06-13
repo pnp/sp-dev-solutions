@@ -255,7 +255,7 @@ class PreviewView_ extends React.Component<IPreviewViewProps, {}> {
 	private getFormatterFieldInfo(rIndex:number): IFormatterFieldInfo {
 		//Apply Formatting
 		let row = {
-			ID: rIndex
+			ID: rIndex,
 		};
 		let rowSchema = {};
 		for(var i = 0; i < this.props.columns.length; i++) {
@@ -338,15 +338,38 @@ class PreviewView_ extends React.Component<IPreviewViewProps, {}> {
 			if (typeof this._rowFormatter !== "undefined") {
 				return this.formattedMarkup(0);
 			} else if (typeof this._additionalRowClass !== "undefined") {
+				const rowClass:string = this.evaluateRowClass(this._additionalRowClass, rowProps.itemIndex);
 				//Only apply additionalRowClass if rowFormatter is NOT specified
 				return (
-					<DetailsRow {...rowProps} className={'sp-field-severity--good'}/>
+					<DetailsRow {...rowProps} className={rowClass}/>
 				);
 			}
 		} catch (error) {
 			//Ignore
 		}
 		return undefined;
+	}
+
+	private evaluateRowClass(customFormatterClassExpression: string, rIndex: number): string {
+		//Build dummy format Info (based on evaluateRowClass in splist)
+		const formatterFieldInfo: IFormatterFieldInfo = {
+			fieldRendererFormat: null,
+			row: {
+				ID: rIndex,
+				Title: "FAKE",
+			},
+			currentFieldName: "Title",
+			rowSchema: {
+				Title: this.colTypeFromEnum(columnTypes.text),
+			},
+			errorStrings: null,
+			pageContextInfo: {
+				userLoginName: this.props.userEmail
+			},
+		};
+
+		const formatter = new this._cfContainer.CustomFormatter(formatterFieldInfo);
+		return formatter.evalExpression(JSON.parse(customFormatterClassExpression));
 	}
 }
 
