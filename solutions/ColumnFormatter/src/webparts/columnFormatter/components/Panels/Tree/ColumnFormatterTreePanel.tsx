@@ -136,7 +136,7 @@ class ColumnFormatterTreePanel_ extends React.Component<IColumnFormatterTreePane
 				)}
 				<DefaultButton text="fx" onClick={this.onFxButtonClick}/>
 				<FormatScriptEditorDialog
-				 initialValue='@currentField + "%"'
+				 initialValue='SWITCH(@currentField,"Done","green","In Progress","yellow","red")'
 				 theme="vs-dark"
 				 visible={this.state.formatScriptDialogVisible}
 				 dialogTitle="Format Script"

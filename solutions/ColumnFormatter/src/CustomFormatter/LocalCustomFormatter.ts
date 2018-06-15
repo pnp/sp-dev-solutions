@@ -1,5 +1,3 @@
-import styles from './LocalCustomFormatter.module.scss';
-
 /* tslint:disable */
 export const LocalCustomFormatter = (e, t, r, o, n, c, i, m) => {
     "use strict";

@@ -479,7 +479,7 @@ export const formatScriptCompletionProvider = ():any => {
 
 
 export interface IFormatOperation {
-	operation: string;
+	operator: string;
 	operands: Array<string|any|boolean|number>;
 }
 
@@ -507,7 +507,7 @@ const ME:string = "__ME__";
 const NOW:string = "__NOW__";
 const WINDOW:string = "__WINDOW__";
 
-const fsKeywordToOperation = (keyword:string): string | undefined => {
+const fsKeywordToOperator = (keyword:string): string | undefined => {
 	switch (keyword.toLowerCase()) {
 		case "concatenate":
 		case "concat":
@@ -556,10 +556,10 @@ const fsKeywordToOperation = (keyword:string): string | undefined => {
 /**
  * Returns the minimum number of arguments for the given operation
  * when used as a callexpression (function)
- * @param operation The operation (assumes valid and translated)
+ * @param operator The operator (assumes valid and translated)
  */
-const callExpressionMinArgCount = (operation:string): number => {
-	switch (operation) {
+const callExpressionMinArgCount = (operator:string): number => {
+	switch (operator) {
 		case "+":
 		case "?":
 		case "&&":
@@ -573,10 +573,10 @@ const callExpressionMinArgCount = (operation:string): number => {
 /**
  * Returns the maximum number of arguments for the given operation
  * when used as a callexpression (function)
- * @param operation The operation (assumes valid and translated)
+ * @param operator The operator (assumes valid and translated)
  */
-const callExpressionMaxArgCount = (operation:string): number => {
-	switch (operation) {
+const callExpressionMaxArgCount = (operator:string): number => {
+	switch (operator) {
 		case "+":
 		case "?":
 		case "&&":
@@ -587,6 +587,54 @@ const callExpressionMaxArgCount = (operation:string): number => {
 	}
 };
 
+/**
+ * Translates a series of parameters to an IFormatOperation to represent a SWITCH
+ * @param testParam This is the value that will be checked against each set of value and result
+ * @param params These are the remaining parameters. It is assumed there are at least 2:
+ *               the first param is the value to check for equality with the testParam
+ *               the second param is the value to use when that equality is true
+ *               if there are more than 3 parameters, then a recursive switch is used
+ *               if there are exactly 3 parameters, the third param is the value to use when the equality is false
+ *               if there are only 2 parameters, then the false value is set as an empty string
+ *               This has the effect of making the last parameter the "Default" value
+ */
+const buildSwitchFormat = (testParam:string, params:Array<string>): IFormatOperation => {
+	return {
+		operator: "?",
+		operands: [
+			{
+				operator: "==",
+				operands: [
+					testParam,
+					params[0],
+				],
+			},
+			params[1],
+			params.length > 3 ? buildSwitchFormat(testParam, params.slice(2)) : (params.length == 3 ? params[2] : ""),
+		]
+	};
+};
+
+/**
+ * Translates a series of parameters to an IFormatOperation to represent an IF
+ * @param params It is assumed there are at least 2 parameters:
+ *               the first param is the boolean value to evaluate
+ *               the second param is the value to use when the evaluation is true
+ *               if there are more than 3 parameters, then a recursive if is used
+ *               if there are exactly 3 parameters, the third param is the value to use when the evaluation is false
+ *               if there are only 2 parameters, then the false value is set as an empty string
+ */
+const buildIfFormat = (params:Array<string>): IFormatOperation => {
+	return {
+		operator: "?",
+		operands: [
+			params[0],
+			params[1],
+			params.length > 3 ? buildIfFormat(params.slice(2)) : (params.length == 3 ? params[2] : ""),
+		],
+	};
+};
+
 const parseFormatScript = (expression:any): IFSParseResult => {
 	let parseResult: IFSParseResult = {
 		errors: new Array<IFSParseError>(),
@@ -595,9 +643,9 @@ const parseFormatScript = (expression:any): IFSParseResult => {
 	try {
 		switch (expression.type) {
 			case "CallExpression":
-				//Figure out the operation
-				const ceOperation = fsKeywordToOperation(expression.callee.name);
-				if (typeof ceOperation == "undefined") {
+				//Figure out the operator
+				const ceOperator = fsKeywordToOperator(expression.callee.name);
+				if (typeof ceOperator == "undefined") {
 					parseResult.errors.push({
 						message: "Unknown Function: " + expression.callee.name,
 						loc: expression.callee.loc,
@@ -606,8 +654,8 @@ const parseFormatScript = (expression:any): IFSParseResult => {
 				}
 
 				//Validate the minimum number of args are supplied
-				const minArgs = callExpressionMinArgCount(ceOperation);
-				const maxArgs = callExpressionMaxArgCount(ceOperation);
+				const minArgs = callExpressionMinArgCount(ceOperator);
+				const maxArgs = callExpressionMaxArgCount(ceOperator);
 				if (minArgs > expression.arguments.length || (maxArgs !== -1 && maxArgs < expression.arguments.length)) {
 					parseResult.errors.push({
 						message: expression.callee.name + " expects " + (maxArgs == -1 ? "at least " + minArgs + " arguments" : (minArgs==maxArgs ? minArgs + (minArgs == 1 ? " argument" : " arguments") : minArgs + "-" + maxArgs + " arguments")),
@@ -617,7 +665,7 @@ const parseFormatScript = (expression:any): IFSParseResult => {
 				}
 
 				parseResult.result = {
-					operation: ceOperation,
+					operator: ceOperator,
 					operands: new Array<string|any|boolean|number>(),
 				};
 
@@ -632,12 +680,20 @@ const parseFormatScript = (expression:any): IFSParseResult => {
 					}
 				});
 
+				if (expression.callee.name.toLowerCase() == "switch") {
+					parseResult.result = buildSwitchFormat(parseResult.result.operands[0], parseResult.result.operands.slice(1));
+				}
+
+				if (expression.callee.name.toLowerCase() == "if") {
+					parseResult.result = buildIfFormat(parseResult.result.operands);
+				}
+
 				break;
 
 			case "BinaryExpression":
-				//Figure out the operation
-				const beOperation = fsKeywordToOperation(expression.operator);
-				if (typeof beOperation == "undefined") {
+				//Figure out the operator
+				const beOperator = fsKeywordToOperator(expression.operator);
+				if (typeof beOperator == "undefined") {
 					parseResult.errors.push({
 						message: "Unknown Operator: " + expression.operator,
 						loc: expression.loc,
@@ -646,7 +702,7 @@ const parseFormatScript = (expression:any): IFSParseResult => {
 				}
 
 				parseResult.result = {
-					operation: beOperation,
+					operator: beOperator,
 					operands: new Array<string|any|boolean|number>(),
 				};
 
@@ -673,7 +729,7 @@ const parseFormatScript = (expression:any): IFSParseResult => {
 			case "ConditionalExpression":
 
 				parseResult.result = {
-					operation: "?",
+					operator: "?",
 					operands: new Array<string|any|boolean|number>(),
 				};
 
@@ -760,7 +816,7 @@ const parseFormatScript = (expression:any): IFSParseResult => {
 								});
 						}
 						break;
-						
+
 					case WINDOW:
 						switch(expression.property.name) {
 							case "innerHeight":
@@ -808,7 +864,7 @@ const parseFormatScript = (expression:any): IFSParseResult => {
 
 export const formatScriptToJSON = (fs:string): IFSParseResult => {
 	//preprocess FormatScript to remove @ keywords (esprima will error out otherwise)
-	const tokenFS = fs.replace("@currentField", CF).replace("@me", ME).replace("@now", NOW).replace("@window", WINDOW);
+	const tokenFS = fs.replace(/@currentField/g, CF).replace(/@me/g, ME).replace(/@now/g, NOW).replace(/@window/g, WINDOW);
 
 	let result: IFSParseResult = {
 		errors: new Array<IFSParseError>(),
