@@ -351,6 +351,124 @@ export default {
 				},
 				required: [ 'verb', 'fieldDisplayName', 'formatterJSON' ],
 				additionalProperties: false
+			},
+			associateFieldCustomizer: {
+				type: 'object',
+				title: getActionTitle('createSPList_associateFieldCustomizer', 'Associate field customizer'),
+				description: getActionDescription(
+					'createSPList_associateFieldCustomizer',
+					'Registers field extension for a list field'
+				),
+				properties: {
+					verb: {
+						enum: [ 'associateFieldCustomizer' ]
+					},
+					internalName: {
+						title: getPropertyTitle(
+							'internalName',
+							'createSPList_associateFieldCustomizer',
+							"Field's internal name"
+						),
+						description: getPropertyDescription(
+							'internalName',
+							'createSPList_associateFieldCustomizer',
+							'The name of the field to operate on'
+						),
+						type: 'string'
+					},
+					clientSideComponentId: {
+						title: getPropertyTitle(
+							'clientSideComponentId',
+							'createSPList_associateFieldCustomizer',
+							'Client Side Component Id'
+						),
+						description: getPropertyDescription(
+							'clientSideComponentId',
+							'createSPList_associateFieldCustomizer',
+							'The identifier (GUID) of the extension in the app catalog. This property value can be found in the manifest.json file or in the elements.xml file'
+						),
+						type: 'string'
+					},
+					clientSideComponentProperties: {
+						title: getPropertyTitle(
+							'clientSideComponentProperties',
+							'createSPList_associateFieldCustomizer',
+							'Client Side Component Properties'
+						),
+						description: getPropertyDescription(
+							'clientSideComponentProperties',
+							'createSPList_associateFieldCustomizer',
+							'(Optional) Can be used to provide properties for the field customizer extension instance, is specified as stringified JSON'
+						),
+						type: 'string'
+					}
+				},
+				required: [ 'verb', 'internalName', 'clientSideComponentId' ],
+				additionalProperties: false
+			},
+			associateListViewCommandSet: {
+				type: 'object',
+				title: getActionTitle('createSPList_associateListViewCommandSet', 'Associate List View Command Set'),
+				description: getActionDescription(
+					'createSPList_associateListViewCommandSet',
+					'Registers field extension for a list field'
+				),
+				properties: {
+					verb: {
+						enum: [ 'associateListViewCommandSet' ]
+					},
+					title: {
+            title: getPropertyTitle('title', 'createSPList_associateListViewCommandSet', 'Title'),
+            description: getPropertyDescription(
+              'title',
+              'createSPList_associateListViewCommandSet',
+              'The title of the extension'
+            ),
+            type: 'string'
+          },
+					location: {
+						title: getPropertyTitle(
+							'location',
+							'createSPList_associateListViewCommandSet',
+							'Location'
+						),
+						description: getPropertyDescription(
+							'location',
+							'createSPList_associateListViewCommandSet',
+							'A required parameter to specify where the command is displayed. Options are: ContextMenu or CommandBar'
+						),
+						type: 'string',
+						enum: [ 'ContextMenu', 'CommandBar' ]
+					},
+					clientSideComponentId: {
+						title: getPropertyTitle(
+							'clientSideComponentId',
+							'createSPList_associateListViewCommandSet',
+							'Client Side Component Id'
+						),
+						description: getPropertyDescription(
+							'clientSideComponentId',
+							'createSPList_associateListViewCommandSet',
+							'The identifier (GUID) of the extension in the app catalog. This property value can be found in the manifest.json file or in the elements.xml file'
+						),
+						type: 'string'
+					},
+					clientSideComponentProperties: {
+						title: getPropertyTitle(
+							'clientSideComponentProperties',
+							'createSPList_associateListViewCommandSet',
+							'Client Side Component Properties'
+						),
+						description: getPropertyDescription(
+							'clientSideComponentProperties',
+							'createSPList_associateListViewCommandSet',
+							'(Optional) Can be used to provide properties for the List View Command Set extension instance, is specified as stringified JSON'
+						),
+						type: 'string'
+					}
+				},
+				required: [ 'verb', 'internalName', 'location', 'clientSideComponentId' ],
+				additionalProperties: false
 			}
 		},
 		SPContentTypeSubactions: {
@@ -574,7 +692,10 @@ export default {
 							{ type: 'object', $ref: '#/definitions/SPListSubactions/removeSPView' },
 							{ type: 'object', $ref: '#/definitions/SPListSubactions/addContentType' },
 							{ type: 'object', $ref: '#/definitions/SPListSubactions/removeContentType' },
-							{ type: 'object', $ref: '#/definitions/SPListSubactions/setSPFieldCustomFormatter' }
+              { type: 'object', $ref: '#/definitions/SPListSubactions/setSPFieldCustomFormatter' },
+              { type: 'object', $ref: '#/definitions/SPListSubactions/associateFieldCustomizer' },
+              { type: 'object', $ref: '#/definitions/SPListSubactions/associateListViewCommandSet' }
+
 						]
 					}
 				}
@@ -674,8 +795,11 @@ export default {
 		},
 		installSPFXSolution: {
 			type: 'object',
-			title: getActionTitle('installSPFXSolution', 'Install a SPFx Solution'),
-			description: getActionDescription('installSPFXSolution', 'Install a SPFx solution (or add-in) to the site'),
+			title: getActionTitle('installSPFXSolution', 'Install a SPFx Solution or Addin'),
+			description: getActionDescription(
+				'installSPFXSolution',
+				'Install a SharePoint Framework solution (or add-in) to the site'
+			),
 			properties: {
 				verb: {
 					enum: [ 'installSPFXSolution' ]
@@ -687,6 +811,90 @@ export default {
 				}
 			},
 			required: [ 'verb', 'id' ]
+		},
+		associateExtension: {
+			type: 'object',
+			title: getActionTitle('associateExtension', 'Associate Extension'),
+			description: getActionDescription(
+				'associateExtension',
+				'Use the associateExtension action to register a deployed SharePoint Framework extension from the tenant app catalog'
+			),
+			properties: {
+				verb: {
+					enum: [ 'associateExtension' ]
+				},
+				title: {
+					title: getPropertyTitle('title', 'associateExtension', 'Title'),
+					description: getPropertyDescription(
+						'title',
+						'associateExtension',
+						'The title of the extension in the app catalog'
+					),
+					type: 'string'
+				},
+				location: {
+					title: getPropertyTitle('location', 'associateExtension', 'Location'),
+					description: getPropertyDescription(
+						'location',
+						'associateExtension',
+						'Used to specify the extension type. If it is used to create commands, then where the command would be displayed; otherwise this should be set to ClientSideExtension.ApplicationCustomizer'
+					),
+					type: 'string',
+					enum: [ 'ContextMenu', 'CommandBar', 'ClientSideExtension.ApplicationCustomizer' ]
+				},
+				clientSideComponentId: {
+					title: getPropertyTitle('clientSideComponentId', 'associateExtension', 'Client Side Component Id'),
+					description: getPropertyDescription(
+						'clientSideComponentId',
+						'associateExtension',
+						'The identifier (GUID) of the extension in the app catalog. This property value can be found in the manifest.json file or in the elements.xml file'
+					),
+					type: 'string'
+				},
+				clientSideComponentProperties: {
+					title: getPropertyTitle(
+						'clientSideComponentProperties',
+						'associateExtension',
+						'Client Side Component Properties'
+					),
+					description: getPropertyDescription(
+						'clientSideComponentProperties',
+						'associateExtension',
+						'(Optional) Can be used to provide properties for the extension instance, is specified as stringified JSON'
+					),
+					type: 'string'
+				},
+				registrationId: {
+					title: getPropertyTitle('registrationId', 'associateExtension', 'Registration Id'),
+					description: getPropertyDescription(
+						'registrationId',
+						'associateExtension',
+						'(Optional) Indicates the type of the list the extension is associated to (if it is a list extension)'
+					),
+					type: 'string'
+				},
+				registrationType: {
+					title: getPropertyTitle('registrationType', 'associateExtension', 'Registration Type'),
+					description: getPropertyDescription(
+						'registrationType',
+						'associateExtension',
+						'(Optional) Should be specified if the extension is associated with a list'
+					),
+					type: 'string'
+				},
+				scope: {
+					title: getPropertyTitle('scope', 'associateExtension', 'Scope'),
+					description: getPropertyDescription(
+						'scope',
+						'associateExtension',
+						'Indicates whether the extension is associated with a Web or a Site'
+					),
+					type: 'string',
+					enum: [ 'Web', 'Site' ]
+				}
+			},
+			required: [ 'verb', 'title', 'location', 'clientSideComponentId' ],
+			additionalProperties: false
 		},
 		triggerFlow: {
 			title: getActionTitle('triggerFlow', 'Trigger a Flow'),
@@ -752,6 +960,35 @@ export default {
 			},
 			required: [ 'verb', 'timeZone', 'locale', 'sortOrder', 'hourFormat' ]
 		},
+		addPrincipalToGroup: {
+			type: 'object',
+			title: getActionTitle('addPrincipalToGroup', 'Add Principal to Group'),
+			description: getActionDescription('addPrincipalToGroup', 'Use the addPrincipalToGroup action to manage addition of users and groups to select default SharePoint groups. This action can be used for licensed users, security groups, and Office 365 Groups'),
+			properties: {
+				verb: {
+					enum: [ 'addPrincipalToGroup' ]
+				},
+				principal: {
+					title: getPropertyTitle('principal', 'addPrincipalToGroup', 'Principal'),
+					description: getPropertyDescription(
+						'principal',
+						'addPrincipalToGroup',
+						'A required parameter to specify the name of the principal (user or group) to add to the SharePoint group'
+					),
+					type: 'string'
+				},
+				group: {
+					title: getPropertyTitle('group', 'addPrincipalToGroup', 'Group'),
+					description: getPropertyDescription(
+						'group',
+						'addPrincipalToGroup',
+						'A required parameter to specify the SharePoint group to add the principal to'
+					),
+					type: 'string'
+				}
+			},
+			required: [ 'verb', 'principal', 'group' ]
+		},
 		setSiteExternalSharingCapability: {
 			type: 'object',
 			title: getActionTitle('setSiteExternalSharingCapability', 'Set site external sharing capability'),
@@ -792,16 +1029,18 @@ export default {
 			description: 'The definition of the script actions',
 			items: {
 				anyOf: [
-          { type: 'object', $ref: '#/definitions/createSPList' },
+					{ type: 'object', $ref: '#/definitions/createSPList' },
 					{ type: 'object', $ref: '#/definitions/createSiteColumn' },
 					{ type: 'object', $ref: '#/definitions/createContentType' },
 					{ type: 'object', $ref: '#/definitions/addNavLink' },
 					{ type: 'object', $ref: '#/definitions/applyTheme' },
 					{ type: 'object', $ref: '#/definitions/setSiteLogo' },
 					{ type: 'object', $ref: '#/definitions/joinHubSite' },
-					{ type: 'object', $ref: '#/definitions/installSPFXSolution' },
-					{ type: 'object', $ref: '#/definitions/triggerFlow' },
-					{ type: 'object', $ref: '#/definitions/setRegionalSettings' },
+          { type: 'object', $ref: '#/definitions/installSPFXSolution' },
+          { type: 'object', $ref: '#/definitions/associateExtension' },
+          { type: 'object', $ref: '#/definitions/triggerFlow' },
+          { type: 'object', $ref: '#/definitions/setRegionalSettings' },
+          { type: 'object', $ref: '#/definitions/addPrincipalToGroup' },
 					{ type: 'object', $ref: '#/definitions/setSiteExternalSharingCapability' }
 				]
 			}
