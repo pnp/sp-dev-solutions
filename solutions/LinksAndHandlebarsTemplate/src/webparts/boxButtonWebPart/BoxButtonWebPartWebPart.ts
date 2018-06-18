@@ -116,7 +116,7 @@ export default class BoxButtonWebPartWebPart extends BaseClientSideWebPart<IBoxB
           var isDoc = false;
           const docExtensions = ["pdf", "xls", "xlsx", "doc", "docx", "ppt", "pptx", "pptm", "dot"];
           for(const i of docExtensions){
-            if(url.indexOf(docExtensions[i], url.length - docExtensions[i].length) !== -1)
+            if(url.indexOf(i, url.length - i.length) !== -1)
               isDoc = true;
           }
 
