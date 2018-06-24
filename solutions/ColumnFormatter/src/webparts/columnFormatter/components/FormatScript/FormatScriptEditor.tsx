@@ -2,16 +2,7 @@ import { autobind } from "office-ui-fabric-react/lib/Utilities";
 import * as React from "react";
 
 import styles from "../ColumnFormatter.module.scss";
-import {
-    formatScriptCompletionProvider,
-    formatScriptConfig,
-    formatScriptId,
-    formatScriptTheme,
-    formatScriptToJSON,
-    formatScriptTokens,
-    IFSParseError,
-    IFSParseResult,
-} from "./FormatScript";
+import { formatScriptId, formatScriptToJSON, IFSParseError, IFSParseResult } from "./FormatScript";
 
 const monaco = require('../../../../MonacoCustomBuild');
 
@@ -27,31 +18,6 @@ export class FormatScriptEditor extends React.Component<IFormatScriptEditorProps
 	private _editor: any;
 	
 	public componentDidMount(): void {
-
-		//Register the FormatScript language
-		monaco.languages.register({
-			id: formatScriptId,
-		});
-
-		//Register custom tokens for FormatScript
-		monaco.languages.setMonarchTokensProvider(formatScriptId, formatScriptTokens());
-
-		//Customize theme for FormatScript
-		monaco.editor.defineTheme(formatScriptId + 'Theme', formatScriptTheme(this.props.theme!=='vs'));
-
-		//Provide configuration for FormatScript
-		monaco.languages.setLanguageConfiguration(formatScriptId, formatScriptConfig());
-
-		//Register Completion Provider FormatScript
-		monaco.languages.registerCompletionItemProvider(formatScriptId, formatScriptCompletionProvider());
-
-		//Adjust tab size once things are ready
-		monaco.editor.onDidCreateModel((m:any) => {
-			m.updateOptions({
-				tabSize: 2
-			});
-		});
-
 		this.createEditor();
 	}
 
@@ -64,7 +30,7 @@ export class FormatScriptEditor extends React.Component<IFormatScriptEditorProps
 		this._editor = monaco.editor.create(this._container, {
 			value: this.props.initialValue,
 			scrollBeyondLastLine: false,
-			theme: formatScriptId + 'Theme',
+			theme: this.props.theme,
 			language: formatScriptId,
 			renderIndentGuides: false,
 			lineNumbers: false,

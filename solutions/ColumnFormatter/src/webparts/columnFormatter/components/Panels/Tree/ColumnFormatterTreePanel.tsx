@@ -98,6 +98,7 @@ const treeStyles:any = {
 
 export interface IColumnFormatterTreePanelProps {
 	codeString:string;
+	theme?:string;
 }
 
 export interface IColumnFormatterTreePanelState {
@@ -137,7 +138,7 @@ class ColumnFormatterTreePanel_ extends React.Component<IColumnFormatterTreePane
 				<DefaultButton text="fx" onClick={this.onFxButtonClick}/>
 				<FormatScriptEditorDialog
 				 initialValue='SWITCH(@currentField,"Done","green","In Progress","yellow","red")'
-				 theme="vs-dark"
+				 theme={this.props.theme}
 				 visible={this.state.formatScriptDialogVisible}
 				 dialogTitle="Format Script"
 				 onCancel={()=>{this.setState({formatScriptDialogVisible:false});}}
@@ -234,7 +235,8 @@ class ColumnFormatterTreePanel_ extends React.Component<IColumnFormatterTreePane
 
 function mapStateToProps(state: IApplicationState): IColumnFormatterTreePanelProps{
 	return {
-		codeString: state.code.formatterString
+		codeString: state.code.formatterString,
+		theme: state.code.editorTheme,
 	};
 }
 

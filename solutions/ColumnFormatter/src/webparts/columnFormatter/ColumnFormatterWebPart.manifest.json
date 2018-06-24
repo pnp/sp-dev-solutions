@@ -23,7 +23,7 @@
     "officeFabricIconFontName": "Design",
     "properties": {
       "height": 340,
-      "editorTheme": "vs",
+      "editorTheme": "fabric",
       "showLineNumbers": false,
       "showMiniMap": false,
       "showIndentGuides": true

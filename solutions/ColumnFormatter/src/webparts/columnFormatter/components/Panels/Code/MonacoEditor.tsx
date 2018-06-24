@@ -2,8 +2,8 @@ import * as strings from "ColumnFormatterWebPartStrings";
 import { autobind } from "office-ui-fabric-react/lib/Utilities";
 import * as React from "react";
 
-import { ColumnFormattingSchema, ColumnFormattingSchemaURI } from "../../../helpers/ColumnFormattingSchema";
-import { ViewFormattingSchema, ViewFormattingSchemaURI } from "../../../helpers/ViewFormattingSchema";
+import { ColumnFormattingSchemaURI } from "../../../helpers/ColumnFormattingSchema";
+import { ViewFormattingSchemaURI } from "../../../helpers/ViewFormattingSchema";
 import { formatterType } from "../../../state/State";
 import styles from "../../ColumnFormatter.module.scss";
 
@@ -26,29 +26,6 @@ export class MonacoEditor extends React.Component<IMonacoEditorProps, {}> {
 	private _editor: any;
 
 	public componentDidMount(): void {
-		//Add Column Formatter Schema for validation
-		monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
-			schemas: [
-				{
-					uri: ColumnFormattingSchemaURI,
-					schema: ColumnFormattingSchema
-				},
-				{
-					uri: ViewFormattingSchemaURI,
-					schema: ViewFormattingSchema
-				},
-			],
-			validate: true,
-			allowComments: false
-		});
-
-		//Adjust tab size once things are ready
-		monaco.editor.onDidCreateModel((m:any) => {
-			m.updateOptions({
-				tabSize: 2
-			});
-		});
-
 		this.createEditor();
 	}
 

@@ -17,6 +17,7 @@ import { ColumnFormatter } from './components/ColumnFormatter';
 import { chooseTheme, setContext, setHeight, toggleIndentGuides, toggleLineNumbers, toggleMiniMap } from './state/Actions';
 import { cfReducer } from './state/Reducers';
 import { IApplicationState } from './state/State';
+import { setupMonaco } from './helpers/MonacoSetup';
 
 export interface IColumnFormatterWebPartProps {
   height: number; //Controls the height of the webpart
@@ -47,6 +48,9 @@ export default class ColumnFormatterWebPart extends BaseClientSideWebPart<IColum
         this.properties
       )
     );
+
+    // Monaco Editor Global Configuration
+    setupMonaco();
 
     //Initializes PNP JS Core with SPFx context
     return super.onInit().then(_ => {
@@ -134,9 +138,11 @@ export default class ColumnFormatterWebPart extends BaseClientSideWebPart<IColum
                   label: strings.Property_EditorThemeLabel,
                   selectedKey: this.properties.editorTheme,
                   options: [
+                    { key: 'fabric', text: 'Fabric' },
+                    { key: 'fabric-dark', text: 'Fabric Dark' },
                     { key: 'vs', text: 'Visual Studio' },
                     { key: 'vs-dark', text: 'Visual Studio Dark' },
-                    { key: 'hc-black', text: 'High Contrast Dark' }
+                    { key: 'hc-black', text: 'High Contrast Dark' },
                   ]
                 }),
                 PropertyPaneToggle('showLineNumbers', {
