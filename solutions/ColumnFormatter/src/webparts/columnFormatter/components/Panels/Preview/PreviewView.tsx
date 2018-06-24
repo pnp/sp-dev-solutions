@@ -336,7 +336,7 @@ class PreviewView_ extends React.Component<IPreviewViewProps, {}> {
 	private renderFormattedRow(rowProps:IDetailsRowProps): JSX.Element {
 		try {
 			if (typeof this._rowFormatter !== "undefined") {
-				return this.formattedMarkup(0);
+				return this.formattedMarkup(rowProps.itemIndex);
 			} else if (typeof this._additionalRowClass !== "undefined") {
 				const rowClass:string = this.evaluateRowClass(this._additionalRowClass, rowProps.itemIndex);
 				//Only apply additionalRowClass if rowFormatter is NOT specified
