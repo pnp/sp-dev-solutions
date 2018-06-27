@@ -22,14 +22,6 @@ declare interface IPropertyFieldStrings {
   SPListFilterCompareAll: string;
   SPListFilterCompareAny: string;
 
-  GuidanceMessageSegment1: string;
-  GuidanceMessageSegment2: string;
-  GuidanceMessageLink1Text: string;
-
-  ImageSelectorMessageSegment1: string;
-  ImageSelectorMessageSegment2: string;
-  ImageSelectorMessageLink1Text: string;
-  ImageSelectorMessageLink2Text: string;
   ImageSelectorTypeAuto: string;
   ImageSelectorTypeCustom: string;
 
@@ -55,6 +47,16 @@ declare interface IPropertyFieldStrings {
   GroupSortMessageSegment1: string;
 
   RichTextCreateLinkTitle: string;
+
+  SearchQueryLabel:string;
+  SelectPropertiesLabel:string;
+  SortLabel:string;
+  ResultsLabel:string;
+  SortPropertyLabel: string;
+  SortDirectionLabel:string;
+
+  Ascending: string;
+  Descending: string;
 }
 
 declare module 'propertyFieldStrings' {

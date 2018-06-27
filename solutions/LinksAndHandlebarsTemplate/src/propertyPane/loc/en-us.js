@@ -47,6 +47,16 @@ define([], function() {
         "RichTextModalCancelText": "Cancel",
         "GroupSortMessageSegment1": "Choose sort order for groups.",
 
-        "RichTextCreateLinkTitle": "Create link"
+        "RichTextCreateLinkTitle": "Create link",
+
+        "SearchQueryLabel": "Search Query",
+        "SelectPropertiesLabel": "Select Properties",
+        "SortLabel": "Sort",
+        "ResultsLabel": "Result Count",
+        "SortPropertyLabel": "Property",
+        "SortDirectionLabel": "Direction",
+
+        "Ascending": "Ascending",
+        "Descending": "Descending"
     }
 });
