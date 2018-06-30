@@ -593,7 +593,7 @@ export default {
 					type: 'string'
 				},
 				description: {
-					title: getPropertyTitle('description', 'createContentType', 'Name'),
+					title: getPropertyTitle('description', 'createContentType', 'Description'),
 					description: getPropertyDescription(
 						'description',
 						'createContentType',
