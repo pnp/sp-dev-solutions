@@ -394,7 +394,7 @@
 					"type": "string"
 				},
 				"description": {
-					"title": "Name",
+					"title": "Description",
 					"description": "The name of the Content Type",
 					"type": "string"
 				},
