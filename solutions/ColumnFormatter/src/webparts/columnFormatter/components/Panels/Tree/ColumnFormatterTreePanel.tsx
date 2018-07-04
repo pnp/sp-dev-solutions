@@ -3,13 +3,14 @@ import { autobind } from 'office-ui-fabric-react/lib/Utilities';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Treebeard } from 'react-treebeard';
-import { DefaultButton, IButtonProps, Button, PrimaryButton, IconButton } from 'office-ui-fabric-react/lib/Button';
+import { DefaultButton, IButtonProps, Button, PrimaryButton, IconButton, IButtonStyles } from 'office-ui-fabric-react/lib/Button';
 import { Dialog, DialogFooter, DialogType } from "office-ui-fabric-react/lib/Dialog";
 
 import { IApplicationState } from '../../../state/State';
 import styles from '../../ColumnFormatter.module.scss';
 import { FormatScriptEditorDialog } from '../../FormatScript/FormatScriptEditorDialog';
-import { Icon } from 'office-ui-fabric-react/lib/Icon';
+import { Icon, IIconStyles } from 'office-ui-fabric-react/lib/Icon';
+import {IStyle} from 'office-ui-fabric-react/lib/Styling';
 
 export interface ITreeNode {
 	name: string;
@@ -17,6 +18,7 @@ export interface ITreeNode {
 	active: boolean;
 	children?: Array<ITreeNode>;
 	icon: string;
+	id: string;
 }
 
 const treeStyles: any = {
@@ -34,7 +36,7 @@ const treeStyles: any = {
 			base: {
 				position: 'relative'
 			},
-			link: {
+			/*link: {
 				cursor: 'pointer',
 				position: 'relative',
 				padding: '0px 5px',
@@ -86,10 +88,10 @@ const treeStyles: any = {
 					lineHeight: '24px',
 					verticalAlign: 'middle'
 				}
-			},
+			},*/
 			subtree: {
 				listStyle: 'none',
-				paddingLeft: '19px'
+				paddingLeft: '14px'
 			},
 			loading: {
 				color: '#666666'
@@ -98,6 +100,61 @@ const treeStyles: any = {
 	}
 };
 
+const rootToggleStyle: Partial<IStyle> = {
+	width: "14px",
+	height: "14px",
+	padding: "0",
+	paddingRight: "3px",
+};
+
+const expandedToggleStyles: Partial<IButtonStyles> = {
+	root: {
+		...rootToggleStyle,
+		verticalAlign: "sub",
+	},
+	icon: {
+		fontSize: "15px",
+		lineHeight: "14px",
+	}
+};
+
+const collapsedToggleStyles: Partial<IButtonStyles> = {
+	...expandedToggleStyles,
+	root: {
+		...rootToggleStyle,
+		verticalAlign: "middle",
+	},
+	icon: {
+		fontSize: "10px",
+		lineHeight: "14px",
+	}
+};
+
+const rootIconStyle: Partial<IStyle> = {
+	width: "14px",
+	height: "100%",
+	padding: "0",
+	paddingRight: "2px",
+	fontSize: "14px",
+	lineHeight: "14px",
+	cursor: "default",
+	verticalAlign: "middle",
+};
+
+const parentIconStyles: Partial<IIconStyles> = {
+	root: {
+		...rootIconStyle
+	}
+};
+
+const terminalIconStyles: Partial<IIconStyles> = {
+	root: {
+		...rootIconStyle,
+		paddingLeft: "16px",
+	}
+};
+
+
 export interface IColumnFormatterTreePanelProps {
 	codeString: string;
 	theme?: string;
@@ -105,7 +162,7 @@ export interface IColumnFormatterTreePanelProps {
 
 export interface IColumnFormatterTreePanelState {
 	treeData?: any;
-	activeNode?: any;
+	activeNodeId?: string;
 	treeError?: string;
 	formatScriptDialogVisible: boolean;
 }
@@ -126,7 +183,7 @@ class ColumnFormatterTreePanel_ extends React.Component<IColumnFormatterTreePane
 
 	public render(): React.ReactElement<IColumnFormatterTreePanelProps> {
 		return (
-			<div className={styles.panel}>
+			<div className={styles.panel + " " + styles.tree}>
 				<span className={styles.panelHeader}>{strings.TreeView_Header}</span>
 				{this.state.treeError == undefined && this.state.treeData !== undefined && (
 					<Treebeard
@@ -137,14 +194,22 @@ class ColumnFormatterTreePanel_ extends React.Component<IColumnFormatterTreePane
 							Container: (props) => {
 								console.log(props);
 								return (
-									<div>
+									<div className={styles.node + (props.node.active ? " " + styles.active : "")}>
 										{!props.terminal &&
 											<IconButton
 												iconProps={{iconName: props.node.toggled ? "CaretSolid" : "CaretSolidRight"}}
-												onClick={props.onClick}/>
+												onClick={props.onClick}
+												styles={props.node.toggled ? expandedToggleStyles : collapsedToggleStyles}/>
 										}
-										<Icon iconName={props.node.icon}/>
-										<span>{props.node.name}</span>
+										<span
+											className={styles.nodeBody}
+											onClick={() => {this.onSelectNode(props.node.id);}}>
+											<Icon
+												iconName={props.node.icon}
+												styles={props.terminal ? terminalIconStyles : parentIconStyles}
+												title={props.node.id}/>
+											<span className={styles.nodeName}>{props.node.name}</span>
+										</span>
 									</div>
 								);
 							}
@@ -178,12 +243,16 @@ class ColumnFormatterTreePanel_ extends React.Component<IColumnFormatterTreePane
 
 	@autobind
 	private onToggle(node: any, toggled: boolean): void {
-		node.active = true;
+		//node.active = true;
 		if (node.children) {
 			node.toggled = toggled;
 		}
+	}
+
+	@autobind
+	private onSelectNode(nodeId:string): void {
 		this.setState({
-			activeNode: node
+			activeNodeId: nodeId,
 		});
 	}
 
@@ -192,7 +261,7 @@ class ColumnFormatterTreePanel_ extends React.Component<IColumnFormatterTreePane
 		this._treeError = undefined;
 		try {
 			let curObj: any = JSON.parse(this.props.codeString);
-			root = this.objToNode(curObj);
+			root = this.objToNode(curObj, "", 1);
 		} catch (e) {
 			this._treeError = e.message;
 			return undefined;
@@ -200,33 +269,28 @@ class ColumnFormatterTreePanel_ extends React.Component<IColumnFormatterTreePane
 		return root;
 	}
 
-	private objToNode(obj: any): ITreeNode | undefined {
-		let children: Array<ITreeNode> = new Array<ITreeNode>();
-		if (obj.children && obj.children.length) {
-			for (var i = 0; i < obj.children.length; i++) {
-				let node: ITreeNode = this.objToNode(obj.children[i]);
-				if (node !== undefined) {
-					children.push(node);
-				}
-			}
-		}
+	private objToNode(obj: any, parentId:string, index:number): ITreeNode | undefined {
 		if (obj.elmType) {
-			let name: string = '<' + obj.elmType.toLowerCase() + '>';
-			/*if(obj.txtContent) {
-				if(typeof obj.txtContent == 'string') {
-					name += ' ' + obj.txtContent;
-				} else {
-					if(obj.txtContent.operator) {
-						name += ' [calculated]';
+			const nodeId: string = parentId == "" ? index.toString() : `${parentId}.${index}-${obj.elmType.toLowerCase()}`;
+			const children: Array<ITreeNode> = new Array<ITreeNode>();
+			if (obj.children && obj.children.length) {
+				for (var i = 0; i < obj.children.length; i++) {
+					let node: ITreeNode = this.objToNode(obj.children[i], nodeId, i+1);
+					if (node !== undefined) {
+						children.push(node);
 					}
 				}
-			}*/
+			}
+
+			let name: string = '<' + obj.elmType.toLowerCase() + '>';
+
 			return {
 				name: name,
 				toggled: true,
-				active: true,
+				active: false,
 				children: children.length > 0 ? children : undefined,
-				icon: this.elmIcon(obj.elmType)
+				icon: this.elmIcon(obj.elmType),
+				id: nodeId,
 			};
 		}
 		return undefined;

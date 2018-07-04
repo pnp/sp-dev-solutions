@@ -1476,6 +1476,31 @@
         }
       }
     }
+
+    &.tree {
+      .node {
+        display: inline-block;
+        background-color: $ms-color-white;
+        width: 100%;
+
+        &.active {
+          background-color: $ms-color-themeLight;
+        }
+
+        .nodeBody {
+          cursor: pointer;
+          
+          &:hover {
+            color: $ms-color-themeDark;
+          }
+        }
+      } 
+      .nodeName {
+        font-size: 14px;
+        line-height: 14px;
+        vertical-align: middle;
+      }
+    }
   }
 
 }
