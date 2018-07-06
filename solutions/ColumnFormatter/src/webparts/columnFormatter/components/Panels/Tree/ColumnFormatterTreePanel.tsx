@@ -29,66 +29,13 @@ const treeStyles: any = {
 			margin: 0,
 			padding: 0,
 			color: '#333333',
-			//fontFamily: 'unset',
 			fontSize: '14px'
 		},
 		node: {
 			base: {
-				position: 'relative'
-			},
-			/*link: {
-				cursor: 'pointer',
 				position: 'relative',
-				padding: '0px 5px',
-				display: 'block',
-				whiteSpace: 'nowrap'
+				marginTop: '-1px',
 			},
-			activeLink: {
-				background: '#ffffff'
-			},
-			toggle: {
-				base: {
-					position: 'relative',
-					display: 'inline-block',
-					verticalAlign: 'top',
-					marginLeft: '-5px',
-					height: '24px',
-					width: '24px'
-				},
-				wrapper: {
-					position: 'absolute',
-					top: '50%',
-					left: '50%',
-					margin: '-9px 0 0 -3px',
-					height: '14px'
-				},
-				height: 10,
-				width: 10,
-				arrow: {
-					fill: '#666666',
-					strokeWidth: 0
-				}
-			},
-			header: {
-				base: {
-					display: 'inline-block',
-					verticalAlign: 'top',
-					color: '#333333'
-				},
-				connector: {
-					width: '2px',
-					height: '12px',
-					borderLeft: 'solid 2px black',
-					borderBottom: 'solid 2px black',
-					position: 'absolute',
-					top: '0px',
-					left: '-21px'
-				},
-				title: {
-					lineHeight: '24px',
-					verticalAlign: 'middle'
-				}
-			},*/
 			subtree: {
 				listStyle: 'none',
 				paddingLeft: '14px'
@@ -100,58 +47,15 @@ const treeStyles: any = {
 	}
 };
 
-const rootToggleStyle: Partial<IStyle> = {
-	width: "14px",
-	height: "14px",
-	padding: "0",
-	paddingRight: "3px",
-};
-
-const expandedToggleStyles: Partial<IButtonStyles> = {
+const treeIconStyles: Partial<IIconStyles> = {
 	root: {
-		...rootToggleStyle,
-		verticalAlign: "sub",
-	},
-	icon: {
-		fontSize: "15px",
+		width: "14px",
+		height: "100%",
+		padding: "2px 4px",
+		fontSize: "14px",
 		lineHeight: "14px",
-	}
-};
-
-const collapsedToggleStyles: Partial<IButtonStyles> = {
-	...expandedToggleStyles,
-	root: {
-		...rootToggleStyle,
-		verticalAlign: "middle",
+		verticalAlign: "bottom",
 	},
-	icon: {
-		fontSize: "10px",
-		lineHeight: "14px",
-	}
-};
-
-const rootIconStyle: Partial<IStyle> = {
-	width: "14px",
-	height: "100%",
-	padding: "0",
-	paddingRight: "2px",
-	fontSize: "14px",
-	lineHeight: "14px",
-	cursor: "default",
-	verticalAlign: "middle",
-};
-
-const parentIconStyles: Partial<IIconStyles> = {
-	root: {
-		...rootIconStyle
-	}
-};
-
-const terminalIconStyles: Partial<IIconStyles> = {
-	root: {
-		...rootIconStyle,
-		paddingLeft: "16px",
-	}
 };
 
 
@@ -170,6 +74,8 @@ export interface IColumnFormatterTreePanelState {
 class ColumnFormatterTreePanel_ extends React.Component<IColumnFormatterTreePanelProps, IColumnFormatterTreePanelState> {
 
 	private _treeError?: string;
+	private _formatObj?: any;
+	private _activeNode?: any;
 
 	constructor(props: IColumnFormatterTreePanelProps) {
 		super(props);
@@ -192,24 +98,16 @@ class ColumnFormatterTreePanel_ extends React.Component<IColumnFormatterTreePane
 						style={treeStyles}
 						decorators={{
 							Container: (props) => {
-								console.log(props);
 								return (
-									<div className={styles.node + (props.node.active ? " " + styles.active : "")}>
-										{!props.terminal &&
-											<IconButton
-												iconProps={{iconName: props.node.toggled ? "CaretSolid" : "CaretSolidRight"}}
-												onClick={props.onClick}
-												styles={props.node.toggled ? expandedToggleStyles : collapsedToggleStyles}/>
-										}
-										<span
-											className={styles.nodeBody}
-											onClick={() => {this.onSelectNode(props.node.id);}}>
-											<Icon
-												iconName={props.node.icon}
-												styles={props.terminal ? terminalIconStyles : parentIconStyles}
-												title={props.node.id}/>
-											<span className={styles.nodeName}>{props.node.name}</span>
-										</span>
+									<div
+									 className={styles.node + (props.node.active ? " " + styles.active : "")}
+									 onClick={props.onClick}>
+
+										<Icon
+										 iconName={props.node.icon}
+										 styles={treeIconStyles}
+										 title={props.node.id}/>
+										<span>{props.node.name}</span>
 									</div>
 								);
 							}
@@ -242,26 +140,24 @@ class ColumnFormatterTreePanel_ extends React.Component<IColumnFormatterTreePane
 	}
 
 	@autobind
-	private onToggle(node: any, toggled: boolean): void {
-		//node.active = true;
-		if (node.children) {
-			node.toggled = toggled;
+	private onToggle(node: ITreeNode, toggled: boolean): void {
+		if(typeof this._activeNode !== "undefined") {
+			this._activeNode.active = false;
 		}
-	}
-
-	@autobind
-	private onSelectNode(nodeId:string): void {
+		this._activeNode = node;
+		node.active = true;
 		this.setState({
-			activeNodeId: nodeId,
+			activeNodeId: node.id,
 		});
+		console.log(this.getElemById(node.id,[this._formatObj]));
 	}
 
 	private codeToTreeData(): ITreeNode | undefined {
 		let root: ITreeNode;
 		this._treeError = undefined;
 		try {
-			let curObj: any = JSON.parse(this.props.codeString);
-			root = this.objToNode(curObj, "", 1);
+			this._formatObj = JSON.parse(this.props.codeString);
+			root = this.objToNode(this._formatObj, "", 0);
 		} catch (e) {
 			this._treeError = e.message;
 			return undefined;
@@ -271,17 +167,21 @@ class ColumnFormatterTreePanel_ extends React.Component<IColumnFormatterTreePane
 
 	private objToNode(obj: any, parentId:string, index:number): ITreeNode | undefined {
 		if (obj.elmType) {
-			const nodeId: string = parentId == "" ? index.toString() : `${parentId}.${index}-${obj.elmType.toLowerCase()}`;
+			//Assign it an id
+			const nodeId: string = parentId == "" ? index.toString() : `${parentId}.${index}`;
+
+			//Process all children into nodes
 			const children: Array<ITreeNode> = new Array<ITreeNode>();
 			if (obj.children && obj.children.length) {
 				for (var i = 0; i < obj.children.length; i++) {
-					let node: ITreeNode = this.objToNode(obj.children[i], nodeId, i+1);
+					let node: ITreeNode = this.objToNode(obj.children[i], nodeId, i);
 					if (node !== undefined) {
 						children.push(node);
 					}
 				}
 			}
 
+			//Display text for the node
 			let name: string = '<' + obj.elmType.toLowerCase() + '>';
 
 			return {
@@ -315,6 +215,14 @@ class ColumnFormatterTreePanel_ extends React.Component<IColumnFormatterTreePane
 			default:
 				return "Unknown";
 		}
+	}
+
+	private getElemById(nodeId:string, siblings:Array<any>): any {
+		let index:number = parseInt(nodeId);
+		if(nodeId.indexOf(".") !== -1) {
+			return this.getElemById(nodeId.substring(nodeId.indexOf(".")+1),siblings[index].children);
+		}
+		return siblings[index];
 	}
 
 	@autobind

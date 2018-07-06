@@ -1478,27 +1478,29 @@
     }
 
     &.tree {
+
       .node {
         display: inline-block;
         background-color: $ms-color-white;
         width: 100%;
-
-        &.active {
-          background-color: $ms-color-themeLight;
-        }
-
-        .nodeBody {
-          cursor: pointer;
-          
-          &:hover {
-            color: $ms-color-themeDark;
-          }
-        }
-      } 
-      .nodeName {
+        cursor: pointer;
         font-size: 14px;
-        line-height: 14px;
-        vertical-align: middle;
+        line-height: 18px;
+        color: $ms-color-neutralPrimary;
+
+        &:hover {
+          color: $ms-color-themeDark;
+          background-color: $ms-color-themeLighterAlt;
+        }
+
+        &.active, &.active:hover {
+          background-color: $ms-color-themeLight;
+          color: $ms-color-neutralPrimary;
+        }
+
+        span {
+          line-height: inherit;
+        }
       }
     }
   }
