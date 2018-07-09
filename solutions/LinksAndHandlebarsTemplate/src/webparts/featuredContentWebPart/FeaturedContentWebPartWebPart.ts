@@ -424,7 +424,7 @@ export default class FeaturedContentWebPartWebPart extends BaseClientSideWebPart
     var isDoc = false;
     const docExtensions = ["pdf", "xls", "xlsx", "doc", "docx", "ppt", "pptx", "pptm", "dot"];
     for(const i of docExtensions){
-      if(urlString.indexOf(docExtensions[i], urlString.length - docExtensions[i].length) !== -1)
+      if(urlString.indexOf(i, urlString.length - i.length) !== -1)
         isDoc = true;
     }
 
