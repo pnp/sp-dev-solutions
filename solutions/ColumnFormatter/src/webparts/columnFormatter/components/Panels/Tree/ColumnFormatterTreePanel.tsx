@@ -11,6 +11,8 @@ import styles from '../../ColumnFormatter.module.scss';
 import { FormatScriptEditorDialog } from '../../FormatScript/FormatScriptEditorDialog';
 import { Icon, IIconStyles } from 'office-ui-fabric-react/lib/Icon';
 import {IStyle} from 'office-ui-fabric-react/lib/Styling';
+import { Dropdown, IDropdownOption } from 'office-ui-fabric-react/lib/Dropdown';
+var SplitPane = require('react-split-pane');
 
 export interface ITreeNode {
 	name: string;
@@ -29,7 +31,8 @@ const treeStyles: any = {
 			margin: 0,
 			padding: 0,
 			color: '#333333',
-			fontSize: '14px'
+			fontSize: '14px',
+			width: "100%",
 		},
 		node: {
 			base: {
@@ -38,10 +41,10 @@ const treeStyles: any = {
 			},
 			subtree: {
 				listStyle: 'none',
-				paddingLeft: '14px'
+				paddingLeft: '14px',
 			},
 			loading: {
-				color: '#666666'
+				color: '#666666',
 			}
 		}
 	}
@@ -68,6 +71,9 @@ export interface IColumnFormatterTreePanelState {
 	treeData?: any;
 	activeNodeId?: string;
 	treeError?: string;
+
+	propFilter: string;
+
 	formatScriptDialogVisible: boolean;
 }
 
@@ -83,49 +89,79 @@ class ColumnFormatterTreePanel_ extends React.Component<IColumnFormatterTreePane
 		this.state = {
 			treeData: this.codeToTreeData(),
 			treeError: this._treeError,
+			propFilter: "relevant",
 			formatScriptDialogVisible: false,
 		};
 	}
 
 	public render(): React.ReactElement<IColumnFormatterTreePanelProps> {
 		return (
-			<div className={styles.panel + " " + styles.tree}>
-				<span className={styles.panelHeader}>{strings.TreeView_Header}</span>
-				{this.state.treeError == undefined && this.state.treeData !== undefined && (
-					<Treebeard
-						data={this.state.treeData}
-						onToggle={this.onToggle}
-						style={treeStyles}
-						decorators={{
-							Container: (props) => {
-								return (
-									<div
-									 className={styles.node + (props.node.active ? " " + styles.active : "")}
-									 onClick={props.onClick}>
+			<SplitPane
+					split="horizontal"
+					className={styles.SplitPaneInTab}
+					size={150}
+					minSize={60}
+					maxSize={-60}>
+						<div className={styles.panel + " " + styles.tree}>
+							<span className={styles.panelHeader}>{strings.TreeView_Header}</span>
+							{this.state.treeError == undefined && this.state.treeData !== undefined && (
+								<Treebeard
+									data={this.state.treeData}
+									onToggle={this.onToggle}
+									style={treeStyles}
+									decorators={{
+										Container: (props) => {
+											return (
+												<div
+												className={styles.node + (props.node.active ? " " + styles.active : "")}
+												onClick={props.onClick}>
 
-										<Icon
-										 iconName={props.node.icon}
-										 styles={treeIconStyles}
-										 title={props.node.id}/>
-										<span>{props.node.name}</span>
-									</div>
-								);
-							}
-						}} />
-				)}
-				{this.state.treeError !== undefined && (
-					<span className={styles.errorMessage}>{strings.TreeView_Error + ' ' + strings.TechnicalDetailsErrorHeader + ': ' + this.state.treeError}</span>
-				)}
-				<DefaultButton text="fx" onClick={this.onFxButtonClick} />
-				<FormatScriptEditorDialog
-					initialValue='SWITCH(@currentField,"Done","green","In Progress","yellow","red")'
-					theme={this.props.theme}
-					visible={this.state.formatScriptDialogVisible}
-					dialogTitle="Format Script"
-					onCancel={() => { this.setState({ formatScriptDialogVisible: false }); }}
-					onSave={this.onFormatScriptEditorSave}
-				/>
-			</div>
+													<Icon
+													iconName={props.node.icon}
+													styles={treeIconStyles}
+													title={props.node.id}/>
+													<span>{props.node.name}</span>
+												</div>
+											);
+										}
+									}} />
+							)}
+							{this.state.treeError !== undefined && (
+								<span className={styles.errorMessage}>{strings.TreeView_Error + ' ' + strings.TechnicalDetailsErrorHeader + ': ' + this.state.treeError}</span>
+							)}
+							<DefaultButton text="fx" onClick={this.onFxButtonClick} />
+							<FormatScriptEditorDialog
+								initialValue='SWITCH(@currentField,"Done","green","In Progress","yellow","red")'
+								theme={this.props.theme}
+								visible={this.state.formatScriptDialogVisible}
+								dialogTitle="Format Script"
+								onCancel={() => { this.setState({ formatScriptDialogVisible: false }); }}
+								onSave={this.onFormatScriptEditorSave}
+							/>
+						</div>
+						<div className={styles.panel + " " + styles.treeProps}>
+							<table className={styles.headerTable} cellPadding={0} cellSpacing={0}>
+								<tbody>
+									<tr>
+										<td>
+											<span className={styles.panelHeader}>Properties</span>
+										</td>
+										<td>
+											<Dropdown
+											 selectedKey={this.state.propFilter}
+											 onChanged={(item:IDropdownOption): void => {this.setState({propFilter:item.key.toString()});}}
+											 calloutProps={{className:styles.treeProps}}
+											 options={[
+												{key:"relevant", text:"Relevant"},
+												{key: "current", text:"Current"},
+												{key: "all", text:"All"}
+											 ]}/>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</SplitPane>
 		);
 	}
 

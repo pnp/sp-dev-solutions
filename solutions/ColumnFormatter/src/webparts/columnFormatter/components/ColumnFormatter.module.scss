@@ -324,6 +324,21 @@
             opacity: 0.5;
           }
         }
+
+        &.horizontal {
+          height: 11px;
+          margin: -5px 0;
+          border-top: 5px solid rgba(255, 255, 255, 0);
+          border-bottom: 5px solid rgba(255, 255, 255, 0);
+          cursor: row-resize;
+          width:100%;
+          &:hover {
+            border-top: 5px solid;
+            border-right: 5px solid;
+            border-color: $ms-color-themeLight;
+            opacity: 0.5;
+          }
+        }
       }
       .Pane {
         overflow: hidden;
@@ -1478,6 +1493,7 @@
     }
 
     &.tree {
+      width:100%;
 
       .node {
         display: inline-block;
@@ -1503,8 +1519,58 @@
         }
       }
     }
+
+    &.treeProps {
+      width:100%;
+
+      :global {
+        .ms-Dropdown-container {
+          .ms-Dropdown-title {
+            height: 20px;
+            line-height: 16px;
+            font-size: 12px;
+            padding: 0 20px 0 6px;
+          }
+          .ms-Dropdown-caretDownWrapper {
+            top: 2px;
+            height: 20px;
+            line-height: 16px;
+
+            .ms-Dropdown-caretDown {
+              font-size: 10px;
+            }
+          }
+          [dir='ltr'] .ms-Dropdown-caretDownWrapper {
+            right: 6px;
+          }
+          [dir='rtl'] .ms-Dropdown-caretDownWrapper {
+            left: 6px;
+          }
+        }
+      }
+
+      .headerTable {
+        border-collapse: collapse;
+        width: 100%;
+
+        td {
+          width: 50%;
+        }
+      }
+    }
   }
 
+}
+
+.treeProps {
+  :global {
+    .ms-Dropdown-item {
+      font-size: 12px;
+      min-height: 20px;
+      line-height: 16px;
+      padding: 2px 8px;
+    }
+  }
 }
 
 .formatScriptDialog {
