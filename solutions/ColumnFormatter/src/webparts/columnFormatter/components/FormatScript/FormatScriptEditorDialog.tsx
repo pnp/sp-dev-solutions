@@ -1,10 +1,12 @@
 import * as strings from "ColumnFormatterWebPartStrings";
 import { DefaultButton, PrimaryButton } from "office-ui-fabric-react/lib/Button";
 import { Dialog, DialogFooter, DialogType } from "office-ui-fabric-react/lib/Dialog";
+import { Icon, IIconStyles } from "office-ui-fabric-react/lib/Icon";
 import { autobind } from "office-ui-fabric-react/lib/Utilities";
 import * as React from "react";
-import { Icon, IIconStyles } from 'office-ui-fabric-react/lib/Icon';
+import { connect } from "react-redux";
 
+import { IApplicationState } from "../../state/State";
 import styles from "../ColumnFormatter.module.scss";
 import { IFSParseError, IFSParseResult } from "./FormatScript";
 import { FormatScriptEditor } from "./FormatScriptEditor";
@@ -21,12 +23,12 @@ const iconStyles: Partial<IIconStyles> = {
 };
 
 export interface IFormatScriptEditorDialogProps {
-	initialValue: string;
-	theme: string;
-	visible: boolean;
-	dialogTitle: string;
-	onSave: (result: any) => void;
-	onCancel: () => void;
+	initialValue?: string;
+	theme?: string;
+	visible?: boolean;
+	dialogTitle?: string;
+	onSave?: (result: any) => void;
+	onCancel?: () => void;
 }
 
 export interface IFormatScriptEditorDialogState {
@@ -35,7 +37,7 @@ export interface IFormatScriptEditorDialogState {
 	extraErrors?: Array<string>;
 }
 
-export class FormatScriptEditorDialog extends React.Component<IFormatScriptEditorDialogProps, IFormatScriptEditorDialogState> {
+class FormatScriptEditorDialog_ extends React.Component<IFormatScriptEditorDialogProps, IFormatScriptEditorDialogState> {
 
 	private _container: HTMLElement;
 	private _editor: any;
@@ -132,3 +134,12 @@ export class FormatScriptEditorDialog extends React.Component<IFormatScriptEdito
 		}
 	}
 }
+
+
+function mapStateToProps(state: IApplicationState, ownProps:IFormatScriptEditorDialogProps): IFormatScriptEditorDialogProps {
+	return {
+		theme: state.code.editorTheme,
+	};
+}
+
+export const FormatScriptEditorDialog = connect(mapStateToProps, null)(FormatScriptEditorDialog_);
