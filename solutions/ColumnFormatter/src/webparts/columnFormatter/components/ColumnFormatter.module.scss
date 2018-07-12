@@ -1560,6 +1560,28 @@
       .propertyTable {
         border-collapse: collapse;
         width: 100%;
+
+        .propertyLabel {
+          font-size: 10px;
+          color: $ms-color-neutralTertiary;
+
+          &.relevant {
+            font-weight: bold;
+          }
+          &.current {
+            color: $ms-color-neutralPrimary;
+          }
+          &.invalid {
+            color: $ms-color-redDark;
+            font-style: italic;
+          }
+        }
+
+        tbody td {
+          border: 1px solid;
+          border-color: $ms-color-neutralLight;
+          padding: 2px;
+        }
       }
     }
   }

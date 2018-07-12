@@ -2,12 +2,13 @@ import { DefaultButton } from "office-ui-fabric-react/lib/Button";
 import { Dropdown, IDropdownOption } from "office-ui-fabric-react/lib/Dropdown";
 import { autobind } from "office-ui-fabric-react/lib/Utilities";
 import * as React from "react";
-import { formatterType } from "../../../state/State";
+
 import { ColumnFormattingSchemaURI } from "../../../helpers/ColumnFormattingSchema";
 import { ViewFormattingSchemaURI } from "../../../helpers/ViewFormattingSchema";
-
+import { formatterType } from "../../../state/State";
 import styles from "../../ColumnFormatter.module.scss";
 import { FormatScriptEditorDialog } from "../../FormatScript/FormatScriptEditorDialog";
+import { INodeProperty, NodePropType } from "./INodeProperty";
 
 export interface INodePropertiesProps {
 	propUpdated?: (property:string, value:any) => void;
@@ -28,9 +29,6 @@ export class NodeProperties extends React.Component<INodePropertiesProps, INodeP
 	constructor(props: INodePropertiesProps) {
 		super(props);
 
-		console.log('Props Node:');
-		console.log(this.props.node);
-
 		this.state = {
 			propFilter: "relevant",
 			formatScriptDialogVisible: false,
@@ -38,7 +36,8 @@ export class NodeProperties extends React.Component<INodePropertiesProps, INodeP
 	}
 
 	public render(): React.ReactElement<INodePropertiesProps> {
-		const nodeProps = this.buildProps(this.props.node, this.props.isRoot, this.props.formatType);
+		const nodeProps = this.buildProps(this.props.node, this.props.isRoot, this.props.formatType).filter(this.filterPropsForView);
+		const nodePropsAttributes = this.buildPropsAttributes(this.props.node, this.props.isRoot, this.props.formatType).filter(this.filterPropsForView);
 
 		return (
 			<div className={styles.panel + " " + styles.treeProps}>
@@ -63,26 +62,36 @@ export class NodeProperties extends React.Component<INodePropertiesProps, INodeP
 						</tr>
 					</tbody>
 				</table>
-				<table className={styles.propertyTable} cellPadding={0} cellSpacing={0}>
-					<tbody>
-						{nodeProps.filter((nodeProp:INodeProperty) => {
-							return this.state.propFilter == "all"
-								|| (this.state.propFilter == "current" && nodeProp.current)
-								|| (this.state.propFilter == "relevant" && nodeProp.relevant);
-						}).map((nodeProp:INodeProperty) => {
-							return (
-								<tr>
-									<td>
-										<span>{nodeProp.name}</span>
-									</td>
-									<td>
-										<span>{nodeProp.value}</span>
-									</td>
-								</tr>
-							);
-						})}
-					</tbody>
-				</table>
+				{(nodeProps.length > 0 || nodePropsAttributes.length > 0) &&
+					<table className={styles.propertyTable} cellPadding={0} cellSpacing={0}>
+						<tbody>
+							{nodeProps.map((nodeProp:INodeProperty) => {
+								return (
+									<tr key={nodeProp.name}>
+										<td className={styles.propertyLabel + (nodeProp.current ? " " + styles.current : "") + (nodeProp.relevant ? " " + styles.relevant : "")}>
+											<span>{nodeProp.name}</span>
+										</td>
+										<td>
+											<span>{nodeProp.value}</span>
+										</td>
+									</tr>
+								);
+							})}
+							{nodePropsAttributes.map((nodeProp:INodeProperty) => {
+								return (
+									<tr key={nodeProp.name}>
+										<td className={styles.propertyLabel + (nodeProp.current ? " " + styles.current : "") + (nodeProp.relevant ? " " + styles.relevant : "")  + (nodeProp.invalidValue ? " " + styles.invalid : "")}>
+											<span>{nodeProp.name}</span>
+										</td>
+										<td>
+											<span>{nodeProp.invalidValue ? "INVALID" : nodeProp.value}</span>
+										</td>
+									</tr>
+								);
+							})}
+						</tbody>
+					</table>
+				}
 				<DefaultButton text="fx" onClick={this.onFxButtonClick} />
 							<FormatScriptEditorDialog
 								initialValue='SWITCH(@currentField,"Done","green","In Progress","yellow","red")'
@@ -95,11 +104,18 @@ export class NodeProperties extends React.Component<INodePropertiesProps, INodeP
 		);
 	}
 
+	@autobind
+	private filterPropsForView(nodeProp:INodeProperty):boolean {
+		return this.state.propFilter == "all"
+			|| (this.state.propFilter == "current" && nodeProp.current)
+			|| (this.state.propFilter == "relevant" && nodeProp.relevant);
+	}
+
 	private buildProps(node:any, isRoot:boolean, formatType:formatterType): Array<INodeProperty> {
 		const props = new Array<INodeProperty>();
 
 		if(typeof node !== "undefined") {
-			let elmType: string = node.hasOwnProperty("elmType") ? node.elmType : this.defaultPropValue("elmType", formatType);
+			const elmType: string = node.hasOwnProperty("elmType") ? node.elmType : this.defaultPropValue("elmType", formatType);
 
 			//ViewFormatting root properties
 			if(isRoot && formatType == formatterType.View) {
@@ -125,15 +141,58 @@ export class NodeProperties extends React.Component<INodePropertiesProps, INodeP
 
 		return props;
 	}
+
+	private buildPropsAttributes(node:any, isRoot:boolean, formatType:formatterType): Array<INodeProperty> {
+		const props = new Array<INodeProperty>();
+
+		if(typeof node !== "undefined" && !(isRoot && formatType == formatterType.View)) {
+			const elmType: string = node.hasOwnProperty("elmType") ? node.elmType : this.defaultPropValue("elmType", formatType);
+
+			//Column Formatting/RowFormatter element attributes
+			props.push(...[
+				this.buildProp("class",node.attributes,elmType,formatType),
+				this.buildProp("iconName",node.attributes,elmType,formatType),
+				this.buildProp("href",node.attributes,elmType,formatType),
+				this.buildProp("target",node.attributes,elmType,formatType),
+				this.buildProp("src",node.attributes,elmType,formatType),
+				this.buildProp("d",node.attributes,elmType,formatType),
+				this.buildProp("title",node.attributes,elmType,formatType),
+				this.buildProp("role",node.attributes,elmType,formatType),
+				this.buildProp("rel",node.attributes,elmType,formatType),
+			]);
+		}
+
+		return props;
+	}
 	
 	private buildProp(propertyName:string, node:any, elmType:string, formatType:formatterType): INodeProperty {
+		const isCurrent:boolean = (typeof node !== "undefined" && node.hasOwnProperty(propertyName));
+		const doesSupportExpression:boolean = this.supportsExpression(propertyName, formatType);
+		let value:any;
+		let isInvalidValue:boolean = false;
+		if(isCurrent) {
+			value = node[propertyName];
+			if (!(typeof value == "string" || typeof value == "number" || typeof value == "boolean")) {
+				if (this.supportsExpression && typeof value == "object") {
+					//Convert to FormatScript (and verify)
+					//TEMP just declare it is an expression and ignore problems
+					value = JSON.stringify(value);
+				} else {
+					isInvalidValue = true;
+				}
+			}
+		} else {
+			value = this.defaultPropValue(propertyName, formatType);
+		}
+
 		return {
 			name:propertyName,
 			type:this.propType(propertyName, formatType),
-			value:node.hasOwnProperty(propertyName) ? node[propertyName] : this.defaultPropValue(propertyName, formatType),
-			current:node.hasOwnProperty(propertyName),
+			value: value,
+			invalidValue: isInvalidValue,
+			current: isCurrent,
 			relevant:this.isRelevantProp(propertyName, elmType, formatType),
-			supportsExpression: this.supportsExpression(propertyName, formatType)
+			supportsExpression: doesSupportExpression,
 		};
 	}
 
@@ -156,6 +215,10 @@ export class NodeProperties extends React.Component<INodePropertiesProps, INodeP
 				return false;
 			case "elmType":
 				return "div";
+			case "target":
+				return "_blank";
+			default:
+				return "";
 		}
 	}
 
@@ -164,7 +227,39 @@ export class NodeProperties extends React.Component<INodePropertiesProps, INodeP
 			case "$schema":
 			case "debugMode":
 			case "elmType":
+			case "class":
+			case "title":
 				return true;
+			case "txtContent":
+				switch(elmType) {
+					case "img":
+					case "svg":
+					case "path":
+						return false;
+					default:
+						return true;
+				}
+			case "iconName":
+				switch(elmType) {
+					case "button":
+					case "img":
+					case "svg":
+					case "path":
+						return false;
+					default:
+						return true;
+				}
+			case "href":
+			case "target":
+			case "rel":
+				return elmType == "a";
+			case "src":
+				return elmType == "img";
+			case "d":
+				return elmType == "path";
+			case "action":
+			case "actionParams":
+				return elmType == "button";
 		}
 		return false;
 	}
@@ -174,8 +269,7 @@ export class NodeProperties extends React.Component<INodePropertiesProps, INodeP
 			case "$schema":
 			case "debugMode":
 			case "elmType":
-			case "style":
-			case "customRowAction":
+			case "action":
 				return false;
 			default:
 				return true;
@@ -201,21 +295,4 @@ export class NodeProperties extends React.Component<INodePropertiesProps, INodeP
 		});
 	}
 
-}
-
-export enum NodePropType {
-	text,
-	dropdown,
-	combobox,
-	toggle
-}
-
-export interface INodeProperty {
-	name: string;
-	type: NodePropType;
-	value: any;
-	current: boolean;
-	relevant: boolean;
-	supportsExpression: boolean;
-	expression?: string;
 }
