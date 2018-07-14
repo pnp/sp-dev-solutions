@@ -1,4 +1,4 @@
-import { DefaultButton } from "office-ui-fabric-react/lib/Button";
+import { DefaultButton, IconButton, IButtonStyles } from "office-ui-fabric-react/lib/Button";
 import { Dropdown, IDropdownOption } from "office-ui-fabric-react/lib/Dropdown";
 import { autobind } from "office-ui-fabric-react/lib/Utilities";
 import * as React from "react";
@@ -71,8 +71,8 @@ export class NodeProperties extends React.Component<INodePropertiesProps, INodeP
 										<td className={styles.propertyLabel + (nodeProp.current ? " " + styles.current : "") + (nodeProp.relevant ? " " + styles.relevant : "")}>
 											<span>{nodeProp.name}</span>
 										</td>
-										<td>
-											<span>{nodeProp.value}</span>
+										<td className={styles.propertyValue}>
+											{this.renderPropEditor(nodeProp)}
 										</td>
 									</tr>
 								);
@@ -83,8 +83,8 @@ export class NodeProperties extends React.Component<INodePropertiesProps, INodeP
 										<td className={styles.propertyLabel + (nodeProp.current ? " " + styles.current : "") + (nodeProp.relevant ? " " + styles.relevant : "")  + (nodeProp.invalidValue ? " " + styles.invalid : "")}>
 											<span>{nodeProp.name}</span>
 										</td>
-										<td>
-											<span>{nodeProp.invalidValue ? "INVALID" : nodeProp.value}</span>
+										<td className={styles.propertyValue}>
+											{this.renderPropEditor(nodeProp)}
 										</td>
 									</tr>
 								);
@@ -170,6 +170,7 @@ export class NodeProperties extends React.Component<INodePropertiesProps, INodeP
 		const doesSupportExpression:boolean = this.supportsExpression(propertyName, formatType);
 		let value:any;
 		let isInvalidValue:boolean = false;
+		let isExpression:boolean = false;
 		if(isCurrent) {
 			value = node[propertyName];
 			if (!(typeof value == "string" || typeof value == "number" || typeof value == "boolean")) {
@@ -177,6 +178,7 @@ export class NodeProperties extends React.Component<INodePropertiesProps, INodeP
 					//Convert to FormatScript (and verify)
 					//TEMP just declare it is an expression and ignore problems
 					value = JSON.stringify(value);
+					isExpression = true;
 				} else {
 					isInvalidValue = true;
 				}
@@ -193,12 +195,14 @@ export class NodeProperties extends React.Component<INodePropertiesProps, INodeP
 			current: isCurrent,
 			relevant:this.isRelevantProp(propertyName, elmType, formatType),
 			supportsExpression: doesSupportExpression,
+			valueIsExpression: isExpression,
 		};
 	}
 
 	private propType(propertyName:string, formatType:formatterType): NodePropType {
 		switch (propertyName) {
 			case "elmType":
+			case "target":
 				return NodePropType.dropdown;
 			case "debugMode":
 				return NodePropType.toggle;
@@ -276,6 +280,83 @@ export class NodeProperties extends React.Component<INodePropertiesProps, INodeP
 		}
 	}
 
+
+	@autobind
+	private renderPropEditor(nodeProp:INodeProperty): JSX.Element {
+
+		//styles for formatscript button
+		const propButtonStyles: Partial<IButtonStyles> = {
+			root: {
+				width: "14px",
+				height: "16px",
+				padding: "0"
+			},
+			icon: {
+				fontSize: "12px",
+				lineHeight: "16px",
+			}
+		};
+
+		return (
+			<div className={styles.propAndButtonBox}>
+				<div className={styles.mainBox}>
+					{this.renderPropEditorControl(nodeProp)}
+				</div>
+				
+				<div className={styles.buttonBox}>
+					{nodeProp.supportsExpression &&
+						<IconButton
+						 iconProps={{
+							 iconName:nodeProp.valueIsExpression ? "TestBeakerSolid" : "TestBeaker",
+							className:nodeProp.valueIsExpression ? "ms-fontColor-themeDarkAlt" : "ms-fontColor-neutralPrimaryAlt"}}
+						 title="FormatScript"
+						 styles={propButtonStyles}/>
+					}
+				</div>
+			</div>
+		);
+	}
+
+	private renderPropEditorControl(nodeProp:INodeProperty): JSX.Element {
+		switch (nodeProp.type) {
+			case NodePropType.dropdown:
+				return (
+					<Dropdown
+					 selectedKey={nodeProp.valueIsExpression ? undefined : nodeProp.value}
+					 placeHolder={nodeProp.valueIsExpression ? "Using Expression" : undefined}
+					 options={this.getPropOptions(nodeProp)}
+					 calloutProps={{className:styles.treeProps}}/>
+				);
+			default:
+				return (
+					<span>{nodeProp.invalidValue ? "INVALID" : nodeProp.value}</span>
+				);
+		}
+	}
+
+	private getPropOptions(nodeProp:INodeProperty): Array<IDropdownOption> {
+		switch (nodeProp.name) {
+			case "elmType":
+				return [
+					{key: "div", text: "div"},
+					{key: "span", text: "span"},
+					{key: "a", text: "a"},
+					{key: "img", text: "img"},
+					{key: "button", text: "button"},
+					{key: "svg", text: "svg"},
+					{key: "path", text: "path"},
+				];
+			case "target":
+				return [
+					{key: "_blank", text: "_blank"},
+					{key: "_self", text: "_self"},
+					{key: "_parent", text: "_parent"},
+					{key: "_top", text: "_top"},
+				];
+			default:
+				return undefined;
+		}
+	}
 
 	@autobind
 	private onFxButtonClick(): void {

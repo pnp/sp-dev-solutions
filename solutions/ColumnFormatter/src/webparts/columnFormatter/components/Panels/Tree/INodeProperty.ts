@@ -13,5 +13,5 @@ export interface INodeProperty {
 	current: boolean;
 	relevant: boolean;
 	supportsExpression: boolean;
-	expression?: string;
+	valueIsExpression: boolean;
 }
