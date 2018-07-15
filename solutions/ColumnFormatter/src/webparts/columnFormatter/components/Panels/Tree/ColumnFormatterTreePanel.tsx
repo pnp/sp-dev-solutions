@@ -56,7 +56,8 @@ class ColumnFormatterTreePanel_ extends React.Component<IColumnFormatterTreePane
 				<NodeProperties
 				 node={this.state.activeNode}
 				 isRoot={this.state.activeNodeId == "0"}
-				 formatType={this.props.formatType}/>
+				 formatType={this.props.formatType}
+				 propUpdated={this.propUpdated}/>
 			</SplitPane>
 		);
 	}
@@ -160,6 +161,11 @@ class ColumnFormatterTreePanel_ extends React.Component<IColumnFormatterTreePane
 			return this.getElemById(nodeId.substring(nodeId.indexOf(".")+1),siblings[index].children);
 		}
 		return siblings[index];
+	}
+
+	@autobind
+	private propUpdated(property:string, value:any): void {
+
 	}
 	
 }

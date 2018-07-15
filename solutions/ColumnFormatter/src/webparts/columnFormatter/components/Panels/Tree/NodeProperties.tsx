@@ -1,6 +1,8 @@
-import { DefaultButton, IconButton, IButtonStyles } from "office-ui-fabric-react/lib/Button";
+import { DefaultButton, IButtonStyles, IconButton } from "office-ui-fabric-react/lib/Button";
 import { Dropdown, IDropdownOption } from "office-ui-fabric-react/lib/Dropdown";
+import { TextField } from "office-ui-fabric-react/lib/TextField";
 import { autobind } from "office-ui-fabric-react/lib/Utilities";
+import { ISelectableOption } from "office-ui-fabric-react/lib/utilities/selectableOption/SelectableOption.Props";
 import * as React from "react";
 
 import { ColumnFormattingSchemaURI } from "../../../helpers/ColumnFormattingSchema";
@@ -11,7 +13,7 @@ import { FormatScriptEditorDialog } from "../../FormatScript/FormatScriptEditorD
 import { INodeProperty, NodePropType } from "./INodeProperty";
 
 export interface INodePropertiesProps {
-	propUpdated?: (property:string, value:any) => void;
+	propUpdated: (property:string, value:any) => void;
 	isRoot: boolean;
 	node?: any;
 	formatType: formatterType;
@@ -325,7 +327,16 @@ export class NodeProperties extends React.Component<INodePropertiesProps, INodeP
 					 selectedKey={nodeProp.valueIsExpression ? undefined : nodeProp.value}
 					 placeHolder={nodeProp.valueIsExpression ? "Using Expression" : undefined}
 					 options={this.getPropOptions(nodeProp)}
-					 calloutProps={{className:styles.treeProps}}/>
+					 calloutProps={{className:styles.treeProps}}
+					 onChanged={(option:ISelectableOption,index?:number) => {this.props.propUpdated(nodeProp.name,option.key.toString());}}/>
+				);
+			case NodePropType.text:
+				return (
+					<TextField
+					 value={nodeProp.valueIsExpression ? undefined : nodeProp.value}
+					 placeholder={nodeProp.valueIsExpression ? "Using Expression" : undefined}
+					 borderless={true}
+					 onChanged={(newValue:any) => {this.props.propUpdated(nodeProp.name,newValue);}}/>
 				);
 			default:
 				return (
