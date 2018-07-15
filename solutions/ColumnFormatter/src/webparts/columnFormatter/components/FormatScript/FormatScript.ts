@@ -767,7 +767,11 @@ const parseFormatScript = (expression:any): IFSParseResult => {
 				break;
 
 			case "Literal":
-				parseResult.result = expression.value.replace(/__CURRENTFIELD__/g, "@currentField").replace(/__ME__/g, "@me").replace(/__NOW__/g, "@now").replace(/__WINDOW__/g, "@window");
+				if(typeof expression.value == "string") {
+					parseResult.result = expression.value.replace(/__CURRENTFIELD__/g, "@currentField").replace(/__ME__/g, "@me").replace(/__NOW__/g, "@now").replace(/__WINDOW__/g, "@window");
+				} else {
+					parseResult.result = expression.value;
+				}
 				break;
 
 			default:
@@ -819,8 +823,10 @@ export const formatScriptToJSON = (fs:string): IFSParseResult => {
 	return result;
 };
 
+
+
 export const JSONToFormatScript = (j:string): string => {
-	return formatObjToFormatScript(JSON.parse(j)).toString();
+	return formatObjToFormatScript(JSON.parse(j)).toString().replace(/__,__/g, ",");
 };
 
 const operatorIsInline = (operator:string): boolean => {
@@ -883,6 +889,53 @@ const operatorMaxOperands = (operator:string): number => {
 	}
 };
 
+const operandIsOperation = (operand:any):boolean => {
+	return (typeof operand == "object" && operand !== null && operand.hasOwnProperty("operator") && operand.hasOwnProperty("operands"));
+};
+
+const operationIsSwitch = (operands:Array<any>):boolean => {
+	if(operands.length < 3) {
+		return false;
+	}
+	if(!operandIsOperation(operands[0]) || operands[0].operator !== "==") {
+		return false;
+	}
+	return true;
+};
+
+const buildSwitchExpression = (operands:Array<string|number|boolean>): string => {
+	const condition:string = operands[0].toString();
+	const pivotValue:string = condition.substring(0, condition.lastIndexOf("=="));
+	const caseValue:string = condition.substring(condition.lastIndexOf("==")+2);
+	const consequent:string = operands[1].toString();
+	let alternate:string = operands[2].toString();
+	
+	//Check if there is a nested SWITCH
+	if(typeof operands[2] == "string" && alternate.indexOf("SWITCH(") == 0) {
+		//Determine if the nested SWITCH needs to be collapsed into this SWITCH
+		const subPivotValue:string = alternate.substring(7,alternate.indexOf("__,__"));
+		if(subPivotValue == pivotValue) {
+			alternate = alternate.substring(alternate.indexOf("__,__")+5,alternate.length-1);
+		}
+	}
+
+	return `SWITCH(${pivotValue}__,__${caseValue}__,__${consequent}${alternate !== '""' ? "__,__" + alternate : ""})`;
+};
+
+const buildIfExpression = (operands:Array<string|number|boolean>): string => {
+	const condition:string = operands[0].toString();
+	const consequent:string = operands[1].toString();
+	let alternate:string = operands[2].toString();
+
+	//Check if there is a nested IF
+	if(typeof operands[2] == "string" && alternate.indexOf("IF(") == 0) {
+		//Collapse nested IFs
+		alternate = alternate.substring(3,alternate.length-1);
+	}
+
+	return `IF(${condition}__,__${consequent}${alternate !== '""' ? "__,__" + alternate : ""})`;
+};
+
 const formatObjToFormatScript = (formatObj:any, parentOperator:string = ""): string | number | boolean => {
 	if(typeof formatObj == "undefined") {
 		return "";
@@ -915,7 +968,7 @@ const formatObjToFormatScript = (formatObj:any, parentOperator:string = ""): str
 	}
 
 	//Process object values that have both operator and operands
-	if(typeof formatObj == "object" && formatObj !== null && formatObj.hasOwnProperty("operator") && formatObj.hasOwnProperty("operands")) {
+	if(operandIsOperation(formatObj)) {
 		const operands = new Array<string|number|boolean>();
 		const minOperands = operatorMinOperands(formatObj.operator);
 		const maxOperands = operatorMaxOperands(formatObj.operator);
@@ -976,7 +1029,12 @@ const formatObjToFormatScript = (formatObj:any, parentOperator:string = ""): str
 			case "toLocaleTimeString()":
 				return `TOLOCALETIMESTRING(${operands[0]})`;
 			case "?":
-				
+				console.log(operands);
+				if(operationIsSwitch(formatObj.operands)) {
+					return buildSwitchExpression(operands);
+				} else {
+					return buildIfExpression(operands);
+				}
 			default:
 				return "";
 		}
