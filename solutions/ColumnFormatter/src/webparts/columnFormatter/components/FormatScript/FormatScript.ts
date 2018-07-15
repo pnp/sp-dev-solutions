@@ -475,14 +475,20 @@ const fsKeywordToOperator = (keyword:string): string | undefined => {
  * Returns the minimum number of arguments for the given operation
  * when used as a callexpression (function)
  * @param operator The operator (assumes valid and translated)
+ * @param callee The actual calling expression name (only important when multiple expressions equate to the same operator such as with ?)
  */
-const callExpressionMinArgCount = (operator:string): number => {
+const callExpressionMinArgCount = (operator:string, callee:string=""): number => {
 	switch (operator) {
 		case "+":
-		case "?":
 		case "&&":
 		case "||":
 			return 2;
+		case "?":
+			if(callee.toLowerCase() == "switch") {
+				return 3;
+			} else {
+				return 2;
+			}
 		default:
 			return 1;
 	}
@@ -572,7 +578,7 @@ const parseFormatScript = (expression:any): IFSParseResult => {
 				}
 
 				//Validate the minimum number of args are supplied
-				const minArgs = callExpressionMinArgCount(ceOperator);
+				const minArgs = callExpressionMinArgCount(ceOperator, expression.callee.name);
 				const maxArgs = callExpressionMaxArgCount(ceOperator);
 				if (minArgs > expression.arguments.length || (maxArgs !== -1 && maxArgs < expression.arguments.length)) {
 					parseResult.errors.push({
@@ -761,7 +767,7 @@ const parseFormatScript = (expression:any): IFSParseResult => {
 				break;
 
 			case "Literal":
-				parseResult.result = expression.value;
+				parseResult.result = expression.value.replace(/__CURRENTFIELD__/g, "@currentField").replace(/__ME__/g, "@me").replace(/__NOW__/g, "@now").replace(/__WINDOW__/g, "@window");
 				break;
 
 			default:
@@ -808,6 +814,172 @@ export const formatScriptToJSON = (fs:string): IFSParseResult => {
 	console.log(result);
 	if(result.errors.length == 0) {
 		console.log(JSON.stringify(result.result));
+		console.log(JSONToFormatScript(JSON.stringify(result.result)));
 	}
 	return result;
+};
+
+export const JSONToFormatScript = (j:string): string => {
+	return formatObjToFormatScript(JSON.parse(j)).toString();
+};
+
+const operatorIsInline = (operator:string): boolean => {
+	switch (operator) {
+		case "+":
+		case "-":
+		case "*":
+		case "/":
+		case "<":
+		case "<=":
+		case ">":
+		case ">=":
+		case "==":
+			return true;
+		default:
+			return false;
+	}
+};
+
+const operatorMinOperands = (operator:string): number => {
+	switch (operator) {
+		case "+":
+		case "-":
+		case "/":
+		case "*":
+		case "<":
+		case "<=":
+		case ">":
+		case ">=":
+		case "==":
+		case "&&":
+		case "||":
+			return 2;
+		case "?":
+			return 3;
+		default:
+			return 1;
+	}
+};
+
+const operatorMaxOperands = (operator:string): number => {
+	switch (operator) {
+		case "+":
+		case "*":
+		case "&&":
+		case "||":
+			return -1;
+		case "-":
+		case "/":
+		case "<":
+		case "<=":
+		case ">":
+		case ">=":
+		case "==":
+			return 2;
+		case "?":
+			return 3;
+		default:
+			return 1;
+	}
+};
+
+const formatObjToFormatScript = (formatObj:any, parentOperator:string = ""): string | number | boolean => {
+	if(typeof formatObj == "undefined") {
+		return "";
+	} 
+	if(typeof formatObj == "number" || typeof formatObj == "boolean") {
+		//numbers and booleans stay as they are
+		return formatObj;
+	}
+
+	if(typeof formatObj == "string") {
+		//If it is a special string, just return it. Otherwise, wrap it in quotes
+		switch (formatObj) {
+			case "@currentField":
+			case "@currentField.email":
+			case "@currentField.id":
+			case "@currentField.title":
+			case "@currentField.sip":
+			case "@currentField.picture":
+			case "@currentField.lookupId":
+			case "@currentField.lookupValue":
+			case "@currentField.desc":
+			case "@now":
+			case "@me":
+			case "@window.innerHeight":
+			case "@window.innerWidth":
+				return formatObj;
+			default:
+				return `"${formatObj}"`;
+		}
+	}
+
+	//Process object values that have both operator and operands
+	if(typeof formatObj == "object" && formatObj !== null && formatObj.hasOwnProperty("operator") && formatObj.hasOwnProperty("operands")) {
+		const operands = new Array<string|number|boolean>();
+		const minOperands = operatorMinOperands(formatObj.operator);
+		const maxOperands = operatorMaxOperands(formatObj.operator);
+
+		//Don't process if not enough operands
+		if(formatObj.operands.length < minOperands) {
+			return "";
+		}
+
+		//If too many operands, cut them out
+		if(maxOperands !== -1 && formatObj.operands.length > maxOperands) {
+			formatObj.operands = formatObj.operands.slice(0, maxOperands);
+		}
+
+		//Process all the operands
+		formatObj.operands.forEach((operand:any) => {
+			operands.push(formatObjToFormatScript(operand, formatObj.operator));
+		});
+
+		switch (formatObj.operator) {
+			case "+":
+			case "-":
+			case "*":
+				if(parentOperator == formatObj.operator || !operatorIsInline(parentOperator)) {
+					return operands.join(formatObj.operator);
+				} else {
+					return `(${operands.join(formatObj.operator)})`;
+				}
+			case "/":
+			case ">":
+			case ">=":
+			case "<":
+			case "<=":
+			case "==":
+				if(operatorIsInline(parentOperator)) {
+					return `(${operands.join(formatObj.operator)})`;
+				} else {
+					return operands.join(formatObj.operator);
+				}
+			case "&&":
+				return `AND(${operands.join(",")})`;
+			case "||":
+				return `OR(${operands.join(",")})`;
+			case "toString()":
+				return `TOSTRING(${operands[0]})`;
+			case "Number()":
+				return `NUMBER(${operands[0]})`;
+			case "Date()":
+				return `DATE(${operands[0]})`;
+			case "cos":
+				return `COS(${operands[0]})`;
+			case "sin":
+				return `SIN(${operands[0]})`;
+			case "toLocaleString()":
+				return `TOLOCALESTRING(${operands[0]})`;
+			case "toLocaleDateString()":
+				return `TOLOCALEDATESTRING(${operands[0]})`;
+			case "toLocaleTimeString()":
+				return `TOLOCALETIMESTRING(${operands[0]})`;
+			case "?":
+				
+			default:
+				return "";
+		}
+	}
+	return "";
 };

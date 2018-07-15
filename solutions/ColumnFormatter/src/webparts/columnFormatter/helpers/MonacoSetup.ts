@@ -91,7 +91,7 @@ const fabricTheme = (useDark:boolean):any => {
 			"editorBracketMatch.background": useDark ? "#5c2d91" : "#eaeaea",//"#b4a0ff", //purple or purpleLight
 			"editorBracketMatch.border": "#" + background,
 			"editorHoverWidget.background": useDark ? "#666666" : "#f4f4f4", //neutralSecondary or neutralLighter
-			"list.focusBackground": useDark ? "#ffb900" : "#f4f4f4", //neutralSecondary or neutralLighter
+			"list.focusBackground": "#ffb900", //yellow
 			"list.highlightForeground": "#00bcf2", //blueLight
 			"list.hoverBackground": useDark ? "#a6a6a6" : "#dadada", //neutralTertiary or neutralQuaternaryAlt
 			"editorWidget.background": useDark ? "#3c3c3c" : "#eaeaea", //neutralPrimaryAlt or neutralLight
