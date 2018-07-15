@@ -7,6 +7,7 @@ export enum NodePropType {
 
 export interface INodeProperty {
 	name: string;
+	address: string;
 	type: NodePropType;
 	value: any;
 	invalidValue: boolean;

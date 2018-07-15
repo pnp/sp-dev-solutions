@@ -1,12 +1,15 @@
 import { autobind } from "office-ui-fabric-react/lib/Utilities";
 import * as React from "react";
 import { connect } from "react-redux";
+import { Dispatch } from "redux";
 
 import { formatterType, IApplicationState } from "../../../state/State";
+import { updateEditorString } from "../../../state/Actions";
 import styles from "../../ColumnFormatter.module.scss";
 import { ITreeNode } from "./ITreeNode";
 import { NodeProperties } from "./NodeProperties";
 import { TreeView } from "./TreeView";
+import { set } from "@microsoft/sp-lodash-subset";
 
 var SplitPane = require('react-split-pane');
 
@@ -14,6 +17,8 @@ var SplitPane = require('react-split-pane');
 export interface IColumnFormatterTreePanelProps {
 	codeString?: string;
 	formatType?: formatterType;
+
+	updateEditorString?: (editorString:string, validationErrors:Array<string>) => void;
 }
 
 export interface IColumnFormatterTreePanelState {
@@ -163,9 +168,27 @@ class ColumnFormatterTreePanel_ extends React.Component<IColumnFormatterTreePane
 		return siblings[index];
 	}
 
-	@autobind
-	private propUpdated(property:string, value:any): void {
+	private idToPath(nodeId:string, property:string): string {
+		if(nodeId.indexOf(".") == -1) {
+			return property || "";
+		}
+		const childId = nodeId.substring(nodeId.indexOf(".")+1);
+		const address = `children[${childId.replace(/\./g,"].children[")}]`;
+		if (typeof property !== undefined && property.length > 0) {
+			return `${address}.${property}`;
+		}
+		return address;
+	}
 
+	@autobind
+	private propUpdated(propertyAddress:string, value:any): void {
+		let validationErrors:Array<string> = new Array<string>();
+		try {
+			set(this._formatObj, this.idToPath(this.state.activeNodeId, propertyAddress), value);
+		} catch (e) {
+			validationErrors.push(e.message);
+		}
+		this.props.updateEditorString(JSON.stringify(this._formatObj, null, 2), validationErrors);
 	}
 	
 }
@@ -177,4 +200,12 @@ function mapStateToProps(state: IApplicationState): IColumnFormatterTreePanelPro
 	};
 }
 
-export const ColumnFormatterTreePanel = connect(mapStateToProps, null)(ColumnFormatterTreePanel_);
+function mapDispatchToProps(dispatch: Dispatch<IColumnFormatterTreePanelProps>): IColumnFormatterTreePanelProps{
+	return {
+		updateEditorString: (editorString:string, validationErrors:Array<string>) => {
+			dispatch(updateEditorString(editorString, validationErrors));
+		},
+    };
+}
+
+export const ColumnFormatterTreePanel = connect(mapStateToProps, mapDispatchToProps)(ColumnFormatterTreePanel_);

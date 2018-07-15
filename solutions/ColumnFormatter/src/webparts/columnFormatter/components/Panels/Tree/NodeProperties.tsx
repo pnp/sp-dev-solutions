@@ -13,7 +13,7 @@ import { FormatScriptEditorDialog } from "../../FormatScript/FormatScriptEditorD
 import { INodeProperty, NodePropType } from "./INodeProperty";
 
 export interface INodePropertiesProps {
-	propUpdated: (property:string, value:any) => void;
+	propUpdated: (propertyAddress:string, value:any) => void;
 	isRoot: boolean;
 	node?: any;
 	formatType: formatterType;
@@ -119,6 +119,8 @@ export class NodeProperties extends React.Component<INodePropertiesProps, INodeP
 		if(typeof node !== "undefined") {
 			const elmType: string = node.hasOwnProperty("elmType") ? node.elmType : this.defaultPropValue("elmType", formatType);
 
+			const addressPrefix = "";
+
 			//ViewFormatting root properties
 			if(isRoot && formatType == formatterType.View) {
 				return [
@@ -129,15 +131,15 @@ export class NodeProperties extends React.Component<INodePropertiesProps, INodeP
 			//ColumnFormatting additional Root Properties
 			if(isRoot) {
 				props.push(...[
-					this.buildProp("$schema",node,elmType,formatType),
-					this.buildProp("debugMode",node,elmType,formatType)
+					this.buildProp("$schema",addressPrefix,node,elmType,formatType),
+					this.buildProp("debugMode",addressPrefix,node,elmType,formatType)
 				]);
 			}
 
 			//Column Formatting/RowFormatter properties
 			props.push(...[
-				this.buildProp("elmType",node,elmType,formatType),
-				this.buildProp("txtContent",node,elmType,formatType)
+				this.buildProp("elmType",addressPrefix,node,elmType,formatType),
+				this.buildProp("txtContent",addressPrefix,node,elmType,formatType)
 			]);
 		}
 
@@ -150,24 +152,25 @@ export class NodeProperties extends React.Component<INodePropertiesProps, INodeP
 		if(typeof node !== "undefined" && !(isRoot && formatType == formatterType.View)) {
 			const elmType: string = node.hasOwnProperty("elmType") ? node.elmType : this.defaultPropValue("elmType", formatType);
 
+			const addressPrefix = "attributes.";
 			//Column Formatting/RowFormatter element attributes
 			props.push(...[
-				this.buildProp("class",node.attributes,elmType,formatType),
-				this.buildProp("iconName",node.attributes,elmType,formatType),
-				this.buildProp("href",node.attributes,elmType,formatType),
-				this.buildProp("target",node.attributes,elmType,formatType),
-				this.buildProp("src",node.attributes,elmType,formatType),
-				this.buildProp("d",node.attributes,elmType,formatType),
-				this.buildProp("title",node.attributes,elmType,formatType),
-				this.buildProp("role",node.attributes,elmType,formatType),
-				this.buildProp("rel",node.attributes,elmType,formatType),
+				this.buildProp("class",addressPrefix,node.attributes,elmType,formatType),
+				this.buildProp("iconName",addressPrefix,node.attributes,elmType,formatType),
+				this.buildProp("href",addressPrefix,node.attributes,elmType,formatType),
+				this.buildProp("target",addressPrefix,node.attributes,elmType,formatType),
+				this.buildProp("src",addressPrefix,node.attributes,elmType,formatType),
+				this.buildProp("d",addressPrefix,node.attributes,elmType,formatType),
+				this.buildProp("title",addressPrefix,node.attributes,elmType,formatType),
+				this.buildProp("role",addressPrefix,node.attributes,elmType,formatType),
+				this.buildProp("rel",addressPrefix,node.attributes,elmType,formatType),
 			]);
 		}
 
 		return props;
 	}
 	
-	private buildProp(propertyName:string, node:any, elmType:string, formatType:formatterType): INodeProperty {
+	private buildProp(propertyName:string, addressPrefix:string, node:any, elmType:string, formatType:formatterType): INodeProperty {
 		const isCurrent:boolean = (typeof node !== "undefined" && node.hasOwnProperty(propertyName));
 		const doesSupportExpression:boolean = this.supportsExpression(propertyName, formatType);
 		let value:any;
@@ -191,6 +194,7 @@ export class NodeProperties extends React.Component<INodePropertiesProps, INodeP
 
 		return {
 			name:propertyName,
+			address:addressPrefix + propertyName,
 			type:this.propType(propertyName, formatType),
 			value: value,
 			invalidValue: isInvalidValue,
@@ -328,7 +332,7 @@ export class NodeProperties extends React.Component<INodePropertiesProps, INodeP
 					 placeHolder={nodeProp.valueIsExpression ? "Using Expression" : undefined}
 					 options={this.getPropOptions(nodeProp)}
 					 calloutProps={{className:styles.treeProps}}
-					 onChanged={(option:ISelectableOption,index?:number) => {this.props.propUpdated(nodeProp.name,option.key.toString());}}/>
+					 onChanged={(option:ISelectableOption,index?:number) => {this.props.propUpdated(nodeProp.address,option.key.toString());}}/>
 				);
 			case NodePropType.text:
 				return (
@@ -336,7 +340,7 @@ export class NodeProperties extends React.Component<INodePropertiesProps, INodeP
 					 value={nodeProp.valueIsExpression ? undefined : nodeProp.value}
 					 placeholder={nodeProp.valueIsExpression ? "Using Expression" : undefined}
 					 borderless={true}
-					 onChanged={(newValue:any) => {this.props.propUpdated(nodeProp.name,newValue);}}/>
+					 onChanged={(newValue:any) => {this.props.propUpdated(nodeProp.address,newValue);}}/>
 				);
 			default:
 				return (
