@@ -51,14 +51,6 @@ class FormatScriptEditorDialog_ extends React.Component<IFormatScriptEditorDialo
 			canSave: true,
 		};
 	}
-	/*<div className={styles.buttonBox + ' ' + (isValid ? styles.valid : styles.invalid)}>
-				<Icon
-				 iconName={isValid ? 'Emoji2' : 'EmojiDisappointed'}
-				 title={isValid ? strings.PreviewValidation_Good : strings.PreviewValidation_Bad + '\n' + this.props.validationErrors.join('\n') + this.props.formatterErrors.join('\n')}
-				 styles={iconStyles}/>
-			</div>
-			title={this.state.canSave ? strings.FormatScriptValidation_Good : strings.FormatScriptValidation_Bad + '\n' + this.state.extraErrors.join('\n')}
-			<div class="ms-Button-flexContainer css-110"><i role="presentation" aria-hidden="true" data-icon-name="Emoji2" class="ms-Icon css-68 root-64 ms-Button-icon css-120"></i></div>*/
 
 	public render(): React.ReactElement<IFormatScriptEditorDialogProps> {
 		return (
@@ -80,6 +72,7 @@ class FormatScriptEditorDialog_ extends React.Component<IFormatScriptEditorDialo
 						onRenderIcon: ():JSX.Element => {
 							return (
 								<Icon
+								 key="validation"
 				 				 iconName={(this.state.canSave || !this.state.hasChanged) ? 'Emoji2' : 'EmojiDisappointed'}
 				 				 title={this.state.canSave ? strings.FormatScriptValidation_Good : strings.FormatScriptValidation_Bad + '\n' + this.state.extraErrors.join('\n')}
 				 				 styles={iconStyles}/>

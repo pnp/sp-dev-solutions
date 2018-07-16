@@ -800,7 +800,7 @@ export const formatScriptToJSON = (fs:string): IFSParseResult => {
 
 	try {
 		const syntaxTree = esprima.parseScript(tokenFS, { loc: true });
-		console.log(syntaxTree);
+		//console.log(syntaxTree);
 		if (syntaxTree.body.length > 1) {
 			result.errors.push({
 				message: "You can only have 1 top level function! (feel free to nest them though)",
@@ -815,19 +815,15 @@ export const formatScriptToJSON = (fs:string): IFSParseResult => {
 		});
 	}
 
-	console.log(result);
+	/*console.log(result);
 	if(result.errors.length == 0) {
 		console.log(JSON.stringify(result.result));
 		console.log(JSONToFormatScript(JSON.stringify(result.result)));
-	}
+	}*/
 	return result;
 };
 
 
-
-export const JSONToFormatScript = (j:string): string => {
-	return formatObjToFormatScript(JSON.parse(j)).toString().replace(/__,__/g, ",");
-};
 
 const operatorIsInline = (operator:string): boolean => {
 	switch (operator) {
@@ -1029,7 +1025,6 @@ const formatObjToFormatScript = (formatObj:any, parentOperator:string = ""): str
 			case "toLocaleTimeString()":
 				return `TOLOCALETIMESTRING(${operands[0]})`;
 			case "?":
-				console.log(operands);
 				if(operationIsSwitch(formatObj.operands)) {
 					return buildSwitchExpression(operands);
 				} else {
@@ -1040,4 +1035,8 @@ const formatObjToFormatScript = (formatObj:any, parentOperator:string = ""): str
 		}
 	}
 	return "";
+};
+
+export const JSONToFormatScript = (j:string): string => {
+	return formatObjToFormatScript(JSON.parse(j)).toString().replace(/__,__/g, ",");
 };

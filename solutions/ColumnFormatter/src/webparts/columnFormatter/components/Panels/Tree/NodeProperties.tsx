@@ -10,6 +10,7 @@ import { ViewFormattingSchemaURI } from "../../../helpers/ViewFormattingSchema";
 import { formatterType } from "../../../state/State";
 import styles from "../../ColumnFormatter.module.scss";
 import { FormatScriptEditorDialog } from "../../FormatScript/FormatScriptEditorDialog";
+import { JSONToFormatScript } from "../../FormatScript/FormatScript";
 import { INodeProperty, NodePropType } from "./INodeProperty";
 
 export interface INodePropertiesProps {
@@ -22,8 +23,10 @@ export interface INodePropertiesProps {
 export interface INodePropertiesState {
 	propFilter: string;
 
-	//TO BE MOVED
 	formatScriptDialogVisible: boolean;
+	formatScriptExpression?: string;
+	formatScriptPropertyAddress?: string;
+	formatScriptPropertyName?: string;
 }
 
 export class NodeProperties extends React.Component<INodePropertiesProps, INodePropertiesState> {
@@ -94,14 +97,13 @@ export class NodeProperties extends React.Component<INodePropertiesProps, INodeP
 						</tbody>
 					</table>
 				}
-				<DefaultButton text="fx" onClick={this.onFxButtonClick} />
-							<FormatScriptEditorDialog
-								initialValue='SWITCH(@currentField,"Done","green","In Progress","yellow","red")'
-								visible={this.state.formatScriptDialogVisible}
-								dialogTitle="Format Script"
-								onCancel={() => { this.setState({ formatScriptDialogVisible: false }); }}
-								onSave={this.onFormatScriptEditorSave}
-							/>
+				<FormatScriptEditorDialog
+				 initialValue={this.state.formatScriptExpression}
+				 visible={this.state.formatScriptDialogVisible}
+				 dialogTitle={`Format Script: ${this.state.formatScriptPropertyName}`}
+				 onCancel={() => { this.setState({ formatScriptDialogVisible: false }); }}
+				 onSave={this.onFormatScriptEditorSave}
+				/>
 			</div>
 		);
 	}
@@ -316,7 +318,15 @@ export class NodeProperties extends React.Component<INodePropertiesProps, INodeP
 							 iconName:nodeProp.valueIsExpression ? "TestBeakerSolid" : "TestBeaker",
 							className:nodeProp.valueIsExpression ? "ms-fontColor-themeDarkAlt" : "ms-fontColor-neutralPrimaryAlt"}}
 						 title="FormatScript"
-						 styles={propButtonStyles}/>
+						 styles={propButtonStyles}
+						 onClick={()=>{
+							this.setState({
+								formatScriptDialogVisible: true,
+								formatScriptExpression: JSONToFormatScript(nodeProp.value),
+								formatScriptPropertyAddress: nodeProp.address,
+								formatScriptPropertyName: nodeProp.name,
+							});
+						 }}/>
 					}
 				</div>
 			</div>
@@ -374,17 +384,8 @@ export class NodeProperties extends React.Component<INodePropertiesProps, INodeP
 	}
 
 	@autobind
-	private onFxButtonClick(): void {
-		this.setState({
-			formatScriptDialogVisible: true,
-		});
-	}
-
-	@autobind
 	private onFormatScriptEditorSave(result: any): void {
-		//TODO add node ref to properly map changes to virtualFormat
-		console.log('Saved!');
-		console.log(JSON.stringify(result));
+		this.props.propUpdated(this.state.formatScriptPropertyAddress, result);
 
 		this.setState({
 			formatScriptDialogVisible: false,
