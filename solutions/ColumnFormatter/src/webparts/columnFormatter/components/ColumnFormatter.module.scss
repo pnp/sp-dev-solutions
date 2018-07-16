@@ -1617,6 +1617,9 @@
                 }
               }
             }
+            .ms-Toggle-stateText {
+              margin: 0 4px;
+            }
           }
 
           .propAndButtonBox {
@@ -1648,6 +1651,26 @@
       min-height: 20px;
       line-height: 16px;
       padding: 2px 8px;
+    }
+  }
+}
+.treePropValue {
+  :global {
+    .ms-Dropdown-item {
+      font-size: 10px;
+      min-height: 16px;
+      line-height: 14px;
+      padding: 0 6px;
+
+      .ms-Checkbox-checkbox {
+        height: 16px;
+        width: 16px;
+        margin: 0;
+      }
+      .ms-Checkbox-text {
+        font-size: 10px;
+        margin: 0 3px;
+      }
     }
   }
 }

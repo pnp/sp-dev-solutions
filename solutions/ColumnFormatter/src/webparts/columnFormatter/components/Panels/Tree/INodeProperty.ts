@@ -1,6 +1,7 @@
 export enum NodePropType {
 	text,
 	dropdown,
+	dropdownMS,
 	combobox,
 	toggle
 }

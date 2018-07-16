@@ -1,16 +1,16 @@
-import { DefaultButton, IButtonStyles, IconButton } from "office-ui-fabric-react/lib/Button";
+import { IButtonStyles, IconButton } from "office-ui-fabric-react/lib/Button";
 import { Dropdown, IDropdownOption } from "office-ui-fabric-react/lib/Dropdown";
 import { TextField } from "office-ui-fabric-react/lib/TextField";
+import { IToggleStyles, Toggle } from "office-ui-fabric-react/lib/Toggle";
 import { autobind } from "office-ui-fabric-react/lib/Utilities";
-import { ISelectableOption } from "office-ui-fabric-react/lib/utilities/selectableOption/SelectableOption.Props";
 import * as React from "react";
 
 import { ColumnFormattingSchemaURI } from "../../../helpers/ColumnFormattingSchema";
 import { ViewFormattingSchemaURI } from "../../../helpers/ViewFormattingSchema";
 import { formatterType } from "../../../state/State";
 import styles from "../../ColumnFormatter.module.scss";
-import { FormatScriptEditorDialog } from "../../FormatScript/FormatScriptEditorDialog";
 import { JSONToFormatScript } from "../../FormatScript/FormatScript";
+import { FormatScriptEditorDialog } from "../../FormatScript/FormatScriptEditorDialog";
 import { INodeProperty, NodePropType } from "./INodeProperty";
 
 export interface INodePropertiesProps {
@@ -212,6 +212,8 @@ export class NodeProperties extends React.Component<INodePropertiesProps, INodeP
 			case "elmType":
 			case "target":
 				return NodePropType.dropdown;
+			case "rel":
+				return NodePropType.dropdownMS;
 			case "debugMode":
 				return NodePropType.toggle;
 			default:
@@ -336,13 +338,31 @@ export class NodeProperties extends React.Component<INodePropertiesProps, INodeP
 	private renderPropEditorControl(nodeProp:INodeProperty): JSX.Element {
 		switch (nodeProp.type) {
 			case NodePropType.dropdown:
+			case NodePropType.dropdownMS:
 				return (
 					<Dropdown
-					 selectedKey={nodeProp.valueIsExpression ? undefined : nodeProp.value}
+					 selectedKeys={nodeProp.valueIsExpression ? undefined : (nodeProp.type == NodePropType.dropdownMS ? nodeProp.value.split(" ") : nodeProp.value)}
 					 placeHolder={nodeProp.valueIsExpression ? "Using Expression" : undefined}
 					 options={this.getPropOptions(nodeProp)}
-					 calloutProps={{className:styles.treeProps}}
-					 onChanged={(option:ISelectableOption,index?:number) => {this.props.propUpdated(nodeProp.address,option.key.toString());}}/>
+					 calloutProps={{className:styles.treePropValue}}
+					 multiSelect={nodeProp.type == NodePropType.dropdownMS}
+					 multiSelectDelimiter=" "
+					 onChanged={(option:IDropdownOption,index?:number) => {
+						 if(nodeProp.type == NodePropType.dropdownMS) {
+							let values:Array<string> = nodeProp.value.split(" ");
+							if(option.selected) {
+								if(values.indexOf(option.key.toString()) == -1) {
+									values.push(option.key.toString());
+								}
+							} else {
+								if(values.indexOf(option.key.toString()) !== -1) {
+									values.splice(values.indexOf(option.key.toString()),1);
+								}
+							}
+							this.props.propUpdated(nodeProp.address,values.filter((val:string)=>{return val.length>0;}).join(" "));
+						 } else {
+							this.props.propUpdated(nodeProp.address,option.key.toString());
+						 }}}/>
 				);
 			case NodePropType.text:
 				return (
@@ -351,6 +371,35 @@ export class NodeProperties extends React.Component<INodePropertiesProps, INodeP
 					 placeholder={nodeProp.valueIsExpression ? "Using Expression" : undefined}
 					 borderless={true}
 					 onChanged={(newValue:any) => {this.props.propUpdated(nodeProp.address,newValue);}}/>
+				);
+			case NodePropType.toggle:
+				const toggleStyles: Partial<IToggleStyles> = {
+					root: {
+						margin: "0",
+						position: "relative",
+					},
+					container: {
+						position: "absolute",
+						top: "-7px",
+						left: "3px"
+					},
+					pill: {
+						height: "14px",
+						lineHeight: "12px",
+						fontSize: "14px",
+					},
+					text: {
+						fontSize: "10px",
+					},
+				};
+
+				return (
+					<Toggle
+					 checked={nodeProp.value}
+					 onChanged={(checked:boolean) => {this.props.propUpdated(nodeProp.address,checked);}}
+					 styles={toggleStyles}
+					 onText="true"
+					 offText="false"/>
 				);
 			default:
 				return (
@@ -377,6 +426,22 @@ export class NodeProperties extends React.Component<INodePropertiesProps, INodeP
 					{key: "_self", text: "_self"},
 					{key: "_parent", text: "_parent"},
 					{key: "_top", text: "_top"},
+				];
+			case "rel":
+				return [
+					{key: "alternate", text: "alternate"},
+					{key: "author", text: "author"},
+					{key: "bookmark", text: "bookmark"},
+					{key: "external", text: "external"},
+					{key: "help", text: "help"},
+					{key: "license", text: "license"},
+					{key: "next", text: "next"},
+					{key: "nofollow", text: "nofollow"},
+					{key: "noreferrer", text: "noreferrer"},
+					{key: "noopener", text: "noopener"},
+					{key: "prev", text: "prev"},
+					{key: "search", text: "search"},
+					{key: "tag", text: "tag"},
 				];
 			default:
 				return undefined;
