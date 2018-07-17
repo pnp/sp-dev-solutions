@@ -1,16 +1,16 @@
 import * as React from 'react';
 import * as ReactDom from 'react-dom';
-import IWebPartContext from '@microsoft/sp-webpart-base/lib/core/IWebPartContext';
 import {
   IPropertyPaneField,
-  PropertyPaneFieldType
+  PropertyPaneFieldType,
+  WebPartContext
 } from '@microsoft/sp-webpart-base';
 import { IPropertyFieldImageSelectorHostProps } from './PropertyFieldImageSelectorHost';
 import PropertyFieldImageSelectorHost from './PropertyFieldImageSelectorHost';
 
 export interface IPropertyFieldImageSelectorProps{
     properties?: any;
-    context?: IWebPartContext;
+    context?: WebPartContext;
     label: string;
     key?: string;
     imageMode: ImageDisplayType;
@@ -20,7 +20,7 @@ export interface IPropertyFieldImageSelectorProps{
 
 export interface IPropertyFieldImageSelectorPropsInternal extends IPropertyFieldImageSelectorProps{
     onRender(elem: HTMLElement): void;
-    context?: IWebPartContext;
+    context?: WebPartContext;
     targetProperty: string;
     label: string;
     key?: string;
@@ -33,7 +33,7 @@ class PropertyFieldImageSelectorBuilder implements IPropertyPaneField<IPropertyF
     public type: PropertyPaneFieldType = PropertyPaneFieldType.Custom;
     public targetProperty: string;
     public properties: IPropertyFieldImageSelectorPropsInternal; 
-    public context?: IWebPartContext;
+    public context?: WebPartContext;
     public label: string;
     public key?: string;
     public changeImage?: (url: string, name?: string) => void;
