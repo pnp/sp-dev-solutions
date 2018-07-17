@@ -8,6 +8,7 @@
     "manifestVersion": 2,
     "requiresCustomScript": [true],
     "safeWithCustomScriptDisabled": false,
+    "supportsFullBleed": true,
 
     "preconfiguredEntries": [{
         "groupId": "01c3854e-1d25-4325-8891-fbb4c5bfe1aa",
@@ -17,9 +18,13 @@
         "officeFabricIconFontName": "MultiSelect",
 
         "properties": {
+            "title": "",
             "listQuery": "",
+            "listQueryData": "",
             "handlebarTemplateUrl": "",
-            "containerClass": ""
+            "containerClass": "",
+            "cssUrl": "",
+            "jsUrl": ""
         }
     }]
 }

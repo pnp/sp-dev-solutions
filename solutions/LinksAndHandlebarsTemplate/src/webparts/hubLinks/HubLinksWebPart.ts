@@ -24,6 +24,7 @@ import { PropertyFieldCamlQueryFieldMapping, SPFieldType, SPFieldRequiredLevel, 
 import { PropertyPaneGroupSort } from '../../propertyPane/propertyFieldGroupSort/PropertyFieldGroupSort'; 
 import pnp from 'sp-pnp-js';
 import QueryStringParser from "../../utilities/urlparser/queryStringParser";
+import { WebPartLogger } from '../../utilities/webpartlogger/usagelogger';
 
 const titleField = "Title";
 const urlField = "URL";
@@ -43,6 +44,14 @@ export default class HubLinksWebPart extends BaseClientSideWebPart<IHubLinksWebP
   }
 
   public onInit(): Promise<void> {
+    const urls: string[]  = [];
+    if(this.properties.data){
+      this.properties.hubLinksItems.forEach(element => {
+        if(element.URL)
+          urls.push(element.URL);
+      });
+    }
+    WebPartLogger.logUsage(this.context,urls);
     return super.onInit().then(_ => {
       pnp.setup({
         spfxContext: this.context
@@ -101,7 +110,7 @@ export default class HubLinksWebPart extends BaseClientSideWebPart<IHubLinksWebP
     const self = this;
     this.checkUpdateProperties();
 
-    const element: React.ReactElement<IHubLinksProps > = React.createElement(
+    const element: React.ReactElement<IHubLinksProps> = React.createElement(
       HubLinks,
       {
         defaultExpand: this.properties.defaultExpand,

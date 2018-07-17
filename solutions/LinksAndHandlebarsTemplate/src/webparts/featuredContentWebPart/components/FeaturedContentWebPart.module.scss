@@ -95,10 +95,10 @@
     }
 }
 
-[aria-describedby="propertyPaneDescriptionId"]>div>div {
-    height: auto;
+[aria-labelledby='propertyPaneTitleId']>div>div {
+    box-sizing: content-box;
 }
 
-[aria-labelledby='propertyPaneTitleId']>div>div {
-    height: auto;
+[class*="choiceFieldIsIcon_"] [class*="fieldIsIcon_"] [class*="labelWrapper_"] {
+    white-space: normal;
 }

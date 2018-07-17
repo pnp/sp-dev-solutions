@@ -25,6 +25,7 @@ import pnp from 'sp-pnp-js';
 import { PropertyPaneRichText } from '../../propertyPane/propertyFieldRichText/PropertyFieldRichText';
 import { PropertyPaneImageSelector, ImageDisplayType } from "../../propertyPane/propertyFieldImageSelector/PropertyFieldImageSelector";
 import QueryStringParser from "../../utilities/urlparser/queryStringParser";
+import { WebPartLogger } from '../../utilities/webpartlogger/usagelogger';
 
 const urlField = "URL";
 const imageField = "Image";
@@ -43,6 +44,21 @@ export default class FeaturedContentWebPartWebPart extends BaseClientSideWebPart
   }
 
   public onInit(): Promise<void> {
+    const urls: string[] = [];
+
+    if(this.properties.featuredContentItems){
+      this.properties.featuredContentItems.forEach(element => {
+        if(element.CustomImageUrl)
+          urls.push(element.CustomImageUrl);
+        if(element.PreviewImageUrl)
+          urls.push(element.PreviewImageUrl);
+        if(element.URL)
+          urls.push(element.URL);
+        if(element.Image)
+          urls.push(element.Image);
+      });
+    }
+    WebPartLogger.logUsage(this.context,urls);
     return super.onInit().then(_ => {
       pnp.setup({
         spfxContext: this.context
@@ -117,6 +133,11 @@ export default class FeaturedContentWebPartWebPart extends BaseClientSideWebPart
             
             if(link[urlField] !== null)
               element.props.links.push(link);
+          });
+          element.props.links.forEach((v,i,a)=>{
+            if(v[imageField].substr(0,this.context.pageContext.web.absoluteUrl.length)===this.context.pageContext.web.absoluteUrl && v[imageField].indexOf("getpreview.ashx")===-1){
+              v[imageField] = this.context.pageContext.web.serverRelativeUrl+"/_layouts/15/getpreview.ashx?resolution=0&clientMode=modernWebPart&path="+encodeURIComponent(v[imageField]);
+            }
           });
           this.webpart = ReactDom.render(element, this.domElement);
         }).catch((error)=>{ });
@@ -361,7 +382,6 @@ export default class FeaturedContentWebPartWebPart extends BaseClientSideWebPart
   }
 
   private rearrangeBasicItems(newOrder: number[]){
-    const currArr = this.properties.featuredContentItems;
     const newArr = new Array<IFeaturedItem>();
     for(const num of newOrder)
       newArr.push(this.properties.featuredContentItems[num]);
@@ -423,8 +443,8 @@ export default class FeaturedContentWebPartWebPart extends BaseClientSideWebPart
 
     var isDoc = false;
     const docExtensions = ["pdf", "xls", "xlsx", "doc", "docx", "ppt", "pptx", "pptm", "dot"];
-    for(const i of docExtensions){
-      if(urlString.indexOf(docExtensions[i], urlString.length - docExtensions[i].length) !== -1)
+    for(const ext of docExtensions){
+      if(urlString.indexOf(ext, urlString.length - ext.length) !== -1)
         isDoc = true;
     }
 

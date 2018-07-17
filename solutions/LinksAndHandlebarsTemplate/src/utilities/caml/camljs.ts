@@ -645,9 +645,10 @@ export namespace Caml {
         }
         public WriteFieldRef(fieldInternalName: string, options?: any) {
             const fieldRef = { Element: 'FieldRef', Name: fieldInternalName };
-            for (const name of options || {}) {
-                fieldRef[name] = options[name];
-            }
+            if(options)
+              for (const name of Object.getOwnPropertyNames(options) || []) {
+                  fieldRef[name] = options[name];
+              }
             this.tree.push(fieldRef);
         }
         public WriteValueElement(valueType: string, value: any) {

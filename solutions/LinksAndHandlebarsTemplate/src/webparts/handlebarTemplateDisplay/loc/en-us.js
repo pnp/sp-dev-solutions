@@ -12,6 +12,10 @@ define([], function() {
         "ScriptFieldLabel": "JS File",
         "ScriptFieldButtonText": "Change JS File",
         "DownloadButtonText": "Download Sample Template",
-        "ConfigureWebPartButtonText": "Configure Web Part"
+        "ConfigureWebPartButtonText": "Configure Web Part",
+        "SearchFieldLabel": "Search Query",
+        "SearchLabel": "Search",
+        "ListLabel": "List",
+        "SearchToggleLabel": "List or Search Source?"
     }
 });

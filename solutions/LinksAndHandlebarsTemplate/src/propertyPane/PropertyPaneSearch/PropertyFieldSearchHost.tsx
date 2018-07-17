@@ -65,7 +65,7 @@ export default class PropertyFieldSearchHost extends React.Component<IPropertyFi
 
   public addSort = () => {
     const state = JSON.parse(JSON.stringify(this.state));
-    let sort = [...state.sort];
+    const sort = [...state.sort];
     sort.push({Property: '', Direction: SortDirection.Ascending});
     this.setState({sort: sort});
     this.saveSearchQuery(state);

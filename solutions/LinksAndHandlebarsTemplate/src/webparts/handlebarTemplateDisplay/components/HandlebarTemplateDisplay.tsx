@@ -91,7 +91,7 @@ export default class HandlebarTemplateDisplay extends React.Component<IHandlebar
         </div>
         <div className={this.props.containerClass}>
           {this.props.items.length > 0 && this.props.templateUrl && this.props.items.map((item) =>  this.templateRender(item, template) )}
-          {this.props.items.length > 0 && !this.props.templateUrl && this.noTemplateRender(this.props.items[0])}
+          {this.props.items.length > 0 && this.props.isEdit && !this.props.templateUrl && this.noTemplateRender(this.props.items[0])}
           {this.props.items.length===0 && !this.props.listIsSelected && this.renderConfigureWebPartView()}
         </div>
         <LinkPickerPanel
@@ -102,6 +102,10 @@ export default class HandlebarTemplateDisplay extends React.Component<IHandlebar
           ref={ (ref) => {this.linkPickerPanel = ref;}} />
       </div>
     );
+  }
+  
+  private renderSeeAll() {
+    return (<a href={this.props.webUrl+'/_layouts/15/SeeAll.aspx?Page='+this.props.serverRelativeUrl+'&InstanceId='+this.props.instanceId} style={{float: 'right'}}>See All</a>);
   }
 
   private templateRender(item, template): React.ReactElement<IHandlebarTemplateDisplayProps>{
@@ -128,10 +132,10 @@ export default class HandlebarTemplateDisplay extends React.Component<IHandlebar
   private buildExampleTemplate(obj, path = ""): string{
     var template = "";
     const separator = path ? "." : "";
-    for(const key of Object.keys(obj).sort()){
+    for(const key of Object.getOwnPropertyNames(obj).sort()){
       const o = obj[key];
       if(key.indexOf(".")!==key.length-1){
-        if(typeof o === 'object'){
+        if(o && typeof o === 'object'){
           template+=this.getLeadingTab(path)+'<div style="margin-left:10px;">';
           template+='\n'+this.getLeadingTab(path)+'    <span style="font-weight:bold;">';
           template+=key+": ";

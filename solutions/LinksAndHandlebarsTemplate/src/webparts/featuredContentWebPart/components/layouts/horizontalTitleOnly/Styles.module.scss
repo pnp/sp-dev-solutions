@@ -16,6 +16,7 @@
         border: 1px solid #eaeaea;
         outline: 1px solid transparent;
         min-height: 238px;
+        max-height: 238px;
         &:hover {
             border: 1px #C8C8C8 solid;
             outline: 1px #C8C8C8 solid;
@@ -157,7 +158,9 @@
     }
 }
 
-:global .ms-sm12.ms-xl4 {
+ :global .CanvasSection-sm12.CanvasSection-xl4,
+ :global .col-sm-3,
+ :global .col-sm-4 {
     & :local .featured-content {
         & :local .featured-content-item {
             width: 100%;

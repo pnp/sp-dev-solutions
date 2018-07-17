@@ -20,6 +20,7 @@ import { IBoxButtonWebPartWebPartProps } from './IBoxButtonWebPartWebPartProps';
 import { SPFieldType, PropertyFieldCamlQueryOrderBy, SPFieldRequiredLevel, PropertyFieldCamlQueryFieldMapping } from '../../propertyPane/propertyFieldCamlQueryFieldMapping/PropertyFieldCamlQueryFieldMapping';
 import pnp from 'sp-pnp-js';
 import QueryStringParser from "../../utilities/urlparser/queryStringParser";
+import { WebPartLogger } from '../../utilities/webpartlogger/usagelogger';
 
 const urlField = "URL";
 const iconField = "Font Awesome Icon";
@@ -36,6 +37,15 @@ export default class BoxButtonWebPartWebPart extends BaseClientSideWebPart<IBoxB
   }
 
   public onInit(): Promise<void> {
+    const urls:string[] = [];
+    if(this.properties.data){
+      this.properties.data.forEach(element => {
+        if(element.url)
+          urls.push(element.url);
+      });
+    }
+    WebPartLogger.logUsage(this.context,urls);
+
     return super.onInit().then(_ => {
       pnp.setup({
         spfxContext: this.context
@@ -115,8 +125,8 @@ export default class BoxButtonWebPartWebPart extends BaseClientSideWebPart<IBoxB
           // Figure out if it's a document
           var isDoc = false;
           const docExtensions = ["pdf", "xls", "xlsx", "doc", "docx", "ppt", "pptx", "pptm", "dot"];
-          for(const i of docExtensions){
-            if(url.indexOf(docExtensions[i], url.length - docExtensions[i].length) !== -1)
+          for(const ext of docExtensions){
+            if(url.indexOf(ext, url.length - ext.length) !== -1)
               isDoc = true;
           }
 
@@ -155,7 +165,6 @@ export default class BoxButtonWebPartWebPart extends BaseClientSideWebPart<IBoxB
         // Called when a user rearranges links in BoxButtonWebPart
         rearrangeItems: (newOrder:number[])=>{
           const newArr = [];
-          const currArr = this.properties.data;
           for(const num of newOrder)
             newArr.push(this.properties.data[num]);
           this.properties.data.length=0;
@@ -357,8 +366,8 @@ export default class BoxButtonWebPartWebPart extends BaseClientSideWebPart<IBoxB
                 }),
                 PropertyPaneLink('iconShortcut',{
                   text: strings.EditItemIconEntryLinkText,
-                  href:"http://fontawesome.io/cheatsheet/",
-                  target: "_blank"
+                  href:"https://fontawesome.com/v4.7.0/cheatsheet/",
+                  target: "blank"
                 })
               ]
             },

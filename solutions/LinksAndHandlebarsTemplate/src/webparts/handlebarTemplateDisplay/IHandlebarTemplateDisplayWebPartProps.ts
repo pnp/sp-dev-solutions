@@ -6,4 +6,6 @@ export interface IHandlebarTemplateDisplayWebPartProps {
   containerClass: string;
   cssUrl: string;
   jsUrl: string;
+  usesSearchSource: boolean;
+  searchSource: string;
 }
