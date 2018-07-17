@@ -12,7 +12,7 @@ import { strings } from '../loc/en-us';
 
 import { SPHttpClient, SPHttpClientResponse, HttpClientResponse } from '@microsoft/sp-http';
 
-const imageJsonConfigLocation = "/SiteAssets/ApprovedImageLibs.json";
+const imageJsonConfigLocation = "/SiteAssets/ApprovedImageLibs.config";
 
 export default class LinkPickerPanel
   extends React.Component<ILinkPickerPanelProps, ILinkPickerPanelState>
@@ -207,7 +207,7 @@ export default class LinkPickerPanel
   private getImageLibraries(){
     this.props.webPartContext.spHttpClient.get(imageJsonConfigLocation, SPHttpClient.configurations.v1).then((response:HttpClientResponse) => {
       response.json().then((results) => {
-        this.setState({imageLibs: results[window.location.host]});
+        this.setState({imageLibs: results});
         this.getApprovedImages();
       });
     });

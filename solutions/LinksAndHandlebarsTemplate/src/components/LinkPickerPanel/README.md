@@ -54,9 +54,8 @@ This design was chosen to allow the link picker to manage its own state, as it m
 
 ##Configuring Approved Images:
 
-    The ApprovedImageLibs.json file in this folder contains the format that is expected for the configuration.  The schema of the JSON file is as follows:
+    The ApprovedImageLibs.config file in this folder contains the format that is expected for the configuration.  This file uses the .config extension due to issues getting a json file from a SharePoint  The schema of the JSON file is as follows:
 
-        * Add an array property to the base object with the name of the host of the SharePoint environment that you are setting up
         * The host array contains objects with 2 properties:
             * libUrl: the absolute URL to the library that you want included in the approved images tab
             * cdnUrl: the absolute URL to the CDN front to the library if one exists
