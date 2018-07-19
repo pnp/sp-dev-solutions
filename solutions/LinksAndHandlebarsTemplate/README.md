@@ -77,6 +77,8 @@ Version  | Date               | Comments
 ## Minimal Path to Awesome
 
 - Clone this repository
+- (Optional) Configure the web part usage logging - /src/utilities/webpartlogger
+- (Optional) Configure the approved image tab for the link picker - /src/components/LinkPickerPanel
 - in the command line run:
   - `npm install`
   - `gulp serve`
