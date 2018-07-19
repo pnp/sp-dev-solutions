@@ -17,6 +17,7 @@ export interface ILinkPickerPanelState {
     navState?: NavState;            // the navigation selection
     isUrlValid?: boolean;           // true if the URL is valid
     url?: string;                   // the link
+    showImageTab: boolean;          // should the brand image tab be shown
     images?: Array<ApprovedImage>;  // array of images for approved image picker
     imageLibs?: Array<ImageLibrary>;      // array of image libraries for approved images.
 }

@@ -18,16 +18,23 @@ export default class LinkPickerPanel
   extends React.Component<ILinkPickerPanelProps, ILinkPickerPanelState>
   implements ILinkPickerPanel {
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       isOpen: false,
       navState: NavState.site,
       isUrlValid: false,
       url: "",
+      showImageTab: false,
       images: [],
       imageLibs: []
     };
+
+    this.props.webPartContext.spHttpClient.get(imageJsonConfigLocation, SPHttpClient.configurations.v1).then((response:HttpClientResponse) => {
+      this.setState({showImageTab: response.status===200});
+    }).catch(()=>{
+      this.setState({showImageTab: false});
+    });
   }
 
   public render(): JSX.Element {
@@ -51,29 +58,50 @@ export default class LinkPickerPanel
               onDismiss={this.onCancelButtonClick.bind(this)}>
 
           {/* Navigation on left of panel */}
+          {this.state.showImageTab &&
+            <Nav initialSelectedKey="site" isOnTop={true}
+            groups={[{
+            links:[
+              {
+                name: strings.LinkPickerSiteNav,
+                icon:"Globe", key:"site", url:"#",
+                onClick:this.onSiteNavClick.bind(this),
+                isExpanded: showDocPickerIFrame
+              },
+              {
+                name: strings.LinkPickerLinkNav,
+                icon:"Link", key:"link", url:"#",
+                onClick:this.onLinkNavClick.bind(this),
+                isExpanded: showLinkEntryForm
+              },
+              {
+                name: strings.LinkPickerImageNav,
+                icon:"Photo2", key:"image", url:"#",
+                onClick:this.onImageNavClick.bind(this),
+                isExpanded: showImageEntryForm
+              }
+            ]
+            }]}/>
+          }
+          {!this.state.showImageTab &&
           <Nav initialSelectedKey="site" isOnTop={true}
-                groups={[{
-                links:[
-                  {
-                    name: strings.LinkPickerSiteNav,
-                    icon:"Globe", key:"site", url:"#",
-                    onClick:this.onSiteNavClick.bind(this),
-                    isExpanded: showDocPickerIFrame
-                  },
-                  {
-                    name: strings.LinkPickerLinkNav,
-                    icon:"Link", key:"link", url:"#",
-                    onClick:this.onLinkNavClick.bind(this),
-                    isExpanded: showLinkEntryForm
-                  },
-                  {
-                    name: strings.LinkPickerImageNav,
-                    icon:"Photo2", key:"image", url:"#",
-                    onClick:this.onImageNavClick.bind(this),
-                    isExpanded: showImageEntryForm
-                  }
-                ]
-                }]}/>
+            groups={[{
+            links:[
+              {
+                name: strings.LinkPickerSiteNav,
+                icon:"Globe", key:"site", url:"#",
+                onClick:this.onSiteNavClick.bind(this),
+                isExpanded: showDocPickerIFrame
+              },
+              {
+                name: strings.LinkPickerLinkNav,
+                icon:"Link", key:"link", url:"#",
+                onClick:this.onLinkNavClick.bind(this),
+                isExpanded: showLinkEntryForm
+              }
+            ]
+            }]}/>
+          }
 
           {/* Doc picker iFrame or link entry form */}
           <div className={styles["tabs"]}>
