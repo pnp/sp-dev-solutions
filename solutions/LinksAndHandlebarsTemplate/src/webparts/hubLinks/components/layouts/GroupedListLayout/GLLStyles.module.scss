@@ -55,6 +55,22 @@
                 padding-top: 5px;
             }
         }
+        @media (max-width: 600px) and (min-width: 0px) {
+            a.linktitle {
+                width: 90%;
+                padding-top: 2px;
+                max-width: 90%;
+                display: block;
+                vertical-align: top;
+                margin-left: 31px;
+            }
+            .linkdescription {
+                max-width: 100%;
+                display: block;
+                margin: 0;
+                padding-top: 5px;
+            }
+        }
         @media all and (max-width: 600px) and (min-width: 320px) {
             .linktitle {
                 float: none;

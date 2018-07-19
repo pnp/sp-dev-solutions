@@ -15,8 +15,8 @@
         margin: 0 2% 20px 0;
         border: 1px solid #eaeaea;
         outline: 1px solid transparent;
-        min-height: 238px;
-        max-height: 238px;
+        min-height: 258px;
+        max-height: 258px;
         &:hover {
             border: 1px #C8C8C8 solid;
             outline: 1px #C8C8C8 solid;
@@ -40,9 +40,13 @@
             font-weight: 600;
             width: 100%;
             position: relative;
-            top: 0px;
-            height: auto!important;
+            top: 0;
             box-sizing: border-box;
+            max-height: 50px;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
         }
         & a.featured-content-link {
             position: absolute;
