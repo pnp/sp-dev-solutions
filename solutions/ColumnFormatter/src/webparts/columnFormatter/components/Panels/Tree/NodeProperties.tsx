@@ -1,5 +1,6 @@
 import { IButtonStyles, IconButton } from "office-ui-fabric-react/lib/Button";
 import { Dropdown, IDropdownOption } from "office-ui-fabric-react/lib/Dropdown";
+import { ComboBox, IComboBoxOption } from "office-ui-fabric-react/lib/ComboBox";
 import { TextField } from "office-ui-fabric-react/lib/TextField";
 import { IToggleStyles, Toggle } from "office-ui-fabric-react/lib/Toggle";
 import { autobind } from "office-ui-fabric-react/lib/Utilities";
@@ -212,6 +213,8 @@ export class NodeProperties extends React.Component<INodePropertiesProps, INodeP
 			case "elmType":
 			case "target":
 				return NodePropType.dropdown;
+			case "class":
+				//return NodePropType.combobox;
 			case "rel":
 				return NodePropType.dropdownMS;
 			case "debugMode":
@@ -324,7 +327,7 @@ export class NodeProperties extends React.Component<INodePropertiesProps, INodeP
 						 onClick={()=>{
 							this.setState({
 								formatScriptDialogVisible: true,
-								formatScriptExpression: JSONToFormatScript(nodeProp.value),
+								formatScriptExpression: nodeProp.valueIsExpression ? JSONToFormatScript(nodeProp.value) : (typeof nodeProp.value == "string" ? `"${nodeProp.value}"` : nodeProp.value),
 								formatScriptPropertyAddress: nodeProp.address,
 								formatScriptPropertyName: nodeProp.name,
 							});
@@ -338,31 +341,53 @@ export class NodeProperties extends React.Component<INodePropertiesProps, INodeP
 	private renderPropEditorControl(nodeProp:INodeProperty): JSX.Element {
 		switch (nodeProp.type) {
 			case NodePropType.dropdown:
+				return (
+					<Dropdown
+					selectedKey={nodeProp.valueIsExpression ? undefined : nodeProp.value}
+					placeHolder={nodeProp.valueIsExpression ? "Using Expression" : undefined}
+					options={this.getPropOptions(nodeProp)}
+					calloutProps={{className:styles.treePropValue}}
+					onChanged={(option:IDropdownOption,index?:number) => {
+						this.props.propUpdated(nodeProp.address,option.key.toString());
+					}}/>
+				);
 			case NodePropType.dropdownMS:
 				return (
 					<Dropdown
-					 selectedKeys={nodeProp.valueIsExpression ? undefined : (nodeProp.type == NodePropType.dropdownMS ? nodeProp.value.split(" ") : nodeProp.value)}
+					 selectedKeys={nodeProp.valueIsExpression ? undefined : nodeProp.value.split(" ")}
 					 placeHolder={nodeProp.valueIsExpression ? "Using Expression" : undefined}
 					 options={this.getPropOptions(nodeProp)}
 					 calloutProps={{className:styles.treePropValue}}
-					 multiSelect={nodeProp.type == NodePropType.dropdownMS}
+					 multiSelect={true}
 					 multiSelectDelimiter=" "
 					 onChanged={(option:IDropdownOption,index?:number) => {
-						 if(nodeProp.type == NodePropType.dropdownMS) {
-							let values:Array<string> = nodeProp.value.split(" ");
-							if(option.selected) {
-								if(values.indexOf(option.key.toString()) == -1) {
-									values.push(option.key.toString());
-								}
-							} else {
-								if(values.indexOf(option.key.toString()) !== -1) {
-									values.splice(values.indexOf(option.key.toString()),1);
-								}
+						let values:Array<string> = nodeProp.value.split(" ");
+						if(option.selected) {
+							if(values.indexOf(option.key.toString()) == -1) {
+								values.push(option.key.toString());
 							}
-							this.props.propUpdated(nodeProp.address,values.filter((val:string)=>{return val.length>0;}).join(" "));
-						 } else {
-							this.props.propUpdated(nodeProp.address,option.key.toString());
-						 }}}/>
+						} else {
+							if(values.indexOf(option.key.toString()) !== -1) {
+								values.splice(values.indexOf(option.key.toString()),1);
+							}
+						}
+						this.props.propUpdated(nodeProp.address,values.filter((val:string)=>{return val.length>0;}).join(" "));
+					 }}/>
+				);
+			case NodePropType.combobox:
+				return (
+					<ComboBox
+					 selectedKey={nodeProp.valueIsExpression ? undefined : nodeProp.value}
+					 autoComplete="on"
+					 allowFreeform={true}
+					 options={this.getPropOptions(nodeProp)}
+					 onChanged={(option?: IComboBoxOption, index?: number, value?: string) => {
+						if(typeof option !== "undefined") {
+							this.props.propUpdated(nodeProp.address, option.key.toString());
+						} else {
+							this.props.propUpdated(nodeProp.address, value);
+						}
+					 }}/>
 				);
 			case NodePropType.text:
 				return (
@@ -443,6 +468,53 @@ export class NodeProperties extends React.Component<INodePropertiesProps, INodeP
 					{key: "search", text: "search"},
 					{key: "tag", text: "tag"},
 				];
+			case "class":
+				const classes = [
+					"sp-field-severity--good",
+					"sp-field-severity--low",
+					"sp-field-severity--warning",
+					"sp-field-severity--severeWarning",
+					"sp-field-severity--blocked",
+					"sp-field-dataBars",
+					"sp-field-trending--up",
+					"sp-field-trending--down",
+					"sp-field-quickAction",
+					"sp-field-customFormatBackground",
+				];
+				const colors = [
+					"themePrimary","themeSecondary","themeTertiary","themeLight","themeLighter","themeLighterAlt",
+					"themeDarkAlt","themeDark","themeDarker",
+					"black","neutralDark","neutralPrimary","neutralPrimaryAlt","neutralSecondary",
+					"neutralTertiary","neutralTertiaryAlt","neutralQuaternary","neutralQuarternaryAlt",
+					"neutralLight","neutralLighter","neutralLighterAlt","white",
+					"yellow","yellowLight","orange","orangeLight","orangeLighter","redDark","red",
+					"magentaDark","magenta","magentaLight","purpleDark","purple","purpleLight",
+					"blueDark","blueMid","blue","blueLight","tealDark","teal","tealLight","greenDark","green","greenLight",
+				]
+				colors.forEach((value:string) => {
+					classes.push(...[
+						"ms-fontColor-"+value, "ms-fontColor-"+value+"--hover",
+						"ms-bgColor-"+value, "ms-bgColor-"+value+"--hover",
+						"ms-borderColor-"+value, "ms-borderColor-"+value+"--hover",
+					]);
+				});
+				classes.push(...[
+					"ms-font-su","ms-font-xxl","ms-font-xl","ms-font-l","ms-font-m-plus",
+					"ms-font-m","ms-font-s-plus","ms-font-s","ms-font-xs","ms-font-mi",
+					"ms-fontSize-su","ms-fontSize-xxl","ms-fontSize-xl","ms-fontSize-l","ms-fontSize-mPlus",
+					"ms-fontSize-m","ms-fontSize-sPlus","ms-fontSize-s","ms-fontSize-xs","ms-fontSize-mi",
+					"ms-fontWeight-light","ms-fontWeight-semilight","ms-fontWeight-regular","ms-fontWeight-semibold",
+				]);
+				classes.push(...[
+					"ms-Grid","ms-Grid-row","ms-Grid-col",
+				]);
+				/*const sizes = [
+					"ms-sm","ms-md","ms-lg","ms-xl","ms-xxl","ms-xxxl"
+				];*/
+				console.log(classes.join('","'));
+				return classes.map((value:string) => {
+					return {key:value, text:value};
+				});
 			default:
 				return undefined;
 		}

@@ -1589,6 +1589,13 @@
                 font-size: 10px;
                 padding: 0 15px 0 3px;
                 border: 0;
+
+                span {
+                  text-overflow: ellipsis;
+                  position: absolute;
+                  width: calc(100% - 15px);
+                  overflow: hidden;
+                }
               }
               .ms-Dropdown-caretDownWrapper {
                 top: 1px;
@@ -1655,6 +1662,8 @@
   }
 }
 .treePropValue {
+  min-width: fit-content;
+
   :global {
     .ms-Dropdown-item {
       font-size: 10px;
