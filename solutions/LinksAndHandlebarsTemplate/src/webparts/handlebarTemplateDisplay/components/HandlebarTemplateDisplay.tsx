@@ -114,7 +114,7 @@ export default class HandlebarTemplateDisplay extends React.Component<IHandlebar
 
   private noTemplateRender(item): React.ReactElement<IHandlebarTemplateDisplayProps>{
     this.templateExport = this.buildExampleTemplate(item);
-    const temaplate = Handlebars.compile(this.templateExport);
+    const template = Handlebars.compile(this.templateExport);
     return (
       <div>
         <div style={{position: 'relative'}}>
@@ -124,7 +124,7 @@ export default class HandlebarTemplateDisplay extends React.Component<IHandlebar
             {strings.DownloadButtonText}
           </Button>
           </div>
-        <div style={{border: '1px solid #DEDEDE', marginBottom: '5px', padding: '7px'}} dangerouslySetInnerHTML={{__html: temaplate(item)}}></div>
+        <div style={{border: '1px solid #DEDEDE', marginBottom: '5px', padding: '7px'}} dangerouslySetInnerHTML={{__html: template(item)}}></div>
       </div>
     );
   }
