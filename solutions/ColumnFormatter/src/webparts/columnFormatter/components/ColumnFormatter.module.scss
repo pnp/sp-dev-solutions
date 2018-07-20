@@ -347,7 +347,11 @@
   }
   .SplitPaneInTab {
     height: calc(100% - 19px) !important;
-    @extend .SplitPane
+    @extend .SplitPane;
+    
+    &:global(.horizontal) {
+      min-height: inherit !important;
+    }
   }
 
 //***************
@@ -1560,6 +1564,26 @@
       .propertyTable {
         border-collapse: collapse;
         width: 100%;
+
+        .groupHeader {
+          border: none;
+          padding: 0;
+
+          span {
+            font-weight: bold;
+            color: $ms-color-neutralSecondary;
+            font-size: 10px;
+            background-color: $ms-color-neutralLight;
+            width: 100%;
+            display: inline-block;
+            padding: 0;
+            margin: 4px 0 0 0;
+            border-radius: 12px 12px 0 0;
+            text-align: center;
+            border-bottom: 1px solid;
+            border-bottom-color: $ms-color-neutralLight;
+          }
+        }
 
         .propertyLabel {
           font-size: 10px;

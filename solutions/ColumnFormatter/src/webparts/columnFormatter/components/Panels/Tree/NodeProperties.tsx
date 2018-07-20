@@ -42,8 +42,14 @@ export class NodeProperties extends React.Component<INodePropertiesProps, INodeP
 	}
 
 	public render(): React.ReactElement<INodePropertiesProps> {
-		const nodeProps = this.buildProps(this.props.node, this.props.isRoot, this.props.formatType).filter(this.filterPropsForView);
-		const nodePropsAttributes = this.buildPropsAttributes(this.props.node, this.props.isRoot, this.props.formatType).filter(this.filterPropsForView);
+		const propGroups = new Array<[string, Array<INodeProperty>]>();
+		propGroups.push(["", this.buildProps(this.props.node, this.props.isRoot, this.props.formatType).filter(this.filterPropsForView)]);
+		propGroups.push(["attributes", this.buildPropsAttributes(this.props.node, this.props.isRoot, this.props.formatType).filter(this.filterPropsForView)]);
+		propGroups.push(["customRowAction", this.buildPropsCustomRowAction(this.props.node, this.props.isRoot, this.props.formatType).filter(this.filterPropsForView)]);
+		let propCount:number = 0;
+		propGroups.forEach((group:[string,Array<INodeProperty>]) => {
+			propCount += group["1"].length;
+		});
 
 		return (
 			<div className={styles.panel + " " + styles.treeProps}>
@@ -68,32 +74,33 @@ export class NodeProperties extends React.Component<INodePropertiesProps, INodeP
 						</tr>
 					</tbody>
 				</table>
-				{(nodeProps.length > 0 || nodePropsAttributes.length > 0) &&
+				{(propCount > 0) &&
 					<table className={styles.propertyTable} cellPadding={0} cellSpacing={0}>
 						<tbody>
-							{nodeProps.map((nodeProp:INodeProperty) => {
-								return (
-									<tr key={nodeProp.name}>
-										<td className={styles.propertyLabel + (nodeProp.current ? " " + styles.current : "") + (nodeProp.relevant ? " " + styles.relevant : "")}>
-											<span>{nodeProp.name}</span>
-										</td>
-										<td className={styles.propertyValue}>
-											{this.renderPropEditor(nodeProp)}
-										</td>
-									</tr>
-								);
-							})}
-							{nodePropsAttributes.map((nodeProp:INodeProperty) => {
-								return (
-									<tr key={nodeProp.name}>
-										<td className={styles.propertyLabel + (nodeProp.current ? " " + styles.current : "") + (nodeProp.relevant ? " " + styles.relevant : "")  + (nodeProp.invalidValue ? " " + styles.invalid : "")}>
-											<span>{nodeProp.name}</span>
-										</td>
-										<td className={styles.propertyValue}>
-											{this.renderPropEditor(nodeProp)}
-										</td>
-									</tr>
-								);
+							{propGroups.map((group:[string,Array<INodeProperty>]) => {
+								const rows = new Array<JSX.Element>();
+								if(group["0"].length > 0 && group["1"].length > 0) {
+									rows.push((
+										<tr>
+											<td className={styles.groupHeader} colSpan={2}>
+												<span>{group["0"]}</span>
+											</td>
+										</tr>
+									));
+								}
+								rows.push(...group["1"].map((nodeProp:INodeProperty) => {
+									return (
+										<tr key={nodeProp.name}>
+											<td className={styles.propertyLabel + (nodeProp.current ? " " + styles.current : "") + (nodeProp.relevant ? " " + styles.relevant : "")  + (nodeProp.invalidValue ? " " + styles.invalid : "")}>
+												<span>{nodeProp.name}</span>
+											</td>
+											<td className={styles.propertyValue}>
+												{this.renderPropEditor(nodeProp)}
+											</td>
+										</tr>
+									);
+								}));
+								return rows;
 							})}
 						</tbody>
 					</table>
@@ -172,6 +179,23 @@ export class NodeProperties extends React.Component<INodePropertiesProps, INodeP
 
 		return props;
 	}
+
+	private buildPropsCustomRowAction(node:any, isRoot:boolean, formatType:formatterType): Array<INodeProperty> {
+		const props = new Array<INodeProperty>();
+
+		if(typeof node !== "undefined" && !(isRoot && formatType == formatterType.View)) {
+			const elmType: string = node.hasOwnProperty("elmType") ? node.elmType : this.defaultPropValue("elmType", formatType);
+
+			const addressPrefix = "customRowAction.";
+			//Column Formatting/RowFormatter element attributes
+			props.push(...[
+				this.buildProp("action",addressPrefix,node.attributes,elmType,formatType),
+				this.buildProp("actionParams",addressPrefix,node.attributes,elmType,formatType),
+			]);
+		}
+
+		return props;
+	}
 	
 	private buildProp(propertyName:string, addressPrefix:string, node:any, elmType:string, formatType:formatterType): INodeProperty {
 		const isCurrent:boolean = (typeof node !== "undefined" && node.hasOwnProperty(propertyName));
@@ -212,9 +236,10 @@ export class NodeProperties extends React.Component<INodePropertiesProps, INodeP
 		switch (propertyName) {
 			case "elmType":
 			case "target":
+			case "action":
 				return NodePropType.dropdown;
 			case "class":
-				//return NodePropType.combobox;
+			case "role":
 			case "rel":
 				return NodePropType.dropdownMS;
 			case "debugMode":
@@ -436,38 +461,32 @@ export class NodeProperties extends React.Component<INodePropertiesProps, INodeP
 	private getPropOptions(nodeProp:INodeProperty): Array<IDropdownOption> {
 		switch (nodeProp.name) {
 			case "elmType":
-				return [
-					{key: "div", text: "div"},
-					{key: "span", text: "span"},
-					{key: "a", text: "a"},
-					{key: "img", text: "img"},
-					{key: "button", text: "button"},
-					{key: "svg", text: "svg"},
-					{key: "path", text: "path"},
-				];
+				return this.stringsToOptions([
+					"div","span","a","img","button","svg","path",
+				]);
 			case "target":
-				return [
-					{key: "_blank", text: "_blank"},
-					{key: "_self", text: "_self"},
-					{key: "_parent", text: "_parent"},
-					{key: "_top", text: "_top"},
-				];
+				return this.stringsToOptions([
+					"_blank","_self","_parent","_top"
+				]);
 			case "rel":
-				return [
-					{key: "alternate", text: "alternate"},
-					{key: "author", text: "author"},
-					{key: "bookmark", text: "bookmark"},
-					{key: "external", text: "external"},
-					{key: "help", text: "help"},
-					{key: "license", text: "license"},
-					{key: "next", text: "next"},
-					{key: "nofollow", text: "nofollow"},
-					{key: "noreferrer", text: "noreferrer"},
-					{key: "noopener", text: "noopener"},
-					{key: "prev", text: "prev"},
-					{key: "search", text: "search"},
-					{key: "tag", text: "tag"},
-				];
+				return this.stringsToOptions([
+					"alternate","author","bookmark","external","help","license","next",
+					"nofollow","noreferrer","noopener","prev","search","tag",
+				]);
+			case "role":
+				return this.stringsToOptions([
+					"alert","alertdialog","application","article","button","cell","checkbox","columnheader","combobox",
+					"complementary","contentinfo","definition","dialog","directory","document","feed","figure","form",
+					"grid","gridcell","group","heading","img","link","list","listbox","listitem","log","main","marquee",
+					"math","menu","menubar","menuitem","menuitemcheckbox","menuitemradio","navigation","none","note",
+					"option","presentation","progressbar","radio","radiogroup","region","row","rowgroup","rowheader",
+					"scrollbar","search","searchbox","separator","slider","spinbutton","status","switch","tab","table",
+					"tablist","tabpanel","term","textbox","timer","toolbar","tooltip","tree","treegrid","treeitem",
+				]);
+			case "action":
+				return this.stringsToOptions([
+					"defaultClick","executeFlow","delete","share","editProps",
+				]);
 			case "class":
 				const classes = [
 					"sp-field-severity--good",
@@ -490,7 +509,7 @@ export class NodeProperties extends React.Component<INodePropertiesProps, INodeP
 					"yellow","yellowLight","orange","orangeLight","orangeLighter","redDark","red",
 					"magentaDark","magenta","magentaLight","purpleDark","purple","purpleLight",
 					"blueDark","blueMid","blue","blueLight","tealDark","teal","tealLight","greenDark","green","greenLight",
-				]
+				];
 				colors.forEach((value:string) => {
 					classes.push(...[
 						"ms-fontColor-"+value, "ms-fontColor-"+value+"--hover",
@@ -511,13 +530,17 @@ export class NodeProperties extends React.Component<INodePropertiesProps, INodeP
 				/*const sizes = [
 					"ms-sm","ms-md","ms-lg","ms-xl","ms-xxl","ms-xxxl"
 				];*/
-				console.log(classes.join('","'));
-				return classes.map((value:string) => {
-					return {key:value, text:value};
-				});
+				//console.log(classes.join('","'));
+				return this.stringsToOptions(classes);
 			default:
 				return undefined;
 		}
+	}
+
+	private stringsToOptions(values: Array<string>):  Array<IDropdownOption> {
+		return values.map((value:string) => {
+			return {key:value, text:value};
+		});
 	}
 
 	@autobind
