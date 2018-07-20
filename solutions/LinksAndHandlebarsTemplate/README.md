@@ -51,7 +51,7 @@ A handlebars template web part that enables highly customized UI code to be appl
 ![Hub Template](./assets/hub_template.png "Hub Template")
 
 ## Used SharePoint Framework Version 
-![drop](https://img.shields.io/badge/version-1.1-green.svg)
+![drop](https://img.shields.io/badge/version-1.4.1-green.svg)
 
 ## Applies to
 
@@ -68,6 +68,7 @@ Note that you will need to download and host a CAMLJS javascript library (https:
 Version  | Date               | Comments
 -------- | ------------------ | --------
 1.0      | September 27, 2017 | Initial release
+1.1      | April 12, 2018 | Updated to use CDN and to use SPFx v1.4.1
 
 ## Disclaimer
 **THIS CODE IS PROVIDED *AS IS* WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING ANY IMPLIED WARRANTIES OF FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.**

@@ -1,0 +1,8 @@
+{
+  "@microsoft/generator-sharepoint": {
+    "version": "1.4.1",
+    "libraryName": "site-designs-studio",
+    "libraryId": "726ee504-f145-43a2-99ea-b378bb4ae9ba",
+    "environment": "spo"
+  }
+}

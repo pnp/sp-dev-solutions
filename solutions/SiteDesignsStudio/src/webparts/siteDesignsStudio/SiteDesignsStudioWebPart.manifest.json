@@ -1,0 +1,24 @@
+{
+  "$schema": "https://dev.office.com/json-schemas/spfx/client-side-web-part-manifest.schema.json",
+  "id": "6bea7c98-ccdd-4268-b124-a19d2a172a21",
+  "alias": "SiteDesignsStudioWebPart",
+  "componentType": "WebPart",
+
+  "version": "*",
+  "manifestVersion": 2,
+
+  "requiresCustomScript": false,
+
+  "preconfiguredEntries": [{
+    "groupId": "5c03119e-3074-46fd-976b-c60198311f70", // Other
+    "group": { "default": "Other" },
+    "title": { "default": "Site Designs Studio" },
+    "description": { "default": "A WebPart allowing to build graphically and easily Site Designs scripts for any user" },
+    "officeFabricIconFontName": "Design",
+    "properties": {
+      "siteDesignSchema": null,
+      "useWizardActionGenerators": true,
+      "useWizardPropertyEditors": true
+    }
+  }]
+}

@@ -1,0 +1,835 @@
+{
+	"$schema": "http://json-schema.org/draft-06/schema#",
+	"title": "JSON Schema for Site Scripts",
+	"description": "A SharePoint Site Script definition",
+	"definitions": {
+		"SPListSubactions": {
+			"setTitle": {
+				"type": "object",
+				"title": "Set the title",
+				"description": "Set the title of the list",
+				"properties": {
+					"verb": {
+						"enum": [ "setTitle" ]
+					},
+					"title": {
+						"title": "Title",
+						"description": "Title of the list",
+						"type": "string"
+					}
+				},
+				"required": [ "verb", "title" ],
+				"additionalProperties": false
+			},
+			"setDescription": {
+				"type": "object",
+				"title": "Set the description",
+				"description": "Set the description of the list",
+				"properties": {
+					"verb": {
+						"enum": [ "setDescription" ]
+					},
+					"description": {
+						"title": "Description",
+						"description": "Description of the list",
+						"type": "string"
+					}
+				},
+				"required": [ "verb", "description" ],
+				"additionalProperties": false
+			},
+			"addSPField": {
+				"type": "object",
+				"title": "Add a field",
+				"description": "Add a field to the list",
+				"properties": {
+					"verb": {
+						"enum": [ "addSPField" ]
+					},
+					"fieldType": {
+						"title": "Field Type",
+						"description": "The type of the field",
+						"enum": [ "Text", "Note", "Number", "Boolean", "User", "DateTime" ]
+					},
+					"displayName": {
+						"title": "Display Name",
+						"description": "The displayed name of the field",
+						"type": "string"
+					},
+					"internalName": {
+						"title": "Internal Name",
+						"description": "(Optional) The internal name of the field",
+						"type": "string"
+					},
+					"isRequired": {
+						"title": "Is required",
+						"description": "Is the field required",
+						"type": "boolean"
+					},
+					"addToDefaultView": {
+						"title": "Add to default view",
+						"description": "The field is added to default view",
+						"type": "boolean"
+					},
+					"enforceUnique": {
+						"title": "Enforce Unique value",
+						"description": "(Optional) Specifies wheter all values for this field must be unique",
+						"type": "boolean"
+					}
+				},
+				"required": [ "verb", "fieldType", "displayName" ],
+				"additionalProperties": false
+			},
+			"deleteSPField": {
+				"type": "object",
+				"title": "Delete a field",
+				"description": "Delete a field from the list",
+				"properties": {
+					"verb": {
+						"enum": [ "deleteSPField" ]
+					},
+					"displayName": {
+						"title": "Display Name",
+						"description": "The displayed name of the field",
+						"type": "string"
+					}
+				},
+				"required": [ "verb", "displayName" ],
+				"additionalProperties": false
+			},
+			"addSPFieldXml": {
+				"type": "object",
+				"title": "Add a field as XML",
+				"description": "Add a field to the list using its XML schema",
+				"properties": {
+					"verb": {
+						"enum": [ "addSPFieldXml" ]
+					},
+					"schemaXml": {
+						"title": "Field XML Schema",
+						"description": "The XML Schema of the field to add",
+						"type": "string"
+					},
+					"addToDefaultView": {
+						"title": "Add to default view",
+						"description": "The field is added to default view",
+						"type": "boolean"
+					}
+				},
+				"required": [ "verb", "schemaXml" ],
+				"additionalProperties": false
+			},
+			"addSPView": {
+				"type": "object",
+				"title": "Add a view",
+				"description": "Defines and adds a view to the list",
+				"properties": {
+					"verb": {
+						"enum": [ "addSPView" ]
+					},
+					"name": {
+						"title": "View's name",
+						"description": "The name of the view",
+						"type": "string"
+					},
+					"viewFields": {
+						"title": "View fields",
+						"description": "The fields included in the view",
+						"type": "array",
+						"items": {
+							"type": "string"
+						}
+					},
+					"query": {
+						"title": "View query",
+						"description": "A CAML query string that contains the where clause for the view's query",
+						"type": "string"
+					},
+					"rowLimit": {
+						"title": "Row limit",
+						"description": "The row limit of the view",
+						"type": "number"
+					},
+					"isPaged": {
+						"title": "Is Paged",
+						"description": "Specifies whether the view is paged",
+						"type": "boolean"
+					},
+					"makeDefault": {
+						"title": "Make Default",
+						"description": "If true, the view will be made the default for the list; otherwise, false",
+						"type": "boolean"
+					},
+					"scope": {
+						"title": "View's scope",
+						"description": "The scope of the view",
+						"enum": [ "Default", "Recursive", "RecursiveAll", "FilesOnly" ]
+					}
+				},
+				"required": [ "verb", "name", "viewFields" ]
+			},
+			"removeSPView": {
+				"type": "object",
+				"title": "Remove a view",
+				"description": "Remove a view from the list",
+				"properties": {
+					"verb": {
+						"enum": [ "removeSPView" ]
+					},
+					"name": {
+						"title": "View's name",
+						"description": "The name of the view to remove",
+						"type": "string"
+					}
+				},
+				"required": [ "verb", "name" ],
+				"additionalProperties": false
+			},
+			"addContentType": {
+				"type": "object",
+				"title": "Add a Content Type",
+				"description": "Add an existing Site Content Type to the list",
+				"properties": {
+					"verb": {
+						"enum": [ "addContentType" ]
+					},
+					"name": {
+						"title": "Content Type's name",
+						"description": "The name of an existing Site Content Type",
+						"type": "string"
+					}
+				},
+				"required": [ "verb", "name" ],
+				"additionalProperties": false
+			},
+			"removeContentType": {
+				"type": "object",
+				"title": "Remove a Content Type",
+				"description": "Remove a Content Type from the list",
+				"properties": {
+					"verb": {
+						"enum": [ "removeContentType" ]
+					},
+					"name": {
+						"title": "Content Type's name",
+						"description": "The name of the Content Type",
+						"type": "string"
+					}
+				},
+				"required": [ "verb", "name" ],
+				"additionalProperties": false
+			},
+			"setSPFieldCustomFormatter": {
+				"type": "object",
+				"title": "Set a field custom formatter",
+				"description": "Set a custom formatter to the specified field",
+				"properties": {
+					"verb": {
+						"enum": [ "setSPFieldCustomFormatter" ]
+					},
+					"fieldDisplayName": {
+						"title": "Field's display name",
+						"description": "The display name of the field to apply the formatting on",
+						"type": "string"
+					},
+					"formatterJSON": {
+						"title": "The formatter JSON",
+						"description": "The formatter rules expressed in JSON",
+						"type": "object"
+					}
+				},
+				"required": [ "verb", "fieldDisplayName", "formatterJSON" ],
+				"additionalProperties": false
+			},
+			"associateFieldCustomizer": {
+				"type": "object",
+				"title": "Associate field customizer",
+				"description": "Registers field extension for a list field",
+				"properties": {
+					"verb": {
+						"enum": [ "associateFieldCustomizer" ]
+					},
+					"internalName": {
+						"title": "Field's internal name",
+						"description": "The name of the field to operate on",
+						"type": "string"
+					},
+					"clientSideComponentId": {
+						"title": "Client Side Component Id",
+						"description": "The identifier (GUID) of the extension in the app catalog. This property value can be found in the manifest.json file or in the elements.xml file",
+						"type": "string"
+					},
+					"clientSideComponentProperties": {
+						"title": "Client Side Component Properties",
+						"description": "(Optional) Can be used to provide properties for the field customizer extension instance, is specified as stringified JSON",
+						"type": "string"
+					}
+				},
+				"required": [ "verb", "internalName", "clientSideComponentId" ],
+				"additionalProperties": false
+			},
+			"associateListViewCommandSet": {
+				"type": "object",
+				"title": "Associate List View Command Set",
+				"description": "Registers field extension for a list field",
+				"properties": {
+					"verb": {
+						"enum": [ "associateListViewCommandSet" ]
+					},
+					"title": {
+						"title": "Title",
+						"description": "The title of the extension",
+						"type": "string"
+					},
+					"location": {
+						"title": "Location",
+						"description": "A required parameter to specify where the command is displayed. Options are: ContextMenu or CommandBar",
+						"type": "string",
+						"enum": [ "ContextMenu", "CommandBar" ]
+					},
+					"clientSideComponentId": {
+						"title": "Client Side Component Id",
+						"description": "The identifier (GUID) of the extension in the app catalog. This property value can be found in the manifest.json file or in the elements.xml file",
+						"type": "string"
+					},
+					"clientSideComponentProperties": {
+						"title": "Client Side Component Properties",
+						"description": "(Optional) Can be used to provide properties for the List View Command Set extension instance, is specified as stringified JSON",
+						"type": "string"
+					}
+				},
+				"required": [ "verb", "internalName", "location", "clientSideComponentId" ],
+				"additionalProperties": false
+			}
+		},
+		"SPContentTypeSubactions": {
+			"addSiteColumn": {
+				"type": "object",
+				"title": "Add a site column",
+				"description": "Add a site column to the Content Type",
+				"properties": {
+					"verb": {
+						"enum": [ "addSiteColumn" ]
+					},
+					"internalName": {
+						"title": "Internal Name",
+						"description": "The internal name of the field to add",
+						"type": "string"
+					}
+				},
+				"required": [ "verb", "internalName" ],
+				"additionalProperties": false
+			},
+			"removeSiteColumn": {
+				"type": "object",
+				"title": "Remove a site column",
+				"description": "Remove a column from the Content Type",
+				"properties": {
+					"verb": {
+						"enum": [ "removeSiteColumn" ]
+					},
+					"internalName": {
+						"title": "Internal Name",
+						"description": "The internal name of the field to remove",
+						"type": "string"
+					}
+				},
+				"required": [ "verb", "internalName" ],
+				"additionalProperties": false
+			}
+		},
+		"createSiteColumn": {
+			"title": "Create Site Column",
+			"description": "Create a new Site Column",
+			"type": "object",
+			"properties": {
+				"verb": {
+					"enum": [ "createSiteColumn" ]
+				},
+				"fieldType": {
+					"title": "Field Type",
+					"description": "The type of the field",
+					"enum": [ "Text", "Note", "Number", "Boolean", "User", "DateTime" ]
+				},
+				"internalName": {
+					"title": "Internal Name",
+					"description": "The internal name of the field",
+					"type": "string"
+				},
+				"displayName": {
+					"title": "Display Name",
+					"description": "The display name of the field",
+					"type": "string"
+				},
+				"isRequired": {
+					"title": "Is Required",
+					"description": "Is this field required to contain information?",
+					"type": "boolean"
+				},
+				"group": {
+					"title": "Group",
+					"description": "The group of the field",
+					"type": "string"
+				},
+				"enforceUnique": {
+					"title": "Enforce Unique value",
+					"description": "(Optional) Specifies wheter all values for this field must be unique",
+					"type": "boolean"
+				}
+			},
+			"required": [ "verb", "internalName", "displayName" ],
+			"additionalProperties": false
+		},
+		"createContentType": {
+			"title": "Create Site Content Type",
+			"description": "Create a new Site Content Type",
+			"type": "object",
+			"properties": {
+				"verb": {
+					"enum": [ "createContentType" ]
+				},
+				"name": {
+					"title": "Name",
+					"description": "The name of the Content Type",
+					"type": "string"
+				},
+				"description": {
+					"title": "Description",
+					"description": "The name of the Content Type",
+					"type": "string"
+				},
+				"parentName": {
+					"title": "Parent's Name",
+					"description": "The name of the parent Content Type",
+					"type": "string"
+				},
+				"parentId": {
+					"title": "Parent's ID",
+					"description": "The ID of the parent Content Type",
+					"type": "string"
+				},
+				"id": {
+					"title": "Id",
+					"description": "The Id of the Content Type",
+					"type": "string"
+				},
+				"hidden": {
+					"title": "Hidden",
+					"description": "Specifies whether the Content Type is hidden or not",
+					"type": "boolean"
+				},
+				"subactions": {
+					"title": "Sub actions",
+					"description": "Define the sub actions of the Create Content Type action",
+					"type": "array",
+					"items": {
+						"anyOf": [
+							{
+								"type": "object",
+								"$ref": "#/definitions/SPContentTypeSubactions/addSiteColumn"
+							},
+							{
+								"type": "object",
+								"$ref": "#/definitions/SPContentTypeSubactions/removeSiteColumn"
+							}
+						]
+					}
+				}
+			},
+			"required": [ "verb", "name" ]
+		},
+		"createSPList": {
+			"type": "object",
+			"title": "Create a List",
+			"description": "Create a SharePoint List script",
+			"properties": {
+				"verb": {
+					"enum": [ "createSPList" ]
+				},
+				"listName": {
+					"title": "List's name",
+					"description": "The name of the List",
+					"type": "string"
+				},
+				"templateType": {
+					"title": "List's Template Type",
+					"description": "The template type of the list",
+					"type": "number"
+				},
+				"subactions": {
+					"title": "Sub actions",
+					"description": "Define the sub actions of the Create List action",
+					"type": "array",
+					"items": {
+						"anyOf": [
+							{
+								"type": "object",
+								"$ref": "#/definitions/SPListSubactions/setTitle"
+							},
+							{
+								"type": "object",
+								"$ref": "#/definitions/SPListSubactions/setDescription"
+							},
+							{
+								"type": "object",
+								"$ref": "#/definitions/SPListSubactions/addSPField"
+							},
+							{
+								"type": "object",
+								"$ref": "#/definitions/SPListSubactions/deleteSPField"
+							},
+							{
+								"type": "object",
+								"$ref": "#/definitions/SPListSubactions/addSPFieldXml"
+							},
+							{
+								"type": "object",
+								"$ref": "#/definitions/SPListSubactions/addSPView"
+							},
+							{
+								"type": "object",
+								"$ref": "#/definitions/SPListSubactions/removeSPView"
+							},
+							{
+								"type": "object",
+								"$ref": "#/definitions/SPListSubactions/addContentType"
+							},
+							{
+								"type": "object",
+								"$ref": "#/definitions/SPListSubactions/removeContentType"
+							},
+							{
+								"type": "object",
+								"$ref": "#/definitions/SPListSubactions/setSPFieldCustomFormatter"
+							},
+							{
+								"type": "object",
+								"$ref": "#/definitions/SPListSubactions/associateFieldCustomizer"
+							},
+							{
+								"type": "object",
+								"$ref": "#/definitions/SPListSubactions/associateListViewCommandSet"
+							}
+						]
+					}
+				}
+			},
+			"required": [ "verb", "listName", "templateType" ],
+			"additionalProperties": false
+		},
+		"addNavLink": {
+			"title": "Add a navigation link",
+			"description": "Add a navigation link to the site",
+			"type": "object",
+			"properties": {
+				"verb": {
+					"enum": [ "addNavLink" ]
+				},
+				"url": {
+					"title": "Link's URL",
+					"description": "The URL of the navigation Link",
+					"type": "string"
+				},
+				"displayName": {
+					"title": "Link's text",
+					"description": "The text of the navigation Link",
+					"type": "string"
+				},
+				"isWebRelative": {
+					"title": "Is Web Relative",
+					"description": "Is the URL of the link web-relative ?",
+					"type": "boolean"
+				}
+			},
+			"required": [ "verb", "url", "displayName", "isWebRelative" ]
+		},
+		"applyTheme": {
+			"title": "Apply a theme",
+			"description": "Apply a custom theme to the site",
+			"type": "object",
+			"properties": {
+				"verb": {
+					"enum": [ "applyTheme" ]
+				},
+				"themeName": {
+					"title": "Theme's name",
+					"description": "The name of the custom theme to apply",
+					"type": "string"
+				}
+			},
+			"required": [ "verb", "themeName" ]
+		},
+		"setSiteLogo": {
+			"type": "object",
+			"title": "Set the Site Logo",
+			"description": "Set the logo of the site (Only works on Communication Sites)",
+			"properties": {
+				"verb": {
+					"enum": [ "setSiteLogo" ]
+				},
+				"url": {
+					"title": "Site logo's URL",
+					"description": "The URL of the Site logo",
+					"type": "string"
+				}
+			},
+			"required": [ "verb", "url" ]
+		},
+		"joinHubSite": {
+			"type": "object",
+			"title": "Join a Hub Site",
+			"description": "Join the current site to a specified Hub Site",
+			"properties": {
+				"verb": {
+					"enum": [ "joinHubSite" ]
+				},
+				"hubSiteId": {
+					"title": "Hub Site",
+					"description": "The identifier of the Hub Site",
+					"type": "string"
+				},
+				"name": {
+					"title": "Name",
+					"description": "An optional name for the Hub Site",
+					"type": "string"
+				}
+			},
+			"required": [ "verb", "hubSiteId" ]
+		},
+		"installSPFXSolution": {
+			"type": "object",
+			"title": "Install a SPFx Solution or Addin",
+			"description": "Install a SharePoint Framework solution (or add-in) to the site",
+			"properties": {
+				"verb": {
+					"enum": [ "installSPFXSolution" ]
+				},
+				"id": {
+					"title": "Id",
+					"description": "The identifier of the solution",
+					"type": "string"
+				}
+			},
+			"required": [ "verb", "id" ]
+		},
+		"associateExtension": {
+			"type": "object",
+			"title": "Associate Extension",
+			"description": "Use the associateExtension action to register a deployed SharePoint Framework extension from the tenant app catalog",
+			"properties": {
+				"verb": {
+					"enum": [ "associateExtension" ]
+				},
+				"title": {
+					"title": "Title",
+					"description": "The title of the extension in the app catalog",
+					"type": "string"
+				},
+				"location": {
+					"title": "Location",
+					"description": "Used to specify the extension type. If it is used to create commands, then where the command would be displayed; otherwise this should be set to ClientSideExtension.ApplicationCustomizer",
+					"type": "string",
+					"enum": [ "ContextMenu", "CommandBar", "ClientSideExtension.ApplicationCustomizer" ]
+				},
+				"clientSideComponentId": {
+					"title": "Client Side Component Id",
+					"description": "The identifier (GUID) of the extension in the app catalog. This property value can be found in the manifest.json file or in the elements.xml file",
+					"type": "string"
+				},
+				"clientSideComponentProperties": {
+					"title": "Client Side Component Properties",
+					"description": "(Optional) Can be used to provide properties for the extension instance, is specified as stringified JSON",
+					"type": "string"
+				},
+				"registrationId": {
+					"title": "Registration Id",
+					"description": "(Optional) Indicates the type of the list the extension is associated to (if it is a list extension)",
+					"type": "string"
+				},
+				"registrationType": {
+					"title": "Registration Type",
+					"description": "(Optional) Should be specified if the extension is associated with a list",
+					"type": "string"
+				},
+				"scope": {
+					"title": "Scope",
+					"description": "Indicates whether the extension is associated with a Web or a Site",
+					"type": "string",
+					"enum": [ "Web", "Site" ]
+				}
+			},
+			"required": [ "verb", "title", "location", "clientSideComponentId" ],
+			"additionalProperties": false
+		},
+		"triggerFlow": {
+			"title": "Trigger a Flow",
+			"description": "Trigger the specified Microsoft Flow with specified parameters",
+			"type": "object",
+			"properties": {
+				"verb": {
+					"enum": [ "triggerFlow" ]
+				},
+				"url": {
+					"title": "Flow's URL",
+					"description": "The URL of the Flow to trigger",
+					"type": "string"
+				},
+				"name": {
+					"title": "Flow's name",
+					"description": "The name of the Flow to trigger",
+					"type": "string"
+				},
+				"parameters": {
+					"title": "Flow's parameters",
+					"description": "The set of parameters of the Flow",
+					"type": "object"
+				}
+			},
+			"required": [ "verb", "url", "name" ]
+		},
+		"setRegionalSettings": {
+			"type": "object",
+			"title": "Set regional settings",
+			"description": "Set the regional settings of the site",
+			"properties": {
+				"verb": {
+					"enum": [ "setRegionalSettings" ]
+				},
+				"timeZone": {
+					"title": "Time Zone",
+					"description": "Define the Time Zone",
+					"type": "number"
+				},
+				"locale": {
+					"title": "Locale",
+					"description": "Define the locale code",
+					"type": "number"
+				},
+				"sortOrder": {
+					"title": "Sort Order",
+					"description": "Define the sort order",
+					"type": "number"
+				},
+				"hourFormat": {
+					"title": "Hour Format",
+					"description": "Define the hour format",
+					"type": "string"
+				}
+			},
+			"required": [ "verb", "timeZone", "locale", "sortOrder", "hourFormat" ]
+		},
+		"addPrincipalToGroup": {
+			"type": "object",
+			"title": "Add Principal to Group",
+			"description": "Use the addPrincipalToGroup action to manage addition of users and groups to select default SharePoint groups. This action can be used for licensed users, security groups, and Office 365 Groups",
+			"properties": {
+				"verb": {
+					"enum": [ "addPrincipalToGroup" ]
+				},
+				"principal": {
+					"title": "Principal",
+					"description": "A required parameter to specify the name of the principal (user or group) to add to the SharePoint group",
+					"type": "string"
+				},
+				"group": {
+					"title": "Group",
+					"description": "A required parameter to specify the SharePoint group to add the principal to",
+					"type": "string"
+				}
+			},
+			"required": [ "verb", "principal", "group" ]
+		},
+		"setSiteExternalSharingCapability": {
+			"type": "object",
+			"title": "Set site external sharing capability",
+			"description": "Set the external sharing capability of the site",
+			"properties": {
+				"verb": {
+					"enum": [ "setSiteExternalSharingCapability" ]
+				},
+				"capability": {
+					"title": "External sharing capability",
+					"description": "The defined external sharing capability",
+					"enum": [
+						"Disabled",
+						"ExistingExternalUserSharingOnly",
+						"ExternalUserSharingOnly",
+						"ExternalUserAndGuestSharing"
+					]
+				}
+			},
+			"required": [ "verb", "capability" ]
+		}
+	},
+	"type": "object",
+	"properties": {
+		"actions": {
+			"type": "array",
+			"description": "The definition of the script actions",
+			"items": {
+				"anyOf": [
+					{
+						"type": "object",
+						"$ref": "#/definitions/createSPList"
+					},
+					{
+						"type": "object",
+						"$ref": "#/definitions/createSiteColumn"
+					},
+					{
+						"type": "object",
+						"$ref": "#/definitions/createContentType"
+					},
+					{
+						"type": "object",
+						"$ref": "#/definitions/addNavLink"
+					},
+					{
+						"type": "object",
+						"$ref": "#/definitions/applyTheme"
+					},
+					{
+						"type": "object",
+						"$ref": "#/definitions/setSiteLogo"
+					},
+					{
+						"type": "object",
+						"$ref": "#/definitions/joinHubSite"
+					},
+					{
+						"type": "object",
+						"$ref": "#/definitions/installSPFXSolution"
+					},
+					{
+						"type": "object",
+						"$ref": "#/definitions/associateExtension"
+					},
+					{
+						"type": "object",
+						"$ref": "#/definitions/triggerFlow"
+					},
+					{
+						"type": "object",
+						"$ref": "#/definitions/setRegionalSettings"
+					},
+					{
+						"type": "object",
+						"$ref": "#/definitions/addPrincipalToGroup"
+					},
+					{
+						"type": "object",
+						"$ref": "#/definitions/setSiteExternalSharingCapability"
+					}
+				]
+			}
+		},
+		"bindata": {
+			"type": "object",
+			"additionalProperties": false
+		},
+		"version": {
+			"type": "number"
+		}
+	},
+	"required": [ "actions", "bindata", "version" ]
+}

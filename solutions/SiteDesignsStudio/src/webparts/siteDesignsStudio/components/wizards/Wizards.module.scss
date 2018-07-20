@@ -1,0 +1,16 @@
+@import '~@microsoft/sp-office-ui-fabric-core/dist/sass/SPFabricCore.scss';
+
+.wizard {
+	.createListWizard {
+		.fieldsList {
+			height: 40vh;
+      overflow-y: auto;
+      border-right: 1px solid $ms-color-themeDark;
+		}
+
+		.contentTypesList {
+			height: 25vh;
+			overflow-y: auto;
+		}
+	}
+}

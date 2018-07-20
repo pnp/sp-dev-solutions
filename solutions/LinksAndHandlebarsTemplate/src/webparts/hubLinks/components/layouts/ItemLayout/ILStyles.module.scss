@@ -133,3 +133,19 @@
         }
     }
 }
+
+:global .CanvasSection-sm12.CanvasSection-xl4 {
+    & :local .hubLinks {
+        & :local li {
+            width: 100%;
+        }
+    }
+}
+ 
+@media (max-width:767px) {
+    .hubLinks {
+        & li {
+            width: 100%;
+        }
+    }
+}
