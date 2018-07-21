@@ -131,26 +131,54 @@ export class NodeProperties extends React.Component<INodePropertiesProps, INodeP
 
 			const addressPrefix = "";
 
+			const knownProps = [];
+
 			//ViewFormatting root properties
 			if(isRoot && formatType == formatterType.View) {
-				return [
-					
+				const rootProps = [
+					"$schema","hideSelection","hideListHeader","additionalRowClass",
 				];
+				rootProps.forEach((value:string) => {
+					props.push(this.buildProp(value,addressPrefix,node,elmType,formatType));
+				});
+				knownProps.push(...rootProps);
 			}
 			
 			//ColumnFormatting additional Root Properties
-			if(isRoot) {
-				props.push(...[
-					this.buildProp("$schema",addressPrefix,node,elmType,formatType),
-					this.buildProp("debugMode",addressPrefix,node,elmType,formatType)
-				]);
+			if(isRoot && formatType == formatterType.Column) {
+				const rootProps = [
+					"$schema","debugMode",
+				];
+				rootProps.forEach((value:string) => {
+					props.push(this.buildProp(value,addressPrefix,node,elmType,formatType));
+				});
+				knownProps.push(...rootProps);
 			}
 
 			//Column Formatting/RowFormatter properties
-			props.push(...[
-				this.buildProp("elmType",addressPrefix,node,elmType,formatType),
-				this.buildProp("txtContent",addressPrefix,node,elmType,formatType)
-			]);
+			if(!(isRoot && formatType == formatterType.View)) {
+				const elmProps = [
+					"elmType","txtContent",
+				];
+				elmProps.forEach((value:string) => {
+					props.push(this.buildProp(value,addressPrefix,node,elmType,formatType));
+				});
+				knownProps.push(...elmProps);
+			}
+
+			//These are parent containers
+			const ignoreProps = [
+				"attributes","style","rowFormatter","customRowAction","children",
+			];
+			knownProps.push(...ignoreProps);
+
+			//Process any leftover props
+			for(const key in node) {
+				if(knownProps.indexOf(key) == -1) {
+					props.push(this.buildProp(key,addressPrefix,node,elmType,formatType));
+					knownProps.push(key);
+				}
+			}
 		}
 
 		return props;
@@ -163,18 +191,20 @@ export class NodeProperties extends React.Component<INodePropertiesProps, INodeP
 			const elmType: string = node.hasOwnProperty("elmType") ? node.elmType : this.defaultPropValue("elmType", formatType);
 
 			const addressPrefix = "attributes.";
+			const knownAttributes = [
+				"class","iconName","href","target","src","d","title","role","rel",
+			];
 			//Column Formatting/RowFormatter element attributes
-			props.push(...[
-				this.buildProp("class",addressPrefix,node.attributes,elmType,formatType),
-				this.buildProp("iconName",addressPrefix,node.attributes,elmType,formatType),
-				this.buildProp("href",addressPrefix,node.attributes,elmType,formatType),
-				this.buildProp("target",addressPrefix,node.attributes,elmType,formatType),
-				this.buildProp("src",addressPrefix,node.attributes,elmType,formatType),
-				this.buildProp("d",addressPrefix,node.attributes,elmType,formatType),
-				this.buildProp("title",addressPrefix,node.attributes,elmType,formatType),
-				this.buildProp("role",addressPrefix,node.attributes,elmType,formatType),
-				this.buildProp("rel",addressPrefix,node.attributes,elmType,formatType),
-			]);
+			knownAttributes.forEach((value:string) => {
+				props.push(this.buildProp(value,addressPrefix,node.attributes,elmType,formatType));
+			});
+			//Process any leftover props
+			for(const key in node.attributes) {
+				if(knownAttributes.indexOf(key) == -1) {
+					props.push(this.buildProp(key,addressPrefix,node.attributes,elmType,formatType,new RegExp('^aria\\-[a-z]+$')));
+					knownAttributes.push(key);
+				}
+			}
 		}
 
 		return props;
@@ -187,17 +217,27 @@ export class NodeProperties extends React.Component<INodePropertiesProps, INodeP
 			const elmType: string = node.hasOwnProperty("elmType") ? node.elmType : this.defaultPropValue("elmType", formatType);
 
 			const addressPrefix = "customRowAction.";
-			//Column Formatting/RowFormatter element attributes
-			props.push(...[
-				this.buildProp("action",addressPrefix,node.attributes,elmType,formatType),
-				this.buildProp("actionParams",addressPrefix,node.attributes,elmType,formatType),
-			]);
+			const knownProps = [
+				"action","actionParams",
+			];
+
+			knownProps.forEach((value:string) => {
+				props.push(this.buildProp(value,addressPrefix,node.customRowAction,elmType,formatType));
+			});
+			//Process any leftover props
+			for(const key in node.customRowAction) {
+				if(knownProps.indexOf(key) == -1) {
+					props.push(this.buildProp(key,addressPrefix,node.customRowAction,elmType,formatType));
+					knownProps.push(key);
+				}
+			}
+
 		}
 
 		return props;
 	}
 	
-	private buildProp(propertyName:string, addressPrefix:string, node:any, elmType:string, formatType:formatterType): INodeProperty {
+	private buildProp(propertyName:string, addressPrefix:string, node:any, elmType:string, formatType:formatterType, relevantPattern?:RegExp): INodeProperty {
 		const isCurrent:boolean = (typeof node !== "undefined" && node.hasOwnProperty(propertyName));
 		const doesSupportExpression:boolean = this.supportsExpression(propertyName, formatType);
 		let value:any;
@@ -226,7 +266,7 @@ export class NodeProperties extends React.Component<INodePropertiesProps, INodeP
 			value: value,
 			invalidValue: isInvalidValue,
 			current: isCurrent,
-			relevant:this.isRelevantProp(propertyName, elmType, formatType),
+			relevant:this.isRelevantProp(propertyName, elmType, formatType, relevantPattern),
 			supportsExpression: doesSupportExpression,
 			valueIsExpression: isExpression,
 		};
@@ -241,8 +281,11 @@ export class NodeProperties extends React.Component<INodePropertiesProps, INodeP
 			case "class":
 			case "role":
 			case "rel":
+			case "additionalRowClass":
 				return NodePropType.dropdownMS;
 			case "debugMode":
+			case "hideSelection":
+			case "hideListHeader":
 				return NodePropType.toggle;
 			default:
 				return NodePropType.text;
@@ -254,6 +297,8 @@ export class NodeProperties extends React.Component<INodePropertiesProps, INodeP
 			case "$schema":
 				return formatType == formatterType.Column ? ColumnFormattingSchemaURI : ViewFormattingSchemaURI;
 			case "debugMode":
+			case "hideSelection":
+			case "hideListHeader":
 				return false;
 			case "elmType":
 				return "div";
@@ -264,13 +309,16 @@ export class NodeProperties extends React.Component<INodePropertiesProps, INodeP
 		}
 	}
 
-	private isRelevantProp(propertyName:string, elmType: string, formatType:formatterType): boolean {
+	private isRelevantProp(propertyName:string, elmType: string, formatType:formatterType, relevantPattern?:RegExp): boolean {
 		switch (propertyName) {
 			case "$schema":
 			case "debugMode":
 			case "elmType":
 			case "class":
 			case "title":
+			case "hideSelection":
+			case "hideListHeader":
+			case "additionalRowClass":
 				return true;
 			case "txtContent":
 				switch(elmType) {
@@ -303,6 +351,12 @@ export class NodeProperties extends React.Component<INodePropertiesProps, INodeP
 			case "actionParams":
 				return elmType == "button";
 		}
+		//Generally for aria props, but could be extended in the future
+		if(typeof relevantPattern !== "undefined") {
+			if(relevantPattern.test(propertyName)) {
+				return true;
+			}
+		}
 		return false;
 	}
 
@@ -312,6 +366,8 @@ export class NodeProperties extends React.Component<INodePropertiesProps, INodeP
 			case "debugMode":
 			case "elmType":
 			case "action":
+			case "hideSelection":
+			case "hideListHeader":
 				return false;
 			default:
 				return true;
@@ -488,6 +544,7 @@ export class NodeProperties extends React.Component<INodePropertiesProps, INodeP
 					"defaultClick","executeFlow","delete","share","editProps",
 				]);
 			case "class":
+			case "additionalRowClass":
 				const classes = [
 					"sp-field-severity--good",
 					"sp-field-severity--low",
