@@ -1599,6 +1599,13 @@
             color: $ms-color-redDark;
             font-style: italic;
           }
+          & .buttonBox {
+            width: 10px;
+            visibility: hidden;
+          }
+          &:hover .buttonBox {
+            visibility: visible;
+          }
         }
 
         .propertyValue {
@@ -1653,22 +1660,22 @@
               margin: 0 4px;
             }
           }
-
-          .propAndButtonBox {
-            display: flex;
-            .mainBox {
-              flex-grow: 1;
-            }
-            .buttonBox {
-              width: 14px;
-            }
-          }
         }
 
         tbody td {
           border: 1px solid;
           border-color: $ms-color-neutralLight;
           padding: 2px;
+        }
+
+        .propAndButtonBox {
+          display: flex;
+          .mainBox {
+            flex-grow: 1;
+          }
+          .buttonBox {
+            width: 14px;
+          }
         }
 
         :global {

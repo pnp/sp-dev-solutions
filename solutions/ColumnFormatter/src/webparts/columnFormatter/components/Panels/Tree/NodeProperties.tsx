@@ -99,7 +99,7 @@ export class NodeProperties extends React.Component<INodePropertiesProps, INodeP
 									return (
 										<tr key={nodeProp.name}>
 											<td className={styles.propertyLabel + (nodeProp.current ? " " + styles.current : "") + (nodeProp.relevant ? " " + styles.relevant : "")  + (nodeProp.invalidValue ? " " + styles.invalid : "")}>
-												<span>{nodeProp.name}</span>
+												{this.renderPropLabel(nodeProp)}
 											</td>
 											<td className={styles.propertyValue}>
 												{this.renderPropEditor(nodeProp)}
@@ -112,7 +112,7 @@ export class NodeProperties extends React.Component<INodePropertiesProps, INodeP
 										<tr key="addStyle">
 											<td className={styles.propertyLabel}>
 											<ComboBox
-											 defaultValue=""
+											 value=""
 											 allowFreeform={true}
 											 autoComplete="on"
 											 options={this.stringsToOptions(this.styleAttributes.filter((value:string) => {
@@ -578,6 +578,46 @@ export class NodeProperties extends React.Component<INodePropertiesProps, INodeP
 
 
 	@autobind
+	private renderPropLabel(nodeProp:INodeProperty): JSX.Element {
+
+		//styles for remove button
+		const propButtonStyles: Partial<IButtonStyles> = {
+			root: {
+				width: "9px",
+				height: "16px",
+				padding: "0",
+			},
+			icon: {
+				fontSize: "9px",
+				lineHeight: "16px",
+				marginTop: "1px",
+			},
+		};
+
+		return (
+			<div className={styles.propAndButtonBox}>
+				<div className={styles.mainBox}>
+					<span>{nodeProp.name}</span>
+				</div>
+				
+				<div className={styles.buttonBox}>
+					{nodeProp.current && 
+						<IconButton
+						 iconProps={{
+							iconName: "Blocked2",
+							className: "ms-fontColor-redDark"}}
+						 title="FormatScript"
+						 styles={propButtonStyles}
+						 onClick={()=>{
+							this.props.propUpdated(nodeProp.address, undefined);
+						 }}/>
+					}
+				</div>
+			</div>
+		);
+	}
+
+	@autobind
 	private renderPropEditor(nodeProp:INodeProperty): JSX.Element {
 
 		//styles for formatscript button
@@ -590,7 +630,7 @@ export class NodeProperties extends React.Component<INodePropertiesProps, INodeP
 			icon: {
 				fontSize: "12px",
 				lineHeight: "16px",
-			}
+			},
 		};
 
 		return (
