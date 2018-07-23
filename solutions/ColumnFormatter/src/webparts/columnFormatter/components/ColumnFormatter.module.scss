@@ -1648,6 +1648,7 @@
                 }
               }
             }
+
             .ms-Toggle-stateText {
               margin: 0 4px;
             }
@@ -1668,6 +1669,40 @@
           border: 1px solid;
           border-color: $ms-color-neutralLight;
           padding: 2px;
+        }
+
+        :global {
+          .ms-ComboBox-container {
+            .ms-ComboBox {
+              margin: 0;
+              padding: 0 15px 0 3px;
+              font-size: 10px;
+              line-height: 15px;
+              height: 16px;
+              border: 0;
+
+              .ms-ComboBox-Input {
+                height: 16px;
+                margin: 0;
+              }
+
+              .ms-ComboBox-CaretDown-button {
+                height: 16px;
+                width: 14px;
+                padding: 0;
+
+                &:hover, &:active {
+                  color: $ms-color-neutralSecondary;
+                  background-color: $ms-color-white;
+                }
+
+                i {
+                  font-size: 9px;
+                  color: $ms-color-neutralSecondary;
+                }
+              }
+            }
+          }
         }
       }
     }

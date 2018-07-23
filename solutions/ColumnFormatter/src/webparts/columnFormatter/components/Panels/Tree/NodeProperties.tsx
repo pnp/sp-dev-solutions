@@ -45,10 +45,16 @@ export class NodeProperties extends React.Component<INodePropertiesProps, INodeP
 		const propGroups = new Array<[string, Array<INodeProperty>]>();
 		propGroups.push(["", this.buildProps(this.props.node, this.props.isRoot, this.props.formatType).filter(this.filterPropsForView)]);
 		propGroups.push(["attributes", this.buildPropsAttributes(this.props.node, this.props.isRoot, this.props.formatType).filter(this.filterPropsForView)]);
+		const styleProps = this.buildPropsStyle(this.props.node, this.props.isRoot, this.props.formatType).filter(this.filterPropsForView);
+		propGroups.push(["style", styleProps]);
 		propGroups.push(["customRowAction", this.buildPropsCustomRowAction(this.props.node, this.props.isRoot, this.props.formatType).filter(this.filterPropsForView)]);
 		let propCount:number = 0;
 		propGroups.forEach((group:[string,Array<INodeProperty>]) => {
 			propCount += group["1"].length;
+		});
+		const setStyles = new Array<string>();
+		styleProps.forEach((value: INodeProperty) => {
+			setStyles.push(value.name);
 		});
 
 		return (
@@ -79,7 +85,8 @@ export class NodeProperties extends React.Component<INodePropertiesProps, INodeP
 						<tbody>
 							{propGroups.map((group:[string,Array<INodeProperty>]) => {
 								const rows = new Array<JSX.Element>();
-								if(group["0"].length > 0 && group["1"].length > 0) {
+								const isStyle:boolean = (group["0"] == "style") && !(this.props.isRoot && this.props.formatType == formatterType.View);
+								if((group["0"].length > 0 && group["1"].length > 0) || isStyle) {
 									rows.push((
 										<tr>
 											<td className={styles.groupHeader} colSpan={2}>
@@ -100,6 +107,39 @@ export class NodeProperties extends React.Component<INodePropertiesProps, INodeP
 										</tr>
 									);
 								}));
+								if (isStyle) {
+									rows.push((
+										<tr key="addStyle">
+											<td className={styles.propertyLabel}>
+											<ComboBox
+											 defaultValue=""
+											 allowFreeform={true}
+											 autoComplete="on"
+											 options={this.stringsToOptions(this.styleAttributes.filter((value:string) => {
+												 return setStyles.indexOf(value) == -1;
+											 }))}
+											 comboBoxOptionStyles={{
+												root: {
+													padding: "0 6px",
+													fontSize: "10px",
+													minHeight: "16px",
+													lineHeight: "14px",
+												},
+											 }}
+											 onChanged={(option?: IComboBoxOption, index?: number, value?: string) => {
+												if(typeof option !== "undefined") {
+													this.props.propUpdated(`style.${option.key.toString()}`, "inherit");
+												} else if(typeof value !== "undefined") {
+													this.props.propUpdated(`style.${value}`, "inherit");
+												}
+											 }}/>
+											</td>
+											<td className={styles.propertyValue}>
+												
+											</td>
+										</tr>
+									));
+								}
 								return rows;
 							})}
 						</tbody>
@@ -199,9 +239,10 @@ export class NodeProperties extends React.Component<INodePropertiesProps, INodeP
 				props.push(this.buildProp(value,addressPrefix,node.attributes,elmType,formatType));
 			});
 			//Process any leftover props
+			const relevantPattern = new RegExp('^aria\\-[a-z]+$');
 			for(const key in node.attributes) {
 				if(knownAttributes.indexOf(key) == -1) {
-					props.push(this.buildProp(key,addressPrefix,node.attributes,elmType,formatType,new RegExp('^aria\\-[a-z]+$')));
+					props.push(this.buildProp(key,addressPrefix,node.attributes,elmType,formatType,relevantPattern));
 					knownAttributes.push(key);
 				}
 			}
@@ -232,6 +273,24 @@ export class NodeProperties extends React.Component<INodePropertiesProps, INodeP
 				}
 			}
 
+		}
+
+		return props;
+	}
+
+	private buildPropsStyle(node:any, isRoot:boolean, formatType:formatterType): Array<INodeProperty> {
+		const props = new Array<INodeProperty>();
+
+		if(typeof node !== "undefined" && !(isRoot && formatType == formatterType.View)) {
+			const elmType: string = node.hasOwnProperty("elmType") ? node.elmType : this.defaultPropValue("elmType", formatType);
+
+			const addressPrefix = "style.";
+
+			//Process props
+			const relevantPattern = new RegExp(".*?");
+			for(const key in node.style) {
+				props.push(this.buildProp(key,addressPrefix,node.style,elmType,formatType,relevantPattern));
+			}
 		}
 
 		return props;
@@ -579,7 +638,6 @@ export class NodeProperties extends React.Component<INodePropertiesProps, INodeP
 				return (
 					<Dropdown
 					 selectedKeys={nodeProp.valueIsExpression ? undefined : nodeProp.value.split(" ")}
-					 placeHolder={nodeProp.valueIsExpression ? "Using Expression" : undefined}
 					 options={this.getPropOptions(nodeProp)}
 					 calloutProps={{className:styles.treePropValue}}
 					 multiSelect={true}
@@ -601,10 +659,18 @@ export class NodeProperties extends React.Component<INodePropertiesProps, INodeP
 			case NodePropType.combobox:
 				return (
 					<ComboBox
-					 selectedKey={nodeProp.valueIsExpression ? undefined : nodeProp.value}
+					 value={nodeProp.valueIsExpression ? undefined : nodeProp.value}
 					 autoComplete="on"
 					 allowFreeform={true}
 					 options={this.getPropOptions(nodeProp)}
+					 comboBoxOptionStyles={{
+						 root: {
+							 padding: "0 6px",
+							 fontSize: "10px",
+							 minHeight: "16px",
+							 lineHeight: "14px",
+						 },
+					 }}
 					 onChanged={(option?: IComboBoxOption, index?: number, value?: string) => {
 						if(typeof option !== "undefined") {
 							this.props.propUpdated(nodeProp.address, option.key.toString());
@@ -617,7 +683,6 @@ export class NodeProperties extends React.Component<INodePropertiesProps, INodeP
 				return (
 					<TextField
 					 value={nodeProp.valueIsExpression ? undefined : nodeProp.value}
-					 placeholder={nodeProp.valueIsExpression ? "Using Expression" : undefined}
 					 borderless={true}
 					 onChanged={(newValue:any) => {this.props.propUpdated(nodeProp.address,newValue);}}/>
 				);
