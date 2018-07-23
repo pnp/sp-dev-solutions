@@ -1508,9 +1508,23 @@
         line-height: 18px;
         color: $ms-color-neutralPrimary;
 
+        .floatingContent {
+          float: left;
+          width: calc(100% - 28px);
+        }
+
+        .floatingButton {
+          visibility: hidden;
+          float: right;
+          width: 14px;
+        }
+
         &:hover {
           color: $ms-color-themeDark;
           background-color: $ms-color-themeLighterAlt;
+        }
+        &:hover .floatingButton {
+          visibility: visible;
         }
 
         &.active, &.active:hover {
@@ -1521,6 +1535,16 @@
         span {
           line-height: inherit;
         }
+      }
+    }
+
+    .propAndButtonBox {
+      display: flex;
+      .mainBox {
+        flex-grow: 1;
+      }
+      .buttonBox {
+        width: 14px;
       }
     }
 
@@ -1693,16 +1717,6 @@
           border: 1px solid;
           border-color: $ms-color-neutralLight;
           padding: 2px;
-        }
-
-        .propAndButtonBox {
-          display: flex;
-          .mainBox {
-            flex-grow: 1;
-          }
-          .buttonBox {
-            width: 14px;
-          }
         }
 
         :global {

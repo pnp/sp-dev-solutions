@@ -257,6 +257,8 @@ define([], function() {
     TreeView_RemoveProp: 'Remove property',
     TreeView_AddStyleProp: 'Add attribute',
     TreeView_InvalidValue: 'INVALID',
+    TreeView_RemoveElement: 'Remove element',
+    TreeView_AddElement: 'Add child',
 
     //Standard Colors
     Color_Yellow: 'Yellow',

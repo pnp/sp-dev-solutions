@@ -1,15 +1,15 @@
+import { set, update } from "@microsoft/sp-lodash-subset";
 import { autobind } from "office-ui-fabric-react/lib/Utilities";
 import * as React from "react";
 import { connect } from "react-redux";
 import { Dispatch } from "redux";
 
-import { formatterType, IApplicationState } from "../../../state/State";
 import { updateEditorString } from "../../../state/Actions";
+import { formatterType, IApplicationState } from "../../../state/State";
 import styles from "../../ColumnFormatter.module.scss";
 import { ITreeNode } from "./ITreeNode";
 import { NodeProperties } from "./NodeProperties";
 import { TreeView } from "./TreeView";
-import { set } from "@microsoft/sp-lodash-subset";
 
 var SplitPane = require('react-split-pane');
 
@@ -57,6 +57,8 @@ class ColumnFormatterTreePanel_ extends React.Component<IColumnFormatterTreePane
 				 nodes={this.state.treeData}
 				 error={this.state.treeError}
 				 onSelectNode={this.selectNode}
+				 removeNode={this.removeNode}
+				 addNode={this.addNode}
 				 activeNodeId={this.state.activeNodeId}/>
 				<NodeProperties
 				 node={this.state.activeNode}
@@ -168,13 +170,13 @@ class ColumnFormatterTreePanel_ extends React.Component<IColumnFormatterTreePane
 		return siblings[index];
 	}
 
-	private idToPath(nodeId:string, property:string): string {
+	private idToPath(nodeId:string, property:string = undefined): string {
 		if(nodeId.indexOf(".") == -1) {
 			return property || "";
 		}
 		const childId = nodeId.substring(nodeId.indexOf(".")+1);
 		const address = `children[${childId.replace(/\./g,"].children[")}]`;
-		if (typeof property !== undefined && property.length > 0) {
+		if (typeof property !== "undefined" && property.length > 0) {
 			return `${address}.${property}`;
 		}
 		return address;
@@ -188,6 +190,65 @@ class ColumnFormatterTreePanel_ extends React.Component<IColumnFormatterTreePane
 		} catch (e) {
 			validationErrors.push(e.message);
 		}
+		this.props.updateEditorString(JSON.stringify(this._formatObj, null, 2), validationErrors);
+	}
+
+	@autobind 
+	private removeNode(nodeId:string): void {
+		let validationErrors:Array<string> = new Array<string>();
+		try {
+			if (nodeId.indexOf(".") !== -1) {
+				const parentId = nodeId.substring(0,nodeId.lastIndexOf("."));
+				const childIndex = parseInt(nodeId.substring(nodeId.lastIndexOf(".")+1));
+
+				if(parentId == "0") {
+					if(this._formatObj.children.length > 1) {
+						this._formatObj.children.splice(childIndex,1);
+					} else {
+						delete(this._formatObj.children);
+					}
+				} else {
+					update(this._formatObj, this.idToPath(parentId), (parent:any) => {
+						if(parent.children.length > 1) {
+							parent.children.splice(childIndex,1);
+						} else {
+							delete(parent.children);
+						}
+						return parent;
+					});
+				}
+			}
+		} catch (e) {
+			validationErrors.push(e.message);
+		}
+		this.props.updateEditorString(JSON.stringify(this._formatObj, null, 2), validationErrors);
+	}
+
+	@autobind 
+	private addNode(parentNodeId:string): void {
+		let validationErrors:Array<string> = new Array<string>();
+		let newNodeId:string = parentNodeId;
+		try {
+			if(parentNodeId == "0") {
+				if(!this._formatObj.hasOwnProperty("children")) {
+					this._formatObj.children = [];
+				}
+				this._formatObj.children.push({elmType:"div"});
+				newNodeId = `${parentNodeId}.${this._formatObj.children.length - 1}`;
+			} else {
+				update(this._formatObj, this.idToPath(parentNodeId), (parent:any) => {
+					if(!parent.hasOwnProperty("children")) {
+						parent.children = [];
+					}
+					parent.children.push({elmType:"div"});
+					newNodeId = `${parentNodeId}.${parent.children.length - 1}`;
+					return parent;
+				});
+			}
+		} catch (e) {
+			validationErrors.push(e.message);
+		}
+		this.selectNode(newNodeId);
 		this.props.updateEditorString(JSON.stringify(this._formatObj, null, 2), validationErrors);
 	}
 	

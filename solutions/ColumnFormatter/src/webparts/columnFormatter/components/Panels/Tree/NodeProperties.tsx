@@ -1,6 +1,8 @@
+import * as strings from "ColumnFormatterWebPartStrings";
 import { IButtonStyles, IconButton } from "office-ui-fabric-react/lib/Button";
-import { Dropdown, IDropdownOption } from "office-ui-fabric-react/lib/Dropdown";
 import { ComboBox, IComboBoxOption } from "office-ui-fabric-react/lib/ComboBox";
+import { Dropdown, IDropdownOption } from "office-ui-fabric-react/lib/Dropdown";
+import { Icon } from "office-ui-fabric-react/lib/Icon";
 import { TextField } from "office-ui-fabric-react/lib/TextField";
 import { IToggleStyles, Toggle } from "office-ui-fabric-react/lib/Toggle";
 import { autobind } from "office-ui-fabric-react/lib/Utilities";
@@ -13,8 +15,6 @@ import styles from "../../ColumnFormatter.module.scss";
 import { JSONToFormatScript } from "../../FormatScript/FormatScript";
 import { FormatScriptEditorDialog } from "../../FormatScript/FormatScriptEditorDialog";
 import { INodeProperty, NodePropType } from "./INodeProperty";
-import * as strings from "ColumnFormatterWebPartStrings";
-import { Icon } from "office-ui-fabric-react/lib/Icon";
 
 export interface INodePropertiesProps {
 	propUpdated: (propertyAddress:string, value:any) => void;
@@ -610,8 +610,8 @@ export class NodeProperties extends React.Component<INodePropertiesProps, INodeP
 					{nodeProp.current && nodeProp.name !== "elmType" &&
 						<IconButton
 						 iconProps={{
-							iconName: "Blocked2",
-							className: "ms-fontColor-redDark"}}
+							iconName: "Delete",
+							className: "ms-fontColor-redDark--hover"}}
 						 title={strings.TreeView_RemoveProp}
 						 styles={propButtonStyles}
 						 onClick={()=>{
