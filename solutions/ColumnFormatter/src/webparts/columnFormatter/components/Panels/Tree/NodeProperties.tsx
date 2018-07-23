@@ -65,7 +65,7 @@ export class NodeProperties extends React.Component<INodePropertiesProps, INodeP
 					<tbody>
 						<tr>
 							<td>
-								<span className={styles.panelHeader}>Properties</span>
+								<span className={styles.panelHeader}>{strings.TreeView_Properties}</span>
 							</td>
 							<td>
 								<Dropdown
@@ -83,71 +83,73 @@ export class NodeProperties extends React.Component<INodePropertiesProps, INodeP
 					</tbody>
 				</table>
 				{(propCount > 0) &&
-					<table className={styles.propertyTable} cellPadding={0} cellSpacing={0}>
-						<tbody>
-							{propGroups.map((group:[string,Array<INodeProperty>]) => {
-								const rows = new Array<JSX.Element>();
-								const isStyle:boolean = (group["0"] == "style") && !(this.props.isRoot && this.props.formatType == formatterType.View);
-								if((group["0"].length > 0 && group["1"].length > 0) || isStyle) {
-									rows.push((
-										<tr>
-											<td className={styles.groupHeader} colSpan={2}>
-												<span>{group["0"]}</span>
-											</td>
-										</tr>
-									));
-								}
-								rows.push(...group["1"].map((nodeProp:INodeProperty) => {
-									return (
-										<tr key={nodeProp.name} className={nodeProp.valueIsExpression ? styles.expressionRow : undefined}>
-											<td className={styles.propertyLabel + (nodeProp.current ? " " + styles.current : "") + (nodeProp.relevant ? " " + styles.relevant : "")  + (nodeProp.invalidValue ? " " + styles.invalid : "")}>
-												{this.renderPropLabel(nodeProp)}
-											</td>
-											<td className={styles.propertyValue}>
-												{this.renderPropEditor(nodeProp)}
-											</td>
-										</tr>
-									);
-								}));
-								if (isStyle) {
-									rows.push((
-										<tr key="addStyle">
-											<td className={styles.propertyLabel}>
-											<ComboBox
-											 value=""
-											 allowFreeform={true}
-											 autoComplete="on"
-											 options={this.stringsToOptions(this.styleAttributes.filter((value:string) => {
-												 return setStyles.indexOf(value) == -1;
-											 }))}
-											 comboBoxOptionStyles={{
-												root: {
-													padding: "0 6px",
-													fontSize: "10px",
-													minHeight: "16px",
-													lineHeight: "14px",
-												},
-											 }}
-											 onChanged={(option?: IComboBoxOption, index?: number, value?: string) => {
-												if(typeof option !== "undefined") {
-													this.props.propUpdated(`style.${option.key.toString()}`, "inherit");
-												} else if(typeof value !== "undefined") {
-													this.props.propUpdated(`style.${value}`, "inherit");
-												}
-											 }}/>
-											</td>
-											<td className={styles.propertyValue + " " + styles.addPropLabel}>
-												<Icon
-												 iconName="ChromeBack"/>
-												<span>{strings.TreeView_AddStyleProp}</span>
-											</td>
-										</tr>
-									));
-								}
-								return rows;
-							})}
-						</tbody>
-					</table>
+					<div className={styles.propsContainer}>
+						<table className={styles.propertyTable} cellPadding={0} cellSpacing={0}>
+							<tbody>
+								{propGroups.map((group:[string,Array<INodeProperty>]) => {
+									const rows = new Array<JSX.Element>();
+									const isStyle:boolean = (group["0"] == "style") && !(this.props.isRoot && this.props.formatType == formatterType.View);
+									if((group["0"].length > 0 && group["1"].length > 0) || isStyle) {
+										rows.push((
+											<tr>
+												<td className={styles.groupHeader} colSpan={2}>
+													<span>{group["0"]}</span>
+												</td>
+											</tr>
+										));
+									}
+									rows.push(...group["1"].map((nodeProp:INodeProperty) => {
+										return (
+											<tr key={nodeProp.name} className={nodeProp.valueIsExpression ? styles.expressionRow : undefined}>
+												<td className={styles.propertyLabel + (nodeProp.current ? " " + styles.current : "") + (nodeProp.relevant ? " " + styles.relevant : "")  + (nodeProp.invalidValue ? " " + styles.invalid : "")}>
+													{this.renderPropLabel(nodeProp)}
+												</td>
+												<td className={styles.propertyValue}>
+													{this.renderPropEditor(nodeProp)}
+												</td>
+											</tr>
+										);
+									}));
+									if (isStyle) {
+										rows.push((
+											<tr key="addStyle">
+												<td className={styles.propertyLabel}>
+												<ComboBox
+												value=""
+												allowFreeform={true}
+												autoComplete="on"
+												options={this.stringsToOptions(this.styleAttributes.filter((value:string) => {
+													return setStyles.indexOf(value) == -1;
+												}))}
+												comboBoxOptionStyles={{
+													root: {
+														padding: "0 6px",
+														fontSize: "10px",
+														minHeight: "16px",
+														lineHeight: "14px",
+													},
+												}}
+												onChanged={(option?: IComboBoxOption, index?: number, value?: string) => {
+													if(typeof option !== "undefined") {
+														this.props.propUpdated(`style.${option.key.toString()}`, "inherit");
+													} else if(typeof value !== "undefined") {
+														this.props.propUpdated(`style.${value}`, "inherit");
+													}
+												}}/>
+												</td>
+												<td className={styles.propertyValue + " " + styles.addPropLabel}>
+													<Icon
+													iconName="ChromeBack"/>
+													<span>{strings.TreeView_AddStyleProp}</span>
+												</td>
+											</tr>
+										));
+									}
+									return rows;
+								})}
+							</tbody>
+						</table>
+					</div>
 				}
 				<FormatScriptEditorDialog
 				 initialValue={this.state.formatScriptExpression}
@@ -605,7 +607,7 @@ export class NodeProperties extends React.Component<INodePropertiesProps, INodeP
 				</div>
 				
 				<div className={styles.buttonBox}>
-					{nodeProp.current && 
+					{nodeProp.current && nodeProp.name !== "elmType" &&
 						<IconButton
 						 iconProps={{
 							iconName: "Blocked2",

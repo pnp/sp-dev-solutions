@@ -1526,6 +1526,7 @@
 
     &.treeProps {
       width:100%;
+      overflow-y: hidden;
 
       :global {
         .ms-Dropdown-container {
@@ -1561,6 +1562,12 @@
           width: 50%;
         }
       }
+
+      .propsContainer {
+        overflow-y: auto;
+        height: calc(100% - 19px);
+      }
+
       .propertyTable {
         border-collapse: collapse;
         width: 100%;
@@ -1592,6 +1599,7 @@
         .propertyLabel {
           font-size: 10px;
           color: $ms-color-neutralTertiary;
+          white-space: nowrap;
 
           &.relevant {
             font-weight: bold;
@@ -1615,6 +1623,7 @@
         .propertyValue {
           font-size: 9px;
           padding: 0;
+          width: 100%;
 
           :global {
             .ms-Dropdown-container {

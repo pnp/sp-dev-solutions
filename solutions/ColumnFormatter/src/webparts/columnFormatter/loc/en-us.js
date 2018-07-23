@@ -248,6 +248,7 @@ define([], function() {
 
     //Tree View
     TreeView_Header: 'Elements tree',
+    TreeView_Properties: 'Properties',
     TreeView_Error: 'Error loading tree!',
     TreeView_PropFilterRelevant: 'Relevant',
     TreeView_PropFilterCurrent: 'Current',

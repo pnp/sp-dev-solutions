@@ -248,6 +248,7 @@ declare interface IColumnFormatterWebPartStrings {
 
   //Tree View
   TreeView_Header: string;
+  TreeView_Properties: string;
   TreeView_Error: string;
   TreeView_PropFilterRelevant: string;
   TreeView_PropFilterCurrent: string;
