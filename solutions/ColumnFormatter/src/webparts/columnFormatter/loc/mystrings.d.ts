@@ -249,6 +249,13 @@ declare interface IColumnFormatterWebPartStrings {
   //Tree View
   TreeView_Header: string;
   TreeView_Error: string;
+  TreeView_PropFilterRelevant: string;
+  TreeView_PropFilterCurrent: string;
+  TreeView_PropFilterAll: string;
+  TreeView_ExpressionEditor: string;
+  TreeView_RemoveProp: string;
+  TreeView_AddStyleProp: string;
+  TreeView_InvalidValue: string;
 
   //Standard Colors
   Color_Yellow: string;

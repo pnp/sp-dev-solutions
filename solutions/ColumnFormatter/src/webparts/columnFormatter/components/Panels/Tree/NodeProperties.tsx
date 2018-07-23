@@ -13,6 +13,8 @@ import styles from "../../ColumnFormatter.module.scss";
 import { JSONToFormatScript } from "../../FormatScript/FormatScript";
 import { FormatScriptEditorDialog } from "../../FormatScript/FormatScriptEditorDialog";
 import { INodeProperty, NodePropType } from "./INodeProperty";
+import * as strings from "ColumnFormatterWebPartStrings";
+import { Icon } from "office-ui-fabric-react/lib/Icon";
 
 export interface INodePropertiesProps {
 	propUpdated: (propertyAddress:string, value:any) => void;
@@ -72,9 +74,9 @@ export class NodeProperties extends React.Component<INodePropertiesProps, INodeP
 								 onChanged={(item:IDropdownOption): void => {this.setState({propFilter:item.key.toString()});}}
 								 calloutProps={{className:styles.treeProps}}
 								 options={[
-									{key:"relevant", text:"Relevant"},
-									{key: "current", text:"Current"},
-									{key: "all", text:"All"}
+									{key:"relevant", text: strings.TreeView_PropFilterRelevant},
+									{key: "current", text: strings.TreeView_PropFilterCurrent},
+									{key: "all", text: strings.TreeView_PropFilterAll},
 								 ]}/>
 							</td>
 						</tr>
@@ -97,7 +99,7 @@ export class NodeProperties extends React.Component<INodePropertiesProps, INodeP
 								}
 								rows.push(...group["1"].map((nodeProp:INodeProperty) => {
 									return (
-										<tr key={nodeProp.name}>
+										<tr key={nodeProp.name} className={nodeProp.valueIsExpression ? styles.expressionRow : undefined}>
 											<td className={styles.propertyLabel + (nodeProp.current ? " " + styles.current : "") + (nodeProp.relevant ? " " + styles.relevant : "")  + (nodeProp.invalidValue ? " " + styles.invalid : "")}>
 												{this.renderPropLabel(nodeProp)}
 											</td>
@@ -134,8 +136,10 @@ export class NodeProperties extends React.Component<INodePropertiesProps, INodeP
 												}
 											 }}/>
 											</td>
-											<td className={styles.propertyValue}>
-												
+											<td className={styles.propertyValue + " " + styles.addPropLabel}>
+												<Icon
+												 iconName="ChromeBack"/>
+												<span>{strings.TreeView_AddStyleProp}</span>
 											</td>
 										</tr>
 									));
@@ -606,7 +610,7 @@ export class NodeProperties extends React.Component<INodePropertiesProps, INodeP
 						 iconProps={{
 							iconName: "Blocked2",
 							className: "ms-fontColor-redDark"}}
-						 title="FormatScript"
+						 title={strings.TreeView_RemoveProp}
 						 styles={propButtonStyles}
 						 onClick={()=>{
 							this.props.propUpdated(nodeProp.address, undefined);
@@ -645,7 +649,7 @@ export class NodeProperties extends React.Component<INodePropertiesProps, INodeP
 						 iconProps={{
 							 iconName:nodeProp.valueIsExpression ? "TestBeakerSolid" : "TestBeaker",
 							className:nodeProp.valueIsExpression ? "ms-fontColor-themeDarkAlt" : "ms-fontColor-neutralPrimaryAlt"}}
-						 title="FormatScript"
+						 title={strings.TreeView_ExpressionEditor}
 						 styles={propButtonStyles}
 						 onClick={()=>{
 							this.setState({
@@ -667,7 +671,6 @@ export class NodeProperties extends React.Component<INodePropertiesProps, INodeP
 				return (
 					<Dropdown
 					selectedKey={nodeProp.valueIsExpression ? undefined : nodeProp.value}
-					placeHolder={nodeProp.valueIsExpression ? "Using Expression" : undefined}
 					options={this.getPropOptions(nodeProp)}
 					calloutProps={{className:styles.treePropValue}}
 					onChanged={(option:IDropdownOption,index?:number) => {

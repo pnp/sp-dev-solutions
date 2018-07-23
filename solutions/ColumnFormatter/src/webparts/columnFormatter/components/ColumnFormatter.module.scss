@@ -1585,6 +1585,10 @@
           }
         }
 
+        .expressionRow {
+          background-color: $ms-color-themeLighterAlt;
+        }
+
         .propertyLabel {
           font-size: 10px;
           color: $ms-color-neutralTertiary;
@@ -1660,6 +1664,20 @@
               margin: 0 4px;
             }
           }
+        }
+
+        .addPropLabel {
+          color: $ms-color-neutralQuaternaryAlt;
+          font-style: italic;
+          font-size: 8px;
+
+          i {
+            margin: 0 2px 0 4px;
+          }
+        }
+
+        tr:hover .addPropLabel {
+          color: $ms-color-neutralTertiary;
         }
 
         tbody td {

@@ -184,9 +184,6 @@ class ColumnFormatterTreePanel_ extends React.Component<IColumnFormatterTreePane
 	private propUpdated(propertyAddress:string, value:any): void {
 		let validationErrors:Array<string> = new Array<string>();
 		try {
-			if(typeof value == "undefined") {
-				console.log('value undefined!');
-			}
 			set(this._formatObj, this.idToPath(this.state.activeNodeId, propertyAddress), value);
 		} catch (e) {
 			validationErrors.push(e.message);

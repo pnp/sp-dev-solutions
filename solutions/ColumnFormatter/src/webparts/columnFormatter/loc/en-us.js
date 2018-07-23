@@ -249,6 +249,13 @@ define([], function() {
     //Tree View
     TreeView_Header: 'Elements tree',
     TreeView_Error: 'Error loading tree!',
+    TreeView_PropFilterRelevant: 'Relevant',
+    TreeView_PropFilterCurrent: 'Current',
+    TreeView_PropFilterAll: 'All',
+    TreeView_ExpressionEditor: 'FormatScript',
+    TreeView_RemoveProp: 'Remove property',
+    TreeView_AddStyleProp: 'Add attribute',
+    TreeView_InvalidValue: 'INVALID',
 
     //Standard Colors
     Color_Yellow: 'Yellow',
