@@ -25,6 +25,7 @@
 - Treeview node toggling (expand/collapse)
 
 ### Fixed
+- style: border-spacing had incorrect intellisense values
 
 # Releases
 ## 1.2.0 - 2018-03-22

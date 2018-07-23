@@ -3,6 +3,7 @@ export enum NodePropType {
 	dropdown,
 	dropdownMS,
 	combobox,
+	color,
 	toggle
 }
 

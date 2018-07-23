@@ -245,7 +245,7 @@ export const ColumnFormattingSchema = {
                         },
                         "border-spacing": {
                             "description": "Sets the distance between the borders of adjacent cells",
-                            "allOf": [{ "$ref": "#/definitions/styleBorderStyle" }]
+                            "allOf": [{ "$ref": "#/definitions/styleStandard" }]
                         },
                         "border-style": {
                             "description": "Sets the style of an element's four borders",
