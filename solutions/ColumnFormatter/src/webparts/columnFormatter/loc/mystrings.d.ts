@@ -259,6 +259,7 @@ declare interface IColumnFormatterWebPartStrings {
   TreeView_InvalidValue: string;
   TreeView_RemoveElement: string;
   TreeView_AddElement: string;
+  TreeView_ColorPicker: string;
 
   //Standard Colors
   Color_Yellow: string;

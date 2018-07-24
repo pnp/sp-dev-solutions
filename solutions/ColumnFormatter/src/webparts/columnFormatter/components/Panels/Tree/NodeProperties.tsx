@@ -1,6 +1,6 @@
 import * as strings from "ColumnFormatterWebPartStrings";
 import { IButtonStyles, IconButton } from "office-ui-fabric-react/lib/Button";
-import { ComboBox, IComboBoxOption } from "office-ui-fabric-react/lib/ComboBox";
+import { IComboBoxOption } from "office-ui-fabric-react/lib/ComboBox";
 import { Dropdown, IDropdownOption } from "office-ui-fabric-react/lib/Dropdown";
 import { Icon } from "office-ui-fabric-react/lib/Icon";
 import { TextField } from "office-ui-fabric-react/lib/TextField";
@@ -14,7 +14,9 @@ import { formatterType } from "../../../state/State";
 import styles from "../../ColumnFormatter.module.scss";
 import { JSONToFormatScript } from "../../FormatScript/FormatScript";
 import { FormatScriptEditorDialog } from "../../FormatScript/FormatScriptEditorDialog";
+import { FreeFormComboBox } from "./FreeFormComboBox";
 import { INodeProperty, NodePropType } from "./INodeProperty";
+import { NodePropColorPicker } from "./NodePropColorPicker";
 
 export interface INodePropertiesProps {
 	propUpdated: (propertyAddress:string, value:any) => void;
@@ -112,30 +114,30 @@ export class NodeProperties extends React.Component<INodePropertiesProps, INodeP
 									}));
 									if (isStyle) {
 										rows.push((
-											<tr key="addStyle">
+											<tr key={"addStyle"+group["1"].length}>
 												<td className={styles.propertyLabel}>
-												<ComboBox
-												value=""
-												allowFreeform={true}
-												autoComplete="on"
-												options={this.stringsToOptions(this.styleAttributes.filter((value:string) => {
-													return setStyles.indexOf(value) == -1;
-												}))}
-												comboBoxOptionStyles={{
-													root: {
-														padding: "0 6px",
-														fontSize: "10px",
-														minHeight: "16px",
-														lineHeight: "14px",
-													},
-												}}
-												onChanged={(option?: IComboBoxOption, index?: number, value?: string) => {
-													if(typeof option !== "undefined") {
-														this.props.propUpdated(`style.${option.key.toString()}`, "inherit");
-													} else if(typeof value !== "undefined") {
-														this.props.propUpdated(`style.${value}`, "inherit");
-													}
-												}}/>
+													<FreeFormComboBox
+													 value=""
+													 allowFreeform={true}
+													 autoComplete="on"
+													 options={this.stringsToOptions(this.styleAttributes.filter((value:string) => {
+														return setStyles.indexOf(value) == -1;
+													 }))}
+													 comboBoxOptionStyles={{
+														root: {
+															padding: "0 6px",
+															fontSize: "10px",
+															minHeight: "16px",
+															lineHeight: "14px",
+														},
+													 }}
+													 onChanged={(option?: IComboBoxOption, index?: number, value?: string) => {
+														if(typeof option !== "undefined") {
+															this.props.propUpdated(`style.${option.key.toString()}`, "inherit");
+														} else if(typeof value !== "undefined") {
+															this.props.propUpdated(`style.${value}`, "inherit");
+														}
+													}}/>
 												</td>
 												<td className={styles.propertyValue + " " + styles.addPropLabel}>
 													<Icon
@@ -703,7 +705,7 @@ export class NodeProperties extends React.Component<INodePropertiesProps, INodeP
 				);
 			case NodePropType.combobox:
 				return (
-					<ComboBox
+					<FreeFormComboBox
 					 value={nodeProp.valueIsExpression ? undefined : nodeProp.value}
 					 autoComplete="on"
 					 allowFreeform={true}
@@ -714,6 +716,7 @@ export class NodeProperties extends React.Component<INodePropertiesProps, INodeP
 							 fontSize: "10px",
 							 minHeight: "16px",
 							 lineHeight: "14px",
+							 minWidth: "fit-content",
 						 },
 					 }}
 					 onChanged={(option?: IComboBoxOption, index?: number, value?: string) => {
@@ -723,6 +726,44 @@ export class NodeProperties extends React.Component<INodePropertiesProps, INodeP
 							this.props.propUpdated(nodeProp.address, value);
 						}
 					 }}/>
+				);
+			case NodePropType.color:
+				return (
+					<div className={styles.propAndButtonBox}>
+						<div
+						 className={styles.buttonBox}
+						 style={{backgroundColor: !(nodeProp.valueIsExpression || nodeProp.invalidValue || typeof nodeProp.value == "undefined") ? nodeProp.value : "inherit" }}>
+							&nbsp;
+						</div>
+						<div className={styles.mainBox}>
+							<FreeFormComboBox
+							 value={nodeProp.valueIsExpression ? undefined : nodeProp.value}
+							 autoComplete="on"
+							 allowFreeform={true}
+							 options={this.getPropOptions(nodeProp)}
+							 comboBoxOptionStyles={{
+								root: {
+									padding: "0 6px",
+									fontSize: "10px",
+									minHeight: "16px",
+									lineHeight: "14px",
+									minWidth: "fit-content",
+								},
+							 }}
+							 onChanged={(option?: IComboBoxOption, index?: number, value?: string) => {
+								if(typeof option !== "undefined") {
+									this.props.propUpdated(nodeProp.address, option.key.toString());
+								} else {
+									this.props.propUpdated(nodeProp.address, value);
+								}
+							 }}/>
+						</div>
+						<div className={styles.buttonBox}>
+							<NodePropColorPicker
+							 value={(nodeProp.valueIsExpression || nodeProp.invalidValue || typeof nodeProp.value !== "string" || nodeProp.value == "inherit" || nodeProp.value == "auto" || nodeProp.value == "initial" || nodeProp.value == "unset") ? "goldenrod" : nodeProp.value}
+							 onColorChanged={(newValue:string) => {this.props.propUpdated(nodeProp.address, newValue);}}/>
+						</div>
+					</div>
 				);
 			case NodePropType.text:
 				return (
@@ -858,7 +899,7 @@ export class NodeProperties extends React.Component<INodePropertiesProps, INodeP
 			case "color":
 			case "column-rule-color":
 			case "fill":
-				return this.styleStringsToOptions(this.namedColors);
+				return this.styleStringsToOptions(this.namedColors.slice(0));
 			case "background-image":
 			case "column-count":
 			case "font-size-adjust":
@@ -1117,7 +1158,7 @@ export class NodeProperties extends React.Component<INodePropertiesProps, INodeP
 	}
 
 	private styleBasic = [
-		"initial","inherit","unset"
+		"initial","inherit","unset",
 	];
 
 	private namedColors = [
@@ -1135,7 +1176,7 @@ export class NodeProperties extends React.Component<INodePropertiesProps, INodeP
 		"olivedrab","orange","orangered","orchid","palegoldenrod","palegreen","paleturquoise","palevioletred","papayawhip","peachpuff",
 		"peru","pink","plum","powderblue","rosybrown","royalblue","saddlebrown","salmon","sandybrown","seagreen","seashell","sienna",
 		"skyblue","slateblue","slategray","snow","springgreen","steelblue","tan","thistle","tomato","turquoise","violet","wheat",
-		"whitesmoke","yellowgreen","rebeccapurple"
+		"whitesmoke","yellowgreen","rebeccapurple",
 	];
 
 	private styleStringsToOptions(values: Array<string>, auto:boolean = false): Array<IDropdownOption> {
