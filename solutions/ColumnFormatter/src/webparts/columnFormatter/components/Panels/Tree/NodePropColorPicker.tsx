@@ -1,7 +1,7 @@
 import * as strings from "ColumnFormatterWebPartStrings";
 import { IconButton } from "office-ui-fabric-react/lib/Button";
+import { Callout, DirectionalHint } from "office-ui-fabric-react/lib/Callout";
 import { ColorPicker } from "office-ui-fabric-react/lib/ColorPicker";
-import { TeachingBubble } from "office-ui-fabric-react/lib/TeachingBubble";
 import * as React from "react";
 
 import styles from "../../ColumnFormatter.module.scss";
@@ -51,22 +51,17 @@ export class NodePropColorPicker extends React.Component<INodePropColorPickerPro
 					});
 				 }}/>
 				{this.state.colorPickerVisible && (
-					<TeachingBubble
-					
-					 targetElement={this._container}
-					 hasCloseIcon={true}
-					 hasCondensedHeadline={true}
-					 headline={strings.TreeView_ColorPicker}
-					 onDismiss={() => {this.setState({colorPickerVisible: false});}}>
-					 	<ColorPicker
+					<Callout
+					 target={this._container}
+					 onDismiss={() => {this.setState({colorPickerVisible: false});}}
+					 directionalHint={DirectionalHint.topRightEdge}>
+						<ColorPicker
 						 color={this.props.value}
 						 alphaSliderHidden={false}
 						 onColorChanged={this.props.onColorChanged}/>
-					</TeachingBubble>
+					</Callout>
 				)}
 			</div>
 		);
 	}
 }
-
-//calloutProps={{className:"ms-TeachingBubble " + styles.nodePropColorPicker}}
