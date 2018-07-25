@@ -18,7 +18,7 @@ export default class AdvancedHorizontalTitleDescriptionLayout implements IFeatur
         { items &&
             items.map((item) => {
               return (
-                <div className={styles["featured-content-item"]+" col-md-4"}>
+                <div className={styles["featured-content-item"]}>
                   <div className={styles["featured-content-picture-container"]}>
                   {item[imageField] && 
                     <img src={item[imageField]+FeaturedContentFactory.getWidthHeightQueryStringAppendForImage(item[imageField])} className="largepictureimg"/>

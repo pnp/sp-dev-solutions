@@ -38,9 +38,6 @@ export default class FeaturedContentWebPartWebPart extends BaseClientSideWebPart
   constructor(){
     super();
     this.onPropertyPaneFieldChanged = this.onPropertyPaneFieldChanged.bind(this);
-    if(document.querySelectorAll("link[href*='bootstrap.min.css']").length===0){
-      SPComponentLoader.loadCss('https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css');
-    }
   }
 
   public onInit(): Promise<void> {
