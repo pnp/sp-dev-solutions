@@ -88,17 +88,3 @@
         }
     }
 }
-
-:global .spPropertyPaneContainer {
-     :global .ms-Label {
-        width: 100%;
-    }
-}
-
-[aria-labelledby='propertyPaneTitleId']>div>div {
-    box-sizing: content-box;
-}
-
-[class*="choiceFieldIsIcon_"] [class*="fieldIsIcon_"] [class*="labelWrapper_"] {
-    white-space: normal;
-}
