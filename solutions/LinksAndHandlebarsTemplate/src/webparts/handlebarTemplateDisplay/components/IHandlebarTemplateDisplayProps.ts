@@ -10,6 +10,7 @@ export interface IHandlebarTemplateDisplayProps {
   instanceId: string;
   templateUrl: string;
   template: string;
+  isOptimized: boolean;
   cssUrl: string;
   jsUrl: string;
   context: IWebPartContext;

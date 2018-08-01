@@ -8,4 +8,6 @@ export interface IHandlebarTemplateDisplayWebPartProps {
   jsUrl: string;
   usesSearchSource: boolean;
   searchSource: string;
+  optimizedTemplate: boolean;
+  precompiledTemplate: string;
 }

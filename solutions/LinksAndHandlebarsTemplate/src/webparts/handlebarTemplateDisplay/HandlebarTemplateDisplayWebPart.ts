@@ -10,9 +10,10 @@ import {
   PropertyPaneButtonType,
   PropertyPaneLink,
   PropertyPaneLabel,
-  PropertyPaneToggle
+  PropertyPaneToggle,
+  PropertyPaneCheckbox
 } from '@microsoft/sp-webpart-base';
-
+import Handlebars = require('handlebars');
 import * as strings from 'handlebarTemplateDisplayStrings';
 import HandlebarTemplateDisplay from './components/HandlebarTemplateDisplay';
 import { IHandlebarTemplateDisplayProps } from './components/IHandlebarTemplateDisplayProps';
@@ -35,7 +36,6 @@ export default class HandlebarTemplateDisplayWebPart extends BaseClientSideWebPa
       pnp.setup({
         spfxContext: this.context
       });
-
     });
   }
 
@@ -46,7 +46,6 @@ export default class HandlebarTemplateDisplayWebPart extends BaseClientSideWebPa
   public set fields(v : any[]) {
     this._fields = v;
   }
-
 
   private _webpart : any;
   public get webpart() : any {
@@ -67,6 +66,7 @@ export default class HandlebarTemplateDisplayWebPart extends BaseClientSideWebPa
         items: [],
         templateUrl: this.properties.handlebarTemplateUrl,
         template: "",
+        isOptimized: this.properties.optimizedTemplate,
         webUrl: this.context.pageContext.web.absoluteUrl,
         instanceId: this.context.instanceId,
         serverRelativeUrl: window.location.pathname,
@@ -81,7 +81,6 @@ export default class HandlebarTemplateDisplayWebPart extends BaseClientSideWebPa
         setScriptUrl: this.setJSUrl.bind(this)
       }
     );
-
     if(propData.selectedList.id && !this.properties.usesSearchSource){
       pnp.sp.web.lists.getById(propData.selectedList.id).renderListDataAsStream({ ViewXml: QueryStringParser.ReplaceQueryStringParameters(this.properties.listQuery), AllowMultipleValueFilterForTaxonomyFields: true},{}).then((response:any)=>{
         response.Row.forEach(value => {
@@ -105,15 +104,30 @@ export default class HandlebarTemplateDisplayWebPart extends BaseClientSideWebPa
 
           element.props.items.push(value);
         });
-
-        this.context.spHttpClient.get(this.properties.handlebarTemplateUrl, SPHttpClient.configurations.v1).then((templateResponse)=>{
-          templateResponse.text().then((s)=>{
-            element.props.template = s;
+        if(this.properties.optimizedTemplate && this.displayMode===DisplayMode.Edit){
+            this.context.spHttpClient.get(this.properties.handlebarTemplateUrl, SPHttpClient.configurations.v1,{method:"GET",mode:"no-cors"}).then((templateResponse)=>{
+              templateResponse.text().then((s)=>{
+                const template = Handlebars.precompile(s);
+                this.properties.precompiledTemplate = template.toString();
+                element.props.template = template;
+                this.webpart = ReactDom.render(element, this.domElement);
+              });
+            });
+          }
+        else if(this.properties.optimizedTemplate){
+          element.props.template = this.properties.precompiledTemplate;
+          this.webpart = ReactDom.render(element, this.domElement);
+        }
+        else{
+          this.context.spHttpClient.get(this.properties.handlebarTemplateUrl, SPHttpClient.configurations.v1,{method:"GET",mode:"no-cors"}).then((templateResponse)=>{
+            templateResponse.text().then((s)=>{
+              element.props.template = s;
+              this.webpart = ReactDom.render(element, this.domElement);
+            });
+          }).catch((error)=>{
             this.webpart = ReactDom.render(element, this.domElement);
           });
-        }).catch((error)=>{
-          this.webpart = ReactDom.render(element, this.domElement);
-        });
+        }
       }).catch((error)=>{
         this.webpart = ReactDom.render(element, this.domElement);
       });
@@ -148,14 +162,30 @@ export default class HandlebarTemplateDisplayWebPart extends BaseClientSideWebPa
 
       pnp.sp.search(sqb).then(response=>{
         element.props.items = response.PrimarySearchResults;
-        this.context.spHttpClient.get(this.properties.handlebarTemplateUrl, SPHttpClient.configurations.v1).then((templateResponse)=>{
-          templateResponse.text().then((s)=>{
-            element.props.template = s;
+        if(this.properties.optimizedTemplate && this.displayMode===DisplayMode.Edit){
+          this.context.spHttpClient.get(this.properties.handlebarTemplateUrl, SPHttpClient.configurations.v1).then((templateResponse)=>{
+            templateResponse.text().then((s)=>{
+              const template = Handlebars.precompile(s);
+              this.properties.precompiledTemplate = template.toString();
+              element.props.template = template;
+              this.webpart = ReactDom.render(element, this.domElement);
+            });
+          });
+        }
+        else if(this.properties.optimizedTemplate){
+          element.props.template = this.properties.precompiledTemplate;
+          this.webpart = ReactDom.render(element, this.domElement);
+        }
+        else{
+          this.context.spHttpClient.get(this.properties.handlebarTemplateUrl, SPHttpClient.configurations.v1).then((templateResponse)=>{
+            templateResponse.text().then((s)=>{
+              element.props.template = s;
+              this.webpart = ReactDom.render(element, this.domElement);
+            });
+          }).catch((error)=>{
             this.webpart = ReactDom.render(element, this.domElement);
           });
-        }).catch((error)=>{
-          this.webpart = ReactDom.render(element, this.domElement);
-        });
+        }
       }).catch((error)=>{
         this.webpart = ReactDom.render(element, this.domElement);
       });
@@ -222,6 +252,12 @@ export default class HandlebarTemplateDisplayWebPart extends BaseClientSideWebPa
                   text: strings.TemplateFieldButtonText,
                   buttonType: PropertyPaneButtonType.Primary,
                   onClick: this.openTemplateSelector.bind(this)
+                }),
+                PropertyPaneCheckbox('optimizedTemplate',{
+                  text: strings.OptimizedTemplateLabel
+                }),
+                PropertyPaneLabel("optimizedTemplate",{
+                  text: strings.OptimizedTemplateDescription
                 }),
                 PropertyPaneLabel("cssLabel",{
                   text: strings.StyleFieldLabel,
@@ -293,6 +329,12 @@ export default class HandlebarTemplateDisplayWebPart extends BaseClientSideWebPa
                   text: strings.TemplateFieldButtonText,
                   buttonType: PropertyPaneButtonType.Primary,
                   onClick: this.openTemplateSelector.bind(this)
+                }),
+                PropertyPaneCheckbox('optimizedTemplate',{
+                  text: strings.OptimizedTemplateLabel
+                }),
+                PropertyPaneLabel("optimizedTemplate",{
+                  text: strings.OptimizedTemplateDescription
                 }),
                 PropertyPaneLabel("cssLabel",{
                   text: strings.StyleFieldLabel,

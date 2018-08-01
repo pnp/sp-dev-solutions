@@ -31,7 +31,7 @@ export default class BasicHorizontalTitleOnlyLayout implements IFeaturedContentL
         { items &&
             items.map((item) => {
               return (
-                <div className={styles["featured-content-item"]+" col-md-4 "+(isEditMode ? styles["edit"] : "")} 
+                <div className={styles["featured-content-item"]+" "+(isEditMode ? styles["edit"] : "")} 
                       key={"item-"+items.indexOf(item)} role="link" id={"item-"+items.indexOf(item)} 
                       draggable={isEditMode} onDragStart={this.webpart.startDrag.bind(this.webpart)} 
                       onMouseDown={this.webpart.mouseDragDown.bind(this.webpart)} onDragEnter={this.webpart.moveItem.bind(this.webpart)} 
@@ -55,7 +55,7 @@ export default class BasicHorizontalTitleOnlyLayout implements IFeaturedContentL
         { (!items || items.length < 3) && isEditMode &&
           Array.apply(null,Array(3-(items ? items.length : 0))).map((o,i)=>{
             return(
-              <div className={styles["featured-content-item"]+" col-md-4 "+styles["empty"]}>
+              <div className={styles["featured-content-item"]+" "+styles["empty"]}>
                 <div role="button" onClick={this.webpart.createNewItemFromLink.bind(this.webpart)}>{strings.PlaceholderButtonText}</div>
               </div>
             );

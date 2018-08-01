@@ -16,6 +16,8 @@ define([], function() {
         "SearchFieldLabel": "Search Query",
         "SearchLabel": "Search",
         "ListLabel": "List",
-        "SearchToggleLabel": "List or Search Source?"
+        "SearchToggleLabel": "List or Search Source?",
+        "OptimizedTemplateLabel": "Optimize Template*",
+        "OptimizedTemplateDescription": "* Precompiling the template will enable better performance but this page in edit mode before any template changes take effect"
     }
 });
