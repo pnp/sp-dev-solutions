@@ -16,6 +16,8 @@ declare interface IHandlebarTemplateDisplayStrings {
   SearchLabel: string;
   ListLabel:string;
   SearchToggleLabel: string;
+  OptimizedTemplateLabel: string;
+  OptimizedTemplateDescription: string;
 }
 
 declare module 'handlebarTemplateDisplayStrings' {

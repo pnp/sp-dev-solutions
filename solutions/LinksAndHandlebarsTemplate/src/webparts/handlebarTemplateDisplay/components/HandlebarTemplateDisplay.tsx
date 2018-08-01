@@ -20,6 +20,10 @@ const specialChar = "    ";
 export default class HandlebarTemplateDisplay extends React.Component<IHandlebarTemplateDisplayProps, IHandlebarDisplayTemplateState> {
   private linkPickerPanel: LinkPickerPanel;
 
+  constructor(props){
+    super(props);
+  }
+
   private _templateExport : string;
   public get templateExport() : string {
     return this._templateExport;
@@ -82,7 +86,7 @@ export default class HandlebarTemplateDisplay extends React.Component<IHandlebar
   }
 
   public render(): React.ReactElement<IHandlebarTemplateDisplayProps> {
-    const template = Handlebars.compile(this.props.template);
+    const template = this.props.isOptimized ? Handlebars.template(eval('('+this.props.template+')')) : Handlebars.compile(this.props.template);
     return (
       <div>
         <div className={styles["webpart-header"]}>

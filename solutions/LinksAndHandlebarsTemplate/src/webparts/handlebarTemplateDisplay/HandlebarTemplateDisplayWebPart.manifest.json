@@ -24,7 +24,8 @@
             "handlebarTemplateUrl": "",
             "containerClass": "",
             "cssUrl": "",
-            "jsUrl": ""
+            "jsUrl": "",
+            "optimizedTemplate": false
         }
     }]
 }
