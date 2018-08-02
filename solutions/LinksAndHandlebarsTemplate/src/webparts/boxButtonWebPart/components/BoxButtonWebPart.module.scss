@@ -35,8 +35,8 @@
         margin: 0;
     }
     & .box-button {
-        border: 1px solid #006699;
-        color: #006699;
+        border: 1px solid "[theme: themePrimary, default: #007cc5]";
+        color: "[theme: themePrimary, default: #007cc5]";
         background-color: #FFFFFF;
         padding: 10px 20px;
         text-align: center;
@@ -47,7 +47,7 @@
         font-size: 18px;
         &.blue {
             color: #FFFFFF;
-            background-color: #006699;
+            background-color: "[theme: themePrimary, default: #007cc5]";
         }
         & i {
             margin-right: 10px;
@@ -69,7 +69,7 @@
             line-height: 100%;
             vertical-align: middle;
             color: #FFFFFF;
-            background-color: #006699;
+            background-color: "[theme: themePrimary, default: #007cc5]";
         }
     }
     &:hover {

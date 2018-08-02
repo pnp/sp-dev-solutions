@@ -2,10 +2,13 @@
     list-style-type: none;
     padding-left: 0px;
     overflow: hidden;
-    &.blue {
+    & a {
+        color: white;
+    }
+    &.themed {
         & .faIcon {
             padding: 15px 12px;
-            background-color: #007cc5;
+            background-color: "[theme: themePrimary, default: #007cc5]";
             border-radius: 35px;
             font-size: 20px;
             color: #fff;
@@ -21,7 +24,7 @@
             }
         }
         & a.linktitle {
-            color: #007cc5;
+            color: "[theme: themePrimary, default: #007cc5]";
             display: block;
             font-size: 16px;
             font-weight: 300;
@@ -101,7 +104,7 @@
                 vertical-align: middle;
                 text-align: center;
                 color: #fff;
-                background-color: #069;
+                background-color: "[theme: themePrimary, default: #007cc5]";
                 font-size: 14px;
                 position: absolute;
                 top: 50%;
@@ -141,7 +144,7 @@
         }
     }
 }
- 
+
 @media (max-width:767px) {
     .hubLinks {
         & li {
