@@ -3,6 +3,8 @@ import { IFeaturedItem } from '../../IFeaturedItem';
 import { IFeaturedContentLayout } from '../FeatureContentLayout';
 import FeaturedContentFactory from '../FeaturedContentFactory';
 import styles from './Styles.module.scss';
+import { OffDomainRedirector } from '../../../../../utilities/redirect/OffDomainRedirector';
+import FeaturedContentWebPart from '../../FeaturedContentWebPart';
 
 const urlField = "URL";
 const imageField = "Image";
@@ -11,7 +13,9 @@ const descriptionField = "Description";
 const openNewTabField = "NewTab";
 
 export default class AdvancedStackedLayout implements IFeaturedContentLayout{
-  constructor(){}
+  constructor(webpart: FeaturedContentWebPart){this.webpart=webpart;}
+
+  private webpart:FeaturedContentWebPart;
 
   public render(items:IFeaturedItem[], isEditMode:boolean):JSX.Element{
     return (
@@ -22,14 +26,14 @@ export default class AdvancedStackedLayout implements IFeaturedContentLayout{
                 <div className={styles["featured-content-item"]}>
                   <div role="presentation" className={styles["box-container"]}>
                     <div className={styles["image"]}>
-                      <a className={styles["featured-content-link"]} href={item[urlField]} target={item[openNewTabField] ? "_blank" : ""}></a>
+                      <a className={styles["featured-content-link"]} href={(item[openNewTabField] ? this.webpart.state.redirectUrl : "")+item[urlField]} target={item[openNewTabField] ? "_blank" : ""}></a>
                       {item[imageField] && 
                       <img src={item[imageField]+FeaturedContentFactory.getWidthHeightQueryStringAppendForImage(item[imageField])}/>
                       }
                     </div>
                     <div className={styles["content"]}>
                       <div className={styles["title"]}>
-                        <a className={styles["featured-content-link"]} href={item[urlField]} target={item[openNewTabField] ? "_blank" : ""}>{item[urlField+"_text"]}</a>
+                        <a className={styles["featured-content-link"]} href={(item[openNewTabField] ? this.webpart.state.redirectUrl : "")+item[urlField]} target={item[openNewTabField] ? "_blank" : ""}>{item[urlField+"_text"]}</a>
                       </div>
                       <span className={styles["description"]}>{item[descriptionField]}</span>
                       <span className={styles["rich-text-field"]} dangerouslySetInnerHTML={{__html:item[contentField]}}></span>

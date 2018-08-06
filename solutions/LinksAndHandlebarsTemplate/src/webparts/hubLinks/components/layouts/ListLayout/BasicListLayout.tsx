@@ -3,7 +3,6 @@ import * as strings from 'hubLinksStrings';
 import { IHubLinksItem } from '../../IHubLinksItem';
 import { IHubLinksLayout } from "../HubLinksLayout";
 import { DefaultButton } from 'office-ui-fabric-react/lib/Button';
-//import HubLinksFactory from '../HubLinksFactory';
 import HubLinksWebPart from "../../HubLinks";
 import llStyles from './LLStyles.module.scss';
 
@@ -33,7 +32,7 @@ export default class BasicListLayout implements IHubLinksLayout{
                       {item.Icon && item.Icon.length > 0 &&
                         <i className={"fa "+item.Icon + " " + llStyles["faIcon"]} aria-hidden="true"/>
                       }
-                    <a className={llStyles["linktitle"]} href={item.URL} target={item.NewTab ? "_blank" : ""}>{item.Title}</a>
+                    <a className={llStyles["linktitle"]} href={(item.NewTab ? this.webpart.state.redirectUrl : "")+item.URL} target={item.NewTab ? "_blank" : ""}>{item.Title}</a>
                     {this.webpart.props.showDescription && 
                     <p className={llStyles["linkdescription"]}>{item.Description}</p>
                     }

@@ -6,16 +6,24 @@ import { IHubLinksState } from './IHubLinksState';
 import { HubLinksLayout } from './layouts/HubLinksLayout';
 import HubLinksFactory  from './layouts/HubLinksFactory';
 import { CommandButton, IButtonProps } from 'office-ui-fabric-react/lib/Button';
-import { Panel, PanelType } from 'office-ui-fabric-react/lib/Panel';
-import { Nav } from 'office-ui-fabric-react/lib/Nav';
-import { DefaultButton, PrimaryButton } from 'office-ui-fabric-react/lib/Button';
 import LinkPickerPanel from '../../../components/LinkPickerPanel/LinkPickerPanel';
 import { LinkType } from '../../../components/LinkPickerPanel/ILinkPickerPanelProps';
 import ElemUtil from "../../../utilities/element/elemUtil";
+import { OffDomainRedirector } from '../../../utilities/redirect/OffDomainRedirector';
 
 export default class HubLinks extends React.Component<IHubLinksProps, IHubLinksState> {
-  constructor(){
-    super();
+  constructor(props){
+    super(props);
+    this.state = {
+      redirectUrl: ""
+    };
+  }
+
+  public componentDidMount(){
+    OffDomainRedirector.GetRedirectUrl(this.props.context.spHttpClient)
+      .then(result=>{
+        this.setState({redirectUrl: result});
+      });
   }
 
   /* Manage drag and drop sorting feature */

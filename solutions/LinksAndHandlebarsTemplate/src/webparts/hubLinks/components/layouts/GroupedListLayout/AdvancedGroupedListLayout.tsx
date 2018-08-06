@@ -44,7 +44,7 @@ export default class AdvancedGroupedListLayout implements IHubLinksLayout{
                           {link.Icon && link.Icon.length > 0 &&
                             <i className={"fa "+link.Icon + " " + gllStyles["faIcon"]} aria-hidden="true"/>
                           }                              
-                          <a className={gllStyles["linktitle"]} href={link.URL} target={link.NewTab ? "_blank" : ""}>{link.Title}</a>
+                          <a className={gllStyles["linktitle"]} href={(item.NewTab ? this.webpart.state.redirectUrl : "")+link.URL} target={link.NewTab ? "_blank" : ""}>{link.Title}</a>
                           {this.webpart.props.showDescription && 
                           <p className={gllStyles["linkdescription"]}>{link.Description}</p>
                           }

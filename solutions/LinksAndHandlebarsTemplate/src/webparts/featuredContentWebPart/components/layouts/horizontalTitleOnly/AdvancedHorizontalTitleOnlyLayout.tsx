@@ -3,14 +3,17 @@ import { IFeaturedItem } from '../../IFeaturedItem';
 import { IFeaturedContentLayout } from '../FeatureContentLayout';
 import FeaturedContentFactory from '../FeaturedContentFactory';
 import styles from './Styles.module.scss';
+import FeaturedContentWebPart from '../../FeaturedContentWebPart';
 
 const urlField = "URL";
 const imageField = "Image";
-const descriptionField = "Description";
+const imageAltField = "ImageAlternate";
 const openNewTabField = "NewTab";
 
 export default class AdvancedHorizontalTitleOnlyLayout implements IFeaturedContentLayout{
-  constructor(){}
+  constructor(webpart:FeaturedContentWebPart){this.webpart=webpart;}
+
+  private webpart: FeaturedContentWebPart;
 
   public render(items:IFeaturedItem[], isEditMode:boolean):JSX.Element{
     return (
@@ -21,11 +24,11 @@ export default class AdvancedHorizontalTitleOnlyLayout implements IFeaturedConte
                 <div className={styles["featured-content-item"]}>
                   <div className={styles["featured-content-picture-container"]}>
                     {item["Image"] && 
-                    <img src={item["Image"]+FeaturedContentFactory.getWidthHeightQueryStringAppendForImage(item.Image)} className="largepictureimg" alt={item.ImageAlternate}/>
+                    <img src={item["Image"]+FeaturedContentFactory.getWidthHeightQueryStringAppendForImage(item[imageField])} className="largepictureimg" alt={item[imageAltField]}/>
                     }
                   </div>
                   <div className={styles["featured-content-title"]}>{item[urlField+"_text"]}</div>
-                  <a className={styles["featured-content-link"]} href={item[urlField]} target={item[openNewTabField] ? "_blank" : ""}></a>
+                  <a className={styles["featured-content-link"]} href={(item[openNewTabField] ? this.webpart.state.redirectUrl : "")+item[urlField]} target={item[openNewTabField] ? "_blank" : ""}></a>
                 </div>
               );
             })

@@ -6,6 +6,7 @@ import { DefaultButton } from 'office-ui-fabric-react/lib/Button';
 import FeaturedContentFactory from '../FeaturedContentFactory';
 import FeaturedContentWebPart from "../../FeaturedContentWebPart";
 import styles from './Styles.module.scss';
+import { OffDomainRedirector } from '../../../../../utilities/redirect/OffDomainRedirector';
 
 export default class BasicStackedLayout implements IFeaturedContentLayout{
   constructor(webpart:FeaturedContentWebPart){
@@ -34,11 +35,11 @@ export default class BasicStackedLayout implements IFeaturedContentLayout{
                   <div role="presentation" className={styles["box-container"]}>
                     <div className={styles["image"]}>
                       <img src={item["Image"]+FeaturedContentFactory.getWidthHeightQueryStringAppendForImage(item.Image)} alt={item.ImageAlternate}/>
-                      <a className={styles["featured-content-link"]} href={item.URL} target={item.NewTab ? "_blank" : ""}></a>
+                      <a className={styles["featured-content-link"]} href={(item.NewTab ? this.webpart.state.redirectUrl : "")+item.URL} target={item.NewTab ? "_blank" : ""}></a>
                     </div>
                     <div className={styles["content"]}>
                       <div className={styles["title"]}>
-                        <a className={styles["featured-content-link"]} href={item.URL} target={item.NewTab ? "_blank" : ""}>{item.Title}</a>
+                        <a className={styles["featured-content-link"]} href={(item.NewTab ? this.webpart.state.redirectUrl : "")+item.URL} target={item.NewTab ? "_blank" : ""}>{item.Title}</a>
                       </div>
                       <span className={styles["description"]}>{item.Description}</span>
                       <span className={styles["rich-text-field"]} dangerouslySetInnerHTML={{__html:item.Content}}></span>

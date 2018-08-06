@@ -36,7 +36,7 @@ export default class BasicHorizontalTitleDescriptionLayout implements IFeaturedC
                   </div>
                   <div className={styles["featured-content-title"]}>{item.Title}</div>
                   <div className={styles["featured-content-desc"]} dangerouslySetInnerHTML={ {__html:item.Description} }></div>
-                  <a className={styles["featured-content-link"]} href={item.URL} target={item.NewTab ? "_blank" : ""}></a>
+                  <a className={styles["featured-content-link"]} href={(item.NewTab ? this.webpart.state.redirectUrl : "")+item.URL} target={item.NewTab ? "_blank" : ""}></a>
                   {isEditMode &&
                     <div className={styles["edit-controls"]}>
                         <DefaultButton iconProps={{iconName:"Clear"}} onClick={this.webpart.deleteBox.bind(this.webpart)} className={styles["right-button"]}/>
