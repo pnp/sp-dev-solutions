@@ -45,7 +45,10 @@
         cursor: pointer;
         font-weight: bold;
         font-size: 18px;
-        &.blue {
+        & a {
+            text-decoration: none;
+        }
+        &.themed {
             color: #FFFFFF;
             background-color: "[theme: themePrimary, default: #007cc5]";
         }
@@ -140,6 +143,6 @@
 @media (max-width: 767px) {
     .box-button {
         display: block;
-        width: 100%;
+        width: calc(100% - 40px);
     }
 }
