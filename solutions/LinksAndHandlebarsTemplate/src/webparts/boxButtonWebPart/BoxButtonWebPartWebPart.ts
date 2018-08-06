@@ -33,7 +33,6 @@ export default class BoxButtonWebPartWebPart extends BaseClientSideWebPart<IBoxB
     super();
 
     SPComponentLoader.loadCss('https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css');
-    SPComponentLoader.loadScript('https://thehubcdnvz.azureedge.net/hub-web-parts/polyfill.closest.min.js');
   }
 
   public onInit(): Promise<void> {
