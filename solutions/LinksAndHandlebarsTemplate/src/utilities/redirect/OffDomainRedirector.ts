@@ -7,10 +7,10 @@ export class OffDomainRedirector{
             const currValue = localStorage.getItem(key);
             if(currValue) resolve(currValue);
 
-            return client.get('/SiteAssets/Redirect.config',SPHttpClient.configurations.v1).then(result=>{
+            client.get('/SiteAssets/Redirect.config',SPHttpClient.configurations.v1).then(result=>{
                 result.json().then(val=>{
                     localStorage.setItem(key,val.redirectUrl);
-                    return val.redirectUrl;
+                    resolve(val.redirectUrl);
                 });
             });
         });
