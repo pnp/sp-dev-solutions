@@ -110,7 +110,7 @@ export default class PropertyFieldCamlQueryFieldMappingHost extends React.Compon
     this.cancelListCreate = this.cancelListCreate.bind(this);
 
     var stateObj = {
-      max: 100,
+      max: 30,
       selectedList: {},
       sort: {},
       fieldMappings: [],
@@ -303,10 +303,11 @@ export default class PropertyFieldCamlQueryFieldMappingHost extends React.Compon
 
         switch(field.kind){
           case SPFieldType.Boolean:
+            const val = element.value.toLocaleLowerCase().trim();
             if(element.operator==="Ne")
-              conditions.push(CamlBuilder.Expression().BooleanField(element.field).NotEqualTo(!!(element.value)));
+              conditions.push(CamlBuilder.Expression().BooleanField(element.field).NotEqualTo(val==="yes" || val==="true" || val==="1"));
             else
-              conditions.push(CamlBuilder.Expression().BooleanField(element.field).EqualTo(!!(element.value)));
+              conditions.push(CamlBuilder.Expression().BooleanField(element.field).EqualTo(val==="yes" || val==="true" || val==="1"));
             break;
           case SPFieldType.Integer:
             const integerValue = parseInt(element.value);
@@ -548,7 +549,7 @@ export default class PropertyFieldCamlQueryFieldMappingHost extends React.Compon
         }
       }
       else{
-        if(this.stateCopy.sort && this.stateCopy.sort.title){
+        if(this.stateCopy.sort != undefined && this.stateCopy.sort.title){
           if(this.stateCopy.sort.direction===SortDirection.Descending){
             queryXml = new CamlBuilder() //Any orderby at this
                 .View(listViewFields)
@@ -896,9 +897,9 @@ export default class PropertyFieldCamlQueryFieldMappingHost extends React.Compon
 
         {this.props.showMax != false ?
           <Slider label={strings.SPListQueryMax}
-            min={0}
+            min={1}
             className={styles["slider"]}
-            max={this.props.max == null ? 500 : this.props.max}
+            max={this.props.max == null ? 100 : this.props.max}
             defaultValue={this.state.max}
             onChange={this.onChangedMax}
             disabled={this.props.disabled === false && this.state.selectedList != null && this.state.selectedList != '' ? false : true }

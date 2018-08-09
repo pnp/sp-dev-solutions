@@ -12,6 +12,12 @@ define([], function() {
         "ScriptFieldLabel": "JS File",
         "ScriptFieldButtonText": "Change JS File",
         "DownloadButtonText": "Download Sample Template",
-        "ConfigureWebPartButtonText": "Configure Web Part"
+        "ConfigureWebPartButtonText": "Configure Web Part",
+        "SearchFieldLabel": "Search Query",
+        "SearchLabel": "Search",
+        "ListLabel": "List",
+        "SearchToggleLabel": "List or Search Source?",
+        "OptimizedTemplateLabel": "Optimize Template*",
+        "OptimizedTemplateDescription": "* Precompiling the template will enable better performance but this page in edit mode before any template changes take effect"
     }
 });

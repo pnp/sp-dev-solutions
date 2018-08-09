@@ -1,5 +1,5 @@
 .featured-content {
-    display: block;
+    display: flex;
     width: 100%;
     flex-wrap: wrap;
     margin-bottom: 25px;
@@ -16,6 +16,7 @@
         border: 1px solid #eaeaea;
         outline: 1px solid transparent;
         min-height: 308px;
+        max-height: 308px;
         &:hover {
             border: 1px #C8C8C8 solid;
             outline: 1px #C8C8C8 solid;
@@ -34,19 +35,29 @@
             font-size: 14px;
             padding: 5px 10px;
             background: #fff;
-            overflow: hidden;
             color: #333;
             font-weight: 600;
             width: 100%;
             position: relative;
-            top: 0px;
-            height: auto!important;
+            top: 0;
             box-sizing: border-box;
+            max-height: 47px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
         }
         & .featured-content-desc {
             position: relative;
-            padding: 0 10px 10px;
+            padding: 0 10px 0;
             line-height: 16px;
+            height: 50px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
         }
         & a.featured-content-link {
             position: absolute;
@@ -162,7 +173,9 @@
     }
 }
 
-:global .CanvasSection-sm12.CanvasSection-xl4 {
+:global .CanvasSection-sm12.CanvasSection-xl4,
+:global .col-sm-3,
+:global .col-sm-4 {
     & :local .featured-content {
         & :local .featured-content-item {
             width: 100%;

@@ -74,6 +74,13 @@
             width: auto;
             height: 100%;
         }
+        & .featured-content-link {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+        }
     }
     & .featured-content-link:hover {
         text-decoration: none;
@@ -102,7 +109,7 @@
     }
 }
 
-:global .ms-sm12.ms-xl4 {
+:global .CanvasSection-sm12.CanvasSection-xl4 {
     & :local .featured-content {
         & :local .image {
             & img {

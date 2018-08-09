@@ -1,11 +1,10 @@
-//uses the react-contenteditable npm package as it's base
-
 import * as React from 'react';
 
 export interface IContentEditableProps{
   html:string;
-  id: string;
-  className: string;
+  id?: string;
+  className?: string;
+  style?: {};
   onChange: (event: any) => void;
 }
 
@@ -27,6 +26,7 @@ export default class ContentEditable extends React.Component<IContentEditablePro
         onInput: this.emitChange,
         onBlur: this.emitChange,
         contentEditable: true,
+        style: this.props.style,
         id: this.props.id,
         className: this.props.className,
         dangerouslySetInnerHTML: {__html: this.props.html}

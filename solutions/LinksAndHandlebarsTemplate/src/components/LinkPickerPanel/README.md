@@ -1,6 +1,6 @@
 # LinkPickerPanel component
 
-Usage:
+##Usage:
 
     <LinkPickerPanel
 
@@ -50,3 +50,14 @@ Then call the pickLink() method on the LinkPickerPanel component to obtain a lin
       });
 
 This design was chosen to allow the link picker to manage its own state, as it may be used directly within an SPFx web part.
+
+
+##Configuring Approved Images:
+
+    The ApprovedImageLibs.config file in this folder contains the format that is expected for the configuration.  This file uses the .config extension due to issues getting a json file from a SharePoint  The schema of the JSON file is as follows:
+
+        * The host array contains objects with 2 properties:
+            * libUrl: the absolute URL to the library that you want included in the approved images tab
+            * cdnUrl: the absolute URL to the CDN front to the library if one exists
+    
+    The default setting is for the package to look for the ApprovedImageLibs.json in the SiteAssets root folder on the root site of the SharePoint tenant.

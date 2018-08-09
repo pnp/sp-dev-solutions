@@ -32,7 +32,7 @@ export default class AdvancedStackedLayout implements IFeaturedContentLayout{
                         <a className={styles["featured-content-link"]} href={item[urlField]} target={item[openNewTabField] ? "_blank" : ""}>{item[urlField+"_text"]}</a>
                       </div>
                       <span className={styles["description"]}>{item[descriptionField]}</span>
-                      <span className={styles["rich-text-field"]}>{item[contentField]}></span>
+                      <span className={styles["rich-text-field"]} dangerouslySetInnerHTML={{__html:item[contentField]}}></span>
                     </div>
                   </div>
                 </div>

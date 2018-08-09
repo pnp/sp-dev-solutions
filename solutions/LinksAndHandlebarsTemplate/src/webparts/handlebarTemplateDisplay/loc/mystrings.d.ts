@@ -12,6 +12,12 @@ declare interface IHandlebarTemplateDisplayStrings {
   ScriptFieldButtonText: string;
   DownloadButtonText: string;
   ConfigureWebPartButtonText: string;
+  SearchFieldLabel: string;
+  SearchLabel: string;
+  ListLabel:string;
+  SearchToggleLabel: string;
+  OptimizedTemplateLabel: string;
+  OptimizedTemplateDescription: string;
 }
 
 declare module 'handlebarTemplateDisplayStrings' {

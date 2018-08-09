@@ -18,7 +18,7 @@ export default class AdvancedHorizontalTitleOnlyLayout implements IFeaturedConte
         { items &&
             items.map((item) => {
               return (
-                <div className={styles["featured-content-item"]+" col-md-4"}>
+                <div className={styles["featured-content-item"]}>
                   <div className={styles["featured-content-picture-container"]}>
                     {item["Image"] && 
                     <img src={item["Image"]+FeaturedContentFactory.getWidthHeightQueryStringAppendForImage(item.Image)} className="largepictureimg" alt={item.ImageAlternate}/>

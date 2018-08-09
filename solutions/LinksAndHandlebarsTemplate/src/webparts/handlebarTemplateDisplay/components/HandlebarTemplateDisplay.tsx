@@ -20,6 +20,10 @@ const specialChar = "    ";
 export default class HandlebarTemplateDisplay extends React.Component<IHandlebarTemplateDisplayProps, IHandlebarDisplayTemplateState> {
   private linkPickerPanel: LinkPickerPanel;
 
+  constructor(props){
+    super(props);
+  }
+
   private _templateExport : string;
   public get templateExport() : string {
     return this._templateExport;
@@ -82,7 +86,7 @@ export default class HandlebarTemplateDisplay extends React.Component<IHandlebar
   }
 
   public render(): React.ReactElement<IHandlebarTemplateDisplayProps> {
-    const template = Handlebars.compile(this.props.template);
+    const template = this.props.isOptimized ? Handlebars.template(eval('('+this.props.template+')')) : Handlebars.compile(this.props.template);
     return (
       <div>
         <div className={styles["webpart-header"]}>
@@ -91,7 +95,7 @@ export default class HandlebarTemplateDisplay extends React.Component<IHandlebar
         </div>
         <div className={this.props.containerClass}>
           {this.props.items.length > 0 && this.props.templateUrl && this.props.items.map((item) =>  this.templateRender(item, template) )}
-          {this.props.items.length > 0 && !this.props.templateUrl && this.noTemplateRender(this.props.items[0])}
+          {this.props.items.length > 0 && this.props.isEdit && !this.props.templateUrl && this.noTemplateRender(this.props.items[0])}
           {this.props.items.length===0 && !this.props.listIsSelected && this.renderConfigureWebPartView()}
         </div>
         <LinkPickerPanel
@@ -103,6 +107,10 @@ export default class HandlebarTemplateDisplay extends React.Component<IHandlebar
       </div>
     );
   }
+  
+  private renderSeeAll() {
+    return (<a href={this.props.webUrl+'/_layouts/15/SeeAll.aspx?Page='+this.props.serverRelativeUrl+'&InstanceId='+this.props.instanceId} style={{float: 'right'}}>See All</a>);
+  }
 
   private templateRender(item, template): React.ReactElement<IHandlebarTemplateDisplayProps>{
     return ( <span dangerouslySetInnerHTML={{__html:template(item)}}></span> );
@@ -110,7 +118,7 @@ export default class HandlebarTemplateDisplay extends React.Component<IHandlebar
 
   private noTemplateRender(item): React.ReactElement<IHandlebarTemplateDisplayProps>{
     this.templateExport = this.buildExampleTemplate(item);
-    const temaplate = Handlebars.compile(this.templateExport);
+    const template = Handlebars.compile(this.templateExport);
     return (
       <div>
         <div style={{position: 'relative'}}>
@@ -120,7 +128,7 @@ export default class HandlebarTemplateDisplay extends React.Component<IHandlebar
             {strings.DownloadButtonText}
           </Button>
           </div>
-        <div style={{border: '1px solid #DEDEDE', marginBottom: '5px', padding: '7px'}} dangerouslySetInnerHTML={{__html: temaplate(item)}}></div>
+        <div style={{border: '1px solid #DEDEDE', marginBottom: '5px', padding: '7px'}} dangerouslySetInnerHTML={{__html: template(item)}}></div>
       </div>
     );
   }
@@ -128,10 +136,10 @@ export default class HandlebarTemplateDisplay extends React.Component<IHandlebar
   private buildExampleTemplate(obj, path = ""): string{
     var template = "";
     const separator = path ? "." : "";
-    for(const key of Object.keys(obj).sort()){
+    for(const key of Object.getOwnPropertyNames(obj).sort()){
       const o = obj[key];
       if(key.indexOf(".")!==key.length-1){
-        if(typeof o === 'object'){
+        if(o && typeof o === 'object'){
           template+=this.getLeadingTab(path)+'<div style="margin-left:10px;">';
           template+='\n'+this.getLeadingTab(path)+'    <span style="font-weight:bold;">';
           template+=key+": ";

@@ -78,10 +78,8 @@ Version  | Date               | Comments
 ## Minimal Path to Awesome
 
 - Clone this repository
-- Download the [caml.js](https://github.com/andrei-markeev/camljs/blob/master/CamlJs/camljs.js) library and host it in an accessible location.
-- Change the config/config.json file to point to the above location.
-- Set the cdnBasePath in the config/write-manifests.json file
-- (_Optional_) Set the Azure storage account information for where the files should be deployed
+- (Optional) Configure the web part usage logging - /src/utilities/webpartlogger
+- (Optional) Configure the approved image tab for the link picker - /src/components/LinkPickerPanel
 - in the command line run:
   - `npm install`
   - `gulp serve`
