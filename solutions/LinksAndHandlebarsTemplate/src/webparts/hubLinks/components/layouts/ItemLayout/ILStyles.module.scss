@@ -1,11 +1,15 @@
 .hubLinks {
     list-style-type: none;
     padding-left: 0px;
+    color: "[theme:primaryText, default: #000000]";
     overflow: hidden;
-    &.blue {
+    & a {
+        color: white;
+    }
+    &.themed {
         & .faIcon {
             padding: 15px 12px;
-            background-color: #007cc5;
+            background-color: "[theme: themePrimary, default: #007cc5]";
             border-radius: 35px;
             font-size: 20px;
             color: #fff;
@@ -21,11 +25,14 @@
             }
         }
         & a.linktitle {
-            color: #007cc5;
+            color: "[theme: themePrimary, default: #007cc5]";
             display: block;
             font-size: 16px;
             font-weight: 300;
             margin-left: 67px;
+            &:visited {
+                color: "[theme: themePrimary, default: #007cc5]";
+            }
         }
         & .linkdescription {
             font-size: 13px;
@@ -36,7 +43,7 @@
     & li {
         display: inline-block;
         margin-bottom: 15px;
-        width: calc(50% - 25px);
+        width: calc(50% - 26px);
         margin-right: 20px;
         min-height: 70px;
         vertical-align: top;
@@ -101,7 +108,7 @@
                 vertical-align: middle;
                 text-align: center;
                 color: #fff;
-                background-color: #069;
+                background-color: "[theme: themePrimary, default: #007cc5]";
                 font-size: 14px;
                 position: absolute;
                 top: 50%;
@@ -141,7 +148,7 @@
         }
     }
 }
- 
+
 @media (max-width:767px) {
     .hubLinks {
         & li {

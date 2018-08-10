@@ -342,25 +342,28 @@ export default class HubLinksWebPart extends BaseClientSideWebPart<IHubLinksWebP
                     {
                       checked: this.properties.layoutMode===HubLinksLayout.ItemLayout,
                       key: HubLinksLayout.ItemLayout,
-                      imageSrc: "https://thehubcdnvz.azureedge.net/hub-web-parts/fc-Layout-Image-Title.svg",
-                      selectedImageSrc: "https://thehubcdnvz.azureedge.net/hub-web-parts/fc-Layout-Image-Title.svg",
-                      imageSize: { height:32, width:32 },
+                      iconProps: {officeFabricIconFontName:"BulletedList2"},
+                      //imageSrc: "https://thehubcdnvz.azureedge.net/hub-web-parts/fc-Layout-Image-Title.svg",
+                      //selectedImageSrc: "https://thehubcdnvz.azureedge.net/hub-web-parts/fc-Layout-Image-Title.svg",
+                      //imageSize: { height:32, width:32 },
                       text: strings.ItemLayoutLabel
                     },
                     {
                       checked: this.properties.layoutMode===HubLinksLayout.ListLayout,
                       key: HubLinksLayout.ListLayout,
-                      imageSrc: "https://thehubcdnvz.azureedge.net/hub-web-parts/fc-Layout-Title-Description.svg",
-                      imageSize: { height:32,width:32 },
-                      selectedImageSrc: "https://thehubcdnvz.azureedge.net/hub-web-parts/fc-Layout-Title-Description.svg",
+                      iconProps: {officeFabricIconFontName:"List"},
+                      //imageSrc: "https://thehubcdnvz.azureedge.net/hub-web-parts/fc-Layout-Title-Description.svg",
+                      //imageSize: { height:32,width:32 },
+                      //selectedImageSrc: "https://thehubcdnvz.azureedge.net/hub-web-parts/fc-Layout-Title-Description.svg",
                       text: strings.ListLayoutLabel
                     },
                     {
                       checked: this.properties.layoutMode===HubLinksLayout.GroupedListLayout,
                       key: HubLinksLayout.GroupedListLayout,
-                      imageSrc: "https://thehubcdnvz.azureedge.net/hub-web-parts/fc-Layout-Title-Description.svg",
-                      imageSize: { height:32,width:32 },
-                      selectedImageSrc: "https://thehubcdnvz.azureedge.net/hub-web-parts/fc-Layout-Title-Description.svg",
+                      iconProps: {officeFabricIconFontName:"GroupedList"},
+                      //imageSrc: "https://thehubcdnvz.azureedge.net/hub-web-parts/fc-Layout-Title-Description.svg",
+                      //imageSize: { height:32,width:32 },
+                      //selectedImageSrc: "https://thehubcdnvz.azureedge.net/hub-web-parts/fc-Layout-Title-Description.svg",
                       text: strings.GroupedListLayoutLabel
                     }
                   ]

@@ -213,7 +213,7 @@ export default class PropertyFieldCamlQueryFieldMappingHost extends React.Compon
         response.map((field: ISPField) => {
           const option = {
             internalName: field.InternalName,
-            name: field.Title,
+            name: field.Title+" - "+field.InternalName,
             kind: this.getKindForType(field.TypeAsString)
           };
           fields.Add(option);

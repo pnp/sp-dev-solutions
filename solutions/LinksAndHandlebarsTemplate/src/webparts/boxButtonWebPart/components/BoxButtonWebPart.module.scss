@@ -18,11 +18,11 @@
         font-weight: inherit;
         line-height: inherit;
         text-align: inherit;
-        color: #333333;
+        color: "[theme:primaryText, default: #000000]";
         height: 40px;
     }
     & .view {
-        color: #333333;
+        color: "[theme:primaryText, default: #000000]";
     }
 }
 
@@ -35,9 +35,9 @@
         margin: 0;
     }
     & .box-button {
-        border: 1px solid #006699;
-        color: #006699;
-        background-color: #FFFFFF;
+        border: 1px solid "[theme: primaryBackground, default: #FFFFFF]";
+        color: "[theme: themePrimary, default: #007cc5]";
+        background-color: "[theme: primaryBackground, default: #FFFFFF]";
         padding: 10px 20px;
         text-align: center;
         text-transform: uppercase;
@@ -45,9 +45,12 @@
         cursor: pointer;
         font-weight: bold;
         font-size: 18px;
-        &.blue {
-            color: #FFFFFF;
-            background-color: #006699;
+        & a {
+            text-decoration: none;
+        }
+        &.themed {
+            color: "[theme: primaryBackground, default: #FFFFFF]";
+            background-color: "[theme: themePrimary, default: #007cc5]";
         }
         & i {
             margin-right: 10px;
@@ -69,7 +72,7 @@
             line-height: 100%;
             vertical-align: middle;
             color: #FFFFFF;
-            background-color: #006699;
+            background-color: "[theme: themePrimary, default: #007cc5]";
         }
     }
     &:hover {
@@ -140,6 +143,6 @@
 @media (max-width: 767px) {
     .box-button {
         display: block;
-        width: 100%;
+        width: calc(100% - 40px);
     }
 }

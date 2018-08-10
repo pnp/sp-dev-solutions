@@ -27,6 +27,11 @@ import { PropertyPaneImageSelector, ImageDisplayType } from "../../propertyPane/
 import QueryStringParser from "../../utilities/urlparser/queryStringParser";
 import { WebPartLogger } from '../../utilities/webpartlogger/usagelogger';
 
+const titleOnlyImage = require('./assets/title-only.svg');
+const titleDescImage = require('./assets/title-desc.svg');
+const stackedImage = require('./assets/stacked.svg');
+const altStackImage = require('./assets/alt-stack.svg');
+
 const urlField = "URL";
 const imageField = "Image";
 const descriptionField = "Description";
@@ -188,33 +193,33 @@ export default class FeaturedContentWebPartWebPart extends BaseClientSideWebPart
                     {
                       checked: this.properties.layoutMode===FeaturedContentLayout.HorizontalTitleOnly,
                       key: FeaturedContentLayout.HorizontalTitleOnly,
-                      imageSrc: "https://thehubcdnvz.azureedge.net/hub-web-parts/fc-Layout-Image-Title.svg",
-                      selectedImageSrc: "https://thehubcdnvz.azureedge.net/hub-web-parts/fc-Layout-Image-Title.svg",
+                      imageSrc: titleOnlyImage,
+                      selectedImageSrc: titleOnlyImage,
                       imageSize: { height:32,width:32 },
                       text: strings.TitleOnlyLabel
                     },
                     {
                       checked: this.properties.layoutMode===FeaturedContentLayout.HorizontalTitleAndDescription,
                       key: FeaturedContentLayout.HorizontalTitleAndDescription,
-                      imageSrc: "https://thehubcdnvz.azureedge.net/hub-web-parts/fc-Layout-Title-Description.svg",
+                      imageSrc: titleDescImage,
                       imageSize: { height:32,width:32 },
-                      selectedImageSrc: "https://thehubcdnvz.azureedge.net/hub-web-parts/fc-Layout-Title-Description.svg",
+                      selectedImageSrc: titleDescImage,
                       text: strings.TitleDescriptionLabel
                     },
                     {
                       checked: this.properties.layoutMode===FeaturedContentLayout.Vertical,
                       key: FeaturedContentLayout.Vertical,
-                      imageSrc: "https://thehubcdnvz.azureedge.net/hub-web-parts/fc-Layout-Stacked.svg",
+                      imageSrc: stackedImage,
                       imageSize: { height:32,width:32 },
-                      selectedImageSrc: "https://thehubcdnvz.azureedge.net/hub-web-parts/fc-Layout-Stacked.svg",
+                      selectedImageSrc: stackedImage,
                       text: strings.StackedLabel
                     },
                     {
                       checked: this.properties.layoutMode===FeaturedContentLayout.VerticalAlternating,
                       key: FeaturedContentLayout.VerticalAlternating,
-                      imageSrc: "https://thehubcdnvz.azureedge.net/hub-web-parts/fc-Layout-Alt-Stacked.svg",
+                      imageSrc: altStackImage,
                       imageSize: { height:32,width:32 },
-                      selectedImageSrc: "https://thehubcdnvz.azureedge.net/hub-web-parts/fc-Layout-Alt-Stacked.svg",
+                      selectedImageSrc: altStackImage,
                       text: strings.AltStackedLabel
                     }
                   ]

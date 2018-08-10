@@ -2,6 +2,7 @@
     list-style-type: none;
     padding-left: 0px;
     display: block;
+    color: "[theme:primaryText, default: #000000]";
     font-family: segoe ui;
     overflow: hidden;
     &>div {
@@ -18,9 +19,8 @@
             border: 1px solid #c8c8c8;
         }
         & .faIcon {
-            color: #007cc5;
+            color: "[theme: themePrimary, default: #007cc5]";
             font-size: 16px !important;
-            width: 45px;
             position: absolute;
             top: 14px;
             vertical-align: top;
@@ -33,6 +33,10 @@
             margin-left: 31px;
             padding-top: 2px;
             vertical-align: top;
+            color: "[theme: themePrimary, default: #007cc5]";
+            &:visited {
+                color: "[theme: themePrimary, default: #007cc5]";
+            }
         }
         & .linkdescription {
             max-width: calc(100% - 262px);
@@ -105,7 +109,7 @@
                 vertical-align: middle;
                 text-align: center;
                 color: #fff;
-                background-color: #069;
+                background-color: "[theme: themePrimary, default: #007cc5]";
                 font-size: 14px;
                 position: relative;
                 top: 50%;
