@@ -3,7 +3,7 @@
   "solution": {
     "name": "Site Designs Studio",
     "id": "0fca3b54-f16b-45e0-8970-1df13f2aeb83",
-    "version": "1.2.0.0",
+    "version": "1.3.0.0",
     "includeClientSideAssets": true,
     "skipFeatureDeployment": true
   },
