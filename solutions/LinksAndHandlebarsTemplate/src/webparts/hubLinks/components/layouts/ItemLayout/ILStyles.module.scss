@@ -1,6 +1,7 @@
 .hubLinks {
     list-style-type: none;
     padding-left: 0px;
+    color: "[theme:primaryText, default: #000000]";
     overflow: hidden;
     & a {
         color: white;
@@ -29,6 +30,9 @@
             font-size: 16px;
             font-weight: 300;
             margin-left: 67px;
+            &:visited {
+                color: "[theme: themePrimary, default: #007cc5]";
+            }
         }
         & .linkdescription {
             font-size: 13px;
