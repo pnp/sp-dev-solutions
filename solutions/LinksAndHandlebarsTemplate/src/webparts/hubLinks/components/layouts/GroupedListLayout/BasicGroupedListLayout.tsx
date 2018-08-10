@@ -48,8 +48,13 @@ export default class BasicGroupedListLayout implements IHubLinksLayout{
                             onDragEnd={this.webpart.endDrag.bind(this.webpart)} data-index={link.index}>
                           {link.Icon && link.Icon.length > 0 &&
                           <i className={"fa "+link.Icon + " " + gllStyles["faIcon"]} aria-hidden="true"/>
-                          }                              
-                          <a className={gllStyles["linktitle"]} href={(link.NewTab ? this.webpart.state.redirectUrl : "")+link.URL} target={link.NewTab ? "_blank" : ""}>{link.Title}</a>
+                          }
+                          {link.NewTab &&                           
+                            <a className={gllStyles["linktitle"]} href={link.URL} target="blank" data-interception="off">{link.Title}</a>
+                          }
+                          {!link.NewTab &&                           
+                            <a className={gllStyles["linktitle"]} href={link.URL}>{link.Title}</a>
+                          }
                           {this.webpart.props.showDescription && 
                           <p className={gllStyles["linkdescription"]}>{link.Description}</p>
                           }

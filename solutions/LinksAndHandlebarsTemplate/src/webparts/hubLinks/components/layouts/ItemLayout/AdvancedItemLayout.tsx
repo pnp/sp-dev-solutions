@@ -25,7 +25,12 @@ export default class AdvancedItemLayoutLayout implements IHubLinksLayout{
               return (
                 <li>
                   <i className={"fa " + item.Icon + " " + ilStyles["faIcon"]} aria-hidden="true"/>
-                  <a className={ilStyles["linktitle"]} href={(item.NewTab ? this.webpart.state.redirectUrl : "")+item.URL} target={item.NewTab ? "_blank" : ""}>{item.Title}</a>
+                  {item.NewTab &&
+                    <a className={ilStyles["linktitle"]} href={item.URL} target="blank" data-interception="off">{item.Title}</a>
+                  }
+                  {!item.NewTab &&
+                    <a className={ilStyles["linktitle"]} href={item.URL}>{item.Title}</a>
+                  }
                   <p className={ilStyles["linkdescription"]}>{item.Description}</p>                    
                 </li>                  
               );

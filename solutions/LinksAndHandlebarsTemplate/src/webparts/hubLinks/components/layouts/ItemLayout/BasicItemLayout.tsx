@@ -30,7 +30,12 @@ export default class BasicHorizontalTitleLayout implements IHubLinksLayout{
                       onMouseDown={this.webpart.mouseDragDown.bind(this.webpart)} onDragEnter={this.webpart.moveItem.bind(this.webpart)} 
                       onDragEnd={this.webpart.endDrag.bind(this.webpart)} data-index={items.indexOf(item)}>
                     <i className={"fa " + item.Icon + " " + ilStyles["faIcon"]} aria-hidden="true"/>
-                    <a className={ilStyles["linktitle"]} href={(item.NewTab ? this.webpart.state.redirectUrl : "")+item.URL} target={item.NewTab ? "_blank" : ""}>{item.Title}</a>
+                    {item.NewTab &&
+                      <a className={ilStyles["linktitle"]} href={item.URL} target="blank" data-interception="off">{item.Title}</a>
+                    }
+                    {!item.NewTab &&
+                      <a className={ilStyles["linktitle"]} href={item.URL}>{item.Title}</a>
+                    }
                     <p className={ilStyles["linkdescription"]}>{item.Description}</p>                    
                     {isEditMode &&
                       <div className={ilStyles["editControls"]}>

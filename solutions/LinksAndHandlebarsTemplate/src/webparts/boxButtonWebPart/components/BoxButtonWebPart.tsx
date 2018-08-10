@@ -12,7 +12,6 @@ import { IBoxButton } from './IBoxButton';
 import LinkPickerPanel from '../../../components/LinkPickerPanel/LinkPickerPanel';
 import { LinkType } from '../../../components/LinkPickerPanel/ILinkPickerPanelProps';
 import ElemUtil from "../../../utilities/element/elemUtil";
-import { OffDomainRedirector } from '../../../utilities/redirect/OffDomainRedirector';
 
 const urlField = "URL";
 const iconField = "Font Awesome Icon";
@@ -20,19 +19,6 @@ const isThemedField = "Has Blue Background";
 const openNewTabField = "Open Link in New Tab";
 
 export default class BoxButtonWebPart extends React.Component<IBoxButtonWebPartProps,IBoxButtonState> {
-
-  constructor(props){
-    super(props);
-    this.state = {redirectUrl:""};
-  }
-
-  public componentDidMount(){
-    OffDomainRedirector.GetRedirectUrl(this.props.context.spHttpClient)
-      .then(result=>{
-        this.setState({redirectUrl: result});
-      });
-  }
-  
   private linkPickerPanel: LinkPickerPanel;
 
   private _dragElement : any;
@@ -196,12 +182,22 @@ export default class BoxButtonWebPart extends React.Component<IBoxButtonWebPartP
   public renderBasicDefaultLayout(item: IBoxButton): JSX.Element{
     return(
       <div className={styles["box-link"]} role="link" id={"item-"+this.props.data.indexOf(item)} key={"item-"+this.props.data.indexOf(item)} draggable={this.props.isEdit} onDragStart={this.startDrag.bind(this)} onMouseDown={this.mouseDragDown.bind(this)} onDragEnter={this.moveItem.bind(this)} onDragEnd={this.endDrag.bind(this)} data-index={this.props.data.indexOf(item)}>
-        <a href={(item.openNew ? this.state.redirectUrl : "")+item.url} target={item.openNew ? "_blank" : ""}>
-          <div className={styles["box-button"]+" "+(item.isBlue ? styles["blue"] : "")+" "+(this.props.isEdit ? styles["edit"] : "")}>
-            <i className={item.icon ? "fa "+item.icon : ""}></i>
-            {item.name}
-          </div>
-        </a>
+        {item.openNew &&
+          <a href={item.url} target="blank" data-interception="off">
+            <div className={styles["box-button"]+" "+(item.isBlue ? styles["themed"] : "")+" "+(this.props.isEdit ? styles["edit"] : "")}>
+              <i className={item.icon ? "fa "+item.icon : ""}></i>
+              {item.name}
+            </div>
+          </a>
+        }
+        {!item.openNew &&
+          <a href={item.url}>
+            <div className={styles["box-button"]+" "+(item.isBlue ? styles["themed"] : "")+" "+(this.props.isEdit ? styles["edit"] : "")}>
+              <i className={item.icon ? "fa "+item.icon : ""}></i>
+              {item.name}
+            </div>
+          </a>
+        }
         {this.props.isEdit && 
           <div className={styles["edit-controls"]}>
               <DefaultButton iconProps={{iconName:"Clear"}} onClick={this.deleteBox.bind(this)}/>
@@ -230,12 +226,22 @@ export default class BoxButtonWebPart extends React.Component<IBoxButtonWebPartP
   public renderAdvancedDefaultLayout(item: any): JSX.Element{
     return(
       <div className={styles["box-link"]} role="link" key={"item-"+this.props.links.indexOf(item)}>
-        <a href={(item[openNewTabField] ? this.state.redirectUrl : "") + item[urlField]} target={item[openNewTabField] ? "_blank" : ""}>
-          <div className={styles["box-button"]+" "+(item[isThemedField] ? styles["blue"] : "")}>
-            <i className={item[iconField] ? "fa "+item[iconField] : ""}></i>
-            {item[urlField+"_text"]}
-          </div>
-        </a>   
+        {item[openNewTabField] &&
+          <a href={item[urlField]} target="blank" data-interception="off">
+            <div className={styles["box-button"]+" "+(item[isThemedField] ? styles["blue"] : "")}>
+              <i className={item[iconField] ? "fa "+item[iconField] : ""}></i>
+              {item[urlField+"_text"]}
+            </div>
+          </a>
+        }
+        {!item[openNewTabField] &&
+          <a href={item[urlField]}>
+            <div className={styles["box-button"]+" "+(item[isThemedField] ? styles["blue"] : "")}>
+              <i className={item[iconField] ? "fa "+item[iconField] : ""}></i>
+              {item[urlField+"_text"]}
+            </div>
+          </a>
+        }
       </div>
     );
   }

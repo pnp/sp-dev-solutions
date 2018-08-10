@@ -10,25 +10,16 @@ import FeaturedContentFactory from './layouts/FeaturedContentFactory';
 import { LinkType } from "../../../components/LinkPickerPanel/ILinkPickerPanelProps";
 import LinkPickerPanel from "../../../components/LinkPickerPanel/LinkPickerPanel";
 import ElemUtil from "../../../utilities/element/elemUtil";
-import { OffDomainRedirector } from '../../../utilities/redirect/OffDomainRedirector';
 
 export default class FeaturedContentWebPart extends React.Component<IFeaturedContentWebPartProps, IFeaturedContentState> {
   constructor(props){
     super(props);
     this.state={
-      redirectUrl:"",
       isLinkPanelOpen: false,
       isSiteSelected: false,
       linkEntered: "",
       linkValid: false
     };
-  }
-
-  public componentDidMount(){
-    OffDomainRedirector.GetRedirectUrl(this.props.context.spHttpClient)
-      .then(result=>{
-        this.setState({redirectUrl: result});
-      });
   }
 
   private _dragElement : any;

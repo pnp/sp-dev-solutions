@@ -27,7 +27,12 @@ export default class AdvancedHorizontalTitleDescriptionLayout implements IFeatur
                   </div>
                   <div className={styles["featured-content-title"]}>{item[urlField+"_text"]}</div>
                   <div className={styles["featured-content-desc"]} dangerouslySetInnerHTML={ {__html:item[descriptionField]} }></div>
-                  <a className={styles["featured-content-link"]} href={(item[openNewTabField] ? this.webpart.state.redirectUrl : "")+item[urlField]} target={item[openNewTabField] ? "_blank" : ""}></a>
+                  {item[openNewTabField] &&
+                    <a className={styles["featured-content-link"]} href={item[urlField]} target="blank" data-interception="off"></a>
+                  }
+                  {!item[openNewTabField] &&
+                    <a className={styles["featured-content-link"]} href={item[urlField]}></a>
+                  }
                 </div>
               );
             })

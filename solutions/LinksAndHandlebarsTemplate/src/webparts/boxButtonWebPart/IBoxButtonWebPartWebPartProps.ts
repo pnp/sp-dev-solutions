@@ -4,7 +4,7 @@ export interface IBoxButtonWebPartWebPartProps {
   name:string;
   fontAwesomeIcon:string;
   url: string;
-  isBlue: boolean;
+  isThemed: boolean;
   newTab: boolean;
   data: IBoxButton[];
   title:string;
