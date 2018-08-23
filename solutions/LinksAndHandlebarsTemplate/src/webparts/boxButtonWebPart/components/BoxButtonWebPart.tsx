@@ -228,7 +228,7 @@ export default class BoxButtonWebPart extends React.Component<IBoxButtonWebPartP
       <div className={styles["box-link"]} role="link" key={"item-"+this.props.links.indexOf(item)}>
         {item[openNewTabField] &&
           <a href={item[urlField]} target="blank" data-interception="off">
-            <div className={styles["box-button"]+" "+(item[isThemedField] ? styles["blue"] : "")}>
+            <div className={styles["box-button"]+" "+(item[isThemedField] ? styles["themed"] : "")}>
               <i className={item[iconField] ? "fa "+item[iconField] : ""}></i>
               {item[urlField+"_text"]}
             </div>
@@ -236,7 +236,7 @@ export default class BoxButtonWebPart extends React.Component<IBoxButtonWebPartP
         }
         {!item[openNewTabField] &&
           <a href={item[urlField]}>
-            <div className={styles["box-button"]+" "+(item[isThemedField] ? styles["blue"] : "")}>
+            <div className={styles["box-button"]+" "+(item[isThemedField] ? styles["themed"] : "")}>
               <i className={item[iconField] ? "fa "+item[iconField] : ""}></i>
               {item[urlField+"_text"]}
             </div>
