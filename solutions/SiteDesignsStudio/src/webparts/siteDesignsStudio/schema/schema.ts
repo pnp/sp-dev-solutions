@@ -175,6 +175,69 @@ export default {
 				required: [ 'verb', 'schemaXml' ],
 				additionalProperties: false
 			},
+			addSPLookupFieldXml: {
+				type: 'object',
+				title: getActionTitle('createSPList_addSPLookupFieldXml', 'Add a lookup field as XML'),
+				description: getActionDescription(
+					'createSPList_addSPLookupFieldXml',
+					'Enables defining lookup fields and their dependent lists element using Collaborative Application Markup Language (CAML).'
+				),
+				properties: {
+					verb: {
+						enum: [ 'addSPLookupFieldXml' ]
+					},
+					schemaXml: {
+						title: getPropertyTitle('schemaXml', 'createSPList_addSPLookupFieldXml', 'Field XML Schema'),
+						description: getPropertyDescription(
+							'schemaXml',
+							'createSPList_addSPLookupFieldXml',
+							'The XML Schema of the field to add'
+						),
+						type: 'string'
+					},
+					targetListName: {
+						title: getPropertyTitle(
+							'targetListName ',
+							'createSPList_addSPLookupFieldXml',
+							"Target list's name"
+						),
+						description: getPropertyDescription(
+							'targetListName ',
+							'createSPList_addSPLookupFieldXml',
+							'The name that identifies the list this lookup field is referencing. Provide either this or targetListUrl.'
+						),
+						type: 'string'
+					},
+					targetListUrl: {
+						title: getPropertyTitle(
+							'targetListUrl ',
+							'createSPList_addSPLookupFieldXml',
+							"Target list's URL"
+						),
+						description: getPropertyDescription(
+							'targetListUrl ',
+							'createSPList_addSPLookupFieldXml',
+							'A web-relative URL that identifies the list this lookup field is referencing. Provide either this or targetListName.'
+						),
+						type: 'string'
+					},
+					addToDefaultView: {
+						title: getPropertyTitle(
+							'addToDefaultView',
+							'createSPList_addSPLookupFieldXml',
+							'Add to default view'
+						),
+						description: getPropertyDescription(
+							'addToDefaultView',
+							'createSPList_addSPLookupFieldXml',
+							'The field is added to default view'
+						),
+						type: 'boolean'
+					}
+				},
+				required: [ 'verb', 'schemaXml' ],
+				additionalProperties: false
+			},
 			addSPView: {
 				type: 'object',
 				title: getActionTitle('createSPList_addSPView', 'Add a view'),
@@ -418,20 +481,16 @@ export default {
 						enum: [ 'associateListViewCommandSet' ]
 					},
 					title: {
-            title: getPropertyTitle('title', 'createSPList_associateListViewCommandSet', 'Title'),
-            description: getPropertyDescription(
-              'title',
-              'createSPList_associateListViewCommandSet',
-              'The title of the extension'
-            ),
-            type: 'string'
-          },
-					location: {
-						title: getPropertyTitle(
-							'location',
+						title: getPropertyTitle('title', 'createSPList_associateListViewCommandSet', 'Title'),
+						description: getPropertyDescription(
+							'title',
 							'createSPList_associateListViewCommandSet',
-							'Location'
+							'The title of the extension'
 						),
+						type: 'string'
+					},
+					location: {
+						title: getPropertyTitle('location', 'createSPList_associateListViewCommandSet', 'Location'),
 						description: getPropertyDescription(
 							'location',
 							'createSPList_associateListViewCommandSet',
@@ -688,14 +747,14 @@ export default {
 							{ type: 'object', $ref: '#/definitions/SPListSubactions/addSPField' },
 							{ type: 'object', $ref: '#/definitions/SPListSubactions/deleteSPField' },
 							{ type: 'object', $ref: '#/definitions/SPListSubactions/addSPFieldXml' },
+							{ type: 'object', $ref: '#/definitions/SPListSubactions/addSPLookupFieldXml' },
 							{ type: 'object', $ref: '#/definitions/SPListSubactions/addSPView' },
 							{ type: 'object', $ref: '#/definitions/SPListSubactions/removeSPView' },
 							{ type: 'object', $ref: '#/definitions/SPListSubactions/addContentType' },
 							{ type: 'object', $ref: '#/definitions/SPListSubactions/removeContentType' },
-              { type: 'object', $ref: '#/definitions/SPListSubactions/setSPFieldCustomFormatter' },
-              { type: 'object', $ref: '#/definitions/SPListSubactions/associateFieldCustomizer' },
-              { type: 'object', $ref: '#/definitions/SPListSubactions/associateListViewCommandSet' }
-
+							{ type: 'object', $ref: '#/definitions/SPListSubactions/setSPFieldCustomFormatter' },
+							{ type: 'object', $ref: '#/definitions/SPListSubactions/associateFieldCustomizer' },
+							{ type: 'object', $ref: '#/definitions/SPListSubactions/associateListViewCommandSet' }
 						]
 					}
 				}
@@ -732,6 +791,36 @@ export default {
 				}
 			},
 			required: [ 'verb', 'url', 'displayName', 'isWebRelative' ]
+		},
+		removeNavLink: {
+			title: getActionTitle('removeNavLink ', 'Remove a Navigation Link'),
+			description: getActionDescription('removeNavLink ', 'Removes a navigation link from the site'),
+			type: 'object',
+			properties: {
+				verb: {
+					enum: [ 'removeNavLink' ]
+				},
+				displayName: {
+					title: getPropertyTitle('displayName', 'removeNavLink', "Link's text"),
+					description: getPropertyDescription('displayName', 'addNavLink', 'The text of the navigation Link'),
+					type: 'string'
+				},
+				url: {
+					title: getPropertyTitle('url', 'removeNavLink', "Link's URL"),
+					description: getPropertyDescription('url', 'removeNavLink', 'The URL of the navigation Link'),
+					type: 'string'
+				},
+				isWebRelative: {
+					title: getPropertyTitle('isWebRelative', 'removeNavLink', 'Is Web Relative'),
+					description: getPropertyDescription(
+						'isWebRelative',
+						'removeNavLink',
+						'Is the URL of the link web-relative ?'
+					),
+					type: 'boolean'
+				}
+			},
+			required: [ 'verb', 'displayName', 'isWebRelative' ]
 		},
 		applyTheme: {
 			title: getActionTitle('applyTheme', 'Apply a theme'),
@@ -963,7 +1052,10 @@ export default {
 		addPrincipalToGroup: {
 			type: 'object',
 			title: getActionTitle('addPrincipalToGroup', 'Add Principal to Group'),
-			description: getActionDescription('addPrincipalToGroup', 'Use the addPrincipalToGroup action to manage addition of users and groups to select default SharePoint groups. This action can be used for licensed users, security groups, and Office 365 Groups'),
+			description: getActionDescription(
+				'addPrincipalToGroup',
+				'Use the addPrincipalToGroup action to manage addition of users and groups to select default SharePoint groups. This action can be used for licensed users, security groups, and Office 365 Groups'
+			),
 			properties: {
 				verb: {
 					enum: [ 'addPrincipalToGroup' ]
@@ -1033,14 +1125,15 @@ export default {
 					{ type: 'object', $ref: '#/definitions/createSiteColumn' },
 					{ type: 'object', $ref: '#/definitions/createContentType' },
 					{ type: 'object', $ref: '#/definitions/addNavLink' },
+					{ type: 'object', $ref: '#/definitions/removeNavLink' },
 					{ type: 'object', $ref: '#/definitions/applyTheme' },
 					{ type: 'object', $ref: '#/definitions/setSiteLogo' },
 					{ type: 'object', $ref: '#/definitions/joinHubSite' },
-          { type: 'object', $ref: '#/definitions/installSPFXSolution' },
-          { type: 'object', $ref: '#/definitions/associateExtension' },
-          { type: 'object', $ref: '#/definitions/triggerFlow' },
-          { type: 'object', $ref: '#/definitions/setRegionalSettings' },
-          { type: 'object', $ref: '#/definitions/addPrincipalToGroup' },
+					{ type: 'object', $ref: '#/definitions/installSPFXSolution' },
+					{ type: 'object', $ref: '#/definitions/associateExtension' },
+					{ type: 'object', $ref: '#/definitions/triggerFlow' },
+					{ type: 'object', $ref: '#/definitions/setRegionalSettings' },
+					{ type: 'object', $ref: '#/definitions/addPrincipalToGroup' },
 					{ type: 'object', $ref: '#/definitions/setSiteExternalSharingCapability' }
 				]
 			}

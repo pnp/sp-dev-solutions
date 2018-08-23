@@ -15,8 +15,8 @@ export enum SiteActions {
 export enum CreateListSubActions {
 	setTitle = 'setTitle',
 	setDescription = 'setDescription',
-  addSPField = 'addSPField',
-  addSPFieldXml= 'addSPFieldXml',
+	addSPField = 'addSPField',
+	addSPFieldXml = 'addSPFieldXml',
 	deleteSPField = 'deleteSPField',
 	addContentType = 'addContentType',
 	removeContentType = 'removeContentType',
