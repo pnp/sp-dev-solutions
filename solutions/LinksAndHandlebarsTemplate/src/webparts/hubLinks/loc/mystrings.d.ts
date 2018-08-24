@@ -63,11 +63,25 @@ declare interface IHubLinksStrings {
   AdvancedEnableListModeLabel: string;
   AdvancedEnableListModeInfo: string;
 
+  TileFontColorLabel:string;
+  TileBorderColorLabel:string;
+  TileBackgroundColorLabel:string;
+
+  ThemePrimaryColor: string;
+  ThemeSecondaryColor: string;
+  ThemeTertiaryColor: string;
+  ThemePrimaryText: string;
+  WhiteColor;
+  BlackColor;
+  TransparentColor;
+
   LayoutLabel: string;
   LayoutSelectorLabel: string;
   ItemLayoutLabel: string;
   ListLayoutLabel: string;
   GroupedListLayoutLabel: string;
+  IconTopLayoutLabel: string;
+  IconLeftLayoutLabel:string;
 
   ShowDescriptionLabel: string;
   GroupSortLabel: string;

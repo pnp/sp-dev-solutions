@@ -19,4 +19,7 @@ export interface IHubLinksProps {
   context: IWebPartContext;
   layoutMode: HubLinksLayout;
   showDescription: boolean;
+  textColor: string;
+  backgroundColor: string;
+  borderColor: string;
 }

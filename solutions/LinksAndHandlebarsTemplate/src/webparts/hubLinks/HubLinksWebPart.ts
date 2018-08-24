@@ -13,6 +13,7 @@ import {
   PropertyPaneToggle,
   PropertyPaneChoiceGroup
 } from '@microsoft/sp-webpart-base';
+import { PropertyFieldSwatchColorPicker, PropertyFieldSwatchColorPickerStyle } from '@pnp/spfx-property-controls/lib/PropertyFieldSwatchColorPicker';
 import { SPComponentLoader } from '@microsoft/sp-loader';
 import * as strings from 'hubLinksStrings';
 import HubLinks from './components/HubLinks';
@@ -51,6 +52,10 @@ export default class HubLinksWebPart extends BaseClientSideWebPart<IHubLinksWebP
           urls.push(element.URL);
       });
     }
+    if(!this.properties.tileColor) this.properties.tileColor = window["__themeState__"]["theme"]["primaryText"];
+    if(!this.properties.tileBorderColor) this.properties.tileBorderColor = "rgba(0,0,0,0)";
+    if(!this.properties.tileBackgroundColor) this.properties.tileBackgroundColor = "rgba(0,0,0,0)";
+
     WebPartLogger.logUsage(this.context,urls);
     return super.onInit().then(_ => {
       pnp.setup({
@@ -120,6 +125,9 @@ export default class HubLinksWebPart extends BaseClientSideWebPart<IHubLinksWebP
           self.properties.title = title;
         },
         isEdit:this.displayMode===DisplayMode.Edit,
+        textColor: this.properties.tileColor,
+        borderColor: this.properties.tileBorderColor,
+        backgroundColor: this.properties.tileBackgroundColor,
         hubLinksItems: this.properties.hubLinksItems,
         usesListMode: this.properties.usesListMode,
         setUrl: (url:string, name: string)=>{
@@ -365,6 +373,24 @@ export default class HubLinksWebPart extends BaseClientSideWebPart<IHubLinksWebP
                       //imageSize: { height:32,width:32 },
                       //selectedImageSrc: "https://thehubcdnvz.azureedge.net/hub-web-parts/fc-Layout-Title-Description.svg",
                       text: strings.GroupedListLayoutLabel
+                    },
+                    {
+                      checked: this.properties.layoutMode===HubLinksLayout.GroupedListLayout,
+                      key: HubLinksLayout.IconTopLayout,
+                      iconProps: {officeFabricIconFontName:"GroupedList"},
+                      //imageSrc: "https://thehubcdnvz.azureedge.net/hub-web-parts/fc-Layout-Title-Description.svg",
+                      //imageSize: { height:32,width:32 },
+                      //selectedImageSrc: "https://thehubcdnvz.azureedge.net/hub-web-parts/fc-Layout-Title-Description.svg",
+                      text: strings.IconTopLayoutLabel
+                    },
+                    {
+                      checked: this.properties.layoutMode===HubLinksLayout.GroupedListLayout,
+                      key: HubLinksLayout.IconLeftLayout,
+                      iconProps: {officeFabricIconFontName:"GroupedList"},
+                      //imageSrc: "https://thehubcdnvz.azureedge.net/hub-web-parts/fc-Layout-Title-Description.svg",
+                      //imageSize: { height:32,width:32 },
+                      //selectedImageSrc: "https://thehubcdnvz.azureedge.net/hub-web-parts/fc-Layout-Title-Description.svg",
+                      text: strings.IconLeftLayoutLabel
                     }
                   ]
                 })
@@ -410,6 +436,51 @@ export default class HubLinksWebPart extends BaseClientSideWebPart<IHubLinksWebP
         );
         break;
       case HubLinksLayout.ItemLayout: 
+        break;
+      case HubLinksLayout.IconLeftLayout:
+      case HubLinksLayout.IconTopLayout:
+        const colors = [
+          {label: strings.ThemePrimaryColor, color: window["__themeState__"]["theme"]["themePrimary"]},
+          {label: strings.ThemeSecondaryColor, color: window["__themeState__"]["theme"]["themeSecondary"]},
+          {label: strings.ThemePrimaryColor, color: window["__themeState__"]["theme"]["themeTertiary"]},
+          {label: strings.ThemePrimaryText, color: window["__themeState__"]["theme"]["primaryText"]},
+          {label: strings.WhiteColor, color: window["__themeState__"]["theme"]["white"]},
+          {label: strings.BlackColor, color: window["__themeState__"]["theme"]["black"]},          
+        ];
+
+        config.pages[0].groups[0].groupFields.push(
+          PropertyFieldSwatchColorPicker('tileColor',{
+            label: strings.TileFontColorLabel,
+            selectedColor: this.properties.tileColor,
+            colors: colors,
+            style: PropertyFieldSwatchColorPickerStyle.Full,
+            onPropertyChange: this.onPropertyPaneFieldChanged,
+            properties: this.properties,
+            key: 'tileColorFieldId'
+          })
+        );
+        config.pages[0].groups[0].groupFields.push(
+          PropertyFieldSwatchColorPicker('tileBackgroundColor',{
+            label: strings.TileBackgroundColorLabel,
+            selectedColor: this.properties.tileBackgroundColor,
+            colors: colors,
+            style: PropertyFieldSwatchColorPickerStyle.Full,
+            onPropertyChange: this.onPropertyPaneFieldChanged,
+            properties: this.properties,
+            key: 'tileBackgroundColorFieldId'
+          })
+        );
+        config.pages[0].groups[0].groupFields.push(
+          PropertyFieldSwatchColorPicker('tileBorderColor',{
+            label: strings.TileBorderColorLabel,
+            selectedColor: this.properties.tileBorderColor,
+            colors: colors,
+            style: PropertyFieldSwatchColorPickerStyle.Full,
+            onPropertyChange: this.onPropertyPaneFieldChanged,
+            properties: this.properties,
+            key: 'tileBorderColorFieldId'
+          })
+        );
         break;
       default:
         //Add show description

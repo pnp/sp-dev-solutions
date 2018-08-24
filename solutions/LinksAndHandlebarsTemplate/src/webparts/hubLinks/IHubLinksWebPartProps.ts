@@ -12,4 +12,7 @@ export interface IHubLinksWebPartProps {
   groups: string[];  //For Group Layout, list of groups identified with sort order
   showDescription: boolean;
   version: string;
+  tileColor: string;
+  tileBorderColor:string;
+  tileBackgroundColor: string;
 }

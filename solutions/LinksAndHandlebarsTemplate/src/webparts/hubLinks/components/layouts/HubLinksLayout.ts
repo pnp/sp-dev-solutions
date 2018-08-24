@@ -3,7 +3,9 @@ import { IHubLinksItem, HubLinksGroupItem } from '../IHubLinksItem';
 export enum HubLinksLayout{
     ItemLayout,
     ListLayout,
-    GroupedListLayout
+    GroupedListLayout,
+    IconTopLayout,
+    IconLeftLayout
 }
 
 export interface IHubLinksLayout{
