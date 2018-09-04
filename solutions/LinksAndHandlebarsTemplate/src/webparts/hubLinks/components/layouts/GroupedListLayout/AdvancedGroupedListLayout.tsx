@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { IHubLinksLayout } from '../HubLinksLayout';
 import HubLinksWebPart from "../../HubLinks";
-import gllStyles from './GLLStyles.module.scss';
+import styles from './Styles.module.scss';
 
 export default class AdvancedGroupedListLayout implements IHubLinksLayout{
   private groupDefault = {};
@@ -23,35 +23,35 @@ export default class AdvancedGroupedListLayout implements IHubLinksLayout{
 
   public render(items:any[], isEditMode:boolean):JSX.Element{
     return (
-      <div className={gllStyles["hubLinks"]+ (this.webpart.props.isEdit? " " + gllStyles["edit"] : "")}>
+      <div className={styles["hubLinks"]+ (this.webpart.props.isEdit? " " + styles["edit"] : "")}>
         { items &&
             items.map((item) => {
               return (
-                <div className={gllStyles["grouped"]} {...this.groupDefault} data-group onClick={this.webpart.toggleGroup.bind(this)}>
-                  <div role="button" className={gllStyles["groupHeader"]}>
+                <div className={styles["grouped"]} {...this.groupDefault} data-group onClick={this.webpart.toggleGroup.bind(this)}>
+                  <div role="button" className={styles["groupHeader"]}>
                     {item.Heading.Title}
-                    <div className={gllStyles["expand"]}>
+                    <div className={styles["expand"]}>
                       <i className="fa fa-angle-right" aria-hidden="true"></i>
                     </div>
-                    <div className={gllStyles["collapse"]}>
+                    <div className={styles["collapse"]}>
                       <i className="fa fa-angle-down" aria-hidden="true"></i>
                     </div>
                   </div>
                   <ul>
                     {item.Links && item.Links.map((link)=> {
                       return(
-                        <li className={gllStyles["linkItem"]}>
+                        <li className={styles["linkItem"]}>
                           {link.Icon && link.Icon.length > 0 &&
-                            <i className={"fa "+link.Icon + " " + gllStyles["faIcon"]} aria-hidden="true"/>
+                            <i className={"fa "+link.Icon + " " + styles["faIcon"]} aria-hidden="true"/>
                           }
                           {link.NewTab &&                            
-                            <a className={gllStyles["linktitle"]} href={link.URL} target="blank" data-interception="off">{link.Title}</a>
+                            <a className={styles["linktitle"]} href={link.URL} target="blank" data-interception="off">{link.Title}</a>
                           }
                           {!link.NewTab &&                            
-                            <a className={gllStyles["linktitle"]} href={link.URL}>{link.Title}</a>
+                            <a className={styles["linktitle"]} href={link.URL}>{link.Title}</a>
                           }
                           {this.webpart.props.showDescription && 
-                          <p className={gllStyles["linkdescription"]}>{link.Description}</p>
+                          <p className={styles["linkdescription"]}>{link.Description}</p>
                           }
                         </li>
                       );
