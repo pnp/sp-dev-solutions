@@ -2,9 +2,9 @@ import * as React from 'react';
 import { IHubLinksItem } from '../../IHubLinksItem';
 import { IHubLinksLayout } from '../HubLinksLayout';
 import HubLinksWebPart from "../../HubLinks";
-import styles from '../ItemLayout/ILStyles.module.scss';
+import styles from './Styles.module.scss';
 
-export default class AdvancedItemLayoutLayout implements IHubLinksLayout{
+export default class AdvancedRoundIconItemLayoutLayout implements IHubLinksLayout{
   constructor(webpart:HubLinksWebPart){
     this.webpart = webpart;
   }
@@ -22,17 +22,22 @@ export default class AdvancedItemLayoutLayout implements IHubLinksLayout{
       <ul className={styles["hubLinks"] + " " + styles["themed"] + (this.webpart.props.isEdit? " " + styles["edit"] : "")}>
         {items &&
             items.map((item) => {
-              return (
+              return item.NewTab ? (
+                <a href={item.URL} target="blank" data-interception="off">
+                  <li>
+                    <i className={"fa " + item.Icon + " " + styles["faIcon"]} aria-hidden="true"/>
+                    <p className={styles["linktitle"]}>{item.Title}</p>
+                    <p className={styles["linkdescription"]}>{item.Description}</p>                    
+                  </li> 
+                </a>                 
+              ) : (
+                <a href={item.URL}>
                 <li>
                   <i className={"fa " + item.Icon + " " + styles["faIcon"]} aria-hidden="true"/>
-                  {item.NewTab &&
-                    <a className={styles["linktitle"]} href={item.URL} target="blank" data-interception="off">{item.Title}</a>
-                  }
-                  {!item.NewTab &&
-                    <a className={styles["linktitle"]} href={item.URL}>{item.Title}</a>
-                  }
+                  <p className={styles["linktitle"]}>{item.Title}</p>
                   <p className={styles["linkdescription"]}>{item.Description}</p>                    
-                </li>                  
+                </li> 
+              </a>       
               );
             })
           }

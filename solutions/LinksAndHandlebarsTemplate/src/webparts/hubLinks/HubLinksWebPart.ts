@@ -26,6 +26,7 @@ import { PropertyPaneGroupSort } from '../../propertyPane/propertyFieldGroupSort
 import pnp from 'sp-pnp-js';
 import QueryStringParser from "../../utilities/urlparser/queryStringParser";
 import { WebPartLogger } from '../../utilities/webpartlogger/usagelogger';
+import WatchJS from 'melanke-watchjs';
 
 const titleField = "Title";
 const urlField = "URL";
@@ -52,9 +53,20 @@ export default class HubLinksWebPart extends BaseClientSideWebPart<IHubLinksWebP
           urls.push(element.URL);
       });
     }
-    if(!this.properties.tileColor) this.properties.tileColor = window["__themeState__"]["theme"]["primaryText"];
-    if(!this.properties.tileBorderColor) this.properties.tileBorderColor = "rgba(0,0,0,0)";
-    if(!this.properties.tileBackgroundColor) this.properties.tileBackgroundColor = "rgba(0,0,0,0)";
+
+    //Change theme colors of web part to expected values
+    if(!this.properties.tileColorProp) this.properties.tileColorProp = "primaryText";
+    if(!this.properties.tileColor) this.properties.tileColor = window["__themeState__"]["theme"][this.properties.tileColorProp];
+    else if(this.properties.tileColor !== window["__themeState__"]["theme"][this.properties.tileColorProp]) this.properties.tileColor = window["__themeState__"]["theme"][this.properties.tileColorProp];
+    
+    if(!this.properties.tileBorderColorProp) this.properties.tileBorderColorProp = "themePrimary";
+    if(!this.properties.tileBorderColor) this.properties.tileBorderColor = window["__themeState__"]["theme"][this.properties.tileBorderColorProp];
+    else if(this.properties.tileBorderColor !== window["__themeState__"]["theme"][this.properties.tileBorderColorProp]) this.properties.tileBorderColor = window["__themeState__"]["theme"][this.properties.tileBorderColorProp];
+    
+    if(!this.properties.tileBackgroundColorProp) this.properties.tileBackgroundColorProp = "white";
+    if(!this.properties.tileBackgroundColor) this.properties.tileBackgroundColor = window["__themeState__"]["theme"][this.properties.tileBackgroundColorProp];
+    else if(this.properties.tileBackgroundColor !== window["__themeState__"]["theme"][this.properties.tileBackgroundColorProp]) this.properties.tileBackgroundColor = window["__themeState__"]["theme"][this.properties.tileBackgroundColorProp];
+    
 
     WebPartLogger.logUsage(this.context,urls);
     return super.onInit().then(_ => {
@@ -125,9 +137,9 @@ export default class HubLinksWebPart extends BaseClientSideWebPart<IHubLinksWebP
           self.properties.title = title;
         },
         isEdit:this.displayMode===DisplayMode.Edit,
-        textColor: this.properties.tileColor,
-        borderColor: this.properties.tileBorderColor,
-        backgroundColor: this.properties.tileBackgroundColor,
+        textColor: this.properties.tileColorProp,
+        borderColor: this.properties.tileBorderColorProp,
+        backgroundColor: this.properties.tileBackgroundColorProp,
         hubLinksItems: this.properties.hubLinksItems,
         usesListMode: this.properties.usesListMode,
         setUrl: (url:string, name: string)=>{
@@ -323,6 +335,42 @@ export default class HubLinksWebPart extends BaseClientSideWebPart<IHubLinksWebP
             this.properties.groups.push(newValue);
         }
       }
+    }else if(propertyPath === "tileColor"){
+      this.properties.tileColorProp = this.getThemeProperty(newValue);
+    }else if(propertyPath === "tileBorderColor"){
+      this.properties.tileBorderColorProp = this.getThemeProperty(newValue);
+    }else if(propertyPath === "tileBackgroundColor"){
+      this.properties.tileBackgroundColorProp = this.getThemeProperty(newValue);
+    }    
+  }
+
+  public getThemeProperty(color: string){
+    const themePrimary = "themePrimary";
+    const themePrimaryColor = window["__themeState__"]["theme"][themePrimary];
+
+    const themeSecondary = "themeSecondary";
+    const themeSecondaryColor = window["__themeState__"]["theme"][themeSecondary];
+
+    const themeTertiary = "themeTertiary";
+    const themeTertiaryColor = window["__themeState__"]["theme"][themeTertiary];
+
+    const primaryText = "primaryText";
+    const primaryTextColor = window["__themeState__"]["theme"][primaryText];
+
+    const white = "white";
+    const whiteColor = window["__themeState__"]["theme"][white];
+
+    const black = "black";
+    const blackColor = window["__themeState__"]["theme"][black];
+
+    switch(color){
+      case themePrimaryColor: return themePrimary;
+      case themeSecondaryColor: return themeSecondary;
+      case themeTertiaryColor: return themeTertiary;
+      case primaryTextColor: return primaryText;
+      case whiteColor: return white;
+      case blackColor: return black;
+      default: return black;
     }
   }
 
@@ -348,8 +396,8 @@ export default class HubLinksWebPart extends BaseClientSideWebPart<IHubLinksWebP
                   label: "",
                   options:[
                     {
-                      checked: this.properties.layoutMode===HubLinksLayout.ItemLayout,
-                      key: HubLinksLayout.ItemLayout,
+                      checked: this.properties.layoutMode===HubLinksLayout.RoundIconItemLayout,
+                      key: HubLinksLayout.RoundIconItemLayout,
                       iconProps: {officeFabricIconFontName:"BulletedList2"},
                       //imageSrc: "https://thehubcdnvz.azureedge.net/hub-web-parts/fc-Layout-Image-Title.svg",
                       //selectedImageSrc: "https://thehubcdnvz.azureedge.net/hub-web-parts/fc-Layout-Image-Title.svg",
@@ -376,7 +424,7 @@ export default class HubLinksWebPart extends BaseClientSideWebPart<IHubLinksWebP
                     },
                     {
                       checked: this.properties.layoutMode===HubLinksLayout.GroupedListLayout,
-                      key: HubLinksLayout.IconTopLayout,
+                      key: HubLinksLayout.TileLayout,
                       iconProps: {officeFabricIconFontName:"GroupedList"},
                       //imageSrc: "https://thehubcdnvz.azureedge.net/hub-web-parts/fc-Layout-Title-Description.svg",
                       //imageSize: { height:32,width:32 },
@@ -385,7 +433,7 @@ export default class HubLinksWebPart extends BaseClientSideWebPart<IHubLinksWebP
                     },
                     {
                       checked: this.properties.layoutMode===HubLinksLayout.GroupedListLayout,
-                      key: HubLinksLayout.IconLeftLayout,
+                      key: HubLinksLayout.SquareIconItemLayout,
                       iconProps: {officeFabricIconFontName:"GroupedList"},
                       //imageSrc: "https://thehubcdnvz.azureedge.net/hub-web-parts/fc-Layout-Title-Description.svg",
                       //imageSize: { height:32,width:32 },
@@ -435,10 +483,10 @@ export default class HubLinksWebPart extends BaseClientSideWebPart<IHubLinksWebP
           })
         );
         break;
-      case HubLinksLayout.ItemLayout: 
+      case HubLinksLayout.RoundIconItemLayout: 
         break;
-      case HubLinksLayout.IconLeftLayout:
-      case HubLinksLayout.IconTopLayout:
+      case HubLinksLayout.SquareIconItemLayout:
+      case HubLinksLayout.TileLayout:
         const colors = [
           {label: strings.ThemePrimaryColor, color: window["__themeState__"]["theme"]["themePrimary"]},
           {label: strings.ThemeSecondaryColor, color: window["__themeState__"]["theme"]["themeSecondary"]},
@@ -519,7 +567,7 @@ export default class HubLinksWebPart extends BaseClientSideWebPart<IHubLinksWebP
                 { name: openNewTabField, type: SPFieldType.Boolean, requiredLevel: SPFieldRequiredLevel.Required }
               ];
       //If showDescription then add mapping for description field.
-      if(this.properties.layoutMode === HubLinksLayout.ItemLayout || this.properties.showDescription){
+      if(this.properties.layoutMode === HubLinksLayout.RoundIconItemLayout || this.properties.showDescription){
         fieldMappings.push({name: descriptionField, type: SPFieldType.Text, requiredLevel: SPFieldRequiredLevel.Required});
       }
 
@@ -585,7 +633,7 @@ export default class HubLinksWebPart extends BaseClientSideWebPart<IHubLinksWebP
                 PropertyPaneTextField("hubLinksItems["+this.activeIndex+"].Description",{
                   label: strings.EditItemGeneralDescriptionLabel,
                   description: strings.EditItemGeneralDescriptionPreCountLabel+(130-(this.properties.hubLinksItems[this.activeIndex].Description ? this.properties.hubLinksItems[this.activeIndex].Description.length : 0))+strings.EditItemGeneralDescriptionPostCountLabel,
-                  onGetErrorMessage: this.itemValidation.bind(this, 130, (this.properties.layoutMode === HubLinksLayout.ItemLayout || this.properties.showDescription), strings.EditItemGeneralDescriptionErrorText)
+                  onGetErrorMessage: this.itemValidation.bind(this, 130, (this.properties.layoutMode === HubLinksLayout.RoundIconItemLayout || this.properties.showDescription), strings.EditItemGeneralDescriptionErrorText)
                 }),
                 PropertyPaneTextField("hubLinksItems["+this.activeIndex+"].GroupBy",{
                   label: strings.EditItemGeneralGroupByLabel,
@@ -616,7 +664,7 @@ export default class HubLinksWebPart extends BaseClientSideWebPart<IHubLinksWebP
                 PropertyPaneTextField("hubLinksItems["+this.activeIndex+"].Icon",{
                   label: strings.EditItemIconEntryLabel,
                   placeholder: strings.EditItemIconEntryPlaceholder,
-                  onGetErrorMessage: this.itemValidation.bind(this, 255, (this.properties.layoutMode === HubLinksLayout.ItemLayout), "")
+                  onGetErrorMessage: this.itemValidation.bind(this, 255, (this.properties.layoutMode === HubLinksLayout.RoundIconItemLayout), "")
                 }),
                 PropertyPaneLink('iconShortcut',{
                   text: strings.EditItemIconEntryLinkText,

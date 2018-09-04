@@ -1,10 +1,102 @@
 .hubLinks {
+    & div.color {
+        &.themePrimary {
+            color: "[theme: themePrimary, default: #007cc5]";
+        }
+        &.themeSecondary {
+            color: "[theme: themeSecondary, default: #007cc5]";
+        }
+        &.themeTertiary {
+            color: "[theme: themeTertiary, default: #007cc5]";
+        }
+        &.primaryText {
+            color: "[theme: primaryText, default: #333333]";
+        }
+        &.black {
+            color: "[theme: black, default: #333333]";
+        }
+        &.white {
+            color: "[theme: white, default: #FFFFFF]";
+        }
+    }
     & .cell-divider {
-        border: 1px solid;
+        border-left: 2px solid;
+        &.themePrimary {
+            border-left-color: "[theme: themePrimary, default: #007cc5]";
+        }
+        &.themeSecondary {
+            border-left-color: "[theme: themeSecondary, default: #007cc5]";
+        }
+        &.themeTertiary {
+            border-left-color: "[theme: themeTertiary, default: #007cc5]";
+        }
+        &.primaryText {
+            border-left-color: "[theme: primaryText, default: #333333]";
+        }
+        &.black {
+            border-left-color: "[theme: black, default: #333333]";
+        }
+        &.white {
+            border-left-color: "[theme: white, default: #FFFFFF]";
+        }
     }
     & .tile {
         display: block;
         border: 1px solid;
+        &.border-themePrimary {
+            border-color: "[theme: themePrimary, default: #007cc5]";
+        }
+        &.border-themeSecondary {
+            border-color: "[theme: themeSecondary, default: #007cc5]";
+        }
+        &.border-themeTertiary {
+            border-color: "[theme: themeTertiary, default: #007cc5]";
+        }
+        &.border-primaryText {
+            border-color: "[theme: primaryText, default: #333333]";
+        }
+        &.border-black {
+            border-color: "[theme: black, default: #333333]";
+        }
+        &.border-white {
+            border-color: "[theme: white, default: #FFFFFF]";
+        }
+        &.background-themePrimary {
+            background-color: "[theme: themePrimary, default: #007cc5]";
+        }
+        &.background-themeSecondary {
+            background-color: "[theme: themeSecondary, default: #007cc5]";
+        }
+        &.background-themeTertiary {
+            background-color: "[theme: themeTertiary, default: #007cc5]";
+        }
+        &.background-primaryText {
+            background-color: "[theme: primaryText, default: #333333]";
+        }
+        &.background-black {
+            border-color: "[theme: black, default: #333333]";
+        }
+        &.background-white {
+            background-color: "[theme: white, default: #FFFFFF]";
+        }
+        &.color-themePrimary {
+            color: "[theme: themePrimary, default: #007cc5]";
+        }
+        &.color-themeSecondary {
+            color: "[theme: themeSecondary, default: #007cc5]";
+        }
+        &.color-themeTertiary {
+            color: "[theme: themeTertiary, default: #007cc5]";
+        }
+        &.color-primaryText {
+            color: "[theme: primaryText, default: #333333]";
+        }
+        &.color-black {
+            color: "[theme: black, default: #333333]";
+        }
+        &.color-white {
+            color: "[theme: white, default: #FFFFFF]";
+        }
         & .editControls {
             display: none;
             width: 42px;
@@ -29,7 +121,7 @@
                 padding: 5px;
                 font-size: 12px;
                 line-height: 14px;
-                width: 29px;
+                width: 22px;
                 margin-left: 10px;
                 text-align: center;
                 cursor: move;
@@ -100,7 +192,7 @@
         position: relative;
     }
     & :local .fontawesome {
-         :local .icon {
+        &.icon {
             display: block;
             margin: 20px auto 5px;
             width: 100%;
@@ -128,6 +220,8 @@
 
 /* two-third column styling of tile layout */
 
+:global .CanvasSection-xl6,
+:global .CanvasSection-xl12,
  :global .CanvasSection-xl8 {
     & :local .hubLinks {
         display: flex;
@@ -144,14 +238,16 @@
         float: left;
         position: relative;
     }
-    & :local .fontawesome.icon {
-        display: inline-block;
-        margin: 0 auto;
-        padding: 30px 0;
-        width: 100px;
-        text-align: center;
-        font-size: 20px;
-        height: 100px;
+    & :local .fontawesome {
+        &.icon {
+            display: inline-block;
+            margin: 0 auto;
+            padding: 30px 0;
+            width: 100px;
+            text-align: center;
+            font-size: 20px;
+            height: 100px;
+        }
     }
     & :local .title {
         font-family: Segoe, "Segoe UI", "DejaVu Sans", "Trebuchet MS", Verdana, "sans-serif";

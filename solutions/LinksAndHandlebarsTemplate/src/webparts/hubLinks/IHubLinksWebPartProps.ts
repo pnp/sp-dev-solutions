@@ -13,6 +13,9 @@ export interface IHubLinksWebPartProps {
   showDescription: boolean;
   version: string;
   tileColor: string;
+  tileColorProp: string;
   tileBorderColor:string;
+  tileBorderColorProp: string;
   tileBackgroundColor: string;
+  tileBackgroundColorProp: string;
 }

@@ -15,7 +15,8 @@
             color: #fff;
             display: block;
             position: absolute;
-            top: 5px;
+            top: 50%;
+            transform: translateY(-50%);
             left: 5px;
             width: 50px;
             height: 50px;
@@ -24,14 +25,15 @@
                 margin-left: 3px;
             }
         }
-        & a.linktitle {
-            color: "[theme: themePrimary, default: #007cc5]";
-            display: block;
-            font-size: 16px;
-            font-weight: 300;
-            margin-left: 67px;
+        & a {
+            color: black;
             &:visited {
-                color: "[theme: themePrimary, default: #007cc5]";
+                color: black;
+            }
+            & .linktitle {
+                font-size: 16px;
+                font-weight: 300;
+                margin-left: 67px;
             }
         }
         & .linkdescription {
@@ -76,7 +78,7 @@
                 padding: 5px;
                 font-size: 12px;
                 line-height: 14px;
-                width: 32px;
+                width: 22px;
                 margin-left: 10px;
                 text-align: center;
                 cursor: move;
@@ -128,7 +130,7 @@
 :global .CanvasSection-sm12.CanvasSection-xl4 {
     & :local .hubLinks {
         & :local li {
-            width: 100%;
+            width: calc(100% - 9px);
         }
     }
 }
@@ -144,7 +146,7 @@
 :global .CanvasSection-sm12.CanvasSection-xl4 {
     & :local .hubLinks {
         & :local li {
-            width: 100%;
+            width: calc(100% - 2px);
         }
     }
 }
