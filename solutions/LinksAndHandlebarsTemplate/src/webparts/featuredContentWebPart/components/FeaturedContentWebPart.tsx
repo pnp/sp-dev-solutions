@@ -1,10 +1,6 @@
 import * as React from 'react';
-import { Panel, PanelType } from 'office-ui-fabric-react/lib/Panel';
-import { Nav } from 'office-ui-fabric-react/lib/Nav';
-import { DefaultButton, PrimaryButton } from 'office-ui-fabric-react/lib/Button';
 import {
-  CommandButton,
-  IButtonProps
+  CommandButton
 } from 'office-ui-fabric-react/lib/Button';
 import styles from './FeaturedContentWebPart.module.scss';
 import * as strings from 'featuredContentWebPartStrings';
@@ -15,15 +11,15 @@ import { LinkType } from "../../../components/LinkPickerPanel/ILinkPickerPanelPr
 import LinkPickerPanel from "../../../components/LinkPickerPanel/LinkPickerPanel";
 import ElemUtil from "../../../utilities/element/elemUtil";
 
-const urlField = "URL";
-const imageField = "Image";
-const descriptionField = "Description";
-const openNewTabField = "NewTab";
-const contentField = "Content";
-
 export default class FeaturedContentWebPart extends React.Component<IFeaturedContentWebPartProps, IFeaturedContentState> {
-  constructor(){
-    super();
+  constructor(props){
+    super(props);
+    this.state={
+      isLinkPanelOpen: false,
+      isSiteSelected: false,
+      linkEntered: "",
+      linkValid: false
+    };
   }
 
   private _dragElement : any;
@@ -49,7 +45,7 @@ export default class FeaturedContentWebPart extends React.Component<IFeaturedCon
   public addBox(event){
     this.setState(
       {
-        isLinkPanelOpen:false, 
+        isLinkPanelOpen:false,
         isSiteSelected: true, 
         linkValid:false,
         linkEntered: ""          

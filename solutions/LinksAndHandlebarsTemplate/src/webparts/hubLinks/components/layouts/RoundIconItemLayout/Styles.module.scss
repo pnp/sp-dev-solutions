@@ -1,53 +1,73 @@
 .hubLinks {
     list-style-type: none;
     padding-left: 0px;
-    display: block;
-    font-family: segoe ui;
+    color: "[theme:primaryText, default: #000000]";
     overflow: hidden;
-    &>div {
-        & i {
+    & a {
+        color: white;
+    }
+    &.themed {
+        & .faIcon {
+            padding: 15px 3px 0 0;
+            text-align: center;
+            background-color: "[theme: themePrimary, default: #007cc5]";
+            border-radius: 35px;
+            font-size: 20px;
+            color: #fff;
+            display: block;
             position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            left: 5px;
+            width: 50px;
+            height: 50px;
+            box-sizing: border-box;
+            &::before {
+                margin-left: 3px;
+            }
+        }
+        & a {
+            color: black;
+            position: relative;
+            &:visited {
+                color: black;
+            }
+            & .text {
+                left: 67px;
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
+                & p {
+                    margin: 0;
+                }
+            }
+            & .linktitle {
+                font-size: 15px;
+                display: block;
+                font-weight: 600;
+            }
+        }
+        & .linkdescription {
+            font-size: 13px;
+            max-height: 2.6em;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
         }
     }
     & li {
-        display: block;
-        padding: 10px;
+        display: inline-block;
+        margin-bottom: 15px;
+        width: calc(50% - 26px);
+        margin-right: 20px;
+        min-height: 70px;
+        vertical-align: top;
         position: relative;
         border: 1px solid transparent;
         &:hover {
             border: 1px solid #c8c8c8;
-        }
-        & .faIcon {
-            color: #007cc5;
-            font-size: 16px !important;
-            width: 45px;
-            position: absolute;
-            top: 14px;
-            vertical-align: top;
-            padding-top: 5px;
-            padding-right: 15px;
-        }
-        & a.linktitle {
-            width: 200px;
-            display: inline-block;
-            margin-left: 31px;
-            padding-top: 2px;
-            vertical-align: top;
-        }
-        & .linkdescription {
-            max-width: calc(100% - 262px);
-            display: inline-block;
-            margin: 2px 0 0 31px;
-            vertical-align: top;
-        }
-        @media all and (max-width: 600px) and (min-width: 320px) {
-            .linktitle {
-                float: none;
-            }
-            .linkdescription {
-                max-width: 300px;
-                margin: 2px 0 0 31px;
-            }
         }
         & .editControls {
             display: none;
@@ -72,10 +92,10 @@
                 color: #333333;
                 padding: 5px;
                 font-size: 12px;
-                line-height: 22px;
+                line-height: 14px;
+                width: 22px;
                 margin-left: 10px;
                 text-align: center;
-                width: 32px;
                 cursor: move;
                 background-color: white;
             }
@@ -105,9 +125,9 @@
                 vertical-align: middle;
                 text-align: center;
                 color: #fff;
-                background-color: #069;
+                background-color: "[theme: themePrimary, default: #007cc5]";
                 font-size: 14px;
-                position: relative;
+                position: absolute;
                 top: 50%;
                 left: 50%;
                 margin-right: -50%;
@@ -119,19 +139,37 @@
     &.edit li:hover {
         border: 1px solid #c8c8c8;
         padding-left: 7px;
-        height: 78px
     }
 }
 
 :global .CanvasSection-sm12.CanvasSection-xl4 {
     & :local .hubLinks {
+        & :local li {
+            width: calc(100% - 9px);
+        }
+    }
+}
+
+@media (max-width:767px) {
+    .hubLinks {
         & li {
-            & :local a.linktitle {
-                display: block;
-            }
-            & :local .linkdescription {
-                max-width: 100%;
-            }
+            width: 100%;
+        }
+    }
+}
+
+:global .CanvasSection-sm12.CanvasSection-xl4 {
+    & :local .hubLinks {
+        & :local li {
+            width: calc(100% - 2px);
+        }
+    }
+}
+
+@media (max-width:767px) {
+    .hubLinks {
+        & li {
+            width: 100%;
         }
     }
 }

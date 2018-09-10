@@ -2,6 +2,7 @@ import * as React from 'react';
 import { IFeaturedItem } from '../../IFeaturedItem';
 import { IFeaturedContentLayout } from '../FeatureContentLayout';
 import FeaturedContentFactory from '../FeaturedContentFactory';
+import FeaturedContentWebPart from '../../FeaturedContentWebPart';
 import styles from './Styles.module.scss';
 
 const urlField = "URL";
@@ -10,8 +11,8 @@ const descriptionField = "Description";
 const openNewTabField = "NewTab";
 
 export default class AdvancedHorizontalTitleDescriptionLayout implements IFeaturedContentLayout{
-  constructor(){}
-
+  constructor(webpart){this.webpart=webpart;}
+  private webpart: FeaturedContentWebPart;
   public render(items:IFeaturedItem[], isEditMode:boolean):JSX.Element{
     return (
       <div className={styles["featured-content"]}>
@@ -25,8 +26,13 @@ export default class AdvancedHorizontalTitleDescriptionLayout implements IFeatur
                   }
                   </div>
                   <div className={styles["featured-content-title"]}>{item[urlField+"_text"]}</div>
-                  <div className={styles["featured-content-desc"]} dangerouslySetInnerHTML={ {__html:item.Description} }></div>
-                  <a className={styles["featured-content-link"]} href={item[urlField]} target={item[openNewTabField] ? "_blank" : ""}></a>
+                  <div className={styles["featured-content-desc"]} dangerouslySetInnerHTML={ {__html:item[descriptionField]} }></div>
+                  {item[openNewTabField] &&
+                    <a className={styles["featured-content-link"]} href={item[urlField]} target="blank" data-interception="off"></a>
+                  }
+                  {!item[openNewTabField] &&
+                    <a className={styles["featured-content-link"]} href={item[urlField]}></a>
+                  }
                 </div>
               );
             })

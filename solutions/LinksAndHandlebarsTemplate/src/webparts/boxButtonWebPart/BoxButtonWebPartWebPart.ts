@@ -33,7 +33,6 @@ export default class BoxButtonWebPartWebPart extends BaseClientSideWebPart<IBoxB
     super();
 
     SPComponentLoader.loadCss('https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css');
-    SPComponentLoader.loadScript('https://thehubcdnvz.azureedge.net/hub-web-parts/polyfill.closest.min.js');
   }
 
   public onInit(): Promise<void> {
@@ -74,13 +73,13 @@ export default class BoxButtonWebPartWebPart extends BaseClientSideWebPart<IBoxB
     if(!this.properties.data && this.properties.name){
       this.properties.data = [{
         name: this.properties.name,
-        isBlue: this.properties.isBlue,
+        isBlue: this.properties.isThemed,
         icon: this.properties.fontAwesomeIcon,
         url: this.properties.url,
         openNew: this.properties.newTab
       }];
       this.properties.name = undefined;
-      this.properties.isBlue = undefined;
+      this.properties.isThemed = undefined;
       this.properties.fontAwesomeIcon = undefined;
       this.properties.url = undefined;
       this.properties.newTab = undefined;
@@ -94,7 +93,7 @@ export default class BoxButtonWebPartWebPart extends BaseClientSideWebPart<IBoxB
       BoxButtonWebPart,
       {
         name: this.properties.name,
-        isBlue: this.properties.isBlue,
+        isThemed: this.properties.isThemed,
         fontAwesomeIcon: this.properties.fontAwesomeIcon,
         url: this.properties.url,
         newTab: this.properties.newTab,

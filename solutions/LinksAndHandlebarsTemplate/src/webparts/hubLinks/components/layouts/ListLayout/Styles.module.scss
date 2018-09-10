@@ -1,49 +1,57 @@
 .hubLinks {
     list-style-type: none;
     padding-left: 0px;
+    display: block;
+    color: "[theme:primaryText, default: #000000]";
+    font-family: segoe ui;
     overflow: hidden;
-    &.blue {
-        & .faIcon {
-            padding: 15px 12px;
-            background-color: #007cc5;
-            border-radius: 35px;
-            font-size: 20px;
-            color: #fff;
-            display: block;
+    &>div {
+        & i {
             position: absolute;
-            top: 5px;
-            left: 5px;
-            width: 50px;
-            height: 50px;
-            box-sizing: border-box;
-            &::before {
-                margin-left: 3px;
-            }
-        }
-        & a.linktitle {
-            color: #007cc5;
-            display: block;
-            font-size: 16px;
-            font-weight: 300;
-            margin-left: 67px;
-        }
-        & .linkdescription {
-            font-size: 13px;
-            display: block;
-            margin-left: 67px;
         }
     }
     & li {
-        display: inline-block;
-        margin-bottom: 15px;
-        width: calc(50% - 25px);
-        margin-right: 20px;
-        min-height: 70px;
-        vertical-align: top;
+        display: block;
+        padding: 10px;
         position: relative;
         border: 1px solid transparent;
         &:hover {
             border: 1px solid #c8c8c8;
+        }
+        & .faIcon {
+            color: "[theme: themePrimary, default: #007cc5]";
+            font-size: 16px !important;
+            position: absolute;
+            top: 14px;
+            vertical-align: top;
+            padding-top: 5px;
+            padding-right: 15px;
+        }
+        & a.linktitle {
+            width: 200px;
+            display: inline-block;
+            margin-left: 31px;
+            padding-top: 2px;
+            vertical-align: top;
+            color: "[theme: themePrimary, default: #007cc5]";
+            &:visited {
+                color: "[theme: themePrimary, default: #007cc5]";
+            }
+        }
+        & .linkdescription {
+            max-width: calc(100% - 262px);
+            display: inline-block;
+            margin: 2px 0 0 31px;
+            vertical-align: top;
+        }
+        @media all and (max-width: 600px) and (min-width: 320px) {
+            .linktitle {
+                float: none;
+            }
+            .linkdescription {
+                max-width: 300px;
+                margin: 2px 0 0 31px;
+            }
         }
         & .editControls {
             display: none;
@@ -68,10 +76,10 @@
                 color: #333333;
                 padding: 5px;
                 font-size: 12px;
-                line-height: 14px;
-                width: 32px;
+                line-height: 22px;
                 margin-left: 10px;
                 text-align: center;
+                width: 32px;
                 cursor: move;
                 background-color: white;
             }
@@ -101,9 +109,9 @@
                 vertical-align: middle;
                 text-align: center;
                 color: #fff;
-                background-color: #069;
+                background-color: "[theme: themePrimary, default: #007cc5]";
                 font-size: 14px;
-                position: absolute;
+                position: relative;
                 top: 50%;
                 left: 50%;
                 margin-right: -50%;
@@ -115,37 +123,19 @@
     &.edit li:hover {
         border: 1px solid #c8c8c8;
         padding-left: 7px;
+        height: 78px
     }
 }
 
 :global .CanvasSection-sm12.CanvasSection-xl4 {
     & :local .hubLinks {
-        & :local li {
-            width: 100%;
-        }
-    }
-}
-
-@media (max-width:767px) {
-    .hubLinks {
         & li {
-            width: 100%;
-        }
-    }
-}
-
-:global .CanvasSection-sm12.CanvasSection-xl4 {
-    & :local .hubLinks {
-        & :local li {
-            width: 100%;
-        }
-    }
-}
- 
-@media (max-width:767px) {
-    .hubLinks {
-        & li {
-            width: 100%;
+            & :local a.linktitle {
+                display: block;
+            }
+            & :local .linkdescription {
+                max-width: 100%;
+            }
         }
     }
 }

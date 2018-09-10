@@ -21,10 +21,10 @@ export default class FeaturedContentFactory{
         }
         else{
             switch(layout){
-                case FeaturedContentLayout.HorizontalTitleAndDescription: return new AdvancedHorizontalTitleDescriptionLayout();
-                case FeaturedContentLayout.Vertical: return new AdvancedStackedLayout();
-                case FeaturedContentLayout.VerticalAlternating: return new AdvancedStackedAlternatingLayout();
-                default: return new AdvancedHorizontalTitleOnlyLayout();
+                case FeaturedContentLayout.HorizontalTitleAndDescription: return new AdvancedHorizontalTitleDescriptionLayout(webPart);
+                case FeaturedContentLayout.Vertical: return new AdvancedStackedLayout(webPart);
+                case FeaturedContentLayout.VerticalAlternating: return new AdvancedStackedAlternatingLayout(webPart);
+                default: return new AdvancedHorizontalTitleOnlyLayout(webPart);
             }
         }
     }
