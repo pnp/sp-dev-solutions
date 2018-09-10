@@ -1,0 +1,46 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/core-build/serve.schema.json",
+  "port": 4321,
+  "https": true,
+  "serveConfigurations": {
+    "default": {
+      "pageUrl": "https://contoso.sharepoint.com/sites/mySite/SitePages/myPage.aspx",
+      "customActions": {
+        "89092bd4-9033-4ea1-8d10-776b7116f8e0": {
+          "location": "ClientSideExtension.ApplicationCustomizer",
+          "properties": {
+            "testMessage": "Test message"
+          }
+        }
+      }
+    },
+    "globalFooter": {
+      "pageUrl": "https://contoso.sharepoint.com/sites/marketing/SitePages/home.aspx",
+      "customActions": {
+        "89092bd4-9033-4ea1-8d10-776b7116f8e0": {
+          "location": "ClientSideExtension.ApplicationCustomizer",
+          "properties": {
+            "links": [
+              {
+                "icon": "Home",
+                "title": "Home",
+                "url": "/"
+              },
+              {
+                "icon": "Headset",
+                "title": "Support",
+                "url": "/sites/support"
+              },
+              {
+                "icon": "Megaphone",
+                "title": "Announcements",
+                "url": "/sites/marcom/sitepages/announcements.aspx"
+              }
+            ],
+            "label": "Contoso - Sharing is caring"
+          }
+        }
+      }
+    }
+  }
+}
