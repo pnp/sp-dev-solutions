@@ -32,8 +32,10 @@ export default class BasicRoundIconItemLayout implements IHubLinksLayout{
                       onDragEnd={this.webpart.endDrag.bind(this.webpart)} data-index={items.indexOf(item)}>
                   <li>
                       <i className={"fa " + item.Icon + " " + styles["faIcon"]} aria-hidden="true"/>
-                      <p className={styles["linktitle"]}>{item.Title}</p>
-                      <p className={styles["linkdescription"]}>{item.Description}</p>                    
+                      <div className={styles["text"]}>
+                        <p className={styles["linktitle"]}>{item.Title}</p>
+                        <p className={styles["linkdescription"]}>{item.Description}</p> 
+                      </div>                   
                       {isEditMode &&
                         <div className={styles["editControls"]}>
                             <DefaultButton iconProps={{iconName:"Clear"}} onClick={this.webpart.deleteBox.bind(this.webpart)} className={styles["right-button"]}/>
@@ -50,8 +52,10 @@ export default class BasicRoundIconItemLayout implements IHubLinksLayout{
                       onDragEnd={this.webpart.endDrag.bind(this.webpart)} data-index={items.indexOf(item)}>
                   <li>
                       <i className={"fa " + item.Icon + " " + styles["faIcon"]} aria-hidden="true"/>
-                      <p className={styles["linktitle"]}>{item.Title}</p>
-                      <p className={styles["linkdescription"]}>{item.Description}</p>                    
+                      <div className={styles["text"]}>
+                        <p className={styles["linktitle"]}>{item.Title}</p>
+                        <p className={styles["linkdescription"]}>{item.Description}</p>  
+                      </div>                  
                       {isEditMode &&
                         <div className={styles["editControls"]}>
                             <DefaultButton iconProps={{iconName:"Clear"}} onClick={this.webpart.deleteBox.bind(this.webpart)} className={styles["right-button"]}/>

@@ -32,8 +32,9 @@ export default class BasicSquareIconItemLayout implements IHubLinksLayout{
                       href={item.URL} className={styles["tile"]+" "+styles["color-"+this.webpart.props.textColor]+" "+styles["background-"+this.webpart.props.backgroundColor]+" "+styles["border-"+this.webpart.props.borderColor]} 
                       data-interception="off" target="_blank">
                   <div className={styles["fontawesome"] + " " + styles["icon"]}>
-                      <i className={"fa "+item.Icon+" fa-2x "+styles["color"]+" "+styles[this.webpart.props.textColor]}></i>
+                      <i className={"fa "+item.Icon+" fa-3x "+styles["color"]+" "+styles[this.webpart.props.textColor]}></i>
                   </div>
+                  <div className={styles["shader"]}></div>
                   <div className={styles["cell-divider"]+" "+styles[this.webpart.props.borderColor]}></div>
                   <div className={styles["title"]+" "+styles["color"]+" "+styles[this.webpart.props.textColor]}>{item.Title}</div>
                   <div className={styles["description"]+" "+styles["color"]+" "+styles[this.webpart.props.textColor]}>{item.Description}</div>
@@ -53,8 +54,9 @@ export default class BasicSquareIconItemLayout implements IHubLinksLayout{
                       onDragEnd={this.webpart.endDrag.bind(this.webpart)} data-index={items.indexOf(item)}
                       href={item.URL} className={styles["tile"]+" "+styles["color-"+this.webpart.props.textColor]+" "+styles["background-"+this.webpart.props.backgroundColor]+" "+styles["border-"+this.webpart.props.borderColor]}>
                   <div className={styles["fontawesome"] + " " + styles["icon"]}>
-                      <i className={"fa "+item.Icon+" fa-2x "+styles["color"]+" "+styles[this.webpart.props.textColor]}></i>
+                      <i className={"fa "+item.Icon+" fa-3x "+styles["color"]+" "+styles[this.webpart.props.textColor]}></i>
                   </div>
+                  <div className={styles["shader"]}></div>
                   <div className={styles["cell-divider"]+" "+styles[this.webpart.props.borderColor]}></div>
                   <div className={styles["title"]+" "+styles["color"]+" "+styles[this.webpart.props.textColor]}>{item.Title}</div>
                   <div className={styles["description"]+" "+styles["color"]+" "+styles[this.webpart.props.textColor]}>{item.Description}</div>     

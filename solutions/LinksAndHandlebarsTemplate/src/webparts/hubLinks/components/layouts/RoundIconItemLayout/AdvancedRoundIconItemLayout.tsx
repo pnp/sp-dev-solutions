@@ -26,16 +26,20 @@ export default class AdvancedRoundIconItemLayoutLayout implements IHubLinksLayou
                 <a href={item.URL} target="blank" data-interception="off">
                   <li>
                     <i className={"fa " + item.Icon + " " + styles["faIcon"]} aria-hidden="true"/>
-                    <p className={styles["linktitle"]}>{item.Title}</p>
-                    <p className={styles["linkdescription"]}>{item.Description}</p>                    
+                    <div className={styles["text"]}>
+                      <p className={styles["linktitle"]}>{item.Title}</p>
+                      <p className={styles["linkdescription"]}>{item.Description}</p>       
+                    </div>             
                   </li> 
                 </a>                 
               ) : (
                 <a href={item.URL}>
                 <li>
                   <i className={"fa " + item.Icon + " " + styles["faIcon"]} aria-hidden="true"/>
-                  <p className={styles["linktitle"]}>{item.Title}</p>
-                  <p className={styles["linkdescription"]}>{item.Description}</p>                    
+                  <div className={styles["text"]}>
+                    <p className={styles["linktitle"]}>{item.Title}</p>
+                    <p className={styles["linkdescription"]}>{item.Description}</p>
+                  </div>                  
                 </li> 
               </a>       
               );
