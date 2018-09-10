@@ -1,9 +1,11 @@
 import { IHubLinksItem, HubLinksGroupItem } from '../IHubLinksItem';
 
 export enum HubLinksLayout{
-    ItemLayout,
+    RoundIconItemLayout,
     ListLayout,
-    GroupedListLayout
+    GroupedListLayout,
+    TileLayout,
+    SquareIconItemLayout
 }
 
 export interface IHubLinksLayout{

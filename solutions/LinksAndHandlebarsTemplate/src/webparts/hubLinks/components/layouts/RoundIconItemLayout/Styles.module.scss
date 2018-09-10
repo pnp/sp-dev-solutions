@@ -8,14 +8,16 @@
     }
     &.themed {
         & .faIcon {
-            padding: 15px 12px;
+            padding: 15px 3px 0 0;
+            text-align: center;
             background-color: "[theme: themePrimary, default: #007cc5]";
             border-radius: 35px;
             font-size: 20px;
             color: #fff;
             display: block;
             position: absolute;
-            top: 5px;
+            top: 50%;
+            transform: translateY(-50%);
             left: 5px;
             width: 50px;
             height: 50px;
@@ -24,20 +26,35 @@
                 margin-left: 3px;
             }
         }
-        & a.linktitle {
-            color: "[theme: themePrimary, default: #007cc5]";
-            display: block;
-            font-size: 16px;
-            font-weight: 300;
-            margin-left: 67px;
+        & a {
+            color: black;
+            position: relative;
             &:visited {
-                color: "[theme: themePrimary, default: #007cc5]";
+                color: black;
+            }
+            & .text {
+                left: 67px;
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
+                & p {
+                    margin: 0;
+                }
+            }
+            & .linktitle {
+                font-size: 15px;
+                display: block;
+                font-weight: 600;
             }
         }
         & .linkdescription {
             font-size: 13px;
-            display: block;
-            margin-left: 67px;
+            max-height: 2.6em;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
         }
     }
     & li {
@@ -76,7 +93,7 @@
                 padding: 5px;
                 font-size: 12px;
                 line-height: 14px;
-                width: 32px;
+                width: 22px;
                 margin-left: 10px;
                 text-align: center;
                 cursor: move;
@@ -128,7 +145,7 @@
 :global .CanvasSection-sm12.CanvasSection-xl4 {
     & :local .hubLinks {
         & :local li {
-            width: 100%;
+            width: calc(100% - 9px);
         }
     }
 }
@@ -144,7 +161,7 @@
 :global .CanvasSection-sm12.CanvasSection-xl4 {
     & :local .hubLinks {
         & :local li {
-            width: 100%;
+            width: calc(100% - 2px);
         }
     }
 }

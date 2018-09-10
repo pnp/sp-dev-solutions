@@ -12,6 +12,7 @@
         "@microsoft/sp-lodash-subset": "~1.5.0",
         "@microsoft/sp-office-ui-fabric-core": "~1.5.0",
         "@microsoft/sp-webpart-base": "~1.5.0",
+        "@pnp/spfx-property-controls": "^1.9.0",
         "@types/react": "15.6.6",
         "@types/react-dom": "15.5.6",
         "@types/webpack-env": ">=1.12.1 <1.14.0",

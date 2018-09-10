@@ -1,0 +1,290 @@
+.hubLinks {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-content: flex-start;
+    align-items: stretch;
+    & div.color {
+        &.themePrimary {
+            color: "[theme: themePrimary, default: #007cc5]";
+        }
+        &.themeSecondary {
+            color: "[theme: themeSecondary, default: #007cc5]";
+        }
+        &.themeTertiary {
+            color: "[theme: themeTertiary, default: #007cc5]";
+        }
+        &.primaryText {
+            color: "[theme: primaryText, default: #333333]";
+        }
+        &.black {
+            color: "[theme: black, default: #333333]";
+        }
+        &.white {
+            color: "[theme: white, default: #FFFFFF]";
+        }
+    }
+    & .shader {
+        position: absolute;
+        left: 102px;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        background-color: #fff;
+        opacity: 0.2;
+    }
+    & .cell-divider {
+        border-left: 2px solid;
+        &.themePrimary {
+            border-left-color: "[theme: themePrimary, default: #007cc5]";
+        }
+        &.themeSecondary {
+            border-left-color: "[theme: themeSecondary, default: #007cc5]";
+        }
+        &.themeTertiary {
+            border-left-color: "[theme: themeTertiary, default: #007cc5]";
+        }
+        &.primaryText {
+            border-left-color: "[theme: primaryText, default: #333333]";
+        }
+        &.black {
+            border-left-color: "[theme: black, default: #333333]";
+        }
+        &.white {
+            border-left-color: "[theme: white, default: #FFFFFF]";
+        }
+    }
+    & .tile {
+        display: block;
+        border: 1px solid;
+        width: calc(50% - 5px);
+        height: 100px;
+        margin: 0 5px 5px 0;
+        float: left;
+        position: relative;
+        &:hover {
+            outline: 1px #767676 solid;
+        }
+        & .fontawesome {
+            &.icon {
+                display: inline-block;
+                margin: 0 auto;
+                padding: 22px 0 0;
+                width: 100px;
+                text-align: center;
+                font-size: 18px;
+                height: 100px;
+            }
+        }
+        & .title {
+            font-family: Segoe, "Segoe UI", "DejaVu Sans", "Trebuchet MS", Verdana, "sans-serif";
+            font-size: 15px;
+            font-weight: 600;
+            text-align: left;
+            padding: 0;
+            position: absolute;
+            top: 10px;
+            left: 110px;
+            width: calc(100% - 120px);
+            height: 1.25em;
+            line-height: 1.25em;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+        }
+        & .description {
+            font-family: Segoe, "Segoe UI", "DejaVu Sans", "Trebuchet MS", Verdana, "sans-serif";
+            font-size: 13px;
+            text-align: left;
+            padding: 0;
+            position: absolute;
+            top: 30px;
+            left: 110px;
+            width: calc(100% - 120px);
+            line-height: 1.25em;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 4;
+            -webkit-box-orient: vertical;
+        }
+        & .cell-divider {
+            position: absolute;
+            left: 100px;
+            top: 0px;
+            width: 0px;
+            height: 100px;
+            border-top: 0px;
+            border-bottom: 0px;
+            border-right: 0px;
+        }
+        &.border-themePrimary {
+            border-color: "[theme: themePrimary, default: #007cc5]";
+        }
+        &.border-themeSecondary {
+            border-color: "[theme: themeSecondary, default: #007cc5]";
+        }
+        &.border-themeTertiary {
+            border-color: "[theme: themeTertiary, default: #007cc5]";
+        }
+        &.border-primaryText {
+            border-color: "[theme: primaryText, default: #333333]";
+        }
+        &.border-black {
+            border-color: "[theme: black, default: #333333]";
+        }
+        &.border-white {
+            border-color: "[theme: white, default: #FFFFFF]";
+        }
+        &.background-themePrimary {
+            background-color: "[theme: themePrimary, default: #007cc5]";
+        }
+        &.background-themeSecondary {
+            background-color: "[theme: themeSecondary, default: #007cc5]";
+        }
+        &.background-themeTertiary {
+            background-color: "[theme: themeTertiary, default: #007cc5]";
+        }
+        &.background-primaryText {
+            background-color: "[theme: primaryText, default: #333333]";
+        }
+        &.background-black {
+            border-color: "[theme: black, default: #333333]";
+        }
+        &.background-white {
+            background-color: "[theme: white, default: #FFFFFF]";
+        }
+        &.color-themePrimary {
+            color: "[theme: themePrimary, default: #007cc5]";
+        }
+        &.color-themeSecondary {
+            color: "[theme: themeSecondary, default: #007cc5]";
+        }
+        &.color-themeTertiary {
+            color: "[theme: themeTertiary, default: #007cc5]";
+        }
+        &.color-primaryText {
+            color: "[theme: primaryText, default: #333333]";
+        }
+        &.color-black {
+            color: "[theme: black, default: #333333]";
+        }
+        &.color-white {
+            color: "[theme: white, default: #FFFFFF]";
+        }
+        & .editControls {
+            display: none;
+            width: 42px;
+            text-align: right;
+            background-color: transparent;
+            z-index: 1000000;
+            float: right;
+            margin-top: -51px;
+            position: absolute;
+            right: 0;
+            top: 51px;
+            &>button {
+                min-width: 20px;
+                width: 32px;
+                height: 22px;
+                padding: 0 5px;
+                background-color: white;
+                border-color: white;
+            }
+            &>i {
+                color: #333333;
+                padding: 5px;
+                font-size: 12px;
+                line-height: 14px;
+                width: 22px;
+                margin-left: 10px;
+                text-align: center;
+                cursor: move;
+                background-color: white;
+            }
+            & :global .ms-Button.ms-Button--default :global .ms-Button-icon {
+                line-height: 15px;
+                height: 10px;
+                &>i {
+                    font-size: 12px;
+                }
+            }
+        }
+        &:hover {
+             :local .editControls {
+                display: block;
+            }
+        }
+        &.emptyBox {
+            background-color: #D9D9D9;
+            padding: 10px 20px;
+            text-align: center;
+            text-transform: uppercase;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 18px;
+            & div {
+                width: 60%;
+                height: 40px;
+                line-height: 40px;
+                vertical-align: middle;
+                text-align: center;
+                color: #fff;
+                background-color: "[theme: themePrimary, default: #007cc5]";
+                font-size: 14px;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                margin-right: -50%;
+                -webkit-transform: translate(-50%, -50%);
+                transform: translate(-50%, -50%);
+            }
+        }
+    }
+    &:local.edit li:hover {
+        border: 1px solid #c8c8c8;
+        padding-left: 7px;
+    }
+}
+
+:global .CanvasSection-xl12 {
+    & :local .tile {
+        width: calc(33% - 5px);
+        &:nth-child(3n) {
+            margin: 0 0 5px 0;
+        }
+    }
+}
+
+:global .CanvasSection-xl6,
+:global .CanvasSection-xl8 {
+    & :local .tile {
+        &:nth-child(2n) {
+            margin: 0 0 5px 0;
+        }
+    }
+}
+
+:global .CanvasSection-xl4 {
+    & :local .tile {
+        width: 100%;
+        margin: 0 0 5px 0;
+    }
+}
+
+
+/* stylings makes 2/3 cols 100% wide on mobile devices */
+
+@media (max-width: 767px) {
+     :global .CanvasSection-xl6,
+     :global .CanvasSection-xl12,
+     :global .CanvasSection-xl8 {
+        & :local .tile {
+            width: 100%;
+            margin: 0 0 5px 0;
+        }
+    }
+}
