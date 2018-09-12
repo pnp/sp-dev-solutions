@@ -39,9 +39,9 @@ export default class BasicTileLayout implements IHubLinksLayout{
                   <div className={styles["description"]+" "+styles["color"]+" "+styles[this.webpart.props.textColor]}>{item.Description}</div>
                   {isEditMode &&
                       <div className={styles["editControls"]}>
-                          <DefaultButton iconProps={{iconName:"Clear"}} onClick={this.webpart.deleteBox.bind(this.webpart)} className={styles["right-button"]}/>
-                          <DefaultButton iconProps={{iconName:"Edit"}} onClick={this.webpart.editBox.bind(this.webpart)} className={styles["right-button"]}/>
-                          <i className={"ms-Icon ms-Icon--Move "+styles["left-button"]} id="drag-handle" aria-hidden="true"></i>
+                          <DefaultButton iconProps={{iconName:"Clear"}} onClick={(e) => {e.stopPropagation();e.preventDefault();this.webpart.deleteBox.call(this.webpart,e);}} className={styles["right-button"]}/>
+                          <DefaultButton iconProps={{iconName:"Edit"}} onClick={(e) => {e.stopPropagation();e.preventDefault();this.webpart.editBox.call(this.webpart,e);}} className={styles["right-button"]}/>
+                          <i className={"ms-Icon ms-Icon--Move "+styles["left-button"]} onClick={(e) => {e.preventDefault();e.stopPropagation();}} id="drag-handle" aria-hidden="true"></i>
                       </div>
                     }    
                 </a>
@@ -60,9 +60,9 @@ export default class BasicTileLayout implements IHubLinksLayout{
                   <div className={styles["description"]+" "+styles["color"]+" "+styles[this.webpart.props.textColor]}>{item.Description}</div>     
                   {isEditMode &&
                       <div className={styles["editControls"]}>
-                          <DefaultButton iconProps={{iconName:"Clear"}} onClick={this.webpart.deleteBox.bind(this.webpart)} className={styles["right-button"]}/>
-                          <DefaultButton iconProps={{iconName:"Edit"}} onClick={this.webpart.editBox.bind(this.webpart)} className={styles["right-button"]}/>
-                          <i className={"ms-Icon ms-Icon--Move "+styles["left-button"]} id="drag-handle" aria-hidden="true"></i>
+                          <DefaultButton iconProps={{iconName:"Clear"}} onClick={(e) => {e.stopPropagation();e.preventDefault();this.webpart.deleteBox.call(this.webpart,e);}} className={styles["right-button"]}/>
+                          <DefaultButton iconProps={{iconName:"Edit"}} onClick={(e) => {e.stopPropagation();e.preventDefault();this.webpart.editBox.call(this.webpart,e);}} className={styles["right-button"]}/>
+                          <i className={"ms-Icon ms-Icon--Move "+styles["left-button"]} onClick={(e) => {e.preventDefault();e.stopPropagation();}} id="drag-handle" aria-hidden="true"></i>
                       </div>
                     }       
                 </a>
