@@ -2,7 +2,7 @@
   "$schema": "https://developer.microsoft.com/json-schemas/spfx/client-side-extension-manifest.schema.json",
 
   "id": "89092bd4-9033-4ea1-8d10-776b7116f8e0",
-  "alias": "OGGlobalFooter",
+  "alias": "pnpGlobalFooter",
   "componentType": "Extension",
   "extensionType": "ApplicationCustomizer",
 
