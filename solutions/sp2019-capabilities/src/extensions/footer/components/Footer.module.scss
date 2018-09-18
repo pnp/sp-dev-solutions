@@ -1,0 +1,19 @@
+@import '~@microsoft/sp-office-ui-fabric-core/dist/sass/SPFabricCore.scss';
+
+.footer {
+  background-color: $ms-color-neutralLighter;
+  color: $ms-color-neutralPrimary;
+
+  .commandBar {
+    width: 100%;
+  }
+
+  .label {
+    margin-left: 10em;
+    font-style: italic;
+
+    &:hover {
+      background-color: inherit;
+    }
+  }
+}
