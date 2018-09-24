@@ -67,11 +67,25 @@ define([], function() {
         'AdvancedEnableListModeLabel': 'Enable list mode',
         'AdvancedEnableListModeInfo': 'When enabled, items will be stored in a list and support filtering',
 
+        "TileFontColorLabel": "Font Color",
+        "TileBorderColorLabel": "Border Color",
+        "TileBackgroundColorLabel": "Background Color",
+
+        "ThemePrimaryColor": "Primary Theme Color",
+        "ThemeSecondaryColor": "Secondary Theme Color",
+        "ThemeTertiaryColor": "Tertiary Theme Color",
+        "ThemePrimaryText": "Primary Theme Text Color",
+        "WhiteColor": "White",
+        "BlackColor": "Black",
+        "TransparentColor": "Transparent",
+
         'LayoutLabel': 'Layout',
         'LayoutSelectorLabel': 'Layout',
-        'ItemLayoutLabel': 'Large Icon',
+        'ItemLayoutLabel': 'Round Icon',
         'ListLayoutLabel': 'List',
         'GroupedListLayoutLabel': 'Grouped List',
+        "IconTopLayoutLabel": "Tiles",
+        "IconLeftLayoutLabel": "Square Icon",
 
         'ShowDescriptionLabel': 'Show Description',
         'GroupSortLabel': 'Reorder Groups',

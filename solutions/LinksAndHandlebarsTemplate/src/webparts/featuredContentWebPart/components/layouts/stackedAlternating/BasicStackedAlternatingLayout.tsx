@@ -33,12 +33,22 @@ export default class BasicStackedLayout implements IFeaturedContentLayout{
                       onDragEnd={this.webpart.endDrag.bind(this.webpart)} data-index={items.indexOf(item)}>
                   <div role="presentation" className={styles["box-container"]}>
                     <div className={styles["image"]}>
-                      <a className={styles["featured-content-link"]} href={item.URL} target={item.NewTab ? "_blank" : ""}></a>
+                      {item.NewTab &&
+                        <a className={styles["featured-content-link"]} href={item.URL} target="blank" data-interception="off"></a>
+                      }
+                      {!item.NewTab &&
+                        <a className={styles["featured-content-link"]} href={item.URL}></a>
+                      }
                       <img src={item["Image"]+FeaturedContentFactory.getWidthHeightQueryStringAppendForImage(item.Image)} alt={item.ImageAlternate}/>
                     </div>
                     <div className={styles["content"]}>
                       <div className={styles["title"]}>
-                        <a className={styles["featured-content-link"]} href={item.URL} target={item.NewTab ? "_blank" : ""}>{item.Title}</a>
+                        {item.NewTab &&
+                          <a className={styles["featured-content-link"]} href={item.URL} target="blank" data-interception="off">{item.Title}</a>
+                        }
+                        {!item.NewTab &&
+                          <a className={styles["featured-content-link"]} href={item.URL}>{item.Title}</a>
+                        }
                       </div>
                       <span className={styles["description"]}>{item.Description}</span>
                       <span className={styles["rich-text-field"]} dangerouslySetInnerHTML={{__html:item.Content}}></span>

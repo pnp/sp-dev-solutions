@@ -2,8 +2,8 @@
     width: 100%;
     font-size: 14px;
     line-height: 1.42857143;
-    color: #333;
-    background-color: #fff;
+    color: "[theme:primaryText, default: #000000]";
+    background-color: "[theme:primaryBackground, default: #FFFFFF]";
     & .featured-content-item {
         position: relative;
         width: 100%;
@@ -47,7 +47,8 @@
     }
     & .box-container {
         clear: both;
-        border: 1px solid #eaeaea;
+        border: 1px solid;
+        border-color: "[theme: themeSecondary, default: #007cc5]";
         margin: 0 0 20px 0;
         display: table;
         width: 100%;
@@ -57,9 +58,9 @@
         overflow: hidden;
         display: block;
         position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 0;
+        top: 1px;
+        bottom: 1px;
+        left: 1px;
         & img {
             width: auto;
             height: 100%;
@@ -72,8 +73,12 @@
             bottom: 0;
         }
     }
-    & .featured-content-link:hover {
-        text-decoration: none;
+    & .featured-content-link {
+        color: "[theme: themePrimary, default: #007cc5]";
+        &:hover {
+            text-decoration: none;
+            color: "[theme: themePrimary, default: #007cc5]";
+        }
     }
     & .title {
         font-size: 28px;
