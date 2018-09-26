@@ -1,0 +1,935 @@
+{
+    "name": "b2e81e89-fcf1-4812-ab32-1e6764124a1f",
+    "id": "/providers/Microsoft.Flow/flows/b2e81e89-fcf1-4812-ab32-1e6764124a1f",
+    "type": "Microsoft.Flow/flows",
+    "properties": {
+        "apiId": "/providers/Microsoft.PowerApps/apis/shared_logicflows",
+        "displayName": "On Course site creation  - Setup all the flows for this site",
+        "definition": {
+            "metadata": {
+                "creator": {
+                    "id": "4ca26fef-1eac-49a7-8667-c51230644baf",
+                    "type": "User",
+                    "tenantId": "72f988bf-86f1-41af-91ab-2d7cd011db47"
+                },
+                "provisioningMethod": "FromDefinition",
+                "failureAlertSubscription": true,
+                "clientLastModifiedTime": "2018-08-14T16:53:00.1482705Z"
+            },
+            "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+            "contentVersion": "1.0.0.0",
+            "parameters": {
+                "$connections": {
+                    "defaultValue": {},
+                    "type": "Object"
+                },
+                "$authentication": {
+                    "defaultValue": {},
+                    "type": "SecureObject"
+                }
+            },
+            "triggers": {
+                "manual": {
+                    "type": "Request",
+                    "kind": "Http",
+                    "inputs": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "webUrl": {
+                                    "type": "string"
+                                },
+                                "webDescription": {
+                                    "type": "string"
+                                },
+                                "webTitle": {
+                                    "type": "string"
+                                },
+                                "creatorName": {
+                                    "type": "string"
+                                },
+                                "creatorEmail": {
+                                    "type": "string"
+                                },
+                                "createdTimeUTC": {
+                                    "type": "string"
+                                },
+                                "parameters": {
+                                    "type": "object",
+                                    "properties": {}
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "actions": {
+                "Get_lists": {
+                    "runAfter": {
+                        "Set_TurnItIn_ID_of_list": [
+                            "Succeeded"
+                        ]
+                    },
+                    "metadata": {
+                        "flowSystemMetadata": {
+                            "swaggerOperationId": "GetTables"
+                        }
+                    },
+                    "type": "ApiConnection",
+                    "inputs": {
+                        "host": {
+                            "api": {
+                                "runtimeUrl": "https://firstrelease-001.azure-apim.net/apim/sharepointonline"
+                            },
+                            "connection": {
+                                "name": "@parameters('$connections')['shared_sharepointonline']['connectionId']"
+                            }
+                        },
+                        "method": "get",
+                        "path": "/datasets/@{encodeURIComponent(encodeURIComponent(triggerBody()?['webUrl']))}/tables",
+                        "authentication": "@parameters('$authentication')"
+                    }
+                },
+                "Apply_to_each": {
+                    "foreach": "@body('Get_lists')?['value']",
+                    "actions": {
+                        "Switch": {
+                            "runAfter": {},
+                            "cases": {
+                                "Case": {
+                                    "case": "Students",
+                                    "actions": {
+                                        "Set_variable": {
+                                            "runAfter": {},
+                                            "type": "SetVariable",
+                                            "inputs": {
+                                                "name": "StudentListID",
+                                                "value": "@items('Apply_to_each')?['Name']"
+                                            }
+                                        },
+                                        "Break_inheritance_on_Students_list": {
+                                            "runAfter": {
+                                                "Set_variable": [
+                                                    "Succeeded"
+                                                ]
+                                            },
+                                            "metadata": {
+                                                "flowSystemMetadata": {
+                                                    "swaggerOperationId": "HttpRequest"
+                                                }
+                                            },
+                                            "type": "ApiConnection",
+                                            "inputs": {
+                                                "host": {
+                                                    "api": {
+                                                        "runtimeUrl": "https://firstrelease-001.azure-apim.net/apim/sharepointonline"
+                                                    },
+                                                    "connection": {
+                                                        "name": "@parameters('$connections')['shared_sharepointonline']['connectionId']"
+                                                    }
+                                                },
+                                                "method": "post",
+                                                "body": {
+                                                    "method": "POST",
+                                                    "uri": "_api/lists/getByTitle('@{items('Apply_to_each')?['DisplayName']}')/breakroleinheritance(copyRoleAssignments=false,clearSubscopes=true)"
+                                                },
+                                                "path": "/datasets/@{encodeURIComponent(encodeURIComponent(triggerBody()?['webUrl']))}/httprequest",
+                                                "authentication": "@parameters('$authentication')"
+                                            }
+                                        }
+                                    }
+                                },
+                                "Case_2": {
+                                    "case": "Assignment Grades",
+                                    "actions": {
+                                        "Set_variable_2": {
+                                            "runAfter": {},
+                                            "type": "SetVariable",
+                                            "inputs": {
+                                                "name": "AssignmentGradesID",
+                                                "value": "@items('Apply_to_each')?['Name']"
+                                            }
+                                        },
+                                        "Break_inheritance_on_Assignment_Grades_list": {
+                                            "runAfter": {
+                                                "Set_variable_2": [
+                                                    "Succeeded"
+                                                ]
+                                            },
+                                            "metadata": {
+                                                "flowSystemMetadata": {
+                                                    "swaggerOperationId": "HttpRequest"
+                                                }
+                                            },
+                                            "type": "ApiConnection",
+                                            "inputs": {
+                                                "host": {
+                                                    "api": {
+                                                        "runtimeUrl": "https://firstrelease-001.azure-apim.net/apim/sharepointonline"
+                                                    },
+                                                    "connection": {
+                                                        "name": "@parameters('$connections')['shared_sharepointonline']['connectionId']"
+                                                    }
+                                                },
+                                                "method": "post",
+                                                "body": {
+                                                    "method": "POST",
+                                                    "uri": "_api/lists/getByTitle('@{items('Apply_to_each')?['DisplayName']}')/breakroleinheritance(copyRoleAssignments=false,clearSubscopes=true)"
+                                                },
+                                                "path": "/datasets/@{encodeURIComponent(encodeURIComponent(triggerBody()?['webUrl']))}/httprequest",
+                                                "authentication": "@parameters('$authentication')"
+                                            }
+                                        }
+                                    }
+                                },
+                                "Case_3": {
+                                    "case": "Assignments",
+                                    "actions": {
+                                        "Set_variable_3": {
+                                            "runAfter": {},
+                                            "type": "SetVariable",
+                                            "inputs": {
+                                                "name": "AssignmentsID",
+                                                "value": "@items('Apply_to_each')?['Name']"
+                                            }
+                                        },
+                                        "Break_Inheritance_on_Assignments_list": {
+                                            "runAfter": {
+                                                "Set_variable_3": [
+                                                    "Succeeded"
+                                                ]
+                                            },
+                                            "metadata": {
+                                                "flowSystemMetadata": {
+                                                    "swaggerOperationId": "HttpRequest"
+                                                }
+                                            },
+                                            "type": "ApiConnection",
+                                            "inputs": {
+                                                "host": {
+                                                    "api": {
+                                                        "runtimeUrl": "https://firstrelease-001.azure-apim.net/apim/sharepointonline"
+                                                    },
+                                                    "connection": {
+                                                        "name": "@parameters('$connections')['shared_sharepointonline']['connectionId']"
+                                                    }
+                                                },
+                                                "method": "post",
+                                                "body": {
+                                                    "method": "POST",
+                                                    "uri": "_api/lists/getByTitle('@{items('Apply_to_each')?['DisplayName']}')/breakroleinheritance(copyRoleAssignments=false,clearSubscopes=true)"
+                                                },
+                                                "path": "/datasets/@{encodeURIComponent(encodeURIComponent(triggerBody()?['webUrl']))}/httprequest",
+                                                "authentication": "@parameters('$authentication')"
+                                            }
+                                        },
+                                        "GetGroupMembersId": {
+                                            "runAfter": {
+                                                "Break_Inheritance_on_Assignments_list": [
+                                                    "Succeeded"
+                                                ]
+                                            },
+                                            "metadata": {
+                                                "flowSystemMetadata": {
+                                                    "swaggerOperationId": "HttpRequest"
+                                                }
+                                            },
+                                            "type": "ApiConnection",
+                                            "inputs": {
+                                                "host": {
+                                                    "api": {
+                                                        "runtimeUrl": "https://firstrelease-001.azure-apim.net/apim/sharepointonline"
+                                                    },
+                                                    "connection": {
+                                                        "name": "@parameters('$connections')['shared_sharepointonline']['connectionId']"
+                                                    }
+                                                },
+                                                "method": "post",
+                                                "body": {
+                                                    "method": "GET",
+                                                    "uri": "_api/web/SiteGroups/getbyname('@{triggerBody()?['webTitle']} Members')/id"
+                                                },
+                                                "path": "/datasets/@{encodeURIComponent(encodeURIComponent(triggerBody()?['webUrl']))}/httprequest",
+                                                "authentication": "@parameters('$authentication')"
+                                            }
+                                        },
+                                        "Send_an_HTTP_request_to_SharePoint": {
+                                            "runAfter": {
+                                                "GetGroupMembersId": [
+                                                    "Succeeded"
+                                                ]
+                                            },
+                                            "metadata": {
+                                                "flowSystemMetadata": {
+                                                    "swaggerOperationId": "HttpRequest"
+                                                }
+                                            },
+                                            "type": "ApiConnection",
+                                            "inputs": {
+                                                "host": {
+                                                    "api": {
+                                                        "runtimeUrl": "https://firstrelease-001.azure-apim.net/apim/sharepointonline"
+                                                    },
+                                                    "connection": {
+                                                        "name": "@parameters('$connections')['shared_sharepointonline']['connectionId']"
+                                                    }
+                                                },
+                                                "method": "post",
+                                                "body": {
+                                                    "method": "POST",
+                                                    "uri": "_api/lists/getByTitle('Assignments')/roleassignments/addroleassignment(principalid=@{body('GetGroupMembersId')['d']['id']},roledefid=1073741826) "
+                                                },
+                                                "path": "/datasets/@{encodeURIComponent(encodeURIComponent(triggerBody()?['webUrl']))}/httprequest",
+                                                "authentication": "@parameters('$authentication')"
+                                            }
+                                        }
+                                    }
+                                },
+                                "Case_4": {
+                                    "case": "Announcements",
+                                    "actions": {
+                                        "Set_variable_4": {
+                                            "runAfter": {},
+                                            "type": "SetVariable",
+                                            "inputs": {
+                                                "name": "AnnouncementsID",
+                                                "value": "@items('Apply_to_each')?['Name']"
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "default": {
+                                "actions": {}
+                            },
+                            "expression": "@items('Apply_to_each')?['DisplayName']",
+                            "type": "Switch"
+                        }
+                    },
+                    "runAfter": {
+                        "Get_lists": [
+                            "Succeeded"
+                        ]
+                    },
+                    "type": "Foreach"
+                },
+                "Init_Student_ID": {
+                    "runAfter": {},
+                    "type": "InitializeVariable",
+                    "inputs": {
+                        "variables": [
+                            {
+                                "name": "StudentListID",
+                                "type": "String"
+                            }
+                        ]
+                    }
+                },
+                "Init_Assignment_Grades_ID": {
+                    "runAfter": {
+                        "Init_Template_Student_ID": [
+                            "Succeeded"
+                        ]
+                    },
+                    "type": "InitializeVariable",
+                    "inputs": {
+                        "variables": [
+                            {
+                                "name": "AssignmentGradesID",
+                                "type": "String"
+                            }
+                        ]
+                    }
+                },
+                "Init_Assignments_ID": {
+                    "runAfter": {
+                        "Init_Template_Assignment_Grade_ID": [
+                            "Succeeded"
+                        ]
+                    },
+                    "type": "InitializeVariable",
+                    "inputs": {
+                        "variables": [
+                            {
+                                "name": "AssignmentsID",
+                                "type": "String"
+                            }
+                        ]
+                    }
+                },
+                "Init_Announcements_ID": {
+                    "runAfter": {
+                        "Init_Template_Assignment_ID": [
+                            "Succeeded"
+                        ]
+                    },
+                    "type": "InitializeVariable",
+                    "inputs": {
+                        "variables": [
+                            {
+                                "name": "AnnouncementsID",
+                                "type": "String"
+                            }
+                        ]
+                    }
+                },
+                "Init_Template_Student_ID": {
+                    "runAfter": {
+                        "Init_Student_ID": [
+                            "Succeeded"
+                        ]
+                    },
+                    "type": "InitializeVariable",
+                    "inputs": {
+                        "variables": [
+                            {
+                                "name": "TemplateStudentsID",
+                                "type": "String",
+                                "value": "[[Students]]"
+                            }
+                        ]
+                    }
+                },
+                "Init_Template_Assignment_Grade_ID": {
+                    "runAfter": {
+                        "Init_Assignment_Grades_ID": [
+                            "Succeeded"
+                        ]
+                    },
+                    "type": "InitializeVariable",
+                    "inputs": {
+                        "variables": [
+                            {
+                                "name": "TemplateAssignmentGradeID",
+                                "type": "String",
+                                "value": "[[AssignmentGrades]]"
+                            }
+                        ]
+                    }
+                },
+                "Init_Template_Assignment_ID": {
+                    "runAfter": {
+                        "Init_Assignments_ID": [
+                            "Succeeded"
+                        ]
+                    },
+                    "type": "InitializeVariable",
+                    "inputs": {
+                        "variables": [
+                            {
+                                "name": "TemplateAssignmentID",
+                                "type": "String",
+                                "value": "[[Assignments]]"
+                            }
+                        ]
+                    }
+                },
+                "Init_Template_Announcements_ID": {
+                    "runAfter": {
+                        "Init_Announcements_ID": [
+                            "Succeeded"
+                        ]
+                    },
+                    "type": "InitializeVariable",
+                    "inputs": {
+                        "variables": [
+                            {
+                                "name": "TemplateAnnouncementsID",
+                                "type": "String",
+                                "value": "[[Announcements]]"
+                            }
+                        ]
+                    }
+                },
+                "Init_webSubUrl": {
+                    "runAfter": {
+                        "Init_Template_turnItIn_ID": [
+                            "Succeeded"
+                        ]
+                    },
+                    "type": "InitializeVariable",
+                    "inputs": {
+                        "variables": [
+                            {
+                                "name": "webSubUrl",
+                                "type": "String",
+                                "value": "@{substring(triggerBody()?['webUrl'],add(lastIndexOf(triggerBody()?['webUrl'], '/'),1), sub(length(triggerBody()?['webUrl']), add(lastIndexOf(triggerBody()?['webUrl'], '/'),1)))}"
+                            }
+                        ]
+                    },
+                    "description": "Get the last part of the webUrl... e.g. get class from https://www.contoso.com/teams/class"
+                },
+                "getAllFlowDefinitions": {
+                    "runAfter": {
+                        "Init_flowDefinitionAfterReplaceAnnouncementsListID": [
+                            "Succeeded"
+                        ]
+                    },
+                    "metadata": {
+                        "%252fShared%2bDocuments%252fflows": "/Shared Documents/flows",
+                        "flowSystemMetadata": {
+                            "swaggerOperationId": "ListFolder"
+                        }
+                    },
+                    "type": "ApiConnection",
+                    "inputs": {
+                        "host": {
+                            "api": {
+                                "runtimeUrl": "https://firstrelease-001.azure-apim.net/apim/sharepointonline"
+                            },
+                            "connection": {
+                                "name": "@parameters('$connections')['shared_sharepointonline']['connectionId']"
+                            }
+                        },
+                        "method": "get",
+                        "path": "/datasets/@{encodeURIComponent(encodeURIComponent('https://microsoft.sharepoint-df.com/teams/Courses'))}/folders/@{encodeURIComponent('%252fShared%2bDocuments%252fflows')}",
+                        "authentication": "@parameters('$authentication')"
+                    },
+                    "description": "Use the List Folder action to get all items in a folder"
+                },
+                "for-each-flow-definition": {
+                    "foreach": "@body('getAllFlowDefinitions')",
+                    "actions": {
+                        "get-flow-definition-content": {
+                            "runAfter": {},
+                            "metadata": {
+                                "flowSystemMetadata": {
+                                    "swaggerOperationId": "GetFileContent"
+                                }
+                            },
+                            "type": "ApiConnection",
+                            "inputs": {
+                                "host": {
+                                    "api": {
+                                        "runtimeUrl": "https://firstrelease-001.azure-apim.net/apim/sharepointonline"
+                                    },
+                                    "connection": {
+                                        "name": "@parameters('$connections')['shared_sharepointonline']['connectionId']"
+                                    }
+                                },
+                                "method": "get",
+                                "path": "/datasets/@{encodeURIComponent(encodeURIComponent('https://microsoft.sharepoint-df.com/teams/Courses'))}/files/@{encodeURIComponent(items('for-each-flow-definition')?['Id'])}/content",
+                                "queries": {
+                                    "inferContentType": true
+                                },
+                                "authentication": "@parameters('$authentication')"
+                            }
+                        },
+                        "replace_web_url": {
+                            "runAfter": {
+                                "get-flow-definition-content": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "SetVariable",
+                            "inputs": {
+                                "name": "flow-definition",
+                                "value": "@{replace(string(json(body('get-flow-definition-content'))['properties']['definition']), '[[webUrl]]', triggerBody()?['webUrl'])}"
+                            },
+                            "description": "Replace with with current web URL. To do this, get the properties.definition property of the flow definition since that what CreateFlow expects"
+                        },
+                        "replace_webSubUrl_and_turnItIn_Lib_ID": {
+                            "runAfter": {
+                                "replace_web_url": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "SetVariable",
+                            "inputs": {
+                                "name": "flowDefinitionAfterReplaceWebSubUrl",
+                                "value": "@{replace( replace(variables('flow-definition'), '[[webSubUrl]]', variables('webSubUrl')),variables('TemplateTurnItInID'), variables('TurnItInID'))}"
+                            }
+                        },
+                        "replace_student_list_id": {
+                            "runAfter": {
+                                "replace_webSubUrl_and_turnItIn_Lib_ID": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "SetVariable",
+                            "inputs": {
+                                "name": "flowDefinitionAfterReplaceStudentsListID",
+                                "value": "@{if( greater( indexOf( variables('flowDefinitionAfterReplaceWebSubUrl'), variables('TemplateStudentsID')), 0), replace( variables('flowDefinitionAfterReplaceWebSubUrl'), variables('TemplateStudentsID'), variables('StudentListID')),variables('flowDefinitionAfterReplaceWebSubUrl'))}"
+                            }
+                        },
+                        "replace_Assignment_list_id": {
+                            "runAfter": {
+                                "replace_student_list_id": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "SetVariable",
+                            "inputs": {
+                                "name": "flowDefinitionAfterReplaceAssignmentsListID",
+                                "value": "@{replace(variables('flowDefinitionAfterReplaceStudentsListID'), variables('TemplateAssignmentID'), variables('AssignmentsID'))}"
+                            }
+                        },
+                        "replace_AssignmentGrades_list_id": {
+                            "runAfter": {
+                                "replace_Assignment_list_id": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "SetVariable",
+                            "inputs": {
+                                "name": "flowDefinitionAfterReplaceAssignmentGradesListID",
+                                "value": "@{replace( variables('flowDefinitionAfterReplaceAssignmentsListID'), variables('TemplateAssignmentGradeID'), variables('AssignmentGradesID'))}"
+                            }
+                        },
+                        "rename_Announcements_list_id": {
+                            "runAfter": {
+                                "replace_AssignmentGrades_list_id": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "SetVariable",
+                            "inputs": {
+                                "name": "flowDefinitionAfterReplaceAnnouncementsListID",
+                                "value": "@{replace( variables('flowDefinitionAfterReplaceAssignmentGradesListID'), variables('TemplateAnnouncementsID'), variables('AnnouncementsID'))}"
+                            }
+                        },
+                        "set_final-flow-definition": {
+                            "runAfter": {
+                                "rename_Announcements_list_id": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "SetVariable",
+                            "inputs": {
+                                "name": "final-flow-definition",
+                                "value": "@variables('flowDefinitionAfterReplaceAnnouncementsListID')"
+                            }
+                        },
+                        "Condition": {
+                            "actions": {
+                                "Create_Flow": {
+                                    "runAfter": {},
+                                    "metadata": {
+                                        "flowSystemMetadata": {
+                                            "swaggerOperationId": "CreateFlow"
+                                        }
+                                    },
+                                    "type": "ApiConnection",
+                                    "inputs": {
+                                        "host": {
+                                            "api": {
+                                                "runtimeUrl": "https://firstrelease-001.azure-apim.net/apim/flowmanagement"
+                                            },
+                                            "connection": {
+                                                "name": "@parameters('$connections')['shared_flowmanagement']['connectionId']"
+                                            }
+                                        },
+                                        "method": "post",
+                                        "body": {
+                                            "properties": {
+                                                "displayName": " @{variables('webSubUrl')}  -   @{json(body('get-flow-definition-content'))['properties']['displayName']}",
+                                                "definition": "@json(variables('final-flow-definition'))",
+                                                "state": "Started",
+                                                "connectionReferences": [
+                                                    {
+                                                        "connectionName": "shared-sharepointonl-620465f0-0406-424a-9b53-4320250849a1",
+                                                        "id": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                                                    }
+                                                ]
+                                            }
+                                        },
+                                        "path": "/environments/@{encodeURIComponent('839eace6-59ab-4243-97ec-a5b8fcc104e4')}/flows",
+                                        "authentication": "@parameters('$authentication')"
+                                    }
+                                }
+                            },
+                            "runAfter": {
+                                "set_final-flow-definition": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "else": {
+                                "actions": {
+                                    "Create_Flow_2": {
+                                        "runAfter": {},
+                                        "metadata": {
+                                            "flowSystemMetadata": {
+                                                "swaggerOperationId": "CreateFlow"
+                                            }
+                                        },
+                                        "type": "ApiConnection",
+                                        "inputs": {
+                                            "host": {
+                                                "api": {
+                                                    "runtimeUrl": "https://firstrelease-001.azure-apim.net/apim/flowmanagement"
+                                                },
+                                                "connection": {
+                                                    "name": "@parameters('$connections')['shared_flowmanagement']['connectionId']"
+                                                }
+                                            },
+                                            "method": "post",
+                                            "body": {
+                                                "properties": {
+                                                    "displayName": " @{variables('webSubUrl')}  -   @{json(body('get-flow-definition-content'))['properties']['displayName']}",
+                                                    "definition": "@json(variables('final-flow-definition'))",
+                                                    "state": "Started",
+                                                    "connectionReferences": [
+                                                        {
+                                                            "connectionName": "shared-sharepointonl-620465f0-0406-424a-9b53-4320250849a1",
+                                                            "id": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                                                        }
+                                                    ]
+                                                }
+                                            },
+                                            "path": "/environments/@{encodeURIComponent('839eace6-59ab-4243-97ec-a5b8fcc104e4')}/flows",
+                                            "authentication": "@parameters('$authentication')"
+                                        }
+                                    }
+                                }
+                            },
+                            "expression": "@equals(variables('webSubUrl'), 'foo')",
+                            "type": "If"
+                        }
+                    },
+                    "runAfter": {
+                        "getAllFlowDefinitions": [
+                            "Succeeded"
+                        ]
+                    },
+                    "type": "Foreach"
+                },
+                "Init_flow-definition": {
+                    "runAfter": {
+                        "Break_inheritance_on_the_turn-it-in_library": [
+                            "Succeeded"
+                        ]
+                    },
+                    "type": "InitializeVariable",
+                    "inputs": {
+                        "variables": [
+                            {
+                                "name": "flow-definition",
+                                "type": "String"
+                            }
+                        ]
+                    },
+                    "description": "Replace the webUrl and Student List ID from the original flow with the new values"
+                },
+                "Init_flowDefinitionAfterReplaceStudentsListID": {
+                    "runAfter": {
+                        "Init_flowDefinitionAfterReplaceWebSubUrl": [
+                            "Succeeded"
+                        ]
+                    },
+                    "type": "InitializeVariable",
+                    "inputs": {
+                        "variables": [
+                            {
+                                "name": "flowDefinitionAfterReplaceStudentsListID",
+                                "type": "String"
+                            }
+                        ]
+                    }
+                },
+                "Init_flowDefinitionAfterReplaceAssignmentsListID": {
+                    "runAfter": {
+                        "Init_flowDefinitionAfterReplaceStudentsListID": [
+                            "Succeeded"
+                        ]
+                    },
+                    "type": "InitializeVariable",
+                    "inputs": {
+                        "variables": [
+                            {
+                                "name": "flowDefinitionAfterReplaceAssignmentsListID",
+                                "type": "String"
+                            }
+                        ]
+                    }
+                },
+                "Init_flowDefinitionAfterReplaceAssignmentGradesListID": {
+                    "runAfter": {
+                        "Init_flowDefinitionAfterReplaceAssignmentsListID": [
+                            "Succeeded"
+                        ]
+                    },
+                    "type": "InitializeVariable",
+                    "inputs": {
+                        "variables": [
+                            {
+                                "name": "flowDefinitionAfterReplaceAssignmentGradesListID",
+                                "type": "String"
+                            }
+                        ]
+                    }
+                },
+                "Init_flowDefinitionAfterReplaceAnnouncementsListID": {
+                    "runAfter": {
+                        "Init_flowDefinitionAfterReplaceAssignmentGradesListID": [
+                            "Succeeded"
+                        ]
+                    },
+                    "type": "InitializeVariable",
+                    "inputs": {
+                        "variables": [
+                            {
+                                "name": "flowDefinitionAfterReplaceAnnouncementsListID",
+                                "type": "String",
+                                "value": "@{if( greater( indexOf( variables('flowDefinitionAfterReplaceAssignmentGradesListID'), variables('TemplateAnnouncementsID')), 0), replace( variables('flowDefinitionAfterReplaceAssignmentGradesListID'), variables('TemplateAnnouncementsID'), variables('AnnouncementsID')),variables('flowDefinitionAfterReplaceAssignmentGradesListID'))}"
+                            }
+                        ]
+                    }
+                },
+                "Init_flowDefinitionAfterReplaceWebSubUrl": {
+                    "runAfter": {
+                        "Init_flow-definition": [
+                            "Succeeded"
+                        ]
+                    },
+                    "type": "InitializeVariable",
+                    "inputs": {
+                        "variables": [
+                            {
+                                "name": "flowDefinitionAfterReplaceWebSubUrl",
+                                "type": "String"
+                            }
+                        ]
+                    }
+                },
+                "final-flow-definition": {
+                    "runAfter": {
+                        "Init_webSubUrl": [
+                            "Succeeded"
+                        ]
+                    },
+                    "type": "InitializeVariable",
+                    "inputs": {
+                        "variables": [
+                            {
+                                "name": "final-flow-definition",
+                                "type": "String"
+                            }
+                        ]
+                    }
+                },
+                "Break_inheritance_on_the_turn-it-in_library": {
+                    "runAfter": {
+                        "Apply_to_each": [
+                            "Succeeded"
+                        ]
+                    },
+                    "metadata": {
+                        "flowSystemMetadata": {
+                            "swaggerOperationId": "HttpRequest"
+                        }
+                    },
+                    "type": "ApiConnection",
+                    "inputs": {
+                        "host": {
+                            "api": {
+                                "runtimeUrl": "https://firstrelease-001.azure-apim.net/apim/sharepointonline"
+                            },
+                            "connection": {
+                                "name": "@parameters('$connections')['shared_sharepointonline']['connectionId']"
+                            }
+                        },
+                        "method": "post",
+                        "body": {
+                            "method": "POST",
+                            "uri": "_api/lists/getByTitle('Turn-it-in')/breakroleinheritance(copyRoleAssignments=false,clearSubscopes=true)"
+                        },
+                        "path": "/datasets/@{encodeURIComponent(encodeURIComponent(triggerBody()?['webUrl']))}/httprequest",
+                        "authentication": "@parameters('$authentication')"
+                    }
+                },
+                "GetTurnItInLibraryDetails": {
+                    "runAfter": {
+                        "final-flow-definition": [
+                            "Succeeded"
+                        ]
+                    },
+                    "metadata": {
+                        "flowSystemMetadata": {
+                            "swaggerOperationId": "HttpRequest"
+                        }
+                    },
+                    "type": "ApiConnection",
+                    "inputs": {
+                        "host": {
+                            "api": {
+                                "runtimeUrl": "https://firstrelease-001.azure-apim.net/apim/sharepointonline"
+                            },
+                            "connection": {
+                                "name": "@parameters('$connections')['shared_sharepointonline']['connectionId']"
+                            }
+                        },
+                        "method": "post",
+                        "body": {
+                            "method": "GET",
+                            "uri": "_api/lists/getByTitle('Turn-it-in')"
+                        },
+                        "path": "/datasets/@{encodeURIComponent(encodeURIComponent(triggerBody()?['webUrl']))}/httprequest",
+                        "authentication": "@parameters('$authentication')"
+                    },
+                    "description": "REST request to get info about the turn it in library"
+                },
+                "Init_TurnItIn_ID": {
+                    "runAfter": {
+                        "Init_Template_Announcements_ID": [
+                            "Succeeded"
+                        ]
+                    },
+                    "type": "InitializeVariable",
+                    "inputs": {
+                        "variables": [
+                            {
+                                "name": "TurnItInID",
+                                "type": "String"
+                            }
+                        ]
+                    }
+                },
+                "Init_Template_turnItIn_ID": {
+                    "runAfter": {
+                        "Init_TurnItIn_ID": [
+                            "Succeeded"
+                        ]
+                    },
+                    "type": "InitializeVariable",
+                    "inputs": {
+                        "variables": [
+                            {
+                                "name": "TemplateTurnItInID",
+                                "type": "String",
+                                "value": "[[TurnItIn]]"
+                            }
+                        ]
+                    }
+                },
+                "Set_TurnItIn_ID_of_list": {
+                    "runAfter": {
+                        "GetTurnItInLibraryDetails": [
+                            "Succeeded"
+                        ]
+                    },
+                    "type": "SetVariable",
+                    "inputs": {
+                        "name": "TurnItInID",
+                        "value": "@{body('GetTurnItInLibraryDetails')['d']['Id']}"
+                    }
+                }
+            },
+            "outputs": {}
+        },
+        "connectionReferences": {
+            "shared_sharepointonline": {
+                "connectionName": "shared-sharepointonl-00000000-0000-0000-0000-000000000000",
+                "source": "Embedded",
+                "id": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                "tier": "NotSpecified"
+            },
+            "shared_flowmanagement": {
+                "connectionName": "shared-flowmanagemen-00000000-0000-0000-0000-000000000000",
+                "source": "Embedded",
+                "id": "/providers/Microsoft.PowerApps/apis/shared_flowmanagement",
+                "tier": "NotSpecified"
+            }
+        },
+        "flowFailureAlertSubscribed": false
+    }
+}

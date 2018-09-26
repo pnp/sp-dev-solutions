@@ -1,0 +1,178 @@
+{
+    "$schema": "https://developer.microsoft.com/json-schemas/sp/view-formatting.schema.json",
+    "hideSelection": true,
+    "hideListHeader": true,
+    "rowFormatter": {
+      "debugMode": true,
+      "elmType": "div",
+      "style": {
+        "padding": "12px",
+        "overflow": "hidden",
+        "border-radius": "2px",
+        "box-shadow": "0 1.6px 3.6px 0 #dddddd, 0 0.3px 0.9px 0 #e3e3e3",
+        "margin-top": "12px",
+        "margin-bottom": "12px",
+        "min-width": "350px",
+        "border": "=if(Number([$SumOfGradeWeights]) <= 0 , '2px solid transparent' , if((Number([$Grade]) * 100 / Number([$SumOfGradeWeights]) < 60 ,'2px solid #FFCCCC','2px solid transparent'))"
+      },
+      "children": [
+        {
+          "elmType": "div",
+          "style" : {
+            "width": "100%"
+          },
+          "children": [
+            {
+              "elmType": "div",
+              "style": {
+                "border": "0",
+                "cursor": "pointer"
+              },
+              "children": [
+                {
+                  "elmType": "img",
+                  "attributes": {
+                    "src": "= @currentWeb + '/_layouts/15/userphoto.aspx?size=L&accountname=' + [$Student.email]"
+                  },
+                  "style": {
+                    "max-width": "100%",
+                    "width": "80px",
+                    "margin-left": "4px",
+                    "margin-right": "16px",
+                    "display": "inline-block",
+                    "border-radius": "4px"
+                  }
+                },
+                {
+                  "elmType": "div",
+                  "style": {
+                    "text-align": "left",
+                    "vertical-align": "top",
+                    "max-width": "600px",
+                    "display": "inline-block"
+                  },
+                  "children": [
+                    {
+                      "elmType": "div",
+                      "txtContent": "[$Student.title]",
+                      "style": {
+                        "font-size": "1.4em",
+                        "padding-bottom": "4px",
+                        "white-space": "normal"
+                      }
+                    },
+                    {
+                      "elmType": "div",
+                      "txtContent": "[$Student.jobTitle]",
+                      "style": {
+                        "padding-bottom": "4px",
+                        "white-space": "normal"
+                      }
+                    },
+                    {
+                      "elmType": "div",
+                      "txtContent": "[$Student.department]",
+                      "style": {
+                        "padding-bottom": "4px",
+                        "white-space": "normal"
+                      }
+                    },
+                    {
+                      "elmType": "div",
+                      "txtContent": "[$Student.email]",
+                      "style": {
+                        "padding-bottom": "4px",
+                        "white-space": "normal"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "elmType": "div",
+              "style": {
+                "width" : "100%",
+                "border": "1px solid grey",
+                "border-radius": "4px",
+                "display": "=if( (Number([$SumOfGradeWeights]) <= 0) ,'none', '')"
+              },
+              "children": [
+                {
+                  "elmType": "div",
+                  "attributes": {
+                    "class": "sp-field-dataBars"
+                  },
+                  "style": {
+                    "width": "=if((Number([$Grade]) * 100 / Number([$SumOfGradeWeights])) > 100, '100%', if( Number([$SumOfGradeWeights]) <=0, '0%', toString(Number([$Grade]) * 100 / Number([$SumOfGradeWeights]) ) + '%')",
+                    "white-space": "normal",
+                    "font-size": "xx-large",
+                    "max-height": "100px",
+                    "overflow": "hidden",
+                    "text-overflow": "ellipsis",
+                    "box-sizing": "border-box",
+                    "color": "=if((Number([$Grade]) * 100 / Number([$SumOfGradeWeights]) <= 90,'', '#007700')"
+                  },
+                  "txtContent": "=if( (Number([$Grade]) <= 0) || (Number([$SumOfGradeWeights]) <= 0) , '', toString(Number([$Grade]) * 100 / Number([$SumOfGradeWeights])) + '%')"
+              }                
+              ]
+            },
+            {
+              "elmType": "div",
+              "style": {
+                "padding-top": "10px",
+                "padding-bottom": "10px"
+              },
+              "children": [
+                {
+                  "elmType": "a",
+                  "style": {
+                    "cursor": "pointer",
+                    "padding": "6px",
+                    "border-radius": "2px",
+                    "box-shadow": "5px 10px 18px #999999",
+                    "margin-right": "5px"
+                  },
+                  "attributes": {
+                    "target": "_blank",
+                    "href": "= @currentWeb + '/Lists/Assignment%20Grades/AllItems.aspx?useFiltersInViewXml=1&FilterField1=Student&FilterType1=User&FilterValue1=' + [$Student.title]"
+                  },
+                  "txtContent": "Grades"
+                },
+                {
+                  "elmType": "a",
+                  "style": {
+                    "cursor": "pointer",
+                    "padding": "6px",
+                    "border-radius": "2px",
+                    "box-shadow": "5px 10px 18px #999999",
+                    "margin-right": "5px"
+                  },
+                  "attributes": {
+                    "target": "_blank",
+                    "href": "= @currentWeb + '/' + [$StudentFolder]"
+                  },
+                  "txtContent": "Turn it in folder"
+                },
+                {
+                  "elmType": "a",
+                  "style": {
+                    "cursor": "pointer",
+                    "padding": "6px",
+                    "border-radius": "2px",
+                    "box-shadow": "5px 10px 18px #999999",
+                    "margin-right": "5px"
+                  },
+                  "attributes": {
+                    "target": "_blank",
+                    "href": "= @currentWeb + '/SitePages/Student-Page.aspx?Student=' + [$Student.title]"
+                  },
+                  "txtContent": "Student Overview"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }

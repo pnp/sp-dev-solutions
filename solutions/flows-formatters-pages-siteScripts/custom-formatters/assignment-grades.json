@@ -1,0 +1,124 @@
+{
+    "$schema": "https://developer.microsoft.com/json-schemas/sp/view-formatting.schema.json",
+    "hideSelection": true,
+    "hideListHeader": true,
+    "rowFormatter": {
+        "debugMode": true,
+        "elmType": "div",
+        "style": {
+            "padding": "12px",
+            "overflow": "hidden",
+            "border-radius": "2px",
+            "box-shadow": "0 1.6px 3.6px 0 #dddddd, 0 0.3px 0.9px 0 #e3e3e3",
+            "border": "=if( ([$Due_x0020_Date] > (@now + 86400000)) || ([$turnedIn] ) ,'4px solid transparent','4px solid #ffeaea')",
+            "margin-bottom": "12px"
+        },
+        "children": [
+            {
+                "elmType": "div",
+                "style": {
+                    "width": "100%",
+                    "text-align": "left"
+                },
+                "children": [
+                    {
+                        "elmType": "a",
+                        "style": {
+                            "font-size": "16px",
+                            "font-weight": "600",
+                            "padding-bottom": "8px",
+                            "display": "block",
+                            "text-decoration": "none"
+                        },
+                        "attributes": {
+                            "target": "_blank",
+                            "href": "= @currentWeb + '/Lists/Assignments/DispForm.aspx?env=WebView&ID=' + [$Assignment.lookupId]"
+                        },
+                        "txtContent": "[$Assignment.lookupValue]"
+                    },
+                    {
+                        "elmType": "div",
+                        "txtContent": "[$Assignment_x003a_Brief_x0020_Des]",
+                        "style": {
+                            "padding-bottom": "4px"
+                        }
+                    },
+                    {
+                        "elmType": "div",
+                        "style": {
+                            "margin-bottom": "5px"
+                        },
+                        "txtContent" : "= 'Due : ' + toLocaleDateString([$Due_x0020_Date])"
+                    },
+                    {
+                        "elmType": "div",
+                        "style": {
+                            "width" : "100%",
+                            "border": "1px solid grey",
+                            "border-radius": "4px",
+                            "display": "=if( (Number([$Grade]) <= 0) ,'none', '')"
+                          },            
+                        "children": [
+                            {
+                                "elmType": "div",
+                                "attributes": {
+                                    "class": "sp-field-dataBars"
+                                },
+                                "style": {
+                                    "box-sizing": "border-box",                
+                                    "width": "=if((Number([$Grade]) * 100 / Number([$Assignment_x003a_Weight])) > 100, '100%', if( Number([$Assignment_x003a_Weight]) <=0, '0%', toString(Number([$Grade]) * 100 / Number([$Assignment_x003a_Weight]) ) + '%')",
+                                    "padding": "0px"
+                                },
+                                "children": [
+                                    {
+                                        "elmType" : "div",
+                                        "style": {
+                                            "padding": "8px",
+                                            "text-overflow": "ellipsis",
+                                            "overflow": "hidden"
+                                        },
+                                        "txtContent": "=if( [$Grade] == '', '', [$Grade] + '/' + [$Assignment_x003a_Weight] + ' = ' + toString(Number([$Grade]) * 100 / Number([$Assignment_x003a_Weight])) + '%')"
+                                    }
+                                ]
+                            }                            
+                        ]
+                    },
+
+                    {
+                        "elmType": "a",
+                        "attributes": {
+                            "href": "= @currentWeb + '/' + [$TurnItInFolder]",
+                            "target": "_blank"
+                        },
+                        "txtContent": "=if([$turnedIn] , 'Assignment folder...' , 'Turn assignment in...')",
+                        "style": {
+                            "display": "inline-block",
+                            "cursor": "pointer",
+                            "margin-top": "4px",
+                            "padding": "4px",
+                            "border": "1px solid",
+                            "background-color": "=if([$turnedIn] ,'#daffda','#ffdada')",
+                            "border-color": "=if([$turnedIn] ,'green','red')",
+                            "border-radius": "2px",
+                            "box-shadow": "0 0 0 0 #ffffff",
+                            "color": "black"
+                        }
+                    },
+                    {
+                        "elmType" : "button",
+                        "customRowAction": {
+                            "action": "editProps"
+                          },
+                        "txtContent": "Grade this assignment...",
+                        "style": {
+                            "display": "=if([$Student.email] == @me, 'none', 'inline-block')",
+                            "margin-left": "4px",
+                            "padding": "3px",
+                            "cursor": "pointer"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+}

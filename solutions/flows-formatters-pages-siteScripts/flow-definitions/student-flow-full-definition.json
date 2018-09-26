@@ -1,0 +1,307 @@
+{
+    "name": "228cd574-6f29-4ffa-adb2-59b896a00cf2",
+    "id": "/providers/Microsoft.Flow/flows/228cd574-6f29-4ffa-adb2-59b896a00cf2",
+    "type": "Microsoft.Flow/flows",
+    "properties": {
+        "apiId": "/providers/Microsoft.PowerApps/apis/shared_logicflows",
+        "displayName": "Classroom - When a new student is created -> Create a folder in the turn-it-in library with the name of the student",
+        "definition": {
+            "metadata": {
+                "creator": {
+                    "id": "4ca26fef-1eac-49a7-8667-c51230644baf",
+                    "type": "User",
+                    "tenantId": "72f988bf-86f1-41af-91ab-2d7cd011db47"
+                },
+                "provisioningMethod": "FromDefinition",
+                "failureAlertSubscription": true,
+                "clientLastModifiedTime": "2018-07-25T17:17:16.3527468Z"
+            },
+            "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+            "contentVersion": "1.0.0.0",
+            "parameters": {
+                "$connections": {
+                    "defaultValue": {},
+                    "type": "Object"
+                },
+                "$authentication": {
+                    "defaultValue": {},
+                    "type": "SecureObject"
+                }
+            },
+            "triggers": {
+                "When_an_item_is_created": {
+                    "recurrence": {
+                        "interval": 1,
+                        "frequency": "Minute"
+                    },
+                    "splitOn": "@triggerBody()?['value']",
+                    "metadata": {
+                        "flowSystemMetadata": {
+                            "swaggerOperationId": "GetOnNewItems"
+                        }
+                    },
+                    "type": "ApiConnection",
+                    "inputs": {
+                        "host": {
+                            "api": {
+                                "runtimeUrl": "https://firstrelease-001.azure-apim.net/apim/sharepointonline"
+                            },
+                            "connection": {
+                                "name": "@parameters('$connections')['shared_sharepointonline']['connectionId']"
+                            }
+                        },
+                        "method": "get",
+                        "path": "/datasets/@{encodeURIComponent(encodeURIComponent('[[webUrl]]'))}/tables/@{encodeURIComponent(encodeURIComponent('[[Students]]'))}/onnewitems",
+                        "authentication": "@parameters('$authentication')"
+                    }
+                }
+            },
+            "actions": {
+                "Create_a_folder_in_the_turn-it-in_library_with_the_name_of_the_student": {
+                    "runAfter": {
+                        "Initialize_folderName_variable": [
+                            "Succeeded"
+                        ]
+                    },
+                    "metadata": {
+                        "flowSystemMetadata": {
+                            "swaggerOperationId": "HttpRequest"
+                        }
+                    },
+                    "type": "ApiConnection",
+                    "inputs": {
+                        "host": {
+                            "api": {
+                                "runtimeUrl": "https://firstrelease-001.azure-apim.net/apim/sharepointonline"
+                            },
+                            "connection": {
+                                "name": "@parameters('$connections')['shared_sharepointonline']['connectionId']"
+                            }
+                        },
+                        "method": "post",
+                        "body": {
+                            "method": "POST",
+                            "uri": "_api/web/folders",
+                            "headers": {
+                                "content-type": "application/json;odata=verbose",
+                                "accept": "application/json;odata=verbose"
+                            },
+                            "body": "{ \"__metadata\": { \"type\": \"SP.Folder\" }, \"ServerRelativeUrl\": \"/teams/[[webSubUrl]]/Turnitin/@{variables('folderName')}\"}"
+                        },
+                        "path": "/datasets/@{encodeURIComponent(encodeURIComponent('[[webUrl]]'))}/httprequest",
+                        "authentication": "@parameters('$authentication')"
+                    },
+                    "description": "Need to ensure that we set the right content-type and accept headers. Also, need to ensure that it's a server relative URL"
+                },
+                "Initialize_folderName_variable": {
+                    "runAfter": {},
+                    "type": "InitializeVariable",
+                    "inputs": {
+                        "variables": [
+                            {
+                                "name": "folderName",
+                                "type": "String",
+                                "value": "@triggerBody()?['Student']?['Email']"
+                            }
+                        ]
+                    }
+                },
+                "GetMetadataOfFolder": {
+                    "runAfter": {
+                        "Create_a_folder_in_the_turn-it-in_library_with_the_name_of_the_student": [
+                            "Succeeded"
+                        ]
+                    },
+                    "metadata": {
+                        "flowSystemMetadata": {
+                            "swaggerOperationId": "HttpRequest"
+                        }
+                    },
+                    "type": "ApiConnection",
+                    "inputs": {
+                        "host": {
+                            "api": {
+                                "runtimeUrl": "https://firstrelease-001.azure-apim.net/apim/sharepointonline"
+                            },
+                            "connection": {
+                                "name": "@parameters('$connections')['shared_sharepointonline']['connectionId']"
+                            }
+                        },
+                        "method": "post",
+                        "body": {
+                            "method": "GET",
+                            "uri": "_api/Web/GetFolderByServerRelativePath(decodedurl='/teams/[[webSubUrl]]/Turnitin/@{variables('folderName')}')/ListItemAllFields"
+                        },
+                        "path": "/datasets/@{encodeURIComponent(encodeURIComponent('[[webUrl]]'))}/httprequest",
+                        "authentication": "@parameters('$authentication')"
+                    },
+                    "description": "Get the metadata of the folder we just created. This will give us the ID of the folder."
+                },
+                "IdOfCreatedFolder": {
+                    "runAfter": {
+                        "GetMetadataOfFolder": [
+                            "Succeeded"
+                        ]
+                    },
+                    "type": "InitializeVariable",
+                    "inputs": {
+                        "variables": [
+                            {
+                                "name": "folderID",
+                                "type": "String",
+                                "value": "@{body('GetMetadataOfFolder')['d']['ID']}"
+                            }
+                        ]
+                    }
+                },
+                "BreakPermissionInheritanceOnFolder": {
+                    "runAfter": {
+                        "IdOfCreatedFolder": [
+                            "Succeeded"
+                        ]
+                    },
+                    "metadata": {
+                        "flowSystemMetadata": {
+                            "swaggerOperationId": "HttpRequest"
+                        }
+                    },
+                    "type": "ApiConnection",
+                    "inputs": {
+                        "host": {
+                            "api": {
+                                "runtimeUrl": "https://firstrelease-001.azure-apim.net/apim/sharepointonline"
+                            },
+                            "connection": {
+                                "name": "@parameters('$connections')['shared_sharepointonline']['connectionId']"
+                            }
+                        },
+                        "method": "post",
+                        "body": {
+                            "method": "POST",
+                            "uri": "_api/lists/getByTitle('Turn-it-in')/items(@{variables('folderID')})/breakroleinheritance(copyRoleAssignments=false,clearSubscopes=true)"
+                        },
+                        "path": "/datasets/@{encodeURIComponent(encodeURIComponent('[[webUrl]]'))}/httprequest",
+                        "authentication": "@parameters('$authentication')"
+                    }
+                },
+                "GetPrincipalIdOfStudent": {
+                    "runAfter": {
+                        "BreakPermissionInheritanceOnFolder": [
+                            "Succeeded"
+                        ]
+                    },
+                    "metadata": {
+                        "flowSystemMetadata": {
+                            "swaggerOperationId": "HttpRequest"
+                        }
+                    },
+                    "type": "ApiConnection",
+                    "inputs": {
+                        "host": {
+                            "api": {
+                                "runtimeUrl": "https://firstrelease-001.azure-apim.net/apim/sharepointonline"
+                            },
+                            "connection": {
+                                "name": "@parameters('$connections')['shared_sharepointonline']['connectionId']"
+                            }
+                        },
+                        "method": "post",
+                        "body": {
+                            "method": "GET",
+                            "uri": "_api/web/SiteUsers/getByEmail('@{triggerBody()?['Student']?['Email']}')"
+                        },
+                        "path": "/datasets/@{encodeURIComponent(encodeURIComponent('[[webUrl]]'))}/httprequest",
+                        "authentication": "@parameters('$authentication')"
+                    }
+                },
+                "set_principalIdOfStudent_variable": {
+                    "runAfter": {
+                        "GetPrincipalIdOfStudent": [
+                            "Succeeded"
+                        ]
+                    },
+                    "type": "InitializeVariable",
+                    "inputs": {
+                        "variables": [
+                            {
+                                "name": "principalIdOfStudent",
+                                "type": "String",
+                                "value": "@{body('GetPrincipalIdOfStudent')['d']['id']}"
+                            }
+                        ]
+                    }
+                },
+                "Make_student_have_contribute_permissions_on_the_folder": {
+                    "runAfter": {
+                        "set_principalIdOfStudent_variable": [
+                            "Succeeded"
+                        ]
+                    },
+                    "metadata": {
+                        "flowSystemMetadata": {
+                            "swaggerOperationId": "HttpRequest"
+                        }
+                    },
+                    "type": "ApiConnection",
+                    "inputs": {
+                        "host": {
+                            "api": {
+                                "runtimeUrl": "https://firstrelease-001.azure-apim.net/apim/sharepointonline"
+                            },
+                            "connection": {
+                                "name": "@parameters('$connections')['shared_sharepointonline']['connectionId']"
+                            }
+                        },
+                        "method": "post",
+                        "body": {
+                            "method": "POST",
+                            "uri": "_api/lists/getByTitle('Turn-it-in')/items(@{variables('folderID')})/roleassignments/addroleassignment(principalid=@{variables('principalIdOfStudent')} ,roledefid=1073741827) "
+                        },
+                        "path": "/datasets/@{encodeURIComponent(encodeURIComponent('[[webUrl]]'))}/httprequest",
+                        "authentication": "@parameters('$authentication')"
+                    },
+                    "description": "roledefid=1073741827 is contribute permissions."
+                },
+                "Update_item": {
+                    "runAfter": {
+                        "Make_student_have_contribute_permissions_on_the_folder": [
+                            "Succeeded"
+                        ]
+                    },
+                    "metadata": {
+                        "flowSystemMetadata": {
+                            "swaggerOperationId": "PatchItem"
+                        }
+                    },
+                    "type": "ApiConnection",
+                    "inputs": {
+                        "host": {
+                            "api": {
+                                "runtimeUrl": "https://firstrelease-001.azure-apim.net/apim/sharepointonline"
+                            },
+                            "connection": {
+                                "name": "@parameters('$connections')['shared_sharepointonline']['connectionId']"
+                            }
+                        },
+                        "method": "patch",
+                        "body": {
+                            "StudentFolder": "Turnitin/@{triggerBody()?['Student']?['Email']}"
+                        },
+                        "path": "/datasets/@{encodeURIComponent(encodeURIComponent('[[webUrl]]'))}/tables/@{encodeURIComponent(encodeURIComponent('[[Students]]'))}/items/@{encodeURIComponent(triggerBody()?['ID'])}",
+                        "authentication": "@parameters('$authentication')"
+                    }
+                }
+            },
+            "outputs": {}
+        },
+        "connectionReferences": {
+            "shared_sharepointonline": {
+                "connectionName": "shared-sharepointonl-00000000-0000-0000-0000-000000000000",
+                "source": "Embedded",
+                "id": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                "tier": "NotSpecified"
+            }
+        },
+        "flowFailureAlertSubscribed": false
+    }
+}

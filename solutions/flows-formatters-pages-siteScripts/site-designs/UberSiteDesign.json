@@ -1,0 +1,244 @@
+{
+    "actions":    [{
+		"verb": "createSPList",
+		"listName": "Assignments",
+		"templateType": 100,
+		"subactions": [{
+			"verb": "addSPFieldXml",
+			"schemaXml": "<Field DisplayName=\"Brief Description\" MaxLength=\"255\" Required=\"TRUE\" Title=\"Brief Description\" Type=\"Text\" ID=\"{349ea15f-8005-4537-962e-f61cf69031fa}\" StaticName=\"Brief_x0020_Description\" Name=\"Brief_x0020_Description\" />"
+		}, {
+			"verb": "addSPFieldXml",
+			"schemaXml": "<Field AppendOnly=\"FALSE\" DisplayName=\"Details\" IsolateStyles=\"FALSE\" NumLines=\"6\" RichText=\"FALSE\" RichTextMode=\"Compatible\" Title=\"Details\" Type=\"Note\" ID=\"{4b7a589c-ed1b-4455-9de5-397e46bfd31e}\" StaticName=\"Details\" Name=\"Details\" />"
+		}, {
+			"verb": "addSPFieldXml",
+			"schemaXml": "<Field Description=\"Specifies the amount of weight this assignment will count towards the final grade\" DisplayName=\"Weight\" Percentage=\"FALSE\" Title=\"Weight\" Type=\"Number\" ID=\"{cdd71daf-8f6a-4d66-a87b-1926e58ac19c}\" StaticName=\"Weight\" Name=\"Weight\" CustomFormatter=\"\" Required=\"TRUE\" EnforceUniqueValues=\"FALSE\" Indexed=\"FALSE\" />"
+		}, {
+			"verb": "addSPFieldXml",
+			"schemaXml": "<Field ClientSideComponentId=\"00000000-0000-0000-0000-000000000000\" DisplayName=\"Due Date\" FriendlyDisplayFormat=\"Disabled\" Format=\"DateOnly\" Required=\"TRUE\" Title=\"Due Date\" Type=\"DateTime\" ID=\"{2b28288c-2029-4472-b456-9e70a4e170b1}\" Name=\"Due_x0020_Date\" StaticName=\"Due_x0020_Date\" />"
+		}, {
+			"verb": "addSPView",
+			"name": "All Items",
+			"viewFields": ["LinkTitle", "Brief_x0020_Description", "Details", "Weight", "Due_x0020_Date", "ID"],
+			"query": "<OrderBy><FieldRef Name=\"ID\" Ascending=\"FALSE\" /></OrderBy>",
+			"rowLimit": 30,
+			"isPaged": true,
+			"makeDefault": true,
+			"formatterJSON": ""
+		}]
+	}, {
+		"verb": "createSPList",
+		"listName": "Students",
+		"templateType": 100,
+		"subactions": [{
+			"verb": "setDescription",
+			"description": "List of students"
+		}, {
+			"verb": "addSPFieldXml",
+			"schemaXml": "<Field DisplayName=\"Student\" EnforceUniqueValues=\"TRUE\" Indexed=\"TRUE\" List=\"UserInfo\" Required=\"TRUE\" Title=\"Student\" Type=\"User\" UserSelectionMode=\"PeopleOnly\" UserSelectionScope=\"0\" ID=\"{984106d1-70b9-46b1-b061-4d2f1d933203}\" StaticName=\"Student\" Name=\"Student\" Group=\"\" ShowField=\"NameWithPictureAndDetails\" />"
+		}, {
+			"verb": "addSPFieldXml",
+			"schemaXml": "<Field DisplayName=\"SumOfGrades\" Percentage=\"FALSE\" Title=\"Grade\" Type=\"Number\" ID=\"{be101d78-c784-4cef-a99d-0f7071ae868a}\" StaticName=\"Grade\" Name=\"Grade\" CustomFormatter=\"\" Required=\"FALSE\" EnforceUniqueValues=\"FALSE\" Indexed=\"FALSE\" />"
+		}, {
+			"verb": "addSPFieldXml",
+			"schemaXml": "<Field Type=\"Number\" DisplayName=\"SumOfGradeWeights\" Required=\"FALSE\" EnforceUniqueValues=\"FALSE\" Indexed=\"FALSE\" ID=\"{496d28ec-1b99-452d-a386-a5e206ab0b8c}\" StaticName=\"SumOfGradeWeights\" Name=\"SumOfGradeWeights\" />"
+		}, {
+			"verb": "addSPFieldXml",
+			"schemaXml": "<Field DisplayName=\"StudentFolder\" MaxLength=\"255\" Title=\"StudentFolder\" Type=\"Text\" ID=\"{655f1ed2-9e59-41cb-a46b-2d6506e8c15c}\" StaticName=\"StudentFolder\" Name=\"StudentFolder\" />"
+		}, {
+			"verb": "addSPView",
+			"name": "All Items",
+			"viewFields": ["LinkTitle", "Student", "Grade", "ID", "SumOfGradeWeights", "StudentFolder"],
+			"query": "",
+			"rowLimit": 30,
+			"isPaged": true,
+			"makeDefault": true,
+			"formatterJSON": "{\n    \"$schema\": \"https://developer.microsoft.com/json-schemas/sp/view-formatting.schema.json\",\n    \"hideSelection\": true,\n    \"hideListHeader\": true,\n    \"rowFormatter\": {\n      \"debugMode\": true,\n      \"elmType\": \"div\",\n      \"style\": {\n        \"padding\": \"12px\",\n        \"overflow\": \"hidden\",\n        \"border-radius\": \"2px\",\n        \"box-shadow\": \"0 1.6px 3.6px 0 #dddddd, 0 0.3px 0.9px 0 #e3e3e3\",\n        \"margin-top\": \"12px\",\n        \"margin-bottom\": \"12px\",\n        \"min-width\": \"350px\",\n        \"border\": \"=if(Number([$SumOfGradeWeights]) &lt;= 0 , '2px solid transparent' , if((Number([$Grade]) * 100 / Number([$SumOfGradeWeights]) &lt; 60 ,'2px solid #FFCCCC','2px solid transparent'))\"\n      },\n      \"children\": [\n        {\n          \"elmType\": \"div\",\n          \"style\" : {\n            \"width\": \"100%\"\n          },\n          \"children\": [\n            {\n              \"elmType\": \"div\",\n              \"style\": {\n                \"border\": \"0\",\n                \"cursor\": \"pointer\"\n              },\n              \"children\": [\n                {\n                  \"elmType\": \"img\",\n                  \"attributes\": {\n                    \"src\": \"= @currentWeb + '/_layouts/15/userphoto.aspx?size=L&amp;accountname=' + [$Student.email]\"\n                  },\n                  \"style\": {\n                    \"max-width\": \"100%\",\n                    \"width\": \"80px\",\n                    \"margin-left\": \"4px\",\n                    \"margin-right\": \"16px\",\n                    \"display\": \"inline-block\",\n                    \"border-radius\": \"4px\"\n                  }\n                },\n                {\n                  \"elmType\": \"div\",\n                  \"style\": {\n                    \"text-align\": \"left\",\n                    \"vertical-align\": \"top\",\n                    \"max-width\": \"600px\",\n                    \"display\": \"inline-block\"\n                  },\n                  \"children\": [\n                    {\n                      \"elmType\": \"div\",\n                      \"txtContent\": \"[$Student.title]\",\n                      \"style\": {\n                        \"font-size\": \"1.4em\",\n                        \"padding-bottom\": \"4px\",\n                        \"white-space\": \"normal\"\n                      }\n                    },\n                    {\n                      \"elmType\": \"div\",\n                      \"txtContent\": \"[$Student.jobTitle]\",\n                      \"style\": {\n                        \"padding-bottom\": \"4px\",\n                        \"white-space\": \"normal\"\n                      }\n                    },\n                    {\n                      \"elmType\": \"div\",\n                      \"txtContent\": \"[$Student.department]\",\n                      \"style\": {\n                        \"padding-bottom\": \"4px\",\n                        \"white-space\": \"normal\"\n                      }\n                    },\n                    {\n                      \"elmType\": \"div\",\n                      \"txtContent\": \"[$Student.email]\",\n                      \"style\": {\n                        \"padding-bottom\": \"4px\",\n                        \"white-space\": \"normal\"\n                      }\n                    }\n                  ]\n                }\n              ]\n            },\n            {\n              \"elmType\": \"div\",\n              \"style\": {\n                \"width\" : \"100%\",\n                \"border\": \"1px solid grey\",\n                \"border-radius\": \"4px\",\n                \"display\": \"=if( (Number([$SumOfGradeWeights]) &lt;= 0) ,'none', '')\"\n              },\n              \"children\": [\n                {\n                  \"elmType\": \"div\",\n                  \"attributes\": {\n                    \"class\": \"sp-field-dataBars\"\n                  },\n                  \"style\": {\n                    \"width\": \"=if((Number([$Grade]) * 100 / Number([$SumOfGradeWeights])) &gt; 100, '100%', if( Number([$SumOfGradeWeights]) &lt;=0, '0%', toString(Number([$Grade]) * 100 / Number([$SumOfGradeWeights]) ) + '%')\",\n                    \"white-space\": \"normal\",\n                    \"font-size\": \"xx-large\",\n                    \"max-height\": \"100px\",\n                    \"overflow\": \"hidden\",\n                    \"text-overflow\": \"ellipsis\",\n                    \"box-sizing\": \"border-box\",\n                    \"color\": \"=if((Number([$Grade]) * 100 / Number([$SumOfGradeWeights]) &lt;= 90,'', '#007700')\"\n                  },\n                  \"txtContent\": \"=if( (Number([$Grade]) &lt;= 0) || (Number([$SumOfGradeWeights]) &lt;= 0) , '', toString(Number([$Grade]) * 100 / Number([$SumOfGradeWeights])) + '%')\"\n              }                \n              ]\n            },\n            {\n              \"elmType\": \"div\",\n              \"style\": {\n                \"padding-top\": \"10px\",\n                \"padding-bottom\": \"10px\"\n              },\n              \"children\": [\n                {\n                  \"elmType\": \"a\",\n                  \"style\": {\n                    \"cursor\": \"pointer\",\n                    \"padding\": \"6px\",\n                    \"border-radius\": \"2px\",\n                    \"box-shadow\": \"5px 10px 18px #999999\",\n                    \"margin-right\": \"5px\"\n                  },\n                  \"attributes\": {\n                    \"target\": \"_blank\",\n                    \"href\": \"= @currentWeb + '/Lists/Assignment%20Grades/AllItems.aspx?useFiltersInViewXml=1&amp;FilterField1=Student&amp;FilterType1=User&amp;FilterValue1=' + [$Student.title]\"\n                  },\n                  \"txtContent\": \"Assignments and Grades\"\n                },\n                {\n                  \"elmType\": \"a\",\n                  \"style\": {\n                    \"cursor\": \"pointer\",\n                    \"padding\": \"6px\",\n                    \"border-radius\": \"2px\",\n                    \"box-shadow\": \"5px 10px 18px #999999\",\n                    \"margin-right\": \"5px\"\n                  },\n                  \"attributes\": {\n                    \"target\": \"_blank\",\n                    \"href\": \"= @currentWeb + '/' + [$StudentFolder]\"\n                  },\n                  \"txtContent\": \"Turn it in folder\"\n                },\n                {\n                  \"elmType\": \"a\",\n                  \"style\": {\n                    \"cursor\": \"pointer\",\n                    \"padding\": \"6px\",\n                    \"border-radius\": \"2px\",\n                    \"box-shadow\": \"5px 10px 18px #999999\",\n                    \"margin-right\": \"5px\"\n                  },\n                  \"attributes\": {\n                    \"target\": \"_blank\",\n                    \"href\": \"= @currentWeb + '/SitePages/Student-Page.aspx?Student=' + [$Student.title]\"\n                  },\n                  \"txtContent\": \"Student Overview\"\n                }\n              ]\n            }\n          ]\n        }\n      ]\n    }\n  }"
+		}, {
+			"verb": "addSPView",
+			"name": "All Items - List View",
+			"viewFields": ["Student", "Grade", "ID", "SumOfGradeWeights", "StudentFolder"],
+			"query": "",
+			"rowLimit": 30,
+			"isPaged": true,
+			"formatterJSON": ""
+		}]
+	}, {
+		"verb": "createSPList",
+		"listName": "Assignment Grades",
+		"templateType": 100,
+		"subactions": [{
+			"verb": "addSPLookupFieldXml",
+			"schemaXml": "<Field Type=\"Lookup\" DisplayName=\"Assignment\" Required=\"TRUE\" EnforceUniqueValues=\"FALSE\" ShowField=\"Title\" UnlimitedLengthInDocumentLibrary=\"FALSE\" RelationshipDeleteBehavior=\"None\" ID=\"{da809e7e-faff-4ce9-a784-595e20e8206a}\" StaticName=\"Assignment\" Name=\"Assignment\" Group=\"\" />",
+			"targetListName": "Assignments"
+		}, {
+			"verb": "addSPLookupFieldXml",
+			"schemaXml": "<Field Type=\"Lookup\" DisplayName=\"Assignment:Brief Description\" ShowField=\"Brief_x0020_Description\" FieldRef=\"da809e7e-faff-4ce9-a784-595e20e8206a\" ReadOnly=\"TRUE\" UnlimitedLengthInDocumentLibrary=\"FALSE\" ID=\"{a708fe1f-a1b7-41c5-8f3f-5859b5d3998b}\" StaticName=\"Assignment_x003a_Brief_x0020_Des\" Name=\"Assignment_x003a_Brief_x0020_Des\" Group=\"Custom Columns\" />",
+			"targetListName": "Assignments"
+		}, {
+			"verb": "addSPLookupFieldXml",
+			"schemaXml": "<Field Type=\"Lookup\" DisplayName=\"Assignment:Weight\" ShowField=\"Weight\" FieldRef=\"da809e7e-faff-4ce9-a784-595e20e8206a\" ReadOnly=\"TRUE\" UnlimitedLengthInDocumentLibrary=\"FALSE\" ID=\"{8aba8e9e-c3f4-4b28-8447-e879e3f611d0}\" StaticName=\"Assignment_x003a_Weight\" Name=\"Assignment_x003a_Weight\" Group=\"Custom Columns\" />",
+			"targetListName": "Assignments"
+		}, {
+			"verb": "addSPFieldXml",
+			"schemaXml": "<Field DisplayName=\"Student\" List=\"UserInfo\" Required=\"TRUE\" Title=\"Student\" Type=\"User\" UserSelectionMode=\"0\" UserSelectionScope=\"0\" ID=\"{1e340f8b-895c-40a3-ab81-09af6a850443}\" StaticName=\"Student\" Name=\"Student\" />"
+		}, {
+			"verb": "addSPFieldXml",
+			"schemaXml": "<Field DisplayName=\"Grade\" Percentage=\"FALSE\" Title=\"Grade\" Type=\"Number\" ID=\"{6c04121c-91cf-4bd2-bba2-ae8375f2888b}\" StaticName=\"Grade\" Name=\"Grade\" CustomFormatter=\"\" Required=\"FALSE\" EnforceUniqueValues=\"FALSE\" Indexed=\"FALSE\" />"
+		}, {
+			"verb": "addSPFieldXml",
+			"schemaXml": "<Field ClientSideComponentId=\"00000000-0000-0000-0000-000000000000\" DisplayName=\"Due Date\" FriendlyDisplayFormat=\"Disabled\" Format=\"DateOnly\" Title=\"Due Date\" Type=\"DateTime\" ID=\"{8e3ff62a-5d8d-49e1-af08-cb97514afdbc}\" Name=\"Due_x0020_Date\" StaticName=\"Due_x0020_Date\" />"
+		}, {
+			"verb": "addSPFieldXml",
+			"schemaXml": "<Field DisplayName=\"turnedIn\" Title=\"turnedIn\" Type=\"Boolean\" ID=\"{6ef2e68b-2b12-4756-a94a-988b78a701ed}\" StaticName=\"turnedIn\" Name=\"turnedIn\"><Default>0</Default></Field>"
+		}, {
+			"verb": "addSPFieldXml",
+			"schemaXml": "<Field Type=\"Text\" DisplayName=\"TurnItInFolder\" Required=\"TRUE\" EnforceUniqueValues=\"FALSE\" Indexed=\"FALSE\" MaxLength=\"255\" ID=\"{37400690-a082-4357-a745-b45b12eedc4d}\" StaticName=\"TurnItInFolder\" Name=\"TurnItInFolder\" />"
+		}, {
+			"verb": "addSPLookupFieldXml",
+			"schemaXml": "<Field Type=\"Lookup\" DisplayName=\"StudentItem\" Required=\"FALSE\" EnforceUniqueValues=\"FALSE\" ShowField=\"ID\" UnlimitedLengthInDocumentLibrary=\"FALSE\" RelationshipDeleteBehavior=\"None\" ID=\"{10b1eaf6-6308-4d6e-9628-716b56e8e985}\" StaticName=\"StudentItem\" Name=\"StudentItem\" Group=\"\" />",
+			"targetListName": "Students"
+		}, {
+			"verb": "addSPFieldXml",
+			"schemaXml": "<Field Type=\"Number\" DisplayName=\"Weight\" Description=\"Weight of this assignment\" Required=\"FALSE\" EnforceUniqueValues=\"FALSE\" Indexed=\"FALSE\" ID=\"{3b510884-4ca7-4154-81aa-d87f028cc2e5}\" StaticName=\"Weight\" Name=\"Weight\" />"
+		}, {
+			"verb": "addSPView",
+			"name": "All Items",
+			"viewFields": ["LinkTitle", "Assignment", "Student", "Assignment_x003a_Brief_x0020_Des", "Assignment_x003a_Weight", "Grade", "Due_x0020_Date", "turnedIn", "ID", "TurnItInFolder", "StudentItem", "Weight"],
+			"query": "<GroupBy Collapse=\"FALSE\" GroupLimit=\"30\"><FieldRef Name=\"Student\" /></GroupBy><OrderBy><FieldRef Name=\"ID\" Ascending=\"FALSE\" /></OrderBy>",
+			"rowLimit": 30,
+			"isPaged": true,
+			"makeDefault": true,
+			"formatterJSON": "{\n    \"$schema\": \"https://developer.microsoft.com/json-schemas/sp/view-formatting.schema.json\",\n    \"hideSelection\": true,\n    \"hideListHeader\": true,\n    \"rowFormatter\": {\n        \"debugMode\": true,\n        \"elmType\": \"div\",\n        \"style\": {\n            \"padding\": \"12px\",\n            \"overflow\": \"hidden\",\n            \"border-radius\": \"2px\",\n            \"box-shadow\": \"0 1.6px 3.6px 0 #dddddd, 0 0.3px 0.9px 0 #e3e3e3\",\n            \"border\": \"=if( ([$Due_x0020_Date] &gt; (@now + 86400000)) || ([$turnedIn] ) ,'4px solid transparent','4px solid #ffeaea')\",\n            \"margin-bottom\": \"12px\"\n        },\n        \"children\": [\n            {\n                \"elmType\": \"div\",\n                \"style\": {\n                    \"width\": \"100%\",\n                    \"text-align\": \"left\"\n                },\n                \"children\": [\n                    {\n                        \"elmType\": \"a\",\n                        \"style\": {\n                            \"font-size\": \"16px\",\n                            \"font-weight\": \"600\",\n                            \"padding-bottom\": \"8px\",\n                            \"display\": \"block\",\n                            \"text-decoration\": \"none\"\n                        },\n                        \"attributes\": {\n                            \"target\": \"_blank\",\n                            \"href\": \"= @currentWeb + '/Lists/Assignments/DispForm.aspx?env=WebView&amp;ID=' + [$Assignment.lookupId]\"\n                        },\n                        \"txtContent\": \"[$Assignment.lookupValue]\"\n                    },\n                    {\n                        \"elmType\": \"div\",\n                        \"txtContent\": \"[$Assignment_x003a_Brief_x0020_Des]\",\n                        \"style\": {\n                            \"padding-bottom\": \"4px\"\n                        }\n                    },\n                    {\n                        \"elmType\": \"div\",\n                        \"style\": {\n                            \"margin-bottom\": \"5px\"\n                        },\n                        \"txtContent\" : \"= 'Due : ' + toLocaleDateString([$Due_x0020_Date])\"\n                    },\n                    {\n                        \"elmType\": \"div\",\n                        \"style\": {\n                            \"width\" : \"100%\",\n                            \"border\": \"1px solid grey\",\n                            \"border-radius\": \"4px\",\n                            \"display\": \"=if( (Number([$Grade]) &lt;= 0) ,'none', '')\"\n                          },            \n                        \"children\": [\n                            {\n                                \"elmType\": \"div\",\n                                \"attributes\": {\n                                    \"class\": \"sp-field-dataBars\"\n                                },\n                                \"style\": {\n                                    \"box-sizing\": \"border-box\",                \n                                    \"width\": \"=if((Number([$Grade]) * 100 / Number([$Assignment_x003a_Weight])) &gt; 100, '100%', if( Number([$Assignment_x003a_Weight]) &lt;=0, '0%', toString(Number([$Grade]) * 100 / Number([$Assignment_x003a_Weight]) ) + '%')\",\n                                    \"padding\": \"0px\"\n                                },\n                                \"children\": [\n                                    {\n                                        \"elmType\" : \"div\",\n                                        \"style\": {\n                                            \"padding\": \"8px\",\n                                            \"text-overflow\": \"ellipsis\",\n                                            \"overflow\": \"hidden\"\n                                        },\n                                        \"txtContent\": \"=if( [$Grade] == '', '', [$Grade] + '/' + [$Assignment_x003a_Weight] + ' = ' + toString(Number([$Grade]) * 100 / Number([$Assignment_x003a_Weight])) + '%')\"\n                                    }\n                                ]\n                            }                            \n                        ]\n                    },\n\n                    {\n                        \"elmType\": \"a\",\n                        \"attributes\": {\n                            \"href\": \"= @currentWeb + '/' + [$TurnItInFolder]\",\n                            \"target\": \"_blank\"\n                        },\n                        \"txtContent\": \"=if([$turnedIn] , 'Assignment folder...' , 'Turn assignment in...')\",\n                        \"style\": {\n                            \"display\": \"inline-block\",\n                            \"cursor\": \"pointer\",\n                            \"margin-top\": \"4px\",\n                            \"padding\": \"4px\",\n                            \"border\": \"1px solid\",\n                            \"background-color\": \"=if([$turnedIn] ,'#daffda','#ffdada')\",\n                            \"border-color\": \"=if([$turnedIn] ,'green','red')\",\n                            \"border-radius\": \"2px\",\n                            \"box-shadow\": \"0 0 0 0 #ffffff\",\n                            \"color\": \"black\"\n                        }\n                    },\n                    {\n                        \"elmType\" : \"button\",\n                        \"customRowAction\": {\n                            \"action\": \"editProps\"\n                          },\n                        \"txtContent\": \"Grade this assignment...\",\n                        \"style\": {\n                            \"display\": \"=if([$Student.email] == @me, 'none', 'inline-block')\",\n                            \"margin-left\": \"4px\",\n                            \"padding\": \"3px\",\n                            \"cursor\": \"pointer\"\n                        }\n                    }\n                ]\n            }\n        ]\n    }\n}"
+		}, {
+			"verb": "addSPView",
+			"name": "Student View",
+			"viewFields": ["Assignment", "Student", "Assignment_x003a_Brief_x0020_Des", "Assignment_x003a_Weight", "Grade", "Due_x0020_Date", "turnedIn", "ID"],
+			"query": "<OrderBy><FieldRef Name=\"ID\" /></OrderBy><Where><Eq><FieldRef Name=\"Student\" /><Value Type=\"Integer\"><UserID Type=\"Integer\" /></Value></Eq></Where>",
+			"rowLimit": 30,
+			"isPaged": true
+		}, {
+			"verb": "addSPView",
+			"name": "All Items list view",
+			"viewFields": ["Assignment", "Student", "Assignment_x003a_Brief_x0020_Des", "Assignment_x003a_Weight", "Grade", "Due_x0020_Date", "turnedIn", "ID", "Author", "TurnItInFolder", "StudentItem"],
+			"query": "",
+			"rowLimit": 30,
+			"isPaged": true,
+			"formatterJSON": ""
+		}, {
+			"verb": "addSPView",
+			"name": "Test",
+			"viewFields": ["Assignment", "Student", "Assignment_x003a_Brief_x0020_Des", "Assignment_x003a_Weight", "Grade", "Due_x0020_Date", "turnedIn", "ID"],
+			"query": "",
+			"rowLimit": 30,
+			"isPaged": true,
+			"formatterJSON": "{\n    \"$schema\": \"file:///D:/git/odsp-common/odsp-customformatter-example-page/viewFormattingSchema.json\",\n    \"hideSelection\": true,\n    \"hideListHeader\": true,\n    \"rowFormatter\": {\n        \"debugMode\": true,\n        \"elmType\": \"div\",\n        \"style\": {\n            \"padding\": \"12px\",\n            \"overflow\": \"hidden\",\n            \"border-radius\": \"2px\",\n            \"box-shadow\": \"0 1.6px 3.6px 0 #dddddd, 0 0.3px 0.9px 0 #e3e3e3\",\n            \"border\": \"=if( ([$Due_x0020_Date] &gt; (@now + 86400000)) || ([$turnedIn] ) ,'4px solid transparent','4px solid #ffeaea')\",\n            \"margin-bottom\": \"12px\"\n        },\n        \"children\": [\n            {\n                \"elmType\": \"div\",\n                \"style\": {\n                    \"width\": \"100%\",\n                    \"text-align\": \"left\"\n                },\n                \"children\": [\n                    {\n                        \"elmType\": \"a\",\n                        \"style\": {\n                            \"font-size\": \"16px\",\n                            \"font-weight\": \"600\",\n                            \"padding-bottom\": \"8px\",\n                            \"display\": \"block\",\n                            \"text-decoration\": \"none\"\n                        },\n                        \"attributes\": {\n                            \"target\": \"_blank\",\n                            \"href\": \"= @currentWeb + '/Lists/Assignments/DispForm.aspx?env=WebView&amp;ID=' + [$Assignment.lookupId]\"\n                        },\n                        \"txtContent\": \"[$Assignment.lookupValue]\"\n                    },\n                    {\n                        \"elmType\": \"div\",\n                        \"txtContent\": \"[$Assignment_x003a_Brief_x0020_Des]\",\n                        \"style\": {\n                            \"padding-bottom\": \"4px\"\n                        }\n                    },\n                    {\n                        \"elmType\": \"div\",\n                        \"style\": {\n                            \"margin-bottom\": \"5px\"\n                        },\n                        \"txtContent\": {\n                            \"operator\": \"+\",\n                            \"operands\": [\n                                \"Due : \",\n                                {\n                                    \"operator\": \"toLocaleDateString()\",\n                                    \"operands\": [\n                                        \"[$Due_x0020_Date]\"\n                                    ]\n                                }\n                            ]\n                        }\n                    },\n                    {\n                        \"elmType\": \"div\",\n                        \"attributes\": {\n                            \"class\": \"sp-field-dataBars\"\n                        },\n                        \"style\": {\n                            \"width\": {\n                                \"operator\": \"?\",\n                                \"operands\": [\n                                  {\n                                    \"operator\": \"&lt;\",\n                                    \"operands\": [\n                                      {\n                                        \"operator\": \"Number()\",\n                                        \"operands\": [\n                                          \"[$Assignment_x003a_Weight]\"\n                                        ]\n                                      },\n                                      \"[$Grade]\"\n                                    ]\n                                  },\n                                  \"100%\",\n                                  {\n                                    \"operator\": \"+\",\n                                    \"operands\": [\n                                      {\n                                        \"operator\": \"toString()\",\n                                        \"operands\": [\n                                          {\n                                            \"operator\": \"/\",\n                                            \"operands\": [\n                                              {\n                                                \"operator\": \"?\",\n                                                \"operands\": [\n                                                  {\n                                                    \"operator\": \"==\",\n                                                    \"operands\": [\n                                                      \"[$Grade]\",\n                                                      \"\"\n                                                    ]\n                                                  },\n                                                  0,\n                                                  {\n                                                    \"operator\": \"*\",\n                                                    \"operands\": [\n                                                      {\n                                                        \"operator\": \"Number()\",\n                                                        \"operands\": [\n                                                          \"[$Grade]\"\n                                                        ]\n                                                      },\n                                                      100\n                                                    ]\n                                                  }\n                                                ]\n                                              },\n                                              {\n                                                \"operator\": \"Number()\",\n                                                \"operands\": [\n                                                  \"[$Assignment_x003a_Weight]\"\n                                                ]\n                                              }\n                                            ]\n                                          }\n                                        ]\n                                      },\n                                      \"%\"\n                                    ]\n                                  }\n                                ]\n                              },\n                            \"padding\": \"0px\"\n                        },\n                        \"children\": [\n                            {\n                                \"elmType\" : \"div\",\n                                \"style\": {\n                                    \"padding\": \"8px\"\n                                },\n                                \"txtContent\": {\n                                    \"operator\": \"?\",\n                                    \"operands\": [\n                                      {\n                                        \"operator\": \"==\",\n                                        \"operands\": [\n                                          \"[$Grade]\",\n                                          \"\"\n                                        ]\n                                      },\n                                      \"\",\n                                      {\n                                        \"operator\": \"+\",\n                                        \"operands\": [\n                                          {\n                                            \"operator\": \"+\",\n                                            \"operands\": [\n                                              {\n                                                \"operator\": \"+\",\n                                                \"operands\": [\n                                                  {\n                                                    \"operator\": \"+\",\n                                                    \"operands\": [\n                                                      {\n                                                        \"operator\": \"+\",\n                                                        \"operands\": [\n                                                          \"[$Grade]\",\n                                                          \" / \"\n                                                        ]\n                                                      },\n                                                      \"[$Assignment_x003a_Weight]\"\n                                                    ]\n                                                  },\n                                                  \" = \"\n                                                ]\n                                              },\n                                              {\n                                                \"operator\": \"toString()\",\n                                                \"operands\": [\n                                                  {\n                                                    \"operator\": \"/\",\n                                                    \"operands\": [\n                                                      {\n                                                        \"operator\": \"*\",\n                                                        \"operands\": [\n                                                          {\n                                                            \"operator\": \"Number()\",\n                                                            \"operands\": [\n                                                              \"[$Grade]\"\n                                                            ]\n                                                          },\n                                                          100\n                                                        ]\n                                                      },\n                                                      {\n                                                        \"operator\": \"Number()\",\n                                                        \"operands\": [\n                                                          \"[$Assignment_x003a_Weight]\"\n                                                        ]\n                                                      }\n                                                    ]\n                                                  }\n                                                ]\n                                              }\n                                            ]\n                                          },\n                                          \"%\"\n                                        ]\n                                      }\n                                    ]\n                                  }\n                            }\n                        ]\n                    },\n                    {\n                        \"elmType\": \"a\",\n                        \"attributes\": {\n                            \"href\": \"= @currentWeb + '/' + [$TurnItInFolder]\",\n                            \"target\": \"_blank\"\n                        },\n                        \"txtContent\": \"=if([$turnedIn] , 'Assignment folder...' , 'Turn assignment in...')\",\n                        \"style\": {\n                            \"display\": \"inline-block\",\n                            \"cursor\": \"pointer\",\n                            \"margin-top\": \"4px\",\n                            \"padding\": \"4px\",\n                            \"border\": \"1px solid\",\n                            \"background-color\": \"=if([$turnedIn] ,'#daffda','#ffdada')\",\n                            \"border-color\": \"=if([$turnedIn] ,'green','red')\",\n                            \"border-radius\": \"2px\",\n                            \"box-shadow\": \"0 0 0 0 #ffffff\",\n                            \"color\": \"black\"\n                        }\n                    },\n                    {\n                        \"elmType\" : \"button\",\n                        \"customRowAction\": {\n                            \"action\": \"editProps\"\n                          },\n                        \"txtContent\": \"Grade this assignment...\",\n                        \"style\": {\n                            \"display\": \"=if([$Student.email] == @me, 'none', 'inline-block')\",\n                            \"margin-left\": \"4px\",\n                            \"padding\": \"3px\",\n                            \"cursor\": \"pointer\"\n                        }\n                    }\n                ]\n            }\n        ]\n    }\n}"
+		}]
+	}, {
+		"verb": "addNavLink",
+		"url": "Lists/Assignments/AllItems.aspx",
+		"displayName": "Assignments",
+		"isWebRelative": true
+	}, {
+		"verb": "addNavLink",
+		"url": "Lists/Students/AllItems.aspx",
+		"displayName": "Students",
+		"isWebRelative": true
+	}, {
+		"verb": "addNavLink",
+		"url": "Lists/Assignment Grades/AllItems.aspx",
+		"displayName": "Grades",
+		"isWebRelative": true
+	}, {
+		"verb": "createSPList",
+		"listName": "Announcements",
+		"templateType": 100,
+		"subactions": [{
+			"verb": "setDescription",
+			"description": "Share your announcements with the group."
+		}, {
+			"verb": "addSPFieldXml",
+			"schemaXml": "<Field AppendOnly=\"FALSE\" DisplayName=\"Details\" IsolateStyles=\"FALSE\" NumLines=\"6\" RichText=\"FALSE\" RichTextMode=\"Compatible\" Title=\"Details\" Type=\"Note\" ID=\"{25b0764b-2f6e-42f0-84b3-d31eb339b418}\" StaticName=\"Details\" Name=\"Details\" />"
+		}, {
+			"verb": "addSPFieldXml",
+			"schemaXml": "<Field Description=\"When you create this announcement, do you want an email to be sent to the group?\" DisplayName=\"Send an email on create?\" Title=\"Send an email on create?\" Type=\"Boolean\" ID=\"{e2b50cd7-6308-4627-8f67-9cbd7c1da589}\" StaticName=\"Send_x0020_an_x0020_email_x0020_\" Name=\"Send_x0020_an_x0020_email_x0020_\"><Default>0</Default></Field>"
+		}, {
+			"verb": "addSPFieldXml",
+			"schemaXml": "<Field Type=\"Choice\" DisplayName=\"HighlightColor\" Description=\"Choose a color to highlight this announcement item.\" Required=\"FALSE\" EnforceUniqueValues=\"FALSE\" Indexed=\"FALSE\" Format=\"Dropdown\" FillInChoice=\"FALSE\" ID=\"{49ba73fc-96e6-4150-af86-30953f816b67}\" StaticName=\"HighlightColor\" Name=\"HighlightColor\"><Default>None</Default><CHOICES><CHOICE>None</CHOICE><CHOICE>Yellow</CHOICE><CHOICE>Red</CHOICE><CHOICE>Green</CHOICE></CHOICES></Field>"
+		}, {
+			"verb": "addSPView",
+			"name": "All Items",
+			"viewFields": ["LinkTitle", "Details", "Send_x0020_an_x0020_email_x0020_", "Created", "HighlightColor"],
+			"query": "<OrderBy><FieldRef Name=\"ID\" Ascending=\"FALSE\" /></OrderBy>",
+			"rowLimit": 30,
+			"isPaged": true,
+			"makeDefault": true,
+			"formatterJSON": "{\n    \"$schema\": \"file:///D:/git/odsp-common/odsp-customformatter-example-page/viewFormattingSchema.json\",\n    \"hideSelection\": true,\n    \"hideListHeader\": true,\n    \"rowFormatter\": {\n        \"debugMode\": true,\n        \"elmType\": \"div\",\n        \"attributes\" : {\n            \"class\": \"=if([$HighlightColor] == 'Green', 'sp-field-severity--good', if([$HighlightColor] == 'Yellow', 'sp-field-severity--low' ,if([$HighlightColor] == 'Orange','sp-field-severity--warning', if([$HighlightColor] == 'Red','sp-field-severity--blocked', ''))\"\n        },\n        \"style\": {\n            \"padding\": \"12px\",\n            \"overflow\": \"hidden\",\n            \"border-radius\": \"2px\",\n            \"box-shadow\": \"0 1.6px 3.6px 0 #dddddd, 0 0.3px 0.9px 0 #e3e3e3\",\n            \"margin-bottom\": \"12px\"\n        },\n        \"children\": [\n            {\n                \"elmType\": \"div\",\n                \"style\": {\n                    \"width\": \"100%\",\n                    \"text-align\": \"left\"\n                },\n                \"children\": [\n                    {\n                        \"elmType\": \"div\",\n                        \"style\": {\n                            \"margin-bottom\": \"5px\"\n                        },\n                        \"txtContent\": \"=toLocaleDateString([$Created])\"\n                    },\n                    {\n                        \"elmType\": \"div\",\n                        \"style\": {\n                            \"font-size\": \"16px\",\n                            \"font-weight\": \"600\",\n                            \"padding-bottom\": \"8px\"\n                        },\n                        \"txtContent\": \"@currentField\"    \n                    },\n                    {\n                        \"elmType\": \"div\",\n                        \"txtContent\": \"[$Details]\",\n                        \"style\": {\n                            \"padding-bottom\": \"4px\"\n                        }\n                    },\n                    {\n                        \"elmType\": \"button\",\n                        \"style\": {\n                          \"font-family\": \"FabricMDL2Icons\",\n                          \"background-color\": \"transparent\",\n                          \"border\": \"0\",\n                          \"cursor\": \"pointer\",\n                          \"padding\": \"10px\"\n                        },\n                        \"customRowAction\": {\n                          \"action\": \"editProps\"\n                        },\n                        \"attributes\": {\n                          \"iconName\": \"Edit\"\n                        }\n                      }\n                ]\n            }\n        ]\n    }\n}"
+		}, {
+			"verb": "addSPView",
+			"name": "All Items - List View",
+			"viewFields": ["LinkTitle", "Details", "Send_x0020_an_x0020_email_x0020_", "Created", "HighlightColor"],
+			"query": "<OrderBy><FieldRef Name=\"ID\" Ascending=\"FALSE\" /></OrderBy>",
+			"rowLimit": 30,
+			"isPaged": true
+		}]
+	}, {
+		"verb": "createSPList",
+		"listName": "Turn-it-in",
+		"templateType": 101,
+		"subactions": [{
+			"verb": "addSPFieldXml",
+			"schemaXml": "<Field ID=\"{47b1b86f-9f8a-4dbe-a75e-ca5d9b0f566c}\" Type=\"URL\" Name=\"_ShortcutUrl\" DisplayName=\"Shortcut URL\" DisplaceOnUpgrade=\"TRUE\" Indexed=\"FALSE\" Required=\"FALSE\" Hidden=\"TRUE\" ReadOnlyField=\"TRUE\" ShowInEditForm=\"FALSE\" ShowInDisplayForm=\"FALSE\" SourceID=\"http://schemas.microsoft.com/sharepoint/v3\" StaticName=\"_ShortcutUrl\" Sealed=\"FALSE\" />"
+		}, {
+			"verb": "addSPFieldXml",
+			"schemaXml": "<Field ID=\"{2662ad77-2410-4938-b01c-e5e43321bad4}\" Type=\"Guid\" Name=\"_ShortcutSiteId\" DisplayName=\"Shortcut Site Id\" DisplaceOnUpgrade=\"TRUE\" Indexed=\"FALSE\" Required=\"FALSE\" Hidden=\"TRUE\" ReadOnlyField=\"TRUE\" ShowInEditForm=\"FALSE\" ShowInDisplayForm=\"FALSE\" SourceID=\"http://schemas.microsoft.com/sharepoint/v3\" StaticName=\"_ShortcutSiteId\" Sealed=\"FALSE\" />"
+		}, {
+			"verb": "addSPFieldXml",
+			"schemaXml": "<Field ID=\"{e2a3861f-c216-47d7-820f-7cb638862ab2}\" Type=\"Guid\" Name=\"_ShortcutWebId\" DisplayName=\"Shortcut Web Id\" DisplaceOnUpgrade=\"TRUE\" Indexed=\"FALSE\" Required=\"FALSE\" Hidden=\"TRUE\" ReadOnlyField=\"TRUE\" ShowInEditForm=\"FALSE\" ShowInDisplayForm=\"FALSE\" SourceID=\"http://schemas.microsoft.com/sharepoint/v3\" StaticName=\"_ShortcutWebId\" Sealed=\"FALSE\" />"
+		}, {
+			"verb": "addSPFieldXml",
+			"schemaXml": "<Field ID=\"{e8fea999-553d-4f45-be52-d941627e9fe5}\" Type=\"Guid\" Name=\"_ShortcutUniqueId\" DisplayName=\"Shortcut Unique Id\" DisplaceOnUpgrade=\"TRUE\" Indexed=\"FALSE\" Required=\"FALSE\" Hidden=\"TRUE\" ReadOnlyField=\"TRUE\" ShowInEditForm=\"FALSE\" ShowInDisplayForm=\"FALSE\" SourceID=\"http://schemas.microsoft.com/sharepoint/v3\" StaticName=\"_ShortcutUniqueId\" Sealed=\"FALSE\" />"
+		}, {
+			"verb": "addSPFieldXml",
+			"schemaXml": "<Field Type=\"Choice\" DisplayName=\"Status\" Required=\"TRUE\" EnforceUniqueValues=\"FALSE\" Indexed=\"FALSE\" Format=\"Dropdown\" FillInChoice=\"FALSE\" ID=\"{30732c51-34b6-4089-9027-d13ec6ae4fad}\" StaticName=\"Status\" Name=\"Status\"><CHOICES><CHOICE>In Progress</CHOICE><CHOICE>Complete</CHOICE></CHOICES></Field>"
+		}, {
+			"verb": "addSPFieldXml",
+			"schemaXml": "<Field ID=\"{e52012a0-51eb-4c0c-8dfb-9b8a0ebedcb6}\" ReadOnly=\"TRUE\" Type=\"Computed\" Name=\"Combine\" DisplaceOnUpgrade=\"TRUE\" DisplayName=\"Merge\" Filterable=\"FALSE\" Sortable=\"FALSE\" Hidden=\"TRUE\" SourceID=\"http://schemas.microsoft.com/sharepoint/v3\" StaticName=\"Combine\" Sealed=\"FALSE\"><FieldRefs><FieldRef Name=\"FSObjType\" Key=\"Primary\" /><FieldRef Name=\"EncodedAbsUrl\" /><FieldRef Name=\"TemplateUrl\" /></FieldRefs><DisplayPattern><IfEqual><Expr1><Field Name=\"FSObjType\" /></Expr1><Expr2>0</Expr2><Then><HTML><![CDATA[<input id=\"chkCombine\" type=\"CHECKBOX\" title=\"Merge]]\" href=\"]]></HTML><Field Name=\"EncodedAbsUrl\" /><HTML><![CDATA[\">]]></HTML><HTML><![CDATA[<input id=\"chkUrl\" type=\"HIDDEN\" href=\"]]></HTML><Column Name=\"TemplateUrl\" HTMLEncode=\"TRUE\" /><HTML><![CDATA[\">]]></HTML><HTML><![CDATA[<input id=\"chkProgID\" type=\"HIDDEN\" href=\"]]></HTML><MapToControl><HTML>|</HTML><GetFileExtension><Column Name=\"TemplateUrl\" HTMLEncode=\"TRUE\" /></GetFileExtension></MapToControl><HTML><![CDATA[\">]]></HTML></Then></IfEqual></DisplayPattern></Field>"
+		}, {
+			"verb": "addSPFieldXml",
+			"schemaXml": "<Field ID=\"{5d36727b-bcb2-47d2-a231-1f0bc63b7439}\" ReadOnly=\"TRUE\" Type=\"Computed\" Name=\"RepairDocument\" DisplaceOnUpgrade=\"TRUE\" DisplayName=\"Relink\" Filterable=\"FALSE\" Sortable=\"FALSE\" Hidden=\"TRUE\" SourceID=\"http://schemas.microsoft.com/sharepoint/v3\" StaticName=\"RepairDocument\" Sealed=\"FALSE\"><FieldRefs><FieldRef Name=\"FSObjType\" Key=\"Primary\" /><FieldRef Name=\"ID\" /></FieldRefs><DisplayPattern><IfEqual><Expr1><Field Name=\"FSObjType\" /></Expr1><Expr2>0</Expr2><Then><HTML><![CDATA[<input id=\"chkRepair\" type=\"CHECKBOX\" title=\"Relink\" docid=\"]]></HTML><Field Name=\"ID\" /><HTML><![CDATA[\">]]></HTML></Then></IfEqual></DisplayPattern></Field>"
+		}, {
+			"verb": "addSPView",
+			"name": "All Documents",
+			"viewFields": ["DocIcon", "LinkFilename", "Modified", "Editor", "Status"],
+			"query": "<OrderBy><FieldRef Name=\"FileLeafRef\" /></OrderBy>",
+			"rowLimit": 30,
+			"isPaged": true,
+			"makeDefault": true,
+			"formatterJSON": ""
+		}, {
+			"verb": "addSPView",
+			"name": "Student View",
+			"viewFields": ["DocIcon", "LinkFilename", "Editor"],
+			"query": "<OrderBy><FieldRef Name=\"FileLeafRef\" /></OrderBy><Where><IsNull><FieldRef Name=\"Author\" /></IsNull></Where>",
+			"rowLimit": 30,
+			"isPaged": true
+		}, {
+			"verb": "addSPView",
+			"name": "foo",
+			"viewFields": ["DocIcon", "LinkFilename", "Editor"],
+			"query": "<OrderBy><FieldRef Name=\"FileLeafRef\" /></OrderBy>",
+			"rowLimit": 30,
+			"isPaged": true
+		}]
+	}, {
+		"verb": "addNavLink",
+		"url": "Turnitin/Forms/AllItems.aspx",
+		"displayName": "Turn it in",
+		"isWebRelative": true
+	},
+	{
+		"verb" : "triggerFlow",
+		"url": "https://prod-16.westus.logic.azure.com:443/workflows/a04eee5f3e6748c88e890b6417ddccc6/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=ZkplHl7fAUgceDTbdLTPQX5mb7oW6gF640OUJiqSPAQ",
+		"name": "Classroom Uber Flow"
+	}]
+}

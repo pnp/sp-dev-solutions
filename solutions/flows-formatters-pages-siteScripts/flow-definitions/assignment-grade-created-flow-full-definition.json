@@ -1,0 +1,263 @@
+{
+    "name": "5166dc2f-d443-4961-bee8-51b0a811e485",
+    "id": "/providers/Microsoft.Flow/flows/5166dc2f-d443-4961-bee8-51b0a811e485",
+    "type": "Microsoft.Flow/flows",
+    "properties": {
+        "apiId": "/providers/Microsoft.PowerApps/apis/shared_logicflows",
+        "displayName": "Classroom - When an Assignment Grade item is created -> Create a folder under the student folder in turn-it-in.",
+        "definition": {
+            "metadata": {
+                "creator": {
+                    "id": "4ca26fef-1eac-49a7-8667-c51230644baf",
+                    "type": "User",
+                    "tenantId": "72f988bf-86f1-41af-91ab-2d7cd011db47"
+                },
+                "provisioningMethod": "FromDefinition",
+                "failureAlertSubscription": true,
+                "clientLastModifiedTime": "2018-07-23T18:48:03.165556Z"
+            },
+            "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+            "contentVersion": "1.0.0.0",
+            "parameters": {
+                "$connections": {
+                    "defaultValue": {},
+                    "type": "Object"
+                },
+                "$authentication": {
+                    "defaultValue": {},
+                    "type": "SecureObject"
+                }
+            },
+            "triggers": {
+                "When_an_Assignment_Grade_item_is_created": {
+                    "recurrence": {
+                        "interval": 1,
+                        "frequency": "Minute"
+                    },
+                    "splitOn": "@triggerBody()?['value']",
+                    "metadata": {
+                        "flowSystemMetadata": {
+                            "swaggerOperationId": "GetOnNewItems"
+                        }
+                    },
+                    "type": "ApiConnection",
+                    "inputs": {
+                        "host": {
+                            "api": {
+                                "runtimeUrl": "https://firstrelease-001.azure-apim.net/apim/sharepointonline"
+                            },
+                            "connection": {
+                                "name": "@parameters('$connections')['shared_sharepointonline']['connectionId']"
+                            }
+                        },
+                        "method": "get",
+                        "path": "/datasets/@{encodeURIComponent(encodeURIComponent('[[webUrl]]'))}/tables/@{encodeURIComponent(encodeURIComponent('[[AssignmentGrades]]'))}/onnewitems",
+                        "authentication": "@parameters('$authentication')"
+                    },
+                    "description": "Assignment Grade items are created for each student automatically when an Assignment is created."
+                }
+            },
+            "actions": {
+                "Variable_for_folder_of_student": {
+                    "runAfter": {},
+                    "type": "InitializeVariable",
+                    "inputs": {
+                        "variables": [
+                            {
+                                "name": "folderOfStudent",
+                                "type": "String",
+                                "value": "@triggerBody()?['Student']?['Email']"
+                            }
+                        ]
+                    },
+                    "description": "There should already be a folder for each student. So get the folderName of the student that this item is associated with. The folder name is the email of the student"
+                },
+                "Create_an_assignment_folder_under_the_student_folder_in_turn-it-in": {
+                    "runAfter": {
+                        "Variable_for_new_folder_we_will_create_for_the_assignment": [
+                            "Succeeded"
+                        ]
+                    },
+                    "metadata": {
+                        "flowSystemMetadata": {
+                            "swaggerOperationId": "HttpRequest"
+                        }
+                    },
+                    "type": "ApiConnection",
+                    "inputs": {
+                        "host": {
+                            "api": {
+                                "runtimeUrl": "https://firstrelease-001.azure-apim.net/apim/sharepointonline"
+                            },
+                            "connection": {
+                                "name": "@parameters('$connections')['shared_sharepointonline']['connectionId']"
+                            }
+                        },
+                        "method": "post",
+                        "body": {
+                            "method": "POST",
+                            "uri": "_api/web/folders",
+                            "headers": {
+                                "content-type": "application/json;odata=verbose",
+                                "accept": "application/json;odata=verbose"
+                            },
+                            "body": "{ \"__metadata\": { \"type\": \"SP.Folder\" }, \"ServerRelativeUrl\": \"/teams/[[webSubUrl]]/Turnitin/@{variables('folderOfStudent')}/@{variables('folderForAssignment')}\"}"
+                        },
+                        "path": "/datasets/@{encodeURIComponent(encodeURIComponent('[[webUrl]]'))}/httprequest",
+                        "authentication": "@parameters('$authentication')"
+                    },
+                    "description": "The permissions for this sub-folder will be the same as the permissions for the student folder."
+                },
+                "Variable_for_new_folder_we_will_create_for_the_assignment": {
+                    "runAfter": {
+                        "Variable_for_folder_of_student": [
+                            "Succeeded"
+                        ]
+                    },
+                    "type": "InitializeVariable",
+                    "inputs": {
+                        "variables": [
+                            {
+                                "name": "folderForAssignment",
+                                "type": "String",
+                                "value": "@{replace(encodeUriComponent(replace(triggerBody()?['Assignment']?['Value'], ' ', '_')), '%', '0x')}"
+                            }
+                        ]
+                    },
+                    "description": "The folder name is URI encoded, and will be a sub-folder under each student. Replace all spaces with '_'. Then encodeUriComponent. Then replace all '%' with '0x'"
+                },
+                "Set_the_folder_location_in_the_assignment-grade_item": {
+                    "runAfter": {
+                        "Create_an_assignment_folder_under_the_student_folder_in_turn-it-in": [
+                            "Succeeded"
+                        ]
+                    },
+                    "metadata": {
+                        "flowSystemMetadata": {
+                            "swaggerOperationId": "PatchItem"
+                        }
+                    },
+                    "type": "ApiConnection",
+                    "inputs": {
+                        "host": {
+                            "api": {
+                                "runtimeUrl": "https://firstrelease-001.azure-apim.net/apim/sharepointonline"
+                            },
+                            "connection": {
+                                "name": "@parameters('$connections')['shared_sharepointonline']['connectionId']"
+                            }
+                        },
+                        "method": "patch",
+                        "body": {
+                            "TurnItInFolder": "Turnitin/@{variables('folderOfStudent')}/@{variables('folderForAssignment')}/",
+                            "turnedIn": false
+                        },
+                        "path": "/datasets/@{encodeURIComponent(encodeURIComponent('[[webUrl]]'))}/tables/@{encodeURIComponent(encodeURIComponent('[[AssignmentGrades]]'))}/items/@{encodeURIComponent(triggerBody()?['ID'])}",
+                        "authentication": "@parameters('$authentication')"
+                    }
+                },
+                "Get_attachments_for_the_assignment_item": {
+                    "runAfter": {
+                        "Set_the_folder_location_in_the_assignment-grade_item": [
+                            "Succeeded"
+                        ]
+                    },
+                    "metadata": {
+                        "flowSystemMetadata": {
+                            "swaggerOperationId": "GetItemAttachments"
+                        }
+                    },
+                    "type": "ApiConnection",
+                    "inputs": {
+                        "host": {
+                            "api": {
+                                "runtimeUrl": "https://firstrelease-001.azure-apim.net/apim/sharepointonline"
+                            },
+                            "connection": {
+                                "name": "@parameters('$connections')['shared_sharepointonline']['connectionId']"
+                            }
+                        },
+                        "method": "get",
+                        "path": "/datasets/@{encodeURIComponent(encodeURIComponent('[[webUrl]]'))}/tables/@{encodeURIComponent(encodeURIComponent('[[Assignments]]'))}/items/@{encodeURIComponent(encodeURIComponent(triggerBody()?['Assignment']?['Id']))}/attachments",
+                        "authentication": "@parameters('$authentication')"
+                    }
+                },
+                "Apply_to_each": {
+                    "foreach": "@body('Get_attachments_for_the_assignment_item')",
+                    "actions": {
+                        "Get_attachment_content": {
+                            "runAfter": {},
+                            "metadata": {
+                                "flowSystemMetadata": {
+                                    "swaggerOperationId": "GetAttachmentContent"
+                                }
+                            },
+                            "type": "ApiConnection",
+                            "inputs": {
+                                "host": {
+                                    "api": {
+                                        "runtimeUrl": "https://firstrelease-001.azure-apim.net/apim/sharepointonline"
+                                    },
+                                    "connection": {
+                                        "name": "@parameters('$connections')['shared_sharepointonline']['connectionId']"
+                                    }
+                                },
+                                "method": "get",
+                                "path": "/datasets/@{encodeURIComponent(encodeURIComponent('[[webUrl]]'))}/tables/@{encodeURIComponent(encodeURIComponent('[[Assignments]]'))}/items/@{encodeURIComponent(encodeURIComponent(body('Set_the_folder_location_in_the_assignment-grade_item')?['Assignment']?['Id']))}/attachments/@{encodeURIComponent(items('Apply_to_each')?['Id'])}/$value",
+                                "authentication": "@parameters('$authentication')"
+                            }
+                        },
+                        "Create_file_in_the_folder_we_just_created": {
+                            "runAfter": {
+                                "Get_attachment_content": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "metadata": {
+                                "flowSystemMetadata": {
+                                    "swaggerOperationId": "CreateFile"
+                                }
+                            },
+                            "type": "ApiConnection",
+                            "inputs": {
+                                "host": {
+                                    "api": {
+                                        "runtimeUrl": "https://firstrelease-001.azure-apim.net/apim/sharepointonline"
+                                    },
+                                    "connection": {
+                                        "name": "@parameters('$connections')['shared_sharepointonline']['connectionId']"
+                                    }
+                                },
+                                "method": "post",
+                                "body": "@body('Get_attachment_content')",
+                                "path": "/datasets/@{encodeURIComponent(encodeURIComponent('[[webUrl]]'))}/files",
+                                "queries": {
+                                    "folderPath": "Turnitin/@{variables('folderOfStudent')}/@{variables('folderForAssignment')}/",
+                                    "name": "@items('Apply_to_each')?['DisplayName']",
+                                    "queryParametersSingleEncoded": true
+                                },
+                                "authentication": "@parameters('$authentication')"
+                            }
+                        }
+                    },
+                    "runAfter": {
+                        "Get_attachments_for_the_assignment_item": [
+                            "Succeeded"
+                        ]
+                    },
+                    "type": "Foreach"
+                }
+            },
+            "outputs": {}
+        },
+        "connectionReferences": {
+            "shared_sharepointonline": {
+                "connectionName": "shared-sharepointonl-00000000-0000-0000-0000-000000000000",
+                "source": "Embedded",
+                "id": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                "tier": "NotSpecified"
+            }
+        },
+        "flowFailureAlertSubscribed": false
+    }
+}

@@ -1,0 +1,348 @@
+{
+    "name": "8075eb31-3498-47aa-a012-19e3a75b966a",
+    "id": "/providers/Microsoft.Flow/flows/8075eb31-3498-47aa-a012-19e3a75b966a",
+    "type": "Microsoft.Flow/flows",
+    "properties": {
+        "apiId": "/providers/Microsoft.PowerApps/apis/shared_logicflows",
+        "displayName": "Classroom - When an Assignment-Grade item is modified, check to see if it's been graded, and update the overall grade for the student",
+        "definition": {
+            "metadata": {
+                "creator": {
+                    "id": "4ca26fef-1eac-49a7-8667-c51230644baf",
+                    "type": "User",
+                    "tenantId": "72f988bf-86f1-41af-91ab-2d7cd011db47"
+                },
+                "provisioningMethod": "FromDefinition",
+                "failureAlertSubscription": true,
+                "clientLastModifiedTime": "2018-08-12T16:37:07.6461854Z"
+            },
+            "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+            "contentVersion": "1.0.0.0",
+            "parameters": {
+                "$connections": {
+                    "defaultValue": {},
+                    "type": "Object"
+                },
+                "$authentication": {
+                    "defaultValue": {},
+                    "type": "SecureObject"
+                }
+            },
+            "triggers": {
+                "When_an_Assignment-Grade_item_is_modified": {
+                    "recurrence": {
+                        "interval": 1,
+                        "frequency": "Minute"
+                    },
+                    "splitOn": "@triggerBody()?['value']",
+                    "metadata": {
+                        "flowSystemMetadata": {
+                            "swaggerOperationId": "GetOnUpdatedItems"
+                        }
+                    },
+                    "type": "ApiConnection",
+                    "inputs": {
+                        "host": {
+                            "api": {
+                                "runtimeUrl": "https://firstrelease-001.azure-apim.net/apim/sharepointonline"
+                            },
+                            "connection": {
+                                "name": "@parameters('$connections')['shared_sharepointonline']['connectionId']"
+                            }
+                        },
+                        "method": "get",
+                        "path": "/datasets/@{encodeURIComponent(encodeURIComponent('[[webUrl]]'))}/tables/@{encodeURIComponent(encodeURIComponent('[[AssignmentGrades]]'))}/onupdateditems",
+                        "authentication": "@parameters('$authentication')"
+                    }
+                }
+            },
+            "actions": {
+                "Is_the_grade_of_the_item_that_was_modified_empty": {
+                    "actions": {},
+                    "runAfter": {
+                        "Initialize_idOfStudentItem": [
+                            "Succeeded"
+                        ]
+                    },
+                    "else": {
+                        "actions": {
+                            "Get_each_asssignment-grade_item_that_belongs_to_this_student": {
+                                "runAfter": {},
+                                "metadata": {
+                                    "flowSystemMetadata": {
+                                        "swaggerOperationId": "GetItems"
+                                    }
+                                },
+                                "type": "ApiConnection",
+                                "inputs": {
+                                    "host": {
+                                        "api": {
+                                            "runtimeUrl": "https://firstrelease-001.azure-apim.net/apim/sharepointonline"
+                                        },
+                                        "connection": {
+                                            "name": "@parameters('$connections')['shared_sharepointonline']['connectionId']"
+                                        }
+                                    },
+                                    "method": "get",
+                                    "path": "/datasets/@{encodeURIComponent(encodeURIComponent('[[webUrl]]'))}/tables/@{encodeURIComponent(encodeURIComponent('[[AssignmentGrades]]'))}/items",
+                                    "queries": {
+                                        "$filter": "Student/EMail eq '@{triggerBody()?['Student']?['Email']}'"
+                                    },
+                                    "authentication": "@parameters('$authentication')"
+                                }
+                            },
+                            "for_each_assignment-grade_item_for_this_student_sum_up_the_grade": {
+                                "foreach": "@body('Get_each_asssignment-grade_item_that_belongs_to_this_student')?['value']",
+                                "actions": {
+                                    "Check_whether_the_current_item_grade_is_null": {
+                                        "actions": {},
+                                        "runAfter": {},
+                                        "else": {
+                                            "actions": {
+                                                "currentItemGrade_=_grade_of_current_item": {
+                                                    "runAfter": {},
+                                                    "type": "SetVariable",
+                                                    "inputs": {
+                                                        "name": "currentItemGrade",
+                                                        "value": "@items('for_each_assignment-grade_item_for_this_student_sum_up_the_grade')?['Grade']"
+                                                    }
+                                                },
+                                                "currentItemWeight_=_weight_of_current_item": {
+                                                    "runAfter": {
+                                                        "currentItemGrade_=_grade_of_current_item": [
+                                                            "Succeeded"
+                                                        ]
+                                                    },
+                                                    "type": "SetVariable",
+                                                    "inputs": {
+                                                        "name": "currentItemWeight",
+                                                        "value": "@items('for_each_assignment-grade_item_for_this_student_sum_up_the_grade')?['Weight']"
+                                                    }
+                                                },
+                                                "temporaryGrade_=_finalGradeOfStudent_+_currentItemGrade": {
+                                                    "runAfter": {
+                                                        "currentItemWeight_=_weight_of_current_item": [
+                                                            "Succeeded"
+                                                        ]
+                                                    },
+                                                    "type": "SetVariable",
+                                                    "inputs": {
+                                                        "name": "temporaryGrade",
+                                                        "value": "@add(variables('finalGradeOfStudent'),variables('currentItemGrade'))"
+                                                    }
+                                                },
+                                                "finalGradeOfStudent_=_temporaryGrade": {
+                                                    "runAfter": {
+                                                        "temporaryGrade_=_finalGradeOfStudent_+_currentItemGrade": [
+                                                            "Succeeded"
+                                                        ]
+                                                    },
+                                                    "type": "SetVariable",
+                                                    "inputs": {
+                                                        "name": "finalGradeOfStudent",
+                                                        "value": "@variables('temporaryGrade')"
+                                                    }
+                                                },
+                                                "temporaryWeight_=_finalWeightOfGrades_+_Weight": {
+                                                    "runAfter": {
+                                                        "finalGradeOfStudent_=_temporaryGrade": [
+                                                            "Succeeded"
+                                                        ]
+                                                    },
+                                                    "type": "SetVariable",
+                                                    "inputs": {
+                                                        "name": "temporaryWeight",
+                                                        "value": "@add(variables('finalWeightOfGrades'), variables('currentItemWeight'))"
+                                                    }
+                                                },
+                                                "finalWeightOfGrades_=_temporaryWeight": {
+                                                    "runAfter": {
+                                                        "temporaryWeight_=_finalWeightOfGrades_+_Weight": [
+                                                            "Succeeded"
+                                                        ]
+                                                    },
+                                                    "type": "SetVariable",
+                                                    "inputs": {
+                                                        "name": "FinalWeightOfGrades",
+                                                        "value": "@variables('temporaryWeight')"
+                                                    }
+                                                },
+                                                "Update_the_student_item_with_the_new_grade": {
+                                                    "runAfter": {
+                                                        "finalWeightOfGrades_=_temporaryWeight": [
+                                                            "Succeeded"
+                                                        ]
+                                                    },
+                                                    "metadata": {
+                                                        "flowSystemMetadata": {
+                                                            "swaggerOperationId": "PatchItem"
+                                                        }
+                                                    },
+                                                    "type": "ApiConnection",
+                                                    "inputs": {
+                                                        "host": {
+                                                            "api": {
+                                                                "runtimeUrl": "https://firstrelease-001.azure-apim.net/apim/sharepointonline"
+                                                            },
+                                                            "connection": {
+                                                                "name": "@parameters('$connections')['shared_sharepointonline']['connectionId']"
+                                                            }
+                                                        },
+                                                        "method": "patch",
+                                                        "body": {
+                                                            "Grade": "@variables('finalGradeOfStudent')",
+                                                            "SumOfGradeWeights": "@variables('FinalWeightOfGrades')"
+                                                        },
+                                                        "path": "/datasets/@{encodeURIComponent(encodeURIComponent('[[webUrl]]'))}/tables/@{encodeURIComponent(encodeURIComponent('[[Students]]'))}/items/@{encodeURIComponent(variables('idOfStudentItem'))}",
+                                                        "authentication": "@parameters('$authentication')"
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "expression": "@equals(items('for_each_assignment-grade_item_for_this_student_sum_up_the_grade')?['Grade'], null)",
+                                        "type": "If"
+                                    }
+                                },
+                                "runAfter": {
+                                    "Get_each_asssignment-grade_item_that_belongs_to_this_student": [
+                                        "Succeeded"
+                                    ]
+                                },
+                                "type": "Foreach"
+                            }
+                        }
+                    },
+                    "expression": "@equals(triggerBody()?['Grade'], null)",
+                    "type": "If"
+                },
+                "Initialize_temporaryGrade": {
+                    "runAfter": {},
+                    "type": "InitializeVariable",
+                    "inputs": {
+                        "variables": [
+                            {
+                                "name": "temporaryGrade",
+                                "type": "Float",
+                                "value": 0
+                            }
+                        ]
+                    },
+                    "description": "temporary variable since Flow doesn't support operations on self-referencing variables like x = x+1"
+                },
+                "Initialize_finalGradeOfStudent": {
+                    "runAfter": {
+                        "Initialize_temporaryGrade": [
+                            "Succeeded"
+                        ]
+                    },
+                    "type": "InitializeVariable",
+                    "inputs": {
+                        "variables": [
+                            {
+                                "name": "finalGradeOfStudent",
+                                "type": "Float",
+                                "value": 0
+                            }
+                        ]
+                    },
+                    "description": "Sum of all the grades for this student"
+                },
+                "Initialize_idOfStudentItem": {
+                    "runAfter": {
+                        "Initialize_finalWeightOfGrades": [
+                            "Succeeded"
+                        ]
+                    },
+                    "type": "InitializeVariable",
+                    "inputs": {
+                        "variables": [
+                            {
+                                "name": "idOfStudentItem",
+                                "type": "Integer",
+                                "value": "@triggerBody()?['StudentItem']?['Id']"
+                            }
+                        ]
+                    }
+                },
+                "Initialize_temporaryWeight": {
+                    "runAfter": {
+                        "Initialize_currentItemWeight": [
+                            "Succeeded"
+                        ]
+                    },
+                    "type": "InitializeVariable",
+                    "inputs": {
+                        "variables": [
+                            {
+                                "name": "temporaryWeight",
+                                "type": "Float",
+                                "value": 0
+                            }
+                        ]
+                    }
+                },
+                "Initialize_finalWeightOfGrades": {
+                    "runAfter": {
+                        "Initialize_temporaryWeight": [
+                            "Succeeded"
+                        ]
+                    },
+                    "type": "InitializeVariable",
+                    "inputs": {
+                        "variables": [
+                            {
+                                "name": "FinalWeightOfGrades",
+                                "type": "Float",
+                                "value": 0
+                            }
+                        ]
+                    }
+                },
+                "Initialize_currentItemGrade": {
+                    "runAfter": {
+                        "Initialize_finalGradeOfStudent": [
+                            "Succeeded"
+                        ]
+                    },
+                    "type": "InitializeVariable",
+                    "inputs": {
+                        "variables": [
+                            {
+                                "name": "currentItemGrade",
+                                "type": "Float",
+                                "value": 0
+                            }
+                        ]
+                    }
+                },
+                "Initialize_currentItemWeight": {
+                    "runAfter": {
+                        "Initialize_currentItemGrade": [
+                            "Succeeded"
+                        ]
+                    },
+                    "type": "InitializeVariable",
+                    "inputs": {
+                        "variables": [
+                            {
+                                "name": "currentItemWeight",
+                                "type": "Float",
+                                "value": 0
+                            }
+                        ]
+                    }
+                }
+            },
+            "outputs": {}
+        },
+        "connectionReferences": {
+            "shared_sharepointonline": {
+                "connectionName": "shared-sharepointonl-00000000-0000-0000-0000-000000000000",
+                "source": "Embedded",
+                "id": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                "tier": "NotSpecified"
+            }
+        },
+        "flowFailureAlertSubscribed": false
+    }
+}

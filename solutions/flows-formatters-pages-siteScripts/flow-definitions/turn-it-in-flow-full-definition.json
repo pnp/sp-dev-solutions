@@ -1,0 +1,144 @@
+{
+    "name": "a8f04908-e764-474c-a256-6a0c843298d8",
+    "id": "/providers/Microsoft.Flow/flows/a8f04908-e764-474c-a256-6a0c843298d8",
+    "type": "Microsoft.Flow/flows",
+    "properties": {
+        "apiId": "/providers/Microsoft.PowerApps/apis/shared_logicflows",
+        "displayName": "Classroom - When a turn-it-in file is modified, update the apprioriate assignment-grade list item to be marked as turned-in if needed.",
+        "definition": {
+            "metadata": {
+                "creator": {
+                    "id": "4ca26fef-1eac-49a7-8667-c51230644baf",
+                    "type": "User",
+                    "tenantId": "72f988bf-86f1-41af-91ab-2d7cd011db47"
+                },
+                "provisioningMethod": "FromDefinition",
+                "failureAlertSubscription": true,
+                "clientLastModifiedTime": "2018-08-10T22:17:20.6631456Z"
+            },
+            "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+            "contentVersion": "1.0.0.0",
+            "parameters": {
+                "$connections": {
+                    "defaultValue": {},
+                    "type": "Object"
+                },
+                "$authentication": {
+                    "defaultValue": {},
+                    "type": "SecureObject"
+                }
+            },
+            "triggers": {
+                "When_a_file_is_created_or_modified_(properties_only)": {
+                    "recurrence": {
+                        "interval": 1,
+                        "frequency": "Minute"
+                    },
+                    "splitOn": "@triggerBody()?['value']",
+                    "metadata": {
+                        "flowSystemMetadata": {
+                            "swaggerOperationId": "GetOnUpdatedFileItems"
+                        }
+                    },
+                    "type": "ApiConnection",
+                    "inputs": {
+                        "host": {
+                            "api": {
+                                "runtimeUrl": "https://firstrelease-001.azure-apim.net/apim/sharepointonline"
+                            },
+                            "connection": {
+                                "name": "@parameters('$connections')['shared_sharepointonline']['connectionId']"
+                            }
+                        },
+                        "method": "get",
+                        "path": "/datasets/@{encodeURIComponent(encodeURIComponent('[[webUrl]]'))}/tables/@{encodeURIComponent(encodeURIComponent('[[TurnItIn]]'))}/onupdatedfileitems",
+                        "authentication": "@parameters('$authentication')"
+                    }
+                }
+            },
+            "actions": {
+                "Condition": {
+                    "actions": {
+                        "Get_the_specific_assignment-grade_item_for_this_file": {
+                            "runAfter": {},
+                            "metadata": {
+                                "flowSystemMetadata": {
+                                    "swaggerOperationId": "GetItems"
+                                }
+                            },
+                            "type": "ApiConnection",
+                            "inputs": {
+                                "host": {
+                                    "api": {
+                                        "runtimeUrl": "https://firstrelease-001.azure-apim.net/apim/sharepointonline"
+                                    },
+                                    "connection": {
+                                        "name": "@parameters('$connections')['shared_sharepointonline']['connectionId']"
+                                    }
+                                },
+                                "method": "get",
+                                "path": "/datasets/@{encodeURIComponent(encodeURIComponent('[[webUrl]]'))}/tables/@{encodeURIComponent(encodeURIComponent('[[AssignmentGrades]]'))}/items",
+                                "queries": {
+                                    "$filter": "TurnItInFolder eq  '@{triggerBody()?['{Path}']}' and Student/EMail eq '@{triggerBody()?['Editor']?['Email']}'"
+                                },
+                                "authentication": "@parameters('$authentication')"
+                            },
+                            "description": "Filter assignment-grade items to the specific assignment of the specific student. This should result in just 1 item"
+                        },
+                        "Apply_to_each": {
+                            "foreach": "@body('Get_the_specific_assignment-grade_item_for_this_file')?['value']",
+                            "actions": {
+                                "Update_the_assignment-grade_item_to_reflect_that_it's_been_turned_in": {
+                                    "runAfter": {},
+                                    "metadata": {
+                                        "flowSystemMetadata": {
+                                            "swaggerOperationId": "PatchItem"
+                                        }
+                                    },
+                                    "type": "ApiConnection",
+                                    "inputs": {
+                                        "host": {
+                                            "api": {
+                                                "runtimeUrl": "https://firstrelease-001.azure-apim.net/apim/sharepointonline"
+                                            },
+                                            "connection": {
+                                                "name": "@parameters('$connections')['shared_sharepointonline']['connectionId']"
+                                            }
+                                        },
+                                        "method": "patch",
+                                        "body": {
+                                            "TurnItInFolder": "@items('Apply_to_each')?['TurnItInFolder']",
+                                            "Title": "@items('Apply_to_each')?['Title']",
+                                            "turnedIn": true
+                                        },
+                                        "path": "/datasets/@{encodeURIComponent(encodeURIComponent('[[webUrl]]'))}/tables/@{encodeURIComponent(encodeURIComponent('[[AssignmentGrades]]'))}/items/@{encodeURIComponent(items('Apply_to_each')?['ID'])}",
+                                        "authentication": "@parameters('$authentication')"
+                                    }
+                                }
+                            },
+                            "runAfter": {
+                                "Get_the_specific_assignment-grade_item_for_this_file": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "Foreach"
+                        }
+                    },
+                    "runAfter": {},
+                    "expression": "@equals(triggerBody()?['Status']?['Value'], 'Complete')",
+                    "type": "If"
+                }
+            },
+            "outputs": {}
+        },
+        "connectionReferences": {
+            "shared_sharepointonline": {
+                "connectionName": "shared-sharepointonl-00000000-0000-0000-0000-000000000000",
+                "source": "Embedded",
+                "id": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                "tier": "NotSpecified"
+            }
+        },
+        "flowFailureAlertSubscribed": false
+    }
+}

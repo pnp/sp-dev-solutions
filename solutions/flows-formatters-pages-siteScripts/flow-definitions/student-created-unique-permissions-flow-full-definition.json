@@ -1,0 +1,176 @@
+{
+    "name": "fb9c8a68-5c8c-4d2e-8e83-d41433c20c63",
+    "id": "/providers/Microsoft.Flow/flows/fb9c8a68-5c8c-4d2e-8e83-d41433c20c63",
+    "type": "Microsoft.Flow/flows",
+    "properties": {
+        "apiId": "/providers/Microsoft.PowerApps/apis/shared_logicflows",
+        "displayName": "Classroom: When a student is crated, assign read only permissions for that student on that item",
+        "definition": {
+            "metadata": {
+                "creator": {
+                    "id": "4ca26fef-1eac-49a7-8667-c51230644baf",
+                    "type": "User",
+                    "tenantId": "72f988bf-86f1-41af-91ab-2d7cd011db47"
+                },
+                "provisioningMethod": "FromDefinition",
+                "failureAlertSubscription": true,
+                "clientLastModifiedTime": "2018-08-10T20:37:35.849444Z"
+            },
+            "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+            "contentVersion": "1.0.0.0",
+            "parameters": {
+                "$connections": {
+                    "defaultValue": {},
+                    "type": "Object"
+                },
+                "$authentication": {
+                    "defaultValue": {},
+                    "type": "SecureObject"
+                }
+            },
+            "triggers": {
+                "When_a_student_item_is_created": {
+                    "recurrence": {
+                        "interval": 1,
+                        "frequency": "Minute"
+                    },
+                    "splitOn": "@triggerBody()?['value']",
+                    "metadata": {
+                        "flowSystemMetadata": {
+                            "swaggerOperationId": "GetOnNewItems"
+                        }
+                    },
+                    "type": "ApiConnection",
+                    "inputs": {
+                        "host": {
+                            "api": {
+                                "runtimeUrl": "https://firstrelease-001.azure-apim.net/apim/sharepointonline"
+                            },
+                            "connection": {
+                                "name": "@parameters('$connections')['shared_sharepointonline']['connectionId']"
+                            }
+                        },
+                        "method": "get",
+                        "path": "/datasets/@{encodeURIComponent(encodeURIComponent('[[webUrl]]'))}/tables/@{encodeURIComponent(encodeURIComponent('[[Students]]'))}/onnewitems",
+                        "authentication": "@parameters('$authentication')"
+                    }
+                }
+            },
+            "actions": {
+                "GetPrincipalIDOfStudent": {
+                    "runAfter": {
+                        "BreakInheritanceOnStudentItem": [
+                            "Succeeded"
+                        ]
+                    },
+                    "metadata": {
+                        "flowSystemMetadata": {
+                            "swaggerOperationId": "HttpRequest"
+                        }
+                    },
+                    "type": "ApiConnection",
+                    "inputs": {
+                        "host": {
+                            "api": {
+                                "runtimeUrl": "https://firstrelease-001.azure-apim.net/apim/sharepointonline"
+                            },
+                            "connection": {
+                                "name": "@parameters('$connections')['shared_sharepointonline']['connectionId']"
+                            }
+                        },
+                        "method": "post",
+                        "body": {
+                            "method": "GET",
+                            "uri": "_api/web/SiteUsers/getByEmail('@{triggerBody()?['Student']?['Email']}')"
+                        },
+                        "path": "/datasets/@{encodeURIComponent(encodeURIComponent('[[webUrl]]'))}/httprequest",
+                        "authentication": "@parameters('$authentication')"
+                    }
+                },
+                "set_principalIdOfStudent_variable": {
+                    "runAfter": {
+                        "GetPrincipalIDOfStudent": [
+                            "Succeeded"
+                        ]
+                    },
+                    "type": "InitializeVariable",
+                    "inputs": {
+                        "variables": [
+                            {
+                                "name": "principalIdOfStudent",
+                                "type": "String",
+                                "value": "@{body('GetPrincipalIDOfStudent')['d']['id']}"
+                            }
+                        ]
+                    }
+                },
+                "Make_the_student_have_read-only_permissions_on_the_item": {
+                    "runAfter": {
+                        "set_principalIdOfStudent_variable": [
+                            "Succeeded"
+                        ]
+                    },
+                    "metadata": {
+                        "flowSystemMetadata": {
+                            "swaggerOperationId": "HttpRequest"
+                        }
+                    },
+                    "type": "ApiConnection",
+                    "inputs": {
+                        "host": {
+                            "api": {
+                                "runtimeUrl": "https://firstrelease-001.azure-apim.net/apim/sharepointonline"
+                            },
+                            "connection": {
+                                "name": "@parameters('$connections')['shared_sharepointonline']['connectionId']"
+                            }
+                        },
+                        "method": "post",
+                        "body": {
+                            "method": "POST",
+                            "uri": "_api/lists/getByTitle('Students')/items(@{triggerBody()?['ID']})/roleassignments/addroleassignment(principalid=@{variables('principalIdOfStudent')} ,roledefid=1073741826) "
+                        },
+                        "path": "/datasets/@{encodeURIComponent(encodeURIComponent('[[webUrl]]'))}/httprequest",
+                        "authentication": "@parameters('$authentication')"
+                    }
+                },
+                "BreakInheritanceOnStudentItem": {
+                    "runAfter": {},
+                    "metadata": {
+                        "flowSystemMetadata": {
+                            "swaggerOperationId": "HttpRequest"
+                        }
+                    },
+                    "type": "ApiConnection",
+                    "inputs": {
+                        "host": {
+                            "api": {
+                                "runtimeUrl": "https://firstrelease-001.azure-apim.net/apim/sharepointonline"
+                            },
+                            "connection": {
+                                "name": "@parameters('$connections')['shared_sharepointonline']['connectionId']"
+                            }
+                        },
+                        "method": "post",
+                        "body": {
+                            "method": "POST",
+                            "uri": "_api/lists/getByTitle('Students')/items(@{triggerBody()?['ID']})/breakroleinheritance(copyRoleAssignments=false,clearSubscopes=true)"
+                        },
+                        "path": "/datasets/@{encodeURIComponent(encodeURIComponent('[[webUrl]]'))}/httprequest",
+                        "authentication": "@parameters('$authentication')"
+                    }
+                }
+            },
+            "outputs": {}
+        },
+        "connectionReferences": {
+            "shared_sharepointonline": {
+                "connectionName": "shared-sharepointonl-00000000-0000-0000-0000-000000000000",
+                "source": "Embedded",
+                "id": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                "tier": "NotSpecified"
+            }
+        },
+        "flowFailureAlertSubscribed": false
+    }
+}

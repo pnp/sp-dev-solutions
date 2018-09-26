@@ -1,0 +1,143 @@
+{
+    "name": "2a31d68b-4599-45c1-9a54-64144f3523ff",
+    "id": "/providers/Microsoft.Flow/flows/2a31d68b-4599-45c1-9a54-64144f3523ff",
+    "type": "Microsoft.Flow/flows",
+    "properties": {
+        "apiId": "/providers/Microsoft.PowerApps/apis/shared_logicflows",
+        "displayName": "Classroom - When an assignment is created, create an assignment-grade item for each student",
+        "definition": {
+            "metadata": {
+                "creator": {
+                    "id": "4ca26fef-1eac-49a7-8667-c51230644baf",
+                    "type": "User",
+                    "tenantId": "72f988bf-86f1-41af-91ab-2d7cd011db47"
+                },
+                "provisioningMethod": "FromDefinition",
+                "failureAlertSubscription": true,
+                "clientLastModifiedTime": "2018-07-24T21:03:49.0803169Z"
+            },
+            "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+            "contentVersion": "1.0.0.0",
+            "parameters": {
+                "$connections": {
+                    "defaultValue": {},
+                    "type": "Object"
+                },
+                "$authentication": {
+                    "defaultValue": {},
+                    "type": "SecureObject"
+                }
+            },
+            "triggers": {
+                "When_a_new_assignment_is_created": {
+                    "recurrence": {
+                        "interval": 1,
+                        "frequency": "Minute"
+                    },
+                    "splitOn": "@triggerBody()?['value']",
+                    "metadata": {
+                        "flowSystemMetadata": {
+                            "swaggerOperationId": "GetOnNewItems"
+                        }
+                    },
+                    "type": "ApiConnection",
+                    "inputs": {
+                        "host": {
+                            "api": {
+                                "runtimeUrl": "https://firstrelease-001.azure-apim.net/apim/sharepointonline"
+                            },
+                            "connection": {
+                                "name": "@parameters('$connections')['shared_sharepointonline']['connectionId']"
+                            }
+                        },
+                        "method": "get",
+                        "path": "/datasets/@{encodeURIComponent(encodeURIComponent('[[webUrl]]'))}/tables/@{encodeURIComponent(encodeURIComponent('[[Assignments]]'))}/onnewitems",
+                        "authentication": "@parameters('$authentication')"
+                    }
+                }
+            },
+            "actions": {
+                "Get_list_of_all_students": {
+                    "runAfter": {},
+                    "metadata": {
+                        "flowSystemMetadata": {
+                            "swaggerOperationId": "GetItems"
+                        }
+                    },
+                    "type": "ApiConnection",
+                    "inputs": {
+                        "host": {
+                            "api": {
+                                "runtimeUrl": "https://firstrelease-001.azure-apim.net/apim/sharepointonline"
+                            },
+                            "connection": {
+                                "name": "@parameters('$connections')['shared_sharepointonline']['connectionId']"
+                            }
+                        },
+                        "method": "get",
+                        "path": "/datasets/@{encodeURIComponent(encodeURIComponent('[[webUrl]]'))}/tables/@{encodeURIComponent(encodeURIComponent('[[Students]]'))}/items",
+                        "authentication": "@parameters('$authentication')"
+                    }
+                },
+                "Apply_to_each": {
+                    "foreach": "@body('Get_list_of_all_students')?['value']",
+                    "actions": {
+                        "Create_an_assignment-grade_item_for_each_student": {
+                            "runAfter": {},
+                            "metadata": {
+                                "flowSystemMetadata": {
+                                    "swaggerOperationId": "PostItem"
+                                }
+                            },
+                            "type": "ApiConnection",
+                            "inputs": {
+                                "host": {
+                                    "api": {
+                                        "runtimeUrl": "https://firstrelease-001.azure-apim.net/apim/sharepointonline"
+                                    },
+                                    "connection": {
+                                        "name": "@parameters('$connections')['shared_sharepointonline']['connectionId']"
+                                    }
+                                },
+                                "method": "post",
+                                "body": {
+                                    "TurnItInFolder": " ",
+                                    "Assignment": {
+                                        "Id": "@triggerBody()?['ID']"
+                                    },
+                                    "Student": {
+                                        "Claims": "@items('Apply_to_each')?['Student']?['Claims']"
+                                    },
+                                    "Due_x0020_Date": "@triggerBody()?['Due_x0020_Date']",
+                                    "turnedIn": false,
+                                    "StudentItem": {
+                                        "Id": "@items('Apply_to_each')?['ID']"
+                                    },
+                                    "Weight": "@triggerBody()?['Weight']"
+                                },
+                                "path": "/datasets/@{encodeURIComponent(encodeURIComponent('[[webUrl]]'))}/tables/@{encodeURIComponent(encodeURIComponent('[[AssignmentGrades]]'))}/items",
+                                "authentication": "@parameters('$authentication')"
+                            }
+                        }
+                    },
+                    "runAfter": {
+                        "Get_list_of_all_students": [
+                            "Succeeded"
+                        ]
+                    },
+                    "type": "Foreach"
+                }
+            },
+            "outputs": {}
+        },
+        "connectionReferences": {
+            "shared_sharepointonline": {
+                "connectionName": "shared-sharepointonl-00000000-0000-0000-0000-000000000000",
+                "source": "Embedded",
+                "id": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                "tier": "NotSpecified"
+            }
+        },
+        "flowFailureAlertSubscribed": false
+    }
+}
