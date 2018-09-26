@@ -206,7 +206,7 @@ Thanks Marc! We'll make the views mobile friendly and responsive, so that the vi
 
 1. **Student list**: We'll make each Student item look like the image below. To achieve this look, we use [this view-formatter JSON](./custom-formatters/Student.json).
 
-    ![Student View Format](./images/view-format-student.png)  
+    ![Student View Format](./images/view-format-student.PNG)  
 
     **Things to note**  
     1. The img element to create the photo of the student is below. Notice the expression for the "src" attribute. It's an easy to read expression that concatenates a few strings. 
@@ -245,7 +245,7 @@ Thanks Marc! We'll make the views mobile friendly and responsive, so that the vi
 
 2. **Assignment-Grade list**: We'll make each Grade item look like this. To achieve this look, we use [this view-formatter JSON](./custom-formatters/assignment-grades.json).
 
-    ![Grade View Format](./images/view-format-assignment-grades.png)  
+    ![Grade View Format](./images/view-format-assignment-grades.PNG)  
     **Things to note**
 
     1. Similar to the Student's list, we have data-bars that specify the grade for this assignment for the student.
