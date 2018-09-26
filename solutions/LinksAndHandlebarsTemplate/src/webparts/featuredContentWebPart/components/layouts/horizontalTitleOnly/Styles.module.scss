@@ -2,6 +2,7 @@
     display: flex;
     width: 100%;
     flex-wrap: wrap;
+    color: "[theme:primaryText, default: #000000]";
     margin-bottom: 25px;
     & .all-featured-link {
         text-transform: uppercase;
@@ -13,13 +14,16 @@
         padding-right: 0;
         padding-left: 0;
         margin: 0 2% 20px 0;
-        border: 1px solid #eaeaea;
+        border: 1px solid;
+        border-color: "[theme: themeSecondary, default: #007cc5]";
         outline: 1px solid transparent;
         min-height: 258px;
         max-height: 258px;
         &:hover {
-            border: 1px #C8C8C8 solid;
-            outline: 1px #C8C8C8 solid;
+            border: 1px solid;
+            border-color: "[theme: themeSecondary, default: #007cc5]";
+            outline: 1px solid;
+            outline-color: "[theme: themeSecondary, default: #007cc5]";
         }
         & .featured-content-picture-container {
             min-height: 200px;
@@ -34,9 +38,9 @@
         & .featured-content-title {
             font-size: 14px;
             padding: 8px 10px;
-            background: #fff;
+            background: "[theme:primaryBackground, default: #FFFFFF]";
             overflow: hidden;
-            color: #333;
+            color: "[theme:primaryText, default: #000000]";
             font-weight: 600;
             width: 100%;
             position: relative;
@@ -128,7 +132,7 @@
                 vertical-align: middle;
                 text-align: center;
                 color: white;
-                background-color: #006699;
+                background-color: "[theme: themePrimary, default: #007cc5]";
                 font-size: 14px;
                 position: absolute;
                 top: 50%;

@@ -18,11 +18,11 @@
         font-weight: inherit;
         line-height: inherit;
         text-align: inherit;
-        color: #333333;
+        color: "[theme:primaryText, default: #000000]";
         height: 40px;
     }
     & .view {
-        color: #333333;
+        color: "[theme:primaryText, default: #000000]";
     }
 }
 

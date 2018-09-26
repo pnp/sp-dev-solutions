@@ -1,6 +1,7 @@
 .webpart-header {
     font-size: 24px;
     font-weight: 100;
+    color: "[theme:primaryText, default: #000000]";
     margin-bottom: 11px;
     & .edit {
         background-color: transparent;
@@ -18,11 +19,11 @@
         font-weight: inherit;
         line-height: inherit;
         text-align: inherit;
-        color: #333333;
+        color: "[theme:primaryText, default: #000000]";
         height: 40px;
     }
     & .view {
-        color: #333333;
+        color: "[theme:primaryText, default: #000000]";
     }
 }
 
@@ -33,7 +34,7 @@
         -webkit-box-flex: 1;
         -ms-flex: 1 1 auto;
         flex: 1 1 auto;
-        background: #0078d7;
+        background: "[theme: themePrimary, default: #007cc5]";
         color: #fff;
         display: -webkit-box;
         display: -ms-flexbox;

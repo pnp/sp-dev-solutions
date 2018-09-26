@@ -2,7 +2,7 @@ import * as React from 'react';
 import { IHubLinksItem } from '../../IHubLinksItem';
 import { IHubLinksLayout } from '../HubLinksLayout';
 import HubLinksWebPart from "../../HubLinks";
-import llStyles from './LLStyles.module.scss';
+import styles from './Styles.module.scss';
 
 export default class AdvancedListLayout implements IHubLinksLayout{
   constructor(webpart:HubLinksWebPart){
@@ -19,17 +19,22 @@ export default class AdvancedListLayout implements IHubLinksLayout{
 
   public render(items:IHubLinksItem[], isEditMode:boolean):JSX.Element{
     return (
-      <ul className={llStyles["hubLinks"]+ (this.webpart.props.isEdit? " " + llStyles["edit"] : "")}>
+      <ul className={styles["hubLinks"]+ (this.webpart.props.isEdit? " " + styles["edit"] : "")}>
         {items &&
             items.map((item) => {
               return (
                 <li>
                     {item.Icon && item.Icon.length > 0 &&
-                      <i className={"fa "+item.Icon+" "+llStyles["faIcon"]} aria-hidden="true"/>
+                      <i className={"fa "+item.Icon+" "+styles["faIcon"]} aria-hidden="true"/>
                     }
-                    <a className={llStyles["linktitle"]} href={item.URL} target={item.NewTab ? "_blank" : ""}>{item.Title}</a>
+                    {item.NewTab &&
+                      <a className={styles["linktitle"]} href={item.URL} target="blank" data-interception="off">{item.Title}</a>
+                    }
+                    {!item.NewTab &&
+                      <a className={styles["linktitle"]} href={item.URL}>{item.Title}</a>
+                    }
                     {this.webpart.props.showDescription && 
-                    <p className={llStyles["linkdescription"]}>{item.Description}</p>
+                    <p className={styles["linkdescription"]}>{item.Description}</p>
                     }
                 </li>                  
               );
