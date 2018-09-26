@@ -554,6 +554,7 @@ Cyrus Balsara ([Microsoft](https://www.microsoft.com))
 Version|Date|Comments
 -------|----|--------
 1.0.0|September 16, 2018|Place holder
+2.0.0|September 25, 2018|Ignite 2018
 
 ## Disclaimer
 
