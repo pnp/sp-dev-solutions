@@ -137,7 +137,7 @@ export default class BoxButtonWebPartWebPart extends BaseClientSideWebPart<IBoxB
           // In the "data" (array of links) adjust the URL to use OWA if it's a document
           props.data[this.activeIndex].url=url+( isDoc ? "?web=1" : "");
           // If the property pane isn't already open, open it and refresh it
-          if(!this.propertyPaneRenderedByWebPart)
+          if(!this.context.propertyPane.isRenderedByWebPart())
             this.context.propertyPane.open();
           propPaneRefresh();
         },

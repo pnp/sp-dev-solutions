@@ -193,33 +193,33 @@ export default class FeaturedContentWebPartWebPart extends BaseClientSideWebPart
                     {
                       checked: this.properties.layoutMode===FeaturedContentLayout.HorizontalTitleOnly,
                       key: FeaturedContentLayout.HorizontalTitleOnly,
-                      imageSrc: titleOnlyImage,
-                      selectedImageSrc: titleOnlyImage,
+                      imageSrc: titleOnlyImage.toString(),
+                      selectedImageSrc: titleOnlyImage.toString(),
                       imageSize: { height:32,width:32 },
                       text: strings.TitleOnlyLabel
                     },
                     {
                       checked: this.properties.layoutMode===FeaturedContentLayout.HorizontalTitleAndDescription,
                       key: FeaturedContentLayout.HorizontalTitleAndDescription,
-                      imageSrc: titleDescImage,
+                      imageSrc: titleDescImage.toString(),
                       imageSize: { height:32,width:32 },
-                      selectedImageSrc: titleDescImage,
+                      selectedImageSrc: titleDescImage.toString(),
                       text: strings.TitleDescriptionLabel
                     },
                     {
                       checked: this.properties.layoutMode===FeaturedContentLayout.Vertical,
                       key: FeaturedContentLayout.Vertical,
-                      imageSrc: stackedImage,
+                      imageSrc: stackedImage.toString(),
                       imageSize: { height:32,width:32 },
-                      selectedImageSrc: stackedImage,
+                      selectedImageSrc: stackedImage.toString(),
                       text: strings.StackedLabel
                     },
                     {
                       checked: this.properties.layoutMode===FeaturedContentLayout.VerticalAlternating,
                       key: FeaturedContentLayout.VerticalAlternating,
-                      imageSrc: altStackImage,
+                      imageSrc: altStackImage.toString(),
                       imageSize: { height:32,width:32 },
-                      selectedImageSrc: altStackImage,
+                      selectedImageSrc: altStackImage.toString(),
                       text: strings.AltStackedLabel
                     }
                   ]
@@ -495,7 +495,7 @@ export default class FeaturedContentWebPartWebPart extends BaseClientSideWebPart
       });
     }
 
-    if(!this.propertyPaneRenderedByWebPart)
+    if(!this.context.propertyPane.isRenderedByWebPart())
       this.context.propertyPane.open();
     this.context.propertyPane.refresh();
   }
