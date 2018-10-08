@@ -26,7 +26,6 @@ import { PropertyPaneGroupSort } from '../../propertyPane/propertyFieldGroupSort
 import pnp from 'sp-pnp-js';
 import QueryStringParser from "../../utilities/urlparser/queryStringParser";
 import { WebPartLogger } from '../../utilities/webpartlogger/usagelogger';
-import WatchJS from 'melanke-watchjs';
 
 const titleField = "Title";
 const urlField = "URL";
@@ -157,7 +156,7 @@ export default class HubLinksWebPart extends BaseClientSideWebPart<IHubLinksWebP
 
           self.properties.hubLinksItems[this.activeIndex].URL=url+( isDoc ? "?web=1" : "");
           self.properties.hubLinksItems[this.activeIndex].Title=name ? name : this.properties.hubLinksItems[this.activeIndex].Title;
-          if(!this.propertyPaneRenderedByWebPart)
+          if(!this.context.propertyPane.isRenderedByWebPart())
             this.context.propertyPane.open();
           self.context.propertyPane.refresh();
         },

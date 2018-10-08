@@ -25,18 +25,20 @@ export default class BasicTileLayout implements IHubLinksLayout{
         { items &&
             items.map((item) => {
               return item.NewTab ? (
-                <a key={"item-"+items.indexOf(item)} role="link" id={"item-"+items.indexOf(item)} 
+                <div key={"item-"+items.indexOf(item)} role="link" id={"item-"+items.indexOf(item)} 
                       draggable={isEditMode} onDragStart={this.webpart.startDrag.bind(this.webpart)} 
                       onMouseDown={this.webpart.mouseDragDown.bind(this.webpart)} onDragEnter={this.webpart.moveItem.bind(this.webpart)} 
                       onDragEnd={this.webpart.endDrag.bind(this.webpart)} data-index={items.indexOf(item)}
-                      href={item.URL} className={styles["box"]+" "+styles["color-"+this.webpart.props.textColor]+" "+styles["background-"+this.webpart.props.backgroundColor]+" "+styles["border-"+this.webpart.props.borderColor]} 
-                      data-interception="off" target="_blank">
-                  <div className={styles["fontawesome"] + " " + styles["icon"]}>
-                      <i className={"fa "+item.Icon+" fa-3x "+styles["color"]+" "+styles[this.webpart.props.textColor]}></i>
-                  </div>
-                  <div className={styles["cell-divider"]}></div>
-                  <div className={styles["title"]+" "+styles["color"]+" "+styles[this.webpart.props.textColor]}>{item.Title}</div>
-                  <div className={styles["description"]+" "+styles["color"]+" "+styles[this.webpart.props.textColor]}>{item.Description}</div>
+                      className={styles["box"]+" "+styles["color-"+this.webpart.props.textColor]+" "+styles["background-"+this.webpart.props.backgroundColor]+" "+styles["border-"+this.webpart.props.borderColor]} 
+                      data-interception="off">
+                  <a href={item.URL} target="_blank">
+                    <div className={styles["fontawesome"] + " " + styles["icon"]}>
+                        <i className={"fa "+item.Icon+" fa-3x "+styles["color"]+" "+styles[this.webpart.props.textColor]}></i>
+                    </div>
+                    <div className={styles["cell-divider"]}></div>
+                    <div className={styles["title"]+" "+styles["color"]+" "+styles[this.webpart.props.textColor]}>{item.Title}</div>
+                    <div className={styles["description"]+" "+styles["color"]+" "+styles[this.webpart.props.textColor]}>{item.Description}</div>
+                  </a>
                   {isEditMode &&
                       <div className={styles["editControls"]}>
                           <DefaultButton iconProps={{iconName:"Clear"}} onClick={(e) => {e.stopPropagation();e.preventDefault();this.webpart.deleteBox.call(this.webpart,e);}} className={styles["right-button"]}/>
@@ -44,20 +46,22 @@ export default class BasicTileLayout implements IHubLinksLayout{
                           <i className={"ms-Icon ms-Icon--Move "+styles["left-button"]} onClick={(e) => {e.preventDefault();e.stopPropagation();}} id="drag-handle" aria-hidden="true"></i>
                       </div>
                     }    
-                </a>
+                </div>
               ) :              
               (
-                <a key={"item-"+items.indexOf(item)} role="link" id={"item-"+items.indexOf(item)} 
+                <div key={"item-"+items.indexOf(item)} role="link" id={"item-"+items.indexOf(item)} 
                       draggable={isEditMode} onDragStart={this.webpart.startDrag.bind(this.webpart)} 
                       onMouseDown={this.webpart.mouseDragDown.bind(this.webpart)} onDragEnter={this.webpart.moveItem.bind(this.webpart)} 
                       onDragEnd={this.webpart.endDrag.bind(this.webpart)} data-index={items.indexOf(item)}
-                      href={item.URL} className={styles["box"]+" "+styles["color-"+this.webpart.props.textColor]+" "+styles["background-"+this.webpart.props.backgroundColor]+" "+styles["border-"+this.webpart.props.borderColor]}>
+                      className={styles["box"]+" "+styles["color-"+this.webpart.props.textColor]+" "+styles["background-"+this.webpart.props.backgroundColor]+" "+styles["border-"+this.webpart.props.borderColor]}>
+                  <a href={item.URL}>
                   <div className={styles["fontawesome"] + " " + styles["icon"]}>
                       <i className={"fa "+item.Icon+" fa-3x "+styles["color"]+" "+styles[this.webpart.props.textColor]}></i>
                   </div>
-                  <div className={styles["cell-divider"]+" "+styles[this.webpart.props.borderColor]}></div>
-                  <div className={styles["title"]+" "+styles["color"]+" "+styles[this.webpart.props.textColor]}>{item.Title}</div>
-                  <div className={styles["description"]+" "+styles["color"]+" "+styles[this.webpart.props.textColor]}>{item.Description}</div>     
+                    <div className={styles["cell-divider"]+" "+styles[this.webpart.props.borderColor]}></div>
+                    <div className={styles["title"]+" "+styles["color"]+" "+styles[this.webpart.props.textColor]}>{item.Title}</div>
+                    <div className={styles["description"]+" "+styles["color"]+" "+styles[this.webpart.props.textColor]}>{item.Description}</div>     
+                  </a>
                   {isEditMode &&
                       <div className={styles["editControls"]}>
                           <DefaultButton iconProps={{iconName:"Clear"}} onClick={(e) => {e.stopPropagation();e.preventDefault();this.webpart.deleteBox.call(this.webpart,e);}} className={styles["right-button"]}/>
@@ -65,7 +69,7 @@ export default class BasicTileLayout implements IHubLinksLayout{
                           <i className={"ms-Icon ms-Icon--Move "+styles["left-button"]} onClick={(e) => {e.preventDefault();e.stopPropagation();}} id="drag-handle" aria-hidden="true"></i>
                       </div>
                     }       
-                </a>
+                </div>
               );
             })
         }

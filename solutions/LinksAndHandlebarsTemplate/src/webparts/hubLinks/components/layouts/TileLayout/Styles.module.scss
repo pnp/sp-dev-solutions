@@ -43,6 +43,13 @@
     & .box {
         display: block;
         border: 1px solid;
+        & a {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
         &.border-themePrimary {
             border-color: "[theme: themePrimary, default: #007cc5]";
         }
@@ -80,22 +87,46 @@
             background-color: "[theme: white, default: #FFFFFF]";
         }
         &.color-themePrimary {
-            color: "[theme: themePrimary, default: #007cc5]";
+            & a,
+            & a:hover,
+            & a:visited {
+                color: "[theme: themePrimary, default: #007cc5]";
+            }
         }
         &.color-themeSecondary {
-            color: "[theme: themeSecondary, default: #007cc5]";
+            & a,
+            & a:hover,
+            & a:visited {
+                color: "[theme: themeSecondary, default: #007cc5]";
+            }
         }
         &.color-themeTertiary {
-            color: "[theme: themeTertiary, default: #007cc5]";
+            & a,
+            & a:hover,
+            & a:visited {
+                color: "[theme: themeTertiary, default: #007cc5]";
+            }
         }
         &.color-primaryText {
-            color: "[theme: primaryText, default: #333333]";
+            & a,
+            & a:hover,
+            & a:visited {
+                color: "[theme: primaryText, default: #333333]";
+            }
         }
         &.color-black {
-            color: "[theme: black, default: #333333]";
+            & a,
+            & a:hover,
+            & a:visited {
+                color: "[theme: black, default: #333333]";
+            }
         }
         &.color-white {
-            color: "[theme: white, default: #FFFFFF]";
+            & a,
+            & a:hover,
+            & a:visited {
+                color: "[theme: white, default: #FFFFFF]";
+            }
         }
         & .editControls {
             display: none;
