@@ -21,7 +21,7 @@ import { IHandlebarTemplateDisplayWebPartProps } from './IHandlebarTemplateDispl
 import { PropertyFieldCamlQueryFieldMapping, PropertyFieldCamlQueryOrderBy } from "../../propertyPane/propertyFieldCamlQueryFieldMapping/PropertyFieldCamlQueryFieldMapping";
 import QueryStringParser from "../../utilities/urlparser/queryStringParser";
 import pnp, { SearchQueryBuilder, Sort, SearchProperty } from 'sp-pnp-js';
-import { PropertyPaneSearch } from '../../propertyPane/propertyPaneSearch/PropertyFieldSearch';
+import { PropertyPaneSearch } from '../../propertyPane/PropertyPaneSearch/PropertyFieldSearch';
 import { WebPartLogger } from '../../utilities/webpartlogger/usagelogger';
 
 export default class HandlebarTemplateDisplayWebPart extends BaseClientSideWebPart<IHandlebarTemplateDisplayWebPartProps> {
