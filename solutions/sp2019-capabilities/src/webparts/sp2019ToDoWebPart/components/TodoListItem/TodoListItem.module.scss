@@ -1,0 +1,34 @@
+@import "~@microsoft/sp-office-ui-fabric-core/dist/sass/SPFabricCore.scss";
+
+.todoListItem {
+    border: 1px $ms-color-neutralTertiaryAlt solid;
+    margin-top: -1px;
+
+    .itemTaskRow {
+      padding: 16px 20px 8px 20px;
+
+      @media (max-width: 600px) {
+        padding: 8px 20px 8px 4px;
+      }
+
+      .deleteButton {
+        &:hover, &:focus {
+          color: $ms-color-themePrimary;
+        }
+      }
+
+      .checkbox {
+        text-align: left;
+
+        :global .ms-Label {
+          color: $ms-color-neutralPrimary;
+          font-size: 18px;
+          padding: 0 0 0 36px;
+        }
+      }
+
+      &.isCompleted {
+        background-color: $ms-color-neutralLighter;
+      }
+    }
+  }

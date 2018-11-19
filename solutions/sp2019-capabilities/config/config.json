@@ -1,0 +1,27 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/config.2.0.schema.json",
+  "version": "2.0",
+  "bundles": {
+    "footer-application-customizer": {
+      "components": [
+        {
+          "entrypoint": "./lib/extensions/footer/FooterApplicationCustomizer.js",
+          "manifest": "./src/extensions/footer/FooterApplicationCustomizer.manifest.json"
+        }
+      ]
+    },
+    "sp-2019-to-do-web-part-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/sp2019ToDoWebPart/Sp2019ToDoWebPartWebPart.js",
+          "manifest": "./src/webparts/sp2019ToDoWebPart/Sp2019ToDoWebPartWebPart.manifest.json"
+        }
+      ]
+    }
+  },
+  "externals": {},
+  "localizedResources": {
+    "FooterApplicationCustomizerStrings": "lib/extensions/footer/loc/{locale}.js",
+    "Sp2019ToDoWebPartWebPartStrings": "lib/webparts/sp2019ToDoWebPart/loc/{locale}.js"
+  }
+}

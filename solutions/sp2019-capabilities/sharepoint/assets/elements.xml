@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Elements xmlns="http://schemas.microsoft.com/sharepoint/">
+    <CustomAction
+        Title="Footer"
+        Location="ClientSideExtension.ApplicationCustomizer"
+        ClientSideComponentId="95db33a0-c2e7-42d7-b4fb-6adb1c7018f3"
+        ClientSideComponentProperties="{
+  &quot;links&quot;: [
+    {
+      &quot;icon&quot;: &quot;Home&quot;,
+      &quot;title&quot;: &quot;Home&quot;,
+      &quot;url&quot;: &quot;/&quot;
+    },
+    {
+      &quot;icon&quot;: &quot;Headset&quot;,
+      &quot;title&quot;: &quot;Support&quot;,
+      &quot;url&quot;: &quot;/sites/support&quot;
+    },
+    {
+      &quot;icon&quot;: &quot;Megaphone&quot;,
+      &quot;title&quot;: &quot;Announcements&quot;,
+      &quot;url&quot;: &quot;/sites/marcom/sitepages/announcements.aspx&quot;
+    }
+  ],
+  &quot;label&quot;: &quot;Contoso - Sharing is caring&quot;
+}">
+    </CustomAction>
+</Elements>
