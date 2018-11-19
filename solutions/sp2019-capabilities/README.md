@@ -49,7 +49,7 @@ This solution is compatible with SharePoint Server 2019 and SharePoint Online.
 
 Version|Date|Comments
 -------|----|--------
-1.0.0|November 15, 2018|Updated to match v1.7 experience and tested in RTM
+1.0.0|November 19, 2018|Updated to match v1.7 experience and tested in RTM
 1.0.0|September 18, 2018|Initial release
 
 ## Disclaimer
