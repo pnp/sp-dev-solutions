@@ -1,0 +1,53 @@
+@import '~@microsoft/sp-office-ui-fabric-core/dist/sass/SPFabricCore.scss';
+
+.preview {
+  border-bottom: 1px solid $ms-color-neutralLight;
+  border-color: $ms-color-neutralLight;
+  position: relative;
+  background-color: $ms-color-neutralLighterAlt;
+  overflow: hidden;
+
+  &.previewIsFileList {
+    background-color: $ms-color-white;
+  }
+
+  .fileList {
+    padding: 16px 16px 0 16px;
+    list-style-type: none;
+    margin: 0;
+
+    li {
+      height: 16px;
+      line-height: 16px;
+      margin-bottom: 8px;
+      overflow: hidden;
+      position: relative;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      padding-left: 24px;
+
+      a {
+        font-size: 12px;
+        text-decoration: none;
+        color: $ms-color-neutralDark;
+
+        &:hover {
+          color: $ms-color-neutralDark;
+        }
+      }
+    }
+
+    .fileListIcon {
+      position: absolute;
+      top: 0;
+      left: 0;
+      border-radius: 50%;
+    }
+  }
+
+  .fileListMore {
+    padding: 0px 16px 8px 16px;
+    display: block;
+    font-size: 12px;
+  }
+}

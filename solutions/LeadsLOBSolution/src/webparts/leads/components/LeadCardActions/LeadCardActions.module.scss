@@ -1,0 +1,61 @@
+@import '~@microsoft/sp-office-ui-fabric-core/dist/sass/SPFabricCore.scss';
+
+.actions {
+  height: 34px;
+  padding: 4px 12px;
+  position: relative;
+
+  .action {
+    color: $ms-color-neutralSecondary;
+    cursor: pointer;
+    float: left;
+    margin-right: 4px;
+
+    :global {
+      .ms-Button {
+        font-size: 16px;
+        height: 34px;
+        width: 34px
+      }
+
+      .ms-Button:hover .ms-Button-icon {
+        color: #1174c3;
+        cursor: pointer;
+      }
+    }
+  }
+
+  .metrics {
+    line-height: 34px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+
+    .metric {
+      margin-left: 8px;      
+
+      :global {
+        .ms-Icon {
+          font-size: 16px;
+          vertical-align: top;
+        }
+      }
+
+      &.change {
+        &.up {
+          color: $ms-color-green;
+        }
+
+        &.down {
+          color: $ms-color-red;
+        }
+
+        :global {
+          .ms-Icon {
+            margin-right: -4px;
+          }
+        }
+      }
+    }
+  }
+}
