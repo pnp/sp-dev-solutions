@@ -1,13 +1,14 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
   "solution": {
-    "name": "Leads-LOB-Solution",
-    "id": "961a3500-b178-4dd9-94e1-3d36a8eb4802",
+    "name": "leads-lob-client-side-solution",
+    "id": "2dc4f7fe-cd2e-4f2a-8a92-86acc494e909",
     "version": "1.0.0.0",
     "includeClientSideAssets": true,
-    "skipFeatureDeployment": true
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false
   },
   "paths": {
-    "zippedPackage": "solution/leads.sppkg"
+    "zippedPackage": "solution/leads-lob.sppkg"
   }
 }

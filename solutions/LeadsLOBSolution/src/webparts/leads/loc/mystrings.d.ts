@@ -1,6 +1,6 @@
 declare interface ILeadsWebPartStrings {
   PropertyPaneDescription: string;
-  ConnectionGroupName: string;
+  BasicGroupName: string;
   DescriptionFieldLabel: string;
 }
 

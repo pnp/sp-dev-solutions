@@ -1,6 +1,6 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/spfx/client-side-web-part-manifest.schema.json",
-  "id": "9f858526-d600-482a-973d-1f09dcb41712",
+  "id": "e81a1b68-686e-412f-90ac-cb80f2544398",
   "alias": "LeadsWebPart",
   "componentType": "WebPart",
 
@@ -15,9 +15,9 @@
 
   "preconfiguredEntries": [{
     "groupId": "5c03119e-3074-46fd-976b-c60198311f70", // Other
-    "group": { "default": "Other" },
+    "group": { "default": "LOB" },
     "title": { "default": "Leads" },
-    "description": { "default": "Company Leads coming from LOB system through Azure Function" },
+    "description": { "default": "Company Leads from the LOB system" },
     "officeFabricIconFontName": "DynamicSMBLogo",
     "properties": {
       "description": "Leads",

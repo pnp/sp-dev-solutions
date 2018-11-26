@@ -4,6 +4,7 @@ import { ILeadsProps, ILeadsState, LeadView } from '.';
 import { LeadComment, Lead, LeadCardActions, Person, LeadCardPreview } from '..';
 import { Dropdown } from 'office-ui-fabric-react/lib/Dropdown';
 import { Spinner, SpinnerSize } from 'office-ui-fabric-react/lib/Spinner';
+import { css } from 'office-ui-fabric-react/lib/Utilities';
 import { DocumentCard, DocumentCardTitle, DocumentCardActivity, DocumentCardLocation } from 'office-ui-fabric-react/lib/DocumentCard';
 import { ImageFit } from 'office-ui-fabric-react/lib/Image';
 import { Icon } from 'office-ui-fabric-react/lib/Icon';
@@ -12,7 +13,7 @@ import { Placeholder } from "@pnp/spfx-controls-react/lib/Placeholder";
 
 export class Leads extends React.Component<ILeadsProps, ILeadsState> {
   constructor() {
-    super();
+    super(null);
 
     this.state = {
       loading: false,
@@ -313,7 +314,7 @@ export class Leads extends React.Component<ILeadsProps, ILeadsState> {
     const { needsConfiguration } = this.props;
 
     if (needsConfiguration) {
-      return <div className={styles.leads}>
+      return <div className={css(styles.leads, 'ms-Fabric')}>
         <Placeholder
           iconName='Chart'
           iconText='Configure your environment'
@@ -322,7 +323,7 @@ export class Leads extends React.Component<ILeadsProps, ILeadsState> {
     }
 
     return (
-      <div className={styles.leads}>
+      <div className={css(styles.leads, 'ms-Fabric')}>
         {loading &&
           <Spinner label='Loading Leads...' size={SpinnerSize.large} />}
         {!loading &&

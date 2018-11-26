@@ -1,8 +1,8 @@
 {
   "$schema": "https://developer.microsoft.com/en-us/json-schemas/teams/v1.2/MicrosoftTeams.schema.json",
   "manifestVersion": "1.2",
-  "packageName": "Leads Management System",
-  "id": "9f858526-d611-482a-973d-1f09dcb41612",
+  "packageName": "Leads",
+  "id": "e81a1b68-686e-412f-90ac-cb80f2544398",
   "version": "0.1",
   "developer": {
     "name": "SPFx + Teams Dev",
@@ -14,8 +14,8 @@
     "short": "Leads"
   },
   "description": {
-    "short": "Company Leads coming from LOB system through Azure Function",
-    "full": "Company Leads coming from LOB system through Azure Function"
+    "short": "Company Leads from the LOB system",
+    "full": "Company Leads from the LOB system"
   },
   "icons": {
     "outline": "Leads20x20.png",
@@ -24,8 +24,8 @@
   "accentColor": "#004578",
   "configurableTabs": [
     {
-      "configurationUrl": "https://{teamSiteDomain}{teamSitePath}/_layouts/15/TeamsLogon.aspx?SPFX=true&dest={teamSitePath}/_layouts/15/teamshostedapp.aspx%3FopenPropertyPane=true%26teams%26componentId=9f858526-d600-482a-973d-1f09dcb41712",
-      "canUpdateConfiguration": true,
+      "configurationUrl": "https://{teamSiteDomain}{teamSitePath}/_layouts/15/TeamsLogon.aspx?SPFX=true&dest={teamSitePath}/_layouts/15/teamshostedapp.aspx%3FopenPropertyPane=true%26teams%26componentId=e81a1b68-686e-412f-90ac-cb80f2544398",
+      "canUpdateConfiguration": false,
       "scopes": [
         "team"
       ]
@@ -41,7 +41,7 @@
     "msft.spoppe.com"
   ],
   "webApplicationInfo": {
-    "resource": "https://contosodemosg.sharepoint.com",
+    "resource": "https://{teamSiteDomain}",
     "id": "00000003-0000-0ff1-ce00-000000000000"
   }
 }

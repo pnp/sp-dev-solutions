@@ -9,8 +9,9 @@ node_modules
 # Build generated files
 dist
 lib
+solution
 temp
-debug
+*.sppkg
 
 # Coverage directory used by tools like istanbul
 coverage
@@ -29,5 +30,3 @@ obj
 
 # Styles Generated Code
 *.scss.ts
-
-.npmrc

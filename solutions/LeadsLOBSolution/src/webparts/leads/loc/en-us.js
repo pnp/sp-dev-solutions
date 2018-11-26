@@ -1,7 +1,7 @@
 define([], function() {
   return {
-    "PropertyPaneDescription": "Leads web part configuration",
-    "ConnectionGroupName": "Connection",
+    "PropertyPaneDescription": "Description",
+    "BasicGroupName": "Group Name",
     "DescriptionFieldLabel": "Description Field"
   }
 });

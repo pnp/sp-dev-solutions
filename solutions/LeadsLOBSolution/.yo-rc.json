@@ -1,11 +1,13 @@
 {
   "@microsoft/generator-sharepoint": {
+    "plusBeta": true,
     "isCreatingSolution": true,
     "environment": "spo",
-    "version": "1.6.0-dk.3",
-    "libraryName": "leads",
-    "libraryId": "961a3500-b178-4dd9-94e1-3d36a8eb4802",
+    "version": "1.7.0",
+    "libraryName": "leads-lob",
+    "libraryId": "2dc4f7fe-cd2e-4f2a-8a92-86acc494e909",
     "packageManager": "npm",
+    "isDomainIsolated": false,
     "componentType": "webpart"
   }
 }

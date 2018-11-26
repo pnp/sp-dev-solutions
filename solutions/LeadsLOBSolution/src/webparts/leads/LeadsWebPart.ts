@@ -149,12 +149,12 @@ export default class LeadsWebPart extends BaseClientSideWebPart<ILeadsWebPartPro
       }
       else {
         this.needsConfiguration = true;
-        this.getApiUrl();
-      } 
+        this.getApiUrl(true);
+      }
     }
   }
 
-  private getApiUrl(): Promise<void> {
+  private getApiUrl(reRender: boolean = false): Promise<void> {
     return new Promise<void>((resolve: () => void, reject: (err: any) => void): void => {
       this.context.spHttpClient
         .get(`${this.context.pageContext.web.absoluteUrl}/_api/web/GetStorageEntity('LeadsApiUrl')`, SPHttpClient.configurations.v1)
@@ -164,6 +164,9 @@ export default class LeadsWebPart extends BaseClientSideWebPart<ILeadsWebPartPro
         .then((res) => {
           this.leadsApiUrl = res.Value;
           this.needsConfiguration = !this.leadsApiUrl;
+          if (reRender) {
+            this.render();
+          }
           resolve();
         }, (err: any): void => {
           reject(err);
