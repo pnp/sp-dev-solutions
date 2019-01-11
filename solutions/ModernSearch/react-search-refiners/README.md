@@ -312,4 +312,4 @@ This Web Part illustrates the following concepts on top of the SharePoint Framew
 - Integrate multiple Office UI Fabric components (DocumentCard, Panel, GroupedList, ...) to fit with the native Office 365 theme.
 - Use the React container component approach inspiring by the [react-todo-basic sample](https://github.com/SharePoint/sp-dev-fx-webparts/tree/master/samples/react-todo-basic).
 
-<img src="https://telemetry.sharepointpnp.com/sp-dev-fx-webparts/samples/react-search-refiners" />
+<img src="https://telemetry.sharepointpnp.com/sp-dev-solutions/ModernSearch/react-search-refiners" />
