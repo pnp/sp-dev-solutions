@@ -73,7 +73,8 @@ export default class SearchBoxWebPart extends BaseClientSideWebPart<ISearchBoxWe
         enableDebugMode: this.properties.enableDebugMode,
         enableNlpService: this.properties.enableNlpService,
         isStaging: this.properties.isStaging,
-        NlpService: this._nlpService
+        NlpService: this._nlpService,
+        placeholderText: this.properties.placeholderText,
       } as ISearchBoxContainerProps);
 
     ReactDom.render(element, this.domElement);
@@ -303,6 +304,10 @@ export default class SearchBoxWebPart extends BaseClientSideWebPart<ISearchBoxWe
       PropertyPaneHorizontalRule(),
       PropertyPaneCheckbox('searchInNewPage', {
         text: strings.SearchBoxSearchInNewPageLabel
+      }),
+      PropertyPaneHorizontalRule(),
+      PropertyPaneTextField('placeholderText', {
+        label: strings.SearchBoxPlaceholderTextLabel
       })
     ];
 

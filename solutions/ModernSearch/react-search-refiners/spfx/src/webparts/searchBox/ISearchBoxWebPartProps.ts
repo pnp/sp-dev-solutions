@@ -12,6 +12,8 @@ interface ISearchBoxWebPartProps {
     enableDebugMode: boolean;
     isStaging: boolean;
     defaultQueryKeywords: DynamicProperty<string>;
+    placeholderText: string;
+
 }
 
 export default ISearchBoxWebPartProps;
