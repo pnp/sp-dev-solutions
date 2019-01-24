@@ -21,7 +21,6 @@ define([], function() {
     "SearchBoxUseStagingEndpoint": "Use LUIS staging endpoint",
     "UrlNotResolvedErrorMessage": "URL '{0}' can't be resolved. Error: '{1}'.",
     "SearchBoxPlaceholderTextLabel": "Placeholder text in search box",
-    "SearchBoxAddSearchToHistoryLabel": "Add searches to browser history",
     "DynamicData": {
       "UseDynamicDataSourceLabel": "Use a dynamic data  source",
       "SearchQueryPropertyLabel": "Search query",

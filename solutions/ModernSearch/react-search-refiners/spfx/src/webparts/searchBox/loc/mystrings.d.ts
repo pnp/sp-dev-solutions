@@ -20,7 +20,6 @@ declare interface ISearchBoxWebPartStrings {
   SearchBoxUseDebugModeLabel: string;
   SearchBoxUseStagingEndpoint: string;
   SearchBoxPlaceholderTextLabel: string;
-  SearchBoxAddSearchToHistoryLabel: string;
   UrlNotResolvedErrorMessage: string;
   DynamicData: {
     UseDynamicDataSourceLabel: string;
