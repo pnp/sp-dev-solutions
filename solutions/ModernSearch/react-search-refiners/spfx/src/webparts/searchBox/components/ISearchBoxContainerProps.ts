@@ -16,4 +16,5 @@ export interface ISearchBoxContainerProps {
     enableDebugMode: boolean;
     isStaging: boolean;
     placeholderText: string;
+    domElement: HTMLElement;
 }

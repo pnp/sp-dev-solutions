@@ -104,16 +104,23 @@ interface ISearchResultsContainerProps {
 
     /** The configured result types */
     resultTypes: ISearchResultType[];
+
     /**
      * The name of the CustomAction that should render this data. 
      */
     rendererId: string;
+
     /**
      * The data passing service for custom action renderers
      */
     resultService: IResultService;
     useCodeRenderer: boolean;
     customTemplateFieldValues:  ICustomTemplateFieldValue[];
+
+    /**
+     * Web Parts localized strings
+     */
+    strings: ISearchResultsWebPartStrings;
 }
 
 export default ISearchResultsContainerProps;
