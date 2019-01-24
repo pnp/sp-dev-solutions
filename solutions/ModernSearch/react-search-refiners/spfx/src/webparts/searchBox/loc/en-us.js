@@ -20,6 +20,7 @@ define([], function() {
     "SearchBoxUseDebugModeLabel": "Enable debug mode",
     "SearchBoxUseStagingEndpoint": "Use LUIS staging endpoint",
     "UrlNotResolvedErrorMessage": "URL '{0}' can't be resolved. Error: '{1}'.",
+    "SearchBoxPlaceholderTextLabel": "Placeholder text in search box",
     "DynamicData": {
       "UseDynamicDataSourceLabel": "Use a dynamic data  source",
       "SearchQueryPropertyLabel": "Search query",
