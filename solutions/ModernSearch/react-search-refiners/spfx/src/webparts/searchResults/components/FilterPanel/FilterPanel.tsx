@@ -136,8 +136,7 @@ export default class FilterPanel extends React.Component<IFilterPanelProps, IFil
                 }
                 <Panel
                         isOpen={this.state.showPanel}
-                        type={PanelType.custom}
-                        customWidth="450px"
+                        type={PanelType.medium}
                         isLightDismiss={true}
                         onDismiss={this._onClosePanel}
                         headerText={strings.FilterPanelTitle}
