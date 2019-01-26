@@ -19,6 +19,7 @@ define([], function() {
       "SearchBoxUseDebugModeLabel": "Activer le mode déboggage",
       "SearchBoxUseStagingEndpoint": "Utiliser le point de terminaison d'évaluation LUIS",
       "UrlNotResolvedErrorMessage": "L'URL '{0}' n'a pas pu être resolue. Erreur: '{1}'.",
+      "SearchBoxPlaceholderTextLabel": "Placeholder texte dans la zone de recherche",
       "DynamicData": {
         "UseDynamicDataSourceLabel": "Utiliser une source de données dynamique",
         "SearchQueryPropertyLabel": "Requête de recherche",
