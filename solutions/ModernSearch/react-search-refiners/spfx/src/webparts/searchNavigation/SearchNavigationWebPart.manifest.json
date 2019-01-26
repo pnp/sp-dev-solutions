@@ -1,0 +1,21 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx/client-side-web-part-manifest.schema.json",
+  "id": "cc39324a-0913-4a5b-b77f-0b6ade7646f6",
+  "alias": "SearchNavigationWebPart",
+  "componentType": "WebPart",
+
+  "version": "*",
+  "manifestVersion": 2,
+
+  "requiresCustomScript": false,
+
+  "preconfiguredEntries": [{
+    "groupId": "5c03119e-3074-46fd-976b-c60198311f70",
+    "group": { "default": "Other" },
+    "title": { "default": "SearchNavigation" },
+    "description": { "default": "SearchNavigation description" },
+    "officeFabricIconFontName": "Page",
+    "properties": {
+    }
+  }]
+}
