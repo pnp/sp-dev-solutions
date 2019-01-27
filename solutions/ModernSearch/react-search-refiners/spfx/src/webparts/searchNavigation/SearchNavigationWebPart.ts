@@ -39,14 +39,11 @@ export interface INavigationNodeProps {
 export default class SearchNavigationWebPart extends BaseClientSideWebPart<ISearchNavigationWebPartProps> {
 
     public render(): void {
-        console.log(this.properties);
-        let dataSourceValue;
+        l et dataSourceValue;
         let source;
         if (this.properties && this.properties.queryKeywords) {
             source = this.properties.queryKeywords.tryGetSource();
         }
-        console.log(this.properties);
-
         if (!source && this.properties.sourceId) {
             source = this.context.dynamicDataProvider.tryGetSource(this.properties.sourceId);
 
@@ -55,7 +52,9 @@ export default class SearchNavigationWebPart extends BaseClientSideWebPart<ISear
             }
 
         } else {
-            dataSourceValue = this.properties.queryKeywords.tryGetValue();
+            if(this.properties.queryKeywords) {
+                dataSourceValue = this.properties.queryKeywords.tryGetValue();
+            }
         }
         const element: React.ReactElement<ISearchNavigationProps> = React.createElement(
             SearchNavigation,
@@ -85,28 +84,6 @@ export default class SearchNavigationWebPart extends BaseClientSideWebPart<ISear
 
     protected get dataVersion(): Version {
         return Version.parse('1.0');
-    }
-
-    protected onBeforeSerialize() {
-        this._saveDataSourceInfo();
-        super.onBeforeSerialize();
-    }
-
-    /**
-    * Save the useful information for the connected data source. 
-    * They will be used to get the value of the dynamic property if this one fails.
-    */
-    private _saveDataSourceInfo() {
-
-        if (this.properties.queryKeywords.reference) {
-            this.properties.sourceId = this.properties.queryKeywords["_reference"]._sourceId;
-            this.properties.propertyId = this.properties.queryKeywords["_reference"]._property;
-            this.properties.propertyPath = this.properties.queryKeywords["_reference"]._propertyPath;
-        } else {
-            this.properties.sourceId = null;
-            this.properties.propertyId = null;
-            this.properties.propertyPath = null;
-        }
     }
 
     protected getPropertyPaneConfiguration(): IPropertyPaneConfiguration {
