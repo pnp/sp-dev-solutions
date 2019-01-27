@@ -12,9 +12,9 @@
   "preconfiguredEntries": [{
     "groupId": "5c03119e-3074-46fd-976b-c60198311f70",
     "group": { "default": "Other" },
-    "title": { "default": "SearchNavigation" },
+    "title": { "default": "Search Navigation" },
     "description": { "default": "SearchNavigation description" },
-    "officeFabricIconFontName": "Page",
+    "officeFabricIconFontName": "SearchAndApps",
     "properties": {
     }
   }]
