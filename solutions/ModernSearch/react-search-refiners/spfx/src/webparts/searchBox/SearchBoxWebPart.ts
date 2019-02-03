@@ -95,28 +95,48 @@ export default class SearchBoxWebPart extends BaseClientSideWebPart<ISearchBoxWe
   }
 
   /**
+   * Returns the friendly annoted values for the property. This info will be used by default SPFx dynamic data property pane fields.
+   * @param propertyId the property id
+   */
+  public getAnnotatedPropertyValue(propertyId: string) {
+
+      switch (propertyId) {
+
+          case 'searchQuery':
+          
+              const annotatedPropertyValue = {
+                  sampleValue: {
+                      'rawInputValue': "*",
+                      'enhancedQuery': '(rawQuery) XRANK(cb=500) owsTaxIdrawQuery:5eb0b270-f8ce-42e9-866f-73b1466a26ac',
+                  },
+                  metadata: {
+                      'rawInputValue': { title: strings.DynamicData.RawInputValuePropertyLabel},
+                      'enhancedQuery': { title: strings.DynamicData.EnhancedQueryPropertyLabel },
+                  }
+              };
+
+              return annotatedPropertyValue;
+
+          default:
+              throw new Error('Bad property id');
+      }
+  }
+
+  /**
    * Return the current value of the specified dynamic data set
    * @param propertyId ID of the dynamic data set to retrieve the value for
    */
-  public getPropertyValue(propertyId: string): any {
-
+  public getPropertyValue(propertyId: string) {
+        
     switch (propertyId) {
-      case 'searchQuery':
 
-          let property = {
-            [strings.DynamicData.RawInputValuePropertyLabel]: this._searchQuery.rawInputValue
-          };
+        case 'searchQuery':
+            return this._searchQuery;
 
-          if (this.properties.enableNlpService && this.properties.NlpServiceUrl) {
-            property[strings.DynamicData.EnhancedQueryPropertyLabel] = this._searchQuery.enhancedQuery;
-          }
-
-          return property;
-
-      default:
-          throw new Error('Bad property id');
+        default:
+            throw new Error('Bad property id');
     }
-  }
+}
 
   protected onInit(): Promise<void> {
 
@@ -260,7 +280,7 @@ export default class SearchBoxWebPart extends BaseClientSideWebPart<ISearchBoxWe
     };
   }
 
-    /**
+  /**
    * Determines the group fields for the search query options inside the property pane
    */
   private _getSearchQueryFields(): IPropertyPaneField<any>[] {

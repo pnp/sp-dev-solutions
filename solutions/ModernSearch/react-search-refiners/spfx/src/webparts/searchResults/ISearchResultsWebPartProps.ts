@@ -31,4 +31,5 @@ export interface ISearchResultsWebPartProps {
     propertyPath: string;
     rendererId: string;
     customTemplateFieldValues: ICustomTemplateFieldValue[];
+    enableLocalization: boolean;
 }
