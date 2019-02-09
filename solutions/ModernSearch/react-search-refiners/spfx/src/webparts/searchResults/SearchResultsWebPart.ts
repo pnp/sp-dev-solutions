@@ -98,7 +98,8 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
 
         let source = this.properties.queryKeywords.tryGetSource();
 
-        // Try to get the source if a source id is present
+        // Try to get the source if a source ID is present
+        // We need to do this check to avoid timing issues regarding data sources reconenction
         if (!source && this.properties.sourceId) {
             source = this.context.dynamicDataProvider.tryGetSource(this.properties.sourceId);
 
@@ -148,6 +149,7 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
                 customTemplateFieldValues: this.properties.customTemplateFieldValues,
                 rendererId: this.properties.selectedLayout as any,
                 resultService: this._resultService,
+                enableLocalization: this.properties.enableLocalization
             } as ISearchResultsContainerProps
         );
 
@@ -369,11 +371,28 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
 
     protected async onPropertyPaneFieldChanged(propertyPath: string) {
 
+        if (propertyPath.localeCompare('queryKeywords') === 0) {
+
+            // Update data source information
+            this._saveDataSourceInfo();
+        }
+
         if (!this.properties.useDefaultSearchQuery) {
             this.properties.defaultSearchQuery = '';
         }
 
-        if (propertyPath === 'selectedLayout') {
+        if (this.properties.enableLocalization) {
+
+            let udpatedProperties: string[] = this.properties.selectedProperties.split(',');
+            if (udpatedProperties.indexOf('UniqueID') === -1) {
+                udpatedProperties.push('UniqueID');
+            }
+
+            // Add automatically the UniqueID managed property for subsequent queries
+            this.properties.selectedProperties = udpatedProperties.join(',');
+        }
+
+        if (propertyPath.localeCompare('selectedLayout') === 0) {
             // Refresh setting the right template for the property pane
             if (!this.codeRendererIsSelected()) {
                 await this._getTemplateContent();
@@ -386,7 +405,7 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
         }
 
         // Detect if the layout has been changed to custom...
-        if (propertyPath === 'inlineTemplateText') {
+        if (propertyPath.localeCompare('inlineTemplateText') === 0) {
 
             // Automatically switch the option to 'Custom' if a default template has been edited
             // (meaning the user started from a the list or tiles template)
@@ -403,18 +422,13 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
         await this.loadPropertyPaneResources();
     }
 
-    protected onBeforeSerialize() {
-        this._saveDataSourceInfo();
-        super.onBeforeSerialize();
-    }
-
     /**
     * Save the useful information for the connected data source. 
     * They will be used to get the value of the dynamic property if this one fails.
     */
     private _saveDataSourceInfo() {
 
-        if (this.properties.queryKeywords.reference) {
+        if (this.properties.queryKeywords.tryGetSource()) {
             this.properties.sourceId = this.properties.queryKeywords["_reference"]._sourceId;
             this.properties.propertyId = this.properties.queryKeywords["_reference"]._property;
             this.properties.propertyPath = this.properties.queryKeywords["_reference"]._propertyPath;
@@ -606,6 +620,7 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
             PropertyFieldCollectionData('sortList', {
                 manageBtnLabel: strings.Sort.EditSortLabel,
                 key: 'sortList',
+                enableSorting: true,
                 panelHeader: strings.Sort.EditSortLabel,
                 panelDescription: strings.Sort.SortListDescription,
                 label: strings.Sort.SortPropertyPaneFieldLabel,
@@ -639,6 +654,7 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
             PropertyFieldCollectionData('sortableFields', {
                 manageBtnLabel: strings.Sort.EditSortableFieldsLabel,
                 key: 'sortableFields',
+                enableSorting: true,
                 panelHeader: strings.Sort.EditSortableFieldsLabel,
                 panelDescription: strings.Sort.SortableFieldsDescription,
                 label: strings.Sort.SortableFieldsPropertyPaneField,
@@ -673,6 +689,7 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
             PropertyFieldCollectionData('refiners', {
                 manageBtnLabel: strings.Refiners.EditRefinersLabel,
                 key: 'refiners',
+                enableSorting: true,
                 panelHeader: strings.Refiners.EditRefinersLabel,
                 panelDescription: strings.Refiners.RefinersFieldDescription,
                 label: strings.Refiners.RefinersFieldLabel,
@@ -699,6 +716,12 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
                 step: 1,
                 value: 50,
             }),
+            PropertyPaneToggle('enableLocalization', {
+                checked: this.properties.enableLocalization,
+                label: strings.EnableLocalizationLabel,
+                onText: strings.EnableLocalizationOnLabel,
+                offText: strings.EnableLocalizationOffLabel
+            })
         ];
 
         return searchSettingsFields;
@@ -809,8 +832,6 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
             key: ResultsLayoutOption.Custom,
         });
 
-
-
         const canEditTemplate = this.properties.externalTemplateUrl && this.properties.selectedLayout === ResultsLayoutOption.Custom ? false : true;
 
         let dialogTextFieldValue;
@@ -853,7 +874,6 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
                 options: layoutOptions
             }),
         ];
-        console.log(stylingFields);
         if (!this.codeRendererIsSelected()) {
             stylingFields.push(
                 this._propertyFieldCodeEditor('inlineTemplateText', {

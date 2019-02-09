@@ -7,6 +7,9 @@ declare interface ISearchResultsWebPartStrings {
     SelectedPropertiesFieldLabel: string;
     SelectedPropertiesFieldDescription: string;
     LoadingMessage: string;
+    EnableLocalizationLabel: string;
+    EnableLocalizationOnLabel: string;
+    EnableLocalizationOffLabel: string;
     MaxResultsCount: string;
     NoResultMessage: string;
     SortableFieldsLabel: string;

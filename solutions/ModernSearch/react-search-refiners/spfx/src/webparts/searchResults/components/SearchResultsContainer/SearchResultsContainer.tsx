@@ -6,7 +6,7 @@ import { Spinner, SpinnerSize } from 'office-ui-fabric-react/lib/Spinner';
 import { Shimmer, ShimmerElementType as ElemType, ShimmerElementsGroup } from 'office-ui-fabric-react/lib/Shimmer';
 import { Logger, LogLevel } from '@pnp/logging';
 import * as strings from 'SearchResultsWebPartStrings';
-import { IRefinementFilter, IRefinementValue, IRefinementResult } from '../../../../models/ISearchResult';
+import { IRefinementFilter, IRefinementValue, IRefinementResult, ISearchResult } from '../../../../models/ISearchResult';
 import Paging from '../Paging/Paging';
 import { Overlay } from 'office-ui-fabric-react/lib/Overlay';
 import { DisplayMode } from '@microsoft/sp-core-library';
@@ -18,7 +18,9 @@ import { SortDirection } from "@pnp/sp";
 import { ITermData, ITerm } from '@pnp/sp-taxonomy';
 import LocalizationHelper from '../../../../helpers/LocalizationHelper';
 import { Text } from '@microsoft/sp-core-library';
-
+import update from 'immutability-helper';
+import { ILocalizableSearchResultProperty, ILocalizableSearchResult } from '../../../../models/ILocalizableSearchResults';
+import * as _ from '@microsoft/sp-lodash-subset';
 
 declare var System: any;
 let FilterPanel = null;
@@ -193,9 +195,9 @@ export default class SearchResultsContainer extends React.Component<ISearchConta
                 const refinerManagedProperties = this.props.refiners.map(e => { return e.refinerName ;}).join(',');
 
                 const searchResults = await this.props.searchService.search(this.props.queryKeywords, refinerManagedProperties, this.state.selectedFilters, this.state.currentPage);
-                const localizedFilters = await this._getLocalizedFilters(searchResults.RefinementResults);
-
-                if (localizedFilters && localizedFilters.length > 0) {
+ 
+                // For performance purposes, only load the filter panel when there are refiners
+                if (searchResults.RefinementResults && searchResults.RefinementResults.length > 0) {
                     const filterPanelComponent = await import(
                         /* webpackChunkName: 'search-filterpanel' */
                         '../FilterPanel'
@@ -203,10 +205,19 @@ export default class SearchResultsContainer extends React.Component<ISearchConta
                     FilterPanel = filterPanelComponent.FilterPanel;
                 }
 
+                // Translates taxonomy refiners and result values by using terms ID
+                if (this.props.enableLocalization) {
+                    const localizedFilters = await this._getLocalizedFilters(searchResults.RefinementResults);
+                    searchResults.RefinementResults = localizedFilters;
+
+                    const localizedResults = await this._getLocalizedMetadata(searchResults.RelevantResults);
+                    searchResults.RelevantResults = localizedResults;
+                }
+                
                 this.setState({
                     results: searchResults,
                     resultCount: searchResults.TotalRows,
-                    availableFilters: localizedFilters,
+                    availableFilters: searchResults.RefinementResults,
                     areResultsLoading: false,
                     lastQuery: this.props.queryKeywords + this.props.searchService.queryTemplate + this.props.selectedProperties.join(',')
                 });
@@ -243,7 +254,8 @@ export default class SearchResultsContainer extends React.Component<ISearchConta
             || this.state.lastQuery !== query
             || this.props.resultSourceId !== nextProps.resultSourceId
             || this.props.queryKeywords !== nextProps.queryKeywords
-            || this.props.enableQueryRules !== nextProps.enableQueryRules) {
+            || this.props.enableQueryRules !== nextProps.enableQueryRules
+            || this.props.enableLocalization !== nextProps.enableLocalization) {
 
             // Don't perform search is there is no keywords
             if (nextProps.queryKeywords) {
@@ -265,9 +277,8 @@ export default class SearchResultsContainer extends React.Component<ISearchConta
 
                     // We reset the page number and refinement filters
                     const searchResults = await this.props.searchService.search(nextProps.queryKeywords, refinerManagedProperties, [], 1);
-                    const localizedFilters = await this._getLocalizedFilters(searchResults.RefinementResults);
-
-                    if (FilterPanel === null && localizedFilters && localizedFilters.length > 0) {
+                    
+                    if (FilterPanel === null && searchResults.RefinementResults && searchResults.RefinementResults.length > 0) {
                         const filterPanelComponent = await import(
                             /* webpackChunkName: 'search-filterpanel' */
                             '../FilterPanel'
@@ -275,10 +286,19 @@ export default class SearchResultsContainer extends React.Component<ISearchConta
                         FilterPanel = filterPanelComponent.FilterPanel;
                     }
 
+                    // Translates taxonomy refiners and result values by using terms ID
+                    if (nextProps.enableLocalization) {
+                        const localizedFilters = await this._getLocalizedFilters(searchResults.RefinementResults);
+                        searchResults.RefinementResults = localizedFilters;
+
+                        const localizedResults = await this._getLocalizedMetadata(searchResults.RelevantResults);
+                        searchResults.RelevantResults = localizedResults;
+                    }
+
                     this.setState({
                         results: searchResults,
                         resultCount: searchResults.TotalRows,
-                        availableFilters: localizedFilters,
+                        availableFilters: searchResults.RefinementResults,
                         areResultsLoading: false,
                         currentPage: 1,
                         lastQuery: query
@@ -341,13 +361,20 @@ export default class SearchResultsContainer extends React.Component<ISearchConta
 
         const searchResults = await
         this.props.searchService.search(this.props.queryKeywords, refinerManagedProperties, newFilters, 1);
-        const localizedFilters = await
-        this._getLocalizedFilters(searchResults.RefinementResults);
+
+        // Translates taxonomy refiners and result values by using terms ID
+        if (this.props.enableLocalization) {
+            const localizedFilters = await this._getLocalizedFilters(searchResults.RefinementResults);
+            searchResults.RefinementResults = localizedFilters;
+
+            const localizedResults = await this._getLocalizedMetadata(searchResults.RelevantResults);
+            searchResults.RelevantResults = localizedResults;
+        }
 
         this.setState({
             resultCount: searchResults.TotalRows,
             results: searchResults,
-            availableFilters: localizedFilters,
+            availableFilters: searchResults.RefinementResults,
             areResultsLoading: false,
         });
         this.handleResultUpdateBroadCast(searchResults);
@@ -410,16 +437,24 @@ export default class SearchResultsContainer extends React.Component<ISearchConta
             areResultsLoading: true,
         });
 
+        // Set the focus at the top of the component
         this._searchWpRef.focus();
 
         const refinerManagedProperties = this.props.refiners.map(e => { return e.refinerName ;}).join(',');
 
         const searchResults = await this.props.searchService.search(this.props.queryKeywords, refinerManagedProperties, this.state.selectedFilters, pageNumber);
 
+        // Translates taxonomy refiners and result values by using terms ID
+        if (this.props.enableLocalization) {
+            const localizedResults = await this._getLocalizedMetadata(searchResults.RelevantResults);
+            searchResults.RelevantResults = localizedResults;
+        }
+
         this.setState({
             results: searchResults,
             areResultsLoading: false,
         });
+        
         this.handleResultUpdateBroadCast(searchResults);
     }
 
@@ -540,6 +575,149 @@ export default class SearchResultsContainer extends React.Component<ISearchConta
         }
 
         return updatedFilters;
+    }
+
+    /**
+     * Translates all result taxonomy values (owsTaxId...) according the current culture
+     * @param rawResults The raw search results to translate coming from SharePoint search
+     */
+    private async _getLocalizedMetadata(rawResults: ISearchResult[]): Promise<ISearchResult[]> {
+
+        // Get the current lcid according to current page language
+        const lcid = LocalizationHelper.getLocaleId(this.props.context.pageContext.cultureInfo.currentUICultureName);
+
+        let resultsToLocalize: ILocalizableSearchResult[] = [];
+
+        let updatedResults: ISearchResult[] = [];
+        let localizedTerms = [];
+
+        // Step #1: identify all taxonomy like properties and gather corresponding term ids for such properties.
+        rawResults.map((result) => {
+
+            let properties = [];
+
+            Object.keys(result).map((value) => {
+
+                // Check if the value seems to be a taxonomy term value (single or multi)
+                const isTerm = /L0\|#.?([0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12})/.test(result[value]);
+
+                if (isTerm) {
+                    
+                    let termIds = [];
+                    
+                    const regex = /L0\|#.?([0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12})/g;
+                    const str = result[value];
+                    let m;
+
+                    while ((m = regex.exec(str)) !== null) {
+                        // This is necessary to avoid infinite loops with zero-width matches
+                        if (m.index === regex.lastIndex) {
+                            regex.lastIndex++;
+                        }
+
+                        termIds.push(m[1]); 
+                    }
+
+                    properties.push({
+                        propertyName: value,
+                        termIds: termIds
+                    } as ILocalizableSearchResultProperty);
+                }
+            });
+
+            // We use the 'UniqueID' as an unique identifier since this property is always present in the metadata
+            if (properties.length > 0) {
+                resultsToLocalize.push({
+                    uniqueIdentifier: result.UniqueID,
+                    properties: properties
+                });
+            }
+        });
+
+        // Step #2: flatten and concatenate all terms ids to retrieve them as a single query using the REST endpoint.
+        if (resultsToLocalize.length > 0) {
+
+            let allTerms: string[] = [];
+
+            // Concat all term ids from all results to make a single query
+            resultsToLocalize.map((result) => { 
+                result.properties.map((p) => {
+                    allTerms = allTerms.concat(p.termIds);
+                });
+            });
+
+            // Remove duplicates
+            allTerms = _.uniq<string>(allTerms);
+
+            // Get the terms from taxonomy
+            // If a term doesn't exist anymore, it won't be retrieved by the API so the termValues count could be less than termsToLocalize count
+            const termValues = await this.props.taxonomyService.getTermsById(allTerms);
+
+            resultsToLocalize.map((resultToLocalize) => {
+
+                let updatedProperties: ILocalizableSearchResultProperty[] = [];
+
+                // Browse each proeprty of each result
+                resultToLocalize.properties.map(property => {
+
+                    let termLabels: string[] = [];
+
+                    // Check if the term has been retrieved from taxonomy (i.e. exists)
+                    const termsFromTaxonomy = termValues.filter((taxonomyTerm: ITerm & ITermData) => {
+                        const termIdFromTaxonomy = taxonomyTerm.Id.substring(taxonomyTerm.Id.indexOf('(') + 1, taxonomyTerm.Id.indexOf(')'));                                        
+                        return property.termIds.indexOf(termIdFromTaxonomy) !== -1;
+                    });
+
+                    if (termsFromTaxonomy.length > 0) {
+                        termsFromTaxonomy.map((taxonomyTerm: ITerm & ITermData) => {
+    
+                            // It supposes the 'Label' property has been selected in the underlying service call
+                            // A term always have a default label so the collection can't be empty
+                            const localizedLabel = taxonomyTerm["Labels"]._Child_Items_.filter((label: any) => {
+                                return label.Language === lcid && label.IsDefaultForLanguage;
+                            });
+    
+                            if (localizedLabel.length > 0) {
+                                // There is only one default label for a language 
+                                termLabels.push(localizedLabel[0].Value);
+                            }
+                        });
+
+                        updatedProperties.push({
+                            propertyName: property.propertyName,
+                            termLabels: termLabels
+                        });
+                    }                    
+                });
+
+                localizedTerms.push({
+                    uniqueIdentifier: resultToLocalize.uniqueIdentifier,
+                    properties: updatedProperties,
+                });
+            });
+
+             // Step #3: populate corresponding properties with term labels and returns new results
+             updatedResults = rawResults.map((result) => {
+
+                const existingResults = localizedTerms.filter((e) => {
+                    return e.uniqueIdentifier === result.UniqueID;
+                });
+
+                if (existingResults.length > 0) {
+                    
+                    existingResults[0].properties.map((res) => {
+                        result[res.propertyName] = res.termLabels.join(', ');
+                    });
+                }
+
+                return result;
+            });
+
+            return updatedResults;
+
+        } else {
+            return rawResults;
+        }
     }
 
     private _getShimmerElements(): JSX.Element {

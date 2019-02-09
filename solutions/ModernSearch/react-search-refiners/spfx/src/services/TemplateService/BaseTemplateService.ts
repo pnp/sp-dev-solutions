@@ -150,8 +150,8 @@ abstract class BaseTemplateService {
                                         <div class="${templateStyles.tags}">
                                             {{#if owstaxidmetadataalltagsinfo}}
                                                 <i class="ms-Icon ms-Icon--Tag" aria-hidden="true"></i>
-                                                {{#each (split owstaxidmetadataalltagsinfo ";") as |tag| }}                                                    
-                                                    <a href="#owstaxidmetadataalltagsinfo:{{getLabel tag}}">{{getLabel tag}}</a>
+                                                {{#each (split owstaxidmetadataalltagsinfo ",") as |tag| }}                                                    
+                                                    <a href="#owstaxidmetadataalltagsinfo:'{{trim tag}}'">{{tag}}</a>
                                                 {{/each}}
                                             {{/if}}
                                         </div>
@@ -172,10 +172,19 @@ abstract class BaseTemplateService {
                                     {{#if ServerRedirectedPreviewURL}}
                                         <div class="doc-container">
                                             <div class="img-container">
-                                                <img id="preview_{{@index}}" class="img-preview document-preview-item" src="{{ServerRedirectedPreviewURL}}" data-url="{{ServerRedirectedEmbedURL}}"/>
-                                                <div class="hover">
-                                                    <div class="${templateStyles.hoverIcon}"><i class="ms-Icon ms-Icon--ImageSearch" aria-hidden="true"></i></div>
-                                                </div>
+                                            {{#eq FileType 'pdf'}}
+                                                <!-- Documents from OneDrive sites can't be viewed directly due to SAMEORIGIN iframe restritions-->
+                                                {{#contains Path '-my.sharepoint'}}
+                                                    <img id="preview_{{@index}}" class="document-preview-item img-preview" width="120" src="{{ServerRedirectedPreviewURL}}" data-url="{{ServerRedirectedEmbedURL}}"/>
+                                                {{else}}
+                                                    <img id="preview_{{@index}}" class="document-preview-item img-preview" width="120" src="{{ServerRedirectedPreviewURL}}" data-url="{{Path}}"/>
+                                                {{/contains}}
+                                            {{else}}
+                                                <img id="preview_{{@index}}" class="document-preview-item img-preview" width="120" src="{{ServerRedirectedPreviewURL}}" data-url="{{ServerRedirectedEmbedURL}}"/>
+                                            {{/eq}}
+                                            <div class="hover">
+                                                <div class="${templateStyles.hoverIcon}"><i class="ms-Icon ms-Icon--ImageSearch" aria-hidden="true"></i></div>
+                                            </div>
                                             </div>
                                         </div>
                                     {{/if}}
@@ -392,19 +401,6 @@ abstract class BaseTemplateService {
                 result = uniq(array);
             }
             return result.length;
-        });
-
-        // Return the text label from amn'owstaxid_' type managed property 
-        // <p>{{getLabel "L0|#045686734-5215-4aad-bed7-8c3f0dbb61fc|Document"}}</p>
-        Handlebars.registerHelper("getLabel", (owsTaxIdValue: string) => {
-
-            let termLabel = owsTaxIdValue;
-            const matches = /L0\|#.+\|(.*)/.exec(owsTaxIdValue);
-            if (matches) {
-                termLabel = matches[1];
-            }
-
-            return termLabel;
         });
     }
 

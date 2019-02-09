@@ -27,13 +27,16 @@
       "name": "Hosted workbench",
       "type": "chrome",
       "request": "launch",
-      "url": "https://collaborationcorner.sharepoint.com/teams/demosearch/SitePages/Search-page.aspx?Mode=Edit",
+      "url": "https://collaborationcorner.sharepoint.com/teams/PnPIntranet/SitePages/Search-Page.aspx",
       "webRoot": "${workspaceRoot}",
       "sourceMaps": true,
       "sourceMapPathOverrides": {
         "webpack:///../../../src/*": "${webRoot}/src/*",
         "webpack:///../../../../src/*": "${webRoot}/src/*",
-        "webpack:///../../../../../src/*": "${webRoot}/src/*"
+        "webpack:///../../../../../../src/*": "${webRoot}/src/*",
+        "webpack:///../../../../../../../src/*": "${webRoot}/src/*",
+        "webpack:///../../../../../../../../src/*": "${webRoot}/src/*",
+        "webpack:///../../../../../../../../../src/*": "${webRoot}/src/*"
       },
       "runtimeArgs": [
         "--remote-debugging-port=9222",
