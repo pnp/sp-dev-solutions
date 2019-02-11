@@ -17,7 +17,6 @@
     "@microsoft/sp-dialog": "1.7.1",
     "@microsoft/sp-loader": "1.7.1",
     "@microsoft/sp-lodash-subset": "1.7.1",
-    "@microsoft/sp-office-ui-fabric-core": "1.7.1",
     "@microsoft/sp-webpart-base": "1.7.1",
     "@pnp/common": "1.2.7",
     "@pnp/logging": "1.2.7",
@@ -52,6 +51,7 @@
     "video.js": "^7.3.0"
   },
   "devDependencies": {
+    "@microsoft/sp-office-ui-fabric-core": "1.6.0",
     "@microsoft/sp-build-web": "1.7.1",
     "@microsoft/sp-module-interfaces": "1.7.1",
     "@microsoft/sp-tslint-rules": "1.7.1",
