@@ -537,53 +537,73 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
 
     private async replaceQueryVariables(queryTemplate: string) {
         const pagePropsVariables = /\{(?:Page)\.(.*?)\}/gi;
-        let reQueryTemplate = queryTemplate;
-        let match = pagePropsVariables.exec(reQueryTemplate);
-        let item = null;
+        const queryParamsVariable = /\{(?:QueryString)\.(.*?)\}/gi;;
+        //#region PagePropVariables
+            let reQueryTemplate = queryTemplate;
+            let match = pagePropsVariables.exec(reQueryTemplate);
+            let item = null;
 
-        if (match != null) {
-            let url = this.context.pageContext.web.absoluteUrl + `/_api/web/GetList(@v1)/RenderExtendedListFormData(itemId=${this.context.pageContext.listItem.id},formId='viewform',mode='2',options=7)?@v1='${this.context.pageContext.list.serverRelativeUrl}'`;
-            var client = this.context.spHttpClient;
-            try {
-                const response: SPHttpClientResponse = await client.post(url, SPHttpClient.configurations.v1, {});
-                if (response.ok) {
-                    let result = await response.json();
-                    let itemRow = JSON.parse(result.value);
-                    item = itemRow.Data.Row[0];
-                }
-                else {
-                    throw response.statusText;
-                }
-            } catch (error) {
-                Log.error(Text.format(LOG_SOURCE, "RenderExtendedListFormData"), error);
-            }
-
-            while (match !== null && item != null) {
-                // matched variable
-                let pageProp = match[1];
-                let itemProp;
-                if (pageProp.indexOf(".Label") !== -1 || pageProp.indexOf(".TermID") !== -1) {
-                    let term = pageProp.split(".");
-
-                    // Handle multi or single values
-                    if (item[term[0]].length > 0) {
-                        itemProp = item[term[0]].map(e => { return e[term[1]]; }).join(',');
-                    } else {
-                        itemProp = item[term[0]][term[1]];
+            if (match != null) {
+                let url = this.context.pageContext.web.absoluteUrl + `/_api/web/GetList(@v1)/RenderExtendedListFormData(itemId=${this.context.pageContext.listItem.id},formId='viewform',mode='2',options=7)?@v1='${this.context.pageContext.list.serverRelativeUrl}'`;
+                var client = this.context.spHttpClient;
+                try {
+                    const response: SPHttpClientResponse = await client.post(url, SPHttpClient.configurations.v1, {});
+                    if (response.ok) {
+                        let result = await response.json();
+                        let itemRow = JSON.parse(result.value);
+                        item = itemRow.Data.Row[0];
                     }
-                } else {
-                    itemProp = item[pageProp];
+                    else {
+                        throw response.statusText;
+                    }
+                } catch (error) {
+                    Log.error(Text.format(LOG_SOURCE, "RenderExtendedListFormData"), error);
                 }
-                if (itemProp && itemProp.indexOf(' ') !== -1) {
-                    // add quotes to multi term values
-                    itemProp = `"${itemProp}"`;
+
+                while (match !== null && item != null) {
+                    // matched variable
+                    let pageProp = match[1];
+                    let itemProp;
+                    if (pageProp.indexOf(".Label") !== -1 || pageProp.indexOf(".TermID") !== -1) {
+                        let term = pageProp.split(".");
+
+                        // Handle multi or single values
+                        if (item[term[0]].length > 0) {
+                            itemProp = item[term[0]].map(e => { return e[term[1]]; }).join(',');
+                        } else {
+                            itemProp = item[term[0]][term[1]];
+                        }
+                    } else {
+                        itemProp = item[pageProp];
+                    }
+                    if (itemProp && itemProp.indexOf(' ') !== -1) {
+                        // add quotes to multi term values
+                        itemProp = `"${itemProp}"`;
+                    }
+                    queryTemplate = queryTemplate.replace(match[0], itemProp);
+                    match = pagePropsVariables.exec(reQueryTemplate);
                 }
-                queryTemplate = queryTemplate.replace(match[0], itemProp);
-                match = pagePropsVariables.exec(reQueryTemplate);
             }
-        }
+        //#endregion
 
+        //#region QueryParamsVariable
+            reQueryTemplate = queryTemplate;
+            let querymatch = queryParamsVariable.exec(reQueryTemplate);          
 
+            if (querymatch != null) {
+                while (querymatch !== null) {
+                    // matched variable
+                    let queryParam = querymatch[1];
+                    let queryParamVal = decodeURIComponent(window.location.search.replace(new RegExp("^(?:.*[&\\?]" + encodeURIComponent(queryParam).replace(/[\.\+\*]/g, "\\$&") + "(?:\\=([^&]*))?)?.*$", "i"), "$1"));;
+                    if(queryParamVal == null || queryParamVal.trim().length == 0)
+                    {
+                        queryParamVal = "*"
+                    }
+                    queryTemplate = queryTemplate.replace(querymatch[0], queryParamVal);
+                    querymatch = queryParamsVariable.exec(reQueryTemplate);
+                }
+            }
+        //#endregion
         const currentDate = /\{CurrentDate\}/gi;
         const currentMonth = /\{CurrentMonth\}/gi;
         const currentYear = /\{CurrentYear\}/gi;
