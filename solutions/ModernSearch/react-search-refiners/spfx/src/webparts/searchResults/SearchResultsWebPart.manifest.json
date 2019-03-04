@@ -56,6 +56,7 @@
             "showBlank": true,
             "showResultsCount": true,
             "webPartTitle": "",
+            "enableLocalization": true,
             "useDefaultSearchQuery": false,
             "resultTypes": []
         }

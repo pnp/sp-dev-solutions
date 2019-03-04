@@ -121,6 +121,8 @@ interface ISearchResultsContainerProps {
      * Web Parts localized strings
      */
     strings: ISearchResultsWebPartStrings;
+
+    enableLocalization: boolean;
 }
 
 export default ISearchResultsContainerProps;

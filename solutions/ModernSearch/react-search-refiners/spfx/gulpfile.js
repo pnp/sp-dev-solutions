@@ -5,6 +5,8 @@ const path = require('path');
 const build = require('@microsoft/sp-build-web');
 const bundleAnalyzer = require('webpack-bundle-analyzer');
 
+build.addSuppression(/^Warning - \[sass\].*$/);
+
 /********************************************************************************************
  * Adds an alias for handlebars in order to avoid errors while gulping the project
  * https://github.com/wycats/handlebars.js/issues/1174
