@@ -135,6 +135,7 @@ class MockSearchService implements ISearchService {
                 searchResults = {
                     RelevantResults: filteredResults,
                     RefinementResults: this._searchResults.RefinementResults,
+                    RefinementFilters: refinementFilters,
                     TotalRows: filteredResults.length,
                 };
             }

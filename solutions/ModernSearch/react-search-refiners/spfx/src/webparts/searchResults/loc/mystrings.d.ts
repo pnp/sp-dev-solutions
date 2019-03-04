@@ -16,7 +16,9 @@ declare interface ISearchResultsWebPartStrings {
     SortableFieldsDescription: string;
     FilterPanelTitle: string;
     FilterResultsButtonLabel: string;
+    RefinersConfiguration: string;
     SelectedFiltersLabel: string;
+    AvailableFiltersLabel: string;
     RemoveAllFiltersLabel: string;
     ShowPagingLabel: string;
     ShowResultsCountLabel: string;
@@ -51,6 +53,7 @@ declare interface ISearchResultsWebPartStrings {
     HandlebarsHelpersDescription: string;
     PromotedResultsLabel: string;
     PanelCloseButtonAria:string;
+    UseExternalRefinersDisplayLabel: string;
     customTemplateFieldsLabel: string;  
     customTemplateFieldsPanelHeader: string;  
     customTemplateFieldsConfigureButtonLabel: string;  

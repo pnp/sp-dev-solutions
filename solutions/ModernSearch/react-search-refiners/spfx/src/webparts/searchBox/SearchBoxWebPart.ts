@@ -18,7 +18,7 @@ import {
 } from '@microsoft/sp-webpart-base';
 import * as strings from 'SearchBoxWebPartStrings';
 import ISearchBoxWebPartProps from './ISearchBoxWebPartProps';
-import { IDynamicDataCallables, IDynamicDataPropertyDefinition, IDynamicDataSource } from '@microsoft/sp-dynamic-data';
+import { IDynamicDataCallables, IDynamicDataPropertyDefinition } from '@microsoft/sp-dynamic-data';
 import ISearchQuery from '../../models/ISearchQuery';
 import { ISearchBoxContainerProps } from './components/ISearchBoxContainerProps';
 import ServiceHelper from '../../helpers/ServiceHelper';
@@ -136,7 +136,7 @@ export default class SearchBoxWebPart extends BaseClientSideWebPart<ISearchBoxWe
         default:
             throw new Error('Bad property id');
     }
-}
+  }
 
   protected onInit(): Promise<void> {
 

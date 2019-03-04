@@ -9,6 +9,7 @@ import ISortableFieldConfiguration from '../../../../models/ISortableFieldConfig
 import { ISearchResultType } from '../../../../models/ISearchResultType';
 import IResultService from '../../../../services/ResultService/IResultService';
 import {ICustomTemplateFieldValue} from '../../../../services/ResultService/ResultService';
+import { IRefinementFilter } from '../../../../models/ISearchResult';
 
 interface ISearchResultsContainerProps {
 
@@ -63,6 +64,16 @@ interface ISearchResultsContainerProps {
     refiners: IRefinerConfiguration[];
 
     /**
+     * Hide refiners in webpart, show externally
+     */
+    useExternalRefinersDisplay: boolean;
+
+    /**
+     * The selected refiners to further filter the query
+     */
+    selectedRefiners: IRefinementFilter[];
+
+    /**
      * The managed properties used as sortable fields for the query
      */
     sortableFields: ISortableFieldConfiguration[];
@@ -102,7 +113,9 @@ interface ISearchResultsContainerProps {
      */
     context: WebPartContext;
 
-    /** The configured result types */
+    /** 
+     * The configured result types 
+     */
     resultTypes: ISearchResultType[];
 
     /**

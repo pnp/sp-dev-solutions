@@ -58,7 +58,9 @@
             "webPartTitle": "",
             "enableLocalization": true,
             "useDefaultSearchQuery": false,
-            "resultTypes": []
+            "resultTypes": [],
+            "useExternalRefinersDisplay": false,
+            "selectedRefiners": []
         }
     }
   ]

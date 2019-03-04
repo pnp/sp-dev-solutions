@@ -18,7 +18,6 @@ import { SortDirection } from "@pnp/sp";
 import { ITermData, ITerm } from '@pnp/sp-taxonomy';
 import LocalizationHelper from '../../../../helpers/LocalizationHelper';
 import { Text } from '@microsoft/sp-core-library';
-import update from 'immutability-helper';
 import { ILocalizableSearchResultProperty, ILocalizableSearchResult } from '../../../../models/ILocalizableSearchResults';
 import * as _ from '@microsoft/sp-lodash-subset';
 
@@ -29,14 +28,15 @@ export default class SearchResultsContainer extends React.Component<ISearchConta
 
     private _searchWpRef: HTMLElement;
 
-    public constructor(props) {
+    public constructor(props: ISearchContainerProps) {
         super(props);
 
         // Set the initial state
         this.state = {
             results: {
                 RefinementResults: [],
-                RelevantResults: []
+                RelevantResults: [],
+                RefinementFilters: []
             },
             resultCount: 0,
             selectedFilters: [],
@@ -106,18 +106,18 @@ export default class SearchResultsContainer extends React.Component<ISearchConta
         } else {
 
             const currentQuery = this.props.queryKeywords + this.props.searchService.queryTemplate + this.props.selectedProperties.join(',');
-            const renderFilterPanel = this.state.availableFilters && this.state.availableFilters.length > 0 ? 
+            const renderFilterPanel = !this.props.useExternalRefinersDisplay && this.state.availableFilters && this.state.availableFilters.length > 0 ? 
                                     <FilterPanel 
                                         availableFilters={this.state.availableFilters} 
+                                        selectedFilters={this.state.selectedFilters}  
                                         onUpdateFilters={this._onUpdateFilters} 
                                         refinersConfiguration={this.props.refiners} 
-                                        resetSelectedFilters={ this.state.lastQuery !== currentQuery ? true : false}
                                     /> : <span />;                                   
 
             if (items.RelevantResults.length === 0) {
 
                 // Check if a search request has already been entered (to distinguish the first use scenario)
-                if (!this.props.showBlank && this.state.lastQuery && !this.state.areResultsLoading) {
+                if (!this.props.showBlank && this.state.lastQuery && !areResultsLoading) {
                     renderWpContent =
                         <div>
                             {renderWebPartTitle}
@@ -125,7 +125,7 @@ export default class SearchResultsContainer extends React.Component<ISearchConta
                             <div className={styles.searchWp__noresult}>{strings.NoResultMessage}</div>
                         </div>;
                 } else {
-                    if (this.props.displayMode === DisplayMode.Edit && !areResultsLoading) {
+                    if (this.props.displayMode === DisplayMode.Edit && !areResultsLoading && this.props.showBlank) {
                         renderWpContent = <MessageBar messageBarType={MessageBarType.info}>{strings.ShowBlankEditInfoMessage}</MessageBar>;
                     }
                 }
@@ -243,26 +243,37 @@ export default class SearchResultsContainer extends React.Component<ISearchConta
     }
 
     public async componentWillReceiveProps(nextProps: ISearchContainerProps) {
-
+        let executeSearch = false;
         let query = nextProps.queryKeywords + nextProps.searchService.queryTemplate + nextProps.selectedProperties.join(',');
+        
+        let selectedRefiners = [];
+        if (JSON.stringify(this.props.selectedRefiners) != JSON.stringify(nextProps.selectedRefiners))
+        {
+            selectedRefiners = nextProps.selectedRefiners;
+            executeSearch = true;
+        }
 
         // New props are passed to the component when the search query has been changed
         if (JSON.stringify(this.props.refiners) !== JSON.stringify(nextProps.refiners)
             || JSON.stringify(this.props.sortableFields) !== JSON.stringify(nextProps.sortableFields)
-            || this.props.sortList !== nextProps.sortList
+            || JSON.stringify(this.props.sortList) !== JSON.stringify(nextProps.sortList)
             || this.props.maxResultsCount !== nextProps.maxResultsCount
             || this.state.lastQuery !== query
             || this.props.resultSourceId !== nextProps.resultSourceId
             || this.props.queryKeywords !== nextProps.queryKeywords
             || this.props.enableQueryRules !== nextProps.enableQueryRules
             || this.props.enableLocalization !== nextProps.enableLocalization) {
+            executeSearch = true;
+            selectedRefiners = [];
+        }
 
+        if (executeSearch) {
             // Don't perform search is there is no keywords
             if (nextProps.queryKeywords) {
                 try {
                     // Clear selected filters on a new query or new refiners
                     this.setState({
-                        selectedFilters: [],
+                        selectedFilters: selectedRefiners,
                         areResultsLoading: true,
                         hasError: false,
                         errorMessage: ""
@@ -276,9 +287,9 @@ export default class SearchResultsContainer extends React.Component<ISearchConta
                     this.props.searchService.sortList = nextProps.sortList;
 
                     // We reset the page number and refinement filters
-                    const searchResults = await this.props.searchService.search(nextProps.queryKeywords, refinerManagedProperties, [], 1);
+                    const searchResults = await this.props.searchService.search(nextProps.queryKeywords, refinerManagedProperties, selectedRefiners, 1);
                     
-                    if (FilterPanel === null && searchResults.RefinementResults && searchResults.RefinementResults.length > 0) {
+                    if (!this.props.useExternalRefinersDisplay && FilterPanel === null && searchResults.RefinementResults && searchResults.RefinementResults.length > 0) {
                         const filterPanelComponent = await import(
                             /* webpackChunkName: 'search-filterpanel' */
                             '../FilterPanel'
@@ -742,6 +753,9 @@ export default class SearchResultsContainer extends React.Component<ISearchConta
 
     private handleResultUpdateBroadCast(results) {
         this.props.resultService.updateResultData(results, this.props.rendererId, `pnp-search-render-node-${this.state.mountingNodeGuid}`, this.props.customTemplateFieldValues);
+        this.props.context.dynamicDataSourceManager.notifyPropertyChanged('availableFilters');
+        this.props.context.dynamicDataSourceManager.notifyPropertyChanged('refinersConfiguration');
+        this.props.context.dynamicDataSourceManager.notifyPropertyChanged('selectedFilters');
     }
 
     /**
