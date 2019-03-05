@@ -14,8 +14,7 @@ import {
 import * as strings from 'SearchNavigationWebPartStrings';
 import SearchNavigation from './components/SearchNavigation';
 import { ISearchNavigationProps } from './components/ISearchNavigationProps';
-import { PropertyFieldCollectionData, CustomCollectionFieldType } from '@pnp/spfx-property-controls/lib/PropertyFieldCollectionData';
-import { PropertyFieldColorPicker, PropertyFieldColorPickerStyle } from '@pnp/spfx-property-controls/lib/PropertyFieldColorPicker';
+
 
 
 
@@ -39,6 +38,10 @@ export interface INavigationNodeProps {
 }
 
 export default class SearchNavigationWebPart extends BaseClientSideWebPart<ISearchNavigationWebPartProps> {
+    private PropertyFieldCollectionData;
+    private CustomCollectionFieldType;
+    private PropertyFieldColorPicker;
+    private PropertyFieldColorPickerStyle;
 
     public render(): void {
         let dataSourceValue;
@@ -89,6 +92,25 @@ export default class SearchNavigationWebPart extends BaseClientSideWebPart<ISear
         return Version.parse('1.0');
     }
 
+    protected async loadPropertyPaneResources(): Promise<void> {
+
+      // tslint:disable-next-line:no-shadowed-variable
+      const { PropertyFieldCollectionData, CustomCollectionFieldType } = await import(
+          /* webpackChunkName: 'search-property-pane' */
+          '@pnp/spfx-property-controls/lib/PropertyFieldCollectionData'
+      );
+      // tslint:disable-next-line:no-shadowed-variable
+      const { PropertyFieldColorPicker, PropertyFieldColorPickerStyle } = await import(
+          /* webpackChunkName: 'search-property-pane' */
+          '@pnp/spfx-property-controls/lib/PropertyFieldColorPicker'
+      );
+
+      this.PropertyFieldCollectionData = PropertyFieldCollectionData;
+      this.CustomCollectionFieldType = CustomCollectionFieldType;
+      this.PropertyFieldColorPicker = PropertyFieldColorPicker;
+      this.PropertyFieldColorPickerStyle = PropertyFieldColorPickerStyle;
+  }
+
     protected getPropertyPaneConfiguration(): IPropertyPaneConfiguration {
         let propertypane =  {
             pages: [
@@ -107,7 +129,7 @@ export default class SearchNavigationWebPart extends BaseClientSideWebPart<ISear
                                         depth: DynamicDataSharedDepth.Source,
                                     },
                                 }),
-                                PropertyFieldCollectionData('nodes', {
+                                this.PropertyFieldCollectionData('nodes', {
                                     key: 'nodes',
                                     label: strings.NavNodeLabel,
                                     panelHeader: strings.NavNodeHeader,
@@ -117,12 +139,12 @@ export default class SearchNavigationWebPart extends BaseClientSideWebPart<ISear
                                         {
                                             id: 'displayText',
                                             title: strings.NavNodeDisplayTextFieldLabel,
-                                            type: CustomCollectionFieldType.string,
+                                            type: this.CustomCollectionFieldType.string,
                                         },
                                         {
                                             id: 'url',
                                             title: strings.NavNodeUrlFieldLabel,
-                                            type: CustomCollectionFieldType.url,
+                                            type: this.CustomCollectionFieldType.url,
                                         }
                                     ]
                                 }),
@@ -137,14 +159,14 @@ export default class SearchNavigationWebPart extends BaseClientSideWebPart<ISear
             ]
         };
         if(!this.properties.useThemeColor) {
-          propertypane.pages[0].groups[0].groupFields.push(PropertyFieldColorPicker('color', {
+          propertypane.pages[0].groups[0].groupFields.push(this.PropertyFieldColorPicker('color', {
             label: strings.ColorPickerLabel,
             selectedColor: this.properties.color,
             onPropertyChange: this.onPropertyPaneFieldChanged,
             properties: this.properties,
             disabled: false,
             alphaSliderHidden: false,
-            style: PropertyFieldColorPickerStyle.Full,
+            style: this.PropertyFieldColorPickerStyle.Full,
             iconName: 'Precipitation',
             key: 'colorFieldId',
           }));
