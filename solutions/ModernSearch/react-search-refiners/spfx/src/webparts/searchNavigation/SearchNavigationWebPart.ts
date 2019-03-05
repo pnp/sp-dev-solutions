@@ -7,7 +7,8 @@ import {
     IPropertyPaneConfiguration,
     PropertyPaneDynamicField,
     PropertyPaneDynamicFieldSet,
-    DynamicDataSharedDepth
+    DynamicDataSharedDepth,
+    PropertyPaneToggle
 } from '@microsoft/sp-webpart-base';
 
 import * as strings from 'SearchNavigationWebPartStrings';
@@ -25,6 +26,7 @@ export interface ISearchNavigationWebPartProps {
     propertyPath: string;
     propertyId: string;
     color: string;
+    useThemeColor: boolean;
 }
 
 export interface INavigationNodeWebPartProps {
@@ -39,7 +41,7 @@ export interface INavigationNodeProps {
 export default class SearchNavigationWebPart extends BaseClientSideWebPart<ISearchNavigationWebPartProps> {
 
     public render(): void {
-        l et dataSourceValue;
+        let dataSourceValue;
         let source;
         if (this.properties && this.properties.queryKeywords) {
             source = this.properties.queryKeywords.tryGetSource();
@@ -62,6 +64,7 @@ export default class SearchNavigationWebPart extends BaseClientSideWebPart<ISear
                 nodes: this.properties.nodes,
                 queryKeywords: dataSourceValue,
                 color: this.properties.color,
+                useThemeColor: this.properties.useThemeColor
             }
         );
 
@@ -87,7 +90,7 @@ export default class SearchNavigationWebPart extends BaseClientSideWebPart<ISear
     }
 
     protected getPropertyPaneConfiguration(): IPropertyPaneConfiguration {
-        return {
+        let propertypane =  {
             pages: [
                 {
                     groups: [
@@ -123,22 +126,29 @@ export default class SearchNavigationWebPart extends BaseClientSideWebPart<ISear
                                         }
                                     ]
                                 }),
-                                PropertyFieldColorPicker('color', {
-                                    label: strings.ColorPickerLabel,
-                                    selectedColor: this.properties.color,
-                                    onPropertyChange: this.onPropertyPaneFieldChanged,
-                                    properties: this.properties,
-                                    disabled: false,
-                                    alphaSliderHidden: false,
-                                    style: PropertyFieldColorPickerStyle.Full,
-                                    iconName: 'Precipitation',
-                                    key: 'colorFieldId'
-                                })
+                                PropertyPaneToggle('useThemeColor', {
+                                  label: strings.UseThemeColorLabel,
+                                }),
+
                             ]
                         }
                     ]
                 }
             ]
         };
+        if(!this.properties.useThemeColor) {
+          propertypane.pages[0].groups[0].groupFields.push(PropertyFieldColorPicker('color', {
+            label: strings.ColorPickerLabel,
+            selectedColor: this.properties.color,
+            onPropertyChange: this.onPropertyPaneFieldChanged,
+            properties: this.properties,
+            disabled: false,
+            alphaSliderHidden: false,
+            style: PropertyFieldColorPickerStyle.Full,
+            iconName: 'Precipitation',
+            key: 'colorFieldId',
+          }));
+        }
+        return propertypane;
     }
 }

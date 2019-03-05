@@ -7,6 +7,7 @@ declare interface ISearchNavigationWebPartStrings {
   NavNodeDisplayTextFieldLabel: string;
   NavNodeUrlFieldLabel: string;
   ColorPickerLabel: string;
+  UseThemeColorLabel: string;
 }
 
 declare module 'SearchNavigationWebPartStrings' {

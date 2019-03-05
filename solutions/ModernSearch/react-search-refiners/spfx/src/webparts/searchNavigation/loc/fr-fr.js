@@ -7,6 +7,7 @@ define([], function() {
       NavNodeManageBtnLabel: "Installer",
       NavNodeDisplayTextFieldLabel: "Afficher le texte",
       NavNodeUrlFieldLabel: "Url",
-      ColorPickerLabel: "Couleur"
+      ColorPickerLabel: "Couleur",
+      UseThemeColorLabel: "Thème principal utilisateur"
     }
   });

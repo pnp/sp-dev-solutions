@@ -7,6 +7,7 @@ define([], function() {
     NavNodeManageBtnLabel: "Setup",
     NavNodeDisplayTextFieldLabel: "Displaytext",
     NavNodeUrlFieldLabel: "Url",
-    ColorPickerLabel: "Color"
+    ColorPickerLabel: "Color",
+    UseThemeColorLabel: "User primary theme"
   }
 });
