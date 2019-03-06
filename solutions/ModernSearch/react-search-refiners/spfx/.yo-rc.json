@@ -1,6 +1,6 @@
 {
   "@microsoft/generator-sharepoint": {
-    "isCreatingSolution": false,
+    "isCreatingSolution": true,
     "environment": "spo",
     "version": "1.7.1",
     "libraryName": "react-search-refiners",

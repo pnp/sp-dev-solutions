@@ -11,11 +11,12 @@
 
   "preconfiguredEntries": [{
     "groupId": "5c03119e-3074-46fd-976b-c60198311f70",
-    "group": { "default": "Other" },
+    "group": { "default": "PnP" },
     "title": { "default": "Search Navigation" },
-    "description": { "default": "SearchNavigation description" },
-    "officeFabricIconFontName": "SearchAndApps",
+    "description": { "default": "Displays a pivot-navigation link list that emulates the navigation in the out-of-the-box search center." },
+    "officeFabricIconFontName": "NavigationFlipper",
     "properties": {
+      "queryKeywords": ""
     }
   }]
 }

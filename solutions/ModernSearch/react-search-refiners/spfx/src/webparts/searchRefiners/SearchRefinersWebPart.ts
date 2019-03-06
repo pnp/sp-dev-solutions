@@ -215,11 +215,11 @@ export default class SearchRefinersWebPart extends BaseClientSideWebPart<ISearch
     }
   }
 
-      /**
-    * Save the useful information for the connected data source. 
-    * They will be used to get the value of the dynamic property if this one fails.
-    */
-   private _saveDataSourceInfo() {
+    /**
+  * Save the useful information for the connected data source. 
+  * They will be used to get the value of the dynamic property if this one fails.
+  */
+  private _saveDataSourceInfo() {
     if (this.properties.availableFilters.tryGetSource()) {
         this.properties.availableFiltersSourceId = this.properties.availableFilters["_reference"]._sourceId;
         this.properties.availableFiltersPropertyId = this.properties.availableFilters["_reference"]._property;
