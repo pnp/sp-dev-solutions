@@ -287,7 +287,7 @@ class SearchService implements ISearchService {
             if (queryStringIndex !== -1) { // filename with query string leads to 400 error.
                 encodedFileName = encodedFileName.slice(0, queryStringIndex);
             }
-            const iconFileName = await this._localPnPSetup.web.mapToIcon(encodedFileName, 1);
+            const iconFileName = await this._localPnPSetup.web.mapToIcon(encodeURIComponent(encodedFileName), 1);
             const iconUrl = webAbsoluteUrl + '/_layouts/15/images/' + iconFileName;
 
             return iconUrl;
