@@ -50,6 +50,9 @@
     "react-js-pagination": "3.0.0",
     "video.js": "^7.3.0"
   },
+  "resolutions": {
+    "@types/react": "16.4.2"
+  },
   "devDependencies": {
     "@microsoft/sp-office-ui-fabric-core": "1.6.0",
     "@microsoft/sp-build-web": "1.7.1",
