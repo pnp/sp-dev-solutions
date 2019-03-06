@@ -44,6 +44,8 @@ import { ResultService, IRenderer } from '../../services/ResultService/ResultSer
 import { IDynamicDataCallables, IDynamicDataPropertyDefinition, IDynamicDataAnnotatedPropertyValue } from '@microsoft/sp-dynamic-data';
 import { IRefinementResult, IRefinementFilter } from '../../models/ISearchResult';
 import IRefinerConfiguration from '../../models/IRefinerConfiguration';
+import IDynamicDataService from '../../services/DynamicDataService/IDynamicDataService';
+import { DynamicDataService } from '../../services/DynamicDataService/DynamicDataService';
 
 const LOG_SOURCE: string = '[SearchResultsWebPart_{0}]';
 
@@ -56,6 +58,7 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
     private _propertyFieldCodeEditor = null;
     private _propertyFieldCodeEditorLanguages = null;
     private _resultService: IResultService;
+    private _dynamicDataService: IDynamicDataService;
     private _codeRenderers: IRenderer[];
     private _searchContainer : JSX.Element;
 
@@ -94,65 +97,19 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
 
     protected renderCompleted(): void {
         super.renderCompleted();
-
-        let queryKeywords;
         let renderElement = null;
-        let dataSourceValue;
 
-        let source = this.properties.queryKeywords.tryGetSource();
-
-        // Try to get the source if a source ID is present
-        // We need to do this check to avoid timing issues regarding data sources reconenction
-        if (!source && this.properties.sourceId) {
-            source = this.context.dynamicDataProvider.tryGetSource(this.properties.sourceId);
-
-            if (source && this.properties.propertyId) {
-                dataSourceValue = source.getPropertyValue(this.properties.propertyId)[this.properties.propertyPath];
-            }
-
-        } else {
-            dataSourceValue = this.properties.queryKeywords.tryGetValue();
-        }
-
-        if (typeof (dataSourceValue) !== 'string') {
-            dataSourceValue = '';
+        let queryDataSourceValue = this._dynamicDataService.getDataSourceValue(this.context.dynamicDataProvider, this.properties.queryKeywords, this.properties.sourceId, this.properties.propertyId, this.properties.propertyPath);
+        if (typeof (queryDataSourceValue) !== 'string') {
+            queryDataSourceValue = '';
             this.context.propertyPane.refresh();
         }
+        let queryKeywords = (!queryDataSourceValue) ? this.properties.defaultSearchQuery : queryDataSourceValue;
 
-        if (!dataSourceValue) {
-            queryKeywords = this.properties.defaultSearchQuery;
-        } else {
-            queryKeywords = dataSourceValue;
-        }
+        let refinerDataSourceValue = this._dynamicDataService.getDataSourceValue(this.context.dynamicDataProvider, this.properties.selectedRefiners, this.properties.refinerSourceId, this.properties.refinerPropertyId, this.properties.refinerPropertyPath);
+        let selectedRefiners = (!refinerDataSourceValue) ? [] : refinerDataSourceValue;
 
-        let selectedRefiners: IRefinementFilter[];
-        let refinerDataSourceValue;
-
-        if (this.properties.selectedRefiners)
-        {
-            let refinerSource = this.properties.selectedRefiners.tryGetSource();
-
-            // Try to get the source if a source ID is present
-            // We need to do this check to avoid timing issues regarding data sources reconenction
-            if (!refinerSource && this.properties.refinerSourceId) {
-                refinerSource = this.context.dynamicDataProvider.tryGetSource(this.properties.refinerSourceId);
-
-                if (refinerSource && this.properties.refinerPropertyId) {
-                    refinerDataSourceValue = refinerSource.getPropertyValue(this.properties.refinerPropertyId)[this.properties.refinerPropertyPath];
-                }
-
-            } else {
-                refinerDataSourceValue = this.properties.selectedRefiners.tryGetValues();
-            }
-        }
-
-        if (!refinerDataSourceValue) {
-            selectedRefiners = [];
-        } else {
-            selectedRefiners = refinerDataSourceValue;
-        }
-
-        const isValueConnected = !!source;
+        const isValueConnected = !!this.properties.queryKeywords.tryGetSource();
         this._searchContainer = React.createElement(
             SearchResultsContainer,
             {
@@ -228,6 +185,8 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
         }
         this._resultService = new ResultService();
         this._codeRenderers = this._resultService.getRegisteredRenderers();
+
+        this._dynamicDataService = new DynamicDataService();
 
         if (this.properties.sourceId || this.properties.refinerSourceId) {
             // Needed to retrieve manually the value for the dynamic property at render time. See the associated SPFx bug
@@ -1188,7 +1147,7 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
         throw new Error('Bad property id');
     }
 
-    public getAnnotatedPropertyValue?(propertyId: string): IDynamicDataAnnotatedPropertyValue { //TODO
+    public getAnnotatedPropertyValue?(propertyId: string): IDynamicDataAnnotatedPropertyValue {
         switch (propertyId) {
 
             case 'availableFilters':
