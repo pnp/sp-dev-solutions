@@ -13,8 +13,8 @@ import {
 } from '@microsoft/sp-webpart-base';
 
 import * as strings from 'SearchNavigationWebPartStrings';
-import SearchNavigation from './components/SearchNavigation';
-import { ISearchNavigationProps } from './components/ISearchNavigationProps';
+import SearchNavigation from './components/SearchNavigationContainer/SearchNavigationContainer';
+import { ISearchNavigationContainerProps } from './components/SearchNavigationContainer/ISearchNavigationContainerProps';
 import { DynamicDataService } from '../../services/DynamicDataService/DynamicDataService';
 import IDynamicDataService from '../../services/DynamicDataService/IDynamicDataService';
 
@@ -48,7 +48,7 @@ export default class SearchNavigationWebPart extends BaseClientSideWebPart<ISear
         let queryDataSourceValue = this._dynamicDataService.getDataSourceValue(this.context.dynamicDataProvider, this.properties.queryKeywords, this.properties.sourceId, this.properties.propertyId, this.properties.propertyPath);
         let queryKeywords = (!queryDataSourceValue) ? "" : queryDataSourceValue;
 
-        const element: React.ReactElement<ISearchNavigationProps> = React.createElement(
+        const element: React.ReactElement<ISearchNavigationContainerProps> = React.createElement(
             SearchNavigation,
             {
                 nodes: this.properties.nodes,

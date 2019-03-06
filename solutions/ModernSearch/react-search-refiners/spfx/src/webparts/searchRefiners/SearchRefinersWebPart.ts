@@ -14,7 +14,7 @@ import {
 
 import * as strings from 'SearchRefinersWebPartStrings';
 import { IRefinementFilter } from '../../models/ISearchResult';
-import SearchRefiners from './components/SearchRefiners';
+import SearchRefiners from './components/SearchResultsContainer/SearchRefinersContainer';
 import { IDynamicDataCallables, IDynamicDataPropertyDefinition, IDynamicDataAnnotatedPropertyValue } from '@microsoft/sp-dynamic-data';
 import { ISearchRefinersWebPartProps } from './ISearchRefinersWebPartProps';
 import { Placeholder } from '@pnp/spfx-controls-react/lib/Placeholder';

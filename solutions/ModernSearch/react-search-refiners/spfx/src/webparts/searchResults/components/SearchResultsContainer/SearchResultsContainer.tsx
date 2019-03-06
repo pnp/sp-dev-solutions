@@ -1,6 +1,6 @@
 import * as React from 'react';
-import ISearchContainerProps from './ISearchResultsContainerProps';
-import ISearchContainerState from './ISearchResultsContainerState';
+import ISearchResultsContainerProps from './ISearchResultsContainerProps';
+import ISearchResultsContainerState from './ISearchResultsContainerState';
 import { MessageBar, MessageBarType } from 'office-ui-fabric-react/lib/MessageBar';
 import { Spinner, SpinnerSize } from 'office-ui-fabric-react/lib/Spinner';
 import { Shimmer, ShimmerElementType as ElemType, ShimmerElementsGroup } from 'office-ui-fabric-react/lib/Shimmer';
@@ -24,11 +24,11 @@ import * as _ from '@microsoft/sp-lodash-subset';
 declare var System: any;
 let FilterPanel = null;
 
-export default class SearchResultsContainer extends React.Component<ISearchContainerProps, ISearchContainerState> {
+export default class SearchResultsContainer extends React.Component<ISearchResultsContainerProps, ISearchResultsContainerState> {
 
     private _searchWpRef: HTMLElement;
 
-    public constructor(props: ISearchContainerProps) {
+    public constructor(props: ISearchResultsContainerProps) {
         super(props);
 
         // Set the initial state
@@ -54,7 +54,7 @@ export default class SearchResultsContainer extends React.Component<ISearchConta
         this._onPageUpdate = this._onPageUpdate.bind(this);
     }
 
-    public render(): React.ReactElement<ISearchContainerProps> {
+    public render(): React.ReactElement<ISearchResultsContainerProps> {
 
         const areResultsLoading = this.state.areResultsLoading;
         const items = this.state.results;
@@ -241,7 +241,7 @@ export default class SearchResultsContainer extends React.Component<ISearchConta
         }
     }
 
-    public async componentWillReceiveProps(nextProps: ISearchContainerProps) {
+    public async componentWillReceiveProps(nextProps: ISearchResultsContainerProps) {
         let executeSearch = false;
         let query = nextProps.queryKeywords + nextProps.searchService.queryTemplate + nextProps.selectedProperties.join(',');
         

@@ -20,7 +20,7 @@ import * as strings from 'SearchBoxWebPartStrings';
 import ISearchBoxWebPartProps from './ISearchBoxWebPartProps';
 import { IDynamicDataCallables, IDynamicDataPropertyDefinition } from '@microsoft/sp-dynamic-data';
 import ISearchQuery from '../../models/ISearchQuery';
-import { ISearchBoxContainerProps } from './components/ISearchBoxContainerProps';
+import { ISearchBoxContainerProps } from './components/SearchBoxContainer/ISearchBoxContainerProps';
 import ServiceHelper from '../../helpers/ServiceHelper';
 import ISearchService from '../../services/SearchService/ISearchService';
 import INlpService from '../../services/NlpService/INlpService';
@@ -29,7 +29,7 @@ import SearchService from '../../services/SearchService/SearchService';
 import MockNlpService from '../../services/NlpService/MockNlpService';
 import NlpService from '../../services/NlpService/NlpService';
 import { PageOpenBehavior } from '../../helpers/UrlHelper';
-import SearchBoxContainer from './components/SearchBoxContainer';
+import SearchBoxContainer from './components/SearchBoxContainer/SearchBoxContainer';
 
 export default class SearchBoxWebPart extends BaseClientSideWebPart<ISearchBoxWebPartProps> implements IDynamicDataCallables {
 

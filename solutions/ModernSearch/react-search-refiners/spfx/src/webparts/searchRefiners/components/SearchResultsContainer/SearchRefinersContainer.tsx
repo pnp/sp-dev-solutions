@@ -1,17 +1,17 @@
 import * as React from 'react';
-import styles from './SearchRefiners.module.scss';
-import { ISearchRefinersProps } from './ISearchRefinersProps';
+import styles from '../SearchRefinersWebPart.module.scss';
+import { ISearchRefinersContainerProps } from './ISearchRefinersContainerProps';
 import { DisplayMode } from '@microsoft/sp-core-library';
 import { WebPartTitle } from "@pnp/spfx-controls-react/lib/WebPartTitle";
-import { Filters } from '../../controls/Filters';
+import { Filters } from '../../../controls/Filters';
 import * as strings from 'SearchRefinersWebPartStrings';
 import { Spinner, SpinnerSize } from 'office-ui-fabric-react/lib/Spinner';
 import { Overlay } from 'office-ui-fabric-react/lib/Overlay';
-import { ISearchRefinersState } from './ISearchRefinersState';
-import { IRefinementFilter } from '../../../models/ISearchResult';
+import { ISearchRefinersContainerState } from './ISearchRefinersContainerState';
+import { IRefinementFilter } from '../../../../models/ISearchResult';
 
-export default class SearchRefiners extends React.Component<ISearchRefinersProps, ISearchRefinersState> {
-  public constructor(props: ISearchRefinersProps) {
+export default class SearchRefinersContainer extends React.Component<ISearchRefinersContainerProps, ISearchRefinersContainerState> {
+  public constructor(props: ISearchRefinersContainerProps) {
     super(props);
 
     this.state = {
@@ -19,7 +19,7 @@ export default class SearchRefiners extends React.Component<ISearchRefinersProps
     };
   }
 
-  public async componentWillReceiveProps(nextProps: ISearchRefinersProps) {
+  public async componentWillReceiveProps(nextProps: ISearchRefinersContainerProps) {
     if (JSON.stringify(this.props.availableFilters) !== JSON.stringify(nextProps.availableFilters)
        || JSON.stringify(this.props.selectedFilters) !== JSON.stringify(nextProps.selectedFilters)) {
       this.setState({
@@ -28,7 +28,7 @@ export default class SearchRefiners extends React.Component<ISearchRefinersProps
     }
   }
 
-  public render(): React.ReactElement<ISearchRefinersProps> {
+  public render(): React.ReactElement<ISearchRefinersContainerProps> {
     let renderWpContent: JSX.Element = null;
     let renderWebPartTitle: JSX.Element = null;
     let renderOverlay: JSX.Element = null;

@@ -1,0 +1,10 @@
+@import '~@microsoft/sp-office-ui-fabric-core/dist/sass/SPFabricCore.scss';
+
+.searchRefiners {
+  .overlay {
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
