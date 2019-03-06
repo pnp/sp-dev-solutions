@@ -15,12 +15,12 @@
             "default": "PnP"
         },
         "title": {
-            "default": "Search Results with Refiners",
+            "default": "Search Results",
             "fr-fr": "Résultats de recherche"
         },
         "description": {
-            "default": "Displays search results with customizable dynamic refiners",
-            "fr-fr": "Affiche des résulats de recherche avec filtres personnalisables"
+            "default": "Displays search results",
+            "fr-fr": "Affiche des résulats de recherche"
         },
         "officeFabricIconFontName": "SearchAndApps",
         "properties": {
