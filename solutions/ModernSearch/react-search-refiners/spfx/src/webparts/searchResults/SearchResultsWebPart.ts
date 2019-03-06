@@ -106,7 +106,7 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
         }
         let queryKeywords = (!queryDataSourceValue) ? this.properties.defaultSearchQuery : queryDataSourceValue;
 
-        let refinerDataSourceValue = this._dynamicDataService.getDataSourceValue(this.context.dynamicDataProvider, this.properties.selectedRefiners, this.properties.refinerSourceId, this.properties.refinerPropertyId, this.properties.refinerPropertyPath);
+        let refinerDataSourceValue = this._dynamicDataService.getDataSourceValues(this.context.dynamicDataProvider, this.properties.selectedRefiners, this.properties.refinerSourceId, this.properties.refinerPropertyId, this.properties.refinerPropertyPath);
         let selectedRefiners = (!refinerDataSourceValue) ? [] : refinerDataSourceValue;
 
         const isValueConnected = !!this.properties.queryKeywords.tryGetSource();
@@ -781,7 +781,7 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
             ]);
         }
         else {
-            this.properties.selectedRefiners.setValue([]);
+            this.properties.selectedRefiners.setValue([] as any);
             this.render();
         }
 

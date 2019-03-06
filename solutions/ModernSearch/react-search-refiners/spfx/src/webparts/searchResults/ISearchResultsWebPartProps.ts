@@ -34,7 +34,7 @@ export interface ISearchResultsWebPartProps {
     customTemplateFieldValues: ICustomTemplateFieldValue[];
     enableLocalization: boolean;
     useExternalRefinersDisplay: boolean;
-    selectedRefiners: DynamicProperty<IRefinementFilter[]>;
+    selectedRefiners: DynamicProperty<IRefinementFilter>;
     refinerSourceId: string;
     refinerPropertyId: string;
     refinerPropertyPath: string;

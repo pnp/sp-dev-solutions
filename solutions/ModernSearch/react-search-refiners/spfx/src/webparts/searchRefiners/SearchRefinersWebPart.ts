@@ -13,8 +13,7 @@ import {
 } from '@microsoft/sp-webpart-base';
 
 import * as strings from 'SearchRefinersWebPartStrings';
-import { IRefinementResult, IRefinementFilter } from '../../models/ISearchResult';
-import IRefinerConfiguration from '../../models/IRefinerConfiguration';
+import { IRefinementFilter } from '../../models/ISearchResult';
 import SearchRefiners from './components/SearchRefiners';
 import { IDynamicDataCallables, IDynamicDataPropertyDefinition, IDynamicDataAnnotatedPropertyValue } from '@microsoft/sp-dynamic-data';
 import { ISearchRefinersWebPartProps } from './ISearchRefinersWebPartProps';
@@ -22,7 +21,6 @@ import { Placeholder } from '@pnp/spfx-controls-react/lib/Placeholder';
 import { DynamicDataService } from '../../services/DynamicDataService/DynamicDataService';
 import IDynamicDataService from '../../services/DynamicDataService/IDynamicDataService';
 
-//TODO: hide on first load (without results, only show after first query done)
 export default class SearchRefinersWebPart extends BaseClientSideWebPart<ISearchRefinersWebPartProps> implements IDynamicDataCallables {
   private _selectedFilters: IRefinementFilter[];
   private _dynamicDataService: IDynamicDataService;
@@ -96,7 +94,7 @@ export default class SearchRefinersWebPart extends BaseClientSideWebPart<ISearch
             dynamicPropertyType: 'array'
         }
     };
-}
+  }
 
   public getPropertyDefinitions(): ReadonlyArray<IDynamicDataPropertyDefinition> {
     return [

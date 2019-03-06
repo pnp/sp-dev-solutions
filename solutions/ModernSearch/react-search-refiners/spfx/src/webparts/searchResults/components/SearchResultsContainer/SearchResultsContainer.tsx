@@ -105,7 +105,6 @@ export default class SearchResultsContainer extends React.Component<ISearchConta
             renderWpContent = <MessageBar messageBarType={MessageBarType.error}>{errorMessage}</MessageBar>;
         } else {
 
-            const currentQuery = this.props.queryKeywords + this.props.searchService.queryTemplate + this.props.selectedProperties.join(',');
             const renderFilterPanel = !this.props.useExternalRefinersDisplay && this.state.availableFilters && this.state.availableFilters.length > 0 ? 
                                     <FilterPanel 
                                         availableFilters={this.state.availableFilters} 
