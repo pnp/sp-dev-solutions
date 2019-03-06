@@ -6,4 +6,10 @@
         ComponentId="6c5daeed-02bf-4f02-806c-7e44a770d71c"
         Properties="{&quot;testMessage&quot;:&quot;Test message&quot;}">
     </ClientSideComponentInstance>
+    <ClientSideComponentInstance
+        Title="PersonRenderer"
+        Location="ClientSideExtension.ApplicationCustomizer"
+        ComponentId="819916f3-760a-4e1a-b5cb-46795cdf9fea"
+        Properties="{&quot;testMessage&quot;:&quot;Test message&quot;}">
+    </ClientSideComponentInstance>
 </Elements>

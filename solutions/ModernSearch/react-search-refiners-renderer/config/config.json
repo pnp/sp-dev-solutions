@@ -9,10 +9,19 @@
           "manifest": "./src/extensions/codeRenderer/CodeRendererApplicationCustomizer.manifest.json"
         }
       ]
+    },
+    "person-renderer-application-customizer": {
+      "components": [
+        {
+          "entrypoint": "./lib/extensions/personRenderer/PersonRendererApplicationCustomizer.js",
+          "manifest": "./src/extensions/personRenderer/PersonRendererApplicationCustomizer.manifest.json"
+        }
+      ]
     }
   },
   "externals": {},
   "localizedResources": {
-    "CodeRendererApplicationCustomizerStrings": "lib/extensions/codeRenderer/loc/{locale}.js"
+    "CodeRendererApplicationCustomizerStrings": "lib/extensions/codeRenderer/loc/{locale}.js",
+    "PersonRendererApplicationCustomizerStrings": "lib/extensions/personRenderer/loc/{locale}.js"
   }
 }

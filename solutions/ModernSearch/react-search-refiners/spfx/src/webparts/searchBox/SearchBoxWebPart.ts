@@ -51,7 +51,7 @@ export default class SearchBoxWebPart extends BaseClientSideWebPart<ISearchBoxWe
   }
 
   public render(): void {
-
+    console.log(this.properties);
     let inputValue = this.properties.defaultQueryKeywords.tryGetValue();
 
     if (inputValue && typeof(inputValue) === 'string') {

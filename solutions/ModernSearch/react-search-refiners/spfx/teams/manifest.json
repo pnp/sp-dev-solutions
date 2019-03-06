@@ -1,8 +1,8 @@
 {
   "$schema": "https://developer.microsoft.com/en-us/json-schemas/teams/v1.2/MicrosoftTeams.schema.json",
   "manifestVersion": "1.2",
-  "packageName": "SearchBox",
-  "id": "096b96cc-8a44-41fa-9b4d-c0ab2ab2a779",
+  "packageName": "SearchNavigation",
+  "id": "cc39324a-0913-4a5b-b77f-0b6ade7646f6",
   "version": "0.1",
   "developer": {
     "name": "SPFx + Teams Dev",
@@ -11,11 +11,11 @@
     "termsOfUseUrl": "https://www.microsoft.com/en-us/servicesagreement"
   },
   "name": {
-    "short": "SearchBox"
+    "short": "SearchNavigation"
   },
   "description": {
-    "short": "Allows users to enter query keywords",
-    "full": "Allows users to enter query keywords"
+    "short": "SearchNavigation description",
+    "full": "SearchNavigation description"
   },
   "icons": {
     "outline": "tab20x20.png",
@@ -24,7 +24,7 @@
   "accentColor": "#004578",
   "configurableTabs": [
     {
-      "configurationUrl": "https://{teamSiteDomain}{teamSitePath}/_layouts/15/TeamsLogon.aspx?SPFX=true&dest={teamSitePath}/_layouts/15/teamshostedapp.aspx%3FopenPropertyPane=true%26teams%26componentId=096b96cc-8a44-41fa-9b4d-c0ab2ab2a779",
+      "configurationUrl": "https://{teamSiteDomain}{teamSitePath}/_layouts/15/TeamsLogon.aspx?SPFX=true&dest={teamSitePath}/_layouts/15/teamshostedapp.aspx%3FopenPropertyPane=true%26teams%26componentId=cc39324a-0913-4a5b-b77f-0b6ade7646f6",
       "canUpdateConfiguration": false,
       "scopes": [
         "team"

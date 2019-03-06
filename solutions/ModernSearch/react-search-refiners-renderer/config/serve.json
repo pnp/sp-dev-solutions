@@ -24,6 +24,17 @@
           }
         }
       }
+    },
+    "personRenderer": {
+      "pageUrl": "https://tgpuzzlepart.sharepoint.com/sites/nbrem-intra-6/SitePages/Search-test.aspx",
+      "customActions": {
+        "819916f3-760a-4e1a-b5cb-46795cdf9fea": {
+          "location": "ClientSideExtension.ApplicationCustomizer",
+          "properties": {
+            "testMessage": "Test message"
+          }
+        }
+      }
     }
   }
 }
