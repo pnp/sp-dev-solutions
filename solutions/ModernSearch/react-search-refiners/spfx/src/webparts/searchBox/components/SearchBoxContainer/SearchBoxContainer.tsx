@@ -54,7 +54,7 @@ export default class SearchBoxContainer extends React.Component<ISearchBoxContai
           <div>
             <div className={ styles.searchFieldGroup }>
               <TextField {...getInputProps({
-                  placeholder: strings.SearchInputPlaceholder,
+                  placeholder: this.props.placeholderText ? this.props.placeholderText : strings.SearchInputPlaceholder,
                   onKeyDown: event => {
 
                     // Submit search on "Enter" 
