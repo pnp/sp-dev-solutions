@@ -38,9 +38,9 @@ interface ISearchResultsContainerState {
      */
     sortDirection?: SortDirection;
     /**
-     *  Guid for the current mounting node
+     *  Id for the current mounting node
      */
-    mountingNodeGuid: string;
+    mountingNodeId: string;
 }
 
 export default ISearchResultsContainerState;

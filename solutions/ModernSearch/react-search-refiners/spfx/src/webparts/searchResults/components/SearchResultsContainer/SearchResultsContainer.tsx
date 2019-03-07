@@ -41,7 +41,7 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
             areResultsLoading: false,
             errorMessage: '',
             hasError: false,
-            mountingNodeGuid: this.getGUID(),
+            mountingNodeId: `pnp-search-render-node-${this.getGUID()}`,
         };
 
         this._onUpdateSort = this._onUpdateSort.bind(this);
@@ -129,8 +129,8 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
                                     totalRows: this.state.results.TotalRows,
                                     keywords: this.props.queryKeywords,
                                     showResultsCount: this.props.showResultsCount,
-                                    siteUrl: this.props.context.pageContext.site.serverRelativeUrl,
-                                    webUrl: this.props.context.pageContext.web.serverRelativeUrl,
+                                    siteUrl: this.props.siteServerRelativeUrl,
+                                    webUrl: this.props.webServerRelativeUrl,
                                     maxResultsCount: this.props.maxResultsCount,
                                     actualResultsCount: items.RelevantResults.length,
                                     strings: strings
@@ -143,7 +143,7 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
                         {renderWebPartTitle}
                         <div className={styles.searchWp__buttonBar}>{sortPanel}</div>
                         {renderOverlay}
-                        <div id={`pnp-search-render-node-${this.state.mountingNodeGuid}`} />
+                        <div id={this.state.mountingNodeId} />
                         {searchResultTemplate}
                         {this.props.showPaging ?
                             <Paging
@@ -398,7 +398,7 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
     private async _getLocalizedFilters(rawFilters: IRefinementResult[]): Promise<IRefinementResult[]> {
 
         // Get the current lcid according to current page language
-        const lcid = LocalizationHelper.getLocaleId(this.props.context.pageContext.cultureInfo.currentUICultureName);
+        const lcid = LocalizationHelper.getLocaleId(this.props.currentUICultureName);
 
         let termsToLocalize: { uniqueIdentifier: string, termId: string, localizedTermLabel: string }[] = [];
         let updatedFilters = [];
@@ -515,7 +515,7 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
     private async _getLocalizedMetadata(rawResults: ISearchResult[]): Promise<ISearchResult[]> {
 
         // Get the current lcid according to current page language
-        const lcid = LocalizationHelper.getLocaleId(this.props.context.pageContext.cultureInfo.currentUICultureName);
+        const lcid = LocalizationHelper.getLocaleId(this.props.currentUICultureName);
 
         let resultsToLocalize: ILocalizableSearchResult[] = [];
 
@@ -671,9 +671,8 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
                 </div>;
     }
 
-    private handleResultUpdateBroadCast(results: ISearchResults) { //TODO move out to the webpart
-        this.props.resultService.updateResultData(results, this.props.rendererId, `pnp-search-render-node-${this.state.mountingNodeGuid}`, this.props.customTemplateFieldValues);
-        this.props.context.dynamicDataSourceManager.notifyPropertyChanged('searchResults');
+    private handleResultUpdateBroadCast(results: ISearchResults) {
+        this.props.onSearchResultsUpdate(results, this.state.mountingNodeId);
     }
 
     /**

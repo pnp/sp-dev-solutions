@@ -134,13 +134,18 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
                 templateService: this._templateService,
                 templateContent: this._templateContentToDisplay,
                 webPartTitle: this.properties.webPartTitle,
-                context: this.context,
+                currentUICultureName: this.context.pageContext.cultureInfo.currentUICultureName,
+                siteServerRelativeUrl: this.context.pageContext.site.serverRelativeUrl,
+                webServerRelativeUrl: this.context.pageContext.web.serverRelativeUrl,
                 resultTypes: this.properties.resultTypes,
                 useCodeRenderer: this.codeRendererIsSelected(),
                 customTemplateFieldValues: this.properties.customTemplateFieldValues,
                 rendererId: this.properties.selectedLayout as any,
-                resultService: this._resultService,
-                enableLocalization: this.properties.enableLocalization
+                enableLocalization: this.properties.enableLocalization,
+                onSearchResultsUpdate: (results, mountingNodeId) => {
+                    this._resultService.updateResultData(results, this.properties.selectedLayout as any, mountingNodeId, this.properties.customTemplateFieldValues);
+                    this.context.dynamicDataSourceManager.notifyPropertyChanged('searchResults');
+                }
             } as ISearchResultsContainerProps
         );
 

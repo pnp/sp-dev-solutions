@@ -10,6 +10,7 @@ import { ISearchResultType } from '../../../../models/ISearchResultType';
 import IResultService from '../../../../services/ResultService/IResultService';
 import {ICustomTemplateFieldValue} from '../../../../services/ResultService/ResultService';
 import { IRefinementFilter } from '../../../../models/ISearchResult';
+import SearchResultsOperationCallback from '../../../../models/SearchResultsOperationCallback';
 
 interface ISearchResultsContainerProps {
 
@@ -109,9 +110,19 @@ interface ISearchResultsContainerProps {
     templateContent: string;
 
     /**
-     * The web part context
+     * The serverRelativeUrl for the current Site
      */
-    context: WebPartContext;
+    siteServerRelativeUrl: string;
+
+    /**
+     * The serverRelativeUrl for the current Web
+     */
+    webServerRelativeUrl: string;
+
+    /**
+     * The name of the current ui culture
+     */
+    currentUICultureName: string;
 
     /** 
      * The configured result types 
@@ -126,7 +137,6 @@ interface ISearchResultsContainerProps {
     /**
      * The data passing service for custom action renderers
      */
-    resultService: IResultService;
     useCodeRenderer: boolean;
     customTemplateFieldValues:  ICustomTemplateFieldValue[];
 
@@ -136,6 +146,8 @@ interface ISearchResultsContainerProps {
     strings: ISearchResultsWebPartStrings;
 
     enableLocalization: boolean;
+
+    onSearchResultsUpdate: SearchResultsOperationCallback;
 }
 
 export default ISearchResultsContainerProps;
