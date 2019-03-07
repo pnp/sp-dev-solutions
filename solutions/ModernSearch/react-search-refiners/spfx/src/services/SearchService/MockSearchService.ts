@@ -122,6 +122,7 @@ class MockSearchService implements ISearchService {
 
             const filters: string[] = [];
             let searchResults = clone(this._searchResults);
+            searchResults.SearchQuery = query + this.queryTemplate + this.selectedProperties.join(',');
             const filteredResults: ISearchResult[] = [];
             
             if (refinementFilters.length > 0) {
@@ -136,12 +137,9 @@ class MockSearchService implements ISearchService {
                     }
                 });
 
-                searchResults = {
-                    SearchQuery: query + this.queryTemplate + this.selectedProperties.join(','),
-                    RelevantResults: filteredResults,
-                    RefinementResults: this._searchResults.RefinementResults,
-                    TotalRows: filteredResults.length,
-                };
+                searchResults.RelevantResults = filteredResults;
+                searchResults.RefinementResults = this._searchResults.RefinementResults;
+                searchResults.TotalRows = filteredResults.length;
             }
 
             // Return only the specified count
