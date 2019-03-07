@@ -14,7 +14,7 @@ import {
 import { PropertyFieldCollectionData, CustomCollectionFieldType } from '@pnp/spfx-property-controls/lib/PropertyFieldCollectionData';
 import * as strings from 'SearchRefinersWebPartStrings';
 import { IRefinementFilter } from '../../models/ISearchResult';
-import SearchRefiners from './components/SearchRefinersContainer/SearchRefinersContainer';
+import SearchRefinersContainer from './components/SearchRefinersContainer/SearchRefinersContainer';
 import { IDynamicDataCallables, IDynamicDataPropertyDefinition, IDynamicDataAnnotatedPropertyValue } from '@microsoft/sp-dynamic-data';
 import { ISearchRefinersWebPartProps } from './ISearchRefinersWebPartProps';
 import { Placeholder } from '@pnp/spfx-controls-react/lib/Placeholder';
@@ -29,17 +29,22 @@ export default class SearchRefinersWebPart extends BaseClientSideWebPart<ISearch
   public render(): void {
     let renderElement = null;
 
-    if (!!this.properties.availableRefiners.tryGetSource())
+    if (!!this.properties.availableRefiners.tryGetSource() 
+        && !!this.properties.searchQuery.tryGetSource() 
+        && this.properties.availableRefinersPropertyPath
+        && this.properties.availableRefinersPropertyPath
+      )
     {
-      let availableRefinersDataSourceValue = this._dynamicDataService.getDataSourceValues(this.context.dynamicDataProvider, this.properties.availableRefiners, this.properties.availableRefinersSourceId, this.properties.availableRefinersPropertyId, this.properties.availableRefinersPropertyPath);
-      let availableRefiners = (!availableRefinersDataSourceValue) ? [] : availableRefinersDataSourceValue;
+      let availableRefiners = this._dynamicDataService.getDataSourceValues(this.context.dynamicDataProvider, this.properties.availableRefiners, this.properties.availableRefinersSourceId, this.properties.availableRefinersPropertyId, this.properties.availableRefinersPropertyPath);
+      let searchQuery = this._dynamicDataService.getDataSourceValue(this.context.dynamicDataProvider, this.properties.searchQuery, this.properties.searchQuerySourceId, this.properties.searchQueryPropertyId, this.properties.searchQueryPropertyPath);
 
       renderElement = React.createElement(
-        SearchRefiners,
+        SearchRefinersContainer,
         {
           webPartTitle: this.properties.webPartTitle,
           availableRefiners: availableRefiners,
           refinersConfiguration: this.properties.refinersConfiguration,
+          searchQuery: searchQuery,
           showBlank: this.properties.showBlank,
           displayMode: this.displayMode,
           onUpdateFilters: (appliedRefiners: IRefinementFilter[]) => {
@@ -76,8 +81,11 @@ export default class SearchRefinersWebPart extends BaseClientSideWebPart<ISearch
 
   protected get propertiesMetadata(): IWebPartPropertiesMetadata {
     return {
+        'searchQuery': {
+            dynamicPropertyType: 'string'
+        },
         'availableRefiners': {
-            dynamicPropertyType: 'array'
+          dynamicPropertyType: 'array'
         }
     };
   }
@@ -189,14 +197,17 @@ export default class SearchRefinersWebPart extends BaseClientSideWebPart<ISearch
                   ]
                 }),
                 PropertyPaneDynamicFieldSet({
-                  label: strings.Refiners.AvailableRefinersLabel,
+                  label: strings.SearchResultsLabel,
                   fields: [
+                    PropertyPaneDynamicField('searchQuery', {
+                      label: strings.SearchQueryLabel
+                    }),
                     PropertyPaneDynamicField('availableRefiners', {
-                      label: strings.AvailableRefinersLabel
+                      label: strings.Refiners.AvailableRefinersLabel
                     })
                   ],
                   sharedConfiguration: {
-                    depth: DynamicDataSharedDepth.Source
+                    depth: DynamicDataSharedDepth.Property
                   }
                 })
               ]
@@ -225,7 +236,7 @@ export default class SearchRefinersWebPart extends BaseClientSideWebPart<ISearch
 
   protected async onPropertyPaneFieldChanged(propertyPath: string) {
 
-    if (propertyPath.localeCompare('availableRefiners') === 0) {
+    if (propertyPath.localeCompare('availableRefiners') === 0 || propertyPath.localeCompare('searchQuery') === 0) {
         // Update data source information
         this._saveDataSourceInfo();
     }
@@ -248,6 +259,16 @@ export default class SearchRefinersWebPart extends BaseClientSideWebPart<ISearch
         this.properties.availableRefinersSourceId = null;
         this.properties.availableRefinersPropertyId = null;
         this.properties.availableRefinersPropertyPath = null;
+    }
+
+    if (this.properties.searchQuery.tryGetSource()) {
+      this.properties.searchQuerySourceId = this.properties.searchQuery["_reference"]._sourceId;
+      this.properties.searchQueryPropertyId = this.properties.searchQuery["_reference"]._property;
+      this.properties.searchQueryPropertyPath = this.properties.searchQuery["_reference"]._propertyPath;
+    } else {
+        this.properties.searchQuerySourceId = null;
+        this.properties.searchQueryPropertyId = null;
+        this.properties.searchQueryPropertyPath = null;
     }
   }
 

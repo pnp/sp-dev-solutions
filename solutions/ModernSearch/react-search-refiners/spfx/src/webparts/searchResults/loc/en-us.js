@@ -14,7 +14,7 @@ define([], function() {
     "FilterPanelTitle": "Available filters",
     "FilterResultsButtonLabel": "Filters",
     "SelectedFiltersLabel": "Selected filters",
-    "AvailableFiltersLabel": "Available filters",
+    "SearchResultsLabel": "Search results",
     "RemoveAllFiltersLabel": "Remove all filters",
     "ShowPagingLabel": "Show paging",
     "ShowResultsCountLabel": "Show results count",

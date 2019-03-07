@@ -6,17 +6,21 @@ class MockSearchService implements ISearchService {
 
     public selectedProperties: string[];
     private _suggestions: string[];
-
+    private _queryTemplate: string;
     private _itemsCount: number;
 
     public get resultsCount(): number { return this._itemsCount; }
     public set resultsCount(value: number) { this._itemsCount = value; }
+
+    public set queryTemplate(value: string) { this._queryTemplate = value; }
+    public get queryTemplate(): string { return this._queryTemplate; }
 
     private _searchResults: ISearchResults;
 
     public constructor() {
      
         this._searchResults = {
+            SearchQuery: "",
             RelevantResults: [
                 {
                     Title: 'Document 1 - Category 1',
@@ -133,6 +137,7 @@ class MockSearchService implements ISearchService {
                 });
 
                 searchResults = {
+                    SearchQuery: query + this.queryTemplate + this.selectedProperties.join(','),
                     RelevantResults: filteredResults,
                     RefinementResults: this._searchResults.RefinementResults,
                     TotalRows: filteredResults.length,

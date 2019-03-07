@@ -32,6 +32,13 @@ export default class FiltersPanel extends React.Component<IFilterPanelProps, IFi
         this._onRenderCell = this._onRenderCell.bind(this);
     }
 
+    public componentWillReceiveProps(nextProps: IFilterPanelProps) {
+        if (this.props.searchQuery !== nextProps.searchQuery)
+        {
+            this._removeAllFilters();
+        }
+    }
+
     public render(): React.ReactElement<IFilterPanelProps> {
 
         let items: JSX.Element[] = [];

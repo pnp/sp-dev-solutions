@@ -23,6 +23,7 @@ export default class SearchRefinersContainer extends React.Component<ISearchRefi
     }
 
     renderWpContent = <FiltersPanel 
+      searchQuery={this.props.searchQuery}
       availableFilters={this.props.availableRefiners}
       refinersConfiguration={this.props.refinersConfiguration}
       onUpdateFilters={this.props.onUpdateFilters}  

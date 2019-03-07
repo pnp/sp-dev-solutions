@@ -13,7 +13,8 @@ define([], function() {
     "RemoveAllFiltersLabel": "Supprimer tous les filtres",
     "ShowBlankEditInfoMessage": "Aucun résultat pour cette requête. Ce composant Web Part restera vide en mode affichage conformément aux paramètres.",
     "RefinersConfiguration": "Configuration des filtres",
-    "AvailableRefinersLabel": "Filtre()s disponible(s)",
+    "SearchResultsLabel": "Résultats de recherche",
+    "SearchQueryLabel": "Requête de recherche",
     "Refiners": {
       "RefinersFieldLabel": "Filtres",
       "RefinersFieldDescription": "Configurez ici les propriétés gerées à utiliser comme filtres. Si il n'existe pas de valeurs pour le filtre spécifié, il n'apparaîtra pas dans le panneau.",

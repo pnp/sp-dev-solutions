@@ -106,6 +106,7 @@ class SearchService implements ISearchService {
         }
 
         let results: ISearchResults = {
+            SearchQuery: query + this.queryTemplate + this.selectedProperties.join(','),
             RelevantResults: [],
             RefinementResults: [],
             TotalRows: 0,

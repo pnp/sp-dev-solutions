@@ -29,11 +29,6 @@ interface ISearchResultsContainerState {
     areResultsLoading: boolean;
 
     /**
-     * Keeps the last query in case you change the query in the propery panel
-     */
-    lastQuery: string;
-
-    /**
      * Keeps the field on which the results need to be sorted (after initial sort)
      */
     sortField?: string;

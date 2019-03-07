@@ -6,7 +6,7 @@ import { Spinner, SpinnerSize } from 'office-ui-fabric-react/lib/Spinner';
 import { Shimmer, ShimmerElementType as ElemType, ShimmerElementsGroup } from 'office-ui-fabric-react/lib/Shimmer';
 import { Logger, LogLevel } from '@pnp/logging';
 import * as strings from 'SearchResultsWebPartStrings';
-import { IRefinementValue, IRefinementResult, ISearchResult } from '../../../../models/ISearchResult';
+import { IRefinementValue, IRefinementResult, ISearchResult, ISearchResults } from '../../../../models/ISearchResult';
 import Paging from '../Paging/Paging';
 import { Overlay } from 'office-ui-fabric-react/lib/Overlay';
 import { DisplayMode } from '@microsoft/sp-core-library';
@@ -33,6 +33,7 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
         // Set the initial state
         this.state = {
             results: {
+                SearchQuery: '',
                 RefinementResults: [],
                 RelevantResults: []
             },
@@ -40,7 +41,6 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
             areResultsLoading: false,
             errorMessage: '',
             hasError: false,
-            lastQuery: '',
             mountingNodeGuid: this.getGUID(),
         };
 
@@ -102,7 +102,7 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
             if (items.RelevantResults.length === 0) {
 
                 // Check if a search request has already been entered (to distinguish the first use scenario)
-                if (!this.props.showBlank && this.state.lastQuery && !areResultsLoading) {
+                if (!this.props.showBlank && this.state.results.SearchQuery && !areResultsLoading) {
                     renderWpContent =
                         <div>
                             {renderWebPartTitle}
@@ -192,8 +192,7 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
                 
                 this.setState({
                     results: searchResults,
-                    areResultsLoading: false,
-                    lastQuery: this.props.queryKeywords + this.props.searchService.queryTemplate + this.props.selectedProperties.join(',')
+                    areResultsLoading: false
                 });
                 this.handleResultUpdateBroadCast(searchResults);
 
@@ -201,13 +200,15 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
 
                 Logger.write('[SearchContainer._componentDidMount()]: Error: ' + error, LogLevel.Error);
 
+                let results: ISearchResults = { SearchQuery: this.state.results.SearchQuery, RefinementResults: [], RelevantResults: [] };
+
                 this.setState({
                     areResultsLoading: false,
-                    results: { RefinementResults: [], RelevantResults: [] },
+                    results: results,
                     hasError: true,
                     errorMessage: error.message
                 });
-                this.handleResultUpdateBroadCast({ RefinementResults: [], RelevantResults: [] });
+                this.handleResultUpdateBroadCast(results);
             }
         } else {
             this.setState({
@@ -225,7 +226,7 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
             || JSON.stringify(this.props.sortableFields) !== JSON.stringify(nextProps.sortableFields)
             || JSON.stringify(this.props.sortList) !== JSON.stringify(nextProps.sortList)
             || this.props.maxResultsCount !== nextProps.maxResultsCount
-            || this.state.lastQuery !== query
+            || this.state.results.SearchQuery !== query
             || this.props.resultSourceId !== nextProps.resultSourceId
             || this.props.queryKeywords !== nextProps.queryKeywords
             || this.props.enableQueryRules !== nextProps.enableQueryRules
@@ -263,8 +264,7 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
                     this.setState({
                         results: searchResults,
                         areResultsLoading: false,
-                        currentPage: 1,
-                        lastQuery: query
+                        currentPage: 1
                     });
                     this.handleResultUpdateBroadCast(searchResults);
 
@@ -272,21 +272,23 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
 
                     Logger.write('[SearchContainer._componentWillReceiveProps()]: Error: ' + error, LogLevel.Error);
 
+                    let results: ISearchResults = { SearchQuery: this.state.results.SearchQuery, RefinementResults: [], RelevantResults: [] };
+
                     this.setState({
                         areResultsLoading: false,
-                        results: { RefinementResults: [], RelevantResults: [] },
+                        results: results,
                         hasError: true,
                         errorMessage: error.message
                     });
-                    this.handleResultUpdateBroadCast({ RefinementResults: [], RelevantResults: [] });
+                    this.handleResultUpdateBroadCast(results);
                 }
             } else {
+                let results: ISearchResults = { SearchQuery: '', RefinementResults: [], RelevantResults: [] };
                 this.setState({
                     areResultsLoading: false,
-                    lastQuery: '',
-                    results: { RefinementResults: [], RelevantResults: [] },
+                    results: results,
                 });
-                this.handleResultUpdateBroadCast({ RefinementResults: [], RelevantResults: [] });
+                this.handleResultUpdateBroadCast(results);
             }
         } else {
             // Refresh the template without making a new search query because we don't need to
@@ -341,14 +343,16 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
             catch(error) {
                 Logger.write('[SearchContainer._onUpdateSort()]: Error: ' + error, LogLevel.Error);
                 const errorMessage = /\"value\":\"[^:]+: SortList\.\"/.test(error.message) ? strings.Sort.SortErrorMessage : error.message;
+                
+                let results: ISearchResults = { SearchQuery: this.state.results.SearchQuery, RefinementResults: [], RelevantResults: [] };
 
                 this.setState({
                     areResultsLoading: false,
-                    results: { RefinementResults: [], RelevantResults: [] },
+                    results: results,
                     hasError: true,
                     errorMessage: errorMessage
                 });
-                this.handleResultUpdateBroadCast({ RefinementResults: [], RelevantResults: [] });
+                this.handleResultUpdateBroadCast(results);
             }
         }
     }
@@ -667,9 +671,9 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
                 </div>;
     }
 
-    private handleResultUpdateBroadCast(results) {
+    private handleResultUpdateBroadCast(results: ISearchResults) { //TODO move out to the webpart
         this.props.resultService.updateResultData(results, this.props.rendererId, `pnp-search-render-node-${this.state.mountingNodeGuid}`, this.props.customTemplateFieldValues);
-        this.props.context.dynamicDataSourceManager.notifyPropertyChanged('availableFilters');
+        this.props.context.dynamicDataSourceManager.notifyPropertyChanged('searchResults');
     }
 
     /**

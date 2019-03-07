@@ -4,6 +4,7 @@ import IRefinerConfiguration from "../../../../models/IRefinerConfiguration";
 import RefinementFilterOperationCallback from "../../../../models/RefinementValueOperationCallback";
 
 interface IFiltersProps {
+    searchQuery: string;
     availableFilters: IRefinementResult[];
     refinersConfiguration: IRefinerConfiguration[];
     onUpdateFilters: RefinementFilterOperationCallback;

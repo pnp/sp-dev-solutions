@@ -12,7 +12,8 @@ declare interface ISearchRefinersWebPartStrings {
   RemoveAllFiltersLabel: string;
   ShowBlankEditInfoMessage: string;
   RefinersConfiguration: string;
-  AvailableRefinersLabel: string;
+  SearchResultsLabel: string;
+  SearchQueryLabel: string;
   Refiners: {
     RefinersFieldLabel: string;
     RefinersFieldDescription: string;

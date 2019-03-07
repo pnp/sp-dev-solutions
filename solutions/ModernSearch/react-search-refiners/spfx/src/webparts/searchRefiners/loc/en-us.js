@@ -13,7 +13,8 @@ define([], function() {
     "RemoveAllFiltersLabel": "Remove all filters",
     "ShowBlankEditInfoMessage": "No result returned for this query. This Web Part will remain blank in display mode according to parameters.",
     "RefinersConfiguration": "Refiners configuration",
-    "AvailableRefinersLabel": "Available refiners",
+    "SearchResultsLabel": "Search results",
+    "SearchQueryLabel": "Search query",
     "Refiners": {
       "RefinersFieldLabel": "Refiners",
       "RefinerManagedPropertyField": "Filter managed property",

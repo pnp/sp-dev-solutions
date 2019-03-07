@@ -17,7 +17,7 @@ declare interface ISearchResultsWebPartStrings {
     FilterPanelTitle: string;
     FilterResultsButtonLabel: string;
     SelectedFiltersLabel: string;
-    AvailableFiltersLabel: string;
+    SearchResultsLabel: string;
     RemoveAllFiltersLabel: string;
     ShowPagingLabel: string;
     ShowResultsCountLabel: string;

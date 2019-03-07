@@ -14,7 +14,7 @@ define([], function() {
     "FilterPanelTitle": "Filtres disponibles",
     "FilterResultsButtonLabel": "Filtrer",
     "SelectedFiltersLabel": "Filtre(s) appliqué(s)",
-    "AvailableFiltersLabel": "Filtre()s disponible(s)",
+    "SearchResultsLabel": "Résultats d recherche",
     "RemoveAllFiltersLabel": "Supprimer tous les filtres",
     "ShowPagingLabel": "Afficher la pagination",
     "ShowResultsCountLabel": "Afficher le nombre de résultats",

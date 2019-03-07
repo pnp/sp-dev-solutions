@@ -42,8 +42,7 @@ import { ResultTypeOperator } from '../../models/ISearchResultType';
 import IResultService from '../../services/ResultService/IResultService';
 import { ResultService, IRenderer } from '../../services/ResultService/ResultService';
 import { IDynamicDataCallables, IDynamicDataPropertyDefinition, IDynamicDataAnnotatedPropertyValue } from '@microsoft/sp-dynamic-data';
-import { IRefinementResult, IRefinementFilter } from '../../models/ISearchResult';
-import IRefinerConfiguration from '../../models/IRefinerConfiguration';
+import { ISearchResults } from '../../models/ISearchResult';
 import IDynamicDataService from '../../services/DynamicDataService/IDynamicDataService';
 import { DynamicDataService } from '../../services/DynamicDataService/DynamicDataService';
 
@@ -1090,16 +1089,16 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
     public getPropertyDefinitions(): ReadonlyArray<IDynamicDataPropertyDefinition> {
         return [
             {
-              id: 'availableFilters',
-              title: strings.AvailableFiltersLabel
+              id: 'searchResults',
+              title: strings.SearchResultsLabel
             }
         ];
     }
 
-    public getPropertyValue(propertyId: string): IRefinementResult[] | IRefinerConfiguration[] | IRefinementFilter[] {
+    public getPropertyValue(propertyId: string): ISearchResults {
         switch (propertyId) {
-            case 'availableFilters':
-                return (this._resultService && this._resultService.results && this._resultService.results.RefinementResults ) ? this._resultService.results.RefinementResults : [];
+            case 'searchResults':
+                return (this._resultService && this._resultService.results) ? this._resultService.results : { SearchQuery: '', RefinementResults: [], RelevantResults: [] };
         }
         
         throw new Error('Bad property id');
@@ -1108,16 +1107,18 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
     public getAnnotatedPropertyValue?(propertyId: string): IDynamicDataAnnotatedPropertyValue {
         switch (propertyId) {
 
-            case 'availableFilters':
-                const availableFiltersAnnotatedPropertyValue = {
+            case 'searchResults':
+                const searchResultsAnnotatedPropertyValue = {
                     sampleValue: {
-
+                        'SearchQuery': '*',
+                        'RefinementResults': []
                     },
                     metadata: {
-
+                        'SearchQuery': { title: 'SearchQuery' },
+                        'RefinementResults': { title: 'RefinementResults' }
                     }
                 };
-                return availableFiltersAnnotatedPropertyValue;
+                return searchResultsAnnotatedPropertyValue;
             default:
                 throw new Error('Bad property id');
         }
