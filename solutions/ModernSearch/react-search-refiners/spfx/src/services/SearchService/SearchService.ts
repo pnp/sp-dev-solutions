@@ -108,7 +108,6 @@ class SearchService implements ISearchService {
         let results: ISearchResults = {
             RelevantResults: [],
             RefinementResults: [],
-            RefinementFilters: refinementFilters,
             TotalRows: 0,
         };
 

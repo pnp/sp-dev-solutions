@@ -17,7 +17,6 @@ export interface ISearchResultsWebPartProps {
     enableQueryRules: boolean;
     maxResultsCount: number;
     selectedProperties: string;
-    refiners: IRefinerConfiguration[];
     sortableFields: ISortableFieldConfiguration[];
     showPaging: boolean;
     showResultsCount: boolean;
@@ -34,8 +33,12 @@ export interface ISearchResultsWebPartProps {
     customTemplateFieldValues: ICustomTemplateFieldValue[];
     enableLocalization: boolean;
     useExternalRefinersDisplay: boolean;
-    selectedRefiners: DynamicProperty<IRefinementFilter>;
-    refinerSourceId: string;
-    refinerPropertyId: string;
-    refinerPropertyPath: string;
+    appliedRefiners: DynamicProperty<IRefinementFilter>;
+    appliedRefinersSourceId: string;
+    appliedRefinersPropertyId: string;
+    appliedRefinersPropertyPath: string;
+    refinersConfiguration: DynamicProperty<IRefinerConfiguration>;
+    refinersConfigurationSourceId: string;
+    refinersConfigurationPropertyId: string;
+    refinersConfigurationPropertyPath: string;
 }

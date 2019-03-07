@@ -13,7 +13,6 @@ define([], function() {
     "NoResultMessage": "Il n'y a aucun résultat à afficher.",
     "FilterPanelTitle": "Filtres disponibles",
     "FilterResultsButtonLabel": "Filtrer",
-    "RefinersConfiguration": "Configuration des filtres",
     "SelectedFiltersLabel": "Filtre(s) appliqué(s)",
     "AvailableFiltersLabel": "Filtre()s disponible(s)",
     "RemoveAllFiltersLabel": "Supprimer tous les filtres",
@@ -52,7 +51,9 @@ define([], function() {
     "HandlebarsHelpersDescription": "Activer les fonctions de moment et handlebars helpers. Voir https://github.com/SharePoint/sp-dev-fx-webparts/blob/master/samples/react-search-refiners/README.md#available-tokens pour plus d'informations.",
     "PromotedResultsLabel": "Résultat(s) promu(s)",
     "PanelCloseButtonAria":"Proche",
-    "UseExternalRefinersDisplayLabel": "Utiliser un composant Web Part externe pour afficher des filtres",
+    "UseRefinersWebPartLabel": "Connectez-vous au composant Web Part de filtres de recherche",
+    "AppliedRefinersFieldLabel": "Filtre(s) appliqué(s)",
+    "RefinersConfigurationFieldLabel": "Configuration des filtres",
     "customTemplateFieldsLabel": "Valeurs de champ de modèle personnalisé",
     "customTemplateFieldsPanelHeader": "Valeurs de champ de modèle personnalisé",
     "customTemplateFieldsConfigureButtonLabel": "Configurer",
@@ -74,13 +75,6 @@ define([], function() {
       "SortableFieldDisplayValueField": "Intitulé du champ à afficher",
       "EditSortableFieldsLabel": "Éditer les champs de tri",
       "EditSortLabel": "Éditer l'ordre de tri"
-    },
-    "Refiners": {
-      "RefinersFieldLabel": "Filtres",
-      "RefinersFieldDescription": "Configurez ici les propriétés gerées à utiliser comme filtres. Si il n'existe pas de valeurs pour le filtre spécifié, il n'apparaîtra pas dans le panneau.",
-      "RefinerManagedPropertyField": "Propriété gérée de filtre",
-      "RefinerDisplayValueField": "Intitulé du filtre à afficher",
-      "EditRefinersLabel": "Éditer les filtres"
     },
     "TermNotFound": "(Terme avec l'ID '{0}' non trouvé)",
     "UseDefaultSearchQueryKeywordsFieldLabel": "Utiliser une requête initiale",

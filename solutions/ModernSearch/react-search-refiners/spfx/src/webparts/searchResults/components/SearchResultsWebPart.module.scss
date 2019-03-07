@@ -39,31 +39,6 @@
         color: "[theme: themePrimary]";
     }
 
-    &__selectedFilters {
-
-        padding: 10px;
-
-        label.filter {        
-            display: inline-block;         
-            margin-bottom: 5px;  
-        }
-
-        label.filter~label.filter:before {
-            padding: 5px;
-            content: "|";
-        }
-
-        i {
-            margin-right: 5px;
-            vertical-align: sub;
-        }
-
-        i:hover {
-            color: "[theme: themePrimary, default: #005a9e]";
-            cursor: pointer;
-        }
-    }
-
     &__paginationContainer {
         text-align: center;        
         margin-top: 15px;

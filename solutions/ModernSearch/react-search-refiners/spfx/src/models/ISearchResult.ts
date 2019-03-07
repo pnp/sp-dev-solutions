@@ -2,7 +2,6 @@ export interface ISearchResults {
     RelevantResults: ISearchResult[];
     RefinementResults: IRefinementResult[];
     PromotedResults?: IPromotedResult[];
-    RefinementFilters?: IRefinementFilter[];
     TotalRows?: number;
 }
 

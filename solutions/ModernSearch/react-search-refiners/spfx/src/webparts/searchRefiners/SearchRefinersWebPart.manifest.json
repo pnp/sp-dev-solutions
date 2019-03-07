@@ -14,16 +14,32 @@
       "default": "PnP" 
     },
     "title": { 
-      "default": "Search Refiners"
+      "default": "Search Refiners",
+      "fr-fr": "Filtres de recherche"
     },
-    "description": { "default": "Displays the customizable dynamic refiners" },
+    "description": { 
+      "default": "Displays the customizable dynamic refiners",
+      "fr-fr": "Affiche les filtres dynamiques personnalisables" 
+    },
     "officeFabricIconFontName": "Filter",
     "properties": {
       "webPartTitle": "",
       "showBlank": true,
-      "availableFilters": [],
-      "selectedFilters": [],
-      "refinersConfiguration": []
+      "refinersConfiguration": [
+        {
+            "refinerName": "Created",
+            "displayValue": "Created Date"
+        },
+        {
+            "refinerName": "Size",
+            "displayValue": "Size of the file"
+        },
+        {
+            "refinerName": "owstaxidmetadataalltagsinfo",
+            "displayValue": "Tags"
+        }
+      ],
+      "availableRefiners": []
     }
   }]
 }

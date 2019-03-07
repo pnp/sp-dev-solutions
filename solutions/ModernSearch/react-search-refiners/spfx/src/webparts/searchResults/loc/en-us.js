@@ -13,7 +13,6 @@ define([], function() {
     "NoResultMessage": "There are no results to show",    
     "FilterPanelTitle": "Available filters",
     "FilterResultsButtonLabel": "Filters",
-    "RefinersConfiguration": "Refiners configuration",
     "SelectedFiltersLabel": "Selected filters",
     "AvailableFiltersLabel": "Available filters",
     "RemoveAllFiltersLabel": "Remove all filters",
@@ -52,7 +51,9 @@ define([], function() {
     "HandlebarsHelpersDescription": "Enable functions from moment and handlebars helpers. See https://github.com/SharePoint/sp-dev-fx-webparts/blob/master/samples/react-search-refiners/README.md#available-tokens for more information.",
     "PromotedResultsLabel": "Promoted result(s)",
     "PanelCloseButtonAria":"Close",
-    "UseExternalRefinersDisplayLabel": "Use external webpart to display refiners",
+    "UseRefinersWebPartLabel": "Connect to the Search Refiners webpart",
+    "AppliedRefinersFieldLabel": "Applied refiners",
+    "RefinersConfigurationFieldLabel": "Refiners configuration",
     "customTemplateFieldsLabel":"Custom template field values",  
     "customTemplateFieldsPanelHeader":"Custom template field values",  
     "customTemplateFieldsConfigureButtonLabel":"Configure",  
@@ -74,13 +75,6 @@ define([], function() {
       "SortableFieldDisplayValueField": "Field name to display",
       "EditSortableFieldsLabel": "Edit sortable fields",
       "EditSortLabel": "Edit sort order"
-    },
-    "Refiners": {
-      "RefinersFieldLabel": "Refiners",
-      "RefinerManagedPropertyField": "Filter managed property",
-      "RefinerDisplayValueField": "Filter name to display",
-      "RefinersFieldDescription": "Specifies managed properties used as refiners. If there are no values for a filter property, it won't appear in the panel.",
-      "EditRefinersLabel": "Edit refiners"
     },
     "TermNotFound": "(Term with ID '{0}' not found)",
     "UseDefaultSearchQueryKeywordsFieldLabel": "Use a default search query",

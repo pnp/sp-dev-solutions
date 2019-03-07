@@ -1,6 +1,6 @@
 import * as React from                                                 'react';
-import IFilterPanelProps from                                          './IFiltersProps';
-import IFilterPanelState from                                          './IFiltersState';
+import IFilterPanelProps from                                          './IFiltersPanelProps';
+import IFilterPanelState from                                          './IFiltersPanelState';
 import { Checkbox } from                                               'office-ui-fabric-react/lib/Checkbox';
 import { Text, DisplayMode } from                                                   '@microsoft/sp-core-library';
 import * as update from                                                'immutability-helper';
@@ -10,16 +10,18 @@ import {
     IGroupDividerProps
 } from                                                                 'office-ui-fabric-react/lib/components/GroupedList/index';
 import {Link, MessageBar, MessageBarType} from 'office-ui-fabric-react';
-import { IRefinementValue, IRefinementFilter } from '../../../models/ISearchResult';
-import styles from './Filters.module.scss';
+import styles from '../SearchRefinersWebPart.module.scss';
+import * as strings from 'SearchRefinersWebPartStrings';
+import { IRefinementValue, IRefinementFilter } from '../../../../models/ISearchResult';
 
-export default class Filters extends React.Component<IFilterPanelProps, IFilterPanelState> {
+export default class FiltersPanel extends React.Component<IFilterPanelProps, IFilterPanelState> {
 
-    public constructor(props) {
+    public constructor(props: IFilterPanelProps) {
         super(props);
 
         this.state = {
             expandedGroups: [],
+            appliedRefiners: []
         };
 
         this._addFilter = this._addFilter.bind(this);
@@ -38,11 +40,11 @@ export default class Filters extends React.Component<IFilterPanelProps, IFilterP
 
         if (this.props.availableFilters.length === 0) {
             if (this.props.displayMode === DisplayMode.Edit && this.props.showBlank) {
-                noResultsElement = <MessageBar messageBarType={MessageBarType.info}>{this.props.strings.showBlankEditInfoMessage}</MessageBar>;
+                noResultsElement = <MessageBar messageBarType={MessageBarType.info}>{strings.ShowBlankEditInfoMessage}</MessageBar>;
             }
             else if (!this.props.showBlank) {
-                noResultsElement = (<div className={styles.searchWp__filterPanel__body__noresult}>
-                        {this.props.strings.noFilterConfiguredLabel}
+                noResultsElement = (<div className={styles.searchRefiners__filterPanel__body__noresult}>
+                        {strings.NoFilterConfiguredLabel}
                     </div>
                 );
             } 
@@ -97,7 +99,7 @@ export default class Filters extends React.Component<IFilterPanelProps, IFilterP
             ref='groupedList'
             items={items}
             onRenderCell={this._onRenderCell}
-            className={styles.searchWp__filterPanel__body__group}
+            className={styles.searchRefiners__filterPanel__body__group}
             groupProps={
                 {
                     onRenderHeader: this._onRenderHeader,
@@ -105,22 +107,22 @@ export default class Filters extends React.Component<IFilterPanelProps, IFilterP
             }
             groups={groups} /> : noResultsElement;
 
-        const renderLinkRemoveAll = this.props.selectedFilters.length > 0 ?
-                                    (<div className={`${styles.searchWp__filterPanel__body__allFiltersToggle} ${this.props.selectedFilters.length === 0 && "hiddenLink"}`}>
+        const renderLinkRemoveAll = this.state.appliedRefiners.length > 0 ?
+                                    (<div className={`${styles.searchRefiners__filterPanel__body__allFiltersToggle} ${this.state.appliedRefiners.length === 0 && "hiddenLink"}`}>
                                     <div className='ms-Grid-row'>
                                         <div className='ms-Grid-col ms-u-sm1 ms-u-md1 ms-u-lg1'>
             
                                         </div>
                                         <div className='ms-Grid-col ms-u-sm10 ms-u-md10 ms-u-lg10'>
                                             <Link onClick={this._removeAllFilters}>
-                                                {this.props.strings.removeAllFiltersLabel}
+                                                {strings.RemoveAllFiltersLabel}
                                             </Link>
                                         </div>
                                     </div>
                                 </div>) : null;
 
         return (
-                <div className={styles.searchWp__filterPanel__body}>
+                <div className={styles.searchRefiners__filterPanel__body}>
                     {renderLinkRemoveAll}
                     {renderAvailableFilters}
                 </div>
@@ -139,7 +141,7 @@ export default class Filters extends React.Component<IFilterPanelProps, IFilterP
 
     private _onRenderHeader(props: IGroupDividerProps): JSX.Element {
         return (
-            <div className={styles.searchWp__filterPanel__body__group__header}>
+            <div className={styles.searchRefiners__filterPanel__body__group__header}>
                 <div className='ms-Grid-row' onClick={() => {
 
                     // Update the index for expanded groups to be able to keep it open after a re-render
@@ -155,7 +157,7 @@ export default class Filters extends React.Component<IFilterPanelProps, IFilterP
                     props.onToggleCollapse(props.group);
                 }}>
                     <div className='ms-Grid-col ms-u-sm1 ms-u-md1 ms-u-lg1'>
-                        <div className={styles.searchWp__filterPanel__body__headerIcon}>
+                        <div className={styles.searchRefiners__filterPanel__body__headerIcon}>
                             <i className={props.group.isCollapsed ? 'ms-Icon ms-Icon--ChevronDown' : 'ms-Icon ms-Icon--ChevronUp'}></i>
                         </div>
                     </div>
@@ -170,14 +172,15 @@ export default class Filters extends React.Component<IFilterPanelProps, IFilterP
     private _addFilter(filterToAdd: IRefinementFilter): void {
 
         // Add the filter to the selected filters collection
-        let newFilters = update(this.props.selectedFilters, {$push: [filterToAdd]});
+        let newFilters = update(this.state.appliedRefiners, {$push: [filterToAdd]});
+
         this._applyFilters(newFilters);
     }
 
     private _removeFilter(filterToRemove: IRefinementFilter): void {
 
         // Remove the filter from the selected filters collection
-        let newFilters = this.props.selectedFilters.filter((elt) => {
+        let newFilters = this.state.appliedRefiners.filter((elt) => {
             return elt.Value.RefinementToken !== filterToRemove.Value.RefinementToken;
         });
 
@@ -193,6 +196,10 @@ export default class Filters extends React.Component<IFilterPanelProps, IFilterP
      * @param selectedFilters The filters to apply
      */
     private _applyFilters(selectedFilters: IRefinementFilter[]): void {
+        this.setState({
+            appliedRefiners: selectedFilters
+        });
+
         this.props.onUpdateFilters(selectedFilters);
     }
 
@@ -202,7 +209,7 @@ export default class Filters extends React.Component<IFilterPanelProps, IFilterP
      */
     private _isInFilterSelection(filterToCheck: IRefinementFilter): boolean {
 
-        let newFilters = this.props.selectedFilters.filter((filter) => {
+        let newFilters = this.state.appliedRefiners.filter((filter) => {
             return filter.Value.RefinementToken === filterToCheck.Value.RefinementToken;
         });
 

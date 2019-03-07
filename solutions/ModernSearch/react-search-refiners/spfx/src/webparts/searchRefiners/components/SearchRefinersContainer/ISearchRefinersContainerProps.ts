@@ -5,8 +5,7 @@ import { DisplayMode } from "@microsoft/sp-core-library";
 
 export interface ISearchRefinersContainerProps {
   webPartTitle: string;
-  availableFilters: IRefinementResult[];
-  selectedFilters?: IRefinementFilter[];
+  availableRefiners: IRefinementResult[];
   refinersConfiguration: IRefinerConfiguration[];
   onUpdateFilters: RefinementFilterOperationCallback;
   showBlank: boolean;

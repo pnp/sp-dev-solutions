@@ -61,7 +61,7 @@ interface ISearchResultsContainerProps {
     /**
      * The managed properties used as refiners for the query
      */
-    refiners: IRefinerConfiguration[];
+    refinersConfiguration: IRefinerConfiguration[];
 
     /**
      * Hide refiners in webpart, show externally
@@ -69,9 +69,9 @@ interface ISearchResultsContainerProps {
     useExternalRefinersDisplay: boolean;
 
     /**
-     * The selected refiners to further filter the query
+     * The applied refiners to further filter the query
      */
-    selectedRefiners: IRefinementFilter[];
+    appliedRefiners: IRefinementFilter[];
 
     /**
      * The managed properties used as sortable fields for the query

@@ -1,9 +1,9 @@
 declare interface ISearchRefinersWebPartStrings {
-  RefinerFiltersGroupName: string;
+  RefinersConfigurationGroupName: string;
   ShowBlankLabel: string;
   StylingSettingsGroupName: string;
   WebPartTitle: string;
-  SelectedFiltersLabel: string;
+  AppliedRefinersLabel: string;
   PlaceHolderEditLabel: string;
   PlaceHolderConfigureBtnLabel: string;
   PlaceHolderIconText: string;
@@ -12,8 +12,16 @@ declare interface ISearchRefinersWebPartStrings {
   RemoveAllFiltersLabel: string;
   ShowBlankEditInfoMessage: string;
   RefinersConfiguration: string;
-  SelectedFiltersLabel: string;
-  AvailableFiltersLabel: string;
+  AvailableRefinersLabel: string;
+  Refiners: {
+    RefinersFieldLabel: string;
+    RefinersFieldDescription: string;
+    RefinerManagedPropertyField: string;
+    RefinerDisplayValueField: string;
+    EditRefinersLabel: string;
+    EditSortLabel: string;
+    AvailableRefinersLabel: string;
+  },
 }
 
 declare module 'SearchRefinersWebPartStrings' {
