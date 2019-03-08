@@ -5,6 +5,7 @@ import { ISortFieldConfiguration } from '../../models/ISortFieldConfiguration';
 import ISortableFieldConfiguration from '../../models/ISortableFieldConfiguration';
 import { ISearchResultType } from '../../models/ISearchResultType';
 import { ICustomTemplateFieldValue } from '../../services/ResultService/ResultService';
+import { IRefinementFilter } from '../../models/ISearchResult';
 
 export interface ISearchResultsWebPartProps {
     queryKeywords: DynamicProperty<string>;
@@ -16,7 +17,6 @@ export interface ISearchResultsWebPartProps {
     enableQueryRules: boolean;
     maxResultsCount: number;
     selectedProperties: string;
-    refiners: IRefinerConfiguration[];
     sortableFields: ISortableFieldConfiguration[];
     showPaging: boolean;
     showResultsCount: boolean;
@@ -32,4 +32,13 @@ export interface ISearchResultsWebPartProps {
     rendererId: string;
     customTemplateFieldValues: ICustomTemplateFieldValue[];
     enableLocalization: boolean;
+    useExternalRefinersDisplay: boolean;
+    appliedRefiners: DynamicProperty<IRefinementFilter>;
+    appliedRefinersSourceId: string;
+    appliedRefinersPropertyId: string;
+    appliedRefinersPropertyPath: string;
+    refinersConfiguration: DynamicProperty<IRefinerConfiguration>;
+    refinersConfigurationSourceId: string;
+    refinersConfigurationPropertyId: string;
+    refinersConfigurationPropertyPath: string;
 }

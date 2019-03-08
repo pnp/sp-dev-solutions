@@ -9,6 +9,8 @@ import ISortableFieldConfiguration from '../../../../models/ISortableFieldConfig
 import { ISearchResultType } from '../../../../models/ISearchResultType';
 import IResultService from '../../../../services/ResultService/IResultService';
 import {ICustomTemplateFieldValue} from '../../../../services/ResultService/ResultService';
+import { IRefinementFilter } from '../../../../models/ISearchResult';
+import SearchResultsOperationCallback from '../../../../models/SearchResultsOperationCallback';
 
 interface ISearchResultsContainerProps {
 
@@ -60,7 +62,17 @@ interface ISearchResultsContainerProps {
     /**
      * The managed properties used as refiners for the query
      */
-    refiners: IRefinerConfiguration[];
+    refinersConfiguration: IRefinerConfiguration[];
+
+    /**
+     * Hide refiners in webpart, show externally
+     */
+    useExternalRefinersDisplay: boolean;
+
+    /**
+     * The applied refiners to further filter the query
+     */
+    appliedRefiners: IRefinementFilter[];
 
     /**
      * The managed properties used as sortable fields for the query
@@ -98,11 +110,23 @@ interface ISearchResultsContainerProps {
     templateContent: string;
 
     /**
-     * The web part context
+     * The serverRelativeUrl for the current Site
      */
-    context: WebPartContext;
+    siteServerRelativeUrl: string;
 
-    /** The configured result types */
+    /**
+     * The serverRelativeUrl for the current Web
+     */
+    webServerRelativeUrl: string;
+
+    /**
+     * The name of the current ui culture
+     */
+    currentUICultureName: string;
+
+    /** 
+     * The configured result types 
+     */
     resultTypes: ISearchResultType[];
 
     /**
@@ -113,7 +137,6 @@ interface ISearchResultsContainerProps {
     /**
      * The data passing service for custom action renderers
      */
-    resultService: IResultService;
     useCodeRenderer: boolean;
     customTemplateFieldValues:  ICustomTemplateFieldValue[];
 
@@ -123,6 +146,8 @@ interface ISearchResultsContainerProps {
     strings: ISearchResultsWebPartStrings;
 
     enableLocalization: boolean;
+
+    onSearchResultsUpdate: SearchResultsOperationCallback;
 }
 
 export default ISearchResultsContainerProps;

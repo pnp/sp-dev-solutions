@@ -17,6 +17,7 @@
     "@microsoft/sp-dialog": "1.7.1",
     "@microsoft/sp-loader": "1.7.1",
     "@microsoft/sp-lodash-subset": "1.7.1",
+    "@microsoft/sp-office-ui-fabric-core": "1.7.1",
     "@microsoft/sp-webpart-base": "1.7.1",
     "@pnp/common": "1.2.9",
     "@pnp/logging": "1.2.9",
@@ -50,11 +51,7 @@
     "react-js-pagination": "3.0.0",
     "video.js": "^7.3.0"
   },
-  "resolutions": {
-    "@types/react": "16.4.2"
-  },
   "devDependencies": {
-    "@microsoft/sp-office-ui-fabric-core": "1.6.0",
     "@microsoft/sp-build-web": "1.7.1",
     "@microsoft/sp-module-interfaces": "1.7.1",
     "@microsoft/sp-tslint-rules": "1.7.1",
@@ -65,5 +62,8 @@
     "gulp": "~3.9.1",
     "unlazy-loader": "0.1.3",
     "webpack-bundle-analyzer": "^3.1.0"
+  },
+  "resolutions": {
+    "@types/react": "16.4.2"
   }
 }

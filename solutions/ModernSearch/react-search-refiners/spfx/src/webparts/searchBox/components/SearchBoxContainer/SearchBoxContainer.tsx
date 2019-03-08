@@ -2,7 +2,7 @@ import * as React from                               'react';
 import { ISearchBoxContainerProps } from             './ISearchBoxContainerProps';
 import * as strings from                             'SearchBoxWebPartStrings';
 import ISearchBoxContainerState from                 './ISearchBoxContainerState';
-import { UrlHelper, PageOpenBehavior } from          '../../../helpers/UrlHelper';
+import { UrlHelper, PageOpenBehavior } from          '../../../../helpers/UrlHelper';
 import { MessageBar, MessageBarType } from           'office-ui-fabric-react/lib/MessageBar';
 import Downshift from                                'downshift';
 import { TextField } from                            'office-ui-fabric-react/lib/TextField';
@@ -11,8 +11,8 @@ import { Spinner, SpinnerSize } from                 'office-ui-fabric-react/lib
 import { Label } from                                'office-ui-fabric-react/lib/Label';
 import * as update from                              'immutability-helper';
 import styles from '../SearchBoxWebPart.module.scss';
-import ISearchQuery from '../../../models/ISearchQuery';
-import NlpDebugPanel from './NlpDebugPanel/NlpDebugPanel';
+import ISearchQuery from '../../../../models/ISearchQuery';
+import NlpDebugPanel from '../NlpDebugPanel/NlpDebugPanel';
 import { IconButton } from 'office-ui-fabric-react/lib/Button';
 
 const SUGGESTION_CHAR_COUNT_TRIGGER = 3;

@@ -24,4 +24,6 @@ export default interface IResultService {
      * Get all registered renderers on the current page. 
      */
     getRegisteredRenderers(): IRenderer[];
+
+    results: ISearchResults;
 }

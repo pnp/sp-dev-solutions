@@ -1,4 +1,4 @@
-import { INlpResponse } from "../../../models/INlpResponse";
+import { INlpResponse } from "../../../../models/INlpResponse";
 
 interface ISearchBoxContainerState {
     

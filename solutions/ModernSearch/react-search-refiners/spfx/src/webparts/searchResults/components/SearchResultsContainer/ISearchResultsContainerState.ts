@@ -1,4 +1,4 @@
-import { ISearchResults, IRefinementFilter, IRefinementResult } from '../../../../models/ISearchResult';
+import { ISearchResults, IRefinementResult } from '../../../../models/ISearchResult';
 import { SortDirection } from "@pnp/sp";
 
 interface ISearchResultsContainerState {
@@ -7,21 +7,6 @@ interface ISearchResultsContainerState {
      * The current search results to display
      */
     results: ISearchResults;
-
-    /**
-     * Number of results
-     */
-    resultCount: number;
-    
-    /**
-     * Current selected filters to apply to the search query. We need this information during page transition to keep existing filters
-     */
-    selectedFilters: IRefinementFilter[];
-
-    /**
-     * Available filters in the filter panel
-     */
-    availableFilters: IRefinementResult[];
 
     /**
      * The current result page number
@@ -39,14 +24,9 @@ interface ISearchResultsContainerState {
     hasError: boolean;
 
     /**
-     * Indicates whether or not the resutls arre currenty loading due to a refinement or new query
+     * Indicates whether or not the results are currenty loading due to a refinement or new query
      */
     areResultsLoading: boolean;
-
-    /**
-     * Keeps the last query in case you change the query in the propery panel
-     */
-    lastQuery: string;
 
     /**
      * Keeps the field on which the results need to be sorted (after initial sort)
@@ -58,9 +38,9 @@ interface ISearchResultsContainerState {
      */
     sortDirection?: SortDirection;
     /**
-     *  Guid for the current mounting node
+     *  Id for the current mounting node
      */
-    mountingNodeGuid: string;
+    mountingNodeId: string;
 }
 
 export default ISearchResultsContainerState;

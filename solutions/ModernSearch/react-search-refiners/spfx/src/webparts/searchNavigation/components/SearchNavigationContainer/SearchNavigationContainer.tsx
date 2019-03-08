@@ -1,22 +1,19 @@
 import * as React from 'react';
-import styles from './SearchNavigation.module.scss';
-import { ISearchNavigationProps } from './ISearchNavigationProps';
-import { INavigationNodeProps } from '../SearchNavigationWebPart';
+import styles from '../SearchNavigationWebPart.module.scss';
+import { ISearchNavigationContainerProps } from './ISearchNavigationContainerProps';
+import { INavigationNodeProps } from '../../SearchNavigationWebPart';
+import { ISearchNavigationContainerState } from './ISearchNavigationContainerState';
 
+export default class SearchNavigationContainer extends React.Component<ISearchNavigationContainerProps, ISearchNavigationContainerState> {
 
-export interface ISearchNavigationState {
-    hoverItemIndex: number;
-}
-export default class SearchNavigation extends React.Component<ISearchNavigationProps, ISearchNavigationState> {
-
-    constructor(props) {
+    constructor(props: ISearchNavigationContainerProps) {
         super(props);
         this.state = {
             hoverItemIndex: undefined,
         };
     }
 
-    public render(): React.ReactElement<ISearchNavigationProps> {
+    public render(): React.ReactElement<ISearchNavigationContainerProps> {
         if (this.props.nodes && this.props.nodes.length > 0) {
             return (
                 <div className={styles.navigationNodes}>

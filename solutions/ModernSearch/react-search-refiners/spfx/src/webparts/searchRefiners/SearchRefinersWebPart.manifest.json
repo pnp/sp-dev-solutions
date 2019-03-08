@@ -1,0 +1,46 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx/client-side-web-part-manifest.schema.json",
+  "id": "e899ac12-9256-4c8d-a8ad-dbd20fc459c3",
+  "alias": "SearchRefinersWebPart",
+  "componentType": "WebPart",
+  "version": "*",
+  "manifestVersion": 2,
+  "supportsFullBleed": true,
+  "requiresCustomScript": false,
+
+  "preconfiguredEntries": [{
+    "groupId": "5c03119e-3074-46fd-976b-c60198311f70",
+    "group": { 
+      "default": "PnP" 
+    },
+    "title": { 
+      "default": "Search Refiners",
+      "fr-fr": "Filtres de recherche"
+    },
+    "description": { 
+      "default": "Displays the customizable dynamic refiners",
+      "fr-fr": "Affiche les filtres dynamiques personnalisables" 
+    },
+    "officeFabricIconFontName": "Filter",
+    "properties": {
+      "webPartTitle": "",
+      "showBlank": true,
+      "refinersConfiguration": [
+        {
+            "refinerName": "Created",
+            "displayValue": "Created Date"
+        },
+        {
+            "refinerName": "Size",
+            "displayValue": "Size of the file"
+        },
+        {
+            "refinerName": "owstaxidmetadataalltagsinfo",
+            "displayValue": "Tags"
+        }
+      ],
+      "searchQuery": "",
+      "availableRefiners": []
+    }
+  }]
+}

@@ -1,0 +1,44 @@
+@import '~@microsoft/sp-office-ui-fabric-core/dist/sass/SPFabricCore.scss';
+
+.searchRefiners {
+  &__filterPanel {
+    &__body {
+        overflow: auto;
+
+        &__headerIcon {
+            text-align: right;
+            margin-top: 5px;
+        }
+
+        &__allFiltersToggle {
+            margin-bottom: 15px;
+        }
+
+        &__noresult {
+            padding:10px 0;
+        }
+
+        &__group {
+
+            &__header {
+                margin-top: 15px;
+            }
+
+            button {
+                padding: 10px;
+            }
+        }
+
+        :global .ms-Grid-row {
+            margin: 0;
+        }
+    }
+  }
+  
+  .overlay {
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}

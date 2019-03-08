@@ -1,7 +1,7 @@
-import { PageOpenBehavior } from '../../../helpers/UrlHelper';
-import ISearchService from       '../../../services/SearchService/ISearchService';
-import INlpService from '../../../services/NlpService/INlpService';
-import ISearchQuery from '../../../models/ISearchQuery';
+import { PageOpenBehavior } from '../../../../helpers/UrlHelper';
+import ISearchService from       '../../../../services/SearchService/ISearchService';
+import INlpService from '../../../../services/NlpService/INlpService';
+import ISearchQuery from '../../../../models/ISearchQuery';
 
 export interface ISearchBoxContainerProps {
     onSearch: (searchQuery: ISearchQuery) => void;

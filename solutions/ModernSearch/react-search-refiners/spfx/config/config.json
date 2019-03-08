@@ -25,6 +25,14 @@
           "manifest": "./src/webparts/searchNavigation/SearchNavigationWebPart.manifest.json"
         }
       ]
+    },
+    "search-refiners-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/searchRefiners/SearchRefinersWebPart.js",
+          "manifest": "./src/webparts/searchRefiners/SearchRefinersWebPart.manifest.json"
+        }
+      ]
     }
   },
   "externals": {},
@@ -33,6 +41,7 @@
     "SearchBoxWebPartStrings": "lib/webparts/searchBox/loc/{locale}.js",
     "ControlStrings": "node_modules/@pnp/spfx-controls-react/lib/loc/{locale}.js",
     "PropertyControlStrings": "node_modules/@pnp/spfx-property-controls/lib/loc/{locale}.js",
-    "SearchNavigationWebPartStrings": "lib/webparts/searchNavigation/loc/{locale}.js"
+    "SearchNavigationWebPartStrings": "lib/webparts/searchNavigation/loc/{locale}.js",
+    "SearchRefinersWebPartStrings": "lib/webparts/searchRefiners/loc/{locale}.js"
   }
 }
