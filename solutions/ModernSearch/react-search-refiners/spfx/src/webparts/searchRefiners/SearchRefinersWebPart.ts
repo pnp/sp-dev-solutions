@@ -207,7 +207,7 @@ export default class SearchRefinersWebPart extends BaseClientSideWebPart<ISearch
             checked: this.properties.showBlank,
         }),
         PropertyPaneChoiceGroup('selectedLayout', {
-          label: '',
+          label: strings.RefinerLayoutLabel,
           options: layoutOptions
       })
     ];
