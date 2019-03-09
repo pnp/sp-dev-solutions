@@ -148,6 +148,11 @@ interface ISearchResultsContainerProps {
     enableLocalization: boolean;
 
     onSearchResultsUpdate: SearchResultsOperationCallback;
+
+    /* 
+     * The selected page to show for the search results
+     */
+    selectedPageNumber: number;
 }
 
 export default ISearchResultsContainerProps;

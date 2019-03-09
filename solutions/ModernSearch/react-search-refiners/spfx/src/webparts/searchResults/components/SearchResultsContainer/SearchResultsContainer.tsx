@@ -36,7 +36,7 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
                 RefinementResults: [],
                 RelevantResults: []
             },
-            currentPage: 1,
+            currentPage: props.selectedPageNumber,
             areResultsLoading: false,
             errorMessage: '',
             hasError: false,
@@ -44,7 +44,6 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
         };
 
         this._onUpdateSort = this._onUpdateSort.bind(this);
-        this._onPageUpdate = this._onPageUpdate.bind(this);
     }
 
     public render(): React.ReactElement<ISearchResultsContainerProps> {
@@ -209,7 +208,15 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
     }
 
     public async componentWillReceiveProps(nextProps: ISearchResultsContainerProps) {
+        let executeSearch = false;
         let query = nextProps.queryKeywords + nextProps.searchService.queryTemplate + nextProps.selectedProperties.join(',');
+
+        let selectedPage = 1;
+        if(this.props.selectedPageNumber !== nextProps.selectedPageNumber)
+        {
+            executeSearch = true;
+            selectedPage = nextProps.selectedPageNumber;
+        }
 
         // New props are passed to the component when the search query has been changed
         if (JSON.stringify(this.props.refinersConfiguration) !== JSON.stringify(nextProps.refinersConfiguration)
@@ -222,7 +229,11 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
             || this.props.queryKeywords !== nextProps.queryKeywords
             || this.props.enableQueryRules !== nextProps.enableQueryRules
             || this.props.enableLocalization !== nextProps.enableLocalization) {
+            executeSearch = true;
+            selectedPage = 1;
+        }
 
+        if (executeSearch) {
             // Don't perform search is there is no keywords
             if (nextProps.queryKeywords) {
                 try {
@@ -241,7 +252,7 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
                     this.props.searchService.sortList = nextProps.sortList;
 
                     // We reset the page number and refinement filters
-                    const searchResults = await this.props.searchService.search(nextProps.queryKeywords, refinerManagedProperties, nextProps.appliedRefiners, 1);
+                    const searchResults = await this.props.searchService.search(nextProps.queryKeywords, refinerManagedProperties, nextProps.appliedRefiners, selectedPage);
 
                     // Translates taxonomy refiners and result values by using terms ID
                     if (nextProps.enableLocalization) {
@@ -255,7 +266,7 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
                     this.setState({
                         results: searchResults,
                         areResultsLoading: false,
-                        currentPage: 1
+                        currentPage: selectedPage
                     });
                     this.handleResultUpdateBroadCast(searchResults);
 
@@ -346,38 +357,6 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
                 this.handleResultUpdateBroadCast(results);
             }
         }
-    }
-
-    /**
-     * Callback function update search results according the page number
-     * @param pageNumber The page mumber to get
-     */
-    private async _onPageUpdate(pageNumber: number) {
-
-        this.setState({
-            currentPage: pageNumber,
-            areResultsLoading: true,
-        });
-
-        // Set the focus at the top of the component
-        this._searchWpRef.focus();
-
-        const refinerManagedProperties = this.props.refinersConfiguration.map(e => { return e.refinerName ;}).join(',');
-
-        const searchResults = await this.props.searchService.search(this.props.queryKeywords, refinerManagedProperties, this.props.appliedRefiners, pageNumber);
-
-        // Translates taxonomy refiners and result values by using terms ID
-        if (this.props.enableLocalization) {
-            const localizedResults = await this._getLocalizedMetadata(searchResults.RelevantResults);
-            searchResults.RelevantResults = localizedResults;
-        }
-
-        this.setState({
-            results: searchResults,
-            areResultsLoading: false,
-        });
-        
-        this.handleResultUpdateBroadCast(searchResults);
     }
 
     /**

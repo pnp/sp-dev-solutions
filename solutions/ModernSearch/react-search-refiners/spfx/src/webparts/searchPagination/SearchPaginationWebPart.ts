@@ -33,6 +33,7 @@ export default class SearchPaginationWebPart extends BaseClientSideWebPart<ISear
 
       if (searchPagination)
       {
+        this._currentPage = searchPagination.CurrentPage;
         renderElement = React.createElement(
           SearchPagination,
           {
@@ -42,7 +43,7 @@ export default class SearchPaginationWebPart extends BaseClientSideWebPart<ISear
               this._currentPage = page;
               this.context.dynamicDataSourceManager.notifyPropertyChanged("currentPage");
             },
-            currentPage: searchPagination.CurrentPage
+            currentPage: this._currentPage
           }
         );
       }

@@ -111,6 +111,9 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
         let refinersConfigurationDataSourceValue = this._dynamicDataService.getDataSourceValues(this.context.dynamicDataProvider, this.properties.refinersConfiguration, this.properties.refinersConfigurationSourceId, this.properties.refinersConfigurationPropertyId, this.properties.refinersConfigurationPropertyPath);
         let refinersConfiguration = (!refinersConfigurationDataSourceValue) ? [] : refinersConfigurationDataSourceValue;
 
+        let selectedPageDataSourceValue = this._dynamicDataService.getDataSourceValue(this.context.dynamicDataProvider, this.properties.selectedPage, this.properties.selectedPageSourceId, this.properties.selectedPagePropertyId, this.properties.selectedPagePropertyPath);
+        let selectedPage = (!selectedPageDataSourceValue) ? 1 : selectedPageDataSourceValue;
+
         const isValueConnected = !!this.properties.queryKeywords.tryGetSource();
         this._searchContainer = React.createElement(
             SearchResultsContainer,
@@ -141,6 +144,7 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
                 customTemplateFieldValues: this.properties.customTemplateFieldValues,
                 rendererId: this.properties.selectedLayout as any,
                 enableLocalization: this.properties.enableLocalization,
+                selectedPageNumber: selectedPage,
                 onSearchResultsUpdate: (results, mountingNodeId) => {
                     this._resultService.updateResultData(results, this.properties.selectedLayout as any, mountingNodeId, this.properties.customTemplateFieldValues);
                     this.context.dynamicDataSourceManager.notifyPropertyChanged('searchResults');
@@ -311,11 +315,11 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
                 },
                 {
                     header: {
-                        description: "Refiner settings"
+                        description: strings.ExternalConnectionsGroupName
                     },
                     groups: [
                         {
-                            groupFields: this._getRefinerSettingsFields()
+                            groupFields: this._getExternalConnectionSettingsFields()
                         }
                     ]
                 },
@@ -343,6 +347,9 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
             },
             'refinersConfiguration': {
                 dynamicPropertyType: 'array'
+            },
+            'selectedPage': {
+                dynamicPropertyType: 'number'
             }
         };
     }
@@ -367,7 +374,11 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
 
     protected async onPropertyPaneFieldChanged(propertyPath: string) {
 
-        if (propertyPath.localeCompare('queryKeywords') === 0 || propertyPath.localeCompare('appliedRefiners') === 0 || propertyPath.localeCompare('refinersConfiguration') === 0) {
+        if (propertyPath.localeCompare('queryKeywords') === 0 
+            || propertyPath.localeCompare('appliedRefiners') === 0
+            || propertyPath.localeCompare('refinersConfiguration') === 0
+            || propertyPath.localeCompare('selectedPage'))
+        {
 
             // Update data source information
             this._saveDataSourceInfo();
@@ -384,6 +395,12 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
             this.properties.refinersConfigurationSourceId = null;
             this.properties.refinersConfigurationPropertyId = null;
             this.properties.refinersConfigurationPropertyPath = null;
+        }
+
+        if (!this.properties.useExternalPaginationDisplay) {
+            this.properties.selectedPageSourceId = null;
+            this.properties.selectedPagePropertyId = null;
+            this.properties.selectedPagePropertyPath = null;
         }
 
         if (this.properties.enableLocalization) {
@@ -451,6 +468,26 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
             this.properties.appliedRefinersSourceId = null;
             this.properties.appliedRefinersPropertyId = null;
             this.properties.appliedRefinersPropertyPath = null;
+        }
+
+        if (this.properties.refinersConfiguration.tryGetSource()) {
+            this.properties.refinersConfigurationSourceId = this.properties.refinersConfiguration["_reference"]._sourceId;
+            this.properties.refinersConfigurationPropertyId = this.properties.refinersConfiguration["_reference"]._property;
+            this.properties.refinersConfigurationPropertyPath = this.properties.refinersConfiguration["_reference"]._propertyPath;
+        } else {
+            this.properties.refinersConfigurationSourceId = null;
+            this.properties.refinersConfigurationPropertyId = null;
+            this.properties.refinersConfigurationPropertyPath = null;
+        }
+
+        if (this.properties.selectedPage.tryGetSource()) {
+            this.properties.selectedPageSourceId = this.properties.selectedPage["_reference"]._sourceId;
+            this.properties.selectedPagePropertyId = this.properties.selectedPage["_reference"]._property;
+            this.properties.selectedPagePropertyPath = this.properties.selectedPage["_reference"]._propertyPath;
+        } else {
+            this.properties.selectedPageSourceId = null;
+            this.properties.selectedPagePropertyId = null;
+            this.properties.selectedPagePropertyPath = null;
         }
     }
 
@@ -723,18 +760,18 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
     /**
      * Determines the group fields for the refiner settings options inside the property pane
      */
-    private _getRefinerSettingsFields(): IPropertyPaneField<any>[] {
+    private _getExternalConnectionSettingsFields(): IPropertyPaneField<any>[] {
 
         // Sets up search settings fields
-        const refinerSettingsFields: IPropertyPaneField<any>[] = [
+        const externalConnectionSettingsFields: IPropertyPaneField<any>[] = [
             PropertyPaneToggle('useExternalRefinersDisplay', {
                 label: strings.UseRefinersWebPartLabel,
                 checked: this.properties.useExternalRefinersDisplay
-            }),
+            })
         ];
 
         if (this.properties.useExternalRefinersDisplay) {
-            refinerSettingsFields.push(...[
+            externalConnectionSettingsFields.push(...[
                 PropertyPaneDynamicFieldSet({
                     label: strings.SearchQueryKeywordsFieldLabel,
 
@@ -758,7 +795,33 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
             this.render();
         }
 
-        return refinerSettingsFields;
+        externalConnectionSettingsFields.push(PropertyPaneToggle('useExternalPaginationDisplay', {
+            label: strings.UsePaginationWebPartLabel,
+            checked: this.properties.useExternalPaginationDisplay
+        }));
+
+        if (this.properties.useExternalPaginationDisplay) {
+            externalConnectionSettingsFields.push(...[
+                PropertyPaneDynamicFieldSet({
+                    label: strings.SearchPaginationFieldLabel,
+
+                    fields: [
+                        PropertyPaneDynamicField('selectedPage', {
+                            label: strings.SelectedPageFieldLabel
+                        })
+                    ],
+                    sharedConfiguration: {
+                        depth: DynamicDataSharedDepth.Source,
+                    },
+                })
+            ]);
+        }
+        else {
+            this.properties.selectedPage.setValue(1);
+            this.render();
+        }
+
+        return externalConnectionSettingsFields;
     }
 
     /**

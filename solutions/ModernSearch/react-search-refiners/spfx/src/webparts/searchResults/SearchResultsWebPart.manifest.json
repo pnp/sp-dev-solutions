@@ -46,6 +46,8 @@
             "useDefaultSearchQuery": false,
             "resultTypes": [],
             "useExternalRefinersDisplay": false,
+            "useExternalPaginationDisplay": false,
+            "selectedPage": 1,
             "appliedRefiners": [],
             "refinersConfiguration": []
         }

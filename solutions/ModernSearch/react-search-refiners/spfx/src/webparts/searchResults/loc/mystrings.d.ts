@@ -53,8 +53,12 @@ declare interface ISearchResultsWebPartStrings {
     PromotedResultsLabel: string;
     PanelCloseButtonAria:string;
     UseRefinersWebPartLabel: string;
+    UsePaginationWebPartLabel: string;
     AppliedRefinersFieldLabel: string;
     RefinersConfigurationFieldLabel: string;
+    ExternalConnectionsGroupName: string;
+    SearchPaginationFieldLabel: string;
+    SelectedPageFieldLabel: string;
     customTemplateFieldsLabel: string;  
     customTemplateFieldsPanelHeader: string;  
     customTemplateFieldsConfigureButtonLabel: string;  

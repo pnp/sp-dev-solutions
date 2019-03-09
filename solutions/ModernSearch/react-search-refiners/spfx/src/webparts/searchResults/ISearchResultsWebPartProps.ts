@@ -32,6 +32,7 @@ export interface ISearchResultsWebPartProps {
     customTemplateFieldValues: ICustomTemplateFieldValue[];
     enableLocalization: boolean;
     useExternalRefinersDisplay: boolean;
+    useExternalPaginationDisplay: boolean;
     appliedRefiners: DynamicProperty<IRefinementFilter>;
     appliedRefinersSourceId: string;
     appliedRefinersPropertyId: string;
@@ -40,4 +41,8 @@ export interface ISearchResultsWebPartProps {
     refinersConfigurationSourceId: string;
     refinersConfigurationPropertyId: string;
     refinersConfigurationPropertyPath: string;
+    selectedPage: DynamicProperty<number>;
+    selectedPageSourceId: string;
+    selectedPagePropertyId: string;
+    selectedPagePropertyPath: string;
 }
