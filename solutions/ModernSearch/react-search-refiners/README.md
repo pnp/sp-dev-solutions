@@ -18,7 +18,7 @@ This solution allows you to build user friendly SharePoint search experiences us
 
 A complete 1 hour turorial video is available on the [official SharePoint Developer blog](https://developer.microsoft.com/en-us/sharepoint/blogs/pnp-webcast-sharepoint-framework-modern-search-web-part/):
 
-<a href="https://www.youtube.com/embed/g41nvRVwtds" target="_blank"><img src="http://img.youtube.com/vi/g41nvRVwtds/maxresdefault.jpg"/></a>
+<a href="https://www.youtube.com/watch?v=g41nvRVwtds" target="_blank"><img src="http://img.youtube.com/vi/g41nvRVwtds/maxresdefault.jpg"/></a>
 
 <p align="center">
   <img src="./images/react-search-refiners.gif"/>
