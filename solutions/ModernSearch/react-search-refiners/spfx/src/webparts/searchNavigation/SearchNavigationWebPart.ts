@@ -45,7 +45,7 @@ export default class SearchNavigationWebPart extends BaseClientSideWebPart<ISear
     private _dynamicDataService: IDynamicDataService;
 
     public render(): void {
-        let queryDataSourceValue = this._dynamicDataService.getDataSourceValue(this.context.dynamicDataProvider, this.properties.queryKeywords, this.properties.sourceId, this.properties.propertyId, this.properties.propertyPath);
+        let queryDataSourceValue = ''//this._dynamicDataService.getDataSourceValue(this.context.dynamicDataProvider, this.properties.queryKeywords, this.properties.sourceId, this.properties.propertyId, this.properties.propertyPath);
         let queryKeywords = (!queryDataSourceValue) ? "" : queryDataSourceValue;
 
         const element: React.ReactElement<ISearchNavigationContainerProps> = React.createElement(
@@ -66,7 +66,7 @@ export default class SearchNavigationWebPart extends BaseClientSideWebPart<ISear
     }
 
     protected onInit(): Promise<void> {
-        this._dynamicDataService = new DynamicDataService();
+        this._dynamicDataService = new DynamicDataService(this.context.dynamicDataProvider);
         
         if (this.properties.sourceId) {
             // Needed to retrieve manually the value for the dynamic property at render time. See the associated SPFx bug

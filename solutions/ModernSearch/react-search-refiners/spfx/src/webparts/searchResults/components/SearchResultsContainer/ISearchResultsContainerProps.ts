@@ -70,9 +70,9 @@ interface ISearchResultsContainerProps {
     useExternalRefinersDisplay: boolean;
 
     /**
-     * The applied refiners to further filter the query
+     * The selected refiners
      */
-    appliedRefiners: IRefinementFilter[];
+    selectedFilters: IRefinementFilter[];
 
     /**
      * The managed properties used as sortable fields for the query

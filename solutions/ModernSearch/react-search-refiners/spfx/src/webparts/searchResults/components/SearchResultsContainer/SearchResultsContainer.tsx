@@ -179,7 +179,7 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
 
                 const refinerManagedProperties = this.props.refinersConfiguration.map(e => { return e.refinerName ;}).join(',');
 
-                const searchResults = await this.props.searchService.search(this.props.queryKeywords, refinerManagedProperties, this.props.appliedRefiners, this.state.currentPage);
+                const searchResults = await this.props.searchService.search(this.props.queryKeywords, refinerManagedProperties, this.props.selectedFilters, this.state.currentPage);
 
                 // Translates taxonomy refiners and result values by using terms ID
                 if (this.props.enableLocalization) {
@@ -194,6 +194,7 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
                     results: searchResults,
                     areResultsLoading: false
                 });
+
                 this.handleResultUpdateBroadCast(searchResults);
 
             } catch (error) {
@@ -208,6 +209,7 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
                     hasError: true,
                     errorMessage: error.message
                 });
+
                 this.handleResultUpdateBroadCast(results);
             }
         } else {
@@ -222,7 +224,7 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
 
         // New props are passed to the component when the search query has been changed
         if (JSON.stringify(this.props.refinersConfiguration) !== JSON.stringify(nextProps.refinersConfiguration)
-            || JSON.stringify(this.props.appliedRefiners) != JSON.stringify(nextProps.appliedRefiners)
+            || JSON.stringify(this.props.selectedFilters) != JSON.stringify(nextProps.selectedFilters)
             || JSON.stringify(this.props.sortableFields) !== JSON.stringify(nextProps.sortableFields)
             || JSON.stringify(this.props.sortList) !== JSON.stringify(nextProps.sortList)
             || this.props.maxResultsCount !== nextProps.maxResultsCount
@@ -250,7 +252,7 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
                     this.props.searchService.sortList = nextProps.sortList;
 
                     // We reset the page number and refinement filters
-                    const searchResults = await this.props.searchService.search(nextProps.queryKeywords, refinerManagedProperties, nextProps.appliedRefiners, 1);
+                    const searchResults = await this.props.searchService.search(nextProps.queryKeywords, refinerManagedProperties, nextProps.selectedFilters, 1);
 
                     // Translates taxonomy refiners and result values by using terms ID
                     if (nextProps.enableLocalization) {
@@ -266,6 +268,7 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
                         areResultsLoading: false,
                         currentPage: 1
                     });
+
                     this.handleResultUpdateBroadCast(searchResults);
 
                 } catch (error) {
@@ -288,6 +291,7 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
                     areResultsLoading: false,
                     results: results,
                 });
+
                 this.handleResultUpdateBroadCast(results);
             }
         } else {
@@ -332,12 +336,13 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
 
             try
             {
-                const searchResults = await this.props.searchService.search(this.props.queryKeywords, refinerManagedProperties, this.props.appliedRefiners, 1);
+                const searchResults = await this.props.searchService.search(this.props.queryKeywords, refinerManagedProperties, this.props.selectedFilters, 1);
 
                 this.setState({
                     results: searchResults,
                     areResultsLoading: false,
                 });
+
                 this.handleResultUpdateBroadCast(searchResults);
             }
             catch(error) {
@@ -352,6 +357,7 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
                     hasError: true,
                     errorMessage: errorMessage
                 });
+
                 this.handleResultUpdateBroadCast(results);
             }
         }
@@ -373,7 +379,7 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
 
         const refinerManagedProperties = this.props.refinersConfiguration.map(e => { return e.refinerName ;}).join(',');
 
-        const searchResults = await this.props.searchService.search(this.props.queryKeywords, refinerManagedProperties, this.props.appliedRefiners, pageNumber);
+        const searchResults = await this.props.searchService.search(this.props.queryKeywords, refinerManagedProperties, this.props.selectedFilters, pageNumber);
 
         // Translates taxonomy refiners and result values by using terms ID
         if (this.props.enableLocalization) {

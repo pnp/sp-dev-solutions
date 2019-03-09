@@ -1,0 +1,73 @@
+.linkPanelLayout {
+
+    &__buttonBar {
+        overflow:auto;
+        display: flex;
+        flex-direction: row-reverse;
+        justify-content: space-between;
+
+        &__button {
+            display: flex;
+            align-items: baseline;
+        }
+    }
+
+    &__filterResultBtn {
+        color: "[theme: themePrimary, default: #005a9e]";
+    }
+
+    &__selectedFilters {
+
+        padding: 10px;
+
+        label.filter {        
+            display: inline-block;         
+            margin-bottom: 5px;  
+        }
+
+        label.filter~label.filter:before {
+            padding: 5px;
+            content: "|";
+        }
+
+        i {
+            margin-right: 5px;
+            vertical-align: sub;
+        }
+
+        i:hover {
+            color: "[theme: themePrimary, default: #005a9e]";
+            cursor: pointer;
+        }
+    }
+    
+    &__filterPanel {
+        &__body {
+            overflow: auto;
+    
+            &__headerIcon {
+                text-align: right;
+                margin-top: 5px;
+            }
+    
+            &__allFiltersToggle {
+                margin-bottom: 15px;
+            }
+    
+            &__group {
+    
+                &__header {
+                    margin-top: 15px;
+                }
+    
+                button {
+                    padding: 10px;
+                }
+            }
+    
+            :global .ms-Grid-row {
+                margin: 0;
+            }
+        }
+      }
+}
