@@ -18,7 +18,6 @@ export interface ISearchResultsWebPartProps {
     maxResultsCount: number;
     selectedProperties: string;
     sortableFields: ISortableFieldConfiguration[];
-    showPaging: boolean;
     showResultsCount: boolean;
     showBlank: boolean;
     selectedLayout: ResultsLayoutOption;

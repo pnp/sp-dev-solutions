@@ -1,9 +1,20 @@
 export interface ISearchResults {
     SearchQuery: string;
+    // SearchState: {
+    //     QueryKeywords: string;
+    //     SelectedProperties: string[];
+    //     QueryTemplate: string;
+    // };
+    Pagination?: ISearchPagination;
     RelevantResults: ISearchResult[];
     RefinementResults: IRefinementResult[];
     PromotedResults?: IPromotedResult[];
-    TotalRows?: number;
+}
+
+export interface ISearchPagination {
+    CurrentPage: number;
+    TotalRows: number;
+    MaxResultsPerPage: number;
 }
 
 export interface ISearchResult {

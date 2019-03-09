@@ -127,7 +127,6 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
                 appliedRefiners: appliedRefiners,
                 useExternalRefinersDisplay: this.properties.useExternalRefinersDisplay,
                 sortableFields: this.properties.sortableFields,
-                showPaging: this.properties.showPaging,
                 showResultsCount: this.properties.showResultsCount,
                 showBlank: this.properties.showBlank,
                 displayMode: this.displayMode,
@@ -899,10 +898,6 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
                 label: strings.ShowResultsCountLabel,
                 checked: this.properties.showResultsCount,
             }),
-            PropertyPaneToggle('showPaging', {
-                label: strings.ShowPagingLabel,
-                checked: this.properties.showPaging,
-            }),
             PropertyPaneHorizontalRule(),
             PropertyPaneChoiceGroup('selectedLayout', {
                 label: 'Results layout',
@@ -1116,11 +1111,13 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
                 const searchResultsAnnotatedPropertyValue = {
                     sampleValue: {
                         'SearchQuery': '*',
-                        'RefinementResults': []
+                        'RefinementResults': [],
+                        'Pagination': {}
                     },
                     metadata: {
                         'SearchQuery': { title: 'SearchQuery' },
-                        'RefinementResults': { title: 'RefinementResults' }
+                        'RefinementResults': { title: 'RefinementResults' },
+                        'Pagination': { title: 'Pagination' }
                     }
                 };
                 return searchResultsAnnotatedPropertyValue;

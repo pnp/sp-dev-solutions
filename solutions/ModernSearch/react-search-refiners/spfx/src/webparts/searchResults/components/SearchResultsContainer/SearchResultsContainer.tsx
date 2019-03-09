@@ -7,7 +7,6 @@ import { Shimmer, ShimmerElementType as ElemType, ShimmerElementsGroup } from 'o
 import { Logger, LogLevel } from '@pnp/logging';
 import * as strings from 'SearchResultsWebPartStrings';
 import { IRefinementValue, IRefinementResult, ISearchResult, ISearchResults } from '../../../../models/ISearchResult';
-import Paging from '../Paging/Paging';
 import { Overlay } from 'office-ui-fabric-react/lib/Overlay';
 import { DisplayMode } from '@microsoft/sp-core-library';
 import { WebPartTitle } from "@pnp/spfx-controls-react/lib/WebPartTitle";
@@ -126,7 +125,7 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
                                 {
                                     items: this.state.results.RelevantResults,
                                     promotedResults: this.state.results.PromotedResults,
-                                    totalRows: this.state.results.TotalRows,
+                                    totalRows: this.state.results.Pagination.TotalRows,
                                     keywords: this.props.queryKeywords,
                                     showResultsCount: this.props.showResultsCount,
                                     siteUrl: this.props.siteServerRelativeUrl,
@@ -145,14 +144,6 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
                         {renderOverlay}
                         <div id={this.state.mountingNodeId} />
                         {searchResultTemplate}
-                        {this.props.showPaging ?
-                            <Paging
-                                totalItems={items.TotalRows}
-                                itemsCountPerPage={this.props.maxResultsCount}
-                                onPageUpdate={this._onPageUpdate}
-                                currentPage={this.state.currentPage} />
-                            : null
-                        }
                     </div>;
             }
         }
