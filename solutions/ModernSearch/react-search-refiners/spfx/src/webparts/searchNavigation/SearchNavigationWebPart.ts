@@ -45,7 +45,7 @@ export default class SearchNavigationWebPart extends BaseClientSideWebPart<ISear
     private _dynamicDataService: IDynamicDataService;
 
     public render(): void {
-        let queryDataSourceValue = ''//this._dynamicDataService.getDataSourceValue(this.context.dynamicDataProvider, this.properties.queryKeywords, this.properties.sourceId, this.properties.propertyId, this.properties.propertyPath);
+        let queryDataSourceValue = this._dynamicDataService.getDataSourceValue(this.properties.queryKeywords, this.properties.sourceId, this.properties.propertyId, this.properties.propertyPath);
         let queryKeywords = (!queryDataSourceValue) ? "" : queryDataSourceValue;
 
         const element: React.ReactElement<ISearchNavigationContainerProps> = React.createElement(

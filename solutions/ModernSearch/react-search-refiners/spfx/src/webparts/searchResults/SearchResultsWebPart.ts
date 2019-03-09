@@ -43,8 +43,8 @@ import { ISortFieldConfiguration, ISortFieldDirection } from '../../models/ISort
 import { ResultTypeOperator } from '../../models/ISearchResultType';
 import IResultService from '../../services/ResultService/IResultService';
 import { ResultService, IRenderer } from '../../services/ResultService/ResultService';
-import { IDynamicDataCallables, IDynamicDataPropertyDefinition, IDynamicDataAnnotatedPropertyValue, IDynamicDataSource } from '@microsoft/sp-dynamic-data';
-import { ISearchResults, IRefinementResult, IRefinementFilter } from '../../models/ISearchResult';
+import { IDynamicDataCallables, IDynamicDataPropertyDefinition, IDynamicDataSource } from '@microsoft/sp-dynamic-data';
+import { IRefinementFilter } from '../../models/ISearchResult';
 import IDynamicDataService from '../../services/DynamicDataService/IDynamicDataService';
 import { DynamicDataService } from '../../services/DynamicDataService/DynamicDataService';
 import { DynamicProperty } from '@microsoft/sp-component-base';
@@ -1101,7 +1101,7 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
 
         switch (propertyId) {
             case SearchComponentType.SearchResultsWebPart:
-                return searchResultSourceData
+                return searchResultSourceData;
         }
         
         throw new Error('Bad property id');

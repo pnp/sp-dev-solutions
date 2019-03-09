@@ -27,7 +27,7 @@ export default class SearchRefinersContainer extends React.Component<ISearchRefi
 
         if (this.props.displayMode === DisplayMode.Edit && this.props.showBlank) {
           renderWpContent = <MessageBar messageBarType={MessageBarType.info}>{strings.ShowBlankEditInfoMessage}</MessageBar>;
-        }         else if (!this.props.showBlank) {
+        } else if (!this.props.showBlank) {
             renderWpContent = <div className={styles.searchRefiners__noFilter}>
                                 {strings.NoFilterConfiguredLabel}
                               </div>;
