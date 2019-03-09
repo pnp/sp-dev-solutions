@@ -16,13 +16,13 @@ This solution allows you to build user friendly SharePoint search experiences us
 - SharePoint best bets support.
 - Search query enhancement with NLP tools (like Microsoft LUIS).
 
+A complete 1 hour turorial video is available on the [official SharePoint Developer blog](https://developer.microsoft.com/en-us/sharepoint/blogs/pnp-webcast-sharepoint-framework-modern-search-web-part/):
+
+<a href="https://www.youtube.com/embed/g41nvRVwtds" target="_blank"><img src="http://img.youtube.com/vi/g41nvRVwtds/maxresdefault.jpg"/></a>
+
 <p align="center">
   <img src="./images/react-search-refiners.gif"/>
 </p>
-
-A complete 1 hour turorial video is available on the [official SharePoint Developer blog](https://developer.microsoft.com/en-us/sharepoint/blogs/pnp-webcast-sharepoint-framework-modern-search-web-part/):
-
-<iframe width="560" height="315" src="https://www.youtube.com/embed/g41nvRVwtds" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 This sample includes the following components and service(s):
 
