@@ -3,6 +3,7 @@ import { IRenderer } from "./ResultService";
 import {ICustomTemplateFieldValue} from './ResultService';
 
 export default interface IResultService {
+
     /**
      * Persists the results to the local storage and fires and update event.
      * @param results The new results
@@ -25,5 +26,13 @@ export default interface IResultService {
      */
     getRegisteredRenderers(): IRenderer[];
 
+    /**
+     * The current results
+     */
     results: ISearchResults;
+
+    /**
+     * Indicates if results are loading
+     */
+    isLoading: boolean;
 }

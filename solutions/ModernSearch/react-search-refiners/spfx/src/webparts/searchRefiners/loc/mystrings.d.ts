@@ -14,6 +14,10 @@ declare interface ISearchRefinersWebPartStrings {
   RefinersConfiguration: string;
   SearchResultsLabel: string;
   SearchQueryLabel: string;
+  FilterPanelTitle: string;
+  FilterResultsButtonLabel: string;
+  RefinerLayoutLabel: string;
+  ConnectToSearchResultsLabel: string;
   Refiners: {
     RefinersFieldLabel: string;
     RefinersFieldDescription: string;

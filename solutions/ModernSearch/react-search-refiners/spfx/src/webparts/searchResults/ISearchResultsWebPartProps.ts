@@ -1,11 +1,9 @@
 import ResultsLayoutOption from '../../models/ResultsLayoutOption';
 import { DynamicProperty } from '@microsoft/sp-component-base';
-import IRefinerConfiguration from '../../models/IRefinerConfiguration';
 import { ISortFieldConfiguration } from '../../models/ISortFieldConfiguration';
 import ISortableFieldConfiguration from '../../models/ISortableFieldConfiguration';
 import { ISearchResultType } from '../../models/ISearchResultType';
 import { ICustomTemplateFieldValue } from '../../services/ResultService/ResultService';
-import { IRefinementFilter } from '../../models/ISearchResult';
 
 export interface ISearchResultsWebPartProps {
     queryKeywords: DynamicProperty<string>;
@@ -32,13 +30,6 @@ export interface ISearchResultsWebPartProps {
     rendererId: string;
     customTemplateFieldValues: ICustomTemplateFieldValue[];
     enableLocalization: boolean;
-    useExternalRefinersDisplay: boolean;
-    appliedRefiners: DynamicProperty<IRefinementFilter>;
-    appliedRefinersSourceId: string;
-    appliedRefinersPropertyId: string;
-    appliedRefinersPropertyPath: string;
-    refinersConfiguration: DynamicProperty<IRefinerConfiguration>;
-    refinersConfigurationSourceId: string;
-    refinersConfigurationPropertyId: string;
-    refinersConfigurationPropertyPath: string;
+    useRefiners: boolean;
+    refinerDataSourceReference: string;
 }

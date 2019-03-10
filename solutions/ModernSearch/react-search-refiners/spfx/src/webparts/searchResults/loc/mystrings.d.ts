@@ -41,6 +41,7 @@ declare interface ISearchResultsWebPartStrings {
     DialogButtonText: string;
     DialogTitle: string;
     SaveButtonText: string;
+    ResultsLayoutLabel: string;
     ListLayoutOption: string;
     TilesLayoutOption: string;
     CustomLayoutOption: string;
@@ -53,8 +54,6 @@ declare interface ISearchResultsWebPartStrings {
     PromotedResultsLabel: string;
     PanelCloseButtonAria:string;
     UseRefinersWebPartLabel: string;
-    AppliedRefinersFieldLabel: string;
-    RefinersConfigurationFieldLabel: string;
     customTemplateFieldsLabel: string;  
     customTemplateFieldsPanelHeader: string;  
     customTemplateFieldsConfigureButtonLabel: string;  

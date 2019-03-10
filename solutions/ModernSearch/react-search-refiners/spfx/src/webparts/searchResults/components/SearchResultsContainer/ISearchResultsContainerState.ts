@@ -37,6 +37,7 @@ interface ISearchResultsContainerState {
      * Keeps the order in which the results need to be sorted (after initial sort)
      */
     sortDirection?: SortDirection;
+    
     /**
      *  Id for the current mounting node
      */

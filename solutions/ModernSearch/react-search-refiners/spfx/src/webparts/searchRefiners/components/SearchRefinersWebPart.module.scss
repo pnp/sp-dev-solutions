@@ -1,44 +1,10 @@
-@import '~@microsoft/sp-office-ui-fabric-core/dist/sass/SPFabricCore.scss';
-
 .searchRefiners {
-  &__filterPanel {
-    &__body {
-        overflow: auto;
+    min-height: 35px;
 
-        &__headerIcon {
-            text-align: right;
-            margin-top: 5px;
-        }
+    // Needed to avoid overlay overflow
+    position: relative;
 
-        &__allFiltersToggle {
-            margin-bottom: 15px;
-        }
-
-        &__noresult {
-            padding:10px 0;
-        }
-
-        &__group {
-
-            &__header {
-                margin-top: 15px;
-            }
-
-            button {
-                padding: 10px;
-            }
-        }
-
-        :global .ms-Grid-row {
-            margin: 0;
-        }
+    &__noFilter {
+        padding:10px 0;
     }
-  }
-  
-  .overlay {
-    z-index: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
 }
