@@ -622,7 +622,7 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
      */
     private _getSearchSettingsFields(): IPropertyPaneField<any>[] {
 
-        const refinerWebParts = this.getAvailableDataSourcesByType(SearchComponentType.RefinersWebPart);
+        const refinerWebParts = this._dynamicDataService.getAvailableDataSourcesByType(SearchComponentType.RefinersWebPart);
         let useRefiners = this.properties.useRefiners;
 
         if (this.properties.useRefiners && refinerWebParts.length === 0) {
@@ -738,7 +738,7 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
 
             searchSettingsFields.splice(5, 0,  
                 PropertyPaneDropdown('refinerDataSourceReference', {
-                options: this.getAvailableDataSourcesByType(SearchComponentType.RefinersWebPart),
+                options: this._dynamicDataService.getAvailableDataSourcesByType(SearchComponentType.RefinersWebPart),
                 label: strings.UseRefinersFromComponentLabel
             }));
         }
@@ -937,7 +937,7 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
         if (this.properties.showPaging) {
             stylingFields.splice(4, 0,  
                 PropertyPaneDropdown('paginationDataSourceReference', {
-                options: this.getAvailableDataSourcesByType(SearchComponentType.PaginationWebPart),
+                options: this._dynamicDataService.getAvailableDataSourcesByType(SearchComponentType.PaginationWebPart),
                 label: strings.UsePaginationFromComponentLabel
             }));
         }
@@ -1152,38 +1152,5 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
         }
         
         throw new Error('Bad property id');
-    }
-
-    /**
-     * Get available data sources on the page with specific property Id (i.e. corresponding to the underlying component type)
-     */
-    private getAvailableDataSourcesByType(propertyId: string): IPropertyPaneDropdownOption[] {
-
-        const sourceOptions: IPropertyPaneDropdownOption[] =
-            this.context.dynamicDataProvider.getAvailableSources().map(source => {
-                return {
-                    key: source.id,
-                    text: source.metadata.title,
-                    instanceId: source.metadata.instanceId
-            };
-        });
-
-        let propertyOptions: IPropertyPaneDropdownOption[] = [];
-
-        sourceOptions.map((sourceInfo) => {
-            const source: IDynamicDataSource = this.context.dynamicDataProvider.tryGetSource(sourceInfo.key.toString());
-            if (source) {
-                source.getPropertyDefinitions().map(prop => {
-                    if (prop.id === propertyId) {
-                        propertyOptions.push({
-                            key: `${source.id}:${prop.id}`,
-                            text: prop.title
-                        });
-                    }
-                });
-            }
-        });
-
-        return propertyOptions;
     }
 }

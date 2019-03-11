@@ -6,7 +6,6 @@ import {
   IPropertyPaneConfiguration,
   PropertyPaneTextField,
   PropertyPaneToggle,
-  IPropertyPaneDropdownOption,
   PropertyPaneDropdown,
   IPropertyPaneField,
   IPropertyPaneChoiceGroupOption,
@@ -25,9 +24,11 @@ import { SearchComponentType } from '../../models/SearchComponentType';
 import RefinersLayoutOption from '../../models/RefinersLayoutOptions';
 import { ISearchRefinersContainerProps } from './components/SearchRefinersContainer/ISearchRefinersContainerProps';
 import ISearchResultSourceData from '../../models/ISearchResultSourceData';
+import { DynamicDataService } from '../../services/DynamicDataService/DynamicDataService';
+import IDynamicDataService from '../../services/DynamicDataService/IDynamicDataService';
 
 export default class SearchRefinersWebPart extends BaseClientSideWebPart<ISearchRefinersWebPartProps> implements IDynamicDataCallables {
-
+  private _dynamicDataService: IDynamicDataService;
   private _selectedFilters: IRefinementFilter[] = [];
   private _availableRefiners: DynamicProperty<ISearchResultSourceData>;
   
@@ -116,6 +117,7 @@ export default class SearchRefinersWebPart extends BaseClientSideWebPart<ISearch
 
   protected onInit(): Promise<void> {
     this._initializeRequiredProperties();
+    this._dynamicDataService = new DynamicDataService(this.context.dynamicDataProvider);
     this.ensureDataSourceConnection();
 
     if (this.properties.searchResultsDataSourceReference) {
@@ -166,7 +168,7 @@ export default class SearchRefinersWebPart extends BaseClientSideWebPart<ISearch
         ]
       }),
       PropertyPaneDropdown('searchResultsDataSourceReference', {
-        options: this.getAvailableDataSourcesByType(SearchComponentType.SearchResultsWebPart),
+        options: this._dynamicDataService.getAvailableDataSourcesByType(SearchComponentType.SearchResultsWebPart),
         label: strings.ConnectToSearchResultsLabel
       })
     ];
@@ -233,41 +235,6 @@ export default class SearchRefinersWebPart extends BaseClientSideWebPart<ISearch
         }
       ]
     };
-  }
-
-  /**
-  * Get available data sources on the page with specific property Id
-  */
-  private getAvailableDataSourcesByType(propertyId: string): IPropertyPaneDropdownOption[] {
-
-    const sourceOptions: IPropertyPaneDropdownOption[] =
-        this.context.dynamicDataProvider.getAvailableSources().map(source => {
-            return {
-                key: source.id,
-                text: source.metadata.title,
-                instanceId: source.metadata.instanceId
-        };
-    });
-
-    let propertyOptions: IPropertyPaneDropdownOption[] = [];
-
-    sourceOptions.map((sourceInfo) => {
-        const source: IDynamicDataSource = this.context.dynamicDataProvider.tryGetSource(sourceInfo.key.toString());
-        if (source) {
-            source.getPropertyDefinitions().map(prop => {
-                if (prop.id === propertyId) {
-
-                    // The prop title should be the Web Part title here
-                    propertyOptions.push({
-                        key: `${source.id}:${prop.id}`,
-                        text: prop.title
-                    });
-                }
-            });
-        }
-    });
-
-    return propertyOptions;
   }
 
   /**
