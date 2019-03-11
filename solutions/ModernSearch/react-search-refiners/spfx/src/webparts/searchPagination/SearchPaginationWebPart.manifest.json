@@ -21,11 +21,6 @@
     },
     "officeFabricIconFontName": "More",
     "properties": {
-      "searchPagination": {
-        "TotalRows": 0,
-        "CurrentPage": 1,
-        "MaxResultsPerPage": 10
-      }
     }
   }]
 }

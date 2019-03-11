@@ -7,6 +7,7 @@ declare interface ISearchPaginationWebPartStrings {
   PlaceHolderIconText: string;
   PlaceHolderDescription: string;
   CurrentPageLabel: string;
+  ConnectToSearchResultsLabel: string;
 }
 
 declare module 'SearchPaginationWebPartStrings' {

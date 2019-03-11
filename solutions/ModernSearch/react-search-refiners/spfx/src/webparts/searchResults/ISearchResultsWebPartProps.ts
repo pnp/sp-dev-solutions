@@ -1,11 +1,9 @@
 import ResultsLayoutOption from '../../models/ResultsLayoutOption';
 import { DynamicProperty } from '@microsoft/sp-component-base';
-import IRefinerConfiguration from '../../models/IRefinerConfiguration';
 import { ISortFieldConfiguration } from '../../models/ISortFieldConfiguration';
 import ISortableFieldConfiguration from '../../models/ISortableFieldConfiguration';
 import { ISearchResultType } from '../../models/ISearchResultType';
 import { ICustomTemplateFieldValue } from '../../services/ResultService/ResultService';
-import { IRefinementFilter } from '../../models/ISearchResult';
 
 export interface ISearchResultsWebPartProps {
     queryKeywords: DynamicProperty<string>;
@@ -18,6 +16,7 @@ export interface ISearchResultsWebPartProps {
     maxResultsCount: number;
     selectedProperties: string;
     sortableFields: ISortableFieldConfiguration[];
+    showPaging: boolean;
     showResultsCount: boolean;
     showBlank: boolean;
     selectedLayout: ResultsLayoutOption;
@@ -31,18 +30,7 @@ export interface ISearchResultsWebPartProps {
     rendererId: string;
     customTemplateFieldValues: ICustomTemplateFieldValue[];
     enableLocalization: boolean;
-    useExternalRefinersDisplay: boolean;
-    useExternalPaginationDisplay: boolean;
-    appliedRefiners: DynamicProperty<IRefinementFilter>;
-    appliedRefinersSourceId: string;
-    appliedRefinersPropertyId: string;
-    appliedRefinersPropertyPath: string;
-    refinersConfiguration: DynamicProperty<IRefinerConfiguration>;
-    refinersConfigurationSourceId: string;
-    refinersConfigurationPropertyId: string;
-    refinersConfigurationPropertyPath: string;
-    selectedPage: DynamicProperty<number>;
-    selectedPageSourceId: string;
-    selectedPagePropertyId: string;
-    selectedPagePropertyPath: string;
+    useRefiners: boolean;
+    refinerDataSourceReference: string;
+    paginationDataSourceReference: string;
 }

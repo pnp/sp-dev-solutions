@@ -7,6 +7,7 @@ define([], function() {
     "PlaceHolderConfigureBtnLabel": "Configure",
     "PlaceHolderIconText": "Search Pagination Web Part",
     "PlaceHolderDescription": "This component displays search pagination",
-    "CurrentPageLabel": "Current page"
+    "CurrentPageLabel": "Current page",
+    "ConnectToSearchResultsLabel": "Connect to search results Web Part"
   }
 });

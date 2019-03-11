@@ -109,7 +109,7 @@ class SearchService implements ISearchService {
             SearchQuery: query + this.queryTemplate + this.selectedProperties.join(','),
             RelevantResults: [],
             RefinementResults: [],
-            Pagination: {
+            PaginationInformation: {
                 CurrentPage: pageNumber,
                 MaxResultsPerPage: this.resultsCount,
                 TotalRows: 0
@@ -232,7 +232,7 @@ class SearchService implements ISearchService {
 
                 results.RelevantResults = relevantResults;
                 results.RefinementResults = refinementResults;
-                results.Pagination.TotalRows = this._initialSearchResult.TotalRows;
+                results.PaginationInformation.TotalRows = this._initialSearchResult.TotalRows;
             }
             return results;
 

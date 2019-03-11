@@ -7,6 +7,7 @@ define([], function() {
     "PlaceHolderConfigureBtnLabel": "Configurer",
     "PlaceHolderIconText": "Pagination de recherche Web Part",
     "PlaceHolderDescription": "Ce composant affiche la pagination de recherche",
-    "CurrentPageLabel": "Page actuelle"
+    "CurrentPageLabel": "Page actuelle",
+    "ConnectToSearchResultsLabel": "Se connecter au composant de recherche"
   }
 });

@@ -2,12 +2,10 @@ import ISearchService from '../../../../services/SearchService/ISearchService';
 import ITaxonomyService from '../../../../services/TaxonomyService/ITaxonomyService';
 import { DisplayMode } from '@microsoft/sp-core-library';
 import TemplateService from '../../../../services/TemplateService/TemplateService';
-import { WebPartContext } from '@microsoft/sp-webpart-base';
 import IRefinerConfiguration from '../../../../models/IRefinerConfiguration';
 import { Sort } from '@pnp/sp';
 import ISortableFieldConfiguration from '../../../../models/ISortableFieldConfiguration';
 import { ISearchResultType } from '../../../../models/ISearchResultType';
-import IResultService from '../../../../services/ResultService/IResultService';
 import {ICustomTemplateFieldValue} from '../../../../services/ResultService/ResultService';
 import { IRefinementFilter } from '../../../../models/ISearchResult';
 import SearchResultsOperationCallback from '../../../../models/SearchResultsOperationCallback';
@@ -70,9 +68,9 @@ interface ISearchResultsContainerProps {
     useExternalRefinersDisplay: boolean;
 
     /**
-     * The applied refiners to further filter the query
+     * The selected refiners
      */
-    appliedRefiners: IRefinementFilter[];
+    selectedFilters: IRefinementFilter[];
 
     /**
      * The managed properties used as sortable fields for the query
@@ -152,7 +150,7 @@ interface ISearchResultsContainerProps {
     /* 
      * The selected page to show for the search results
      */
-    selectedPageNumber: number;
+    selectedPage: number;
 }
 
 export default ISearchResultsContainerProps;

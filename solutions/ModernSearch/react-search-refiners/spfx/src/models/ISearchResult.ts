@@ -5,13 +5,13 @@ export interface ISearchResults {
     //     SelectedProperties: string[];
     //     QueryTemplate: string;
     // };
-    Pagination?: ISearchPagination;
+    PaginationInformation?: IPaginationInformation;
     RelevantResults: ISearchResult[];
     RefinementResults: IRefinementResult[];
     PromotedResults?: IPromotedResult[];
 }
 
-export interface ISearchPagination {
+export interface IPaginationInformation {
     CurrentPage: number;
     TotalRows: number;
     MaxResultsPerPage: number;

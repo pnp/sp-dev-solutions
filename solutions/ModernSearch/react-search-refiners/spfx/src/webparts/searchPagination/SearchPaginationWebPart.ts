@@ -4,32 +4,39 @@ import { Version, DisplayMode } from '@microsoft/sp-core-library';
 import {
   BaseClientSideWebPart,
   IPropertyPaneConfiguration,
-  DynamicDataSharedDepth,
-  PropertyPaneDynamicFieldSet,
-  PropertyPaneDynamicField,
-  IWebPartPropertiesMetadata
+  IPropertyPaneDropdownOption,
+  PropertyPaneDropdown
 } from '@microsoft/sp-webpart-base';
 
 import * as strings from 'SearchPaginationWebPartStrings';
 import SearchPagination from './components/SearchPaginationContainer/SearchPaginationContainer';
 import { ISearchPaginationWebPartProps } from './ISearchPaginationWebPartProps';
 import { Placeholder } from '@pnp/spfx-controls-react/lib/Placeholder';
-import IDynamicDataService from '../../services/DynamicDataService/IDynamicDataService';
-import { DynamicDataService } from '../../services/DynamicDataService/DynamicDataService';
-import { IDynamicDataCallables, IDynamicDataPropertyDefinition, IDynamicDataAnnotatedPropertyValue } from '@microsoft/sp-dynamic-data';
+import { IDynamicDataCallables, IDynamicDataPropertyDefinition, IDynamicDataSource } from '@microsoft/sp-dynamic-data';
+import { DynamicProperty } from '@microsoft/sp-component-base';
+import ISearchResultSourceData from '../../models/ISearchResultSourceData';
+import { SearchComponentType } from '../../models/SearchComponentType';
+import { IPaginationInformation } from '../../models/ISearchResult';
+import IPaginationSourceData from '../../models/IPaginationSourceData';
 
 export default class SearchPaginationWebPart extends BaseClientSideWebPart<ISearchPaginationWebPartProps> implements IDynamicDataCallables {
-  private _dynamicDataService: IDynamicDataService;
   private _currentPage: number = 1;
+  private _pageInformation: DynamicProperty<ISearchResultSourceData>;
 
   public render(): void {
     let renderElement = null;
+    let searchPagination: IPaginationInformation = null;
 
-    if (!!this.properties.searchPagination.tryGetSource() 
-        && this.properties.searchPaginationPropertyPath
-      )
-    {
-      let searchPagination = this._dynamicDataService.getDataSourceValue(this.context.dynamicDataProvider, this.properties.searchPagination, this.properties.searchPaginationSourceId, this.properties.searchPaginationPropertyId, this.properties.searchPaginationPropertyPath);
+    if (this.properties.searchResultsDataSourceReference) {
+
+      // If the dynamic property exists, it means the Web Part ins connected to a search results Web Part
+      if (this._pageInformation) {
+        const searchResultSourceData: ISearchResultSourceData = this._pageInformation.tryGetValue();
+
+        if (searchResultSourceData) {
+          searchPagination = searchResultSourceData.paginationInformation;
+        }
+      }      
 
       if (searchPagination)
       {
@@ -41,7 +48,7 @@ export default class SearchPaginationWebPart extends BaseClientSideWebPart<ISear
             itemsCountPerPage: searchPagination.MaxResultsPerPage,
             onPageUpdate: (page: number) => {
               this._currentPage = page;
-              this.context.dynamicDataSourceManager.notifyPropertyChanged("currentPage");
+              this.context.dynamicDataSourceManager.notifyPropertyChanged(SearchComponentType.PaginationWebPart);
             },
             currentPage: this._currentPage
           }
@@ -70,54 +77,33 @@ export default class SearchPaginationWebPart extends BaseClientSideWebPart<ISear
     this.context.propertyPane.open();
   }
 
-  protected get propertiesMetadata(): IWebPartPropertiesMetadata {
-    return {
-        'searchPagination': {
-          dynamicPropertyType: 'object'
-        }
-    };
-  }
-
   public getPropertyDefinitions(): ReadonlyArray<IDynamicDataPropertyDefinition> {
+
+    // Use the Web Part title as property title since we don't expose sub properties
     return [
       {
-          id: 'currentPage',
-          title: strings.CurrentPageLabel
+        id: SearchComponentType.PaginationWebPart,
+        title: this.title
       }
     ];
   }
 
-  public getPropertyValue(propertyId: string): number {
+  public getPropertyValue(propertyId: string): IPaginationSourceData {
     switch (propertyId) {
 
-      case 'currentPage':
-          return this._currentPage;
-      default:
-          throw new Error('Bad property id');
-    }
-  }
-
-  public getAnnotatedPropertyValue?(propertyId: string): IDynamicDataAnnotatedPropertyValue {
-    switch (propertyId) {
-      case 'currentPage':
-          const annotatedPropertyValue = {
-              sampleValue: {
-
-              },
-              metadata: {
-
-              }
-          };
-          return annotatedPropertyValue;
+      case SearchComponentType.PaginationWebPart:
+        return { 
+          selectedPage: this._currentPage,
+        } as IPaginationSourceData;
       default:
           throw new Error('Bad property id');
     }
   }
 
   protected onInit(): Promise<void> {
-    this._dynamicDataService = new DynamicDataService();
+    this.ensureDataSourceConnection();
 
-    if (this.properties.searchPaginationSourceId) {
+    if (this.properties.searchResultsDataSourceReference) {
         // Needed to retrieve manually the value for the dynamic property at render time. See the associated SPFx bug
         // https://github.com/SharePoint/sp-dev-docs/issues/2985
         this.context.dynamicDataProvider.registerAvailableSourcesChanged(this.render);
@@ -144,46 +130,80 @@ export default class SearchPaginationWebPart extends BaseClientSideWebPart<ISear
             {
               groupName: strings.PaginationConfigurationGroupName,
               groupFields: [
-                PropertyPaneDynamicFieldSet({
-                  label: strings.SearchResultsLabel,
-                  fields: [
-                    PropertyPaneDynamicField('searchPagination', {
-                      label: strings.SearchPaginationLabel
-                    })
-                  ],
-                  sharedConfiguration: {
-                    depth: DynamicDataSharedDepth.Source
-                  }
+                PropertyPaneDropdown('searchResultsDataSourceReference', {
+                  options: this.getAvailableDataSourcesByType(SearchComponentType.SearchResultsWebPart),
+                  label: strings.ConnectToSearchResultsLabel
                 })
               ]
             }
-          ]
+          ],
+          displayGroupsAsAccordion: false
         }
       ]
     };
   }
 
-  protected async onPropertyPaneFieldChanged(propertyPath: string) {
+  /**
+  * Get available data sources on the page with specific property Id
+  */
+  private getAvailableDataSourcesByType(propertyId: string): IPropertyPaneDropdownOption[] {
 
-    if (propertyPath.localeCompare('searchPagination') === 0) {
-        // Update data source information
-        this._saveDataSourceInfo();
-    }
+    const sourceOptions: IPropertyPaneDropdownOption[] =
+        this.context.dynamicDataProvider.getAvailableSources().map(source => {
+            return {
+                key: source.id,
+                text: source.metadata.title,
+                instanceId: source.metadata.instanceId
+        };
+    });
+
+    let propertyOptions: IPropertyPaneDropdownOption[] = [];
+
+    sourceOptions.map((sourceInfo) => {
+        const source: IDynamicDataSource = this.context.dynamicDataProvider.tryGetSource(sourceInfo.key.toString());
+        if (source) {
+            source.getPropertyDefinitions().map(prop => {
+                if (prop.id === propertyId) {
+
+                    // The prop title should be the Web Part title here
+                    propertyOptions.push({
+                        key: `${source.id}:${prop.id}`,
+                        text: prop.title
+                    });
+                }
+            });
+        }
+    });
+
+    return propertyOptions;
   }
 
   /**
-  * Save the useful information for the connected data source. 
-  * They will be used to get the value of the dynamic property if this one fails.
-  */
-  private _saveDataSourceInfo() {
-    if (this.properties.searchPagination.tryGetSource()) {
-        this.properties.searchPaginationSourceId = this.properties.searchPagination["_reference"]._sourceId;
-        this.properties.searchPaginationPropertyId = this.properties.searchPagination["_reference"]._property;
-        this.properties.searchPaginationPropertyPath = this.properties.searchPagination["_reference"]._propertyPath;
+   * Make sure the dynamic property is correctly connected to the source if a search results component has been selected in options 
+   */
+  private ensureDataSourceConnection() {
+
+    if (this.properties.searchResultsDataSourceReference) {
+
+      // Register the data source manually since we don't want user select properties manually
+      if (!this._pageInformation) {
+        this._pageInformation = new DynamicProperty<ISearchResultSourceData>(this.context.dynamicDataProvider);
+      }
+
+      this._pageInformation.setReference(this.properties.searchResultsDataSourceReference);
+      this._pageInformation.register(this.render);
+      
     } else {
-        this.properties.searchPaginationSourceId = null;
-        this.properties.searchPaginationPropertyId = null;
-        this.properties.searchPaginationPropertyPath = null;
+      if (this._pageInformation) {
+        this._pageInformation.unregister(this.render);
+      }
+    }
+  }
+
+  protected async onPropertyPaneFieldChanged(propertyPath: string) {
+
+    if (propertyPath.localeCompare('searchResultsDataSourceReference') === 0) {
+      this.ensureDataSourceConnection();
     }
   }
 }
