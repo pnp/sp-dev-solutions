@@ -99,8 +99,12 @@ class MockSearchService implements ISearchService {
                         },
                     ]
                 }
-            ],      
-            TotalRows: 5,      
+            ],
+            PaginationInformation: {
+                TotalRows: 5,
+                CurrentPage: 1,
+                MaxResultsPerPage: this.resultsCount
+            }
         };
 
         this._suggestions = [
@@ -139,9 +143,12 @@ class MockSearchService implements ISearchService {
 
                 searchResults.RelevantResults = filteredResults;
                 searchResults.RefinementResults = this._searchResults.RefinementResults;
-                searchResults.TotalRows = filteredResults.length;
             }
 
+            searchResults.PaginationInformation.CurrentPage = pageNumber;
+            searchResults.PaginationInformation.TotalRows = searchResults.RelevantResults.length;
+            searchResults.PaginationInformation.MaxResultsPerPage = this.resultsCount;
+            
             // Return only the specified count
             searchResults.RelevantResults = this._paginate(searchResults.RelevantResults, this._itemsCount, pageNumber);
 

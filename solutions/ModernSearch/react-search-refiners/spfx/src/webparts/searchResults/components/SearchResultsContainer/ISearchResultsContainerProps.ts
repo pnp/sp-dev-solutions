@@ -2,12 +2,10 @@ import ISearchService from '../../../../services/SearchService/ISearchService';
 import ITaxonomyService from '../../../../services/TaxonomyService/ITaxonomyService';
 import { DisplayMode } from '@microsoft/sp-core-library';
 import TemplateService from '../../../../services/TemplateService/TemplateService';
-import { WebPartContext } from '@microsoft/sp-webpart-base';
 import IRefinerConfiguration from '../../../../models/IRefinerConfiguration';
 import { Sort } from '@pnp/sp';
 import ISortableFieldConfiguration from '../../../../models/ISortableFieldConfiguration';
 import { ISearchResultType } from '../../../../models/ISearchResultType';
-import IResultService from '../../../../services/ResultService/IResultService';
 import {ICustomTemplateFieldValue} from '../../../../services/ResultService/ResultService';
 import { IRefinementFilter } from '../../../../models/ISearchResult';
 import SearchResultsOperationCallback from '../../../../models/SearchResultsOperationCallback';
@@ -148,6 +146,11 @@ interface ISearchResultsContainerProps {
     enableLocalization: boolean;
 
     onSearchResultsUpdate: SearchResultsOperationCallback;
+
+    /* 
+     * The selected page to show for the search results
+     */
+    selectedPage: number;
 }
 
 export default ISearchResultsContainerProps;

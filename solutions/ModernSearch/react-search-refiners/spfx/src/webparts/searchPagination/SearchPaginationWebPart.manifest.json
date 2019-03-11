@@ -1,0 +1,26 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx/client-side-web-part-manifest.schema.json",
+  "id": "8745e454-5d73-4819-bad9-a00a88bf8428",
+  "alias": "SearchPaginationWebPart",
+  "componentType": "WebPart",
+  "version": "*",
+  "manifestVersion": 2,
+  "requiresCustomScript": false,
+  "preconfiguredEntries": [{
+    "groupId": "5c03119e-3074-46fd-976b-c60198311f70",
+    "group": { 
+      "default": "PnP" 
+    },
+    "title": { 
+      "default": "Search Pagination",
+      "fr-fr": "Pagination de recherche"
+    },
+    "description": { 
+      "default": "Displays the pagination for the search results",
+      "fr-fr": "Affiche la pagination pour les résultats de la recherche" 
+    },
+    "officeFabricIconFontName": "More",
+    "properties": {
+    }
+  }]
+}

@@ -19,7 +19,7 @@ declare interface ISearchResultsWebPartStrings {
     SelectedFiltersLabel: string;
     SearchResultsLabel: string;
     RemoveAllFiltersLabel: string;
-    ShowPagingLabel: string;
+    UsePaginationWebPartLabel: string;
     ShowResultsCountLabel: string;
     ShowBlankLabel: string;
     ShowBlankEditInfoMessage: string;
@@ -54,6 +54,8 @@ declare interface ISearchResultsWebPartStrings {
     PromotedResultsLabel: string;
     PanelCloseButtonAria:string;
     UseRefinersWebPartLabel: string;
+    UseRefinersFromComponentLabel: string;
+    UsePaginationFromComponentLabel: string;
     customTemplateFieldsLabel: string;  
     customTemplateFieldsPanelHeader: string;  
     customTemplateFieldsConfigureButtonLabel: string;  

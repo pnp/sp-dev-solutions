@@ -32,4 +32,5 @@ export interface ISearchResultsWebPartProps {
     enableLocalization: boolean;
     useRefiners: boolean;
     refinerDataSourceReference: string;
+    paginationDataSourceReference: string;
 }

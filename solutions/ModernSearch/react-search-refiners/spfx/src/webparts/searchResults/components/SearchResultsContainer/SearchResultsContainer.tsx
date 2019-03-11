@@ -7,7 +7,6 @@ import { Shimmer, ShimmerElementType as ElemType, ShimmerElementsGroup } from 'o
 import { Logger, LogLevel } from '@pnp/logging';
 import * as strings from 'SearchResultsWebPartStrings';
 import { IRefinementValue, IRefinementResult, ISearchResult, ISearchResults } from '../../../../models/ISearchResult';
-import Paging from '../Paging/Paging';
 import { Overlay } from 'office-ui-fabric-react/lib/Overlay';
 import { DisplayMode } from '@microsoft/sp-core-library';
 import { WebPartTitle } from "@pnp/spfx-controls-react/lib/WebPartTitle";
@@ -37,7 +36,6 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
                 RefinementResults: [],
                 RelevantResults: []
             },
-            currentPage: 1,
             areResultsLoading: false,
             errorMessage: '',
             hasError: false,
@@ -45,7 +43,6 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
         };
 
         this._onUpdateSort = this._onUpdateSort.bind(this);
-        this._onPageUpdate = this._onPageUpdate.bind(this);
     }
 
     public render(): React.ReactElement<ISearchResultsContainerProps> {
@@ -126,7 +123,7 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
                                 {
                                     items: this.state.results.RelevantResults,
                                     promotedResults: this.state.results.PromotedResults,
-                                    totalRows: this.state.results.TotalRows,
+                                    totalRows: this.state.results.PaginationInformation.TotalRows,
                                     keywords: this.props.queryKeywords,
                                     showResultsCount: this.props.showResultsCount,
                                     siteUrl: this.props.siteServerRelativeUrl,
@@ -145,14 +142,6 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
                         {renderOverlay}
                         <div id={this.state.mountingNodeId} />
                         {searchResultTemplate}
-                        {this.props.showPaging ?
-                            <Paging
-                                totalItems={items.TotalRows}
-                                itemsCountPerPage={this.props.maxResultsCount}
-                                onPageUpdate={this._onPageUpdate}
-                                currentPage={this.state.currentPage} />
-                            : null
-                        }
                     </div>;
             }
         }
@@ -179,7 +168,7 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
 
                 const refinerManagedProperties = this.props.refinersConfiguration.map(e => { return e.refinerName ;}).join(',');
 
-                const searchResults = await this.props.searchService.search(this.props.queryKeywords, refinerManagedProperties, this.props.selectedFilters, this.state.currentPage);
+                const searchResults = await this.props.searchService.search(this.props.queryKeywords, refinerManagedProperties, this.props.selectedFilters, this.props.selectedPage);
 
                 // Translates taxonomy refiners and result values by using terms ID
                 if (this.props.enableLocalization) {
@@ -220,7 +209,14 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
     }
 
     public async componentWillReceiveProps(nextProps: ISearchResultsContainerProps) {
+        let executeSearch = false;
+        let selectedPage = 1;
         let query = nextProps.queryKeywords + nextProps.searchService.queryTemplate + nextProps.selectedProperties.join(',');
+
+        if (this.props.selectedPage !== nextProps.selectedPage) {
+            executeSearch = true;
+            selectedPage = nextProps.selectedPage;
+        }
 
         // New props are passed to the component when the search query has been changed
         if (JSON.stringify(this.props.refinersConfiguration) !== JSON.stringify(nextProps.refinersConfiguration)
@@ -233,7 +229,11 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
             || this.props.queryKeywords !== nextProps.queryKeywords
             || this.props.enableQueryRules !== nextProps.enableQueryRules
             || this.props.enableLocalization !== nextProps.enableLocalization) {
+            executeSearch = true;
+            selectedPage = 1;
+        }
 
+        if (executeSearch) {
             // Don't perform search is there is no keywords
             if (nextProps.queryKeywords) {
                 try {
@@ -252,7 +252,7 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
                     this.props.searchService.sortList = nextProps.sortList;
 
                     // We reset the page number and refinement filters
-                    const searchResults = await this.props.searchService.search(nextProps.queryKeywords, refinerManagedProperties, nextProps.selectedFilters, 1);
+                    const searchResults = await this.props.searchService.search(nextProps.queryKeywords, refinerManagedProperties, nextProps.selectedFilters, selectedPage);
 
                     // Translates taxonomy refiners and result values by using terms ID
                     if (nextProps.enableLocalization) {
@@ -265,8 +265,7 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
 
                     this.setState({
                         results: searchResults,
-                        areResultsLoading: false,
-                        currentPage: 1
+                        areResultsLoading: false
                     });
 
                     this.handleResultUpdateBroadCast(searchResults);
@@ -324,7 +323,6 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
             this.setState({
                 sortField: sortField,
                 sortDirection: sortDirection,
-                currentPage: 1,
                 areResultsLoading: true,
                 hasError:false,
                 errorMessage:null
@@ -361,38 +359,6 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
                 this.handleResultUpdateBroadCast(results);
             }
         }
-    }
-
-    /**
-     * Callback function update search results according the page number
-     * @param pageNumber The page mumber to get
-     */
-    private async _onPageUpdate(pageNumber: number) {
-
-        this.setState({
-            currentPage: pageNumber,
-            areResultsLoading: true,
-        });
-
-        // Set the focus at the top of the component
-        this._searchWpRef.focus();
-
-        const refinerManagedProperties = this.props.refinersConfiguration.map(e => { return e.refinerName ;}).join(',');
-
-        const searchResults = await this.props.searchService.search(this.props.queryKeywords, refinerManagedProperties, this.props.selectedFilters, pageNumber);
-
-        // Translates taxonomy refiners and result values by using terms ID
-        if (this.props.enableLocalization) {
-            const localizedResults = await this._getLocalizedMetadata(searchResults.RelevantResults);
-            searchResults.RelevantResults = localizedResults;
-        }
-
-        this.setState({
-            results: searchResults,
-            areResultsLoading: false,
-        });
-        
-        this.handleResultUpdateBroadCast(searchResults);
     }
 
     /**

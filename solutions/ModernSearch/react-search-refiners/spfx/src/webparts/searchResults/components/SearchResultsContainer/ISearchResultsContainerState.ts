@@ -9,11 +9,6 @@ interface ISearchResultsContainerState {
     results: ISearchResults;
 
     /**
-     * The current result page number
-     */
-    currentPage: number;
-
-    /**
      * Error message display in the message bar
      */
     errorMessage: string;

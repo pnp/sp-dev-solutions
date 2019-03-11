@@ -33,6 +33,14 @@
           "manifest": "./src/webparts/searchRefiners/SearchRefinersWebPart.manifest.json"
         }
       ]
+    },
+    "search-pagination-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/searchPagination/SearchPaginationWebPart.js",
+          "manifest": "./src/webparts/searchPagination/SearchPaginationWebPart.manifest.json"
+        }
+      ]
     }
   },
   "externals": {},
@@ -42,6 +50,7 @@
     "ControlStrings": "node_modules/@pnp/spfx-controls-react/lib/loc/{locale}.js",
     "PropertyControlStrings": "node_modules/@pnp/spfx-property-controls/lib/loc/{locale}.js",
     "SearchNavigationWebPartStrings": "lib/webparts/searchNavigation/loc/{locale}.js",
-    "SearchRefinersWebPartStrings": "lib/webparts/searchRefiners/loc/{locale}.js"
+    "SearchRefinersWebPartStrings": "lib/webparts/searchRefiners/loc/{locale}.js",
+    "SearchPaginationWebPartStrings": "lib/webparts/searchPagination/loc/{locale}.js"
   }
 }

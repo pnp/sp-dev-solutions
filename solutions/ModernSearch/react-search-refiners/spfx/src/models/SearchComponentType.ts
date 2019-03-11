@@ -1,4 +1,5 @@
 export enum SearchComponentType {
     SearchResultsWebPart = 'searchResultsWebPart',
-    RefinersWebPart = 'refinersWebPart'
+    RefinersWebPart = 'refinersWebPart',
+    PaginationWebPart = 'paginationWebPart'
 }
