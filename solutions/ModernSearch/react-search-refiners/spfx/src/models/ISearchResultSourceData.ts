@@ -5,7 +5,11 @@ import { ISearchServiceConfiguration } from "./ISearchServiceConfiguration";
  * Represents the data exposed by a search results Web Part for dynamic data connection
  */
 interface ISearchResultSourceData {
-    
+    /**
+     * The query keywords
+     */
+    queryKeywords: string;
+
     /**
      * The refinement results
      */

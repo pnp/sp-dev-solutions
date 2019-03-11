@@ -6,6 +6,7 @@ interface IHorizontalProps {
     availableFilters: IRefinementResult[];
     refinersConfiguration: IRefinerConfiguration[];
     onUpdateFilters: RefinementFilterOperationCallback;
+    resetSelectedFilters: boolean;
 }
   
 export default IHorizontalProps;

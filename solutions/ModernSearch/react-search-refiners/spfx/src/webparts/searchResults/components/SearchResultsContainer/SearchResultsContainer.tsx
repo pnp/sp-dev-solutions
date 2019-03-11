@@ -230,6 +230,9 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
             || this.props.enableLocalization !== nextProps.enableLocalization) {
             executeSearch = true;
             selectedPage = 1;
+            if (lastQuery !== query) {
+                nextProps.searchService.refinementFilters = [];
+            }
         }
 
         if (executeSearch) {

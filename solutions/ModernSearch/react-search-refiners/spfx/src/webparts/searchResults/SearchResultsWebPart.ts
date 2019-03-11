@@ -17,7 +17,6 @@ import {
     PropertyPaneChoiceGroup,
     PropertyPaneCheckbox,
     PropertyPaneHorizontalRule,
-    IPropertyPaneDropdownOption,
     PropertyPaneDropdown,
 } from '@microsoft/sp-webpart-base';
 import * as strings from 'SearchResultsWebPartStrings';
@@ -1135,6 +1134,7 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
     public getPropertyValue(propertyId: string): ISearchResultSourceData {
 
         const searchResultSourceData: ISearchResultSourceData = {
+            queryKeywords: this._dynamicDataService.getDataSourceValue(this.properties.queryKeywords, this.properties.sourceId, this.properties.propertyId, this.properties.propertyPath),
             refinementResults: (this._resultService && this._resultService.results) ? this._resultService.results.RefinementResults : [],
             paginationInformation: (this._resultService && this._resultService.results) ? this._resultService.results.PaginationInformation : {
                 CurrentPage: 1,

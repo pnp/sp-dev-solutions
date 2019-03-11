@@ -13,4 +13,7 @@ export interface ISearchRefinersContainerProps {
   showBlank: boolean;
   displayMode: DisplayMode;
   areResultsLoading: boolean;
+  queryKeywords: string;
+  selectedProperties: string[];
+  queryTemplate: string;
 }

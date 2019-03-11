@@ -36,15 +36,22 @@ export default class SearchRefinersWebPart extends BaseClientSideWebPart<ISearch
     let renderElement = null;
     let availableRefiners = [];
     let areResultsLoading = false;
+    let queryKeywords = '';
+    let selectedProperties: string[] = [];
+    let queryTemplate: string = '';
 
     if (this.properties.searchResultsDataSourceReference) {
 
       // If the dynamic property exists, it means the Web Part ins connected to a search results Web Part
       if (this._availableRefiners) {
-        const searchResultSourceData: ISearchResultSourceData= this._availableRefiners.tryGetValue();
+        const searchResultSourceData: ISearchResultSourceData = this._availableRefiners.tryGetValue();
 
         if (searchResultSourceData) {
           availableRefiners = searchResultSourceData.refinementResults;
+          queryKeywords = searchResultSourceData.queryKeywords;
+          const searchServiceConfig = searchResultSourceData.searchServiceConfiguration;
+          selectedProperties = (searchServiceConfig.selectedProperties) ? searchServiceConfig.selectedProperties : [];
+          queryTemplate = (searchServiceConfig.queryTemplate) ? searchServiceConfig.queryTemplate : '';
         }
       }
 
@@ -56,6 +63,9 @@ export default class SearchRefinersWebPart extends BaseClientSideWebPart<ISearch
           refinersConfiguration: this.properties.refinersConfiguration,
           showBlank: this.properties.showBlank,
           displayMode: this.displayMode,
+          queryKeywords: queryKeywords,
+          queryTemplate: queryTemplate,
+          selectedProperties: selectedProperties,
           onUpdateFilters: (appliedRefiners: IRefinementFilter[]) => {
             this._selectedFilters = appliedRefiners;
             this.context.dynamicDataSourceManager.notifyPropertyChanged(SearchComponentType.RefinersWebPart);

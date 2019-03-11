@@ -8,11 +8,32 @@ import LinkPanel from '../Layouts/LinkPanel/LinkPanel';
 import RefinersLayoutOption from '../../../../models/RefinersLayoutOptions';
 import { MessageBarType, MessageBar } from 'office-ui-fabric-react';
 import * as strings from 'SearchRefinersWebPartStrings';
+import { ISearchRefinersContainerState } from './ISearchRefinersContainerState';
 
-export default class SearchRefinersContainer extends React.Component<ISearchRefinersContainerProps, {}> {
+export default class SearchRefinersContainer extends React.Component<ISearchRefinersContainerProps, ISearchRefinersContainerState> {
   
   public constructor(props: ISearchRefinersContainerProps) {
     super(props);
+
+    this.state = {
+      currentQuery: '',
+      lastQuery: ''
+    };
+  }
+
+  public componentDidMount() {
+    this.setState({
+      currentQuery: this.props.queryKeywords + this.props.queryTemplate + this.props.selectedProperties.join(','),
+      lastQuery: this.props.queryKeywords + this.props.queryTemplate + this.props.selectedProperties.join(',')
+    });
+  }
+
+  public componentWillReceiveProps(nextProps: ISearchRefinersContainerProps) {
+    let nextQuery = nextProps.queryKeywords + nextProps.queryTemplate + nextProps.selectedProperties.join(',');
+    this.setState((s) => ({
+      currentQuery: nextQuery,
+      lastQuery: s.currentQuery
+    }));
   }
 
   public render(): React.ReactElement<ISearchRefinersContainerProps> {
@@ -42,6 +63,7 @@ export default class SearchRefinersContainer extends React.Component<ISearchRefi
                               availableFilters={this.props.availableRefiners}
                               refinersConfiguration={this.props.refinersConfiguration}
                               onUpdateFilters={this.props.onUpdateFilters}  
+                              resetSelectedFilters={ this.state.lastQuery !== this.state.currentQuery ? true : false}
                             />;
             break;
 
@@ -50,7 +72,7 @@ export default class SearchRefinersContainer extends React.Component<ISearchRefi
                               availableFilters={this.props.availableRefiners}
                               refinersConfiguration={this.props.refinersConfiguration}
                               onUpdateFilters={this.props.onUpdateFilters}  
-                              
+                              resetSelectedFilters={ this.state.lastQuery !== this.state.currentQuery ? true : false}
                             />;
           break;
       }
