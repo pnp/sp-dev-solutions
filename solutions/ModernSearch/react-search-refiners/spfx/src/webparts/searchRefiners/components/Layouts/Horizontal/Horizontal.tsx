@@ -32,6 +32,22 @@ export default class Horizontal extends React.Component<IFilterPanelProps, IFilt
         this._onRenderCell = this._onRenderCell.bind(this);
     }
 
+    public componentDidMount() {
+        this.setState({
+            selectedFilters: []
+        });
+    }
+
+    public componentWillReceiveProps(nextProps: IFilterPanelProps) {
+
+        if (nextProps.resetSelectedFilters) {
+            // Reset the selected filter on new query
+            this.setState({
+                selectedFilters: []
+            });
+        }
+    }
+
     public render(): React.ReactElement<IFilterPanelProps> {
 
         let items: JSX.Element[] = [];

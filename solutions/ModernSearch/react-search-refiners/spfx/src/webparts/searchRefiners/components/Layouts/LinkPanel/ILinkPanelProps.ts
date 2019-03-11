@@ -7,6 +7,7 @@ interface ILinkPanelProps {
     availableFilters: IRefinementResult[];
     refinersConfiguration: IRefinerConfiguration[];
     onUpdateFilters: RefinementFilterOperationCallback;
+    resetSelectedFilters: boolean;
 }
 
   

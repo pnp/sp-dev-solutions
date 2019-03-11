@@ -1,5 +1,5 @@
 export interface ISearchResults {
-    SearchQuery: string;
+    QueryKeywords: string;
     PaginationInformation?: IPaginationInformation;
     RelevantResults: ISearchResult[];
     RefinementResults: IRefinementResult[];

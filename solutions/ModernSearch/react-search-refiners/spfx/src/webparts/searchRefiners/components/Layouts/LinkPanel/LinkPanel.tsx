@@ -19,7 +19,7 @@ import * as strings from 'SearchRefinersWebPartStrings';
 
 export default class LinkPanel extends React.Component<ILinkPanelProps, ILinkPanelState> {
 
-    public constructor(props) {
+    public constructor(props: ILinkPanelProps) {
         super(props);
 
         this.state = {
@@ -176,6 +176,16 @@ export default class LinkPanel extends React.Component<ILinkPanelProps, ILinkPan
         this.setState({
             selectedFilters: []
         });
+    }
+
+    public componentWillReceiveProps(nextProps: ILinkPanelProps) {
+
+        if (nextProps.resetSelectedFilters) {
+            // Reset the selected filter on new query
+            this.setState({
+                selectedFilters: []
+            });
+        }
     }
 
     private _onRenderCell(nestingDepth: number, item: any, itemIndex: number) {

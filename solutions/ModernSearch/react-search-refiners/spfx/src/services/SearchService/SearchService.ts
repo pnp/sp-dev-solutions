@@ -10,6 +10,8 @@ const mapKeys: any = require('lodash/mapKeys');
 const mapValues: any = require('lodash/mapValues');
 import LocalizationHelper from                                                                        '../../helpers/LocalizationHelper';
 import "@pnp/polyfill-ie11";
+import IRefinerConfiguration from '../../models/IRefinerConfiguration';
+import { ISearchServiceConfiguration } from '../../models/ISearchServiceConfiguration';
 
 declare var System: any;
 
@@ -23,6 +25,8 @@ class SearchService implements ISearchService {
     private _resultSourceId: string;
     private _sortList: Sort[];
     private _enableQueryRules: boolean;
+    private _refiners: IRefinerConfiguration[];
+    private _refinementFilters: IRefinementFilter[];
 
     public get resultsCount(): number { return this._resultsCount; }
     public set resultsCount(value: number) { this._resultsCount = value; }
@@ -41,6 +45,12 @@ class SearchService implements ISearchService {
 
     public set enableQueryRules(value: boolean) { this._enableQueryRules = value; }
     public get enableQueryRules(): boolean { return this._enableQueryRules; }
+
+    public set refiners(value: IRefinerConfiguration[]) { this._refiners = value; }
+    public get refiners(): IRefinerConfiguration[] { return this._refiners; }
+
+    public set refinementFilters(value: IRefinementFilter[]) { this._refinementFilters = value; }
+    public get refinementFilters(): IRefinementFilter[] { return this._refinementFilters; }
 
     private _localPnPSetup: SPRest;
 
@@ -66,7 +76,7 @@ class SearchService implements ISearchService {
      * @param query The search query in KQL format
      * @return The search results
      */
-    public async search(query: string, refiners?: string, refinementFilters?: IRefinementFilter[], pageNumber?: number): Promise<ISearchResults> {
+    public async search(query: string, pageNumber?: number): Promise<ISearchResults> {
 
         let searchQuery: SearchQuery = {};
         let sortedRefiners: string[] = [];
@@ -93,20 +103,20 @@ class SearchService implements ISearchService {
         searchQuery.TrimDuplicates = false;
         searchQuery.SortList = this._sortList ? this._sortList : [];
 
-        if (refiners) {
+        if (this.refiners) {
             // Get the refiners order specified in the property pane
-            sortedRefiners = refiners.split(',');
-            searchQuery.Refiners = refiners ? refiners : '';
+            sortedRefiners = this.refiners.map(e => e.refinerName);
+            searchQuery.Refiners = sortedRefiners.join(',');
         }
 
-        if (refinementFilters) {
-            if (refinementFilters.length > 0) {
-                searchQuery.RefinementFilters = [this._buildRefinementQueryString(refinementFilters)];
+        if (this.refinementFilters) {
+            if (this.refinementFilters.length > 0) {
+                searchQuery.RefinementFilters = [this._buildRefinementQueryString(this.refinementFilters)];
             }
         }
 
         let results: ISearchResults = {
-            SearchQuery: query + this.queryTemplate + this.selectedProperties.join(','),
+            QueryKeywords: query,
             RelevantResults: [],
             RefinementResults: [],
             PaginationInformation: {
@@ -276,6 +286,19 @@ class SearchService implements ISearchService {
             Logger.write("[SharePointDataProvider.suggest()]: Error: " + error, LogLevel.Error);
             throw error;
         }
+    }
+
+    public getConfiguration(): ISearchServiceConfiguration {
+        return {
+            enableQueryRules: this.enableQueryRules,
+            queryTemplate: this.queryTemplate,
+            refinementFilters: this.refinementFilters,
+            refiners: this.refiners,
+            resultSourceId: this.resultSourceId,
+            resultsCount: this.resultsCount,
+            selectedProperties: this.selectedProperties,
+            sortList: this.sortList
+        };
     }
 
     /**

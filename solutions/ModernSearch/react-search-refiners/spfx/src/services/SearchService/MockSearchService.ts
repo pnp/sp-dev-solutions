@@ -1,26 +1,52 @@
 import ISearchService from                                       './ISearchService';
 import { ISearchResults, IRefinementFilter, ISearchResult } from '../../models/ISearchResult';
 import { intersection, clone } from '@microsoft/sp-lodash-subset';
+import IRefinerConfiguration from '../../models/IRefinerConfiguration';
+import { Sort } from '@pnp/sp';
+import { ISearchServiceConfiguration } from '../../models/ISearchServiceConfiguration';
 
 class MockSearchService implements ISearchService {
 
-    public selectedProperties: string[];
     private _suggestions: string[];
+    private _resultsCount: number;
+    private _selectedProperties: string[];
     private _queryTemplate: string;
-    private _itemsCount: number;
+    private _resultSourceId: string;
+    private _sortList: Sort[];
+    private _enableQueryRules: boolean;
+    private _refiners: IRefinerConfiguration[];
+    private _refinementFilters: IRefinementFilter[];
 
-    public get resultsCount(): number { return this._itemsCount; }
-    public set resultsCount(value: number) { this._itemsCount = value; }
+    public get resultsCount(): number { return this._resultsCount; }
+    public set resultsCount(value: number) { this._resultsCount = value; }
+
+    public set selectedProperties(value: string[]) { this._selectedProperties = value; }
+    public get selectedProperties(): string[] { return this._selectedProperties; }
 
     public set queryTemplate(value: string) { this._queryTemplate = value; }
     public get queryTemplate(): string { return this._queryTemplate; }
+
+    public set resultSourceId(value: string) { this._resultSourceId = value; }
+    public get resultSourceId(): string { return this._resultSourceId; }
+
+    public set sortList(value: Sort[]) { this._sortList = value; }
+    public get sortList(): Sort[] { return this._sortList; }
+
+    public set enableQueryRules(value: boolean) { this._enableQueryRules = value; }
+    public get enableQueryRules(): boolean { return this._enableQueryRules; }
+
+    public set refiners(value: IRefinerConfiguration[]) { this._refiners = value; }
+    public get refiners(): IRefinerConfiguration[] { return this._refiners; }
+
+    public set refinementFilters(value: IRefinementFilter[]) { this._refinementFilters = value; }
+    public get refinementFilters(): IRefinementFilter[] { return this._refinementFilters; }
 
     private _searchResults: ISearchResults;
 
     public constructor() {
      
         this._searchResults = {
-            SearchQuery: "",
+            QueryKeywords: "",
             RelevantResults: [
                 {
                     Title: 'Document 1 - Category 1',
@@ -120,17 +146,17 @@ class MockSearchService implements ISearchService {
         ];
     }
 
-    public search(query: string, refiners?: string, refinementFilters?: IRefinementFilter[], pageNumber?: number): Promise<ISearchResults> {
+    public search(query: string, pageNumber?: number): Promise<ISearchResults> {
          
         const p1 = new Promise<ISearchResults>((resolve, reject) => {
 
             const filters: string[] = [];
             let searchResults = clone(this._searchResults);
-            searchResults.SearchQuery = query + this.queryTemplate + this.selectedProperties.join(',');
+            searchResults.QueryKeywords = query;
             const filteredResults: ISearchResult[] = [];
             
-            if (refinementFilters.length > 0) {
-                refinementFilters.map((filter) => {
+            if (this.refinementFilters.length > 0) {
+                this.refinementFilters.map((filter) => {
                     filters.push(filter.Value.RefinementToken);                                                     
                 });
                 
@@ -150,7 +176,7 @@ class MockSearchService implements ISearchService {
             searchResults.PaginationInformation.MaxResultsPerPage = this.resultsCount;
             
             // Return only the specified count
-            searchResults.RelevantResults = this._paginate(searchResults.RelevantResults, this._itemsCount, pageNumber);
+            searchResults.RelevantResults = this._paginate(searchResults.RelevantResults, this.resultsCount, pageNumber);
 
             // Simulate an async call
             setTimeout(() => {
@@ -195,6 +221,19 @@ class MockSearchService implements ISearchService {
         });
         
         return p1;
+    }
+
+    public getConfiguration(): ISearchServiceConfiguration {
+        return {
+            enableQueryRules: this.enableQueryRules,
+            queryTemplate: this.queryTemplate,
+            refinementFilters: this.refinementFilters,
+            refiners: this.refiners,
+            resultSourceId: this.resultSourceId,
+            resultsCount: this.resultsCount,
+            selectedProperties: this.selectedProperties,
+            sortList: this.sortList
+        };
     }
 }
 

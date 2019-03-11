@@ -32,7 +32,7 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
         // Set the initial state
         this.state = {
             results: {
-                SearchQuery: '',
+                QueryKeywords: '',
                 RefinementResults: [],
                 RelevantResults: []
             },
@@ -97,9 +97,10 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
         } else {                                 
 
             if (items.RelevantResults.length === 0) {
-
+                const selectedProperties = (this.props.searchService.selectedProperties) ? this.props.searchService.selectedProperties.join(',') : undefined;
+                const lastQuery = this.state.results.QueryKeywords + this.props.searchService.queryTemplate + selectedProperties;
                 // Check if a search request has already been entered (to distinguish the first use scenario)
-                if (!this.props.showBlank && this.state.results.SearchQuery && !areResultsLoading) {
+                if (!this.props.showBlank && lastQuery && !areResultsLoading) {
                     renderWpContent =
                         <div>
                             {renderWebPartTitle}
@@ -128,7 +129,7 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
                                     showResultsCount: this.props.showResultsCount,
                                     siteUrl: this.props.siteServerRelativeUrl,
                                     webUrl: this.props.webServerRelativeUrl,
-                                    maxResultsCount: this.props.maxResultsCount,
+                                    maxResultsCount: this.props.searchService.resultsCount,
                                     actualResultsCount: items.RelevantResults.length,
                                     strings: strings
                                 }
@@ -164,11 +165,7 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
                     areResultsLoading: true,
                 });
 
-                this.props.searchService.selectedProperties = this.props.selectedProperties;
-
-                const refinerManagedProperties = this.props.refinersConfiguration.map(e => { return e.refinerName ;}).join(',');
-
-                const searchResults = await this.props.searchService.search(this.props.queryKeywords, refinerManagedProperties, this.props.selectedFilters, this.props.selectedPage);
+                const searchResults = await this.props.searchService.search(this.props.queryKeywords, this.props.selectedPage);
 
                 // Translates taxonomy refiners and result values by using terms ID
                 if (this.props.enableLocalization) {
@@ -190,7 +187,7 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
 
                 Logger.write('[SearchContainer._componentDidMount()]: Error: ' + error, LogLevel.Error);
 
-                let results: ISearchResults = { SearchQuery: this.state.results.SearchQuery, RefinementResults: [], RelevantResults: [] };
+                let results: ISearchResults = { QueryKeywords: this.state.results.QueryKeywords, RefinementResults: [], RelevantResults: [] };
 
                 this.setState({
                     areResultsLoading: false,
@@ -211,7 +208,10 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
     public async componentWillReceiveProps(nextProps: ISearchResultsContainerProps) {
         let executeSearch = false;
         let selectedPage = 1;
-        let query = nextProps.queryKeywords + nextProps.searchService.queryTemplate + nextProps.selectedProperties.join(',');
+        let lastSelectedProperties = (this.props.searchService.selectedProperties) ? this.props.searchService.selectedProperties.join(',') : undefined;
+        let lastQuery = this.props.queryKeywords + this.props.searchService.queryTemplate + lastSelectedProperties;
+        let nextSelectedProperties = (nextProps.searchService.selectedProperties) ? nextProps.searchService.selectedProperties.join(',') : undefined;
+        let query = nextProps.queryKeywords + nextProps.searchService.queryTemplate + nextSelectedProperties;
 
         if (this.props.selectedPage !== nextProps.selectedPage) {
             executeSearch = true;
@@ -219,18 +219,20 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
         }
 
         // New props are passed to the component when the search query has been changed
-        if (JSON.stringify(this.props.refinersConfiguration) !== JSON.stringify(nextProps.refinersConfiguration)
-            || JSON.stringify(this.props.selectedFilters) != JSON.stringify(nextProps.selectedFilters)
-            || JSON.stringify(this.props.sortableFields) !== JSON.stringify(nextProps.sortableFields)
-            || JSON.stringify(this.props.sortList) !== JSON.stringify(nextProps.sortList)
-            || this.props.maxResultsCount !== nextProps.maxResultsCount
-            || this.state.results.SearchQuery !== query
-            || this.props.resultSourceId !== nextProps.resultSourceId
+        if (JSON.stringify(this.props.searchService.refiners) !== JSON.stringify(nextProps.searchService.refiners)
+            || JSON.stringify(this.props.searchService.refinementFilters) != JSON.stringify(nextProps.searchService.refinementFilters)
+            || JSON.stringify(this.props.searchService.sortList) !== JSON.stringify(nextProps.searchService.sortList)
+            || this.props.searchService.resultsCount !== nextProps.searchService.resultsCount
+            || this.props.searchService.enableQueryRules !== nextProps.searchService.enableQueryRules
+            || lastQuery !== query
+            || this.props.searchService.resultSourceId !== nextProps.searchService.resultSourceId
             || this.props.queryKeywords !== nextProps.queryKeywords
-            || this.props.enableQueryRules !== nextProps.enableQueryRules
             || this.props.enableLocalization !== nextProps.enableLocalization) {
             executeSearch = true;
             selectedPage = 1;
+            if (lastQuery !== query) {
+                nextProps.searchService.refinementFilters = [];
+            }
         }
 
         if (executeSearch) {
@@ -244,15 +246,8 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
                         errorMessage: ""
                     });
 
-                    this.props.searchService.selectedProperties = nextProps.selectedProperties;
-
-                    const refinerManagedProperties = nextProps.refinersConfiguration.map(e => { return e.refinerName ;}).join(',');
-
-                    // Reset sortlist
-                    this.props.searchService.sortList = nextProps.sortList;
-
                     // We reset the page number and refinement filters
-                    const searchResults = await this.props.searchService.search(nextProps.queryKeywords, refinerManagedProperties, nextProps.selectedFilters, selectedPage);
+                    const searchResults = await nextProps.searchService.search(nextProps.queryKeywords, selectedPage);
 
                     // Translates taxonomy refiners and result values by using terms ID
                     if (nextProps.enableLocalization) {
@@ -274,7 +269,7 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
 
                     Logger.write('[SearchContainer._componentWillReceiveProps()]: Error: ' + error, LogLevel.Error);
 
-                    let results: ISearchResults = { SearchQuery: this.state.results.SearchQuery, RefinementResults: [], RelevantResults: [] };
+                    let results: ISearchResults = { QueryKeywords: this.state.results.QueryKeywords, RefinementResults: [], RelevantResults: [] };
 
                     this.setState({
                         areResultsLoading: false,
@@ -285,7 +280,7 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
                     this.handleResultUpdateBroadCast(results);
                 }
             } else {
-                let results: ISearchResults = { SearchQuery: '', RefinementResults: [], RelevantResults: [] };
+                let results: ISearchResults = { QueryKeywords: '', RefinementResults: [], RelevantResults: [] };
                 this.setState({
                     areResultsLoading: false,
                     results: results,
@@ -328,13 +323,11 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
                 errorMessage:null
             });
 
-            const refinerManagedProperties = this.props.refinersConfiguration.map(e => { return e.refinerName ;}).join(',');
-                       
             this.props.searchService.sortList = [{Property: sortField, Direction: sortDirection}];
 
             try
             {
-                const searchResults = await this.props.searchService.search(this.props.queryKeywords, refinerManagedProperties, this.props.selectedFilters, 1);
+                const searchResults = await this.props.searchService.search(this.props.queryKeywords, 1);
 
                 this.setState({
                     results: searchResults,
@@ -347,7 +340,7 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
                 Logger.write('[SearchContainer._onUpdateSort()]: Error: ' + error, LogLevel.Error);
                 const errorMessage = /\"value\":\"[^:]+: SortList\.\"/.test(error.message) ? strings.Sort.SortErrorMessage : error.message;
                 
-                let results: ISearchResults = { SearchQuery: this.state.results.SearchQuery, RefinementResults: [], RelevantResults: [] };
+                let results: ISearchResults = { QueryKeywords: this.state.results.QueryKeywords, RefinementResults: [], RelevantResults: [] };
 
                 this.setState({
                     areResultsLoading: false,
