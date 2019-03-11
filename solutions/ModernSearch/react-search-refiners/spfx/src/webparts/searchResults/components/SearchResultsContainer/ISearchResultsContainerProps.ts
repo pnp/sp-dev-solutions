@@ -2,12 +2,10 @@ import ISearchService from '../../../../services/SearchService/ISearchService';
 import ITaxonomyService from '../../../../services/TaxonomyService/ITaxonomyService';
 import { DisplayMode } from '@microsoft/sp-core-library';
 import TemplateService from '../../../../services/TemplateService/TemplateService';
-import IRefinerConfiguration from '../../../../models/IRefinerConfiguration';
 import { Sort } from '@pnp/sp';
 import ISortableFieldConfiguration from '../../../../models/ISortableFieldConfiguration';
 import { ISearchResultType } from '../../../../models/ISearchResultType';
 import {ICustomTemplateFieldValue} from '../../../../services/ResultService/ResultService';
-import { IRefinementFilter } from '../../../../models/ISearchResult';
 import SearchResultsOperationCallback from '../../../../models/SearchResultsOperationCallback';
 
 interface ISearchResultsContainerProps {
@@ -31,46 +29,6 @@ interface ISearchResultsContainerProps {
      * The search query keywords
      */
     queryKeywords: string;
-
-    /**
-     * Number of results to retrieve
-     */
-    maxResultsCount: number;
-
-    /**
-     * The SharePoint result source id to target
-     */
-    resultSourceId: string;
-
-    /**
-     * The sort order of the results
-     */
-    sortList: Sort[];
-
-    /**
-     * Enable SharePoint query rules
-     */
-    enableQueryRules: boolean;
-
-    /**
-     * Properties to retrieve
-     */
-    selectedProperties: string[];
-
-    /**
-     * The managed properties used as refiners for the query
-     */
-    refinersConfiguration: IRefinerConfiguration[];
-
-    /**
-     * Hide refiners in webpart, show externally
-     */
-    useExternalRefinersDisplay: boolean;
-
-    /**
-     * The selected refiners
-     */
-    selectedFilters: IRefinementFilter[];
 
     /**
      * The managed properties used as sortable fields for the query

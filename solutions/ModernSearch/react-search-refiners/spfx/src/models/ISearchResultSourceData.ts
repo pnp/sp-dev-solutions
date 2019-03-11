@@ -1,4 +1,5 @@
 import { IRefinementResult, IPaginationInformation } from "./ISearchResult";
+import { ISearchServiceConfiguration } from "./ISearchServiceConfiguration";
 
 /**
  * Represents the data exposed by a search results Web Part for dynamic data connection
@@ -11,9 +12,14 @@ interface ISearchResultSourceData {
     refinementResults: IRefinementResult[];
 
     /**
-     * The refinement results
+     * The pagination information
      */
     paginationInformation: IPaginationInformation;
+
+    /**
+     * The search service configuration
+     */
+    searchServiceConfiguration: ISearchServiceConfiguration;
 }
 
 export default ISearchResultSourceData;
