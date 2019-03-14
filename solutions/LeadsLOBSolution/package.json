@@ -26,6 +26,7 @@
     "react": "16.7.0"
   },
   "devDependencies": {
+    "@microsoft/rush-stack-compiler-3.3": "0.1.7",
     "@microsoft/sp-build-web": "1.8.0",
     "@microsoft/sp-tslint-rules": "1.8.0",
     "@microsoft/sp-module-interfaces": "1.8.0",
