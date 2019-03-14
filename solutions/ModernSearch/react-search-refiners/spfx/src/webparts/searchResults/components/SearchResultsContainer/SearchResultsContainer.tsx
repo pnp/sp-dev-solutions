@@ -207,6 +207,7 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
 
     public async componentWillReceiveProps(nextProps: ISearchResultsContainerProps) {
         let executeSearch = false;
+        let isPageChanged = false;
         let selectedPage = 1;
         let lastSelectedProperties = (this.props.searchService.selectedProperties) ? this.props.searchService.selectedProperties.join(',') : undefined;
         let lastQuery = this.props.queryKeywords + this.props.searchService.queryTemplate + lastSelectedProperties;
@@ -215,6 +216,7 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
 
         if (this.props.selectedPage !== nextProps.selectedPage) {
             executeSearch = true;
+            isPageChanged = true;
             selectedPage = nextProps.selectedPage;
         }
 
@@ -229,6 +231,7 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
             || this.props.queryKeywords !== nextProps.queryKeywords
             || this.props.enableLocalization !== nextProps.enableLocalization) {
             executeSearch = true;
+            isPageChanged = false;
             selectedPage = 1;
             if (lastQuery !== query) {
                 nextProps.searchService.refinementFilters = [];
@@ -245,6 +248,12 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
                         hasError: false,
                         errorMessage: ""
                     });
+
+                    if (isPageChanged)
+                    {
+                        // Set the focus at the top of the component
+                        this._searchWpRef.focus();
+                    }
 
                     // We reset the page number and refinement filters
                     const searchResults = await nextProps.searchService.search(nextProps.queryKeywords, selectedPage);
