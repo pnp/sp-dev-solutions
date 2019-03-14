@@ -3,7 +3,7 @@ import styles from '../SearchRefinersWebPart.module.scss';
 import { ISearchRefinersContainerProps } from './ISearchRefinersContainerProps';
 import { DisplayMode } from '@microsoft/sp-core-library';
 import { WebPartTitle } from "@pnp/spfx-controls-react/lib/WebPartTitle";
-import Horizontal from '../Layouts/Horizontal/Horizontal';
+import Vertical from '../Layouts/Vertical/Vertical';
 import LinkPanel from '../Layouts/LinkPanel/LinkPanel';
 import RefinersLayoutOption from '../../../../models/RefinersLayoutOptions';
 import { MessageBarType, MessageBar } from 'office-ui-fabric-react';
@@ -59,7 +59,7 @@ export default class SearchRefinersContainer extends React.Component<ISearchRefi
       // Choose the right layout according to the Web Part option
       switch (this.props.selectedLayout) {
         case RefinersLayoutOption.Vertical: 
-          renderWpContent = <Horizontal 
+          renderWpContent = <Vertical 
                               availableFilters={this.props.availableRefiners}
                               refinersConfiguration={this.props.refinersConfiguration}
                               onUpdateFilters={this.props.onUpdateFilters}  

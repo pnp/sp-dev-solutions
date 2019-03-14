@@ -9,6 +9,10 @@
         &__button {
             display: flex;
             align-items: baseline;
+            
+            button {
+                height: 100%;
+            }
         }
     }
 
@@ -44,24 +48,33 @@
     &__filterPanel {
         &__body {
             overflow: auto;
+            margin-left: 15px;
     
             &__headerIcon {
                 text-align: right;
                 margin-top: 5px;
+                padding-left: 15px;
+                padding-right: 10px;
             }
     
-            &__allFiltersToggle {
-                margin-bottom: 15px;
+            &__removeAllFilters {
+                padding: 15px;
             }
     
             &__group {
     
                 &__header {
-                    margin-top: 15px;
+                    display: flex;
+                    align-items: center;
                 }
     
                 button {
                     padding: 10px;
+                }
+
+                &__item {
+                    padding-left: 15px;
+                    padding-top: 10px;
                 }
             }
     
