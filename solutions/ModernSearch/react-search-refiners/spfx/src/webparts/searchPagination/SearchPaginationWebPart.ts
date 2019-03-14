@@ -4,7 +4,6 @@ import { Version, DisplayMode } from '@microsoft/sp-core-library';
 import {
   BaseClientSideWebPart,
   IPropertyPaneConfiguration,
-  IPropertyPaneDropdownOption,
   PropertyPaneDropdown
 } from '@microsoft/sp-webpart-base';
 
@@ -27,12 +26,12 @@ export default class SearchPaginationWebPart extends BaseClientSideWebPart<ISear
   private _pageInformation: DynamicProperty<ISearchResultSourceData>;
 
   public render(): void {
-    let renderElement = null;
     let searchPagination: IPaginationInformation = null;
 
+    let renderElement: JSX.Element = React.createElement('div', null);
     if (this.properties.searchResultsDataSourceReference) {
 
-      // If the dynamic property exists, it means the Web Part ins connected to a search results Web Part
+      // If the dynamic property exists, it means the Web Part is connected to a search results Web Part
       if (this._pageInformation) {
         const searchResultSourceData: ISearchResultSourceData = this._pageInformation.tryGetValue();
 
@@ -41,7 +40,7 @@ export default class SearchPaginationWebPart extends BaseClientSideWebPart<ISear
         }
       }      
 
-      if (searchPagination)
+      if (searchPagination && searchPagination.TotalRows > 0)
       {
         this._currentPage = searchPagination.CurrentPage;
         renderElement = React.createElement(
@@ -57,20 +56,19 @@ export default class SearchPaginationWebPart extends BaseClientSideWebPart<ISear
           }
         );
       }
-    } else {
+    }
+    else {
       if (this.displayMode === DisplayMode.Edit) {
-          renderElement = React.createElement(
-            Placeholder,
-            {
-                iconName: strings.PlaceHolderEditLabel,
-                iconText: strings.PlaceHolderIconText,
-                description: strings.PlaceHolderDescription,
-                buttonLabel: strings.PlaceHolderConfigureBtnLabel,
-                onConfigure: this._setupWebPart.bind(this)
-            }
-          );
-      } else {
-          renderElement = React.createElement('div', null);
+        renderElement = React.createElement(
+          Placeholder,
+          {
+              iconName: strings.PlaceHolderEditLabel,
+              iconText: strings.PlaceHolderIconText,
+              description: strings.PlaceHolderDescription,
+              buttonLabel: strings.PlaceHolderConfigureBtnLabel,
+              onConfigure: this._setupWebPart.bind(this)
+          }
+        );
       }
     }
     ReactDom.render(renderElement, this.domElement);
