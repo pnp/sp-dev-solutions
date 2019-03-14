@@ -1,8 +1,8 @@
 import { IRefinementFilter } from "../../../../../models/ISearchResult";
 
-interface IHorizontalState {
+interface IVerticalState {
     expandedGroups?: number[];
     selectedFilters: IRefinementFilter[];
 }
 
-export default IHorizontalState;
+export default IVerticalState;

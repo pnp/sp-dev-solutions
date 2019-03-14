@@ -113,16 +113,10 @@ export default class LinkPanel extends React.Component<ILinkPanelProps, ILinkPan
             groups={groups} />;
 
             const renderLinkRemoveAll = this.state.selectedFilters.length > 0 ?
-                                            (<div className={`${styles.linkPanelLayout__filterPanel__body__allFiltersToggle} ${this.state.selectedFilters.length === 0 && "hiddenLink"}`}>
-                                            <div className='ms-Grid-row'>
-                                                <div className='ms-Grid-col ms-u-sm1 ms-u-md1 ms-u-lg1'>            
-                                                </div>
-                                                <div className='ms-Grid-col ms-u-sm10 ms-u-md10 ms-u-lg10'>
-                                                    <Link onClick={this._removeAllFilters}>
-                                                        {strings.RemoveAllFiltersLabel}
-                                                    </Link>
-                                                </div>
-                                            </div>
+                                        (<div className={`${styles.linkPanelLayout__filterPanel__body__removeAllFilters} ${this.state.selectedFilters.length === 0 && "hiddenLink"}`}>
+                                                <Link onClick={this._removeAllFilters}>
+                                                    {strings.RemoveAllFiltersLabel}
+                                                </Link>
                                         </div>) : null;
 
         return (
@@ -190,18 +184,17 @@ export default class LinkPanel extends React.Component<ILinkPanelProps, ILinkPan
 
     private _onRenderCell(nestingDepth: number, item: any, itemIndex: number) {
         return (
-            <div className='ms-Grid-row' data-selection-index={itemIndex}>
-                <div className='ms-Grid-col ms-u-sm10 ms-u-md10 ms-u-lg10 ms-smPush1 ms-mdPush1 ms-lgPush1'>
-                    {item}
-                </div>
+            <div className={styles.linkPanelLayout__filterPanel__body__group__item} data-selection-index={itemIndex}>
+                {item}
             </div>
         );
     }
 
     private _onRenderHeader(props: IGroupDividerProps): JSX.Element {
         return (
-            <div className={styles.linkPanelLayout__filterPanel__body__group__header}>
-                <div className='ms-Grid-row' onClick={() => {
+            <div className={ styles.linkPanelLayout__filterPanel__body__group__header }
+                style={props.groupIndex > 0 ? { marginTop: '10px' } : undefined }
+                onClick={() => {
 
                     // Update the index for expanded groups to be able to keep it open after a re-render
                     const updatedExpandedGroups =
@@ -215,15 +208,10 @@ export default class LinkPanel extends React.Component<ILinkPanelProps, ILinkPan
 
                     props.onToggleCollapse(props.group);
                 }}>
-                    <div className='ms-Grid-col ms-u-sm1 ms-u-md1 ms-u-lg1'>
-                        <div className={styles.linkPanelLayout__filterPanel__body__headerIcon}>
-                            <i className={props.group.isCollapsed ? 'ms-Icon ms-Icon--ChevronDown' : 'ms-Icon ms-Icon--ChevronUp'}></i>
-                        </div>
-                    </div>
-                    <div className='ms-Grid-col ms-u-sm10 ms-u-md10 ms-u-lg10'>
-                        <div className='ms-font-l'>{props.group.name}</div>
-                    </div>
+                <div className={styles.linkPanelLayout__filterPanel__body__headerIcon}>
+                    <i className={props.group.isCollapsed ? 'ms-Icon ms-Icon--ChevronDown' : 'ms-Icon ms-Icon--ChevronUp'}></i>
                 </div>
+                <div className='ms-font-l'>{props.group.name}</div>
             </div>
         );
     }
