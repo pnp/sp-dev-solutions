@@ -5,19 +5,19 @@ import { LeadComment, Lead, LeadCardActions, Person, LeadCardPreview } from '..'
 import { Dropdown } from 'office-ui-fabric-react/lib/Dropdown';
 import { Spinner, SpinnerSize } from 'office-ui-fabric-react/lib/Spinner';
 import { css } from 'office-ui-fabric-react/lib/Utilities';
-import { DocumentCard, DocumentCardTitle, DocumentCardActivity, DocumentCardLocation } from 'office-ui-fabric-react/lib/DocumentCard';
+import { DocumentCard, DocumentCardTitle, DocumentCardActivity, DocumentCardLocation, IDocumentCardActivityPerson } from 'office-ui-fabric-react/lib/DocumentCard';
 import { ImageFit } from 'office-ui-fabric-react/lib/Image';
 import { Icon } from 'office-ui-fabric-react/lib/Icon';
 import { HttpClient, HttpClientResponse } from '@microsoft/sp-http';
 import { Placeholder } from "@pnp/spfx-controls-react/lib/Placeholder";
 
 export class Leads extends React.Component<ILeadsProps, ILeadsState> {
-  constructor() {
-    super(null);
+  constructor(props: ILeadsProps) {
+    super(props);
 
     this.state = {
       loading: false,
-      error: null,
+      error: undefined,
       leads: [],
       view: LeadView.new
     };
@@ -212,11 +212,8 @@ export class Leads extends React.Component<ILeadsProps, ILeadsState> {
       return Promise.resolve(data);
     }
     else {
-      this.props.httpClient
-        .get(this.props.leadsApiUrl, HttpClient.configurations.v1)
-        .then((res: HttpClientResponse): Promise<Lead[]> => {
-          return res.json();
-        });
+      return this.props.httpClient.get(this.props.leadsApiUrl, HttpClient.configurations.v1)
+        .then((res: HttpClientResponse) => res.json());
     }
   }
 
@@ -364,14 +361,14 @@ export class Leads extends React.Component<ILeadsProps, ILeadsState> {
                           <Icon iconName='Info' className={styles.urgent} />}
                         <DocumentCardLocation location={l.account} locationHref='#' />
                         <DocumentCardTitle title={l.title} shouldTruncate={true} />
-                        <div className={styles.titleSecondary}><DocumentCardTitle title={l.description} shouldTruncate={true} /></div>
+                        <div className={styles.titleSecondary}><DocumentCardTitle title={l.description!} shouldTruncate={true} /></div>
                       </div>
                       <div>
                         <DocumentCardActivity
                           activity={`Created ${this.getDisplayDate(l.createdOn)}`}
                           people={
-                            []
-                              .concat({ name: l.createdBy.name, profileImageSrc: this.getPhotoUrl(l.createdBy.email) })
+                            ([] as IDocumentCardActivityPerson[])
+                              .concat([{ name: l.createdBy.name, profileImageSrc: this.getPhotoUrl(l.createdBy.email) }])
                               .concat(this.getDistinctContributors(l.createdBy, l.comments).map(c => {
                                 return {
                                   name: c.name,
