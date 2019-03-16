@@ -12,7 +12,7 @@ export default class SearchResult extends React.Component<ISearchResultProps, {}
             <div className="template_root">
                 <ul className={styles.resultContainer}>
                 {this.props.searchResults.RelevantResults.map(result => {
-                    const pictureUrl = `https://navno.sharepoint.com/sites/intranett/_layouts/15/UserPhoto.aspx?size=m&userName=${result.userName}&default=none`;
+                    const pictureUrl = `${this.props.webServerRelativeUrl}/_layouts/15/UserPhoto.aspx?size=m&userName=${result.userName}&default=none`;
                     return (
                         <li className={styles.resultItem}>
                             <PersonaCoin className={styles.coin} imageUrl={pictureUrl} text={result.PreferredName} />

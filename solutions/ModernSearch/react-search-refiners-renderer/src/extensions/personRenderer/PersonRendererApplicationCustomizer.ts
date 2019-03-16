@@ -31,8 +31,7 @@ export default class PersonRendererApplicationCustomizer
   @override
   public onInit(): Promise<void> {
     this._resultService = new ResultService();
-    this.onChangeHappened.bind(this);
-    this._resultService.registerRenderer(this.componentId, 'Persona', 'People', this.onChangeHappened, ['SecondaryText', 'TertiaryText']);
+    this._resultService.registerRenderer(this.componentId, 'Persona', 'People', (e) => this.onChangeHappened(e), ['SecondaryText', 'TertiaryText']);
     return Promise.resolve();
 
   }
@@ -41,6 +40,7 @@ export default class PersonRendererApplicationCustomizer
     const tertiaryTextField = e.customTemplateFieldValues[1].searchProperty && e.customTemplateFieldValues[1].searchProperty.length > 1 ? e.customTemplateFieldValues[1].searchProperty : 'OfficeNumber';
     const resultDisplay = React.createElement(SearchResult, {
       searchResults: e.results,
+      webServerRelativeUrl: this.context.pageContext.web.serverRelativeUrl,
       componentId: e.rendererId,
       secondaryTextField: secondaryTextField,
       tertiaryTextField: tertiaryTextField
