@@ -164,6 +164,14 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
                 enableLocalization: this.properties.enableLocalization,
                 selectedPage: selectedPage,
                 onSearchResultsUpdate: (results, mountingNodeId) => {
+                    if (this.properties.selectedLayout in ResultsLayoutOption)
+                    {
+                        let node = document.getElementById(mountingNodeId);
+                        if (node) {
+                            ReactDom.render(null, node);
+                        }
+                    }
+
                     this._resultService.updateResultData(results, this.properties.selectedLayout as any, mountingNodeId, this.properties.customTemplateFieldValues);
 
                     // Send notification to the connected search refiner component
