@@ -1,6 +1,6 @@
 {
   "name": "pnp-react-search-refiners",
-  "version": "3.0.2",
+  "version": "3.0.3",
   "private": true,
   "engines": {
     "node": ">=0.10.0"

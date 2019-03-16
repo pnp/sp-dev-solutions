@@ -1065,7 +1065,7 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
                     };
                 });
             }
-            if (currentCodeRenderer.customFields && currentCodeRenderer.customFields.length > 0) {
+            if (currentCodeRenderer && currentCodeRenderer.customFields && currentCodeRenderer.customFields.length > 0) {
                 const searchPropertyOptions = this.properties.selectedProperties.split(',').map(prop => {
                     return ({
                         key: prop,

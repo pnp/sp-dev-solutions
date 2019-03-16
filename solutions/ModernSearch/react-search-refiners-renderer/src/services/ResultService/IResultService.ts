@@ -3,6 +3,7 @@ import { IRenderer } from "./ResultService";
 import {ICustomTemplateFieldValue} from './ResultService';
 
 export default interface IResultService {
+
     /**
      * Persists the results to the local storage and fires and update event.
      * @param results The new results
@@ -18,10 +19,20 @@ export default interface IResultService {
      * @param rendererIcon The office-ui-fabric icon to be displayed.
      * @param callback The function that should run whenever the renderer recieves data
      */
-    registerRenderer(rendererId: string, rendererName: string, rendererIcon: string, callback: (e) => void, customFields?: string[]);
+    registerRenderer(rendererId: string, rendererName: string, rendererIcon: string, callback: (e) => void, customFields?:string[]);
 
     /**
      * Get all registered renderers on the current page. 
      */
     getRegisteredRenderers(): IRenderer[];
+
+    /**
+     * The current results
+     */
+    results: ISearchResults;
+
+    /**
+     * Indicates if results are loading
+     */
+    isLoading: boolean;
 }
