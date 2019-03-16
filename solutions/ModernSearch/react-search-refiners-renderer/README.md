@@ -25,8 +25,9 @@ react-search-refiners-renderers | Tarald Gåsbakk - [@taraldga](http://www.twitt
 ## Version history
 Version|Date|Comments
 -------|----|--------
-1.0 | Jan 06, 2019 | Initial release
-1.0 | Mar 05, 2019 | Added Persona renderer
+1.0.0 | Jan 06, 2019 | Initial release
+1.0.0 | Mar 05, 2019 | Added Persona renderer
+1.0.1 | Mar 16, 2019 | Fixed hardcoded profile image url in Persona renderer. Updated some files to be in sync with Search solution
 
 ## Minimal Path to Awesome
 

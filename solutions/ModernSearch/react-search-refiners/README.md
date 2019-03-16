@@ -1,6 +1,6 @@
 # SharePoint Framework modern search Web Parts
 
-![Version](https://img.shields.io/badge/version-3.0.0-green.svg)
+![Version](https://img.shields.io/badge/version-3.0.3-green.svg)
 
 ## Summary
 This solution allows you to build user friendly SharePoint search experiences using SPFx in the modern interface. The main features include:
@@ -12,7 +12,7 @@ This solution allows you to build user friendly SharePoint search experiences us
 - Customizable refiners supporting multilingual values for taxonomy based filters.
 - Sortable results (unique field).
 - Refiners Web Part.
-- Results paging.
+- Pagination Web Part.
 - SharePoint best bets support.
 - Search query enhancement with NLP tools (like Microsoft LUIS).
 
@@ -32,8 +32,9 @@ Component | Description
 ----- | ----- 
 Search Box Web Part | Allows users to enter free text/KQL search queries connected to a search results Web Part.
 Search Results Web Part | Performs static or dynamic search query with customizable parameters sorting and templating. An associated [blog post](http://thecollaborationcorner.com/2017/10/16/build-dynamic-sharepoint-search-experiences-with-refiners-and-paging-with-spfx-office-ui-fabric-and-pnp-js-library/) is available to give you more details about this Web Part implementation.
-Search Refiners | Allows users to configure refiners from a search results Web Part.
-Search Navigation | Allows users to configure refiners from a search results
+Search Refiners | Allows users to configure refiners for a search results Web Part.
+Search Pagination | Allows users to configure pagination for a search results Web Part.
+Search Navigation | Allows users to configure navigation for a search results Web Part
 
 **Back-end service(s)**
 
@@ -115,7 +116,7 @@ Query template | The search query template in KQL format. You can use search var
 Result Source Identifier | The GUID of a SharePoint result source.
 Initial sort order | The initial search results sort order. You can use mutliple properties here.
 Sortable fields | The search managed properties to use for sorting. Make sure these are sortable. With SharePoint Online, you have to reuse the default ones to do so (RefinableStringXX etc.). The order is the same as they will appear in the sort panel. You can also provide your own custom labels using the following format RefinableString01:"You custom filter label",RefinableString02:"You custom filter label",... If no sortable fields are provided, the 'Sort' button will not be visible.
-Connect to a search refiners Web Part | If enable, select the search refiners Web Part to use on the current page to get selected filters. It is a 2 ways connection so don't forget to connect the targeted search refiners to the sarch results Web Part as well. 
+Connect to a search refiners Web Part | If enable, select the search refiners Web Part to use on the current page to get selected filters. It is a 2 ways connection so don't forget to connect the targeted search refiners to the search results Web Part as well. 
 Enable Query Rules | Enable the query rules if applies. Turn this options  'on' to display your SharePoint Promoted results (links only).
 Selected properties | The search managed properties to retrieve. You can use these properties then in your Handlebar template with the syntax (`item.property_name`).
 Number of items to retrieve per page | Quite explicit. The paging behavior is done directly by the search API (See the *SearchDataProvider.ts* file), not by the code on post-render.
@@ -127,7 +128,7 @@ Setting | Description
 Web Part Title | Shows a title for this Web Part. Set blank if you don't want a title.
 Show blank if no result | Shows nothing if there is no result
 Show result count | Shows the result count and entered keywords  
-Show paging | Indicates whether or not the component should show the paging control at the bottom.
+Connect to a search pagination Web Part	 | If enable, select the search pagination Web Part to use on the current page to get selected page. It is a 2 ways connection so don't forget to connect the targeted search pagination to the search results Web Part as well. 
 Result Layouts options | Choose the template to use to display search results. Some layouts are defined by default (List and Tiles) but you can create your own either by clinkg on the **"Custom"** tile, or **"Edit template"** from an existing chosen template. In custom mode, you can set an external template. It has to be in the same SharePoint tenant. Behind the scenes, the Office UI Fabric core CSS components are used in a isolated way. Custom code templates will also automaticly be displayed here upon registration.
 Result types | Allows you to set a custom template at item level according to a specific condition (ex: FileType equals 'pdf').
 Handlebars Helpers | Load [handlebar helpers](https://github.com/helpers/handlebars-helpers) to use in your template. Disable this option will make Web Part loading faster if you don't need them.
@@ -285,6 +286,16 @@ Web Part Title | Shows a title for this Web Part. Set blank if you don't want a 
 Show blank if no result | Shows nothing if there is no filter
 Filters layout | Choose the template to use to display filters results.
 
+### Search Pagination
+
+<p align="center"><img width="300px" src="./images/search-pagination-property-pane.png"/><p>
+
+#### Pagination Options
+
+Setting | Description 
+-------|----
+Connect to search results Web Part | The search results Web Part to use on the current page to get page.
+
 ### Search Navigation Webpart
 This addition is a pivot-navigation link list that may be used to emulate the navigation in the out-of-the-box search center. You can use this webpart on several different pages and set up a searchbox and refiners webpart to handle different types of result. The webpart will automaticly detect if it is on the right page from the set of navigation nodes, and display it in the preferred color. 
 <img src="./images/NavNodesMain.gif">
@@ -335,6 +346,9 @@ Version|Date|Comments
 2.5.0.1 | Feb 11, 2019 | Downgrade @microsoft/sp-office-ui-fabric-core to v1.6.0 to fix theming
 2.5.1.0 | Mar 05, 2019 | Added Search Navigation webpart to the package.
 3.0.0.0 | Mar 10, 2019 | Created a dedicated refiners Web Part to connect with a search results like to the classic SharePoint search experience.
+3.0.1.0 | Mar 14, 2019 | Created a dedicated pagination Web Part to connect with a search results like to the classic SharePoint search experience. Improved Refienrs WP CSS.
+3.0.2.0 | Mar 14, 2019 | Fixed regressions with the paging experience
+3.0.3.0 | Mar 16, 2019 | Fixed display of custom renderers, in edit mode
 
 ## Important notice on upgrading the solution from pre v2.2.0.0
 **Due to code restucturing we have hit an edge case which impacts upgrades from previous versions. To solve the issue go to `https://<tenant>.sharepoint.com/sites/<appcatalog>/Lists/ComponentManifests` and remove the entries for SearchBox and Search Results, and then upload the .sppkg for the new release.**
