@@ -3,7 +3,7 @@
   "solution": {
     "name": " Code renderer for React Search Refiners",
     "id": "41f46e12-4ce6-4826-b1e3-10e7a2a0b895",
-    "version": "1.0.0.0",
+    "version": "1.0.1.0",
     "includeClientSideAssets": true,
     "features": [
       {

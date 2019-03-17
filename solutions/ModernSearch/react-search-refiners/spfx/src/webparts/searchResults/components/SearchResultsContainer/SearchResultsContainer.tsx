@@ -229,7 +229,9 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
             || lastQuery !== query
             || this.props.searchService.resultSourceId !== nextProps.searchService.resultSourceId
             || this.props.queryKeywords !== nextProps.queryKeywords
-            || this.props.enableLocalization !== nextProps.enableLocalization) {
+            || this.props.enableLocalization !== nextProps.enableLocalization
+            || this.props.rendererId !== nextProps.rendererId
+            || this.props.customTemplateFieldValues !== nextProps.customTemplateFieldValues) {
             executeSearch = true;
             isPageChanged = false;
             selectedPage = 1;

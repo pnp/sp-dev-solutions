@@ -1,8 +1,15 @@
 export interface ISearchResults {
+    QueryKeywords: string;
+    PaginationInformation?: IPaginationInformation;
     RelevantResults: ISearchResult[];
     RefinementResults: IRefinementResult[];
     PromotedResults?: IPromotedResult[];
-    TotalRows?: number;
+}
+
+export interface IPaginationInformation {
+    CurrentPage: number;
+    TotalRows: number;
+    MaxResultsPerPage: number;
 }
 
 export interface ISearchResult {
