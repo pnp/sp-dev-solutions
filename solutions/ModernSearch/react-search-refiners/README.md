@@ -215,19 +215,48 @@ You may also define  your own renderers, which most often should be SPFx applica
 
 More information about custom code renderers may be found in a [seperate sample](../react-search-refiners-renderer), which showcases such a renderer.
 
-#### Query variables
+#### Out of the box query variables
 
-The following out of the box query variables are supported/tested:
+The following out of the box [query variables](https://docs.microsoft.com/en-us/sharepoint/technical-reference/query-variables) are supported/tested:
 
-* {searchTerms}
-* {Site}
-* {SiteCollection}
-* {URLToken}
-* {User}
-* {Today}
-* {SearchBoxQuery}
-* {CurrentDisplayLanguage}
-* {CurrentDisplayLCID}
+##### Site and site collection properties
+|**Query variable**|**Definition**|
+|:-----|:-----|
+|{Site} or {Site.URL}  <br/> |URL of the site from where the query was issued. For example, this value can be used to query content of the managed property Path.  <br/> |
+|{Site.ID}  <br/> |GUID of site from where the query was issued. This value corresponds to the value of the managed property SiteID.  <br/> |
+|{Site.LCID}  <br/> |Numeric value of the locale as specified by the Regional Settings in the Site Settings on the Site from where the query was issued.  <br/> |
+|{Site.Locale}  <br/> |Language of the Site from where the query was issued in ll-cc format — for example, en-us.  <br/> |
+|{Site.\<property\>}  <br/> |Any property from the property bag of the site (SPWeb) from where the query was issued, including custom properties.  <br/> |
+|{SiteCollection} or {SiteCollection.URL}  <br/> |URL of site collection from where the query was issued. For example, this value can be used to query content of the managed property Path.  <br/> |
+|{SiteCollection.ID}  <br/> |GUID of site collection from where the query was issued.  <br/> |
+|{SiteCollection.LCID}  <br/> |Numeric value of the locale as specified by the Regional Settings in the Site Settings on the Site Collection from where the query was issued.  <br/> |
+|{SiteCollection.Locale}  <br/> |Language of the Site Collection from where the query was issued in ll-cc format — for example, en-us.  <br/> |
+|{SiteCollection.\<property\>}  <br/> |Any property from the property bag of the root site (SPWeb) in the site collection (SPSite) from where the query was issued, including custom properties.  <br/> |
+
+##### URL token and request properties
+|**Query variable**|**Definition**|
+|:-----|:-----|
+|{URLToken.\<integer\>}  <br/> |A value from the URL of a page. The integer represents the position of the value in the URL as counted from right to left. For example, for the page http://www.contoso/audio/mp3/1010101, the query variable {URLToken.1} will query for the last value in the URL, 1010101. The query variable {URLToken.3} will query for the third last property in the URL, audio. You can query for values up to the ninth last position in a ULR.  <br/> |
+|{Request.\<PropertyName\>}  <br/> |A value from the current http request - for example, {Request.Url}.  <br/> |
+
+##### User properties
+|**Query variable**|**Definition**|
+|:-----|:-----|
+|{User} or {User.Name}  <br/> |Display name of the user who issued the query. For example, this value can be used to query content of the managed property Author.  <br/> |
+|{User.Email}  <br/> |Email address of the user who issued the query. For example, this value can be used to query content of the managed property WorkEmail.  <br/> |
+|{User.PreferredContentLanguage}  <br/> |Language as specified as Preferred Content Language in the profile of the user who issued the query.  <br/> |
+|{User.PreferredDisplayLanguage}  <br/> |Language as specified as Preferred Display Language in the profile of the user who issued the query.  <br/> |
+|{User.\<property\>}  <br/> |Any property from the user profile of the user who issued the query — for example, SPS-Interests, including custom properties.  <br/> |
+   
+##### Other properties
+|**Query variable**|**Definition**|
+|:-----|:-----|
+|{Today+/- \<integer value for number of days\>}  <br/> |A date calculated by adding/subtracting the specified number of days to/from the date when the query is issued. Date format is YYYY-MM-DD. For example, this value can be used to query content of the managed property LastModifiedTime.  <br/> |
+|{SearchBoxQuery} or {searchTerms} <br/> |The query value entered into a search box on a page.  <br/> |
+|{CurrentDisplayLanguage}  <br/> |The current display language based on MUI in ll-cc format.  <br/> |
+|{CurrentDisplayLCID}  <br/> |Numeric value of the current display language based on MUI in ll-cc format.  <br/> |
+
+#### Custom query variables
 
 The following custom query variables are supported:
 
