@@ -2,7 +2,7 @@ import { Lead } from "..";
 
 export interface ILeadsState {
   loading: boolean;
-  error: string;
+  error: string | undefined;
   leads: Lead[];
   view: LeadView;
 }
