@@ -13,8 +13,6 @@ import { DomHelper } from '../../helpers/DomHelper';
 import { ISearchResultType, ResultTypeOperator } from '../../models/ISearchResultType';
 
 abstract class BaseTemplateService {
-    private _helper = null;
-    private _videoJs = null;
     public CurrentLocale = "en";
 
     constructor() {
@@ -23,11 +21,18 @@ abstract class BaseTemplateService {
     }
 
     private async LoadHandlebarsHelpers() {
+        if((<any>window).searchHBHelper !== undefined) {
+            // early check - seems to never hit(?)
+            return;
+        }
         let component = await import(
             /* webpackChunkName: 'search-handlebars-helpers' */
             'handlebars-helpers'
-        );
-        this._helper = component({
+        );        
+        if((<any>window).searchHBHelper !== undefined) {
+            return;
+        }
+        (<any>window).searchHBHelper = component({
             handlebars: Handlebars
         });
     }
@@ -264,7 +269,7 @@ abstract class BaseTemplateService {
             </div>
         `;
     }
-    
+
     /**
      * Gets the default Handlebars result type list item
      * @returns the template HTML markup
@@ -369,10 +374,10 @@ abstract class BaseTemplateService {
         // <p>{{getDate Created "LL"}}</p>
         Handlebars.registerHelper("getDate", (date: string, format: string) => {
             try {
-                let d = this._helper.moment(date, format, { lang: this.CurrentLocale, datejs: false });
+                let d = (<any>window).searchHBHelper.moment(date, format, { lang: this.CurrentLocale, datejs: false });
                 return d;
             } catch (error) {
-                return;
+                return date;
             }
         });
 
@@ -586,8 +591,8 @@ abstract class BaseTemplateService {
      * Based on https://github.com/helpers/handlebars-helpers/ operators
      * @param resultTypes the configured result types from the property pane
      */
-    public async registerResultTypes(resultTypes: ISearchResultType[]) : Promise<void> {
-  
+    public async registerResultTypes(resultTypes: ISearchResultType[]): Promise<void> {
+
         if (resultTypes.length > 0) {
             let content = await this._buildCondition(resultTypes, resultTypes[0], 0);
             let template = Handlebars.compile(content);
@@ -628,23 +633,23 @@ abstract class BaseTemplateService {
 
         // Operator: "Not null"
         if (currentResultType.operator === ResultTypeOperator.NotNull) {
-            param2 = null; 
+            param2 = null;
         }
 
         const baseCondition = `{{#${operator} ${param1} ${param2 || ""}}} 
                                     ${templateContent}`;
 
-         if (currentIdx === resultTypes.length - 1) {
+        if (currentIdx === resultTypes.length - 1) {
             // Renders inner content set in the 'resultTypes' partial
             conditionBlockContent = "{{> @partial-block }}";
-         } else {
-            conditionBlockContent = await this._buildCondition(resultTypes, resultTypes[currentIdx+1], currentIdx+1);
-         }
-                
+        } else {
+            conditionBlockContent = await this._buildCondition(resultTypes, resultTypes[currentIdx + 1], currentIdx + 1);
+        }
+
         return `${baseCondition}   
                 {{else}} 
                     ${conditionBlockContent}
-                {{/${operator}}}`;                       
+                {{/${operator}}}`;
     }
 
     /**
@@ -732,14 +737,16 @@ abstract class BaseTemplateService {
     }
 
     private async _loadVideoLibrary() {
-
         // Load Videos-Js on Demand 
         // Webpack will create a other bundle loaded on demand just for this library
+        if((<any>window).searchVideoJS !== undefined) {
+            return;
+        }
         const videoJs = await import(
             /* webpackChunkName: 'videos-js' */
             './video-js',
         );
-        this._videoJs = videoJs.default.getVideoJs();
+        (<any>window).searchVideoJS = videoJs.default.getVideoJs();
     }
 
     private _initVideoPreviews() {
@@ -759,14 +766,14 @@ abstract class BaseTemplateService {
                 const previewContainedId = `${playerId}_container`;
                 let containerElt = document.getElementById(previewContainedId);
 
-                let player = this._videoJs.getPlayer(`#${playerId}`);
+                let player = (<any>window).searchVideoJS.getPlayer(`#${playerId}`);
 
                 // Case when the player is still registered in Video.js but does not exist in the DOM (due to page mode switch or tempalte update)
                 if (player && !document.getElementById(playerId)) {
 
                     // In this case, we simply delete the player instance and recreate it
                     player.dispose();
-                    player = this._videoJs.getPlayer(`#${playerId}`);
+                    player = (<any>window).searchVideoJS.getPlayer(`#${playerId}`);
                 }
 
                 // Remove exiting instance if there is already a player registered with  id
@@ -793,7 +800,7 @@ abstract class BaseTemplateService {
                         DomHelper.insertAfter(newEl, thumbnailElt.parentElement);
 
                         // Instantiate a new player with Video.js
-                        const videoPlayer = new this._videoJs(playerId, {
+                        const videoPlayer = new (<any>window).searchVideoJS(playerId, {
                             controls: true,
                             autoplay: false,
                             preload: "metadata",

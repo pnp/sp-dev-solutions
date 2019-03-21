@@ -378,6 +378,7 @@ Version|Date|Comments
 3.0.1.0 | Mar 14, 2019 | Created a dedicated pagination Web Part to connect with a search results like to the classic SharePoint search experience. Improved Refienrs WP CSS.
 3.0.2.0 | Mar 14, 2019 | Fixed regressions with the paging experience
 3.0.3.0 | Mar 16, 2019 | Fixed display of custom renderers, in edit mode
+3.0.4.0 | Mar 21, 2019 | Fixed loading of Handlebars helpers when having multiple search parts on a page
 
 ## Important notice on upgrading the solution from pre v2.2.0.0
 **Due to code restucturing we have hit an edge case which impacts upgrades from previous versions. To solve the issue go to `https://<tenant>.sharepoint.com/sites/<appcatalog>/Lists/ComponentManifests` and remove the entries for SearchBox and Search Results, and then upload the .sppkg for the new release.**

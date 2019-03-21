@@ -16,7 +16,6 @@ import { ISearchServiceConfiguration } from '../../models/ISearchServiceConfigur
 declare var System: any;
 
 class SearchService implements ISearchService {
-    private _helper = null;
     private _initialSearchResult: SearchResults = null;
     private _resultsCount: number;
     private _context: IWebPartContext;
@@ -149,15 +148,16 @@ class SearchService implements ISearchService {
                 let refinementResultsRows = r2.RawSearchResults.PrimaryQueryResult.RefinementResults;
 
                 const refinementRows: any = refinementResultsRows ? refinementResultsRows.Refiners : [];
-                if (refinementRows.length > 0) {
-
+                if (refinementRows.length > 0 && (<any>window).searchHBHelper === undefined) {                    
                     const component = await import(
                         /* webpackChunkName: 'search-handlebars-helpers' */
                         'handlebars-helpers'
                     );
-                    this._helper = component({
-                        handlebars: Handlebars
-                    });
+                    if((<any>window).searchHBHelper === undefined) {
+                        (<any>window).searchHBHelper = component({
+                            handlebars: Handlebars
+                        });    
+                    }
                 }
 
                 // Map search results
@@ -339,7 +339,7 @@ class SearchService implements ISearchService {
         
         if (matches) {            
             matches.map(match => {
-                updatedInputValue = updatedInputValue.replace(match, this._helper.moment(match, "LL", { lang: this._context.pageContext.cultureInfo.currentUICultureName }));
+                updatedInputValue = updatedInputValue.replace(match, (<any>window).searchHBHelper.moment(match, "LL", { lang: this._context.pageContext.cultureInfo.currentUICultureName }));
             });
         }
 
