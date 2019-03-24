@@ -26,6 +26,7 @@ import { ISearchRefinersContainerProps } from './components/SearchRefinersContai
 import ISearchResultSourceData from '../../models/ISearchResultSourceData';
 import { DynamicDataService } from '../../services/DynamicDataService/DynamicDataService';
 import IDynamicDataService from '../../services/DynamicDataService/IDynamicDataService';
+import RefinerTemplateOption from '../../models/RefinerTemplateOption';
 
 export default class SearchRefinersWebPart extends BaseClientSideWebPart<ISearchRefinersWebPartProps> implements IDynamicDataCallables {
   private _dynamicDataService: IDynamicDataService;
@@ -165,16 +166,31 @@ export default class SearchRefinersWebPart extends BaseClientSideWebPart<ISearch
         value: this.properties.refinersConfiguration,
         fields: [
             {
-                id: 'refinerName',
-                title: strings.Refiners.RefinerManagedPropertyField,
-                type: CustomCollectionFieldType.string,
-                placeholder: '\"RefinableStringXXX\", etc.'
+              id: 'refinerName',
+              title: strings.Refiners.RefinerManagedPropertyField,
+              type: CustomCollectionFieldType.string,
+              placeholder: '\"RefinableStringXXX\", etc.'
             },
             {
-                id: 'displayValue',
-                title: strings.Refiners.RefinerDisplayValueField,
-                type: CustomCollectionFieldType.string
-            }
+              id: 'displayValue',
+              title: strings.Refiners.RefinerDisplayValueField,
+              type: CustomCollectionFieldType.string
+            },
+            {
+              id: 'template',
+              title: "Refiner template",
+              type: CustomCollectionFieldType.dropdown,
+              options: [
+                {
+                  key: RefinerTemplateOption.CheckBox,
+                  text: 'Checkbox'
+                },
+                {
+                  key: RefinerTemplateOption.CheckBoxMulti,
+                  text: 'Checkbox multi',
+                }
+              ]
+          }
         ]
       }),
       PropertyPaneDropdown('searchResultsDataSourceReference', {
@@ -292,15 +308,18 @@ export default class SearchRefinersWebPart extends BaseClientSideWebPart<ISearch
     this.properties.refinersConfiguration = Array.isArray(this.properties.refinersConfiguration) ? this.properties.refinersConfiguration : [
         {
             refinerName: "Created",
-            displayValue: "Created Date"
+            displayValue: "Created Date",
+            template: RefinerTemplateOption.CheckBox
         },
         {
             refinerName: "Size",
-            displayValue: "Size of the file"
+            displayValue: "Size of the file",
+            template: RefinerTemplateOption.CheckBox
         },
         {
             refinerName: "owstaxidmetadataalltagsinfo",
-            displayValue: "Tags"
+            displayValue: "Tags",
+            template: RefinerTemplateOption.CheckBox
         }
     ];
 
