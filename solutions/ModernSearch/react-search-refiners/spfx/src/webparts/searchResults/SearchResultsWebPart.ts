@@ -82,7 +82,6 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
 
     public async render(): Promise<void> {
         // Configure the provider before the query according to our needs
-        this._searchService = this.getSearchService();
         this._searchService.resultsCount = this.properties.maxResultsCount;
         this._searchService.queryTemplate = await this.replaceQueryVariables(this.properties.queryTemplate);
         this._searchService.resultSourceId = this.properties.resultSourceId;
@@ -441,6 +440,8 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
                 this.properties.externalTemplateUrl = '';
             }
         }
+
+        this._searchService = this.getSearchService();
     }
 
     protected async onPropertyPaneConfigurationStart() {
