@@ -52,6 +52,7 @@ import IRefinerConfiguration from '../../models/IRefinerConfiguration';
 import { SearchComponentType } from '../../models/SearchComponentType';
 import ISearchResultSourceData from '../../models/ISearchResultSourceData';
 import IPaginationSourceData from '../../models/IPaginationSourceData';
+import * as update from 'immutability-helper';
 
 const LOG_SOURCE: string = '[SearchResultsWebPart_{0}]';
 
@@ -69,6 +70,7 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
     private _paginationSourceData: DynamicProperty<IPaginationSourceData>;
     private _codeRenderers: IRenderer[];
     private _searchContainer : JSX.Element;
+    private _queryTemplate: string;
 
     /**
      * The template to display at render time
@@ -81,14 +83,7 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
     }
 
     public async render(): Promise<void> {
-        // Configure the provider before the query according to our needs
-        this._searchService = this.getSearchService();
-        this._searchService.resultsCount = this.properties.maxResultsCount;
-        this._searchService.queryTemplate = await this.replaceQueryVariables(this.properties.queryTemplate);
-        this._searchService.resultSourceId = this.properties.resultSourceId;
-        this._searchService.sortList = this._convertToSortList(this.properties.sortList);
-        this._searchService.enableQueryRules = this.properties.enableQueryRules;
-        this._searchService.selectedProperties = this.properties.selectedProperties ? this.properties.selectedProperties.replace(/\s|,+$/g, '').split(',') : [];
+        this._queryTemplate = await this.replaceQueryVariables(this.properties.queryTemplate);
 
         // Determine the template content to display
         // In the case of an external template is selected, the render is done asynchronously waiting for the content to be fetched
@@ -127,8 +122,17 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
             }
         }
 
-        this._searchService.refiners = refinerConfiguration;
-        this._searchService.refinementFilters = selectedFilters;
+        // Configure the provider before the query according to our needs
+        this._searchService = update(this._searchService, {
+            resultsCount: {$set: this.properties.maxResultsCount},
+            queryTemplate: {$set: this._queryTemplate},
+            resultSourceId: {$set: this.properties.resultSourceId},
+            sortList: {$set: this._convertToSortList(this.properties.sortList)},
+            enableQueryRules: {$set: this.properties.enableQueryRules},
+            selectedProperties: {$set: this.properties.selectedProperties ? this.properties.selectedProperties.replace(/\s|,+$/g, '').split(',') : []},
+            refiners: {$set: refinerConfiguration},
+            refinementFilters: {$set: selectedFilters},
+        });
 
         if (this._paginationSourceData) {
             const paginationSourceData: IPaginationSourceData = this._paginationSourceData.tryGetValue();
