@@ -1161,6 +1161,6 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
     }
 
     private getSearchService(): ISearchService {
-        return (Environment.type === EnvironmentType.Local) ? new MockSearchService() : new SearchService(this.context);
+        return (Environment.type === EnvironmentType.Local) ? new MockSearchService() : this._searchService || new SearchService(this.context);
     }
 }
