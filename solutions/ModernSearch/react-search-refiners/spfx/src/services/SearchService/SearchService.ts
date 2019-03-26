@@ -1,14 +1,14 @@
-import * as Handlebars from                                                                           'handlebars';
-import ISearchService from                                                                            './ISearchService';
+import * as Handlebars from 'handlebars';
+import ISearchService from './ISearchService';
 import { ISearchResults, ISearchResult, IRefinementResult, IRefinementValue, IRefinementFilter, IPromotedResult } from '../../models/ISearchResult';
-import { sp, SearchQuery, SearchResults, SPRest, Sort, SortDirection, SearchSuggestQuery } from                                                '@pnp/sp';
-import { Logger, LogLevel, ConsoleListener } from                                                     '@pnp/logging';
-import { IWebPartContext } from                                                                       '@microsoft/sp-webpart-base';
-import { Text } from                                                                                  '@microsoft/sp-core-library';
-import {sortBy, groupBy} from                                                                         '@microsoft/sp-lodash-subset';
+import { sp, SearchQuery, SearchResults, SPRest, Sort, SortDirection, SearchSuggestQuery } from '@pnp/sp';
+import { Logger, LogLevel, ConsoleListener } from '@pnp/logging';
+import { IWebPartContext } from '@microsoft/sp-webpart-base';
+import { Text } from '@microsoft/sp-core-library';
+import { sortBy, groupBy } from '@microsoft/sp-lodash-subset';
 const mapKeys: any = require('lodash/mapKeys');
 const mapValues: any = require('lodash/mapValues');
-import LocalizationHelper from                                                                        '../../helpers/LocalizationHelper';
+import LocalizationHelper from '../../helpers/LocalizationHelper';
 import "@pnp/polyfill-ie11";
 import IRefinerConfiguration from '../../models/IRefinerConfiguration';
 import { ISearchServiceConfiguration } from '../../models/ISearchServiceConfiguration';
@@ -84,6 +84,19 @@ class SearchService implements ISearchService {
         let page = pageNumber ? pageNumber : 1;
 
         searchQuery.ClientType = 'ContentSearchRegular';
+        searchQuery.Properties = [{
+            Name: "EnableDynamicGroups",
+            Value: {
+                BoolVal: true,
+                QueryPropertyValueTypeIndex: 3
+            }
+        }, {
+            Name: "EnableMultiGeoSearch",
+            Value: {
+                BoolVal: true,
+                QueryPropertyValueTypeIndex: 3
+            }
+        }];
         searchQuery.Querytext = query;
 
         // Disable query rules by default if not specified
@@ -92,10 +105,10 @@ class SearchService implements ISearchService {
         if (this._resultSourceId) {
             searchQuery.SourceId = this._resultSourceId;
         }
-        
+
         // To be able to use search query variable according to the current context
         // http://www.techmikael.com/2015/07/sharepoint-rest-do-support-query.html
-        searchQuery.QueryTemplate = this._queryTemplate;        
+        searchQuery.QueryTemplate = this._queryTemplate;
 
         searchQuery.RowLimit = this._resultsCount ? this._resultsCount : 50;
         searchQuery.SelectProperties = this._selectedProperties;
@@ -148,15 +161,15 @@ class SearchService implements ISearchService {
                 let refinementResultsRows = r2.RawSearchResults.PrimaryQueryResult.RefinementResults;
 
                 const refinementRows: any = refinementResultsRows ? refinementResultsRows.Refiners : [];
-                if (refinementRows.length > 0 && (<any>window).searchHBHelper === undefined) {                    
+                if (refinementRows.length > 0 && (<any>window).searchHBHelper === undefined) {
                     const component = await import(
                         /* webpackChunkName: 'search-handlebars-helpers' */
                         'handlebars-helpers'
                     );
-                    if((<any>window).searchHBHelper === undefined) {
+                    if ((<any>window).searchHBHelper === undefined) {
                         (<any>window).searchHBHelper = component({
                             handlebars: Handlebars
-                        });    
+                        });
                     }
                 }
 
@@ -209,14 +222,14 @@ class SearchService implements ISearchService {
                 // Query rules handling
                 const secondaryQueryResults = r2.RawSearchResults.SecondaryQueryResults;
                 if (Array.isArray(secondaryQueryResults) && secondaryQueryResults.length > 0) {
-                    
+
                     let promotedResults: IPromotedResult[] = [];
-                    
+
                     secondaryQueryResults.map((e) => {
 
                         // Best bets are mapped through the "SpecialTermResults" https://msdn.microsoft.com/en-us/library/dd907265(v=office.12).aspx
                         if (e.SpecialTermResults) {
-                            
+
                             e.SpecialTermResults.Results.map((result) => {
                                 promotedResults.push({
                                     Title: result.Title,
@@ -224,7 +237,7 @@ class SearchService implements ISearchService {
                                     Description: result.Description
                                 } as IPromotedResult);
                             });
-                        }                        
+                        }
                     });
 
                     results.PromotedResults = promotedResults;
@@ -308,7 +321,7 @@ class SearchService implements ISearchService {
     private async _mapToIcon(filename: string): Promise<string> {
 
         const webAbsoluteUrl = this._context.pageContext.web.absoluteUrl;
-        
+
         try {
             let encodedFileName = filename ? filename.replace(/['']/g, '') : '';
             const queryStringIndex = encodedFileName.indexOf('?');
@@ -336,8 +349,8 @@ class SearchService implements ISearchService {
         const matches = inputValue.match(iso8061rgx);
 
         let updatedInputValue = inputValue;
-        
-        if (matches) {            
+
+        if (matches) {
             matches.map(match => {
                 updatedInputValue = updatedInputValue.replace(match, (<any>window).searchHBHelper.moment(match, "LL", { lang: this._context.pageContext.cultureInfo.currentUICultureName }));
             });
