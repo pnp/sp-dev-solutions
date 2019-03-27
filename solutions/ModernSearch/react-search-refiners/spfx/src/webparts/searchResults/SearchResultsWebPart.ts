@@ -217,12 +217,14 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
         if (Environment.type === EnvironmentType.Local) {
             this._taxonomyService = new MockTaxonomyService();
             this._templateService = new MockTemplateService(this.context.pageContext.cultureInfo.currentUICultureName);
+            this._searchService = new MockSearchService();
 
         } else {
             this._taxonomyService = new TaxonomyService(this.context.pageContext.site.absoluteUrl);
             this._templateService = new TemplateService(this.context.spHttpClient, this.context.pageContext.cultureInfo.currentUICultureName);
+            this._searchService = new SearchService(this.context);
         }
-        this._searchService = this.getSearchService();
+        
         this._resultService = new ResultService();
         this._codeRenderers = this._resultService.getRegisteredRenderers();
         this._dynamicDataService = new DynamicDataService(this.context.dynamicDataProvider);
@@ -1162,9 +1164,5 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
         }
         
         throw new Error('Bad property id');
-    }
-
-    private getSearchService(): ISearchService {
-        return (Environment.type === EnvironmentType.Local) ? new MockSearchService() : new SearchService(this.context);
     }
 }
