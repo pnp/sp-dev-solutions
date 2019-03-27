@@ -114,9 +114,9 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
                 }
             } else {
 
-                let searchResultTemplate = <div></div>;
+                let renderSearchResultTemplate = <div></div>;
                  if(!this.props.useCodeRenderer) {
-                    searchResultTemplate =  (
+                    renderSearchResultTemplate = 
                         <SearchResultsTemplate
                             templateService={this.props.templateService}
                             templateContent={this.props.templateContent}
@@ -134,7 +134,7 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
                                     strings: strings
                                 }
                             }
-                        />);
+                        />;
                 }
                 renderWpContent =
                     <div>
@@ -142,7 +142,7 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
                         <div className={styles.searchWp__buttonBar}>{sortPanel}</div>
                         {renderOverlay}
                         <div id={this.state.mountingNodeId} />
-                        {searchResultTemplate}
+                        {renderSearchResultTemplate}
                     </div>;
             }
         }
@@ -206,19 +206,11 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
     }
 
     public async componentWillReceiveProps(nextProps: ISearchResultsContainerProps) {
-        let executeSearch = false;
-        let isPageChanged = false;
-        let selectedPage = 1;
+
         let lastSelectedProperties = (this.props.searchService.selectedProperties) ? this.props.searchService.selectedProperties.join(',') : undefined;
         let lastQuery = this.props.queryKeywords + this.props.searchService.queryTemplate + lastSelectedProperties;
         let nextSelectedProperties = (nextProps.searchService.selectedProperties) ? nextProps.searchService.selectedProperties.join(',') : undefined;
         let query = nextProps.queryKeywords + nextProps.searchService.queryTemplate + nextSelectedProperties;
-
-        if (this.props.selectedPage !== nextProps.selectedPage) {
-            executeSearch = true;
-            isPageChanged = true;
-            selectedPage = nextProps.selectedPage;
-        }
 
         // New props are passed to the component when the search query has been changed
         if (JSON.stringify(this.props.searchService.refiners) !== JSON.stringify(nextProps.searchService.refiners)
@@ -231,16 +223,13 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
             || this.props.queryKeywords !== nextProps.queryKeywords
             || this.props.enableLocalization !== nextProps.enableLocalization
             || this.props.rendererId !== nextProps.rendererId
-            || this.props.customTemplateFieldValues !== nextProps.customTemplateFieldValues) {
-            executeSearch = true;
-            isPageChanged = false;
-            selectedPage = 1;
+            || this.props.customTemplateFieldValues !== nextProps.customTemplateFieldValues
+            || this.props.selectedPage !== nextProps.selectedPage) {
+
             if (lastQuery !== query) {
                 nextProps.searchService.refinementFilters = [];
             }
-        }
 
-        if (executeSearch) {
             // Don't perform search is there is no keywords
             if (nextProps.queryKeywords) {
                 try {
@@ -251,14 +240,11 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
                         errorMessage: ""
                     });
 
-                    if (isPageChanged)
-                    {
-                        // Set the focus at the top of the component
-                        this._searchWpRef.focus();
-                    }
+                    // Set the focus at the top of the component
+                    this._searchWpRef.focus();
 
                     // We reset the page number and refinement filters
-                    const searchResults = await nextProps.searchService.search(nextProps.queryKeywords, selectedPage);
+                    const searchResults = await nextProps.searchService.search(nextProps.queryKeywords, nextProps.selectedPage);
 
                     // Translates taxonomy refiners and result values by using terms ID
                     if (nextProps.enableLocalization) {
