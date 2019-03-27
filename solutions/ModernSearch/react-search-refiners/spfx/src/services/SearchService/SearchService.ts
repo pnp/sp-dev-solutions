@@ -110,7 +110,7 @@ class SearchService implements ISearchService {
 
         if (this.refinementFilters) {
             if (this.refinementFilters.length > 0) {
-                searchQuery.RefinementFilters = [this._buildRefinementQueryString(this.refinementFilters)];
+                searchQuery.RefinementFilters = this._buildRefinementQueryString(this.refinementFilters);
             }
         }
 
@@ -350,49 +350,27 @@ class SearchService implements ISearchService {
      * Build the refinement condition in FQL format
      * @param selectedFilters The selected filter array
      */
-    private _buildRefinementQueryString(selectedFilters: IRefinementFilter[]): string {
+    private _buildRefinementQueryString(selectedFilters: IRefinementFilter[]): string[] {
 
         let refinementQueryConditions: string[] = [];
-        let refinementQueryString: string = null;
+
+        const groups = groupBy(selectedFilters, 'FilterName');
 
         // Conditions between values inside a refiner property 
-        const refinementFilters = mapValues(groupBy(selectedFilters, 'FilterName'), (values) => {
+        const refinementFilters = mapValues(groups, (values) => {
             const refinementFilter = values.map((filter) => {
                 return filter.Value.RefinementToken;
             });
 
-            return refinementFilter.length > 1 ? Text.format('and({0})', refinementFilter) : refinementFilter.toString();
+            // If multiple values are selected for a single refiner, we do an 'OR'
+            return refinementFilter.length > 1 ? Text.format('or({0})', refinementFilter) : refinementFilter.toString();
         });
 
         mapKeys(refinementFilters, (value, key) => {
             refinementQueryConditions.push(key + ':' + value);
         });
 
-        const conditionsCount = refinementQueryConditions.length;
-
-        switch (true) {
-
-            // No filters
-            case (conditionsCount === 0): {
-                refinementQueryString = null;
-                break;
-            }
-
-            // Just one filter
-            case (conditionsCount === 1): {
-                refinementQueryString = refinementQueryConditions[0].toString();
-                break;
-            }
-
-            // Multiple filters
-            case (conditionsCount > 1): {
-                // Conditions between refiner properties
-                refinementQueryString = Text.format('and({0})', refinementQueryConditions.toString());
-                break;
-            }
-        }
-
-        return refinementQueryString;
+        return refinementQueryConditions;
     }
 }
 

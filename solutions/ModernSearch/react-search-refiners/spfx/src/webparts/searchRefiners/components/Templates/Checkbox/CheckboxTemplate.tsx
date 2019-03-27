@@ -6,6 +6,7 @@ import { Checkbox } from 'office-ui-fabric-react/lib/Checkbox';
 import { Text } from '@microsoft/sp-core-library';
 import { Link } from "office-ui-fabric-react";
 import * as update from 'immutability-helper';
+import * as _ from '@microsoft/sp-lodash-subset';
 
 export default class CheckboxTemplate extends React.Component<IBaseRefinerTemplateProps, IBaseRefinerTemplateState> {
 
@@ -25,18 +26,18 @@ export default class CheckboxTemplate extends React.Component<IBaseRefinerTempla
 
         return <div>
                     {
-                        this.props.refinementFilter.Values.map((refinementValue: IRefinementValue, j) => {
+                        this.props.refinementResult.Values.map((refinementValue: IRefinementValue, j) => {
 
                             // Create a new IRefinementFilter with only the current refinement information
                             const currentRefinement: IRefinementFilter = {
-                                FilterName: this.props.refinementFilter.FilterName,
+                                FilterName: this.props.refinementResult.FilterName,
                                 Value: refinementValue,
                             };
 
                             return (
                                 <Checkbox
                                     key={j}                                    
-                                    defaultChecked={this._isInFilterSelection(currentRefinement)}
+                                    checked={this._isInFilterSelection(currentRefinement)}
                                     disabled={false}
                                     label={Text.format(refinementValue.RefinementValue + ' ({0})', refinementValue.RefinementCount)}
                                     onChange={(ev, checked: boolean) => {
@@ -48,7 +49,7 @@ export default class CheckboxTemplate extends React.Component<IBaseRefinerTempla
                     {
                         this.props.isMultiValue ? 
                         
-                            <Link onClick={() => { this._applyFilters(this.state.refinerSelectedFilters)}}>Apply</Link> 
+                            <Link onClick={() => { this._applyFilters()}}>Apply</Link> 
                         
                         : null
                     }
@@ -84,28 +85,44 @@ export default class CheckboxTemplate extends React.Component<IBaseRefinerTempla
         });
 
         if (!this.props.isMultiValue) {
-            this._applyFilters(newFilters);
+            this.props.onFiltersAdded(newFilters);
         }
     }
 
     private _onFilterRemoved(removedFilter: IRefinementFilter) {
-
-      // Remove the filter from the selected filters collection
+        
         const newFilters = this.state.refinerSelectedFilters.filter((elt) => {
             return elt.Value.RefinementToken !== removedFilter.Value.RefinementToken;
         });
-
-        if (!this.props.isMultiValue) {
-            this._applyFilters(newFilters);
-        }
-    }
-
-    private _applyFilters(newFilters: IRefinementFilter[]) {
 
         this.setState({
             refinerSelectedFilters: newFilters
         });
 
-        this.props.onUpdateFilters(newFilters);
+        if (!this.props.isMultiValue) {
+            this.props.onFiltersRemoved(newFilters);
+        }
+    }
+
+    private _applyFilters() {
+
+        const comparer = (otherArray: IRefinementFilter[]) => {
+            return (current: IRefinementFilter) => {
+                return otherArray.filter((other) => {
+                    return other.Value.RefinementToken == current.Value.RefinementToken
+                }).length == 0;
+            }
+        };
+          
+        const onlyInA = this.state.refinerSelectedFilters.filter(comparer(this.props.selectedRefinementFilters));
+        const onlyInB = this.props.selectedRefinementFilters.filter(comparer(this.state.refinerSelectedFilters));
+
+        if (onlyInA.length > 0) {
+            this.props.onFiltersAdded(onlyInA);
+        }
+
+        if (onlyInB.length > 0) {
+            this.props.onFiltersRemoved(onlyInB);
+        }
     }
 }

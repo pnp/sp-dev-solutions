@@ -19,7 +19,7 @@ export default class SearchRefinersContainer extends React.Component<ISearchRefi
     this.state = {
       currentQuery: '',
       lastQuery: '',
-      allSelectedFilters: []
+      selectedRefinementFilters: []
     };
 
     this.onFiltersAdded = this.onFiltersAdded.bind(this);
@@ -31,7 +31,7 @@ export default class SearchRefinersContainer extends React.Component<ISearchRefi
     this.setState({
       currentQuery: this.props.queryKeywords + this.props.queryTemplate + this.props.selectedProperties.join(','),
       lastQuery: this.props.queryKeywords + this.props.queryTemplate + this.props.selectedProperties.join(','),
-      allSelectedFilters: []
+      selectedRefinementFilters: []
     });
   }
 
@@ -45,7 +45,7 @@ export default class SearchRefinersContainer extends React.Component<ISearchRefi
 
     if (this.state.lastQuery !== this.state.currentQuery ? true : false) {
       this.setState({
-        allSelectedFilters: []
+        selectedRefinementFilters: []
       });
     }
   }
@@ -74,9 +74,10 @@ export default class SearchRefinersContainer extends React.Component<ISearchRefi
       switch (this.props.selectedLayout) {
         case RefinersLayoutOption.Vertical: 
           renderWpContent = <Vertical 
-                              onUpdateFilters={this.props.onUpdateFilters}
-                              allSelectedFilters={this.state.allSelectedFilters}
-                              availableFilters={this.props.availableRefiners}
+                              onFiltersAdded={this.onFiltersAdded}
+                              onFiltersRemoved={this.onFiltersRemoved}
+                              selectedRefinementFilters={this.state.selectedRefinementFilters}
+                              refinementResults={this.props.availableRefiners}
                               refinersConfiguration={this.props.refinersConfiguration}
                             />;
             break;
@@ -104,7 +105,7 @@ export default class SearchRefinersContainer extends React.Component<ISearchRefi
   private onFiltersAdded(filtersToAdd: IRefinementFilter[]): void {
 
     // Add the filter to the selected filters collection
-    let newFilters = update(this.state.allSelectedFilters, {$push: filtersToAdd});
+    let newFilters = update(this.state.selectedRefinementFilters, {$push: filtersToAdd});
 
     this._applyFilters(newFilters);
   }
@@ -112,10 +113,10 @@ export default class SearchRefinersContainer extends React.Component<ISearchRefi
   private onFiltersRemoved(filtersToRemove: IRefinementFilter[]): void {
 
       // Remove the filter from the selected filters collection
-      let newFilters = this.state.allSelectedFilters.filter((elt) => {
-          filtersToRemove.map(filter => {
+      let newFilters = this.state.selectedRefinementFilters.filter((elt) => {
+          return filtersToRemove.filter(filter => {
             return elt.Value.RefinementToken !== filter.Value.RefinementToken;
-          });
+          }).length > 0;
       });
 
       this._applyFilters(newFilters);
@@ -128,7 +129,7 @@ export default class SearchRefinersContainer extends React.Component<ISearchRefi
   private _applyFilters(selectedFilters: IRefinementFilter[]): void {
 
     this.setState({
-      allSelectedFilters: selectedFilters
+      selectedRefinementFilters: selectedFilters
     });
 
     this.props.onUpdateFilters(selectedFilters);

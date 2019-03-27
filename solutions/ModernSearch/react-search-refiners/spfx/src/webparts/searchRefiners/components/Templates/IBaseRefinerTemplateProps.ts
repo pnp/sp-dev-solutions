@@ -6,8 +6,14 @@ interface IBaseRefinerTemplateProps {
     /**
      * The refiner values to render
      */
-    refinementFilter: IRefinementResult;
-    onUpdateFilters: RefinementFilterOperationCallback;
+    refinementResult: IRefinementResult;
+
+    selectedRefinementFilters: IRefinementFilter[];
+
+    onFiltersAdded: RefinementFilterOperationCallback;
+
+    onFiltersRemoved: RefinementFilterOperationCallback;
+
     isMultiValue?: boolean;
 } 
 

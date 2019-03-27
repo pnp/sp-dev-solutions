@@ -3,16 +3,14 @@ import IRefinerConfiguration from "../../../../../models/IRefinerConfiguration";
 import RefinementFilterOperationCallback from "../../../../../models/RefinementValueOperationCallback";
 
 interface IVerticalProps {
-    availableFilters: IRefinementResult[];
+    refinementResults: IRefinementResult[];
 
     refinersConfiguration: IRefinerConfiguration[];
 
-    onUpdateFilters: RefinementFilterOperationCallback;
+    selectedRefinementFilters: IRefinementFilter[];
 
-    /**
-     * The current selected filters across all refiners
-     */
-    allSelectedFilters: IRefinementFilter[];
+    onFiltersAdded: RefinementFilterOperationCallback;
+    onFiltersRemoved: RefinementFilterOperationCallback;
 }
   
 export default IVerticalProps;

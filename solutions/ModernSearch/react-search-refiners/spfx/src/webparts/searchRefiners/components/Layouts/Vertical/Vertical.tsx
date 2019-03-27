@@ -33,11 +33,11 @@ export default class Vertical extends React.Component<IVerticalProps, IVerticalS
         let noResultsElement: JSX.Element;
 
         // Initialize the Office UI grouped list
-        this.props.availableFilters.map((filter, i) => {
+        this.props.refinementResults.map((refinementResult, i) => {
 
             // Get group name
-            let groupName = filter.FilterName;
-            const configuredFilter = this.props.refinersConfiguration.filter(e => { return e.refinerName === filter.FilterName;});
+            let groupName = refinementResult.FilterName;
+            const configuredFilter = this.props.refinersConfiguration.filter(e => { return e.refinerName === refinementResult.FilterName;});
             groupName = configuredFilter.length > 0 && configuredFilter[0].displayValue ? configuredFilter[0].displayValue : groupName;
 
             groups.push({
@@ -52,14 +52,16 @@ export default class Vertical extends React.Component<IVerticalProps, IVerticalS
             items.push(
                 <TemplateHost 
                     key={i} 
-                    refinementFilter={filter} 
+                    refinementResult={refinementResult} 
+                    selectedRefinementFilters={this.props.selectedRefinementFilters.filter(filter => { return filter.FilterName === refinementResult.FilterName ;})}
                     templateType={configuredFilter[0].template}
-                    onUpdateFilters={this.props.onUpdateFilters}
+                    onFiltersAdded={this.props.onFiltersAdded}
+                    onFiltersRemoved={this.props.onFiltersRemoved}
                 />
             );
         });
 
-        const renderAvailableFilters = (this.props.availableFilters.length > 0) ? <GroupedList
+        const renderAvailableFilters = (this.props.refinementResults.length > 0) ? <GroupedList
             ref='groupedList'
             items={items}
             onRenderCell={this._onRenderCell}
@@ -71,8 +73,8 @@ export default class Vertical extends React.Component<IVerticalProps, IVerticalS
             }
             groups={groups} /> : noResultsElement;
 
-        const renderLinkRemoveAll = this.props.allSelectedFilters.length > 0 ?
-                                    (<div className={`${styles.verticalLayout__filterPanel__body__removeAllFilters} ${this.props.allSelectedFilters.length === 0 && "hiddenLink"}`}>
+        const renderLinkRemoveAll = this.props.selectedRefinementFilters.length > 0 ?
+                                    (<div className={`${styles.verticalLayout__filterPanel__body__removeAllFilters} ${this.props.selectedRefinementFilters.length === 0 && "hiddenLink"}`}>
                                             <Link onClick={this._removeAllFilters}>
                                                 {strings.RemoveAllFiltersLabel}
                                             </Link>
