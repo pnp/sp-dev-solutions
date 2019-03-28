@@ -1,5 +1,5 @@
 import * as React from                                                 'react';
-import IVerticalProps from                                              './IVerticalProps';
+import IFilterLayoutProps from                                              '../IFilterLayoutProps';
 import IVerticalState from                                              './IVerticalState';
 import * as update from                                                'immutability-helper';
 import {
@@ -12,9 +12,9 @@ import styles from './Vertical.module.scss';
 import * as strings from 'SearchRefinersWebPartStrings';
 import TemplateRenderer from '../../Templates/TemplateRenderer';
 
-export default class Vertical extends React.Component<IVerticalProps, IVerticalState> {
+export default class Vertical extends React.Component<IFilterLayoutProps, IVerticalState> {
 
-    public constructor(props: IVerticalProps) {
+    public constructor(props: IFilterLayoutProps) {
         super(props);
 
         this.state = {
@@ -26,7 +26,7 @@ export default class Vertical extends React.Component<IVerticalProps, IVerticalS
         this._onRenderCell = this._onRenderCell.bind(this);
     }
 
-    public render(): React.ReactElement<IVerticalProps> {
+    public render(): React.ReactElement<IFilterLayoutProps> {
 
         let items: JSX.Element[] = [];
         let groups: IGroup[] = [];

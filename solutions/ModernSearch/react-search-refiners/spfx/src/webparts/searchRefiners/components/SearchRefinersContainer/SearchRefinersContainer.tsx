@@ -4,6 +4,7 @@ import { ISearchRefinersContainerProps } from './ISearchRefinersContainerProps';
 import { DisplayMode } from '@microsoft/sp-core-library';
 import { WebPartTitle } from "@pnp/spfx-controls-react/lib/WebPartTitle";
 import Vertical from '../Layouts/Vertical/Vertical';
+import LinkPanel from '../Layouts/LinkPanel/LinkPanel';
 import RefinersLayoutOption from '../../../../models/RefinersLayoutOptions';
 import { MessageBarType, MessageBar } from 'office-ui-fabric-react';
 import * as strings from 'SearchRefinersWebPartStrings';
@@ -44,6 +45,7 @@ export default class SearchRefinersContainer extends React.Component<ISearchRefi
         } 
     
     } else {
+      
 
       // Choose the right layout according to the Web Part option
       switch (this.props.selectedLayout) {
@@ -59,12 +61,22 @@ export default class SearchRefinersContainer extends React.Component<ISearchRefi
             break;
 
         case RefinersLayoutOption.LinkAndPanel:
-         /* renderWpContent = <LinkPanel
-                              availableFilters={this.props.availableRefiners}
+
+          // Flatten all selected values
+          let selectedValues = [];
+          this.state.selectedRefinementFilters.map(refinement => { 
+            selectedValues = selectedValues.concat(refinement.Values);
+          });
+
+          renderWpContent = <LinkPanel
+                              onFilterValuesUpdated={this.onFilterValuesUpdated}
+                              refinementResults={this.props.availableRefiners}
                               refinersConfiguration={this.props.refinersConfiguration}
-    
-                              resetSelectedFilters={ this.state.lastQuery !== this.state.currentQuery ? true : false}
-                            />;*/
+                              shouldResetFilters={this.state.shouldResetFilters}
+                              onRemoveAllFilters={this.onRemoveAllFilters}
+                              hasSelectedValues={this.state.selectedRefinementFilters.length > 0 ? true : false }
+                              selectedFilterValues={selectedValues}                              
+                            />;
           break;
       }
     }

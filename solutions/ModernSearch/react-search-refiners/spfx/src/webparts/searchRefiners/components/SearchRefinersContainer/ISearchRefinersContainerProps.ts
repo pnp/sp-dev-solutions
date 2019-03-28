@@ -11,8 +11,4 @@ export interface ISearchRefinersContainerProps {
   onUpdateFilters: (filters: IRefinementFilter[]) => void;
   showBlank: boolean;
   displayMode: DisplayMode;
-  areResultsLoading: boolean;
-  queryKeywords: string;
-  selectedProperties: string[];
-  queryTemplate: string;
 }
