@@ -29,11 +29,13 @@ import IDynamicDataService from '../../services/DynamicDataService/IDynamicDataS
 import RefinerTemplateOption from '../../models/RefinerTemplateOption';
 
 export default class SearchRefinersWebPart extends BaseClientSideWebPart<ISearchRefinersWebPartProps> implements IDynamicDataCallables {
+
   private _dynamicDataService: IDynamicDataService;
   private _selectedFilters: IRefinementFilter[] = [];
   private _availableRefiners: DynamicProperty<ISearchResultSourceData>;
   
   public render(): void {
+
     let renderElement = null;
     let availableRefiners = [];
     let areResultsLoading = false;
@@ -127,6 +129,7 @@ export default class SearchRefinersWebPart extends BaseClientSideWebPart<ISearch
   }
 
   protected onInit(): Promise<void> {
+    
     this._initializeRequiredProperties();
     this._dynamicDataService = new DynamicDataService(this.context.dynamicDataProvider);
     this.ensureDataSourceConnection();

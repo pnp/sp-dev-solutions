@@ -7,10 +7,13 @@ interface IVerticalProps {
 
     refinersConfiguration: IRefinerConfiguration[];
 
-    selectedRefinementFilters: IRefinementFilter[];
+    hasSelectedValues: boolean;
 
-    onFiltersAdded: RefinementFilterOperationCallback;
-    onFiltersRemoved: RefinementFilterOperationCallback;
+    onFilterValuesUpdated: RefinementFilterOperationCallback;
+
+    onRemoveAllFilters: () => void;
+
+    shouldResetFilters: boolean;
 }
   
 export default IVerticalProps;

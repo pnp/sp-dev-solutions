@@ -8,13 +8,20 @@ interface IBaseRefinerTemplateProps {
      */
     refinementResult: IRefinementResult;
 
-    selectedRefinementFilters: IRefinementFilter[];
+    /**
+     * Callback method to update selected filters
+     */
+    onFilterValuesUpdated: RefinementFilterOperationCallback;
 
-    onFiltersAdded: RefinementFilterOperationCallback;
-
-    onFiltersRemoved: RefinementFilterOperationCallback;
-
+    /**
+     * Indicates if the template allows multi values selection
+     */
     isMultiValue?: boolean;
+
+    /**
+     * Indicates if the current filters should be reset
+     */
+    shouldResetFilters: boolean;
 } 
 
 export default IBaseRefinerTemplateProps;

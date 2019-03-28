@@ -25,7 +25,13 @@ define([], function() {
       "RefinerDisplayValueField": "Filter name to display",
       "RefinersFieldDescription": "Specifies managed properties used as refiners. If there are no values for a filter property, it won't appear in the panel.",
       "EditRefinersLabel": "Edit refiners",
-      "AvailableRefinersLabel": "Available refiners"
+      "AvailableRefinersLabel": "Available refiners",
+      "ApplyFiltersLabel": "Apply",
+      "ClearFiltersLabel": "Clear",
+      "Templates": {
+        "RefinementItemTemplateLabel": "Default refinement item",
+        "MutliValueRefinementItemTemplateLabel": "Multi-value refinement item"
+      }
     },
   }
 });

@@ -157,7 +157,7 @@ class MockSearchService implements ISearchService {
             
             if (this.refinementFilters.length > 0) {
                 this.refinementFilters.map((filter) => {
-                    filters.push(filter.Value.RefinementToken);                                                     
+                    filters.push(filter.Values[0].RefinementToken);                                                     
                 });
                 
                 searchResults.RelevantResults.map((searchResult) => {

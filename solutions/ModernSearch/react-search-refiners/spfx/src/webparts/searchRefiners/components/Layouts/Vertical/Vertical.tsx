@@ -10,7 +10,7 @@ import {
 import {Link} from 'office-ui-fabric-react';
 import styles from './Vertical.module.scss';
 import * as strings from 'SearchRefinersWebPartStrings';
-import TemplateHost from '../../Templates/TemplateHost';
+import TemplateRenderer from '../../Templates/TemplateRenderer';
 
 export default class Vertical extends React.Component<IVerticalProps, IVerticalState> {
 
@@ -18,7 +18,7 @@ export default class Vertical extends React.Component<IVerticalProps, IVerticalS
         super(props);
 
         this.state = {
-            expandedGroups: [],
+            expandedGroups: []
         };
 
         this._removeAllFilters = this._removeAllFilters.bind(this);
@@ -50,13 +50,12 @@ export default class Vertical extends React.Component<IVerticalProps, IVerticalS
             });
 
             items.push(
-                <TemplateHost 
+                <TemplateRenderer 
                     key={i} 
-                    refinementResult={refinementResult} 
-                    selectedRefinementFilters={this.props.selectedRefinementFilters.filter(filter => { return filter.FilterName === refinementResult.FilterName ;})}
+                    refinementResult={refinementResult}
+                    shouldResetFilters={this.props.shouldResetFilters}
                     templateType={configuredFilter[0].template}
-                    onFiltersAdded={this.props.onFiltersAdded}
-                    onFiltersRemoved={this.props.onFiltersRemoved}
+                    onFilterValuesUpdated={this.props.onFilterValuesUpdated}
                 />
             );
         });
@@ -73,8 +72,8 @@ export default class Vertical extends React.Component<IVerticalProps, IVerticalS
             }
             groups={groups} /> : noResultsElement;
 
-        const renderLinkRemoveAll = this.props.selectedRefinementFilters.length > 0 ?
-                                    (<div className={`${styles.verticalLayout__filterPanel__body__removeAllFilters} ${this.props.selectedRefinementFilters.length === 0 && "hiddenLink"}`}>
+        const renderLinkRemoveAll = this.props.hasSelectedValues ?
+                                    (<div className={`${styles.verticalLayout__filterPanel__body__removeAllFilters} ${this.props.hasSelectedValues && "hiddenLink"}`}>
                                             <Link onClick={this._removeAllFilters}>
                                                 {strings.RemoveAllFiltersLabel}
                                             </Link>
@@ -123,8 +122,7 @@ export default class Vertical extends React.Component<IVerticalProps, IVerticalS
         );
     }
 
-    private _removeAllFilters(): void {
-        //this._applyFilters([]);
+    private _removeAllFilters() {        
+        this.props.onRemoveAllFilters();
     }
-
 }

@@ -26,6 +26,12 @@ declare interface ISearchRefinersWebPartStrings {
     EditRefinersLabel: string;
     EditSortLabel: string;
     AvailableRefinersLabel: string;
+    ApplyFiltersLabel: string;
+    ClearFiltersLabel: string;
+    Templates: {
+      RefinementItemTemplateLabel: string;
+      MutliValueRefinementItemTemplateLabel: string;
+    }
   },
 }
 

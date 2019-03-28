@@ -1,5 +1,5 @@
-import { IRefinementFilter } from './ISearchResult';
+import { IRefinementFilter, IRefinementValue, RefinementOperator } from './ISearchResult';
 
-type RefinementFilterOperationCallback = (filters: IRefinementFilter[]) => void;
+type RefinementFilterOperationCallback = (filterName: string, filterValues: IRefinementValue[], Operatr: RefinementOperator) => void;
 
 export default RefinementFilterOperationCallback;

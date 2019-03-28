@@ -354,20 +354,18 @@ class SearchService implements ISearchService {
 
         let refinementQueryConditions: string[] = [];
 
-        const groups = groupBy(selectedFilters, 'FilterName');
+        selectedFilters.map(filter => {
+            if (filter.Values.length > 1) {
 
-        // Conditions between values inside a refiner property 
-        const refinementFilters = mapValues(groups, (values) => {
-            const refinementFilter = values.map((filter) => {
-                return filter.Value.RefinementToken;
-            });
-
-            // If multiple values are selected for a single refiner, we do an 'OR'
-            return refinementFilter.length > 1 ? Text.format('or({0})', refinementFilter) : refinementFilter.toString();
-        });
-
-        mapKeys(refinementFilters, (value, key) => {
-            refinementQueryConditions.push(key + ':' + value);
+                // A refiner can have multiple values selected in a multi or mon multi selection scenario
+                // The correct operator is determined by the refiner display template according to its behavior
+                const conditions = filter.Values.map(value => { return value.RefinementToken; });
+                refinementQueryConditions.push(`${filter.FilterName}:${filter.Operator}(${conditions.join(',')})`);
+            } else {
+                if (filter.Values.length === 1) {
+                    refinementQueryConditions.push(`${filter.FilterName}:${filter.Values[0].RefinementToken}`);
+                }
+            }
         });
 
         return refinementQueryConditions;

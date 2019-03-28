@@ -25,7 +25,13 @@ define([], function() {
       "RefinerManagedPropertyField": "Propriété gérée de filtre",
       "RefinerDisplayValueField": "Intitulé du filtre à afficher",
       "EditRefinersLabel": "Éditer les filtres",
-      "AvailableRefinersLabel": "Filtre(s) disponible(s)"
+      "AvailableRefinersLabel": "Filtre(s) disponible(s)",
+      "ApplyFiltersLabel": "Appliquer",
+      "ClearFiltersLabel": "Effacer",
+      "Templates": {
+        "RefinementItemTemplateLabel": "Filtre par défaut",
+        "MutliValueRefinementItemTemplateLabel": "Filtre à valeurs multiples"
+      }
     },
   }
 });

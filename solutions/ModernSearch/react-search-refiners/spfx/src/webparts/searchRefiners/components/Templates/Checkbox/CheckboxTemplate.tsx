@@ -1,25 +1,28 @@
 import * as React from "react";
 import IBaseRefinerTemplateProps from '../IBaseRefinerTemplateProps';
 import IBaseRefinerTemplateState from '../IBaseRefinerTemplateState';
-import { IRefinementValue, IRefinementFilter } from "../../../../../models/ISearchResult";
+import { IRefinementValue, RefinementOperator } from "../../../../../models/ISearchResult";
 import { Checkbox } from 'office-ui-fabric-react/lib/Checkbox';
 import { Text } from '@microsoft/sp-core-library';
 import { Link } from "office-ui-fabric-react";
+import * as strings from 'SearchRefinersWebPartStrings';
 import * as update from 'immutability-helper';
-import * as _ from '@microsoft/sp-lodash-subset';
 
 export default class CheckboxTemplate extends React.Component<IBaseRefinerTemplateProps, IBaseRefinerTemplateState> {
+
+    private _operator: RefinementOperator;
 
     public constructor(props: IBaseRefinerTemplateProps) {
         super(props);
 
         this.state = {
-            refinerSelectedFilters: []
+            refinerSelectedFilterValues: []
         };
 
         this._onFilterAdded = this._onFilterAdded.bind(this);
         this._onFilterRemoved = this._onFilterRemoved.bind(this);
         this._applyFilters = this._applyFilters.bind(this);
+        this._clearFilters = this._clearFilters.bind(this);
     }
     
     public render() {
@@ -28,20 +31,14 @@ export default class CheckboxTemplate extends React.Component<IBaseRefinerTempla
                     {
                         this.props.refinementResult.Values.map((refinementValue: IRefinementValue, j) => {
 
-                            // Create a new IRefinementFilter with only the current refinement information
-                            const currentRefinement: IRefinementFilter = {
-                                FilterName: this.props.refinementResult.FilterName,
-                                Value: refinementValue,
-                            };
-
-                            return (
+                                return (
                                 <Checkbox
                                     key={j}                                    
-                                    checked={this._isInFilterSelection(currentRefinement)}
+                                    checked={this._isValueInFilterSelection(refinementValue)}
                                     disabled={false}
                                     label={Text.format(refinementValue.RefinementValue + ' ({0})', refinementValue.RefinementCount)}
                                     onChange={(ev, checked: boolean) => {
-                                        checked ? this._onFilterAdded(currentRefinement) : this._onFilterRemoved(currentRefinement);
+                                        checked ? this._onFilterAdded(refinementValue) : this._onFilterRemoved(refinementValue);
                                     }} />
                             );
                         })
@@ -49,80 +46,99 @@ export default class CheckboxTemplate extends React.Component<IBaseRefinerTempla
                     {
                         this.props.isMultiValue ? 
                         
-                            <Link onClick={() => { this._applyFilters()}}>Apply</Link> 
+                            <div>
+                                <Link onClick={this._applyFilters}>{strings.Refiners.ApplyFiltersLabel}</Link>|<Link onClick={this._clearFilters}>{strings.Refiners.ClearFiltersLabel}</Link> 
+                            </div>
                         
                         : null
                     }
                 </div>
     }
 
+    public componentDidMount() {
+
+        // Determine the operator according to multi value setting
+        this._operator = this.props.isMultiValue ? RefinementOperator.OR :RefinementOperator.AND;
+
+        this.setState({
+            refinerSelectedFilterValues: []
+        });
+    }
+
+    public componentWillReceiveProps(nextProps: IBaseRefinerTemplateProps) {
+        
+        if (nextProps.shouldResetFilters) {
+            this.setState({
+                refinerSelectedFilterValues: []
+            });
+        }
+    }
+
     /**
      * Checks if the current filter value is present in the list of the selected values for the current filter
-     * @param filterToCheck The filter to check
+     * @param valueToCheck The filter value to check
      */
-    private _isInFilterSelection(filterToCheck: IRefinementFilter): boolean {
+    private _isValueInFilterSelection(valueToCheck: IRefinementValue): boolean {
 
-        let newFilters = this.state.refinerSelectedFilters.filter((filter) => {
-            return filter.Value.RefinementToken === filterToCheck.Value.RefinementToken;
+        let newFilters = this.state.refinerSelectedFilterValues.filter((filter) => {
+            return filter.RefinementToken === valueToCheck.RefinementToken;
         });
 
         return newFilters.length === 0 ? false : true;
     }
 
-    public componentDidMount() {
+    /**
+     * Handler when a new filter value is selected
+     * @param addedValue the filter value added
+     */
+    private _onFilterAdded(addedValue: IRefinementValue) {
+
+        let newFilterValues = update(this.state.refinerSelectedFilterValues, {$push: [addedValue]});
 
         this.setState({
-            refinerSelectedFilters: []
-        });
-    }
-
-    private _onFilterAdded(filterAdded: IRefinementFilter) {
-
-        let newFilters = update(this.state.refinerSelectedFilters, {$push: [filterAdded]});
-
-        this.setState({
-            refinerSelectedFilters: newFilters
+            refinerSelectedFilterValues: newFilterValues
         });
 
         if (!this.props.isMultiValue) {
-            this.props.onFiltersAdded(newFilters);
+            this.props.onFilterValuesUpdated(this.props.refinementResult.FilterName, newFilterValues, this._operator);
         }
     }
 
-    private _onFilterRemoved(removedFilter: IRefinementFilter) {
+    /**
+     * Handler when a filter value is unselected
+     * @param removedValue the filter value removed
+     */
+    private _onFilterRemoved(removedValue: IRefinementValue) {
         
-        const newFilters = this.state.refinerSelectedFilters.filter((elt) => {
-            return elt.Value.RefinementToken !== removedFilter.Value.RefinementToken;
+        const newFilterValues = this.state.refinerSelectedFilterValues.filter((elt) => {
+            return elt.RefinementToken !== removedValue.RefinementToken;
         });
 
         this.setState({
-            refinerSelectedFilters: newFilters
+            refinerSelectedFilterValues: newFilterValues
         });
 
         if (!this.props.isMultiValue) {
-            this.props.onFiltersRemoved(newFilters);
+            this.props.onFilterValuesUpdated(this.props.refinementResult.FilterName, newFilterValues, this._operator);
         }
     }
 
+    /**
+     * Applies all selected filters for the current refiner 
+     */
     private _applyFilters() {
+        this.props.onFilterValuesUpdated(this.props.refinementResult.FilterName, this.state.refinerSelectedFilterValues, this._operator);
+    }
 
-        const comparer = (otherArray: IRefinementFilter[]) => {
-            return (current: IRefinementFilter) => {
-                return otherArray.filter((other) => {
-                    return other.Value.RefinementToken == current.Value.RefinementToken
-                }).length == 0;
-            }
-        };
-          
-        const onlyInA = this.state.refinerSelectedFilters.filter(comparer(this.props.selectedRefinementFilters));
-        const onlyInB = this.props.selectedRefinementFilters.filter(comparer(this.state.refinerSelectedFilters));
+    /**
+     * Clears all selected filters for the current refiner
+     */
+    private _clearFilters() {
 
-        if (onlyInA.length > 0) {
-            this.props.onFiltersAdded(onlyInA);
-        }
+        this.setState({
+            refinerSelectedFilterValues: []
+        });
 
-        if (onlyInB.length > 0) {
-            this.props.onFiltersRemoved(onlyInB);
-        }
+        this.props.onFilterValuesUpdated(this.props.refinementResult.FilterName, [], this._operator);
     }
 }

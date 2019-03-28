@@ -1,11 +1,11 @@
-import { IRefinementFilter } from "../../../../models/ISearchResult";
+import { IRefinementFilter, IRefinementValue } from "../../../../models/ISearchResult";
 
 interface IBaseRefinerTemplateState {
 
     /**
-     * The  selected values for the current refiner 
+     * The current selected values for the refiner 
      */
-    refinerSelectedFilters: IRefinementFilter[];
+    refinerSelectedFilterValues: IRefinementValue[];
 } 
 
 export default IBaseRefinerTemplateState;
