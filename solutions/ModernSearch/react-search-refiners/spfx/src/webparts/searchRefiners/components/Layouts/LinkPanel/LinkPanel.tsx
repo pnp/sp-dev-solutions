@@ -23,6 +23,7 @@ export default class LinkPanel extends React.Component<ILinkPanelProps, ILinkPan
         this.state = {
             showPanel: false,
             expandedGroups: [],
+            valueToRemove: null
         };
 
         this._onTogglePanel = this._onTogglePanel.bind(this);
@@ -63,6 +64,7 @@ export default class LinkPanel extends React.Component<ILinkPanelProps, ILinkPan
                     refinementResult={refinementResult}
                     shouldResetFilters={this.props.shouldResetFilters}
                     templateType={configuredFilter[0].template}
+                    valueToRemove={this.state.valueToRemove}
                     onFilterValuesUpdated={this.props.onFilterValuesUpdated}
                 />
             );
@@ -72,7 +74,11 @@ export default class LinkPanel extends React.Component<ILinkPanelProps, ILinkPan
 
             return (
                 <Label className={styles.filter}>
-                    <i className='ms-Icon ms-Icon--ClearFilter' onClick={() => { /*this._removeFilter(filter);*/ }}></i>
+                    <i className='ms-Icon ms-Icon--ClearFilter' onClick={() => { 
+                        this.setState({
+                            valueToRemove: value
+                        });
+                    }}></i>
                     {value.RefinementName}
                 </Label>)
         });
@@ -117,7 +123,7 @@ export default class LinkPanel extends React.Component<ILinkPanelProps, ILinkPan
                         isOpen={this.state.showPanel}
                         type={PanelType.medium}
                         isLightDismiss={true}
-                        
+                        isHiddenOnDismiss={true}
                         onDismiss={this._onClosePanel}
                         headerText={strings.FilterPanelTitle}
                         onRenderBody={() => {
@@ -141,6 +147,12 @@ export default class LinkPanel extends React.Component<ILinkPanelProps, ILinkPan
                     </Panel>
             </div>
         );
+    }
+
+    public componentWillReceiveProps(nextProps: ILinkPanelProps) {
+        this.setState({
+            valueToRemove: null
+        });
     }
 
     private _onRenderCell(nestingDepth: number, item: any, itemIndex: number) {

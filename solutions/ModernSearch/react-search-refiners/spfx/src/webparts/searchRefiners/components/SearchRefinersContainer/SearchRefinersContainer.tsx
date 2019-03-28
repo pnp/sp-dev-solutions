@@ -24,6 +24,7 @@ export default class SearchRefinersContainer extends React.Component<ISearchRefi
 
     this.onFilterValuesUpdated = this.onFilterValuesUpdated.bind(this);
     this.onRemoveAllFilters = this.onRemoveAllFilters.bind(this);
+    this.onRemoveFilterValue = this.onRemoveFilterValue.bind(this);
   }
 
   public render(): React.ReactElement<ISearchRefinersContainerProps> {
@@ -120,7 +121,7 @@ export default class SearchRefinersContainer extends React.Component<ISearchRefi
     if (filterIdx !== -1) {
 
       if (filterValues.length > 0) {
-        // Update value for the specific filter
+        // Update value for the specific filters
         newFilters = update(this.state.selectedRefinementFilters, {[filterIdx]: {$set: refinementFilter}});
       } else {
         // // If no values, we remove the filter
@@ -136,6 +137,43 @@ export default class SearchRefinersContainer extends React.Component<ISearchRefi
     });
 
     this.props.onUpdateFilters(newFilters);
+  }
+
+  private onRemoveFilterValue(filterValue: IRefinementValue) {
+
+    // Get the index of the filter in the current filters
+    const filter = this.state.selectedRefinementFilters.filter(selected => { 
+
+      const values = selected.Values.filter(value => {
+        return value.RefinementToken === filterValue.RefinementToken;
+      });
+
+      if (values.length > 0) {
+        return selected; 
+      }
+    });
+
+    if (filter.length > 0) {
+
+      let refinementFilter: IRefinementFilter = {
+        FilterName: filter[0].FilterName,
+        Values: filter[0].Values.filter(value => {
+          return value.RefinementToken !== filterValue.RefinementToken;
+        }),
+        Operator: filter[0].Operator
+      };
+      
+      // Get the index of the filter in the current filter
+      const filterIdx = this.state.selectedRefinementFilters.map(selected => { return selected.FilterName; }).indexOf(filter[0].FilterName);
+
+      const newFilters = update(this.state.selectedRefinementFilters, {[filterIdx]: {$set: refinementFilter}});
+
+      this.setState({
+        selectedRefinementFilters: newFilters
+      });
+
+      this.props.onUpdateFilters(newFilters);
+    }
   }
 
   /**

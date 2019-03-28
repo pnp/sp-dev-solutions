@@ -1,4 +1,4 @@
-import { IRefinementResult, IRefinementFilter } from "../../../../models/ISearchResult";
+import { IRefinementResult, IRefinementFilter, IRefinementValue } from "../../../../models/ISearchResult";
 import RefinementFilterOperationCallback from "../../../../models/RefinementValueOperationCallback";
 
 interface IBaseRefinerTemplateProps {
@@ -22,6 +22,11 @@ interface IBaseRefinerTemplateProps {
      * Indicates if the current filters should be reset
      */
     shouldResetFilters: boolean;
+
+    /**
+     * A single filter value to reset
+     */
+    removeFilterValue?: IRefinementValue;
 } 
 
 export default IBaseRefinerTemplateProps;

@@ -1,7 +1,7 @@
 import * as React from                                                 'react';
 import RefinerTemplateOption from '../../../../models/RefinerTemplateOption'
 import CheckboxTemplate from "./Checkbox/CheckboxTemplate";
-import { IRefinementResult } from "../../../../models/ISearchResult";
+import { IRefinementResult, IRefinementValue } from "../../../../models/ISearchResult";
 import RefinementFilterOperationCallback from '../../../../models/RefinementValueOperationCallback';
 
 export interface ITemplateRendererProps {
@@ -25,6 +25,11 @@ export interface ITemplateRendererProps {
      * Indicates if the current filters should be reset
      */
     shouldResetFilters: boolean;
+
+    /**
+     * A single to remove from the selection
+     */
+    valueToRemove?: IRefinementValue;
 }
 
 export default class TemplateRenderer extends React.Component<ITemplateRendererProps> {
@@ -41,6 +46,7 @@ export default class TemplateRenderer extends React.Component<ITemplateRendererP
                                     onFilterValuesUpdated={this.props.onFilterValuesUpdated}
                                     shouldResetFilters={this.props.shouldResetFilters}
                                     isMultiValue={false}
+                                    removeFilterValue={this.props.valueToRemove}
                                 />;
                 break;
 
@@ -50,6 +56,7 @@ export default class TemplateRenderer extends React.Component<ITemplateRendererP
                                     onFilterValuesUpdated={this.props.onFilterValuesUpdated}
                                     shouldResetFilters={this.props.shouldResetFilters}
                                     isMultiValue={true}
+                                    removeFilterValue={this.props.valueToRemove}
                                 />;
                 break;
 

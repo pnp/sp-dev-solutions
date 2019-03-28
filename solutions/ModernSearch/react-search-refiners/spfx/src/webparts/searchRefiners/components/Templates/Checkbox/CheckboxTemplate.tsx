@@ -47,7 +47,7 @@ export default class CheckboxTemplate extends React.Component<IBaseRefinerTempla
                         this.props.isMultiValue ? 
                         
                             <div>
-                                <Link onClick={this._applyFilters}>{strings.Refiners.ApplyFiltersLabel}</Link>|<Link onClick={this._clearFilters}>{strings.Refiners.ClearFiltersLabel}</Link> 
+                                <Link onClick={() => { this._applyFilters(this.state.refinerSelectedFilterValues);}}>{strings.Refiners.ApplyFiltersLabel}</Link>|<Link onClick={this._clearFilters}>{strings.Refiners.ClearFiltersLabel}</Link> 
                             </div>
                         
                         : null
@@ -71,6 +71,21 @@ export default class CheckboxTemplate extends React.Component<IBaseRefinerTempla
             this.setState({
                 refinerSelectedFilterValues: []
             });
+        }
+
+        // Remove an arbitrary value from the inner state
+        // Useful when the remove filter action is also present in the parent control
+        if (nextProps.removeFilterValue) {
+            
+            const newFilterValues = this.state.refinerSelectedFilterValues.filter((elt) => {
+                return elt.RefinementToken !== nextProps.removeFilterValue.RefinementToken;
+            });
+    
+            this.setState({
+                refinerSelectedFilterValues: newFilterValues
+            });
+
+            this._applyFilters(newFilterValues);
         }
     }
 
@@ -100,7 +115,7 @@ export default class CheckboxTemplate extends React.Component<IBaseRefinerTempla
         });
 
         if (!this.props.isMultiValue) {
-            this.props.onFilterValuesUpdated(this.props.refinementResult.FilterName, newFilterValues, this._operator);
+            this._applyFilters(newFilterValues);
         }
     }
 
@@ -119,15 +134,15 @@ export default class CheckboxTemplate extends React.Component<IBaseRefinerTempla
         });
 
         if (!this.props.isMultiValue) {
-            this.props.onFilterValuesUpdated(this.props.refinementResult.FilterName, newFilterValues, this._operator);
-        }
+            this._applyFilters(newFilterValues);
+        }   
     }
 
     /**
      * Applies all selected filters for the current refiner 
      */
-    private _applyFilters() {
-        this.props.onFilterValuesUpdated(this.props.refinementResult.FilterName, this.state.refinerSelectedFilterValues, this._operator);
+    private _applyFilters(updatedValues: IRefinementValue[]) {
+        this.props.onFilterValuesUpdated(this.props.refinementResult.FilterName, updatedValues, this._operator);
     }
 
     /**
@@ -139,6 +154,6 @@ export default class CheckboxTemplate extends React.Component<IBaseRefinerTempla
             refinerSelectedFilterValues: []
         });
 
-        this.props.onFilterValuesUpdated(this.props.refinementResult.FilterName, [], this._operator);
+        this._applyFilters([]);
     }
 }

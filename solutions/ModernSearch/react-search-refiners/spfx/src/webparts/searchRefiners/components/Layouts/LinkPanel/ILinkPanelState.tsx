@@ -1,7 +1,8 @@
-import { IRefinementFilter } from '../../../../../models/ISearchResult';
+import { IRefinementValue } from "../../../../../models/ISearchResult";
 
 interface ILinkPanelState {
     showPanel?: boolean;
+    valueToRemove: IRefinementValue;
     expandedGroups?: number[];
 }
 
