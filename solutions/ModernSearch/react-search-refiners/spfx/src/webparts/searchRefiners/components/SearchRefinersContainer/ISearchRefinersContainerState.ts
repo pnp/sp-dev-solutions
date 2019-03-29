@@ -1,4 +1,7 @@
+import { IRefinementFilter, IRefinementResult } from "../../../../models/ISearchResult";
+
 export interface ISearchRefinersContainerState {
-    currentQuery: string;
-    lastQuery: string;
+    selectedRefinementFilters: IRefinementFilter[];
+    shouldResetFilters: boolean;
+    availableRefiners: IRefinementResult[];
 }

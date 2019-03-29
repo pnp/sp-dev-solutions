@@ -744,7 +744,7 @@ abstract class BaseTemplateService {
         }
         const videoJs = await import(
             /* webpackChunkName: 'videos-js' */
-            './video-js',
+            './video-js'
         );
         (<any>window).searchVideoJS = videoJs.default.getVideoJs();
     }
