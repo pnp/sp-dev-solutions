@@ -186,11 +186,15 @@ export default class SearchRefinersWebPart extends BaseClientSideWebPart<ISearch
               options: [
                 {
                   key: RefinerTemplateOption.CheckBox,
-                  text: 'Checkbox'
+                  text: strings.Refiners.Templates.RefinementItemTemplateLabel
                 },
                 {
                   key: RefinerTemplateOption.CheckBoxMulti,
-                  text: 'Checkbox multi',
+                  text: strings.Refiners.Templates.MutliValueRefinementItemTemplateLabel
+                },
+                {
+                  key: RefinerTemplateOption.DateRange,
+                  text: 'Date range',
                 }
               ]
           }

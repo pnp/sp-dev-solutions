@@ -127,6 +127,8 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
             }
         }
 
+        // Check if a data time is selected
+        
         this._searchService.refiners = refinerConfiguration;
         this._searchService.refinementFilters = selectedFilters;
 

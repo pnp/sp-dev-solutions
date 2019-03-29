@@ -1,6 +1,7 @@
 import * as React from                                                 'react';
 import RefinerTemplateOption from '../../../../models/RefinerTemplateOption'
 import CheckboxTemplate from "./Checkbox/CheckboxTemplate";
+import DateRangeTemplate from "./Checkbox/DateRangeTemplate";
 import { IRefinementResult, IRefinementValue } from "../../../../models/ISearchResult";
 import RefinementFilterOperationCallback from '../../../../models/RefinementValueOperationCallback';
 
@@ -52,6 +53,16 @@ export default class TemplateRenderer extends React.Component<ITemplateRendererP
 
             case RefinerTemplateOption.CheckBoxMulti:
                 renderTemplate =    <CheckboxTemplate 
+                                    refinementResult={this.props.refinementResult}
+                                    onFilterValuesUpdated={this.props.onFilterValuesUpdated}
+                                    shouldResetFilters={this.props.shouldResetFilters}
+                                    isMultiValue={true}
+                                    removeFilterValue={this.props.valueToRemove}
+                                />;
+                break;
+
+            case RefinerTemplateOption.DateRange:
+                renderTemplate = <DateRangeTemplate
                                     refinementResult={this.props.refinementResult}
                                     onFilterValuesUpdated={this.props.onFilterValuesUpdated}
                                     shouldResetFilters={this.props.shouldResetFilters}

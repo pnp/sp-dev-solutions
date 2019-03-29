@@ -11,6 +11,7 @@ import * as strings from 'SearchRefinersWebPartStrings';
 import { ISearchRefinersContainerState } from './ISearchRefinersContainerState';
 import { IRefinementFilter, IRefinementValue, RefinementOperator } from '../../../../models/ISearchResult';
 import * as update from 'immutability-helper';
+import RefinerTemplateOption from '../../../../models/RefinerTemplateOption';
 
 export default class SearchRefinersContainer extends React.Component<ISearchRefinersContainerProps, ISearchRefinersContainerState> {
   
@@ -19,12 +20,12 @@ export default class SearchRefinersContainer extends React.Component<ISearchRefi
 
     this.state = {
       shouldResetFilters: false,
-      selectedRefinementFilters: []
+      selectedRefinementFilters: [],
+      availableRefiners: []
     };
 
     this.onFilterValuesUpdated = this.onFilterValuesUpdated.bind(this);
     this.onRemoveAllFilters = this.onRemoveAllFilters.bind(this);
-    this.onRemoveFilterValue = this.onRemoveFilterValue.bind(this);
   }
 
   public render(): React.ReactElement<ISearchRefinersContainerProps> {
@@ -35,7 +36,7 @@ export default class SearchRefinersContainer extends React.Component<ISearchRefi
       renderWebPartTitle = <WebPartTitle title={this.props.webPartTitle} updateProperty={null} displayMode={DisplayMode.Read} />;
     }
 
-    if (this.props.availableRefiners.length === 0) {
+    if (this.state.availableRefiners.length === 0) {
 
         if (this.props.displayMode === DisplayMode.Edit && this.props.showBlank) {
           renderWpContent = <MessageBar messageBarType={MessageBarType.info}>{strings.ShowBlankEditInfoMessage}</MessageBar>;
@@ -47,13 +48,12 @@ export default class SearchRefinersContainer extends React.Component<ISearchRefi
     
     } else {
       
-
       // Choose the right layout according to the Web Part option
       switch (this.props.selectedLayout) {
         case RefinersLayoutOption.Vertical: 
           renderWpContent = <Vertical 
                               onFilterValuesUpdated={this.onFilterValuesUpdated}
-                              refinementResults={this.props.availableRefiners}
+                              refinementResults={this.state.availableRefiners}
                               refinersConfiguration={this.props.refinersConfiguration}
                               shouldResetFilters={this.state.shouldResetFilters}
                               onRemoveAllFilters={this.onRemoveAllFilters}
@@ -71,7 +71,7 @@ export default class SearchRefinersContainer extends React.Component<ISearchRefi
 
           renderWpContent = <LinkPanel
                               onFilterValuesUpdated={this.onFilterValuesUpdated}
-                              refinementResults={this.props.availableRefiners}
+                              refinementResults={this.state.availableRefiners}
                               refinersConfiguration={this.props.refinersConfiguration}
                               shouldResetFilters={this.state.shouldResetFilters}
                               onRemoveAllFilters={this.onRemoveAllFilters}
@@ -97,6 +97,40 @@ export default class SearchRefinersContainer extends React.Component<ISearchRefi
       this.setState({
         shouldResetFilters: false
       });
+
+      let availableFilters = nextProps.availableRefiners;
+
+      // If a filter of type DateTime is currently selected but is not present in the new received refinement results, we add it as a result manually to be able to reset it
+      const dateFilters = nextProps.refinersConfiguration.filter(refiner => { 
+        return refiner.template === RefinerTemplateOption.DateRange;
+      });
+
+      dateFilters.map(dateFilter => {
+
+        // Is the filter currently selected?
+        const isSelected = this.state.selectedRefinementFilters.map(filter => { return filter.FilterName === dateFilter.refinerName }).length > 0 ? true : false;
+
+        // If selected but there is no more result for this refiner, we manually add a dummy entry to available filters
+        if (isSelected && nextProps.availableRefiners.filter(availableRefiner => { return availableRefiner.FilterName ===  dateFilter.refinerName;}).length === 0) {
+          const refinementFilter: IRefinementFilter = {
+            FilterName: dateFilter.refinerName,
+            Values: [],
+            Operator: null
+          };
+
+          availableFilters = update(nextProps.availableRefiners, {$push: [refinementFilter]});
+        }
+      });
+
+      this.setState({
+        availableRefiners: availableFilters
+      });
+  }
+
+  public componentDidMount() {
+    this.setState({
+      availableRefiners: this.props.availableRefiners
+    });
   }
 
   /**
@@ -137,43 +171,6 @@ export default class SearchRefinersContainer extends React.Component<ISearchRefi
     });
 
     this.props.onUpdateFilters(newFilters);
-  }
-
-  private onRemoveFilterValue(filterValue: IRefinementValue) {
-
-    // Get the index of the filter in the current filters
-    const filter = this.state.selectedRefinementFilters.filter(selected => { 
-
-      const values = selected.Values.filter(value => {
-        return value.RefinementToken === filterValue.RefinementToken;
-      });
-
-      if (values.length > 0) {
-        return selected; 
-      }
-    });
-
-    if (filter.length > 0) {
-
-      let refinementFilter: IRefinementFilter = {
-        FilterName: filter[0].FilterName,
-        Values: filter[0].Values.filter(value => {
-          return value.RefinementToken !== filterValue.RefinementToken;
-        }),
-        Operator: filter[0].Operator
-      };
-      
-      // Get the index of the filter in the current filter
-      const filterIdx = this.state.selectedRefinementFilters.map(selected => { return selected.FilterName; }).indexOf(filter[0].FilterName);
-
-      const newFilters = update(this.state.selectedRefinementFilters, {[filterIdx]: {$set: refinementFilter}});
-
-      this.setState({
-        selectedRefinementFilters: newFilters
-      });
-
-      this.props.onUpdateFilters(newFilters);
-    }
   }
 
   /**

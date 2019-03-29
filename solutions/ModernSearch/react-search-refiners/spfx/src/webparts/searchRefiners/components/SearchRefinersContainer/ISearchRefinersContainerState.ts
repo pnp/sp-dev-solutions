@@ -1,6 +1,7 @@
-import { IRefinementFilter } from "../../../../models/ISearchResult";
+import { IRefinementFilter, IRefinementResult } from "../../../../models/ISearchResult";
 
 export interface ISearchRefinersContainerState {
     selectedRefinementFilters: IRefinementFilter[];
     shouldResetFilters: boolean;
+    availableRefiners: IRefinementResult[];
 }

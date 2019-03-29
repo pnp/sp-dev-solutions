@@ -30,7 +30,9 @@ define([], function() {
       "ClearFiltersLabel": "Effacer",
       "Templates": {
         "RefinementItemTemplateLabel": "Filtre par défaut",
-        "MutliValueRefinementItemTemplateLabel": "Filtre à valeurs multiples"
+        "MutliValueRefinementItemTemplateLabel": "Filtre à valeurs multiples",
+        "DateFromLabel": "De",
+        "DateTolabel": "Jusqu'au"
       }
     },
   }

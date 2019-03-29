@@ -30,7 +30,9 @@ define([], function() {
       "ClearFiltersLabel": "Clear",
       "Templates": {
         "RefinementItemTemplateLabel": "Default refinement item",
-        "MutliValueRefinementItemTemplateLabel": "Multi-value refinement item"
+        "MutliValueRefinementItemTemplateLabel": "Multi-value refinement item",
+        "DateFromLabel": "From",
+        "DateTolabel": "To"
       }
     },
   }

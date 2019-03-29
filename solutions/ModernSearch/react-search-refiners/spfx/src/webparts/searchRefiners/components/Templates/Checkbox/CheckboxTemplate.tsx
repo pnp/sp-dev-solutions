@@ -35,7 +35,6 @@ export default class CheckboxTemplate extends React.Component<IBaseRefinerTempla
                                 <Checkbox
                                     key={j}                                    
                                     checked={this._isValueInFilterSelection(refinementValue)}
-                                    disabled={false}
                                     label={Text.format(refinementValue.RefinementValue + ' ({0})', refinementValue.RefinementCount)}
                                     onChange={(ev, checked: boolean) => {
                                         checked ? this._onFilterAdded(refinementValue) : this._onFilterRemoved(refinementValue);
