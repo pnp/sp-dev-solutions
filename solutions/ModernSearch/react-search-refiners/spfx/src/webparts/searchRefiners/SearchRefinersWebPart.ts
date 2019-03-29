@@ -194,7 +194,7 @@ export default class SearchRefinersWebPart extends BaseClientSideWebPart<ISearch
                 },
                 {
                   key: RefinerTemplateOption.DateRange,
-                  text: 'Date range',
+                  text: strings.Refiners.Templates.DateRangeRefinementItemLabel,
                 }
               ]
           }
@@ -312,11 +312,25 @@ export default class SearchRefinersWebPart extends BaseClientSideWebPart<ISearch
         this.properties.refinersConfiguration = [];
     }
 
-    this.properties.refinersConfiguration = Array.isArray(this.properties.refinersConfiguration) ? this.properties.refinersConfiguration : [
+    if (Array.isArray(this.properties.refinersConfiguration)) {
+      
+      this.properties.refinersConfiguration = this.properties.refinersConfiguration.map(config => {
+        if (!config.template) {
+          config.template = RefinerTemplateOption.CheckBox
+        }
+
+        return config;
+      });
+
+    } else {
+
+      // Default setup
+      this.properties.refinersConfiguration = [
         {
             refinerName: "Created",
             displayValue: "Created Date",
             template: RefinerTemplateOption.CheckBox
+      
         },
         {
             refinerName: "Size",
@@ -328,7 +342,8 @@ export default class SearchRefinersWebPart extends BaseClientSideWebPart<ISearch
             displayValue: "Tags",
             template: RefinerTemplateOption.CheckBox
         }
-    ];
+      ];
+    }
 
     this.properties.selectedLayout = this.properties.selectedLayout ? this.properties.selectedLayout : RefinersLayoutOption.Vertical; 
   }

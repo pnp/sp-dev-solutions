@@ -51,14 +51,14 @@ export default class SearchBoxWebPart extends BaseClientSideWebPart<ISearchBoxWe
   }
 
   public render(): void {
-    console.log(this.properties);
+
     let inputValue = this.properties.defaultQueryKeywords.tryGetValue();
 
     if (inputValue && typeof(inputValue) === 'string') {
       
-      // Notify subsscriber a new value if available
+      // Notify subscriber a new value if available
+      this._searchQuery.rawInputValue = decodeURIComponent(inputValue);
       this.context.dynamicDataSourceManager.notifyPropertyChanged('searchQuery');
-      this._searchQuery.rawInputValue = inputValue;
     }
     
     const element: React.ReactElement<ISearchBoxContainerProps> = React.createElement(

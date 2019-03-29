@@ -114,9 +114,9 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
                 }
             } else {
 
-                let searchResultTemplate = <div></div>;
+                let renderSearchResultTemplate = <div></div>;
                  if(!this.props.useCodeRenderer) {
-                    searchResultTemplate =  (
+                    renderSearchResultTemplate = 
                         <SearchResultsTemplate
                             templateService={this.props.templateService}
                             templateContent={this.props.templateContent}
@@ -134,7 +134,7 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
                                     strings: strings
                                 }
                             }
-                        />);
+                        />;
                 }
                 renderWpContent =
                     <div>
@@ -142,7 +142,7 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
                         <div className={styles.searchWp__buttonBar}>{sortPanel}</div>
                         {renderOverlay}
                         <div id={this.state.mountingNodeId} />
-                        {searchResultTemplate}
+                        {renderSearchResultTemplate}
                     </div>;
             }
         }

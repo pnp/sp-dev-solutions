@@ -31,6 +31,7 @@ declare interface ISearchRefinersWebPartStrings {
     Templates: {
       RefinementItemTemplateLabel: string;
       MutliValueRefinementItemTemplateLabel: string;
+      DateRangeRefinementItemLabel: string;
       DateFromLabel: string;
       DateTolabel: string;
     }
