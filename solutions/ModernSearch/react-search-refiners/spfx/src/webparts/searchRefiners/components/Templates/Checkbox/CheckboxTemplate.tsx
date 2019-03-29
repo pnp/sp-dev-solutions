@@ -46,12 +46,12 @@ export default class CheckboxTemplate extends React.Component<IBaseRefinerTempla
                         this.props.isMultiValue ? 
                         
                             <div>
-                                <Link onClick={() => { this._applyFilters(this.state.refinerSelectedFilterValues);}}>{strings.Refiners.ApplyFiltersLabel}</Link>|<Link onClick={this._clearFilters}>{strings.Refiners.ClearFiltersLabel}</Link> 
+                                <Link onClick={() => { this._applyFilters(this.state.refinerSelectedFilterValues);}} disabled={this.state.refinerSelectedFilterValues.length === 0}>{strings.Refiners.ApplyFiltersLabel}</Link>|<Link onClick={this._clearFilters} disabled={this.state.refinerSelectedFilterValues.length === 0}>{strings.Refiners.ClearFiltersLabel}</Link> 
                             </div>
                         
                         : null
                     }
-                </div>
+                </div>;
     }
 
     public componentDidMount() {

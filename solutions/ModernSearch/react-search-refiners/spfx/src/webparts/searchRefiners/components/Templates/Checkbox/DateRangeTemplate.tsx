@@ -62,8 +62,8 @@ export default class DateRangeTemplate extends React.Component<IBaseRefinerTempl
         return  <div>
                     <DatePicker {...fromProps}/>
                     <DatePicker {...toProps}/>
-                    <Link onClick={this._clearFilters}>{strings.Refiners.ClearFiltersLabel}</Link>
-                </div>
+                    <Link onClick={this._clearFilters} disabled={!this.state.selectedToDate && !this.state.selectedFromDate}>{strings.Refiners.ClearFiltersLabel}</Link>
+                </div>;
     }
 
     public componentWillReceiveProps(nextProps: IBaseRefinerTemplateProps) {

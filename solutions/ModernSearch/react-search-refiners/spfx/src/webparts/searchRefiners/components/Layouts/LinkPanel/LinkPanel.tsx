@@ -80,7 +80,7 @@ export default class LinkPanel extends React.Component<ILinkPanelProps, ILinkPan
                         });
                     }}></i>
                     {value.RefinementName}
-                </Label>)
+                </Label>);
         });
 
         const renderAvailableFilters = <GroupedList

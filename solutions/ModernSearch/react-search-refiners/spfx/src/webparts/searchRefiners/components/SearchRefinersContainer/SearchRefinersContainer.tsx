@@ -9,7 +9,7 @@ import RefinersLayoutOption from '../../../../models/RefinersLayoutOptions';
 import { MessageBarType, MessageBar } from 'office-ui-fabric-react';
 import * as strings from 'SearchRefinersWebPartStrings';
 import { ISearchRefinersContainerState } from './ISearchRefinersContainerState';
-import { IRefinementFilter, IRefinementValue, RefinementOperator } from '../../../../models/ISearchResult';
+import { IRefinementFilter, IRefinementValue, RefinementOperator, IRefinementResult } from '../../../../models/ISearchResult';
 import * as update from 'immutability-helper';
 import RefinerTemplateOption from '../../../../models/RefinerTemplateOption';
 
@@ -93,7 +93,7 @@ export default class SearchRefinersContainer extends React.Component<ISearchRefi
 
   public componentWillReceiveProps(nextProps: ISearchRefinersContainerProps) {
 
-      // Reset the flag every time we receive new refinement results
+      // Reset the flag every time we receive new refinement results except if there is no refinement results
       this.setState({
         shouldResetFilters: false
       });
@@ -108,17 +108,12 @@ export default class SearchRefinersContainer extends React.Component<ISearchRefi
       dateFilters.map(dateFilter => {
 
         // Is the filter currently selected?
-        const isSelected = this.state.selectedRefinementFilters.map(filter => { return filter.FilterName === dateFilter.refinerName }).length > 0 ? true : false;
+        const isSelected = this.state.selectedRefinementFilters.map(filter => { return filter.FilterName === dateFilter.refinerName; }).length > 0 ? true : false;
 
         // If selected but there is no more result for this refiner, we manually add a dummy entry to available filters
         if (isSelected && nextProps.availableRefiners.filter(availableRefiner => { return availableRefiner.FilterName ===  dateFilter.refinerName;}).length === 0) {
-          const refinementFilter: IRefinementFilter = {
-            FilterName: dateFilter.refinerName,
-            Values: [],
-            Operator: null
-          };
-
-          availableFilters = update(nextProps.availableRefiners, {$push: [refinementFilter]});
+          // Simply revert to old props to be able to reset combination
+          availableFilters = update(nextProps.availableRefiners, {$set: this.props.availableRefiners});
         }
       });
 
@@ -141,7 +136,7 @@ export default class SearchRefinersContainer extends React.Component<ISearchRefi
    */
   private onFilterValuesUpdated(filterName: string, filterValues: IRefinementValue[], operator: RefinementOperator) {
 
-    let newFilters; 
+    let newFilters = []; 
 
     const refinementFilter: IRefinementFilter = {
       FilterName: filterName,
@@ -158,12 +153,16 @@ export default class SearchRefinersContainer extends React.Component<ISearchRefi
         // Update value for the specific filters
         newFilters = update(this.state.selectedRefinementFilters, {[filterIdx]: {$set: refinementFilter}});
       } else {
-        // // If no values, we remove the filter
+        // If no values, we remove the filter
         newFilters = update(this.state.selectedRefinementFilters, { $splice: [[filterIdx, 1]] });
       }
 
     } else {
-      newFilters = update(this.state.selectedRefinementFilters, {$push: [refinementFilter]});
+
+      if (filterValues.length > 0){
+        // If does not exist, add to selected filters
+        newFilters = update(this.state.selectedRefinementFilters, {$push: [refinementFilter]});
+      }      
     }
 
     this.setState({

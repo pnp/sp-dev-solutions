@@ -1,5 +1,5 @@
 import * as React from                                                 'react';
-import RefinerTemplateOption from '../../../../models/RefinerTemplateOption'
+import RefinerTemplateOption from '../../../../models/RefinerTemplateOption';
 import CheckboxTemplate from "./Checkbox/CheckboxTemplate";
 import DateRangeTemplate from "./Checkbox/DateRangeTemplate";
 import { IRefinementResult, IRefinementValue } from "../../../../models/ISearchResult";
