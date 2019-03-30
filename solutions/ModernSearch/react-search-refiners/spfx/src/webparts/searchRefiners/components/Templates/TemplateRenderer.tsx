@@ -1,7 +1,7 @@
 import * as React from                                                 'react';
 import RefinerTemplateOption from '../../../../models/RefinerTemplateOption';
 import CheckboxTemplate from "./Checkbox/CheckboxTemplate";
-import DateRangeTemplate from "./Checkbox/DateRangeTemplate";
+import DateRangeTemplate from "./DateRange/DateRangeTemplate";
 import { IRefinementResult, IRefinementValue } from "../../../../models/ISearchResult";
 import RefinementFilterOperationCallback from '../../../../models/RefinementValueOperationCallback';
 

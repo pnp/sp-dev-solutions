@@ -9,7 +9,7 @@ import RefinersLayoutOption from '../../../../models/RefinersLayoutOptions';
 import { MessageBarType, MessageBar } from 'office-ui-fabric-react';
 import * as strings from 'SearchRefinersWebPartStrings';
 import { ISearchRefinersContainerState } from './ISearchRefinersContainerState';
-import { IRefinementFilter, IRefinementValue, RefinementOperator, IRefinementResult } from '../../../../models/ISearchResult';
+import { IRefinementFilter, IRefinementValue, RefinementOperator } from '../../../../models/ISearchResult';
 import * as update from 'immutability-helper';
 import RefinerTemplateOption from '../../../../models/RefinerTemplateOption';
 
@@ -93,7 +93,7 @@ export default class SearchRefinersContainer extends React.Component<ISearchRefi
 
   public componentWillReceiveProps(nextProps: ISearchRefinersContainerProps) {
 
-      // Reset the flag every time we receive new refinement results except if there is no refinement results
+      // Reset the flag every time we receive new refinement results
       this.setState({
         shouldResetFilters: false
       });
@@ -112,7 +112,7 @@ export default class SearchRefinersContainer extends React.Component<ISearchRefi
 
         // If selected but there is no more result for this refiner, we manually add a dummy entry to available filters
         if (isSelected && nextProps.availableRefiners.filter(availableRefiner => { return availableRefiner.FilterName ===  dateFilter.refinerName;}).length === 0) {
-          // Simply revert to old props to be able to reset combination
+          // Simply revert to prievous props to be able to reset combination
           availableFilters = update(nextProps.availableRefiners, {$set: this.props.availableRefiners});
         }
       });
@@ -132,7 +132,7 @@ export default class SearchRefinersContainer extends React.Component<ISearchRefi
    * Update the filter status in the state according to values
    * @param filterName the filter to update
    * @param filterValues the filter values
-   * @param operator the operator (FQL)
+   * @param operator the operator (FQL) (i.e AND/OR)
    */
   private onFilterValuesUpdated(filterName: string, filterValues: IRefinementValue[], operator: RefinementOperator) {
 
@@ -144,7 +144,7 @@ export default class SearchRefinersContainer extends React.Component<ISearchRefi
       Operator: operator
     };
 
-    // Get the index of the filter in the current filter
+    // Get the index of the filter in the current selected filters collection
     const filterIdx = this.state.selectedRefinementFilters.map(selected => { return selected.FilterName; }).indexOf(filterName);
 
     if (filterIdx !== -1) {
@@ -160,7 +160,7 @@ export default class SearchRefinersContainer extends React.Component<ISearchRefi
     } else {
 
       if (filterValues.length > 0){
-        // If does not exist, add to selected filters
+        // If does not exist, add to selected filters collection
         newFilters = update(this.state.selectedRefinementFilters, {$push: [refinementFilter]});
       }      
     }
