@@ -316,7 +316,7 @@ export default class SearchRefinersWebPart extends BaseClientSideWebPart<ISearch
       
       this.properties.refinersConfiguration = this.properties.refinersConfiguration.map(config => {
         if (!config.template) {
-          config.template = RefinerTemplateOption.CheckBox
+          config.template = RefinerTemplateOption.CheckBox;
         }
 
         return config;
