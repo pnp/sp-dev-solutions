@@ -101,8 +101,14 @@ interface ISearchResultsContainerProps {
      */
     strings: ISearchResultsWebPartStrings;
 
+    /**
+     * Enables taxonomy terms fro filters and results metadata
+     */
     enableLocalization: boolean;
 
+    /**
+     * Handler method when search results are updated
+     */
     onSearchResultsUpdate: SearchResultsOperationCallback;
 
     /* 

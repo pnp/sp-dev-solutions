@@ -44,4 +44,9 @@ export interface ISearchRefinersContainerProps {
    * The current UI language
    */
   language: string;
+
+  /**
+   * The current search query
+   */
+  query: string;
 }

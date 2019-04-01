@@ -84,7 +84,6 @@ export default class SearchRefinersContainer extends React.Component<ISearchRefi
       }
     }
     
-
     return (
       <div className={ styles.searchRefiners }>
         {renderWebPartTitle}
@@ -95,10 +94,21 @@ export default class SearchRefinersContainer extends React.Component<ISearchRefi
 
   public componentWillReceiveProps(nextProps: ISearchRefinersContainerProps) {
 
-      // Reset the flag every time we receive new refinement results
-      this.setState({
-        shouldResetFilters: false
-      });
+      // If a new query has been entered, we reset all filters
+      if (nextProps.query !== this.props.query) {
+
+        this.setState({
+          shouldResetFilters: true,
+          selectedRefinementFilters: []
+        });
+
+      } else {
+
+        // Reset the flag every time we receive new refinement results
+        this.setState({
+          shouldResetFilters: false
+        });
+      }
 
       let availableFilters = nextProps.availableRefiners;
 
@@ -167,8 +177,10 @@ export default class SearchRefinersContainer extends React.Component<ISearchRefi
       }      
     }
 
+    // Very important to reset the 'reset' flag after an udpdate
     this.setState({
-      selectedRefinementFilters: newFilters
+      selectedRefinementFilters: newFilters,
+      shouldResetFilters: false
     });
 
     this.props.onUpdateFilters(newFilters);

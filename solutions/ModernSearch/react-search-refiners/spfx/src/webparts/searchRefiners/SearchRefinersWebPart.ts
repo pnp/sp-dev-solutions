@@ -71,7 +71,8 @@ export default class SearchRefinersWebPart extends BaseClientSideWebPart<ISearch
             this.context.dynamicDataSourceManager.notifyPropertyChanged(SearchComponentType.RefinersWebPart);
           },
           selectedLayout: this.properties.selectedLayout,
-          language: this.context.pageContext.cultureInfo.currentUICultureName
+          language: this.context.pageContext.cultureInfo.currentUICultureName,
+          query: queryKeywords + queryTemplate + selectedProperties
         } as ISearchRefinersContainerProps
       );
     } else {
