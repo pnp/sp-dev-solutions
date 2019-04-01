@@ -56,6 +56,7 @@ export default class Vertical extends React.Component<IFilterLayoutProps, IVerti
                     shouldResetFilters={this.props.shouldResetFilters}
                     templateType={configuredFilter[0].template}
                     onFilterValuesUpdated={this.props.onFilterValuesUpdated}
+                    language={this.props.language}
                 />
             );
         });

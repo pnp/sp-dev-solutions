@@ -12,9 +12,13 @@ export interface IDateRangeTemplateState extends IBaseRefinerTemplateState {
     selectedToDate: Date;
 }
 
-export default class DateRangeTemplate extends React.Component<IBaseRefinerTemplateProps, IDateRangeTemplateState> {
+export interface IDateRangeTemplateProps extends IBaseRefinerTemplateProps {
+    language: string;
+}
 
-    public constructor(props: IBaseRefinerTemplateProps) {
+export default class DateRangeTemplate extends React.Component<IDateRangeTemplateProps, IDateRangeTemplateState> {
+
+    public constructor(props: IDateRangeTemplateProps) {
         super(props);
 
         this.state = {
@@ -27,6 +31,7 @@ export default class DateRangeTemplate extends React.Component<IBaseRefinerTempl
         this._updateToDate = this._updateToDate.bind(this);
         this._updateFilter = this._updateFilter.bind(this);
         this._clearFilters = this._clearFilters.bind(this);
+        this._onFormatDate = this._onFormatDate.bind(this);
     }
     
     public render() {
@@ -37,6 +42,7 @@ export default class DateRangeTemplate extends React.Component<IBaseRefinerTempl
             value:this.state.selectedFromDate,
             showGoToToday:true,
             borderless:true,
+            strings: strings.Refiners.Templates.DatePickerStrings
         };
 
         let toProps: IDatePickerProps = {
@@ -44,19 +50,26 @@ export default class DateRangeTemplate extends React.Component<IBaseRefinerTempl
             onSelectDate:this._updateToDate,
             value:this.state.selectedToDate,
             showGoToToday:true,
-            borderless:true  
+            borderless:true,
+            strings: strings.Refiners.Templates.DatePickerStrings
+        };
+
+        // Check if moment js is present on the current page (loaded from a search results WP)
+        if ((window as any).searchHBHelper) {
+            toProps.formatDate = this._onFormatDate;
+            fromProps.formatDate = this._onFormatDate;
         };
 
         if (this.state.selectedFromDate) {
-            const date = new Date();
-            date.setDate(this.state.selectedFromDate.getDate() + 1);
-            toProps.minDate = date;
+            const minDdate = new Date(this.state.selectedFromDate.getTime());
+            minDdate.setDate(this.state.selectedFromDate.getDate() + 1);
+            toProps.minDate = minDdate;
         }
 
         if (this.state.selectedToDate) {
-            const date = new Date();
-            date.setDate(this.state.selectedToDate.getDate() -1);
-            fromProps.maxDate = date;
+            const maxDate = new Date(this.state.selectedToDate.getTime());
+            maxDate.setDate(this.state.selectedToDate.getDate() - 1);
+            fromProps.maxDate = maxDate;
         }
 
         return  <div>
@@ -152,5 +165,9 @@ export default class DateRangeTemplate extends React.Component<IBaseRefinerTempl
         });
 
         this.props.onFilterValuesUpdated(this.props.refinementResult.FilterName, [], RefinementOperator.AND);
+    }
+
+    private _onFormatDate(date: Date): string {
+        return (window as any).searchHBHelper.moment(date, "LL", { lang: this.props.language });
     }
 }

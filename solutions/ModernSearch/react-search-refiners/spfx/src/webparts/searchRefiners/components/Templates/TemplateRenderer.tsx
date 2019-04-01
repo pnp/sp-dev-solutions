@@ -31,6 +31,11 @@ export interface ITemplateRendererProps {
      * A single to remove from the selection
      */
     valueToRemove?: IRefinementValue;
+
+    /**
+     * The current UI language
+     */
+    language: string;
 }
 
 export default class TemplateRenderer extends React.Component<ITemplateRendererProps> {
@@ -68,6 +73,7 @@ export default class TemplateRenderer extends React.Component<ITemplateRendererP
                                     shouldResetFilters={this.props.shouldResetFilters}
                                     isMultiValue={true}
                                     removeFilterValue={this.props.valueToRemove}
+                                    language={this.props.language}
                                 />;
                 break;
 

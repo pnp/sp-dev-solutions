@@ -66,15 +66,12 @@ export default class SearchRefinersWebPart extends BaseClientSideWebPart<ISearch
           refinersConfiguration: this.properties.refinersConfiguration,
           showBlank: this.properties.showBlank,
           displayMode: this.displayMode,
-          queryKeywords: queryKeywords,
-          queryTemplate: queryTemplate,
-          selectedProperties: selectedProperties,
           onUpdateFilters: (appliedRefiners: IRefinementFilter[]) => {
             this._selectedFilters = appliedRefiners;
             this.context.dynamicDataSourceManager.notifyPropertyChanged(SearchComponentType.RefinersWebPart);
           },
           selectedLayout: this.properties.selectedLayout,
-          areResultsLoading: areResultsLoading
+          language: this.context.pageContext.cultureInfo.currentUICultureName
         } as ISearchRefinersContainerProps
       );
     } else {

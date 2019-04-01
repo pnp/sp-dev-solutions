@@ -15,6 +15,11 @@ interface IFilterLayoutProps {
     onRemoveAllFilters: () => void;
 
     shouldResetFilters: boolean;
+
+    /**
+     * The current UI language
+     */
+    language: string;
 }
   
 export default IFilterLayoutProps;
