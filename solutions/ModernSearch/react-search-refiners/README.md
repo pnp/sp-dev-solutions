@@ -1,6 +1,6 @@
 # SharePoint Framework modern search Web Parts
 
-![Version](https://img.shields.io/badge/version-3.1.0-green.svg)
+![Version](https://img.shields.io/badge/version-3.1.1-green.svg)
 
 ## Summary
 This solution allows you to build user friendly SharePoint search experiences using SPFx in the modern interface. The main features include:
