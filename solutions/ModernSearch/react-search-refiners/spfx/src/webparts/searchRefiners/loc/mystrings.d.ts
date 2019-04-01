@@ -34,6 +34,20 @@ declare interface ISearchRefinersWebPartStrings {
       DateRangeRefinementItemLabel: string;
       DateFromLabel: string;
       DateTolabel: string;
+      DatePickerStrings: {
+        months: string[],      
+        shortMonths: string[],      
+        days: string[],      
+        shortDays: string[],      
+        goToToday: string,
+        prevMonthAriaLabel: string,
+        nextMonthAriaLabel: string,
+        prevYearAriaLabel: string,
+        nextYearAriaLabel: string,
+        closeButtonAriaLabel: string,      
+        isRequiredErrorMessage: string,      
+        invalidInputErrorMessage: string
+      };
     }
   },
 }

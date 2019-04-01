@@ -73,7 +73,7 @@ export default class CheckboxTemplate extends React.Component<IBaseRefinerTempla
         }
 
         // Remove an arbitrary value from the inner state
-        // Useful when the remove filter action is also present in the parent control
+        // Useful when the remove filter action is also present in the parent layout component
         if (nextProps.removeFilterValue) {
             
             const newFilterValues = this.state.refinerSelectedFilterValues.filter((elt) => {
@@ -89,7 +89,7 @@ export default class CheckboxTemplate extends React.Component<IBaseRefinerTempla
     }
 
     /**
-     * Checks if the current filter value is present in the list of the selected values for the current filter
+     * Checks if the current filter value is present in the list of the selected values for the current refiner
      * @param valueToCheck The filter value to check
      */
     private _isValueInFilterSelection(valueToCheck: IRefinementValue): boolean {

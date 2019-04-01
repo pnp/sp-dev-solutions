@@ -1,8 +1,9 @@
-import { IRefinementResult, IRefinementFilter, IRefinementValue } from "../../../../models/ISearchResult";
+import { IRefinementResult } from "../../../../models/ISearchResult";
 import IRefinerConfiguration from "../../../../models/IRefinerConfiguration";
 import RefinementFilterOperationCallback from "../../../../models/RefinementValueOperationCallback";
 
 interface IFilterLayoutProps {
+    
     refinementResults: IRefinementResult[];
 
     refinersConfiguration: IRefinerConfiguration[];
@@ -14,6 +15,11 @@ interface IFilterLayoutProps {
     onRemoveAllFilters: () => void;
 
     shouldResetFilters: boolean;
+
+    /**
+     * The current UI language
+     */
+    language: string;
 }
   
 export default IFilterLayoutProps;

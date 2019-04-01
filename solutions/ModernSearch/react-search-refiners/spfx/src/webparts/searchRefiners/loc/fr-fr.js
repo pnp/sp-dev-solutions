@@ -32,8 +32,22 @@ define([], function() {
         "RefinementItemTemplateLabel": "Filtre par défaut",
         "MutliValueRefinementItemTemplateLabel": "Filtre à valeurs multiples",
         "DateRangeRefinementItemLabel": "Sélecteur de dates",
-        "DateFromLabel": "De",
-        "DateTolabel": "Jusqu'au"
+        "DateFromLabel": "Du",
+        "DateTolabel": "Jusqu'au",
+        "DatePickerStrings": {
+          "months": ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'],      
+          "shortMonths": ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Jui', 'Jui', 'Aoû', 'Sep', 'Oct', 'Nov', 'Déc'],      
+          "days": ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'],      
+          "shortDays": ['D', 'M', 'M', 'J', 'V', 'V', 'S'],      
+          "goToToday": "Aujourd'hui",
+          "prevMonthAriaLabel": 'Mois précédent',
+          "nextMonthAriaLabel": 'Mois suivant',
+          "prevYearAriaLabel": "Année précédente",
+          "nextYearAriaLabel": "Année suivante",
+          "closeButtonAriaLabel": 'Fermer le sélecteur de date',      
+          "isRequiredErrorMessage": 'La date de début est requise.',      
+          "invalidInputErrorMessage": 'Format de date invalide.'
+        }
       }
     },
   }

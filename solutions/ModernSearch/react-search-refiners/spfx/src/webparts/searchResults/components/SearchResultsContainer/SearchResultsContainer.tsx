@@ -424,15 +424,21 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
 
                     // It supposes the 'Label' property has been selected in the underlying call
                     // A term always have a default label so the collection can't be empty
-                    const localizedLabel = termFromTaxonomy["Labels"]._Child_Items_.filter((label: any) => {
+                    let  localizedLabel = termFromTaxonomy["Labels"]._Child_Items_.filter((label: any) => {
                         return label.Language === lcid;
                     });
+
+                    // Term does not have a translation for this LCID, get the default label
+                    if (localizedLabel.length === 0) {
+                        localizedLabel = termFromTaxonomy["Labels"]._Child_Items_;
+                    }
                     
                     localizedTerms.push({
                         uniqueIdentifier: termToLocalize.uniqueIdentifier,
                         termId: termToLocalize.termId,
-                        localizedTermLabel: localizedLabel.length > 0 ? localizedLabel[0].Value : termFromTaxonomy.Name
+                        localizedTermLabel: localizedLabel[0].Value
                     });
+
                 } else {
                     localizedTerms.push({
                         uniqueIdentifier: termToLocalize.uniqueIdentifier,
@@ -580,9 +586,14 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
     
                             // It supposes the 'Label' property has been selected in the underlying service call
                             // A term always have a default label so the collection can't be empty
-                            const localizedLabel = taxonomyTerm["Labels"]._Child_Items_.filter((label: any) => {
+                            let localizedLabel = taxonomyTerm["Labels"]._Child_Items_.filter((label: any) => {
                                 return label.Language === lcid && label.IsDefaultForLanguage;
                             });
+
+                            // Term does not have a translation for this LCID, get the default label
+                            if (localizedLabel.length === 0) {
+                                localizedLabel = taxonomyTerm["Labels"]._Child_Items_;
+                            }
     
                             if (localizedLabel.length > 0) {
                                 // There is only one default label for a language 
