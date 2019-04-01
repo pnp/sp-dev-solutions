@@ -52,13 +52,13 @@ export default class DateRangeTemplate extends React.Component<IDateRangeTemplat
             showGoToToday:true,
             borderless:true,
             strings: strings.Refiners.Templates.DatePickerStrings
-        };
+        }
 
         // Check if moment js is present on the current page (loaded from a search results WP)
         if ((window as any).searchHBHelper) {
             toProps.formatDate = this._onFormatDate;
             fromProps.formatDate = this._onFormatDate;
-        };
+        }
 
         if (this.state.selectedFromDate) {
             const minDdate = new Date(this.state.selectedFromDate.getTime());
