@@ -1,8 +1,6 @@
 import * as React from                                                 'react';
-import IVerticalProps from                                              './IVerticalProps';
+import IFilterLayoutProps from                                              '../IFilterLayoutProps';
 import IVerticalState from                                              './IVerticalState';
-import { Checkbox } from                                               'office-ui-fabric-react/lib/Checkbox';
-import { Text } from                                                   '@microsoft/sp-core-library';
 import * as update from                                                'immutability-helper';
 import {
     GroupedList,
@@ -12,54 +10,34 @@ import {
 import {Link} from 'office-ui-fabric-react';
 import styles from './Vertical.module.scss';
 import * as strings from 'SearchRefinersWebPartStrings';
-import { IRefinementValue, IRefinementFilter } from '../../../../../models/ISearchResult';
+import TemplateRenderer from '../../Templates/TemplateRenderer';
 
-export default class Vertical extends React.Component<IVerticalProps, IVerticalState> {
+export default class Vertical extends React.Component<IFilterLayoutProps, IVerticalState> {
 
-    public constructor(props: IVerticalProps) {
+    public constructor(props: IFilterLayoutProps) {
         super(props);
 
         this.state = {
-            expandedGroups: [],
-            selectedFilters: []
+            expandedGroups: []
         };
 
-        this._addFilter = this._addFilter.bind(this);
-        this._removeFilter = this._removeFilter.bind(this);
-        this._isInFilterSelection = this._isInFilterSelection.bind(this);
         this._removeAllFilters = this._removeAllFilters.bind(this);
         this._onRenderHeader = this._onRenderHeader.bind(this);
         this._onRenderCell = this._onRenderCell.bind(this);
     }
 
-    public componentDidMount() {
-        this.setState({
-            selectedFilters: []
-        });
-    }
-
-    public componentWillReceiveProps(nextProps: IVerticalProps) {
-
-        if (nextProps.resetSelectedFilters) {
-            // Reset the selected filter on new query
-            this.setState({
-                selectedFilters: []
-            });
-        }
-    }
-
-    public render(): React.ReactElement<IVerticalProps> {
+    public render(): React.ReactElement<IFilterLayoutProps> {
 
         let items: JSX.Element[] = [];
         let groups: IGroup[] = [];
         let noResultsElement: JSX.Element;
 
         // Initialize the Office UI grouped list
-        this.props.availableFilters.map((filter, i) => {
+        this.props.refinementResults.map((refinementResult, i) => {
 
             // Get group name
-            let groupName = filter.FilterName;
-            const configuredFilter = this.props.refinersConfiguration.filter(e => { return e.refinerName === filter.FilterName;});
+            let groupName = refinementResult.FilterName;
+            const configuredFilter = this.props.refinersConfiguration.filter(e => { return e.refinerName === refinementResult.FilterName;});
             groupName = configuredFilter.length > 0 && configuredFilter[0].displayValue ? configuredFilter[0].displayValue : groupName;
 
             groups.push({
@@ -72,34 +50,18 @@ export default class Vertical extends React.Component<IVerticalProps, IVerticalS
             });
 
             items.push(
-                <div key={i}>
-                        {
-                            filter.Values.map((refinementValue: IRefinementValue, j) => {
-
-                                // Create a new IRefinementFilter with only the current refinement information
-                                const currentRefinement: IRefinementFilter = {
-                                    FilterName: filter.FilterName,
-                                    Value: refinementValue,
-                                };
-
-                                return (
-                                    <Checkbox
-                                        key={j}
-                                        checked={this._isInFilterSelection(currentRefinement)}
-                                        disabled={false}
-                                        label={Text.format(refinementValue.RefinementValue + ' ({0})', refinementValue.RefinementCount)}
-                                        onChange={(ev, checked: boolean) => {
-                                            // Every time we chek/uncheck a filter, a complete new search request is performed with current selected refiners
-                                            checked ? this._addFilter(currentRefinement) : this._removeFilter(currentRefinement);
-                                        }} />
-                                );
-                            })
-                        }
-                </div>
+                <TemplateRenderer 
+                    key={i} 
+                    refinementResult={refinementResult}
+                    shouldResetFilters={this.props.shouldResetFilters}
+                    templateType={configuredFilter[0].template}
+                    onFilterValuesUpdated={this.props.onFilterValuesUpdated}
+                    language={this.props.language}
+                />
             );
         });
 
-        const renderAvailableFilters = (this.props.availableFilters.length > 0) ? <GroupedList
+        const renderAvailableFilters = (this.props.refinementResults.length > 0) ? <GroupedList
             ref='groupedList'
             items={items}
             onRenderCell={this._onRenderCell}
@@ -111,8 +73,8 @@ export default class Vertical extends React.Component<IVerticalProps, IVerticalS
             }
             groups={groups} /> : noResultsElement;
 
-        const renderLinkRemoveAll = this.state.selectedFilters.length > 0 ?
-                                    (<div className={`${styles.verticalLayout__filterPanel__body__removeAllFilters} ${this.state.selectedFilters.length === 0 && "hiddenLink"}`}>
+        const renderLinkRemoveAll = this.props.hasSelectedValues ?
+                                    (<div className={`${styles.verticalLayout__filterPanel__body__removeAllFilters} ${this.props.hasSelectedValues && "hiddenLink"}`}>
                                             <Link onClick={this._removeAllFilters}>
                                                 {strings.RemoveAllFiltersLabel}
                                             </Link>
@@ -161,50 +123,7 @@ export default class Vertical extends React.Component<IVerticalProps, IVerticalS
         );
     }
 
-    private _addFilter(filterToAdd: IRefinementFilter): void {
-
-        // Add the filter to the selected filters collection
-        let newFilters = update(this.state.selectedFilters, {$push: [filterToAdd]});
-
-        this._applyFilters(newFilters);
-    }
-
-    private _removeFilter(filterToRemove: IRefinementFilter): void {
-
-        // Remove the filter from the selected filters collection
-        let newFilters = this.state.selectedFilters.filter((elt) => {
-            return elt.Value.RefinementToken !== filterToRemove.Value.RefinementToken;
-        });
-
-        this._applyFilters(newFilters);
-    }
-
-    private _removeAllFilters(): void {
-        this._applyFilters([]);
-    }
-
-    /**
-     * Inner method to effectivly apply the refiners by calling back the parent component
-     * @param selectedFilters The filters to apply
-     */
-    private _applyFilters(selectedFilters: IRefinementFilter[]): void {
-        this.setState({
-            selectedFilters: selectedFilters
-        });
-
-        this.props.onUpdateFilters(selectedFilters);
-    }
-
-    /**
-     * Checks if the current filter is present in the list of the selected filters
-     * @param filterToCheck The filter to check
-     */
-    private _isInFilterSelection(filterToCheck: IRefinementFilter): boolean {
-
-        let newFilters = this.state.selectedFilters.filter((filter) => {
-            return filter.Value.RefinementToken === filterToCheck.Value.RefinementToken;
-        });
-
-        return newFilters.length === 0 ? false : true;
+    private _removeAllFilters() {        
+        this.props.onRemoveAllFilters();
     }
 }

@@ -26,13 +26,16 @@ import { ISearchRefinersContainerProps } from './components/SearchRefinersContai
 import ISearchResultSourceData from '../../models/ISearchResultSourceData';
 import { DynamicDataService } from '../../services/DynamicDataService/DynamicDataService';
 import IDynamicDataService from '../../services/DynamicDataService/IDynamicDataService';
+import RefinerTemplateOption from '../../models/RefinerTemplateOption';
 
 export default class SearchRefinersWebPart extends BaseClientSideWebPart<ISearchRefinersWebPartProps> implements IDynamicDataCallables {
+
   private _dynamicDataService: IDynamicDataService;
   private _selectedFilters: IRefinementFilter[] = [];
   private _availableRefiners: DynamicProperty<ISearchResultSourceData>;
   
   public render(): void {
+
     let renderElement = null;
     let availableRefiners = [];
     let areResultsLoading = false;
@@ -63,15 +66,13 @@ export default class SearchRefinersWebPart extends BaseClientSideWebPart<ISearch
           refinersConfiguration: this.properties.refinersConfiguration,
           showBlank: this.properties.showBlank,
           displayMode: this.displayMode,
-          queryKeywords: queryKeywords,
-          queryTemplate: queryTemplate,
-          selectedProperties: selectedProperties,
           onUpdateFilters: (appliedRefiners: IRefinementFilter[]) => {
             this._selectedFilters = appliedRefiners;
             this.context.dynamicDataSourceManager.notifyPropertyChanged(SearchComponentType.RefinersWebPart);
           },
           selectedLayout: this.properties.selectedLayout,
-          areResultsLoading: areResultsLoading
+          language: this.context.pageContext.cultureInfo.currentUICultureName,
+          query: queryKeywords + queryTemplate + selectedProperties
         } as ISearchRefinersContainerProps
       );
     } else {
@@ -126,6 +127,7 @@ export default class SearchRefinersWebPart extends BaseClientSideWebPart<ISearch
   }
 
   protected onInit(): Promise<void> {
+    
     this._initializeRequiredProperties();
     this._dynamicDataService = new DynamicDataService(this.context.dynamicDataProvider);
     this.ensureDataSourceConnection();
@@ -165,16 +167,35 @@ export default class SearchRefinersWebPart extends BaseClientSideWebPart<ISearch
         value: this.properties.refinersConfiguration,
         fields: [
             {
-                id: 'refinerName',
-                title: strings.Refiners.RefinerManagedPropertyField,
-                type: CustomCollectionFieldType.string,
-                placeholder: '\"RefinableStringXXX\", etc.'
+              id: 'refinerName',
+              title: strings.Refiners.RefinerManagedPropertyField,
+              type: CustomCollectionFieldType.string,
+              placeholder: '\"RefinableStringXXX\", etc.'
             },
             {
-                id: 'displayValue',
-                title: strings.Refiners.RefinerDisplayValueField,
-                type: CustomCollectionFieldType.string
-            }
+              id: 'displayValue',
+              title: strings.Refiners.RefinerDisplayValueField,
+              type: CustomCollectionFieldType.string
+            },
+            {
+              id: 'template',
+              title: "Refiner template",
+              type: CustomCollectionFieldType.dropdown,
+              options: [
+                {
+                  key: RefinerTemplateOption.CheckBox,
+                  text: strings.Refiners.Templates.RefinementItemTemplateLabel
+                },
+                {
+                  key: RefinerTemplateOption.CheckBoxMulti,
+                  text: strings.Refiners.Templates.MutliValueRefinementItemTemplateLabel
+                },
+                {
+                  key: RefinerTemplateOption.DateRange,
+                  text: strings.Refiners.Templates.DateRangeRefinementItemLabel,
+                }
+              ]
+          }
         ]
       }),
       PropertyPaneDropdown('searchResultsDataSourceReference', {
@@ -289,20 +310,38 @@ export default class SearchRefinersWebPart extends BaseClientSideWebPart<ISearch
         this.properties.refinersConfiguration = [];
     }
 
-    this.properties.refinersConfiguration = Array.isArray(this.properties.refinersConfiguration) ? this.properties.refinersConfiguration : [
+    if (Array.isArray(this.properties.refinersConfiguration)) {
+      
+      this.properties.refinersConfiguration = this.properties.refinersConfiguration.map(config => {
+        if (!config.template) {
+          config.template = RefinerTemplateOption.CheckBox;
+        }
+
+        return config;
+      });
+
+    } else {
+
+      // Default setup
+      this.properties.refinersConfiguration = [
         {
             refinerName: "Created",
-            displayValue: "Created Date"
+            displayValue: "Created Date",
+            template: RefinerTemplateOption.CheckBox
+      
         },
         {
             refinerName: "Size",
-            displayValue: "Size of the file"
+            displayValue: "Size of the file",
+            template: RefinerTemplateOption.CheckBox
         },
         {
             refinerName: "owstaxidmetadataalltagsinfo",
-            displayValue: "Tags"
+            displayValue: "Tags",
+            template: RefinerTemplateOption.CheckBox
         }
-    ];
+      ];
+    }
 
     this.properties.selectedLayout = this.properties.selectedLayout ? this.properties.selectedLayout : RefinersLayoutOption.Vertical; 
   }

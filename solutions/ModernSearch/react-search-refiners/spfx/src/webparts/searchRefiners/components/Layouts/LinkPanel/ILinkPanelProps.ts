@@ -1,14 +1,8 @@
-import { IRefinementResult } from             '../../../../../models/ISearchResult';
-import RefinementFilterOperationCallback from '../../../../../models/RefinementValueOperationCallback';
-import IRefinerConfiguration from '../../../../../models/IRefinerConfiguration';
-import { PanelType } from 'office-ui-fabric-react/lib/Panel';
+import IFilterLayoutProps from "../IFilterLayoutProps";
+import { IRefinementValue } from "../../../../../models/ISearchResult";
 
-interface ILinkPanelProps {
-    availableFilters: IRefinementResult[];
-    refinersConfiguration: IRefinerConfiguration[];
-    onUpdateFilters: RefinementFilterOperationCallback;
-    resetSelectedFilters: boolean;
+interface ILinkPanelProps extends IFilterLayoutProps {
+    selectedFilterValues: IRefinementValue[];
 }
-
   
 export default ILinkPanelProps;

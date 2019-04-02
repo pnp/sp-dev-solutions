@@ -1,6 +1,6 @@
 # SharePoint Framework modern search Web Parts
 
-![Version](https://img.shields.io/badge/version-3.0.5-green.svg)
+![Version](https://img.shields.io/badge/version-3.1.1-green.svg)
 
 ## Summary
 This solution allows you to build user friendly SharePoint search experiences using SPFx in the modern interface. The main features include:
@@ -52,9 +52,9 @@ Search Query Enhancer | Sample Azure function to demonstrate the use of Microsof
 
 ## Solution
 
-Solution|Author(s)
+Solution| Contributors(s)
 --------|---------
-react-search-refiners | Franck Cornu (aequos) - [@FranckCornu](http://www.twitter.com/FranckCornu)<br/>Mikael Svenson -[@mikaelsvenson](http://www.twitter.com/mikaelsvenson)
+ModernSearch | Franck Cornu (aequos) - [@FranckCornu](http://www.twitter.com/FranckCornu)<br/>Tarald Gåsbakk (Puzzlepart AS) - [@taraldgasbakk](https://twitter.com/Taraldgasbakk)<br/>Yannick Reekmans - [@yannickreekmans](https://twitter.com/yannickreekmans)<br/>Mikael Svenson (Puzzlepart AS) - [@mikaelsvenson](http://www.twitter.com/mikaelsvenson)
 
 ## Web Parts Configuration
 
@@ -236,7 +236,7 @@ The following out of the box [query variables](https://docs.microsoft.com/en-us/
 ##### URL token and request properties
 |**Query variable**|**Definition**|
 |:-----|:-----|
-|{URLToken.\<integer\>}  <br/> |A value from the URL of a page. The integer represents the position of the value in the URL as counted from right to left. For example, for the page http://www.contoso/audio/mp3/1010101, the query variable {URLToken.1} will query for the last value in the URL, 1010101. The query variable {URLToken.3} will query for the third last property in the URL, audio. You can query for values up to the ninth last position in a ULR.  <br/> |
+|{URLToken.\<integer\>}  <br/> |A value from the URL of a page. The integer represents the position of the value in the URL as counted from right to left. For example, for the page http://www.contoso/audio/mp3/1010101, the query variable {URLToken.1} will query for the last value in the URL, 1010101. The query variable {URLToken.3} will query for the third last property in the URL, audio. You can query for values up to the ninth last position in a URL.  <br/> |
 |{Request.\<PropertyName\>}  <br/> |A value from the current http request - for example, {Request.Url}.  <br/> |
 
 ##### User properties
@@ -380,6 +380,7 @@ Version|Date|Comments
 3.0.3.0 | Mar 16, 2019 | Fixed display of custom renderers, in edit mode
 3.0.4.0 | Mar 21, 2019 | Fixed loading of Handlebars helpers when having multiple search parts on a page
 3.0.5.0 | Mar 26, 2019 | Fixed recreating SearchService on each render
+3.1.0.0 | Mar 30, 2019 | Added date range and multi value refiner templates
 
 ## Important notice on upgrading the solution from pre v2.2.0.0
 **Due to code restucturing we have hit an edge case which impacts upgrades from previous versions. To solve the issue go to `https://<tenant>.sharepoint.com/sites/<appcatalog>/Lists/ComponentManifests` and remove the entries for SearchBox and Search Results, and then upload the .sppkg for the new release.**
