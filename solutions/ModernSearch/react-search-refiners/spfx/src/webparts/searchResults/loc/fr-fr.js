@@ -96,7 +96,8 @@ define([], function() {
       "GreaterOrEqualOperator": "Supérieur ou égal",
       "GreaterThanOperator": "Supérieur à",
       "LessOrEqualOperator": "Inférieur ou égal",
-      "LessThanOperator": "Inférieur"
+      "LessThanOperator": "Inférieur",
+      "SynonymJSON": "Synonyms in JSON FR"
     }
   }
 });

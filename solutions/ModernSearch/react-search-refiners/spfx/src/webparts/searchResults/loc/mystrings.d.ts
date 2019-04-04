@@ -10,6 +10,7 @@ declare interface ISearchResultsWebPartStrings {
     EnableLocalizationLabel: string;
     EnableLocalizationOnLabel: string;
     EnableLocalizationOffLabel: string;
+    SynonymJSON: string;
     MaxResultsCount: string;
     NoResultMessage: string;
     SortableFieldsLabel: string;

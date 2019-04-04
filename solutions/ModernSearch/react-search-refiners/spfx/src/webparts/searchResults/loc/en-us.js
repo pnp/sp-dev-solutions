@@ -9,6 +9,7 @@ define([], function() {
     "EnableLocalizationLabel": "Enable taxonomy values localization for refiners and results",
     "EnableLocalizationOnLabel": "Localization enabled",
     "EnableLocalizationOffLabel": "Localization disabled",
+    "SynonymJSON": "Synonyms in JSON",
     "MaxResultsCount": "Number of items to retrieve per page",
     "NoResultMessage": "There are no results to show",    
     "FilterPanelTitle": "Available filters",
@@ -97,6 +98,7 @@ define([], function() {
       "GreaterThanOperator": "Greater than",
       "LessOrEqualOperator": "Less or equal",
       "LessThanOperator": "Less than"
+      
     }
   }
 });

@@ -4,6 +4,7 @@ import { ISortFieldConfiguration } from '../../models/ISortFieldConfiguration';
 import ISortableFieldConfiguration from '../../models/ISortableFieldConfiguration';
 import { ISearchResultType } from '../../models/ISearchResultType';
 import { ICustomTemplateFieldValue } from '../../services/ResultService/ResultService';
+import { ISynonymFieldConfiguration} from '../../models/ISynonymFieldConfiguration';
 
 export interface ISearchResultsWebPartProps {
     queryKeywords: DynamicProperty<string>;
@@ -33,4 +34,6 @@ export interface ISearchResultsWebPartProps {
     useRefiners: boolean;
     refinerDataSourceReference: string;
     paginationDataSourceReference: string;
+    synonymList: ISynonymFieldConfiguration[];
+
 }

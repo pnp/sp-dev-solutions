@@ -39,6 +39,7 @@ import { PropertyFieldCollectionData, CustomCollectionFieldType } from '@pnp/spf
 import { SPHttpClientResponse, SPHttpClient } from '@microsoft/sp-http';
 import { SortDirection, Sort } from '@pnp/sp';
 import { ISortFieldConfiguration, ISortFieldDirection } from '../../models/ISortFieldConfiguration';
+import { ISynonymFieldConfiguration } from '../../models/ISynonymFieldConfiguration';
 import { ResultTypeOperator } from '../../models/ISearchResultType';
 import IResultService from '../../services/ResultService/IResultService';
 import { ResultService, IRenderer } from '../../services/ResultService/ResultService';
@@ -69,8 +70,9 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
     private _refinerSourceData: DynamicProperty<IRefinerSourceData>;
     private _paginationSourceData: DynamicProperty<IPaginationSourceData>;
     private _codeRenderers: IRenderer[];
-    private _searchContainer : JSX.Element;
+    private _searchContainer: JSX.Element;
     private _queryTemplate: string;
+    private _synonymTable: { [key: string]: string[] };
 
     /**
      * The template to display at render time
@@ -124,14 +126,15 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
 
         // Configure the provider before the query according to our needs
         this._searchService = update(this._searchService, {
-            resultsCount: {$set: this.properties.maxResultsCount},
-            queryTemplate: {$set: this._queryTemplate},
-            resultSourceId: {$set: this.properties.resultSourceId},
-            sortList: {$set: this._convertToSortList(this.properties.sortList)},
-            enableQueryRules: {$set: this.properties.enableQueryRules},
-            selectedProperties: {$set: this.properties.selectedProperties ? this.properties.selectedProperties.replace(/\s|,+$/g, '').split(',') : []},
-            refiners: {$set: refinerConfiguration},
-            refinementFilters: {$set: selectedFilters},
+            resultsCount: { $set: this.properties.maxResultsCount },
+            queryTemplate: { $set: this._queryTemplate },
+            resultSourceId: { $set: this.properties.resultSourceId },
+            sortList: { $set: this._convertToSortList(this.properties.sortList) },
+            enableQueryRules: { $set: this.properties.enableQueryRules },
+            selectedProperties: { $set: this.properties.selectedProperties ? this.properties.selectedProperties.replace(/\s|,+$/g, '').split(',') : [] },
+            refiners: { $set: refinerConfiguration },
+            refinementFilters: { $set: selectedFilters },
+            synonymTable: { $set: this._synonymTable }
         });
 
         if (this._paginationSourceData) {
@@ -140,7 +143,7 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
                 selectedPage = paginationSourceData.selectedPage;
             }
         }
-        
+
         let queryKeywords = (!queryDataSourceValue) ? this.properties.defaultSearchQuery : queryDataSourceValue;
 
         const isValueConnected = !!this.properties.queryKeywords.tryGetSource();
@@ -168,8 +171,7 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
                 enableLocalization: this.properties.enableLocalization,
                 selectedPage: selectedPage,
                 onSearchResultsUpdate: (results, mountingNodeId) => {
-                    if (this.properties.selectedLayout in ResultsLayoutOption)
-                    {
+                    if (this.properties.selectedLayout in ResultsLayoutOption) {
                         let node = document.getElementById(mountingNodeId);
                         if (node) {
                             ReactDom.render(null, node);
@@ -224,7 +226,7 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
             this._templateService = new TemplateService(this.context.spHttpClient, this.context.pageContext.cultureInfo.currentUICultureName);
             this._searchService = new SearchService(this.context);
         }
-        
+
         this._resultService = new ResultService();
         this._codeRenderers = this._resultService.getRegisteredRenderers();
         this._dynamicDataService = new DynamicDataService(this.context.dynamicDataProvider);
@@ -241,6 +243,7 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
         this.properties.selectedLayout = this.properties.selectedLayout ? this.properties.selectedLayout : ResultsLayoutOption.List;
 
         this.context.dynamicDataSourceManager.initializeSource(this);
+        this._synonymTable = this._convertToSynonymTable(this.properties.synonymList);
 
         return super.onInit();
     }
@@ -261,6 +264,34 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
                 sortDirection: direction
             } as ISortFieldConfiguration;
         });
+    }
+
+    private _convertToSynonymTable(synonymList: ISynonymFieldConfiguration[]): { [key: string]: string[] } {
+        let synonymsTable: { [key: string]: string[] } = {};
+
+        synonymList.forEach(item => {
+            const currentTerm = item.term.toLowerCase();
+            const currentSynonyms = this._splitSynonyms(item.synonyms);
+
+            //add to array
+            synonymsTable[currentTerm] = currentSynonyms;
+
+            if (item.twoways) {
+                // Loop over the list of synonyms
+                let tempSynonyms: string[] = currentSynonyms;
+                tempSynonyms.push(currentTerm.trim());
+
+                currentSynonyms.forEach(s => {
+                    synonymsTable[s.toLowerCase().trim()] = tempSynonyms.filter( f => { return f !== s; });
+                });
+            }
+        });
+
+        return synonymsTable;
+    }
+
+    private _splitSynonyms(value: string) {
+        return value.split(",").map(v => { return v.toLowerCase().trim().replace(/\"/g, ""); } );
     }
 
     private _convertToSortList(sortList: ISortFieldConfiguration[]): Sort[] {
@@ -304,7 +335,7 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
 
         this.properties.queryTemplate = this.properties.queryTemplate ? this.properties.queryTemplate : "{searchTerms} Path:{Site}";
 
-        if(!Array.isArray(this.properties.sortList) && !isEmpty(this.properties.sortList)) {
+        if (!Array.isArray(this.properties.sortList) && !isEmpty(this.properties.sortList)) {
             this.properties.sortList = this._convertToSortConfig(this.properties.sortList);
         }
 
@@ -318,10 +349,14 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
                 sortDirection: ISortFieldDirection.Descending
             }
         ];
+
+
+
         this.properties.sortableFields = Array.isArray(this.properties.sortableFields) ? this.properties.sortableFields : [];
         this.properties.selectedProperties = this.properties.selectedProperties ? this.properties.selectedProperties : "Title,Path,Created,Filename,SiteLogo,PreviewUrl,PictureThumbnailURL,ServerRedirectedPreviewURL,ServerRedirectedURL,HitHighlightedSummary,FileType,contentclass,ServerRedirectedEmbedURL,DefaultEncodingURL,owstaxidmetadataalltagsinfo";
         this.properties.maxResultsCount = this.properties.maxResultsCount ? this.properties.maxResultsCount : 10;
         this.properties.resultTypes = Array.isArray(this.properties.resultTypes) ? this.properties.resultTypes : [];
+        this.properties.synonymList = Array.isArray(this.properties.synonymList) ? this.properties.synonymList : [];
     }
 
     protected getPropertyPaneConfiguration(): IPropertyPaneConfiguration {
@@ -447,6 +482,8 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
                 this.properties.externalTemplateUrl = '';
             }
         }
+
+        this._synonymTable = this._convertToSynonymTable(this.properties.synonymList);
     }
 
     protected async onPropertyPaneConfigurationStart() {
@@ -741,16 +778,54 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
                 label: strings.EnableLocalizationLabel,
                 onText: strings.EnableLocalizationOnLabel,
                 offText: strings.EnableLocalizationOffLabel
+            }),
+            // PropertyPaneTextField('synonymJSON', {
+            //     label: strings.SynonymJSON,
+            //     value: this.properties.synonymJSON,
+            //     multiline: true,
+            //     resizable: true,
+            //     deferredValidationTime: 300
+            // }),
+            PropertyFieldCollectionData('synonymList', {
+                manageBtnLabel: 'manageSynonyms', //strings.Sort.EditSortLabel,
+                key: 'synonymList',
+                enableSorting: false,
+                panelHeader: 'Edit synonyms', //strings.Sort.EditSortLabel,
+                panelDescription: 'this interface is used to manage synonyms', //strings.Sort.SortListDescription,
+                label: 'synonyms', //strings.Sort.SortPropertyPaneFieldLabel,
+                value: this.properties.synonymList,
+                fields: [
+                    {
+                        id: 'term',
+                        title: "Term",
+                        type: CustomCollectionFieldType.string,
+                        required: true,
+                        placeholder: '\"Computer\"'
+                    },
+                    {
+                        id: 'synonyms',
+                        title: "Synonyms",
+                        type: CustomCollectionFieldType.string,
+                        required: true,
+                        placeholder: '\"Laptop\", \"Desktop\"'
+                    },
+                    {
+                        id: 'twoways',
+                        title: "Two-way?",
+                        type: CustomCollectionFieldType.boolean,
+                        required: false,
+                    }
+                ]
             })
         ];
-        
+
         if (this.properties.useRefiners) {
 
-            searchSettingsFields.splice(5, 0,  
+            searchSettingsFields.splice(5, 0,
                 PropertyPaneDropdown('refinerDataSourceReference', {
-                options: this._dynamicDataService.getAvailableDataSourcesByType(SearchComponentType.RefinersWebPart),
-                label: strings.UseRefinersFromComponentLabel
-            }));
+                    options: this._dynamicDataService.getAvailableDataSourcesByType(SearchComponentType.RefinersWebPart),
+                    label: strings.UseRefinersFromComponentLabel
+                }));
         }
 
         return searchSettingsFields;
@@ -762,34 +837,34 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
     private ensureDataSourceConnection() {
 
         if (this.properties.refinerDataSourceReference) {
-    
+
             if (!this._refinerSourceData) {
                 this._refinerSourceData = new DynamicProperty<IRefinerSourceData>(this.context.dynamicDataProvider);
             }
-            
+
             // Register the data source manually since we don't want user select properties manually
             this._refinerSourceData.setReference(this.properties.refinerDataSourceReference);
             this._refinerSourceData.register(this.render);
 
         } else {
-        
+
             if (this._refinerSourceData) {
                 this._refinerSourceData.unregister(this.render);
             }
         }
 
         if (this.properties.paginationDataSourceReference) {
-    
+
             if (!this._paginationSourceData) {
                 this._paginationSourceData = new DynamicProperty<IPaginationSourceData>(this.context.dynamicDataProvider);
             }
-            
+
             // Register the data source manually since we don't want user select properties manually
             this._paginationSourceData.setReference(this.properties.paginationDataSourceReference);
             this._paginationSourceData.register(this.render);
 
         } else {
-        
+
             if (this._paginationSourceData) {
                 this._paginationSourceData.unregister(this.render);
             }
@@ -945,11 +1020,11 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
         ];
 
         if (this.properties.showPaging) {
-            stylingFields.splice(4, 0,  
+            stylingFields.splice(4, 0,
                 PropertyPaneDropdown('paginationDataSourceReference', {
-                options: this._dynamicDataService.getAvailableDataSourcesByType(SearchComponentType.PaginationWebPart),
-                label: strings.UsePaginationFromComponentLabel
-            }));
+                    options: this._dynamicDataService.getAvailableDataSourcesByType(SearchComponentType.PaginationWebPart),
+                    label: strings.UsePaginationFromComponentLabel
+                }));
         }
 
         if (!this.codeRendererIsSelected()) {
@@ -1139,8 +1214,8 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
         // Use the Web Part title as property title since we don't expose sub properties
         return [
             {
-              id: SearchComponentType.SearchResultsWebPart,
-              title: this.properties.webPartTitle ? this.properties.webPartTitle : this.title
+                id: SearchComponentType.SearchResultsWebPart,
+                title: this.properties.webPartTitle ? this.properties.webPartTitle : this.title
             }
         ];
     }
@@ -1162,7 +1237,7 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
             case SearchComponentType.SearchResultsWebPart:
                 return searchResultSourceData;
         }
-        
+
         throw new Error('Bad property id');
     }
 }
