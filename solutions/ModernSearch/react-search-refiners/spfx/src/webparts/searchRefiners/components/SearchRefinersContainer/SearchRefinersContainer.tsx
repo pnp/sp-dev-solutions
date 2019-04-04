@@ -124,8 +124,21 @@ export default class SearchRefinersContainer extends React.Component<ISearchRefi
 
         // If selected but there is no more result for this refiner, we manually add a dummy entry to available filters
         if (isSelected && nextProps.availableRefiners.filter(availableRefiner => { return availableRefiner.FilterName ===  dateFilter.refinerName;}).length === 0) {
-          // Simply revert to prievous props to be able to reset combination
-          availableFilters = update(nextProps.availableRefiners, {$set: this.props.availableRefiners});
+
+          // Simply revert to previous filters to be able to reset filters combination
+          availableFilters = update(nextProps.availableRefiners, {$set: this.props.availableRefiners.length > 0 ? this.props.availableRefiners : this.state.availableRefiners});
+
+          // Reset all refinement counts
+          availableFilters = availableFilters.map(filter => {
+
+            const values = filter.Values.map(value => {
+              value.RefinementCount = 0;
+              return value;
+            });
+
+            filter.Values = values;
+            return filter;
+          });
         }
       });
 

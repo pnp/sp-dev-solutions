@@ -73,6 +73,15 @@ export default class LinkPanel extends React.Component<ILinkPanelProps, ILinkPan
 
         const renderSelectedFilterValues: JSX.Element[] = this.props.selectedFilterValues.map((value) => {
 
+            // Get the 'display name' of the associated refiner for this value
+            const configuredRefiners = this.props.refinersConfiguration.filter(refiner => { return refiner.refinerName === value.RefinementName; });
+            let filterName = configuredRefiners.length === 1 ? configuredRefiners[0].displayValue : value.RefinementName;
+
+            // Date refiner value
+            if (/range\(.+\)/.test(value.RefinementToken) && value.RefinementName !== value.RefinementValue) {
+                filterName = `${filterName} ${value.RefinementValue}`
+            }
+
             return (
                 <Label className={styles.filter}>
                     <i className='ms-Icon ms-Icon--ClearFilter' onClick={() => { 
@@ -80,7 +89,7 @@ export default class LinkPanel extends React.Component<ILinkPanelProps, ILinkPan
                             valueToRemove: value
                         });
                     }}></i>
-                    {value.RefinementName}
+                    {filterName}
                 </Label>);
         });
 
@@ -91,7 +100,7 @@ export default class LinkPanel extends React.Component<ILinkPanelProps, ILinkPan
             className={styles.linkPanelLayout__filterPanel__body__group}
             groupProps={
                 {
-                    onRenderHeader: this._onRenderHeader,
+                    onRenderHeader: this._onRenderHeader
                 }
             }
             groups={groups} />;

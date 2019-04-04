@@ -132,13 +132,26 @@ export default class DateRangeTemplate extends React.Component<IDateRangeTemplat
         let startDate = selectedFromDate ? selectedFromDate.toISOString() : "min";
         let endDate = selectedToDate ? selectedToDate.toISOString() : "max";
 
-        const rangeConditions =  `range(${startDate},${endDate})`;
+        const rangeConditions = `range(${startDate},${endDate})`;
 
+        let filterDisplayValue: string[] = [];
+
+        if ((window as any).searchHBHelper) {
+
+            if (startDate.localeCompare('min') !== 0) {
+                filterDisplayValue.push(`> ${this._onFormatDate(new Date(startDate))}`);
+            }
+
+            if (endDate.localeCompare('max') !== 0) {
+                filterDisplayValue.push(`< ${this._onFormatDate(new Date(endDate))}`);
+            } 
+        }
+        
         const refinementValue: IRefinementValue = {
             RefinementCount: 0,
             RefinementName: this.props.refinementResult.FilterName,
             RefinementToken: rangeConditions,
-            RefinementValue: this.props.refinementResult.FilterName
+            RefinementValue: filterDisplayValue.length > 0 ? `(${filterDisplayValue.join(",")})` : this.props.refinementResult.FilterName
         };
 
         if (this.state.refinerSelectedFilterValues.length > 0) {
