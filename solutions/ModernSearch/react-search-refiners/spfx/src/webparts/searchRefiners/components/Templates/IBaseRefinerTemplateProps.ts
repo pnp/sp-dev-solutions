@@ -9,6 +9,12 @@ interface IBaseRefinerTemplateProps {
     refinementResult: IRefinementResult;
 
     /**
+     * The current selected values for this refinement result
+     * Used to build local state for sub components
+     */
+    selectedValues: IRefinementValue[];
+
+    /**
      * Callback method to update selected filters
      */
     onFilterValuesUpdated: RefinementFilterOperationCallback;

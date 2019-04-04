@@ -46,9 +46,15 @@ export default class Vertical extends React.Component<IFilterLayoutProps, IVerti
                 count: 1,
                 startIndex: i,
                 isDropEnabled: true,
-                isCollapsed: this.state.expandedGroups.indexOf(i) === -1 ? true : false,
+                isCollapsed: this.state.expandedGroups.indexOf(groupName) === -1 ? true : false,
             });
 
+            // Get selected values for this specfic refiner
+            // This scenario happens due to the behavior of the Office UI Fabric GroupedList component who recreates child components when a greoup is collapsed/expanded, causing a state reset for sub components
+            // In this case we use the refiners global state to recreate the 'local' state for this component
+            const selectedFilter = this.props.selectedFilters.filter(filter => { return filter.FilterName === refinementResult.FilterName;});
+            const selectedFilterValues = selectedFilter.length === 1 ? selectedFilter[0].Values : [];
+            
             items.push(
                 <TemplateRenderer 
                     key={i} 
@@ -57,6 +63,7 @@ export default class Vertical extends React.Component<IFilterLayoutProps, IVerti
                     templateType={configuredFilter[0].template}
                     onFilterValuesUpdated={this.props.onFilterValuesUpdated}
                     language={this.props.language}
+                    selectedValues={selectedFilterValues}
                 />
             );
         });
@@ -106,8 +113,8 @@ export default class Vertical extends React.Component<IFilterLayoutProps, IVerti
                     // Update the index for expanded groups to be able to keep it open after a re-render
                     const updatedExpandedGroups =
                         props.group.isCollapsed ?
-                            update(this.state.expandedGroups, { $push: [props.group.startIndex] }) :
-                            update(this.state.expandedGroups, { $splice: [[this.state.expandedGroups.indexOf(props.group.startIndex), 1]] });
+                            update(this.state.expandedGroups, { $push: [props.group.name] }) :
+                            update(this.state.expandedGroups, { $splice: [[this.state.expandedGroups.indexOf(props.group.name), 1]] });
 
                     this.setState({
                         expandedGroups: updatedExpandedGroups,

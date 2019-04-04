@@ -59,8 +59,10 @@ export default class CheckboxTemplate extends React.Component<IBaseRefinerTempla
         // Determine the operator according to multi value setting
         this._operator = this.props.isMultiValue ? RefinementOperator.OR :RefinementOperator.AND;
 
+        // This scenario happens due to the behavior of the Office UI Fabric GroupedList component who recreates child components when a greoup is collapsed/expanded, causing a state reset for sub components
+        // In this case we use the refiners global state to recreate the 'local' state for this component
         this.setState({
-            refinerSelectedFilterValues: []
+            refinerSelectedFilterValues: this.props.selectedValues
         });
     }
 

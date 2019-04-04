@@ -59,6 +59,7 @@ export default class SearchRefinersContainer extends React.Component<ISearchRefi
                               onRemoveAllFilters={this.onRemoveAllFilters}
                               hasSelectedValues={this.state.selectedRefinementFilters.length > 0 ? true : false }
                               language={this.props.language}
+                              selectedFilters={this.state.selectedRefinementFilters}
                             />;
             break;
 
@@ -78,7 +79,8 @@ export default class SearchRefinersContainer extends React.Component<ISearchRefi
                               onRemoveAllFilters={this.onRemoveAllFilters}
                               hasSelectedValues={this.state.selectedRefinementFilters.length > 0 ? true : false }
                               selectedFilterValues={selectedValues}
-                              language={this.props.language}                              
+                              language={this.props.language}
+                              selectedFilters={this.state.selectedRefinementFilters}                            
                             />;
           break;
       }
