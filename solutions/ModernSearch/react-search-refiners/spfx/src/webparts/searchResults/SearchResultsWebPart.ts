@@ -779,20 +779,13 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
                 onText: strings.EnableLocalizationOnLabel,
                 offText: strings.EnableLocalizationOffLabel
             }),
-            // PropertyPaneTextField('synonymJSON', {
-            //     label: strings.SynonymJSON,
-            //     value: this.properties.synonymJSON,
-            //     multiline: true,
-            //     resizable: true,
-            //     deferredValidationTime: 300
-            // }),
             PropertyFieldCollectionData('synonymList', {
-                manageBtnLabel: 'manageSynonyms', //strings.Sort.EditSortLabel,
+                manageBtnLabel: strings.Synonyms.EditSynonymLabel,
                 key: 'synonymList',
                 enableSorting: false,
-                panelHeader: 'Edit synonyms', //strings.Sort.EditSortLabel,
-                panelDescription: 'this interface is used to manage synonyms', //strings.Sort.SortListDescription,
-                label: 'synonyms', //strings.Sort.SortPropertyPaneFieldLabel,
+                panelHeader: strings.Synonyms.EditSynonymLabel,
+                panelDescription: strings.Synonyms.SynonymListDescription, 
+                label: strings.Synonyms.SynonymPropertyPanelFieldLabel, 
                 value: this.properties.synonymList,
                 fields: [
                     {
@@ -800,14 +793,14 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
                         title: "Term",
                         type: CustomCollectionFieldType.string,
                         required: true,
-                        placeholder: '\"Computer\"'
+                        placeholder: 'Computer'
                     },
                     {
                         id: 'synonyms',
                         title: "Synonyms",
                         type: CustomCollectionFieldType.string,
                         required: true,
-                        placeholder: '\"Laptop\", \"Desktop\"'
+                        placeholder: 'Laptop, \"Desktop with monitor\"'
                     },
                     {
                         id: 'twoways',

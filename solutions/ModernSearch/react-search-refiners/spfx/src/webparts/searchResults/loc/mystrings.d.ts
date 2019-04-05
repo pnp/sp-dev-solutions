@@ -79,6 +79,11 @@ declare interface ISearchResultsWebPartStrings {
         EditSortableFieldsLabel: string;
         EditSortLabel: string;
     },
+    Synonyms: {
+        EditSynonymLabel: string;
+        SynonymListDescription: string;
+        SynonymPropertyPanelFieldLabel: string;
+    },
     ResultTypes: {
         ResultTypeslabel: string;
         ResultTypesDescription: string;

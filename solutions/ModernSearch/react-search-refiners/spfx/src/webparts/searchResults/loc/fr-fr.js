@@ -77,6 +77,11 @@ define([], function() {
       "EditSortableFieldsLabel": "Éditer les champs de tri",
       "EditSortLabel": "Éditer l'ordre de tri"
     },
+    "Synonyms": {
+      "EditSynonymLabel": "Modifier les synonymes",
+      "SynonymListDescription": "Inclure tous les synonymes utilisés pour la recherche. Chaque terme sera bonifié avec tous les synonymes associés au moment de lancer la requête au serveur. Si un synonyme contient plus d'un mot, celui-ci doit être encapsulé par des double guillements.",
+      "SynonymPropertyPanelFieldLabel": "Liste des synonymes"
+    },
     "TermNotFound": "(Terme avec l'ID '{0}' non trouvé)",
     "UseDefaultSearchQueryKeywordsFieldLabel": "Utiliser une requête initiale",
     "DefaultSearchQueryKeywordsFieldLabel": "Requête de recherche par défaut",
@@ -96,8 +101,7 @@ define([], function() {
       "GreaterOrEqualOperator": "Supérieur ou égal",
       "GreaterThanOperator": "Supérieur à",
       "LessOrEqualOperator": "Inférieur ou égal",
-      "LessThanOperator": "Inférieur",
-      "SynonymJSON": "Synonyms in JSON FR"
+      "LessThanOperator": "Inférieur"
     }
   }
 });

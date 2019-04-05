@@ -9,7 +9,6 @@ define([], function() {
     "EnableLocalizationLabel": "Enable taxonomy values localization for refiners and results",
     "EnableLocalizationOnLabel": "Localization enabled",
     "EnableLocalizationOffLabel": "Localization disabled",
-    "SynonymJSON": "Synonyms in JSON",
     "MaxResultsCount": "Number of items to retrieve per page",
     "NoResultMessage": "There are no results to show",    
     "FilterPanelTitle": "Available filters",
@@ -78,6 +77,11 @@ define([], function() {
       "EditSortableFieldsLabel": "Edit sortable fields",
       "EditSortLabel": "Edit sort order"
     },
+    "Synonyms": {
+      "EditSynonymLabel": "Edit synonyms",
+      "SynonymListDescription": "Specify all the synonyms that will be used when searching. Each term a search will be enchanced with all the associated synonyms when the query is sent to the server. If a synonym contains more than one word, it has to be wrapped in double quotes.",
+      "SynonymPropertyPanelFieldLabel": "List of synonyms"
+    },
     "TermNotFound": "(Term with ID '{0}' not found)",
     "UseDefaultSearchQueryKeywordsFieldLabel": "Use a default search query",
     "DefaultSearchQueryKeywordsFieldLabel": "Default search query",
@@ -98,7 +102,6 @@ define([], function() {
       "GreaterThanOperator": "Greater than",
       "LessOrEqualOperator": "Less or equal",
       "LessThanOperator": "Less than"
-      
     }
   }
 });
