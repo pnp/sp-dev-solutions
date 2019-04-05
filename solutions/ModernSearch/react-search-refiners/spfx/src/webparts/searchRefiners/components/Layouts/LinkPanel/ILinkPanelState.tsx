@@ -3,7 +3,7 @@ import { IRefinementValue } from "../../../../../models/ISearchResult";
 interface ILinkPanelState {
     showPanel?: boolean;
     valueToRemove: IRefinementValue;
-    expandedGroups?: number[];
+    expandedGroups?: string[];
 }
 
 export default ILinkPanelState;

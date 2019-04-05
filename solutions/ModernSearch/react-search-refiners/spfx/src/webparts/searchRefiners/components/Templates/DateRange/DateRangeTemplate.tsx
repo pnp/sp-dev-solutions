@@ -79,6 +79,30 @@ export default class DateRangeTemplate extends React.Component<IDateRangeTemplat
                 </div>;
     }
 
+    public componentDidMount() {
+        
+        // This scenario happens due to the behavior of the Office UI Fabric GroupedList component who recreates child components when a greoup is collapsed/expanded, causing a state reset for sub components
+        // In this case we use the refiners global state to recreate the 'local' state for this component
+        if (this.props.selectedValues.length === 1) {
+
+            // Means a data has been already selected. Should be only one value in this case (i.e date range)
+            const value = this.props.selectedValues[0].RefinementToken;
+            const matches = /range\((.+)\,(.+)\)/.exec(value);
+
+            if (matches[1] !== 'min') {
+                this.setState({
+                    selectedFromDate: new Date(matches[1])
+                });
+            }
+
+            if (matches[2] !== 'max') {
+                this.setState({
+                    selectedToDate: new Date(matches[2])
+                });
+            }
+        }
+    }
+
     public componentWillReceiveProps(nextProps: IBaseRefinerTemplateProps) {
         
         if (nextProps.shouldResetFilters) {
@@ -132,13 +156,26 @@ export default class DateRangeTemplate extends React.Component<IDateRangeTemplat
         let startDate = selectedFromDate ? selectedFromDate.toISOString() : "min";
         let endDate = selectedToDate ? selectedToDate.toISOString() : "max";
 
-        const rangeConditions =  `range(${startDate},${endDate})`;
+        const rangeConditions = `range(${startDate},${endDate})`;
 
+        let filterDisplayValue: string[] = [];
+
+        if ((window as any).searchHBHelper) {
+
+            if (startDate.localeCompare('min') !== 0) {
+                filterDisplayValue.push(`> ${this._onFormatDate(new Date(startDate))}`);
+            }
+
+            if (endDate.localeCompare('max') !== 0) {
+                filterDisplayValue.push(`< ${this._onFormatDate(new Date(endDate))}`);
+            } 
+        }
+        
         const refinementValue: IRefinementValue = {
             RefinementCount: 0,
             RefinementName: this.props.refinementResult.FilterName,
             RefinementToken: rangeConditions,
-            RefinementValue: this.props.refinementResult.FilterName
+            RefinementValue: filterDisplayValue.length > 0 ? `(${filterDisplayValue.join(",")})` : this.props.refinementResult.FilterName
         };
 
         if (this.state.refinerSelectedFilterValues.length > 0) {
