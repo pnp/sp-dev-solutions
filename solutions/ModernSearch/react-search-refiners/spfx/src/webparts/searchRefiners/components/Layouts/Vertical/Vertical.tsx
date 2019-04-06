@@ -7,7 +7,7 @@ import {
     IGroup,
     IGroupDividerProps
 } from                                                                 'office-ui-fabric-react/lib/components/GroupedList/index';
-import {Link} from 'office-ui-fabric-react';
+import {Link} from 'office-ui-fabric-react/lib/Link';
 import styles from './Vertical.module.scss';
 import * as strings from 'SearchRefinersWebPartStrings';
 import TemplateRenderer from '../../Templates/TemplateRenderer';
