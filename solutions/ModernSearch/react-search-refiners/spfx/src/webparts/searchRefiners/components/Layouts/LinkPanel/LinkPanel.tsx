@@ -10,7 +10,8 @@ import {
     IGroupDividerProps
 } from                                                                 'office-ui-fabric-react/lib/components/GroupedList/index';
 import { Scrollbars } from                                             'react-custom-scrollbars';
-import {ActionButton, Link} from 'office-ui-fabric-react';
+import {Link} from 'office-ui-fabric-react/lib/Link';
+import {ActionButton} from 'office-ui-fabric-react/lib/Button';
 import styles from './LinkPanel.module.scss';
 import * as strings from 'SearchRefinersWebPartStrings';
 import TemplateRenderer from '../../Templates/TemplateRenderer';
@@ -97,7 +98,7 @@ export default class LinkPanel extends React.Component<ILinkPanelProps, ILinkPan
 
             // Date refiner value
             if (/range\(.+\)/.test(value.RefinementToken) && value.RefinementName !== value.RefinementValue) {
-                filterName = `${filterName} ${value.RefinementValue}`
+                filterName = `${filterName} ${value.RefinementValue}`;
             }
 
             return (
