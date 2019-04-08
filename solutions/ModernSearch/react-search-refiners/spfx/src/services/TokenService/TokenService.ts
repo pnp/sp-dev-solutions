@@ -1,16 +1,18 @@
 import { SPHttpClient, SPHttpClientResponse } from "@microsoft/sp-http";
 import { Text, Log } from "@microsoft/sp-core-library";
-import { IWebPartContext } from "@microsoft/sp-webpart-base";
 import { ITokenService } from ".";
 import { UrlQueryParameterCollection } from '@microsoft/sp-core-library';
+import { PageContext } from "@microsoft/sp-page-context";
 
 const LOG_SOURCE: string = '[SearchResultsWebPart_{0}]';
 
 export class TokenService implements ITokenService {
-    private _context: IWebPartContext;
+    private _pageContext: PageContext;
+    private _spHttpClient: SPHttpClient;
 
-    constructor(context: IWebPartContext) {
-        this._context = context;
+    constructor(pageContext: PageContext, spHttpClient: SPHttpClient) {
+        this._pageContext = pageContext;
+        this._spHttpClient = spHttpClient;
     }
 
     public async replaceQueryVariables(queryTemplate: string): Promise<string> {
@@ -27,8 +29,8 @@ export class TokenService implements ITokenService {
         let match = pagePropsVariables.exec(reQueryTemplate);
         let item = null;
         if (match != null) {
-            let url = this._context.pageContext.web.absoluteUrl + `/_api/web/GetList(@v1)/RenderExtendedListFormData(itemId=${this._context.pageContext.listItem.id},formId='viewform',mode='2',options=7)?@v1='${this._context.pageContext.list.serverRelativeUrl}'`;
-            var client = this._context.spHttpClient;
+            let url = this._pageContext.web.absoluteUrl + `/_api/web/GetList(@v1)/RenderExtendedListFormData(itemId=${this._pageContext.listItem.id},formId='viewform',mode='2',options=7)?@v1='${this._pageContext.list.serverRelativeUrl}'`;
+            var client = this._spHttpClient;
             try {
                 const response: SPHttpClientResponse = await client.post(url, SPHttpClient.configurations.v1, {});
                 if (response.ok) {

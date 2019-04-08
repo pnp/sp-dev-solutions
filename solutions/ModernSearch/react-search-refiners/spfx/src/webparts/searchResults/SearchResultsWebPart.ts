@@ -217,7 +217,7 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
         } else {
             this._taxonomyService = new TaxonomyService(this.context.pageContext.site.absoluteUrl);
             this._templateService = new TemplateService(this.context.spHttpClient, this.context.pageContext.cultureInfo.currentUICultureName);
-            this._searchService = new SearchService(this.context);
+            this._searchService = new SearchService(this.context.pageContext, this.context.spHttpClient);
         }
         
         this._resultService = new ResultService();

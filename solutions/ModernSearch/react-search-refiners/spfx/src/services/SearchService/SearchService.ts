@@ -1,9 +1,8 @@
 import * as Handlebars from 'handlebars';
 import ISearchService from './ISearchService';
 import { ISearchResults, ISearchResult, IRefinementResult, IRefinementValue, IRefinementFilter, IPromotedResult } from '../../models/ISearchResult';
-import { sp, SearchQuery, SearchResults, SPRest, Sort, SortDirection, SearchSuggestQuery } from '@pnp/sp';
+import { sp, SearchQuery, SearchResults, SPRest, Sort, SearchSuggestQuery } from '@pnp/sp';
 import { Logger, LogLevel, ConsoleListener } from '@pnp/logging';
-import { IWebPartContext } from '@microsoft/sp-webpart-base';
 import { Text } from '@microsoft/sp-core-library';
 import { sortBy } from '@microsoft/sp-lodash-subset';
 import LocalizationHelper from '../../helpers/LocalizationHelper';
@@ -11,11 +10,13 @@ import "@pnp/polyfill-ie11";
 import IRefinerConfiguration from '../../models/IRefinerConfiguration';
 import { ISearchServiceConfiguration } from '../../models/ISearchServiceConfiguration';
 import { ITokenService, TokenService } from '../TokenService';
+import { PageContext } from '@microsoft/sp-page-context';
+import { SPHttpClient } from '@microsoft/sp-http';
 
 class SearchService implements ISearchService {
     private _initialSearchResult: SearchResults = null;
     private _resultsCount: number;
-    private _context: IWebPartContext;
+    private _pageContext: PageContext;
     private _tokenService: ITokenService;
     private _selectedProperties: string[];
     private _queryTemplate: string;
@@ -51,9 +52,9 @@ class SearchService implements ISearchService {
 
     private _localPnPSetup: SPRest;
 
-    public constructor(webPartContext: IWebPartContext) {
-        this._context = webPartContext;
-        this._tokenService = new TokenService(webPartContext);
+    public constructor(pageContext: PageContext, spHttpClient: SPHttpClient) {
+        this._pageContext = pageContext;
+        this._tokenService = new TokenService(this._pageContext, spHttpClient);
 
         // Setup the PnP JS instance
         const consoleListener = new ConsoleListener();
@@ -66,7 +67,7 @@ class SearchService implements ISearchService {
             headers: {
                 Accept: 'application/json; odata=nometadata',
             },
-        }, this._context.pageContext.web.absoluteUrl);
+        }, this._pageContext.web.absoluteUrl);
     }
 
     /**
@@ -278,7 +279,7 @@ class SearchService implements ISearchService {
             count: 10,
             hitHighlighting: true,
             prefixMatch: true,
-            culture: LocalizationHelper.getLocaleId(this._context.pageContext.cultureInfo.currentUICultureName).toString()
+            culture: LocalizationHelper.getLocaleId(this._pageContext.cultureInfo.currentUICultureName).toString()
         };
 
         try {
@@ -319,7 +320,7 @@ class SearchService implements ISearchService {
      */
     private async _mapToIcon(filename: string): Promise<string> {
 
-        const webAbsoluteUrl = this._context.pageContext.web.absoluteUrl;
+        const webAbsoluteUrl = this._pageContext.web.absoluteUrl;
 
         try {
             let encodedFileName = filename ? filename.replace(/['']/g, '') : '';
@@ -351,7 +352,7 @@ class SearchService implements ISearchService {
 
         if (matches) {
             matches.map(match => {
-                updatedInputValue = updatedInputValue.replace(match, (<any>window).searchHBHelper.moment(match, "LL", { lang: this._context.pageContext.cultureInfo.currentUICultureName }));
+                updatedInputValue = updatedInputValue.replace(match, (<any>window).searchHBHelper.moment(match, "LL", { lang: this._pageContext.cultureInfo.currentUICultureName }));
             });
         }
 
