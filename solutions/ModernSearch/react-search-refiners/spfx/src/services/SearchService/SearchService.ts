@@ -12,6 +12,7 @@ import { ISearchServiceConfiguration } from '../../models/ISearchServiceConfigur
 import { ITokenService, TokenService } from '../TokenService';
 import { PageContext } from '@microsoft/sp-page-context';
 import { SPHttpClient } from '@microsoft/sp-http';
+import ISynonymTable from '../../models/ISynonym';
 
 class SearchService implements ISearchService {
     private _initialSearchResult: SearchResults = null;
@@ -25,6 +26,7 @@ class SearchService implements ISearchService {
     private _enableQueryRules: boolean;
     private _refiners: IRefinerConfiguration[];
     private _refinementFilters: IRefinementFilter[];
+    private _synonymTable: ISynonymTable;
 
     public get resultsCount(): number { return this._resultsCount; }
     public set resultsCount(value: number) { this._resultsCount = value; }
@@ -49,6 +51,9 @@ class SearchService implements ISearchService {
 
     public set refinementFilters(value: IRefinementFilter[]) { this._refinementFilters = value; }
     public get refinementFilters(): IRefinementFilter[] { return this._refinementFilters; }
+
+    public set synonymTable(value: ISynonymTable) { this._synonymTable = value; }
+    public get synonymTable(): ISynonymTable { return this._synonymTable; }
 
     private _localPnPSetup: SPRest;
 
@@ -97,7 +102,7 @@ class SearchService implements ISearchService {
                 QueryPropertyValueTypeIndex: 3
             }
         }];
-        searchQuery.Querytext = query;
+        searchQuery.Querytext = this._injectSynonyms(query);
 
         // Disable query rules by default if not specified
         searchQuery.EnableQueryRules = this._enableQueryRules ? this._enableQueryRules : false;
@@ -310,7 +315,8 @@ class SearchService implements ISearchService {
             resultSourceId: this.resultSourceId,
             resultsCount: this.resultsCount,
             selectedProperties: this.selectedProperties,
-            sortList: this.sortList
+            sortList: this.sortList,
+            synonymTable: this.synonymTable
         };
     }
 
@@ -383,6 +389,62 @@ class SearchService implements ISearchService {
 
         return refinementQueryConditions;
     }
+
+    // Function to inject synonyms at run-time
+    private _injectSynonyms(query: string): string {
+
+        if (this._synonymTable && Object.keys(this._synonymTable).length > 0) {
+            // Remove complex query parts AND/OR/NOT/ANY/ALL/parenthasis/property queries/exclusions - can probably be improved            
+            const cleanQuery = query.replace(/(-\w+)|(-"\w+.*?")|(-?\w+[:=<>]+\w+)|(-?\w+[:=<>]+".*?")|((\w+)?\(.*?\))|(AND)|(OR)|(NOT)/g, '');
+            const queryParts: string[] = cleanQuery.match(/("[^"]+"|[^"\s]+)/g);
+
+            // code which should modify the current query based on context for each new query
+            if (queryParts) {
+
+                for (let i = 0; i < queryParts.length; i++) {
+                    const key = queryParts[i].toLowerCase();
+                    const value = this._synonymTable[key];
+
+                    if (value) {
+                        // Replace the current query part in the query with all the synonyms
+                        query = query.replace(queryParts[i],
+                            Text.format('({0} OR {1})',
+                                this._formatSynonym(queryParts[i]),
+                                this._formatSynonymsSearchQuery(value)));
+                    }
+                }
+            }
+        }
+        return query;
+    }
+
+    private _formatSynonym(value: string): string {
+        value = value.trim().replace(/"/g, '').trim();
+        value = '"' + value + '"';
+
+        return value;
+    }
+
+    private _formatSynonymsSearchQuery(items: string[]): string {
+        let result = '';
+
+        for (let i = 0; i < items.length; i++) {
+            let item = items[i];
+
+            if (item.length > 0) {
+                item = this._formatSynonym(item);
+
+                result += item;
+
+                if (i < items.length - 1) {
+                    result += ' OR ';
+                }
+            }
+        }
+
+        return result;
+    }
 }
+
 
 export default SearchService;
