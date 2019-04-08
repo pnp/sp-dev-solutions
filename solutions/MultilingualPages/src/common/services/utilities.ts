@@ -2,34 +2,25 @@ export function correctUrl(absoluteUrl:string):string{
   
   let url: string = absoluteUrl;
   let currentHost: string = (window.location.protocol + "//" + window.location.host);
-  let reverseHost: string = 'https://mytakeda.sharepoint.com.rproxy.goskope.com';
-  let normalHost: string = 'https://mytakeda.sharepoint.com';
-  let reversePattern: RegExp = new RegExp(reverseHost,'gi');
-  let normalPattern: RegExp = new RegExp(normalHost,'gi');
 
-  switch(currentHost.toLowerCase()){
+  let reverseProxy = '.rproxy.goskope.com';
+  let currentReverse = currentHost.toLowerCase().indexOf(reverseProxy) != -1 ? true : false;
 
-    case reverseHost:
-      if(url.toLowerCase().indexOf(reverseHost) != -1){
-        return url;
-      }
-      else {
-        return url.replace(normalPattern,reverseHost);
-      }
-
-    case normalHost:
-      if(url.toLowerCase().indexOf(reverseHost) == -1){
-        return url;
-      }
-      else {
-        return url.replace(reversePattern,normalHost);
-      }
-
-      default:
-        return url;
-
+  if (currentReverse) {
+    if (url.toLowerCase().indexOf(reverseProxy) !== -1) {
+      return url;
+    }
+    else {
+      return url.replace(currentHost, currentHost + reverseProxy);
+    }
+  } else {
+    if (url.toLowerCase().indexOf(reverseProxy) === -1) {
+      return url;
+    }
+    else {
+      return url.replace(reverseProxy, "");
+    }
   }
-
 }
 
 export function getQueryStringValue(name:string):string{
