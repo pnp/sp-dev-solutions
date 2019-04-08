@@ -1,6 +1,6 @@
 export interface ISynonymFieldConfiguration {
-    term: string;
-    synonyms: string;
-    twoways: boolean;
+    Term: string;
+    Synonyms: string;
+    TwoWays: boolean;
 }
 

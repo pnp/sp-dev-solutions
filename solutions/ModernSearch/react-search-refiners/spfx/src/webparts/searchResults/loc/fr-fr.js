@@ -80,7 +80,12 @@ define([], function() {
     "Synonyms": {
       "EditSynonymLabel": "Modifier les synonymes",
       "SynonymListDescription": "Inclure tous les synonymes utilisés pour la recherche. Chaque terme sera bonifié avec tous les synonymes associés au moment de lancer la requête au serveur. Si un synonyme contient plus d'un mot, celui-ci doit être encapsulé par des double guillements.",
-      "SynonymPropertyPanelFieldLabel": "Liste des synonymes"
+      "SynonymPropertyPanelFieldLabel": "Configurer les synonymes",
+      "SynonymListTerm": "Terme",
+      "SynonymListSynonyms": "Synonymes",
+      "SynonymIsTwoWays": "Bidirectionnel?",
+      "SynonymListSynonymsExemple": "Portable, \"Tour et écran\"",
+      "SynonymListTermExemple": "Ordinateur"
     },
     "TermNotFound": "(Terme avec l'ID '{0}' non trouvé)",
     "UseDefaultSearchQueryKeywordsFieldLabel": "Utiliser une requête initiale",

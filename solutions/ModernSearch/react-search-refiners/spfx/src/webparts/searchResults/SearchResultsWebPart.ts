@@ -53,6 +53,7 @@ import IRefinerConfiguration from '../../models/IRefinerConfiguration';
 import { SearchComponentType } from '../../models/SearchComponentType';
 import ISearchResultSourceData from '../../models/ISearchResultSourceData';
 import IPaginationSourceData from '../../models/IPaginationSourceData';
+import ISynonymTable from '../../models/ISynonym';
 import * as update from 'immutability-helper';
 
 const LOG_SOURCE: string = '[SearchResultsWebPart_{0}]';
@@ -72,7 +73,8 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
     private _codeRenderers: IRenderer[];
     private _searchContainer: JSX.Element;
     private _queryTemplate: string;
-    private _synonymTable: { [key: string]: string[] };
+    private _synonymTable: ISynonymTable;
+    
 
     /**
      * The template to display at render time
@@ -266,32 +268,34 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
         });
     }
 
-    private _convertToSynonymTable(synonymList: ISynonymFieldConfiguration[]): { [key: string]: string[] } {
-        let synonymsTable: { [key: string]: string[] } = {};
+    private _convertToSynonymTable(synonymList: ISynonymFieldConfiguration[]): ISynonymTable {
+        let synonymsTable: ISynonymTable = {};
 
-        synonymList.forEach(item => {
-            const currentTerm = item.term.toLowerCase();
-            const currentSynonyms = this._splitSynonyms(item.synonyms);
-
-            //add to array
-            synonymsTable[currentTerm] = currentSynonyms;
-
-            if (item.twoways) {
-                // Loop over the list of synonyms
-                let tempSynonyms: string[] = currentSynonyms;
-                tempSynonyms.push(currentTerm.trim());
-
-                currentSynonyms.forEach(s => {
-                    synonymsTable[s.toLowerCase().trim()] = tempSynonyms.filter( f => { return f !== s; });
-                });
-            }
-        });
-
+        if (synonymList)
+        {
+            synonymList.forEach(item => {
+                const currentTerm = item.Term.toLowerCase();
+                const currentSynonyms = this._splitSynonyms(item.Synonyms);
+    
+                //add to array
+                synonymsTable[currentTerm] = currentSynonyms;
+    
+                if (item.TwoWays) {
+                    // Loop over the list of synonyms
+                    let tempSynonyms: string[] = currentSynonyms;
+                    tempSynonyms.push(currentTerm.trim());
+    
+                    currentSynonyms.forEach(s => {
+                        synonymsTable[s.toLowerCase().trim()] = tempSynonyms.filter(f => { return f !== s; });
+                    });
+                }
+            });
+        }
         return synonymsTable;
     }
 
     private _splitSynonyms(value: string) {
-        return value.split(",").map(v => { return v.toLowerCase().trim().replace(/\"/g, ""); } );
+        return value.split(",").map(v => { return v.toLowerCase().trim().replace(/\"/g, ""); });
     }
 
     private _convertToSortList(sortList: ISortFieldConfiguration[]): Sort[] {
@@ -784,29 +788,29 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
                 key: 'synonymList',
                 enableSorting: false,
                 panelHeader: strings.Synonyms.EditSynonymLabel,
-                panelDescription: strings.Synonyms.SynonymListDescription, 
-                label: strings.Synonyms.SynonymPropertyPanelFieldLabel, 
+                panelDescription: strings.Synonyms.SynonymListDescription,
+                label: strings.Synonyms.SynonymPropertyPanelFieldLabel,
                 value: this.properties.synonymList,
                 fields: [
                     {
-                        id: 'term',
-                        title: "Term",
+                        id: 'Term',
+                        title: strings.Synonyms.SynonymListTerm,
                         type: CustomCollectionFieldType.string,
                         required: true,
-                        placeholder: 'Computer'
+                        placeholder: strings.Synonyms.SynonymListTermExemple
                     },
                     {
-                        id: 'synonyms',
-                        title: "Synonyms",
+                        id: 'Synonyms',
+                        title: strings.Synonyms.SynonymListSynonyms,
                         type: CustomCollectionFieldType.string,
                         required: true,
-                        placeholder: 'Laptop, \"Desktop with monitor\"'
+                        placeholder: strings.Synonyms.SynonymListSynonymsExemple 
                     },
                     {
-                        id: 'twoways',
-                        title: "Two-way?",
+                        id: 'TwoWays',
+                        title: strings.Synonyms.SynonymIsTwoWays,
                         type: CustomCollectionFieldType.boolean,
-                        required: false,
+                        required: false
                     }
                 ]
             })

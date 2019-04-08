@@ -10,7 +10,6 @@ declare interface ISearchResultsWebPartStrings {
     EnableLocalizationLabel: string;
     EnableLocalizationOnLabel: string;
     EnableLocalizationOffLabel: string;
-    SynonymJSON: string;
     MaxResultsCount: string;
     NoResultMessage: string;
     SortableFieldsLabel: string;
@@ -83,6 +82,11 @@ declare interface ISearchResultsWebPartStrings {
         EditSynonymLabel: string;
         SynonymListDescription: string;
         SynonymPropertyPanelFieldLabel: string;
+        SynonymListTerm: string;
+        SynonymListSynonyms: string;
+        SynonymIsTwoWays: string;
+        SynonymListSynonymsExemple: string;
+        SynonymListTermExemple: string;
     },
     ResultTypes: {
         ResultTypeslabel: string;

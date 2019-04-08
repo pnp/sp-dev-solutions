@@ -12,6 +12,7 @@ import LocalizationHelper from '../../helpers/LocalizationHelper';
 import "@pnp/polyfill-ie11";
 import IRefinerConfiguration from '../../models/IRefinerConfiguration';
 import { ISearchServiceConfiguration } from '../../models/ISearchServiceConfiguration';
+import ISynonymTable from '../../models/ISynonym';
 
 declare var System: any;
 
@@ -26,7 +27,7 @@ class SearchService implements ISearchService {
     private _enableQueryRules: boolean;
     private _refiners: IRefinerConfiguration[];
     private _refinementFilters: IRefinementFilter[];
-    private _synonymTable: { [key:string]: string[] };
+    private _synonymTable: ISynonymTable;
 
     public get resultsCount(): number { return this._resultsCount; }
     public set resultsCount(value: number) { this._resultsCount = value; }
@@ -52,8 +53,8 @@ class SearchService implements ISearchService {
     public set refinementFilters(value: IRefinementFilter[]) { this._refinementFilters = value; }
     public get refinementFilters(): IRefinementFilter[] { return this._refinementFilters; }
 
-    public set synonymTable(value: { [key:string]: string[] }) { this._synonymTable = value; }
-    public get synonymTable(): { [key:string]: string[] } { return this._synonymTable; }
+    public set synonymTable(value: ISynonymTable) { this._synonymTable = value; }
+    public get synonymTable(): ISynonymTable { return this._synonymTable; }
 
     private _localPnPSetup: SPRest;
 
@@ -391,27 +392,29 @@ class SearchService implements ISearchService {
 
     // Function to inject synonyms at run-time
     private _injectSynonyms(query: string): string {
-        // Remove complex query parts AND/OR/NOT/ANY/ALL/parenthasis/property queries/exclusions - can probably be improved            
-        const cleanQuery = query.replace(/(-\w+)|(-"\w+.*?")|(-?\w+[:=<>]+\w+)|(-?\w+[:=<>]+".*?")|((\w+)?\(.*?\))|(AND)|(OR)|(NOT)/g, '');
-        const queryParts: string[] = cleanQuery.match(/("[^"]+"|[^"\s]+)/g);
 
-        // code which should modify the current query based on context for each new query
-        if (queryParts && this._synonymTable) {
+        if (this._synonymTable && Object.keys(this._synonymTable).length > 0) {
+            // Remove complex query parts AND/OR/NOT/ANY/ALL/parenthasis/property queries/exclusions - can probably be improved            
+            const cleanQuery = query.replace(/(-\w+)|(-"\w+.*?")|(-?\w+[:=<>]+\w+)|(-?\w+[:=<>]+".*?")|((\w+)?\(.*?\))|(AND)|(OR)|(NOT)/g, '');
+            const queryParts: string[] = cleanQuery.match(/("[^"]+"|[^"\s]+)/g);
 
-            for (let i = 0; i < queryParts.length; i++) {
-                const key = queryParts[i].toLowerCase(); 
-                const value = this._synonymTable[key]; 
+            // code which should modify the current query based on context for each new query
+            if (queryParts) {
 
-                if (value) {
-                    // Replace the current query part in the query with all the synonyms
-                    query = query.replace(queryParts[i],
-                        Text.format('({0} OR {1})',
-                            this._formatSynonym(queryParts[i]),
-                            this._formatSynonymsSearchQuery(value)));
+                for (let i = 0; i < queryParts.length; i++) {
+                    const key = queryParts[i].toLowerCase();
+                    const value = this._synonymTable[key];
+
+                    if (value) {
+                        // Replace the current query part in the query with all the synonyms
+                        query = query.replace(queryParts[i],
+                            Text.format('({0} OR {1})',
+                                this._formatSynonym(queryParts[i]),
+                                this._formatSynonymsSearchQuery(value)));
+                    }
                 }
             }
         }
-
         return query;
     }
 
