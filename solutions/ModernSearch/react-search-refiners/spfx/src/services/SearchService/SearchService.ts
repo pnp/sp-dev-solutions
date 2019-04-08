@@ -5,20 +5,18 @@ import { sp, SearchQuery, SearchResults, SPRest, Sort, SortDirection, SearchSugg
 import { Logger, LogLevel, ConsoleListener } from '@pnp/logging';
 import { IWebPartContext } from '@microsoft/sp-webpart-base';
 import { Text } from '@microsoft/sp-core-library';
-import { sortBy, groupBy } from '@microsoft/sp-lodash-subset';
-const mapKeys: any = require('lodash/mapKeys');
-const mapValues: any = require('lodash/mapValues');
+import { sortBy } from '@microsoft/sp-lodash-subset';
 import LocalizationHelper from '../../helpers/LocalizationHelper';
 import "@pnp/polyfill-ie11";
 import IRefinerConfiguration from '../../models/IRefinerConfiguration';
 import { ISearchServiceConfiguration } from '../../models/ISearchServiceConfiguration';
-
-declare var System: any;
+import { ITokenService, TokenService } from '../TokenService';
 
 class SearchService implements ISearchService {
     private _initialSearchResult: SearchResults = null;
     private _resultsCount: number;
     private _context: IWebPartContext;
+    private _tokenService: ITokenService;
     private _selectedProperties: string[];
     private _queryTemplate: string;
     private _resultSourceId: string;
@@ -55,6 +53,7 @@ class SearchService implements ISearchService {
 
     public constructor(webPartContext: IWebPartContext) {
         this._context = webPartContext;
+        this._tokenService = new TokenService(webPartContext);
 
         // Setup the PnP JS instance
         const consoleListener = new ConsoleListener();
@@ -108,7 +107,7 @@ class SearchService implements ISearchService {
 
         // To be able to use search query variable according to the current context
         // http://www.techmikael.com/2015/07/sharepoint-rest-do-support-query.html
-        searchQuery.QueryTemplate = this._queryTemplate;
+        searchQuery.QueryTemplate = await this._tokenService.replaceQueryVariables(this._queryTemplate);
 
         searchQuery.RowLimit = this._resultsCount ? this._resultsCount : 50;
         searchQuery.SelectProperties = this._selectedProperties;
