@@ -251,7 +251,7 @@ export default class SearchBoxWebPart extends BaseClientSideWebPart<ISearchBoxWe
         if (Environment.type === EnvironmentType.Local ) {
           this._searchService = new MockSearchService();
         } else {
-          this._searchService = new SearchService(this.context);        
+          this._searchService = new SearchService(this.context.pageContext, this.context.spHttpClient);        
         return "";
       }
     }

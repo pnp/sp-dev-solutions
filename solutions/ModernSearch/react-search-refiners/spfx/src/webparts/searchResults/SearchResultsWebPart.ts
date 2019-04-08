@@ -1,6 +1,6 @@
 ﻿import * as React from 'react';
 import * as ReactDom from 'react-dom';
-import { Version, Text, Environment, EnvironmentType, DisplayMode, Log } from '@microsoft/sp-core-library';
+import { Version, Text, Environment, EnvironmentType, DisplayMode } from '@microsoft/sp-core-library';
 import {
     BaseClientSideWebPart,
     IPropertyPaneConfiguration,
@@ -36,14 +36,13 @@ import MockTaxonomyService from '../../services/TaxonomyService/MockTaxonomyServ
 import ISearchResultsContainerProps from './components/SearchResultsContainer/ISearchResultsContainerProps';
 import { Placeholder, IPlaceholderProps } from '@pnp/spfx-controls-react/lib/Placeholder';
 import { PropertyFieldCollectionData, CustomCollectionFieldType } from '@pnp/spfx-property-controls/lib/PropertyFieldCollectionData';
-import { SPHttpClientResponse, SPHttpClient } from '@microsoft/sp-http';
 import { SortDirection, Sort } from '@pnp/sp';
 import { ISortFieldConfiguration, ISortFieldDirection } from '../../models/ISortFieldConfiguration';
 import { ISynonymFieldConfiguration } from '../../models/ISynonymFieldConfiguration';
 import { ResultTypeOperator } from '../../models/ISearchResultType';
 import IResultService from '../../services/ResultService/IResultService';
 import { ResultService, IRenderer } from '../../services/ResultService/ResultService';
-import { IDynamicDataCallables, IDynamicDataPropertyDefinition, IDynamicDataSource } from '@microsoft/sp-dynamic-data';
+import { IDynamicDataCallables, IDynamicDataPropertyDefinition } from '@microsoft/sp-dynamic-data';
 import { IRefinementFilter } from '../../models/ISearchResult';
 import IDynamicDataService from '../../services/DynamicDataService/IDynamicDataService';
 import { DynamicDataService } from '../../services/DynamicDataService/DynamicDataService';
@@ -55,8 +54,6 @@ import ISearchResultSourceData from '../../models/ISearchResultSourceData';
 import IPaginationSourceData from '../../models/IPaginationSourceData';
 import ISynonymTable from '../../models/ISynonym';
 import * as update from 'immutability-helper';
-
-const LOG_SOURCE: string = '[SearchResultsWebPart_{0}]';
 
 export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchResultsWebPartProps> implements IDynamicDataCallables {
 
@@ -72,9 +69,7 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
     private _paginationSourceData: DynamicProperty<IPaginationSourceData>;
     private _codeRenderers: IRenderer[];
     private _searchContainer: JSX.Element;
-    private _queryTemplate: string;
     private _synonymTable: ISynonymTable;
-    
 
     /**
      * The template to display at render time
@@ -87,8 +82,6 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
     }
 
     public async render(): Promise<void> {
-        this._queryTemplate = await this.replaceQueryVariables(this.properties.queryTemplate);
-
         // Determine the template content to display
         // In the case of an external template is selected, the render is done asynchronously waiting for the content to be fetched
         await this._getTemplateContent();
@@ -129,7 +122,7 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
         // Configure the provider before the query according to our needs
         this._searchService = update(this._searchService, {
             resultsCount: { $set: this.properties.maxResultsCount },
-            queryTemplate: { $set: this._queryTemplate },
+            queryTemplate: { $set: this.properties.queryTemplate },
             resultSourceId: { $set: this.properties.resultSourceId },
             sortList: { $set: this._convertToSortList(this.properties.sortList) },
             enableQueryRules: { $set: this.properties.enableQueryRules },
@@ -226,7 +219,7 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
         } else {
             this._taxonomyService = new TaxonomyService(this.context.pageContext.site.absoluteUrl);
             this._templateService = new TemplateService(this.context.spHttpClient, this.context.pageContext.cultureInfo.currentUICultureName);
-            this._searchService = new SearchService(this.context);
+            this._searchService = new SearchService(this.context.pageContext, this.context.spHttpClient);
         }
 
         this._resultService = new ResultService();
@@ -605,67 +598,6 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
         } catch (error) {
             return Text.format(strings.ErrorTemplateResolve, error);
         }
-    }
-
-    private async replaceQueryVariables(queryTemplate: string) {
-        const pagePropsVariables = /\{(?:Page)\.(.*?)\}/gi;
-        let reQueryTemplate = queryTemplate;
-        let match = pagePropsVariables.exec(reQueryTemplate);
-        let item = null;
-
-        if (match != null) {
-            let url = this.context.pageContext.web.absoluteUrl + `/_api/web/GetList(@v1)/RenderExtendedListFormData(itemId=${this.context.pageContext.listItem.id},formId='viewform',mode='2',options=7)?@v1='${this.context.pageContext.list.serverRelativeUrl}'`;
-            var client = this.context.spHttpClient;
-            try {
-                const response: SPHttpClientResponse = await client.post(url, SPHttpClient.configurations.v1, {});
-                if (response.ok) {
-                    let result = await response.json();
-                    let itemRow = JSON.parse(result.value);
-                    item = itemRow.Data.Row[0];
-                }
-                else {
-                    throw response.statusText;
-                }
-            } catch (error) {
-                Log.error(Text.format(LOG_SOURCE, "RenderExtendedListFormData"), error);
-            }
-
-            while (match !== null && item != null) {
-                // matched variable
-                let pageProp = match[1];
-                let itemProp;
-                if (pageProp.indexOf(".Label") !== -1 || pageProp.indexOf(".TermID") !== -1) {
-                    let term = pageProp.split(".");
-
-                    // Handle multi or single values
-                    if (item[term[0]].length > 0) {
-                        itemProp = item[term[0]].map(e => { return e[term[1]]; }).join(',');
-                    } else {
-                        itemProp = item[term[0]][term[1]];
-                    }
-                } else {
-                    itemProp = item[pageProp];
-                }
-                if (itemProp && itemProp.indexOf(' ') !== -1) {
-                    // add quotes to multi term values
-                    itemProp = `"${itemProp}"`;
-                }
-                queryTemplate = queryTemplate.replace(match[0], itemProp);
-                match = pagePropsVariables.exec(reQueryTemplate);
-            }
-        }
-
-
-        const currentDate = /\{CurrentDate\}/gi;
-        const currentMonth = /\{CurrentMonth\}/gi;
-        const currentYear = /\{CurrentYear\}/gi;
-
-        const d = new Date();
-        queryTemplate = queryTemplate.replace(currentDate, d.getDate().toString());
-        queryTemplate = queryTemplate.replace(currentMonth, (d.getMonth() + 1).toString());
-        queryTemplate = queryTemplate.replace(currentYear, d.getFullYear().toString());
-
-        return queryTemplate;
     }
 
     /**

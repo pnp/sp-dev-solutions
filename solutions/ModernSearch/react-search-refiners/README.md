@@ -1,6 +1,6 @@
 # SharePoint Framework modern search Web Parts
 
-![Version](https://img.shields.io/badge/version-3.1.1-green.svg)
+![Version](https://img.shields.io/badge/version-3.2.0-green.svg)
 
 ## Summary
 This solution allows you to build user friendly SharePoint search experiences using SPFx in the modern interface. The main features include:
@@ -259,13 +259,13 @@ The following out of the box [query variables](https://docs.microsoft.com/en-us/
 #### Custom query variables
 
 The following custom query variables are supported:
-
-* {Page.&lt;column&gt;} - where column is the internal name of the column.
-   * When used with taxonomy columns, use `{Page.Column.Label}` or `{Page.Column.TermID}`
-* {CurrentYear} - Todays's date four digits, 2018
-* {CurrentMonth} - Today's month, 1-12
-* {CurrentDate} - Today's date, 1-31
-   * Sample query template: {searchTerms} Write>2010-{CurrentMonth}-{CurrentDate}
+|**Query variable**|**Definition**|
+|:-----|:-----|
+|{Page.&lt;FieldName&gt;}  <br/> | The value of a field on the page from where the query was issued. For example, if the page from where the query was issued contained a site column named "ContentOwner," specifying {Page.ContentOwner} would allow you to query for the value of "ContentOwner." FieldName is the internal name of the field. When used with taxonomy columns, use `{Page.<FieldName>.Label}` or `{Page.<FieldName>.TermID}` <br/> |
+|{CurrentYear}  <br/> | Todays's date four digits, 2018 <br/> |
+|{CurrentMonth}  <br/> | Today's month, 1-12 <br/> |
+|{CurrentDate}  <br/> | Today's date, 1-31 <br/> |
+|{QueryString.&lt;ParameterName&gt;} <br/> | A value from a query string in the URL of the current page. For example, if the URL of the current page contains a query string such as ItemNumber=567, you could obtain the value 567 by specifying {QueryString.ItemNumber}. <br/> |
 
 #### Best bets
 
@@ -381,6 +381,7 @@ Version|Date|Comments
 3.0.4.0 | Mar 21, 2019 | Fixed loading of Handlebars helpers when having multiple search parts on a page
 3.0.5.0 | Mar 26, 2019 | Fixed recreating SearchService on each render
 3.1.0.0 | Mar 30, 2019 | Added date range and multi value refiner templates
+3.2.0.0 | Apr 08, 2019 | Added support for QueryString token
 
 ## Important notice on upgrading the solution from pre v2.2.0.0
 **Due to code restucturing we have hit an edge case which impacts upgrades from previous versions. To solve the issue go to `https://<tenant>.sharepoint.com/sites/<appcatalog>/Lists/ComponentManifests` and remove the entries for SearchBox and Search Results, and then upload the .sppkg for the new release.**
