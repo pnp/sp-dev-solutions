@@ -72,6 +72,7 @@ export class MultilingualButton extends React.Component<IMultilingualButtonProps
   }
 
   private init(): void {
+    if(this.props.rootFolder) {return;}
     let pageLanguages: IPageVariants[] = [];
     let pageLanguagesOptions: ILanguageSelectOption[] = [];
     let defaultOption: string = "";
@@ -123,7 +124,7 @@ export class MultilingualButton extends React.Component<IMultilingualButtonProps
         defaultOption: defaultOption
       });
     } catch (err) {
-      Logger.write(`${err} - ${this.LOG_SOURCE}`, LogLevel.Error);
+      Logger.write(`${err} - ${this.LOG_SOURCE} (init)`, LogLevel.Error);
     }
     return;
   }
@@ -140,7 +141,7 @@ export class MultilingualButton extends React.Component<IMultilingualButtonProps
         document.location.href = urlRedirect;
       }
     } catch (err) {
-      Logger.write(`${err} - ${this.LOG_SOURCE}`, LogLevel.Error);
+      Logger.write(`${err} - ${this.LOG_SOURCE} (changePage)`, LogLevel.Error);
     }
   }
 
@@ -171,7 +172,7 @@ export class MultilingualButton extends React.Component<IMultilingualButtonProps
       }
       document.location.href = urlRedirect;
     } catch (err) {
-      Logger.write(`${err} - ${this.LOG_SOURCE}`, LogLevel.Error);
+      Logger.write(`${err} - ${this.LOG_SOURCE} (movePage)`, LogLevel.Error);
       this.setState({
         movingPage: false
       });
@@ -236,7 +237,7 @@ export class MultilingualButton extends React.Component<IMultilingualButtonProps
           dialogContentProps={{
             type: DialogType.normal,
             title: "Confirm Move Page to Language Folder",
-            subText: `This action will move this page from its current location to the ${this.state.movePageLocation} language folder, making it unavailable from here.  If this is not what you intended, or you are not clear on the consequences of this move, please cancel and ask for BST support.`
+            subText: `This action will move this page from its current location to the ${this.state.movePageLocation} language folder, making it unavailable from here.  If this is not what you intended, or you are not clear on the consequences of this move, please cancel and ask for support.`
           }}
           modalProps={{
             titleAriaId: 'promptMoveLabelId',

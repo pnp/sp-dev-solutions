@@ -114,7 +114,8 @@ MultilingualPages | Dave Feldman (Takeda) - [@bostonmusicdave](https://twitter.c
 
 Version|Date|Comments
 -------|----|--------
-1.6.1|June 29, 2018|Initial release
+1.6.2|April 9, 2019|Generalize move page message.
+1.6.1|April 8, 2019|Initial release
 
 ## Disclaimer
 
