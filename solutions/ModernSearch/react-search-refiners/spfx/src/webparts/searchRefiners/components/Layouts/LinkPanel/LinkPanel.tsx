@@ -48,6 +48,7 @@ export default class LinkPanel extends React.Component<ILinkPanelProps, ILinkPan
             // Get group name
             let groupName = refinementResult.FilterName;
             const configuredFilter = this.props.refinersConfiguration.filter(e => { return e.refinerName === refinementResult.FilterName;});
+            const showExpanded = configuredFilter.length > 0 && configuredFilter[0].showExpanded ? configuredFilter[0].showExpanded : false;
             groupName = configuredFilter.length > 0 && configuredFilter[0].displayValue ? configuredFilter[0].displayValue : groupName;
 
             groups.push({
@@ -56,8 +57,7 @@ export default class LinkPanel extends React.Component<ILinkPanelProps, ILinkPan
                 count: 1,
                 startIndex: i,
                 isDropEnabled: true,
-                
-                isCollapsed: this.state.expandedGroups.indexOf(groupName) === -1 ? true : false,
+                isCollapsed: this.state.expandedGroups.indexOf(groupName) === -1 && showExpanded !== true ? true : false
             });
 
             // Get selected values for this specfic refiner

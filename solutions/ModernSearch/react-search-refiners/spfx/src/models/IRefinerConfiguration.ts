@@ -17,6 +17,11 @@ interface IRefinerConfiguration {
      * The selected template for this refiner
      */
     template: RefinerTemplateOption;
+
+    /**
+     * Allow refiners to be expanded by default
+     */
+    showExpanded: boolean;
 }
 
 export default IRefinerConfiguration;
