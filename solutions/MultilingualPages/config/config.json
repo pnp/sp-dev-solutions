@@ -1,0 +1,27 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/config.2.0.schema.json",
+  "version": "2.0",
+  "bundles": {
+    "multilingual-extension-application-customizer": {
+      "components": [
+        {
+          "entrypoint": "./lib/extensions/multilingualExtension/MultilingualExtensionApplicationCustomizer.js",
+          "manifest": "./src/extensions/multilingualExtension/MultilingualExtensionApplicationCustomizer.manifest.json"
+        }
+      ]
+    },
+    "multilingual-redirector-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/multilingualRedirector/MultilingualRedirectorWebPart.js",
+          "manifest": "./src/webparts/multilingualRedirector/MultilingualRedirectorWebPart.manifest.json"
+        }
+      ]
+    }
+  },
+  "externals": {},
+  "localizedResources": {
+    "MultilingualExtensionApplicationCustomizerStrings": "lib/extensions/multilingualExtension/loc/{locale}.js",
+    "MultilingualRedirectorWebPartStrings": "lib/webparts/multilingualRedirector/loc/{locale}.js"
+  }
+}

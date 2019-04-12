@@ -1,0 +1,115 @@
+.linkPicker {
+  & [role="navigation"] {
+      width: 210px;
+      min-height: 100%;
+      padding-top: 60px;
+      box-sizing: border-box;
+      border-top: 40px solid #F4F4F4;
+      border-right: 2px solid #F4F4F4;
+      & a {
+          width: 100%;
+          &:hover,
+          &:focus {
+              text-decoration: none;
+          }
+      }
+  }
+  & .sourceType {
+      height: 100%;
+  }
+  & .tabs {
+      position: absolute;
+      left: 250px;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      &>div {
+          overflow-y: auto;
+      }
+      &>div,
+      & iframe {
+          height: 100%;
+          width: 97%;
+          border: none;
+      }
+      & .linkInsert {
+          padding-left: 30px;
+          box-sizing: border-box;
+          border-top: 40px solid #F4F4F4;
+          border-right: 2px solid #F4F4F4;
+          & label:after {
+              content: ' *';
+              color: #a80000;
+          }
+      }
+      & textarea {
+          resize: none;
+          line-height: 17px;
+          overflow: auto;
+          min-height: 60px;
+          max-width: 639px;
+          width: 100%;
+          padding: 6px 12px 0 12px;
+          border: solid 1px #C8C8C8;
+          font-family: "Segoe UI WestEuropean", "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif;
+      }
+      & .buttons {
+          position: absolute;
+          bottom: 10px;
+          right: 10px;
+          & button {
+              margin-right: 20px;
+          }
+      }
+      & .imageCont {
+          width: 100%;
+          display: -webkit-box;
+          display: -ms-flexbox;
+          display: flex;
+          -ms-flex-wrap: wrap;
+          flex-wrap: wrap;
+          padding: 10px;
+          padding-left: 30px;
+          box-sizing: border-box;
+          border-top: 40px solid #f4f4f4;
+          border-right: 2px solid #f4f4f4;
+          & .imageItem {
+              width: 158px;
+              height: 158px;
+              cursor: pointer;
+              overflow: hidden;
+              border: 1px #fff solid;
+              display: block;
+              padding: 0;
+              text-align: center;
+              outline: 1px #eaeaea solid;
+              margin-right: 10px;
+              margin-bottom: 10px;
+              position: relative;
+              &:hover {
+                  outline: 2px #c8c8c8 solid;
+              }
+              &[isSelected] {
+                  outline: 2px #767676 solid;
+              }
+              & img {
+                  width: 100%;
+              }
+              & p {
+                  text-align: left;
+                  position: absolute;
+                  bottom: -14px;
+                  opacity: 0.95;
+                  border-top: 1px solid #EAEAEA;
+                  min-height: 35px;
+                  width: 158px;
+                  padding: 4px 6px 0;
+                  background-color: #FFFFFF;
+                  white-space: nowrap;
+                  text-overflow: ellipsis;
+                  overflow: hidden;
+              }
+          }
+      }
+  }
+}

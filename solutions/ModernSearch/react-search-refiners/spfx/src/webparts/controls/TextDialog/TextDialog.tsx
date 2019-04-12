@@ -11,7 +11,7 @@ import 'brace';
 import 'brace/mode/html';
 import 'brace/theme/monokai';
 import 'brace/ext/language_tools';
-import { Link } from 'office-ui-fabric-react';
+import { Link } from 'office-ui-fabric-react/lib/Link';
 
 export default class TextDialog extends React.Component<ITextDialogProps, ITextDialogState> {
 

@@ -1,5 +1,4 @@
-import { ISearchResults, IRefinementFilter } from '../../models/ISearchResult';
-import { Sort } from '@pnp/sp';
+import { ISearchResults } from '../../models/ISearchResult';
 import { ISearchServiceConfiguration } from '../../models/ISearchServiceConfiguration';
 
 interface ISearchService extends ISearchServiceConfiguration {
