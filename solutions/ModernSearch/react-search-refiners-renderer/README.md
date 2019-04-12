@@ -64,3 +64,5 @@ By registering a field-name in the 'customFields' value, you may expose them to 
 ### Using the Persona renderer
 In order to make the persona-renderer work as is when installing the ready-made package, you need to fetch the following properties:
 PrefferedName,WorkEmail,WorkPhone,JobTitle,OfficeNumber,Title,PictureURL,FirstName,LastName,userName,Path
+
+<img src="https://telemetry.sharepointpnp.com/sp-dev-solutions/solutions/ModernSearch/react-search-refiners-renderer" />
