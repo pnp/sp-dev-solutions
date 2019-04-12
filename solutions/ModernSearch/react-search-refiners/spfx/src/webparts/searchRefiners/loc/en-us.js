@@ -28,6 +28,7 @@ define([], function() {
       "AvailableRefinersLabel": "Available refiners",
       "ApplyFiltersLabel": "Apply",
       "ClearFiltersLabel": "Clear",
+      "ShowExpanded": "Expand filter by default",
       "Templates": {
         "RefinementItemTemplateLabel": "Default refinement item",
         "MutliValueRefinementItemTemplateLabel": "Multi-value refinement item",

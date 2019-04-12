@@ -195,6 +195,11 @@ export default class SearchRefinersWebPart extends BaseClientSideWebPart<ISearch
                   text: strings.Refiners.Templates.DateRangeRefinementItemLabel,
                 }
               ]
+          },
+          {
+            id: 'showExpanded',
+            title: strings.Refiners.ShowExpanded,
+            type: CustomCollectionFieldType.boolean
           }
         ]
       }),
@@ -327,18 +332,20 @@ export default class SearchRefinersWebPart extends BaseClientSideWebPart<ISearch
         {
             refinerName: "Created",
             displayValue: "Created Date",
-            template: RefinerTemplateOption.CheckBox
-      
+            template: RefinerTemplateOption.CheckBox,
+            showExpanded: false
         },
         {
             refinerName: "Size",
             displayValue: "Size of the file",
-            template: RefinerTemplateOption.CheckBox
+            template: RefinerTemplateOption.CheckBox,
+            showExpanded: false
         },
         {
             refinerName: "owstaxidmetadataalltagsinfo",
             displayValue: "Tags",
-            template: RefinerTemplateOption.CheckBox
+            template: RefinerTemplateOption.CheckBox,
+            showExpanded: false
         }
       ];
     }
