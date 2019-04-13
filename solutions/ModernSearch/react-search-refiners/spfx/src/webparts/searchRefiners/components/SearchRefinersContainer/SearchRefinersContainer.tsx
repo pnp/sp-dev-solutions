@@ -6,10 +6,10 @@ import { WebPartTitle } from "@pnp/spfx-controls-react/lib/WebPartTitle";
 import Vertical from '../Layouts/Vertical/Vertical';
 import LinkPanel from '../Layouts/LinkPanel/LinkPanel';
 import RefinersLayoutOption from '../../../../models/RefinersLayoutOptions';
-import { MessageBarType, MessageBar } from 'office-ui-fabric-react';
+import { MessageBarType, MessageBar } from 'office-ui-fabric-react/lib/MessageBar';
 import * as strings from 'SearchRefinersWebPartStrings';
 import { ISearchRefinersContainerState } from './ISearchRefinersContainerState';
-import { IRefinementFilter, IRefinementValue, RefinementOperator, IRefinementResult } from '../../../../models/ISearchResult';
+import { IRefinementFilter, IRefinementValue, RefinementOperator } from '../../../../models/ISearchResult';
 import * as update from 'immutability-helper';
 import RefinerTemplateOption from '../../../../models/RefinerTemplateOption';
 
@@ -58,6 +58,8 @@ export default class SearchRefinersContainer extends React.Component<ISearchRefi
                               shouldResetFilters={this.state.shouldResetFilters}
                               onRemoveAllFilters={this.onRemoveAllFilters}
                               hasSelectedValues={this.state.selectedRefinementFilters.length > 0 ? true : false }
+                              language={this.props.language}
+                              selectedFilters={this.state.selectedRefinementFilters}
                             />;
             break;
 
@@ -76,13 +78,14 @@ export default class SearchRefinersContainer extends React.Component<ISearchRefi
                               shouldResetFilters={this.state.shouldResetFilters}
                               onRemoveAllFilters={this.onRemoveAllFilters}
                               hasSelectedValues={this.state.selectedRefinementFilters.length > 0 ? true : false }
-                              selectedFilterValues={selectedValues}                              
+                              selectedFilterValues={selectedValues}
+                              language={this.props.language}
+                              selectedFilters={this.state.selectedRefinementFilters}                            
                             />;
           break;
       }
     }
     
-
     return (
       <div className={ styles.searchRefiners }>
         {renderWebPartTitle}
@@ -93,10 +96,21 @@ export default class SearchRefinersContainer extends React.Component<ISearchRefi
 
   public componentWillReceiveProps(nextProps: ISearchRefinersContainerProps) {
 
-      // Reset the flag every time we receive new refinement results except if there is no refinement results
-      this.setState({
-        shouldResetFilters: false
-      });
+      // If a new query has been entered, we reset all filters
+      if (nextProps.query !== this.props.query) {
+
+        this.setState({
+          shouldResetFilters: true,
+          selectedRefinementFilters: []
+        });
+
+      } else {
+
+        // Reset the flag every time we receive new refinement results
+        this.setState({
+          shouldResetFilters: false
+        });
+      }
 
       let availableFilters = nextProps.availableRefiners;
 
@@ -112,8 +126,21 @@ export default class SearchRefinersContainer extends React.Component<ISearchRefi
 
         // If selected but there is no more result for this refiner, we manually add a dummy entry to available filters
         if (isSelected && nextProps.availableRefiners.filter(availableRefiner => { return availableRefiner.FilterName ===  dateFilter.refinerName;}).length === 0) {
-          // Simply revert to old props to be able to reset combination
-          availableFilters = update(nextProps.availableRefiners, {$set: this.props.availableRefiners});
+
+          // Simply revert to previous filters to be able to reset filters combination
+          availableFilters = update(nextProps.availableRefiners, {$set: this.props.availableRefiners.length > 0 ? this.props.availableRefiners : this.state.availableRefiners});
+
+          // Reset all refinement counts
+          availableFilters = availableFilters.map(filter => {
+
+            const values = filter.Values.map(value => {
+              value.RefinementCount = 0;
+              return value;
+            });
+
+            filter.Values = values;
+            return filter;
+          });
         }
       });
 
@@ -132,7 +159,7 @@ export default class SearchRefinersContainer extends React.Component<ISearchRefi
    * Update the filter status in the state according to values
    * @param filterName the filter to update
    * @param filterValues the filter values
-   * @param operator the operator (FQL)
+   * @param operator the operator (FQL) (i.e AND/OR)
    */
   private onFilterValuesUpdated(filterName: string, filterValues: IRefinementValue[], operator: RefinementOperator) {
 
@@ -144,7 +171,7 @@ export default class SearchRefinersContainer extends React.Component<ISearchRefi
       Operator: operator
     };
 
-    // Get the index of the filter in the current filter
+    // Get the index of the filter in the current selected filters collection
     const filterIdx = this.state.selectedRefinementFilters.map(selected => { return selected.FilterName; }).indexOf(filterName);
 
     if (filterIdx !== -1) {
@@ -160,13 +187,15 @@ export default class SearchRefinersContainer extends React.Component<ISearchRefi
     } else {
 
       if (filterValues.length > 0){
-        // If does not exist, add to selected filters
+        // If does not exist, add to selected filters collection
         newFilters = update(this.state.selectedRefinementFilters, {$push: [refinementFilter]});
       }      
     }
 
+    // Very important to reset the 'reset' flag after an udpdate
     this.setState({
-      selectedRefinementFilters: newFilters
+      selectedRefinementFilters: newFilters,
+      shouldResetFilters: false
     });
 
     this.props.onUpdateFilters(newFilters);

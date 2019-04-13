@@ -59,8 +59,10 @@ export default class CheckboxTemplate extends React.Component<IBaseRefinerTempla
         // Determine the operator according to multi value setting
         this._operator = this.props.isMultiValue ? RefinementOperator.OR :RefinementOperator.AND;
 
+        // This scenario happens due to the behavior of the Office UI Fabric GroupedList component who recreates child components when a greoup is collapsed/expanded, causing a state reset for sub components
+        // In this case we use the refiners global state to recreate the 'local' state for this component
         this.setState({
-            refinerSelectedFilterValues: []
+            refinerSelectedFilterValues: this.props.selectedValues
         });
     }
 
@@ -73,7 +75,7 @@ export default class CheckboxTemplate extends React.Component<IBaseRefinerTempla
         }
 
         // Remove an arbitrary value from the inner state
-        // Useful when the remove filter action is also present in the parent control
+        // Useful when the remove filter action is also present in the parent layout component
         if (nextProps.removeFilterValue) {
             
             const newFilterValues = this.state.refinerSelectedFilterValues.filter((elt) => {
@@ -89,7 +91,7 @@ export default class CheckboxTemplate extends React.Component<IBaseRefinerTempla
     }
 
     /**
-     * Checks if the current filter value is present in the list of the selected values for the current filter
+     * Checks if the current filter value is present in the list of the selected values for the current refiner
      * @param valueToCheck The filter value to check
      */
     private _isValueInFilterSelection(valueToCheck: IRefinementValue): boolean {

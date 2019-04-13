@@ -13,7 +13,7 @@ class MockTaxonomyService implements ITaxonomyService {
     }
 
     public getTermsById(termIds: string[]): Promise<ITerm[]> {
-        throw new Error('Method not implemented.');
+       return Promise.resolve([]);
     }
 }
 

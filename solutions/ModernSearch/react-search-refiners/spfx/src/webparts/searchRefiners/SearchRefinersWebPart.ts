@@ -66,15 +66,13 @@ export default class SearchRefinersWebPart extends BaseClientSideWebPart<ISearch
           refinersConfiguration: this.properties.refinersConfiguration,
           showBlank: this.properties.showBlank,
           displayMode: this.displayMode,
-          queryKeywords: queryKeywords,
-          queryTemplate: queryTemplate,
-          selectedProperties: selectedProperties,
           onUpdateFilters: (appliedRefiners: IRefinementFilter[]) => {
             this._selectedFilters = appliedRefiners;
             this.context.dynamicDataSourceManager.notifyPropertyChanged(SearchComponentType.RefinersWebPart);
           },
           selectedLayout: this.properties.selectedLayout,
-          areResultsLoading: areResultsLoading
+          language: this.context.pageContext.cultureInfo.currentUICultureName,
+          query: queryKeywords + queryTemplate + selectedProperties
         } as ISearchRefinersContainerProps
       );
     } else {
@@ -197,6 +195,11 @@ export default class SearchRefinersWebPart extends BaseClientSideWebPart<ISearch
                   text: strings.Refiners.Templates.DateRangeRefinementItemLabel,
                 }
               ]
+          },
+          {
+            id: 'showExpanded',
+            title: strings.Refiners.ShowExpanded,
+            type: CustomCollectionFieldType.boolean
           }
         ]
       }),
@@ -316,7 +319,7 @@ export default class SearchRefinersWebPart extends BaseClientSideWebPart<ISearch
       
       this.properties.refinersConfiguration = this.properties.refinersConfiguration.map(config => {
         if (!config.template) {
-          config.template = RefinerTemplateOption.CheckBox
+          config.template = RefinerTemplateOption.CheckBox;
         }
 
         return config;
@@ -329,18 +332,20 @@ export default class SearchRefinersWebPart extends BaseClientSideWebPart<ISearch
         {
             refinerName: "Created",
             displayValue: "Created Date",
-            template: RefinerTemplateOption.CheckBox
-      
+            template: RefinerTemplateOption.CheckBox,
+            showExpanded: false
         },
         {
             refinerName: "Size",
             displayValue: "Size of the file",
-            template: RefinerTemplateOption.CheckBox
+            template: RefinerTemplateOption.CheckBox,
+            showExpanded: false
         },
         {
             refinerName: "owstaxidmetadataalltagsinfo",
             displayValue: "Tags",
-            template: RefinerTemplateOption.CheckBox
+            template: RefinerTemplateOption.CheckBox,
+            showExpanded: false
         }
       ];
     }

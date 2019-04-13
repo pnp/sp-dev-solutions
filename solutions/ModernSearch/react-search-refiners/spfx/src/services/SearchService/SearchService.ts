@@ -1,24 +1,24 @@
 import * as Handlebars from 'handlebars';
 import ISearchService from './ISearchService';
 import { ISearchResults, ISearchResult, IRefinementResult, IRefinementValue, IRefinementFilter, IPromotedResult } from '../../models/ISearchResult';
-import { sp, SearchQuery, SearchResults, SPRest, Sort, SortDirection, SearchSuggestQuery } from '@pnp/sp';
+import { sp, SearchQuery, SearchResults, SPRest, Sort, SearchSuggestQuery } from '@pnp/sp';
 import { Logger, LogLevel, ConsoleListener } from '@pnp/logging';
-import { IWebPartContext } from '@microsoft/sp-webpart-base';
 import { Text } from '@microsoft/sp-core-library';
-import { sortBy, groupBy } from '@microsoft/sp-lodash-subset';
-const mapKeys: any = require('lodash/mapKeys');
-const mapValues: any = require('lodash/mapValues');
+import { sortBy } from '@microsoft/sp-lodash-subset';
 import LocalizationHelper from '../../helpers/LocalizationHelper';
 import "@pnp/polyfill-ie11";
 import IRefinerConfiguration from '../../models/IRefinerConfiguration';
 import { ISearchServiceConfiguration } from '../../models/ISearchServiceConfiguration';
-
-declare var System: any;
+import { ITokenService, TokenService } from '../TokenService';
+import { PageContext } from '@microsoft/sp-page-context';
+import { SPHttpClient } from '@microsoft/sp-http';
+import ISynonymTable from '../../models/ISynonym';
 
 class SearchService implements ISearchService {
     private _initialSearchResult: SearchResults = null;
     private _resultsCount: number;
-    private _context: IWebPartContext;
+    private _pageContext: PageContext;
+    private _tokenService: ITokenService;
     private _selectedProperties: string[];
     private _queryTemplate: string;
     private _resultSourceId: string;
@@ -26,6 +26,7 @@ class SearchService implements ISearchService {
     private _enableQueryRules: boolean;
     private _refiners: IRefinerConfiguration[];
     private _refinementFilters: IRefinementFilter[];
+    private _synonymTable: ISynonymTable;
 
     public get resultsCount(): number { return this._resultsCount; }
     public set resultsCount(value: number) { this._resultsCount = value; }
@@ -51,10 +52,14 @@ class SearchService implements ISearchService {
     public set refinementFilters(value: IRefinementFilter[]) { this._refinementFilters = value; }
     public get refinementFilters(): IRefinementFilter[] { return this._refinementFilters; }
 
+    public set synonymTable(value: ISynonymTable) { this._synonymTable = value; }
+    public get synonymTable(): ISynonymTable { return this._synonymTable; }
+
     private _localPnPSetup: SPRest;
 
-    public constructor(webPartContext: IWebPartContext) {
-        this._context = webPartContext;
+    public constructor(pageContext: PageContext, spHttpClient: SPHttpClient) {
+        this._pageContext = pageContext;
+        this._tokenService = new TokenService(this._pageContext, spHttpClient);
 
         // Setup the PnP JS instance
         const consoleListener = new ConsoleListener();
@@ -67,7 +72,7 @@ class SearchService implements ISearchService {
             headers: {
                 Accept: 'application/json; odata=nometadata',
             },
-        }, this._context.pageContext.web.absoluteUrl);
+        }, this._pageContext.web.absoluteUrl);
     }
 
     /**
@@ -97,7 +102,7 @@ class SearchService implements ISearchService {
                 QueryPropertyValueTypeIndex: 3
             }
         }];
-        searchQuery.Querytext = query;
+        searchQuery.Querytext = this._injectSynonyms(query);
 
         // Disable query rules by default if not specified
         searchQuery.EnableQueryRules = this._enableQueryRules ? this._enableQueryRules : false;
@@ -108,7 +113,7 @@ class SearchService implements ISearchService {
 
         // To be able to use search query variable according to the current context
         // http://www.techmikael.com/2015/07/sharepoint-rest-do-support-query.html
-        searchQuery.QueryTemplate = this._queryTemplate;
+        searchQuery.QueryTemplate = await this._tokenService.replaceQueryVariables(this._queryTemplate);
 
         searchQuery.RowLimit = this._resultsCount ? this._resultsCount : 50;
         searchQuery.SelectProperties = this._selectedProperties;
@@ -279,7 +284,7 @@ class SearchService implements ISearchService {
             count: 10,
             hitHighlighting: true,
             prefixMatch: true,
-            culture: LocalizationHelper.getLocaleId(this._context.pageContext.cultureInfo.currentUICultureName).toString()
+            culture: LocalizationHelper.getLocaleId(this._pageContext.cultureInfo.currentUICultureName).toString()
         };
 
         try {
@@ -310,7 +315,8 @@ class SearchService implements ISearchService {
             resultSourceId: this.resultSourceId,
             resultsCount: this.resultsCount,
             selectedProperties: this.selectedProperties,
-            sortList: this.sortList
+            sortList: this.sortList,
+            synonymTable: this.synonymTable
         };
     }
 
@@ -320,7 +326,7 @@ class SearchService implements ISearchService {
      */
     private async _mapToIcon(filename: string): Promise<string> {
 
-        const webAbsoluteUrl = this._context.pageContext.web.absoluteUrl;
+        const webAbsoluteUrl = this._pageContext.web.absoluteUrl;
 
         try {
             let encodedFileName = filename ? filename.replace(/['']/g, '') : '';
@@ -352,7 +358,7 @@ class SearchService implements ISearchService {
 
         if (matches) {
             matches.map(match => {
-                updatedInputValue = updatedInputValue.replace(match, (<any>window).searchHBHelper.moment(match, "LL", { lang: this._context.pageContext.cultureInfo.currentUICultureName }));
+                updatedInputValue = updatedInputValue.replace(match, (<any>window).searchHBHelper.moment(match, "LL", { lang: this._pageContext.cultureInfo.currentUICultureName }));
             });
         }
 
@@ -383,6 +389,62 @@ class SearchService implements ISearchService {
 
         return refinementQueryConditions;
     }
+
+    // Function to inject synonyms at run-time
+    private _injectSynonyms(query: string): string {
+
+        if (this._synonymTable && Object.keys(this._synonymTable).length > 0) {
+            // Remove complex query parts AND/OR/NOT/ANY/ALL/parenthasis/property queries/exclusions - can probably be improved            
+            const cleanQuery = query.replace(/(-\w+)|(-"\w+.*?")|(-?\w+[:=<>]+\w+)|(-?\w+[:=<>]+".*?")|((\w+)?\(.*?\))|(AND)|(OR)|(NOT)/g, '');
+            const queryParts: string[] = cleanQuery.match(/("[^"]+"|[^"\s]+)/g);
+
+            // code which should modify the current query based on context for each new query
+            if (queryParts) {
+
+                for (let i = 0; i < queryParts.length; i++) {
+                    const key = queryParts[i].toLowerCase();
+                    const value = this._synonymTable[key];
+
+                    if (value) {
+                        // Replace the current query part in the query with all the synonyms
+                        query = query.replace(queryParts[i],
+                            Text.format('({0} OR {1})',
+                                this._formatSynonym(queryParts[i]),
+                                this._formatSynonymsSearchQuery(value)));
+                    }
+                }
+            }
+        }
+        return query;
+    }
+
+    private _formatSynonym(value: string): string {
+        value = value.trim().replace(/"/g, '').trim();
+        value = '"' + value + '"';
+
+        return value;
+    }
+
+    private _formatSynonymsSearchQuery(items: string[]): string {
+        let result = '';
+
+        for (let i = 0; i < items.length; i++) {
+            let item = items[i];
+
+            if (item.length > 0) {
+                item = this._formatSynonym(item);
+
+                result += item;
+
+                if (i < items.length - 1) {
+                    result += ' OR ';
+                }
+            }
+        }
+
+        return result;
+    }
 }
+
 
 export default SearchService;

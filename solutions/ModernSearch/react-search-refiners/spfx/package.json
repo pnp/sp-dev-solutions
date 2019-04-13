@@ -1,6 +1,6 @@
 {
   "name": "pnp-react-search-refiners",
-  "version": "3.1.0",
+  "version": "3.2.0",
   "private": true,
   "engines": {
     "node": ">=0.10.0"
@@ -17,7 +17,7 @@
     "@microsoft/sp-dialog": "1.7.1",
     "@microsoft/sp-loader": "1.7.1",
     "@microsoft/sp-lodash-subset": "1.7.1",
-    "@microsoft/sp-office-ui-fabric-core": "1.7.1",
+    "@microsoft/sp-office-ui-fabric-core": "1.6.0",
     "@microsoft/sp-webpart-base": "1.7.1",
     "@pnp/common": "1.2.9",
     "@pnp/logging": "1.2.9",

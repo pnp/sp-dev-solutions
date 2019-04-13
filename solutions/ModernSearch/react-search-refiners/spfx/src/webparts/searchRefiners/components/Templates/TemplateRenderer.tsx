@@ -1,7 +1,7 @@
 import * as React from                                                 'react';
 import RefinerTemplateOption from '../../../../models/RefinerTemplateOption';
 import CheckboxTemplate from "./Checkbox/CheckboxTemplate";
-import DateRangeTemplate from "./Checkbox/DateRangeTemplate";
+import DateRangeTemplate from "./DateRange/DateRangeTemplate";
 import { IRefinementResult, IRefinementValue } from "../../../../models/ISearchResult";
 import RefinementFilterOperationCallback from '../../../../models/RefinementValueOperationCallback';
 
@@ -31,6 +31,17 @@ export interface ITemplateRendererProps {
      * A single to remove from the selection
      */
     valueToRemove?: IRefinementValue;
+
+    /**
+     * The current UI language
+     */
+    language: string;
+
+    /**
+     * The current selected values for this refinement result
+     * Used to build local state for sub components
+     */
+    selectedValues: IRefinementValue[];
 }
 
 export default class TemplateRenderer extends React.Component<ITemplateRendererProps> {
@@ -48,6 +59,7 @@ export default class TemplateRenderer extends React.Component<ITemplateRendererP
                                     shouldResetFilters={this.props.shouldResetFilters}
                                     isMultiValue={false}
                                     removeFilterValue={this.props.valueToRemove}
+                                    selectedValues={this.props.selectedValues}
                                 />;
                 break;
 
@@ -58,6 +70,7 @@ export default class TemplateRenderer extends React.Component<ITemplateRendererP
                                     shouldResetFilters={this.props.shouldResetFilters}
                                     isMultiValue={true}
                                     removeFilterValue={this.props.valueToRemove}
+                                    selectedValues={this.props.selectedValues}
                                 />;
                 break;
 
@@ -68,6 +81,8 @@ export default class TemplateRenderer extends React.Component<ITemplateRendererP
                                     shouldResetFilters={this.props.shouldResetFilters}
                                     isMultiValue={true}
                                     removeFilterValue={this.props.valueToRemove}
+                                    language={this.props.language}
+                                    selectedValues={this.props.selectedValues}
                                 />;
                 break;
 
