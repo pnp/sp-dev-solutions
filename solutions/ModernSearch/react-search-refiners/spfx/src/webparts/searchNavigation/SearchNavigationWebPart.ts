@@ -121,6 +121,7 @@ export default class SearchNavigationWebPart extends BaseClientSideWebPart<ISear
                                 }),
                                 this._propertyFieldCollectionData('nodes', {
                                     key: 'nodes',
+                                    enableSorting: true,
                                     label: strings.NavNodeLabel,
                                     panelHeader: strings.NavNodeHeader,
                                     manageBtnLabel: strings.NavNodeManageBtnLabel,

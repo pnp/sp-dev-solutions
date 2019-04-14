@@ -58,9 +58,9 @@ export default class SearchNavigationContainer extends React.Component<ISearchNa
     }
 
     private getCustomElement(node: INavigationNodeProps, queryParam: string, isSelected: boolean, idx: number) {
-        let selectedClass;
+        let selectedClass: string;
         let color = this.props.color ? this.props.color : '#ee0410';
-        let colorStyle;
+        let colorStyle: React.CSSProperties;
         if (isSelected) {
             selectedClass = styles.selected;
             colorStyle = { color: color };
