@@ -1,4 +1,5 @@
-import { INavigationNodeProps } from '../../SearchNavigationWebPart';
+import { INavigationNodeProps } from "../../../../models/INavigationNodeProps";
+
 export interface ISearchNavigationContainerProps {
   nodes: INavigationNodeProps[];
   color: string;

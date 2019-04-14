@@ -16,7 +16,8 @@
     "description": { "default": "Displays a pivot-navigation link list that emulates the navigation in the out-of-the-box search center." },
     "officeFabricIconFontName": "NavigationFlipper",
     "properties": {
-      "queryKeywords": ""
+      "useThemeColor": true,
+      "useNlpValue": false
     }
   }]
 }

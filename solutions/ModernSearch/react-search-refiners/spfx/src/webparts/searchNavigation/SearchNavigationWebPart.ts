@@ -1,64 +1,74 @@
 import * as React from 'react';
 import * as ReactDom from 'react-dom';
-import { Version } from '@microsoft/sp-core-library';
+import { Version, DisplayMode } from '@microsoft/sp-core-library';
 import { DynamicProperty } from '@microsoft/sp-component-base';
 import {
     BaseClientSideWebPart,
     IPropertyPaneConfiguration,
-    PropertyPaneDynamicField,
-    PropertyPaneDynamicFieldSet,
-    DynamicDataSharedDepth,
     PropertyPaneToggle,
-    IWebPartPropertiesMetadata
+    PropertyPaneDropdown
 } from '@microsoft/sp-webpart-base';
-
+import { Placeholder } from '@pnp/spfx-controls-react/lib/Placeholder';
 import * as strings from 'SearchNavigationWebPartStrings';
 import SearchNavigation from './components/SearchNavigationContainer/SearchNavigationContainer';
-import { ISearchNavigationContainerProps } from './components/SearchNavigationContainer/ISearchNavigationContainerProps';
+import { ISearchNavigationWebPartProps } from './ISearchNavigationWebPartProps';
+import { SearchComponentType } from '../../models/SearchComponentType';
 import { DynamicDataService } from '../../services/DynamicDataService/DynamicDataService';
 import IDynamicDataService from '../../services/DynamicDataService/IDynamicDataService';
-
-export interface ISearchNavigationWebPartProps {
-    nodes: INavigationNodeProps[];
-    queryKeywords: DynamicProperty<string>;
-    sourceId: string;
-    propertyPath: string;
-    propertyId: string;
-    color: string;
-    useThemeColor: boolean;
-}
-
-export interface INavigationNodeWebPartProps {
-    collectionData: INavigationNodeProps[];
-}
-
-export interface INavigationNodeProps {
-    displayText: string;
-    url: string;
-}
+import ISearchQuery from '../../models/ISearchQuery';
 
 export default class SearchNavigationWebPart extends BaseClientSideWebPart<ISearchNavigationWebPartProps> {
-    private PropertyFieldCollectionData;
-    private CustomCollectionFieldType;
-    private PropertyFieldColorPicker;
-    private PropertyFieldColorPickerStyle;
+    private _propertyFieldCollectionData;
+    private _customCollectionFieldType;
+    private _propertyFieldColorPicker;
+    private _propertyFieldColorPickerStyle;
     private _dynamicDataService: IDynamicDataService;
+    private _queryKeywordsSourceData: DynamicProperty<ISearchQuery>;
 
     public render(): void {
-        let queryDataSourceValue = this._dynamicDataService.getDataSourceValue(this.properties.queryKeywords, this.properties.sourceId, this.properties.propertyId, this.properties.propertyPath);
-        let queryKeywords = (!queryDataSourceValue) ? "" : queryDataSourceValue;
-
-        const element: React.ReactElement<ISearchNavigationContainerProps> = React.createElement(
-            SearchNavigation,
+        let renderElement: JSX.Element = React.createElement('div', null);
+        
+        if (this.properties.queryKeywordsDataSourceReference 
+            && this._queryKeywordsSourceData 
+            && this.properties.nodes 
+            && this.properties.nodes.length > 0) 
+        {
+            let queryKeywords = "";
+            let queryKeywordsData = this._queryKeywordsSourceData.tryGetValue();
+            if (queryKeywordsData)
             {
-                nodes: this.properties.nodes,
-                queryKeywords: queryKeywords,
-                color: this.properties.color,
-                useThemeColor: this.properties.useThemeColor
+                queryKeywords = (this.properties.useNlpValue)? queryKeywordsData.enhancedQuery : queryKeywordsData.rawInputValue;
             }
-        );
 
-        ReactDom.render(element, this.domElement);
+            renderElement = React.createElement(
+                SearchNavigation,
+                {
+                    nodes: this.properties.nodes,
+                    queryKeywords: queryKeywords,
+                    color: this.properties.color,
+                    useThemeColor: this.properties.useThemeColor
+                }
+            );
+        }
+        else {
+          if (this.displayMode === DisplayMode.Edit) {
+            renderElement = React.createElement(
+              Placeholder,
+              {
+                  iconName: strings.PlaceHolderEditLabel,
+                  iconText: strings.PlaceHolderIconText,
+                  description: strings.PlaceHolderDescription,
+                  buttonLabel: strings.PlaceHolderConfigureBtnLabel,
+                  onConfigure: this._setupWebPart.bind(this)
+              }
+            );
+          }
+        }
+        ReactDom.render(renderElement, this.domElement);
+    }
+
+    private _setupWebPart() {
+        this.context.propertyPane.open();
     }
 
     protected onDispose(): void {
@@ -67,14 +77,9 @@ export default class SearchNavigationWebPart extends BaseClientSideWebPart<ISear
 
     protected onInit(): Promise<void> {
         this._dynamicDataService = new DynamicDataService(this.context.dynamicDataProvider);
-        
-        if (this.properties.sourceId) {
-            // Needed to retrieve manually the value for the dynamic property at render time. See the associated SPFx bug
-            // https://github.com/SharePoint/sp-dev-docs/issues/2985
-            this.context.dynamicDataProvider.registerSourceChanged(this.properties.sourceId, this.render);
-        }
-
-        return super.onInit();
+        this.ensureDataSourceConnection();
+    
+        return Promise.resolve();
     }
 
     protected get dataVersion(): Version {
@@ -94,10 +99,10 @@ export default class SearchNavigationWebPart extends BaseClientSideWebPart<ISear
           '@pnp/spfx-property-controls/lib/PropertyFieldColorPicker'
       );
 
-      this.PropertyFieldCollectionData = PropertyFieldCollectionData;
-      this.CustomCollectionFieldType = CustomCollectionFieldType;
-      this.PropertyFieldColorPicker = PropertyFieldColorPicker;
-      this.PropertyFieldColorPickerStyle = PropertyFieldColorPickerStyle;
+      this._propertyFieldCollectionData = PropertyFieldCollectionData;
+      this._customCollectionFieldType = CustomCollectionFieldType;
+      this._propertyFieldColorPicker = PropertyFieldColorPicker;
+      this._propertyFieldColorPickerStyle = PropertyFieldColorPickerStyle;
     }
 
     protected getPropertyPaneConfiguration(): IPropertyPaneConfiguration {
@@ -107,18 +112,14 @@ export default class SearchNavigationWebPart extends BaseClientSideWebPart<ISear
                     groups: [
                         {
                             groupFields: [
-                                PropertyPaneDynamicFieldSet({
-                                    label: strings.DynamicFieldSetLabel,
-                                    fields: [
-                                        PropertyPaneDynamicField('queryKeywords', {
-                                            label: strings.DynamicFieldLabel
-                                        })
-                                    ],
-                                    sharedConfiguration: {
-                                        depth: DynamicDataSharedDepth.Source,
-                                    },
+                                PropertyPaneDropdown('queryKeywordsDataSourceReference', {
+                                    options: this._dynamicDataService.getAvailableDataSourcesByType(SearchComponentType.SearchBoxWebPart),
+                                    label: strings.DynamicFieldLabel
                                 }),
-                                this.PropertyFieldCollectionData('nodes', {
+                                PropertyPaneToggle('useNlpValue', {
+                                    label: strings.UseNlpValueLabel,
+                                }),
+                                this._propertyFieldCollectionData('nodes', {
                                     key: 'nodes',
                                     label: strings.NavNodeLabel,
                                     panelHeader: strings.NavNodeHeader,
@@ -128,19 +129,18 @@ export default class SearchNavigationWebPart extends BaseClientSideWebPart<ISear
                                         {
                                             id: 'displayText',
                                             title: strings.NavNodeDisplayTextFieldLabel,
-                                            type: this.CustomCollectionFieldType.string,
+                                            type: this._customCollectionFieldType.string,
                                         },
                                         {
                                             id: 'url',
                                             title: strings.NavNodeUrlFieldLabel,
-                                            type: this.CustomCollectionFieldType.url,
+                                            type: this._customCollectionFieldType.url,
                                         }
                                     ]
                                 }),
                                 PropertyPaneToggle('useThemeColor', {
                                   label: strings.UseThemeColorLabel,
                                 }),
-
                             ]
                         }
                     ]
@@ -148,14 +148,14 @@ export default class SearchNavigationWebPart extends BaseClientSideWebPart<ISear
             ]
         };
         if(!this.properties.useThemeColor) {
-          propertypane.pages[0].groups[0].groupFields.push(this.PropertyFieldColorPicker('color', {
+          propertypane.pages[0].groups[0].groupFields.push(this._propertyFieldColorPicker('color', {
             label: strings.ColorPickerLabel,
             selectedColor: this.properties.color,
             onPropertyChange: this.onPropertyPaneFieldChanged,
             properties: this.properties,
             disabled: false,
             alphaSliderHidden: false,
-            style: this.PropertyFieldColorPickerStyle.Full,
+            style: this._propertyFieldColorPickerStyle.Full,
             iconName: 'Precipitation',
             key: 'colorFieldId',
           }));
@@ -163,35 +163,29 @@ export default class SearchNavigationWebPart extends BaseClientSideWebPart<ISear
         return propertypane;
     }
 
-    protected async onPropertyPaneFieldChanged(propertyPath: string) {
-        if (propertyPath.localeCompare('queryKeywords') === 0) {
-
-            // Update data source information
-            this._saveDataSourceInfo();
-        }
-    }
-
     /**
-     * Save the useful information for the connected data source. 
-     * They will be used to get the value of the dynamic property if this one fails.
+     * Make sure the dynamic property is correctly connected to the source if a search results component has been selected in options 
      */
-    private _saveDataSourceInfo() {
-        if (this.properties.queryKeywords.tryGetSource()) {
-            this.properties.sourceId = this.properties.queryKeywords["_reference"]._sourceId;
-            this.properties.propertyId = this.properties.queryKeywords["_reference"]._property;
-            this.properties.propertyPath = this.properties.queryKeywords["_reference"]._propertyPath;
+    private ensureDataSourceConnection() {
+        if (this.properties.queryKeywordsDataSourceReference) {
+            // Register the data source manually since we don't want user select properties manually
+            if (!this._queryKeywordsSourceData) {
+                this._queryKeywordsSourceData = new DynamicProperty<ISearchQuery>(this.context.dynamicDataProvider);
+            }
+
+            this._queryKeywordsSourceData.setReference(this.properties.queryKeywordsDataSourceReference);
+            this._queryKeywordsSourceData.register(this.render);
+            
         } else {
-            this.properties.sourceId = null;
-            this.properties.propertyId = null;
-            this.properties.propertyPath = null;
+            if (this._queryKeywordsSourceData) {
+                this._queryKeywordsSourceData.unregister(this.render);
+            }
         }
     }
 
-    protected get propertiesMetadata(): IWebPartPropertiesMetadata {
-        return {
-            'queryKeywords': {
-                dynamicPropertyType: 'string'
-            }
-        };
+    protected async onPropertyPaneFieldChanged(propertyPath: string) {
+        if (propertyPath.localeCompare('queryKeywordsDataSourceReference') === 0) {
+            this.ensureDataSourceConnection();
+        }
     }
 }
