@@ -5,4 +5,5 @@ export interface ISearchNavigationContainerProps {
   color: string;
   queryKeywords: string;
   useThemeColor: boolean;
+  currentPageUrl: string;
 }

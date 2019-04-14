@@ -27,7 +27,7 @@ export default class SearchNavigationWebPart extends BaseClientSideWebPart<ISear
 
     public render(): void {
         let renderElement: JSX.Element = React.createElement('div', null);
-        
+
         if (this.properties.queryKeywordsDataSourceReference 
             && this._queryKeywordsSourceData 
             && this.properties.nodes 
@@ -46,7 +46,8 @@ export default class SearchNavigationWebPart extends BaseClientSideWebPart<ISear
                     nodes: this.properties.nodes,
                     queryKeywords: queryKeywords,
                     color: this.properties.color,
-                    useThemeColor: this.properties.useThemeColor
+                    useThemeColor: this.properties.useThemeColor,
+                    currentPageUrl: this.context.pageContext.site.absoluteUrl.replace(this.context.pageContext.site.serverRelativeUrl, "") + this.context.pageContext.site.serverRequestPath
                 }
             );
         }

@@ -30,7 +30,7 @@ export default class SearchNavigationContainer extends React.Component<ISearchNa
     }
 
     private isNodeSelected(url: string) {
-        return (document.location.href.toLocaleLowerCase().indexOf(encodeURI(url).toLocaleLowerCase()) > -1);
+        return (this.props.currentPageUrl.toLocaleLowerCase().indexOf(encodeURI(url).toLocaleLowerCase()) > -1);
     }
 
     private renderPivotElement(node: INavigationNodeProps, idx: number) {
