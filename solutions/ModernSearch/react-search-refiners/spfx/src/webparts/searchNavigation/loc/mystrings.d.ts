@@ -1,5 +1,4 @@
 declare interface ISearchNavigationWebPartStrings {
-  DynamicFieldSetLabel: string;
   DynamicFieldLabel: string;
   NavNodeLabel: string;
   NavNodeHeader: string;
@@ -8,6 +7,11 @@ declare interface ISearchNavigationWebPartStrings {
   NavNodeUrlFieldLabel: string;
   ColorPickerLabel: string;
   UseThemeColorLabel: string;
+  PlaceHolderEditLabel: string;
+  PlaceHolderConfigureBtnLabel: string;
+  PlaceHolderIconText: string;
+  PlaceHolderDescription: string;
+  UseNlpValueLabel: string;
 }
 
 declare module 'SearchNavigationWebPartStrings' {

@@ -30,6 +30,7 @@ import MockNlpService from '../../services/NlpService/MockNlpService';
 import NlpService from '../../services/NlpService/NlpService';
 import { PageOpenBehavior } from '../../helpers/UrlHelper';
 import SearchBoxContainer from './components/SearchBoxContainer/SearchBoxContainer';
+import { SearchComponentType } from '../../models/SearchComponentType';
 
 export default class SearchBoxWebPart extends BaseClientSideWebPart<ISearchBoxWebPartProps> implements IDynamicDataCallables {
 
@@ -88,7 +89,7 @@ export default class SearchBoxWebPart extends BaseClientSideWebPart<ISearchBoxWe
   public getPropertyDefinitions(): ReadonlyArray<IDynamicDataPropertyDefinition> {
     return [
       {
-          id: 'searchQuery',
+          id: SearchComponentType.SearchBoxWebPart,
           title: strings.DynamicData.SearchQueryPropertyLabel
       },
     ];
