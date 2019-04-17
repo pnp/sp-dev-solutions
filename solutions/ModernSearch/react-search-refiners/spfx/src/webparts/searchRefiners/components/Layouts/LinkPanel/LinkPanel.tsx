@@ -15,6 +15,8 @@ import {ActionButton} from 'office-ui-fabric-react/lib/Button';
 import styles from './LinkPanel.module.scss';
 import * as strings from 'SearchRefinersWebPartStrings';
 import TemplateRenderer from '../../Templates/TemplateRenderer';
+import { IRefinementResult } from '../../../../../models/ISearchResult';
+import IRefinerConfiguration from '../../../../../models/IRefinerConfiguration';
 
 export default class LinkPanel extends React.Component<ILinkPanelProps, ILinkPanelState> {
 
@@ -48,7 +50,6 @@ export default class LinkPanel extends React.Component<ILinkPanelProps, ILinkPan
             // Get group name
             let groupName = refinementResult.FilterName;
             const configuredFilter = this.props.refinersConfiguration.filter(e => { return e.refinerName === refinementResult.FilterName;});
-            const showExpanded = configuredFilter.length > 0 && configuredFilter[0].showExpanded ? configuredFilter[0].showExpanded : false;
             groupName = configuredFilter.length > 0 && configuredFilter[0].displayValue ? configuredFilter[0].displayValue : groupName;
 
             groups.push({
@@ -57,7 +58,7 @@ export default class LinkPanel extends React.Component<ILinkPanelProps, ILinkPan
                 count: 1,
                 startIndex: i,
                 isDropEnabled: true,
-                isCollapsed: this.state.expandedGroups.indexOf(groupName) === -1 && showExpanded !== true ? true : false
+                isCollapsed: this.state.expandedGroups.indexOf(groupName) === -1 ? true : false
             });
 
             // Get selected values for this specfic refiner
@@ -178,10 +179,16 @@ export default class LinkPanel extends React.Component<ILinkPanelProps, ILinkPan
         );
     }
 
+    public componentDidMount() {
+       this._initExpandedGroups(this.props.refinementResults, this.props.refinersConfiguration);
+    }
+
     public componentWillReceiveProps(nextProps: ILinkPanelProps) {
         this.setState({
             valueToRemove: null
         });
+
+        this._initExpandedGroups(nextProps.refinementResults, nextProps.refinersConfiguration);
     }
 
     private _onRenderCell(nestingDepth: number, item: any, itemIndex: number) {
@@ -227,5 +234,28 @@ export default class LinkPanel extends React.Component<ILinkPanelProps, ILinkPan
 
     private _removeAllFilters() {        
         this.props.onRemoveAllFilters();
+    }
+
+    /***
+     * Initializes expanded groups
+     * @param refinementResults the refinements results
+     * @param refinersConfiguration the current refiners configuration
+     */
+    private _initExpandedGroups(refinementResults: IRefinementResult[], refinersConfiguration: IRefinerConfiguration[]) {
+
+        refinementResults.map((refinementResult, i) => {
+
+            // Get group name
+            let groupName = refinementResult.FilterName;
+            const configuredFilter = refinersConfiguration.filter(e => { return e.refinerName === refinementResult.FilterName;});
+            groupName = configuredFilter.length > 0 && configuredFilter[0].displayValue ? configuredFilter[0].displayValue : groupName;
+            const showExpanded = configuredFilter.length > 0 && configuredFilter[0].showExpanded ? configuredFilter[0].showExpanded : false;
+
+            if (showExpanded) {
+                this.setState({
+                    expandedGroups: update(this.state.expandedGroups, { $push: [groupName] })
+                });
+            }
+        });
     }
 }
