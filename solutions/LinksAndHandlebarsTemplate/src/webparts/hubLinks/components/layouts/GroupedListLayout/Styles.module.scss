@@ -103,6 +103,7 @@
                 background-color: white;
                 border-color: white;
             }
+            /*
             &>i {
                 color: #333333;
                 padding: 5px;
@@ -114,6 +115,21 @@
                 cursor: move;
                 background-color: white;
             }
+            */
+            &>i {
+                color: #333;
+                padding: 5px 5px 0px;
+                font-size: 12px;
+                line-height: 22px;
+                margin: 0px;
+                text-align: right;
+                width: 32px;
+                cursor: move;
+                display: inline-block;
+                box-sizing: border-box;
+                position: relative;
+            }
+            
             & :global .ms-Button.ms-Button--default :global .ms-Button-icon {
                 line-height: 15px;
                 height: 10px;
@@ -169,7 +185,8 @@
             line-height: 18px;
             margin-left: 0;
             list-style-type: none;
-            display: table;
+            box-sizing: border-box;
+            display: block;
             width: 100%;
             & .row {
                 margin: 0;
