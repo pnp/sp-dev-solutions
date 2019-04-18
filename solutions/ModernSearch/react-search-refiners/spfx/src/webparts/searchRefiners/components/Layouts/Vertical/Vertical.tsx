@@ -11,6 +11,8 @@ import {Link} from 'office-ui-fabric-react/lib/Link';
 import styles from './Vertical.module.scss';
 import * as strings from 'SearchRefinersWebPartStrings';
 import TemplateRenderer from '../../Templates/TemplateRenderer';
+import { IRefinementResult } from '../../../../../models/ISearchResult';
+import IRefinerConfiguration from '../../../../../models/IRefinerConfiguration';
 
 export default class Vertical extends React.Component<IFilterLayoutProps, IVerticalState> {
 
@@ -38,17 +40,15 @@ export default class Vertical extends React.Component<IFilterLayoutProps, IVerti
             // Get group name
             let groupName = refinementResult.FilterName;
             const configuredFilter = this.props.refinersConfiguration.filter(e => { return e.refinerName === refinementResult.FilterName; });
-            const showExpanded = configuredFilter.length > 0 && configuredFilter[0].showExpanded ? configuredFilter[0].showExpanded : false;
             groupName = configuredFilter.length > 0 && configuredFilter[0].displayValue ? configuredFilter[0].displayValue : groupName;
             
-
             groups.push({
                 key: i.toString(),
                 name: groupName,
                 count: 1,
                 startIndex: i,
                 isDropEnabled: true,
-                isCollapsed: this.state.expandedGroups.indexOf(groupName) === -1 && showExpanded !== true ? true : false
+                isCollapsed: this.state.expandedGroups.indexOf(groupName) === -1 ? true : false
             });
 
             // Get selected values for this specfic refiner
@@ -97,6 +97,14 @@ export default class Vertical extends React.Component<IFilterLayoutProps, IVerti
         );
     }
 
+    public componentDidMount() {
+        this._initExpandedGroups(this.props.refinementResults, this.props.refinersConfiguration);
+    }
+
+    public componentWillReceiveProps(nextProps: IFilterLayoutProps) {
+        this._initExpandedGroups(nextProps.refinementResults, nextProps.refinersConfiguration);
+    }
+
     private _onRenderCell(nestingDepth: number, item: any, itemIndex: number) {
         return (
             <div className={styles.verticalLayout__filterPanel__body__group__item} data-selection-index={itemIndex}>
@@ -134,5 +142,28 @@ export default class Vertical extends React.Component<IFilterLayoutProps, IVerti
 
     private _removeAllFilters() {
         this.props.onRemoveAllFilters();
+    }
+
+    /***
+     * Initializes expanded groups
+     * @param refinementResults the refinements results
+     * @param refinersConfiguration the current refiners configuration
+     */
+    private _initExpandedGroups(refinementResults: IRefinementResult[], refinersConfiguration: IRefinerConfiguration[]) {
+
+        refinementResults.map((refinementResult, i) => {
+
+            // Get group name
+            let groupName = refinementResult.FilterName;
+            const configuredFilter = refinersConfiguration.filter(e => { return e.refinerName === refinementResult.FilterName;});
+            groupName = configuredFilter.length > 0 && configuredFilter[0].displayValue ? configuredFilter[0].displayValue : groupName;
+            const showExpanded = configuredFilter.length > 0 && configuredFilter[0].showExpanded ? configuredFilter[0].showExpanded : false;
+
+            if (showExpanded) {
+                this.setState({
+                    expandedGroups: update(this.state.expandedGroups, { $push: [groupName] })
+                });
+            }
+        });
     }
 }
