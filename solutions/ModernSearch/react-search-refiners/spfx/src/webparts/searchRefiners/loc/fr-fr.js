@@ -28,6 +28,7 @@ define([], function() {
       "AvailableRefinersLabel": "Filtre(s) disponible(s)",
       "ApplyFiltersLabel": "Appliquer",
       "ClearFiltersLabel": "Effacer",
+      "ShowExpanded": "Mode développé par défaut",
       "Templates": {
         "RefinementItemTemplateLabel": "Filtre par défaut",
         "MutliValueRefinementItemTemplateLabel": "Filtre à valeurs multiples",

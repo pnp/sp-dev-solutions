@@ -8,7 +8,7 @@ import { Logger, LogLevel } from '@pnp/logging';
 import * as strings from 'SearchResultsWebPartStrings';
 import { IRefinementValue, IRefinementResult, ISearchResult, ISearchResults } from '../../../../models/ISearchResult';
 import { Overlay } from 'office-ui-fabric-react/lib/Overlay';
-import { DisplayMode } from '@microsoft/sp-core-library';
+import { DisplayMode, Guid } from '@microsoft/sp-core-library';
 import { WebPartTitle } from "@pnp/spfx-controls-react/lib/WebPartTitle";
 import SearchResultsTemplate from '../Layouts/SearchResultsTemplate';
 import styles from '../SearchResultsWebPart.module.scss';
@@ -390,15 +390,22 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
                 const isTerm = /L0\|#(.+)\|/.test(value.RefinementValue);
 
                 if (isTerm) {
-                    const termId = /L0\|#(.+)\|/.exec(value.RefinementValue)[1].substr(1);
 
-                    // The uniqueIdentifier is here to be able to match the original value with the localized one
-                    // We use the refinement token, which is unique
-                    termsToLocalize.push({
-                        uniqueIdentifier: value.RefinementToken,
-                        termId: termId,
-                        localizedTermLabel: null
-                    });
+                    // Check if it is a multi value term (i.e property bag proeprty formatted with ';')
+                    // The ';' is a reserved character so it can't appear in taxonomy labels
+                    const values = value.RefinementValue.split(';');
+                    values.map((term) => {
+                        let termId = /L0\|#(.+)\|/.exec(term)[1];
+                        termId = Guid.isValid(termId) ? termId : termId.substr(1);
+
+                        // The uniqueIdentifier is here to be able to match the original value with the localized one
+                        // We use the refinement token, which is unique
+                        termsToLocalize.push({
+                            uniqueIdentifier: value.RefinementToken,
+                            termId: termId,
+                            localizedTermLabel: null
+                        });
+                    }); 
                 }
             });
         });
@@ -454,13 +461,16 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
 
                 filter.Values.map((value) => {
                     const existingFilters = localizedTerms.filter((e) => { return e.uniqueIdentifier === value.RefinementToken; });
+                                        
                     if (existingFilters.length > 0) {
-                        updatedValues.push({
-                            RefinementCount: value.RefinementCount,
-                            RefinementName: existingFilters[0].localizedTermLabel,
-                            RefinementToken: value.RefinementToken,
-                            RefinementValue: existingFilters[0].localizedTermLabel,
-                        } as IRefinementValue);
+                        existingFilters.map((existingFilter) => {
+                            updatedValues.push({
+                                RefinementCount: value.RefinementCount,
+                                RefinementName: existingFilter.localizedTermLabel,
+                                RefinementToken: value.RefinementToken,
+                                RefinementValue: existingFilter.localizedTermLabel,
+                            } as IRefinementValue);
+                        });
                     } else {
 
                         // Keep only terms (L0). The crawl property ows_taxid_xxx return term sets too.

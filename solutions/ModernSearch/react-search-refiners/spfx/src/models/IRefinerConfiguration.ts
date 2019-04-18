@@ -23,6 +23,11 @@ interface IRefinerConfiguration {
      * How the refiner values should be sorted
      */
     refinerSortType: RefinersSortOption;
+
+    /** 
+     * Allow refiners to be expanded by default
+     */    
+     showExpanded: boolean;
 }
 
 export default IRefinerConfiguration;

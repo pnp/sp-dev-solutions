@@ -36,6 +36,11 @@ interface ISearchBoxContainerState {
      * Error message
      */
     errorMessage: string;
+
+    /**
+     * Show Clear button in the Search Box
+     */
+    showClearButton: boolean;
 }
 
 export default ISearchBoxContainerState;

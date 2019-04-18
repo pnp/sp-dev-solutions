@@ -21,15 +21,15 @@ abstract class BaseTemplateService {
     }
 
     private async LoadHandlebarsHelpers() {
-        if((<any>window).searchHBHelper !== undefined) {
+        if ((<any>window).searchHBHelper !== undefined) {
             // early check - seems to never hit(?)
             return;
         }
         let component = await import(
             /* webpackChunkName: 'search-handlebars-helpers' */
             'handlebars-helpers'
-        );        
-        if((<any>window).searchHBHelper !== undefined) {
+        );
+        if ((<any>window).searchHBHelper !== undefined) {
             return;
         }
         (<any>window).searchHBHelper = component({
@@ -384,11 +384,17 @@ abstract class BaseTemplateService {
         // Return the URL or Title part of a URL automatic managed property
         // <p>{{getUrlField MyLinkOWSURLH "Title"}}</p>
         Handlebars.registerHelper("getUrlField", (urlField: string, value: "URL" | "Title") => {
-            let separatorPos = urlField.indexOf(",");
-            if (value === "URL") {
-                return urlField.substr(0, separatorPos);
+            if (!isEmpty(urlField)) {
+                let separatorPos = urlField.indexOf(",");
+                if (separatorPos === -1) {
+                    return urlField;
+                }
+                if (value === "URL") {
+                    return urlField.substr(0, separatorPos);
+                }
+                return urlField.substr(separatorPos + 1).trim();
             }
-            return urlField.substr(separatorPos + 1).trim();
+            return urlField;
         });
 
         // Return the unique count based on an array or property of an object in the array
@@ -739,7 +745,7 @@ abstract class BaseTemplateService {
     private async _loadVideoLibrary() {
         // Load Videos-Js on Demand 
         // Webpack will create a other bundle loaded on demand just for this library
-        if((<any>window).searchVideoJS !== undefined) {
+        if ((<any>window).searchVideoJS !== undefined) {
             return;
         }
         const videoJs = await import(
