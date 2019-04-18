@@ -48,6 +48,9 @@ declare interface ISearchRefinersWebPartStrings {
         isRequiredErrorMessage: string,      
         invalidInputErrorMessage: string
       };
+      RefinerSortTypeLabel: string,
+      RefinerSortTypeAlphabetical: string,
+      RefinerSortTypeByNumberOfResults: string
     }
   },
 }

@@ -27,6 +27,7 @@ import ISearchResultSourceData from '../../models/ISearchResultSourceData';
 import { DynamicDataService } from '../../services/DynamicDataService/DynamicDataService';
 import IDynamicDataService from '../../services/DynamicDataService/IDynamicDataService';
 import RefinerTemplateOption from '../../models/RefinerTemplateOption';
+import RefinersSortOption from '../../models/RefinersSortOptions';
 
 export default class SearchRefinersWebPart extends BaseClientSideWebPart<ISearchRefinersWebPartProps> implements IDynamicDataCallables {
 
@@ -195,7 +196,22 @@ export default class SearchRefinersWebPart extends BaseClientSideWebPart<ISearch
                   text: strings.Refiners.Templates.DateRangeRefinementItemLabel,
                 }
               ]
-          }
+            },
+            {
+              id: 'refinerSortType',
+              title: strings.Refiners.Templates.RefinerSortTypeLabel,
+              type: CustomCollectionFieldType.dropdown,
+              options: [
+                {
+                  key: RefinersSortOption.ByNumberOfResults,
+                  text: strings.Refiners.Templates.RefinerSortTypeByNumberOfResults
+                },
+                {
+                  key: RefinersSortOption.Alphabetical,
+                  text: strings.Refiners.Templates.RefinerSortTypeAlphabetical
+                }
+              ]
+            }
         ]
       }),
       PropertyPaneDropdown('searchResultsDataSourceReference', {
@@ -316,6 +332,9 @@ export default class SearchRefinersWebPart extends BaseClientSideWebPart<ISearch
         if (!config.template) {
           config.template = RefinerTemplateOption.CheckBox;
         }
+        if (!config.refinerSortType){
+          config.refinerSortType = RefinersSortOption.ByNumberOfResults;
+        }
 
         return config;
       });
@@ -327,18 +346,20 @@ export default class SearchRefinersWebPart extends BaseClientSideWebPart<ISearch
         {
             refinerName: "Created",
             displayValue: "Created Date",
-            template: RefinerTemplateOption.CheckBox
-      
+            template: RefinerTemplateOption.CheckBox,
+            refinerSortType: RefinersSortOption.ByNumberOfResults      
         },
         {
             refinerName: "Size",
             displayValue: "Size of the file",
-            template: RefinerTemplateOption.CheckBox
+            template: RefinerTemplateOption.CheckBox,
+            refinerSortType: RefinersSortOption.ByNumberOfResults
         },
         {
             refinerName: "owstaxidmetadataalltagsinfo",
             displayValue: "Tags",
-            template: RefinerTemplateOption.CheckBox
+            template: RefinerTemplateOption.CheckBox,
+            refinerSortType: RefinersSortOption.ByNumberOfResults
         }
       ];
     }

@@ -12,9 +12,11 @@ import { ISearchRefinersContainerState } from './ISearchRefinersContainerState';
 import { IRefinementFilter, IRefinementValue, RefinementOperator } from '../../../../models/ISearchResult';
 import * as update from 'immutability-helper';
 import RefinerTemplateOption from '../../../../models/RefinerTemplateOption';
+import { find } from '@microsoft/sp-lodash-subset';
+import RefinersSortOption from '../../../../models/RefinersSortOptions';
 
 export default class SearchRefinersContainer extends React.Component<ISearchRefinersContainerProps, ISearchRefinersContainerState> {
-  
+
   public constructor(props: ISearchRefinersContainerProps) {
     super(props);
 
@@ -38,54 +40,54 @@ export default class SearchRefinersContainer extends React.Component<ISearchRefi
 
     if (this.state.availableRefiners.length === 0) {
 
-        if (this.props.displayMode === DisplayMode.Edit && this.props.showBlank) {
-          renderWpContent = <MessageBar messageBarType={MessageBarType.info}>{strings.ShowBlankEditInfoMessage}</MessageBar>;
-        } else if (!this.props.showBlank) {
-            renderWpContent = <div className={styles.searchRefiners__noFilter}>
-                                {strings.NoFilterConfiguredLabel}
-                              </div>;
-        } 
-    
+      if (this.props.displayMode === DisplayMode.Edit && this.props.showBlank) {
+        renderWpContent = <MessageBar messageBarType={MessageBarType.info}>{strings.ShowBlankEditInfoMessage}</MessageBar>;
+      } else if (!this.props.showBlank) {
+        renderWpContent = <div className={styles.searchRefiners__noFilter}>
+          {strings.NoFilterConfiguredLabel}
+        </div>;
+      }
+
     } else {
-      
+
       // Choose the right layout according to the Web Part option
       switch (this.props.selectedLayout) {
-        case RefinersLayoutOption.Vertical: 
-          renderWpContent = <Vertical 
-                              onFilterValuesUpdated={this.onFilterValuesUpdated}
-                              refinementResults={this.state.availableRefiners}
-                              refinersConfiguration={this.props.refinersConfiguration}
-                              shouldResetFilters={this.state.shouldResetFilters}
-                              onRemoveAllFilters={this.onRemoveAllFilters}
-                              hasSelectedValues={this.state.selectedRefinementFilters.length > 0 ? true : false }
-                              language={this.props.language}
-                              selectedFilters={this.state.selectedRefinementFilters}
-                            />;
-            break;
+        case RefinersLayoutOption.Vertical:
+          renderWpContent = <Vertical
+            onFilterValuesUpdated={this.onFilterValuesUpdated}
+            refinementResults={this.state.availableRefiners}
+            refinersConfiguration={this.props.refinersConfiguration}
+            shouldResetFilters={this.state.shouldResetFilters}
+            onRemoveAllFilters={this.onRemoveAllFilters}
+            hasSelectedValues={this.state.selectedRefinementFilters.length > 0 ? true : false }
+            language={this.props.language}
+            selectedFilters={this.state.selectedRefinementFilters}
+          />;
+          break;
 
         case RefinersLayoutOption.LinkAndPanel:
 
           // Flatten all selected values
           let selectedValues = [];
-          this.state.selectedRefinementFilters.map(refinement => { 
+          this.state.selectedRefinementFilters.map(refinement => {
             selectedValues = selectedValues.concat(refinement.Values);
           });
 
           renderWpContent = <LinkPanel
-                              onFilterValuesUpdated={this.onFilterValuesUpdated}
-                              refinementResults={this.state.availableRefiners}
-                              refinersConfiguration={this.props.refinersConfiguration}
-                              shouldResetFilters={this.state.shouldResetFilters}
-                              onRemoveAllFilters={this.onRemoveAllFilters}
-                              hasSelectedValues={this.state.selectedRefinementFilters.length > 0 ? true : false }
-                              selectedFilterValues={selectedValues}
-                              language={this.props.language}
-                              selectedFilters={this.state.selectedRefinementFilters}                            
-                            />;
+            onFilterValuesUpdated={this.onFilterValuesUpdated}
+            refinementResults={this.state.availableRefiners}
+            refinersConfiguration={this.props.refinersConfiguration}
+            shouldResetFilters={this.state.shouldResetFilters}
+            onRemoveAllFilters={this.onRemoveAllFilters}
+            hasSelectedValues={this.state.selectedRefinementFilters.length > 0 ? true : false }
+            selectedFilterValues={selectedValues}
+            language={this.props.language}
+            selectedFilters={this.state.selectedRefinementFilters}
+          />;
           break;
       }
     }
-    
+
     return (
       <div className={ styles.searchRefiners }>
         {renderWebPartTitle}
@@ -96,57 +98,74 @@ export default class SearchRefinersContainer extends React.Component<ISearchRefi
 
   public componentWillReceiveProps(nextProps: ISearchRefinersContainerProps) {
 
-      // If a new query has been entered, we reset all filters
-      if (nextProps.query !== this.props.query) {
-
-        this.setState({
-          shouldResetFilters: true,
-          selectedRefinementFilters: []
-        });
-
-      } else {
-
-        // Reset the flag every time we receive new refinement results
-        this.setState({
-          shouldResetFilters: false
-        });
-      }
-
-      let availableFilters = nextProps.availableRefiners;
-
-      // If a filter of type DateTime is currently selected but is not present in the new received refinement results, we add it as a result manually to be able to reset it
-      const dateFilters = nextProps.refinersConfiguration.filter(refiner => { 
-        return refiner.template === RefinerTemplateOption.DateRange;
-      });
-
-      dateFilters.map(dateFilter => {
-
-        // Is the filter currently selected?
-        const isSelected = this.state.selectedRefinementFilters.map(filter => { return filter.FilterName === dateFilter.refinerName; }).length > 0 ? true : false;
-
-        // If selected but there is no more result for this refiner, we manually add a dummy entry to available filters
-        if (isSelected && nextProps.availableRefiners.filter(availableRefiner => { return availableRefiner.FilterName ===  dateFilter.refinerName;}).length === 0) {
-
-          // Simply revert to previous filters to be able to reset filters combination
-          availableFilters = update(nextProps.availableRefiners, {$set: this.props.availableRefiners.length > 0 ? this.props.availableRefiners : this.state.availableRefiners});
-
-          // Reset all refinement counts
-          availableFilters = availableFilters.map(filter => {
-
-            const values = filter.Values.map(value => {
-              value.RefinementCount = 0;
-              return value;
-            });
-
-            filter.Values = values;
-            return filter;
-          });
-        }
-      });
+    // If a new query has been entered, we reset all filters
+    if (nextProps.query !== this.props.query) {
 
       this.setState({
-        availableRefiners: availableFilters
+        shouldResetFilters: true,
+        selectedRefinementFilters: []
       });
+
+    } else {
+
+      // Reset the flag every time we receive new refinement results
+      this.setState({
+        shouldResetFilters: false
+      });
+    }
+
+    let availableFilters = nextProps.availableRefiners;
+
+
+    nextProps.availableRefiners.forEach((refinementResult, index) => {
+
+      // get the configuration for this refiner
+      let refinerConfig = find(nextProps.refinersConfiguration, refiner => refiner.refinerName === refinementResult.FilterName);
+
+      // if the Sort Option is Alphabetical, reorder the values
+      if (refinerConfig && refinerConfig.refinerSortType === RefinersSortOption.Alphabetical) {
+        let sortedValues = refinementResult.Values.sort((a, b) => {
+          let textA = a.RefinementName.toUpperCase();
+          let textB = b.RefinementName.toUpperCase();
+          return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
+        });
+        availableFilters[index].Values = sortedValues;
+      }
+    });
+
+    // If a filter of type DateTime is currently selected but is not present in the new received refinement results, we add it as a result manually to be able to reset it
+    const dateFilters = nextProps.refinersConfiguration.filter(refiner => {
+      return refiner.template === RefinerTemplateOption.DateRange;
+    });
+
+    dateFilters.map(dateFilter => {
+
+      // Is the filter currently selected?
+      const isSelected = this.state.selectedRefinementFilters.map(filter => { return filter.FilterName === dateFilter.refinerName; }).length > 0 ? true : false;
+
+      // If selected but there is no more result for this refiner, we manually add a dummy entry to available filters
+      if (isSelected && nextProps.availableRefiners.filter(availableRefiner => { return availableRefiner.FilterName ===  dateFilter.refinerName;}).length === 0) {
+
+        // Simply revert to previous filters to be able to reset filters combination
+        availableFilters = update(nextProps.availableRefiners, {$set: this.props.availableRefiners.length > 0 ? this.props.availableRefiners : this.state.availableRefiners});
+
+        // Reset all refinement counts
+        availableFilters = availableFilters.map(filter => {
+
+          const values = filter.Values.map(value => {
+            value.RefinementCount = 0;
+            return value;
+          });
+
+          filter.Values = values;
+          return filter;
+        });
+      }
+    });
+
+    this.setState({
+      availableRefiners: availableFilters
+    });
   }
 
   public componentDidMount() {
@@ -163,7 +182,7 @@ export default class SearchRefinersContainer extends React.Component<ISearchRefi
    */
   private onFilterValuesUpdated(filterName: string, filterValues: IRefinementValue[], operator: RefinementOperator) {
 
-    let newFilters = []; 
+    let newFilters = [];
 
     const refinementFilter: IRefinementFilter = {
       FilterName: filterName,
@@ -189,7 +208,7 @@ export default class SearchRefinersContainer extends React.Component<ISearchRefi
       if (filterValues.length > 0){
         // If does not exist, add to selected filters collection
         newFilters = update(this.state.selectedRefinementFilters, {$push: [refinementFilter]});
-      }      
+      }
     }
 
     // Very important to reset the 'reset' flag after an udpdate

@@ -47,7 +47,10 @@ define([], function() {
           "closeButtonAriaLabel": 'Close date picker',      
           "isRequiredErrorMessage": 'Start date is required.',      
           "invalidInputErrorMessage": 'Invalid date format.'
-        }
+        },
+        "RefinerSortTypeLabel": "Refiner sort type",
+        "RefinerSortTypeAlphabetical": "Alphabetical",
+        "RefinerSortTypeByNumberOfResults": "By number of results"
       }
     },
   }
