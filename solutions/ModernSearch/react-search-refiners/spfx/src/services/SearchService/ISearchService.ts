@@ -1,5 +1,6 @@
-import { ISearchResults } from '../../models/ISearchResult';
+import { ISearchResults, ISearchVerticalInformation, IRefinementFilter } from '../../models/ISearchResult';
 import { ISearchServiceConfiguration } from '../../models/ISearchServiceConfiguration';
+import ISearchVerticalSourceData from '../../models/ISearchVerticalSourceData';
 
 interface ISearchService extends ISearchServiceConfiguration {
     /**
@@ -18,6 +19,14 @@ interface ISearchService extends ISearchServiceConfiguration {
      * Retrieve the configuration of the search service
      */
     getConfiguration(): ISearchServiceConfiguration;
+
+    /**
+     * Retreives the result counts for each search vertical
+     * @param queryText the search query text
+     * @param searchVerticalsConfiguration the search verticals configuration
+     * @param currentSelectedFilters the current selected filters
+     */
+    getSearchVerticalCounts(queryText: string, searchConfiguration: ISearchVerticalSourceData, currentSelectedFilters: IRefinementFilter[]): Promise<ISearchVerticalInformation[]>;
 }
 
  export default ISearchService;

@@ -1,10 +1,10 @@
 import * as Handlebars from 'handlebars';
 import ISearchService from './ISearchService';
-import { ISearchResults, ISearchResult, IRefinementResult, IRefinementValue, IRefinementFilter, IPromotedResult } from '../../models/ISearchResult';
+import { ISearchResults, ISearchResult, IRefinementResult, IRefinementValue, IRefinementFilter, IPromotedResult, ISearchVerticalInformation } from '../../models/ISearchResult';
 import { sp, SearchQuery, SearchResults, SPRest, Sort, SearchSuggestQuery } from '@pnp/sp';
 import { Logger, LogLevel, ConsoleListener } from '@pnp/logging';
-import { Text } from '@microsoft/sp-core-library';
-import { sortBy } from '@microsoft/sp-lodash-subset';
+import { Text, Guid } from '@microsoft/sp-core-library';
+import { sortBy, isEmpty } from '@microsoft/sp-lodash-subset';
 import LocalizationHelper from '../../helpers/LocalizationHelper';
 import "@pnp/polyfill-ie11";
 import IRefinerConfiguration from '../../models/IRefinerConfiguration';
@@ -13,6 +13,9 @@ import { ITokenService, TokenService } from '../TokenService';
 import { PageContext } from '@microsoft/sp-page-context';
 import { SPHttpClient } from '@microsoft/sp-http';
 import ISynonymTable from '../../models/ISynonym';
+import { JSONParser } from '@pnp/odata';
+import { UrlHelper } from '../../helpers/UrlHelper';
+import ISearchVerticalSourceData from '../../models/ISearchVerticalSourceData';
 
 class SearchService implements ISearchService {
     private _initialSearchResult: SearchResults = null;
@@ -306,6 +309,79 @@ class SearchService implements ISearchService {
         }
     }
 
+    /**
+     * Retreives the result counts for each search vertical
+     * @param queryText the search query text
+     * @param searchVerticalsConfiguration the search verticals configuration 
+     * @param currentSelectedFilters the current selected filters
+     */
+    public async getSearchVerticalCounts(queryText: string, searchVerticalsConfiguration: ISearchVerticalSourceData, currentSelectedFilters: IRefinementFilter[]): Promise<ISearchVerticalInformation[]> {
+
+        const batch = this._localPnPSetup.createBatch();   
+        const parser = new JSONParser();     
+        const batchId = Guid.newGuid().toString();
+        let verticalInfos: ISearchVerticalInformation[] = [];
+  
+        const promises = searchVerticalsConfiguration.verticalsConfiguration.map(async vertical => {
+
+            if (/\{searchTerms\}/.test(vertical.queryTemplate) && !isEmpty(queryText)) {
+
+                // Specify the same query parameters as the current vertical one to be sure to get the same total rows
+                // POST request does not seem to work well with batching so we use a GET request here
+                let url = `${this._pageContext.web.absoluteUrl}/_api/search/query`;
+
+                url = UrlHelper.addOrReplaceQueryStringParam(url, 'querytext', `'${queryText}'`);
+                url = UrlHelper.addOrReplaceQueryStringParam(url, 'rowlimit', '0');
+                url = UrlHelper.addOrReplaceQueryStringParam(url, 'querytemplate', `'${vertical.queryTemplate}'`);
+                url = UrlHelper.addOrReplaceQueryStringParam(url, 'trimduplicates', "'false'");
+                url = UrlHelper.addOrReplaceQueryStringParam(url, 'properties', "'EnableDynamicGroups:true,EnableMultiGeoSearch:true'");
+                url = UrlHelper.addOrReplaceQueryStringParam(url, 'clienttype', "'ContentSearchRegular'");
+
+                if (vertical.resultSourceId) {
+                    url = UrlHelper.addOrReplaceQueryStringParam(url, 'sourceid', `'${vertical.resultSourceId}'`);
+                }
+
+                if (vertical.key === searchVerticalsConfiguration.selectedVertical.key && currentSelectedFilters.length > 0) {
+
+                    const refinementConditions = this._buildRefinementQueryString(currentSelectedFilters, true);
+                    let refinementFiltersQueryString = refinementConditions.join(',');
+
+                    if (refinementConditions.length > 1) {
+                        refinementFiltersQueryString = `and(${refinementFiltersQueryString})`;
+                    }
+
+                    url = UrlHelper.addOrReplaceQueryStringParam(url, 'refinementfilters', `'${refinementFiltersQueryString}'`);
+                }
+
+                return batch.add(url, 'GET', {
+                    headers: {
+                        Accept: 'application/json; odata=nometadata'
+                    }
+                }, parser, batchId);
+            }
+        });
+        
+        // Execute the batch
+        await batch.execute();
+
+        const response = await Promise.all(promises);
+
+        // Parse results and return counts for each vertical
+        // We suppose the batch order follow the input verticals order
+        response.map((result: any, index: number) => {
+            if (result) {
+                verticalInfos.push(
+                    {
+                        Count: result.PrimaryQueryResult ? result.PrimaryQueryResult.RelevantResults.TotalRows : null,
+                        VerticalKey: searchVerticalsConfiguration.verticalsConfiguration[index].key
+                    } as ISearchVerticalInformation
+                );
+            }
+        });
+        
+        return verticalInfos;
+    }
+
     public getConfiguration(): ISearchServiceConfiguration {
         return {
             enableQueryRules: this.enableQueryRules,
@@ -368,8 +444,9 @@ class SearchService implements ISearchService {
     /**
      * Build the refinement condition in FQL format
      * @param selectedFilters The selected filter array
+     * @param encodeTokens If true, encodes the taxonomy refinement tokens in UTF-8 to work with GET requests. Javascript encodes natively in UTF-16 by default.
      */
-    private _buildRefinementQueryString(selectedFilters: IRefinementFilter[]): string[] {
+    private _buildRefinementQueryString(selectedFilters: IRefinementFilter[], encodeTokens?: boolean): string[] {
 
         let refinementQueryConditions: string[] = [];
 
@@ -378,11 +455,17 @@ class SearchService implements ISearchService {
 
                 // A refiner can have multiple values selected in a multi or mon multi selection scenario
                 // The correct operator is determined by the refiner display template according to its behavior
-                const conditions = filter.Values.map(value => { return value.RefinementToken; });
+                const conditions = filter.Values.map(value => {
+
+                    return /ǂǂ/.test(value.RefinementToken) && encodeTokens ? encodeURIComponent(value.RefinementToken) : value.RefinementToken; 
+                });
                 refinementQueryConditions.push(`${filter.FilterName}:${filter.Operator}(${conditions.join(',')})`);
             } else {
                 if (filter.Values.length === 1) {
-                    refinementQueryConditions.push(`${filter.FilterName}:${filter.Values[0].RefinementToken}`);
+
+                    // See https://sharepoint.stackexchange.com/questions/258081/how-to-hex-encode-refiners/258161
+                    let refinementToken = /ǂǂ/.test(filter.Values[0].RefinementToken) && encodeTokens ? encodeURIComponent(filter.Values[0].RefinementToken) : filter.Values[0].RefinementToken;
+                    refinementQueryConditions.push(`${filter.FilterName}:${refinementToken}`);
                 }
             }
         });
@@ -445,6 +528,5 @@ class SearchService implements ISearchService {
         return result;
     }
 }
-
 
 export default SearchService;

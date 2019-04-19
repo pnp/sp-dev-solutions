@@ -169,6 +169,7 @@ export default class SearchNavigationWebPart extends BaseClientSideWebPart<ISear
      * Make sure the dynamic property is correctly connected to the source if a search results component has been selected in options 
      */
     private ensureDataSourceConnection() {
+        
         if (this.properties.queryKeywordsDataSourceReference) {
             // Register the data source manually since we don't want user select properties manually
             if (!this._queryKeywordsSourceData) {

@@ -2,5 +2,6 @@ export enum SearchComponentType {
     SearchResultsWebPart = 'searchResultsWebPart',
     RefinersWebPart = 'refinersWebPart',
     PaginationWebPart = 'paginationWebPart',
-    SearchBoxWebPart = 'searchQuery'
+    SearchBoxWebPart = 'searchQuery',
+    SearchVerticalsWebPart = 'searchVerticals'
 }

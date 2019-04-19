@@ -32,13 +32,12 @@ export default class SearchRefinersWebPart extends BaseClientSideWebPart<ISearch
 
   private _dynamicDataService: IDynamicDataService;
   private _selectedFilters: IRefinementFilter[] = [];
-  private _availableRefiners: DynamicProperty<ISearchResultSourceData>;
+  private _searchResultSourceData: DynamicProperty<ISearchResultSourceData>;
   
   public render(): void {
 
     let renderElement = null;
     let availableRefiners = [];
-    let areResultsLoading = false;
     let queryKeywords = '';
     let selectedProperties: string[] = [];
     let queryTemplate: string = '';
@@ -46,8 +45,8 @@ export default class SearchRefinersWebPart extends BaseClientSideWebPart<ISearch
     if (this.properties.searchResultsDataSourceReference) {
 
       // If the dynamic property exists, it means the Web Part ins connected to a search results Web Part
-      if (this._availableRefiners) {
-        const searchResultSourceData: ISearchResultSourceData = this._availableRefiners.tryGetValue();
+      if (this._searchResultSourceData) {
+        const searchResultSourceData: ISearchResultSourceData = this._searchResultSourceData.tryGetValue();
 
         if (searchResultSourceData) {
           availableRefiners = searchResultSourceData.refinementResults;
@@ -281,16 +280,16 @@ export default class SearchRefinersWebPart extends BaseClientSideWebPart<ISearch
     if (this.properties.searchResultsDataSourceReference) {
 
       // Register the data source manually since we don't want user select properties manually
-      if (!this._availableRefiners) {
-        this._availableRefiners = new DynamicProperty<ISearchResultSourceData>(this.context.dynamicDataProvider);
+      if (!this._searchResultSourceData) {
+        this._searchResultSourceData = new DynamicProperty<ISearchResultSourceData>(this.context.dynamicDataProvider);
       }
 
-      this._availableRefiners.setReference(this.properties.searchResultsDataSourceReference);
-      this._availableRefiners.register(this.render);
+      this._searchResultSourceData.setReference(this.properties.searchResultsDataSourceReference);
+      this._searchResultSourceData.register(this.render);
       
     } else {
-      if (this._availableRefiners) {
-        this._availableRefiners.unregister(this.render);
+      if (this._searchResultSourceData) {
+        this._searchResultSourceData.unregister(this.render);
       }
     }
   }

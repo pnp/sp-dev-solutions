@@ -236,6 +236,9 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
             isPageChanged = false;
             selectedPage = 1;
             if (lastQuery !== query) {
+                // Reset current selected refinement filters when:
+                // - A search vertical is selected
+                // - A new query is performed via the search box of URL trigger
                 nextProps.searchService.refinementFilters = [];
             }
         }
@@ -669,7 +672,7 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
     }
 
     private handleResultUpdateBroadCast(results: ISearchResults) {
-        this.props.onSearchResultsUpdate(results, this.state.mountingNodeId);
+        this.props.onSearchResultsUpdate(results, this.state.mountingNodeId, this.props.searchService);
     }
 
     /**
