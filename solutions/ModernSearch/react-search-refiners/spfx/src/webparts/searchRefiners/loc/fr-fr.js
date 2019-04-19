@@ -48,7 +48,10 @@ define([], function() {
           "closeButtonAriaLabel": 'Fermer le sélecteur de date',      
           "isRequiredErrorMessage": 'La date de début est requise.',      
           "invalidInputErrorMessage": 'Format de date invalide.'
-        }
+        },
+        "RefinerSortTypeLabel": "Type de tri du filtre",
+        "RefinerSortTypeAlphabetical": "Alphabétique",
+        "RefinerSortTypeByNumberOfResults": "Par nombre de résultats"
       }
     },
   }
