@@ -49,9 +49,9 @@ define([], function() {
           "isRequiredErrorMessage": 'La date de début est requise.',      
           "invalidInputErrorMessage": 'Format de date invalide.'
         },
-        "RefinerSortTypeLabel": "Refiner sort type",
-        "RefinerSortTypeAlphabetical": "Alphabetical",
-        "RefinerSortTypeByNumberOfResults": "By number of results"
+        "RefinerSortTypeLabel": "Type de tri du filtre",
+        "RefinerSortTypeAlphabetical": "Alphabétique",
+        "RefinerSortTypeByNumberOfResults": "Par nombre de résultats"
       }
     },
   }
