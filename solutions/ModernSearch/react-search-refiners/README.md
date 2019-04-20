@@ -354,15 +354,15 @@ The search verticals Web Part allow users to search through predefined scopes (i
 <table>
   <tr>
     <td>
-<p align="center"><img width="300px" src="./images/search_verticals_propertypane.png"/><p>
+<p align="center"><img src="./images/search_verticals_propertypane.png"/><p>
     </td>
     <td>
-<p align="center"><img width="300px" src="./images/search_verticals_propertypane2.png"/><p>
+<p align="center"><img src="./images/search_verticals_propertypane2.png"/><p>
     </td>
   </tr>
   <tr>
     <td colspan=2>
-<p align="center"><img width="600px" src="./images/search_verticals_propertypane3.png"/><p>
+<p align="center"><img src="./images/search_verticals_propertypane3.png"/><p>
     </td>
   </tr>
 <table>
