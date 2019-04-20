@@ -7,7 +7,7 @@ This solution allows you to build user friendly SharePoint search experiences us
 
 - Fully customizable SharePoint search query like the good old Content Search Web Part.
 - Can either use a static query or be connected to a search box component using SPFx dynamic data.
-- Live templating system with Handlebar to meet your requirements in terms of UI + builtin list and tiles templates. Can alos use template from an external file.
+- Live templating system with Handlebar to meet your requirements in terms of UI + builtin list and tiles templates. Can also use template from an external file.
 - Search results includings previews for Office documents and Office 365 videos.
 - Customizable refiners supporting multilingual values for taxonomy based filters.
 - Sortable results (unique field).
@@ -34,7 +34,8 @@ Search Box Web Part | Allows users to enter free text/KQL search queries connect
 Search Results Web Part | Performs static or dynamic search query with customizable parameters sorting and templating. An associated [blog post](http://thecollaborationcorner.com/2017/10/16/build-dynamic-sharepoint-search-experiences-with-refiners-and-paging-with-spfx-office-ui-fabric-and-pnp-js-library/) is available to give you more details about this Web Part implementation.
 Search Refiners | Allows users to configure refiners for a search results Web Part.
 Search Pagination | Allows users to configure pagination for a search results Web Part.
-Search Navigation | Allows users to configure navigation for a search results Web Part
+Search Navigation | Allows users to configure navigation for a search results Web Part.
+Search Verticals | Allows users to search in predefined scopes.
 
 **Back-end service(s)**
 
@@ -339,6 +340,38 @@ This step is used to set up the navigation nodes, and needs to be done on all pa
 #### Setup colors
 The you may either use the sitecollections theme colors, or use a custom color you choose in the settings pane.
 <img src="./images/ChangeColor.gif">
+
+### Search Verticals Web Part
+
+<p align="center"><img width="500px" src="./images/search_verticals.png"/><p>
+
+
+The search verticals Web Part allow users to search through predefined scopes (i.e videos, people, etc.). The behavior is different from the search navigation Web Part because here, we simply replace the query template and result source dynamically for a chosen vertical. To get it work, you simply need to connect the search verticals Web Part to a search results Web Part using the associated opton. Also, if you want to display counts for each verticals **when a new query is performed** (for instance a search box query or an URL fragment udpate), connect the search results Web Part to the search verticals one (two ways connection in this case).
+
+#### Verticals Options
+
+<table>
+  <tr>
+    <td>
+<p align="center"><img width="300px" src="./images/search_verticals_propertypane.png"/><p>
+    </td>
+    <td>
+<p align="center"><img width="300px" src="./images/search_verticals_propertypane2.png"/><p>
+    </td>
+  </tr>
+  <tr>
+    <td colspan=2>
+<p align="center"><img width="600px" src="./images/search_verticals_propertypane3.png"/><p>
+    </td>
+  </tr>
+<table>
+
+
+Setting | Description 
+-------|----
+Search verticals | Configure the search verticals to display. When you set a query template or a result source id for a vertical, these override the ones in the connected search results. You can also set an icon for a vertical using [Office UI Fabric icons names](https://developer.microsoft.com/en-us/fabric#/styles/icons). The query keywords are shared across all verticals. For instance, if you need default results for tabs, just specify a default query in the connected search results Web Part (like `*`) and the `{searchTerms}` expression in your vertical query template. Also, selected refinement filters are reset, if present, when a new vertical is selected.
+Show results count | Indicates if the results count should be displayed for each vertical. In this case, you need to connect the Web Part to an existing search results Web Part on the page.
+
 
 ## Features
 This Web Part illustrates the following concepts on top of the SharePoint Framework:
