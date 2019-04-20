@@ -4,7 +4,7 @@ import { ISearchResults, ISearchResult, IRefinementResult, IRefinementValue, IRe
 import { sp, SearchQuery, SearchResults, SPRest, Sort, SearchSuggestQuery } from '@pnp/sp';
 import { Logger, LogLevel, ConsoleListener } from '@pnp/logging';
 import { Text, Guid } from '@microsoft/sp-core-library';
-import { sortBy, isEmpty } from '@microsoft/sp-lodash-subset';
+import { sortBy, isEmpty, escape } from '@microsoft/sp-lodash-subset';
 import LocalizationHelper from '../../helpers/LocalizationHelper';
 import "@pnp/polyfill-ie11";
 import IRefinerConfiguration from '../../models/IRefinerConfiguration';
@@ -15,7 +15,7 @@ import { SPHttpClient } from '@microsoft/sp-http';
 import ISynonymTable from '../../models/ISynonym';
 import { JSONParser } from '@pnp/odata';
 import { UrlHelper } from '../../helpers/UrlHelper';
-import ISearchVerticalSourceData from '../../models/ISearchVerticalSourceData';
+import { ISearchVertical } from '../../models/ISearchVertical';
 
 class SearchService implements ISearchService {
     private _initialSearchResult: SearchResults = null;
@@ -312,53 +312,37 @@ class SearchService implements ISearchService {
     /**
      * Retreives the result counts for each search vertical
      * @param queryText the search query text
-     * @param searchVerticalsConfiguration the search verticals configuration 
-     * @param currentSelectedFilters the current selected filters
+     * @param searchVerticalsConfiguration the search verticals configuration
      */
-    public async getSearchVerticalCounts(queryText: string, searchVerticalsConfiguration: ISearchVerticalSourceData, currentSelectedFilters: IRefinementFilter[]): Promise<ISearchVerticalInformation[]> {
+    public async getSearchVerticalCounts(queryText: string, searchVerticals: ISearchVertical[]): Promise<ISearchVerticalInformation[]> {
 
         const batch = this._localPnPSetup.createBatch();   
         const parser = new JSONParser();     
         const batchId = Guid.newGuid().toString();
         let verticalInfos: ISearchVerticalInformation[] = [];
   
-        const promises = searchVerticalsConfiguration.verticalsConfiguration.map(async vertical => {
+        const promises = searchVerticals.map(async vertical => {
 
-            if (/\{searchTerms\}/.test(vertical.queryTemplate) && !isEmpty(queryText)) {
+            // Specify the same query parameters as the current vertical one to be sure to get the same total rows
+            // POST request does not seem to work well with batching so we use a GET request here
+            let url = `${this._pageContext.web.absoluteUrl}/_api/search/query`;
 
-                // Specify the same query parameters as the current vertical one to be sure to get the same total rows
-                // POST request does not seem to work well with batching so we use a GET request here
-                let url = `${this._pageContext.web.absoluteUrl}/_api/search/query`;
+            url = UrlHelper.addOrReplaceQueryStringParam(url, 'querytext', `'${queryText.replace(/'/g, "''")}'`);
+            url = UrlHelper.addOrReplaceQueryStringParam(url, 'rowlimit', '0');
+            url = UrlHelper.addOrReplaceQueryStringParam(url, 'querytemplate', `'${vertical.queryTemplate}'`);
+            url = UrlHelper.addOrReplaceQueryStringParam(url, 'trimduplicates', "'false'");
+            url = UrlHelper.addOrReplaceQueryStringParam(url, 'properties', "'EnableDynamicGroups:true,EnableMultiGeoSearch:true'");
+            url = UrlHelper.addOrReplaceQueryStringParam(url, 'clienttype', "'ContentSearchRegular'");
 
-                url = UrlHelper.addOrReplaceQueryStringParam(url, 'querytext', `'${queryText}'`);
-                url = UrlHelper.addOrReplaceQueryStringParam(url, 'rowlimit', '0');
-                url = UrlHelper.addOrReplaceQueryStringParam(url, 'querytemplate', `'${vertical.queryTemplate}'`);
-                url = UrlHelper.addOrReplaceQueryStringParam(url, 'trimduplicates', "'false'");
-                url = UrlHelper.addOrReplaceQueryStringParam(url, 'properties', "'EnableDynamicGroups:true,EnableMultiGeoSearch:true'");
-                url = UrlHelper.addOrReplaceQueryStringParam(url, 'clienttype', "'ContentSearchRegular'");
-
-                if (vertical.resultSourceId) {
-                    url = UrlHelper.addOrReplaceQueryStringParam(url, 'sourceid', `'${vertical.resultSourceId}'`);
-                }
-
-                if (vertical.key === searchVerticalsConfiguration.selectedVertical.key && currentSelectedFilters.length > 0) {
-
-                    const refinementConditions = this._buildRefinementQueryString(currentSelectedFilters, true);
-                    let refinementFiltersQueryString = refinementConditions.join(',');
-
-                    if (refinementConditions.length > 1) {
-                        refinementFiltersQueryString = `and(${refinementFiltersQueryString})`;
-                    }
-
-                    url = UrlHelper.addOrReplaceQueryStringParam(url, 'refinementfilters', `'${refinementFiltersQueryString}'`);
-                }
-
-                return batch.add(url, 'GET', {
-                    headers: {
-                        Accept: 'application/json; odata=nometadata'
-                    }
-                }, parser, batchId);
+            if (vertical.resultSourceId) {
+                url = UrlHelper.addOrReplaceQueryStringParam(url, 'sourceid', `'${vertical.resultSourceId}'`);
             }
+
+            return batch.add(url, 'GET', {
+                headers: {
+                    Accept: 'application/json; odata=nometadata'
+                }
+            }, parser, batchId);
         });
         
         // Execute the batch
@@ -369,11 +353,11 @@ class SearchService implements ISearchService {
         // Parse results and return counts for each vertical
         // We suppose the batch order follow the input verticals order
         response.map((result: any, index: number) => {
-            if (result) {
+            if (result.PrimaryQueryResult) {
                 verticalInfos.push(
                     {
                         Count: result.PrimaryQueryResult ? result.PrimaryQueryResult.RelevantResults.TotalRows : null,
-                        VerticalKey: searchVerticalsConfiguration.verticalsConfiguration[index].key
+                        VerticalKey: searchVerticals[index].key
                     } as ISearchVerticalInformation
                 );
             }

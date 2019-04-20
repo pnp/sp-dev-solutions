@@ -1,6 +1,6 @@
 # SharePoint Framework modern search Web Parts
 
-![Version](https://img.shields.io/badge/version-3.2.0-green.svg)
+![Version](https://img.shields.io/badge/version-3.3.0-green.svg)
 
 ## Summary
 This solution allows you to build user friendly SharePoint search experiences using SPFx in the modern interface. The main features include:
@@ -349,7 +349,7 @@ This Web Part illustrates the following concepts on top of the SharePoint Framew
 - Using SharePoint taxonomy using JSOM in SPFx (filter translations)
 - Integrate the [@pnp/spfx-property-controls](https://github.com/SharePoint/sp-dev-fx-property-controls) in your solution (*PlaceHolder* control).
 - Integrate multiple Office UI Fabric components (DocumentCard, Panel, GroupedList, ...) to fit with the native Office 365 theme.
-- Use the React container component approach inspiring by the [react-todo-basic sample](https://github.com/SharePoint/sp-dev-fx-webparts/tree/master/samples/react-todo-basic).
+- Use the React container component approach inspiring by the [react-todo-basic sample](https://github.com/SharePoint/sp-dev-fx-webparts/tree/master/samples/react-todo-basic)
 
 <img src="https://telemetry.sharepointpnp.com/sp-dev-solutions/ModernSearch/react-search-refiners" />
 
@@ -382,6 +382,7 @@ Version|Date|Comments
 3.0.5.0 | Mar 26, 2019 | Fixed recreating SearchService on each render
 3.1.0.0 | Mar 30, 2019 | Added date range and multi value refiner templates
 3.2.0.0 | Apr 08, 2019 | Added support for QueryString token
+3.3.0.0 | Apr 20, 2019 | Added search verticals Web Part allwoing to search within predefined scopes using query template and result source.
 
 ## Important notice on upgrading the solution from pre v2.2.0.0
 **Due to code restucturing we have hit an edge case which impacts upgrades from previous versions. To solve the issue go to `https://<tenant>.sharepoint.com/sites/<appcatalog>/Lists/ComponentManifests` and remove the entries for SearchBox and Search Results, and then upload the .sppkg for the new release.**

@@ -53,10 +53,8 @@ export default class SearchVerticalsWebPart extends BaseClientSideWebPart<ISearc
   
           if (searchResultSourceData.verticalsInformation) {
             // Updated vertical counts
-            searchVerticals = searchVerticals.map(configuredVertical => { 
-  
+            searchVerticals = searchVerticals.map(configuredVertical => {
               const verticalInfo = searchResultSourceData.verticalsInformation.filter(v => { return v.VerticalKey === configuredVertical.key; });
-  
               if (verticalInfo.length > 0) {
                 configuredVertical.count = verticalInfo[0].Count;
               }
@@ -198,37 +196,37 @@ export default class SearchVerticalsWebPart extends BaseClientSideWebPart<ISearc
 
     let settingFields: IPropertyPaneField<any>[] = [
       this._propertyFieldCollectionData('verticals', {
-        manageBtnLabel: "Edit search verticals",
+        manageBtnLabel: strings.PropertyPane.Verticals.ButtonLabel,
         key: 'verticals',
-        panelHeader: "Search verticals",
-        panelDescription: "Configure verticals",
+        panelHeader: strings.PropertyPane.Verticals.PanelHeader,
+        panelDescription: strings.PropertyPane.Verticals.PanelDescription,
         enableSorting: true,
-        label: "Configure verticals",
+        label: strings.PropertyPane.Verticals.PropertyLabel,
         value: this.properties.verticals,
         fields: [
             {
                 id: 'tabName',
-                title: "Tab name",
+                title: strings.PropertyPane.Verticals.Fields.TabName,
                 type: this._customCollectionFieldType.string,
                 required: true
             },
             {
                 id: 'queryTemplate',
-                title: "Query template",
+                title: strings.PropertyPane.Verticals.Fields.QueryTemplate,
                 type: this._customCollectionFieldType.string,
                 required: true,
                 defaultValue: "{searchTerms}"
             },
             {
                 id: 'resultSourceId',
-                title: "Result Source id",
+                title: strings.PropertyPane.Verticals.Fields.ResultSource,
                 type: this._customCollectionFieldType.string,
                 required: false,
                 
             },
             {
                 id: 'iconName',
-                title: "Icon name",
+                title: strings.PropertyPane.Verticals.Fields.IconName,
                 type: this._customCollectionFieldType.string,
                 required: false
             }
@@ -239,7 +237,7 @@ export default class SearchVerticalsWebPart extends BaseClientSideWebPart<ISearc
     if (this.properties.verticals.length > 0) {
       settingFields.push(
         PropertyPaneToggle('showCounts', {
-          label: "Show counts"
+          label: strings.PropertyPane.ShowCounts.PropertyLabel
         })
       );
     }
@@ -248,7 +246,7 @@ export default class SearchVerticalsWebPart extends BaseClientSideWebPart<ISearc
       settingFields.push(      
         PropertyPaneDropdown('searchResultsDataSourceReference', {
         options: this._dynamicDataService.getAvailableDataSourcesByType(SearchComponentType.SearchResultsWebPart),
-        label: "Connect to search results"
+        label: strings.PropertyPane.SearchResultsDataSource.PropertyLabel
        })
       );
     }

@@ -5,6 +5,7 @@ import IRefinerConfiguration from '../../models/IRefinerConfiguration';
 import { Sort } from '@pnp/sp';
 import { ISearchServiceConfiguration } from '../../models/ISearchServiceConfiguration';
 import ISearchVerticalSourceData from '../../models/ISearchVerticalSourceData';
+import { ISearchVertical } from '../../models/ISearchVertical';
 
 class MockSearchService implements ISearchService {
 
@@ -289,8 +290,18 @@ class MockSearchService implements ISearchService {
      * @param queryText the search query text
      * @param searchVerticalsConfiguration the search verticals configuration 
      */
-    public getSearchVerticalCounts(queryText: string, searchConfiguration: ISearchVerticalSourceData, currentSelectedFilters: IRefinementFilter[]): Promise<ISearchVerticalInformation[]> {
-        throw new Error("Method not implemented.");
+    public getSearchVerticalCounts(queryText: string, searchVerticals: ISearchVertical[]): Promise<ISearchVerticalInformation[]> {
+
+        let verticalInformation: ISearchVerticalInformation[] = [];
+
+        verticalInformation = searchVerticals.map(vertical => {
+            return {
+                Count: Math.ceil(Math.random() * 10),
+                VerticalKey: vertical.key
+            } as ISearchVerticalInformation;
+        });
+
+        return Promise.resolve(verticalInformation);
     }
 }
 

@@ -41,6 +41,7 @@ export default class SearchRefinersWebPart extends BaseClientSideWebPart<ISearch
     let queryKeywords = '';
     let selectedProperties: string[] = [];
     let queryTemplate: string = '';
+    let resultSourceId: string = '';
 
     if (this.properties.searchResultsDataSourceReference) {
 
@@ -54,6 +55,7 @@ export default class SearchRefinersWebPart extends BaseClientSideWebPart<ISearch
           const searchServiceConfig = searchResultSourceData.searchServiceConfiguration;
           selectedProperties = (searchServiceConfig.selectedProperties) ? searchServiceConfig.selectedProperties : [];
           queryTemplate = (searchServiceConfig.queryTemplate) ? searchServiceConfig.queryTemplate : '';
+          resultSourceId = searchServiceConfig.resultSourceId;
         }
       }
 
@@ -71,7 +73,7 @@ export default class SearchRefinersWebPart extends BaseClientSideWebPart<ISearch
           },
           selectedLayout: this.properties.selectedLayout,
           language: this.context.pageContext.cultureInfo.currentUICultureName,
-          query: queryKeywords + queryTemplate + selectedProperties
+          query: queryKeywords + queryTemplate + selectedProperties + resultSourceId
         } as ISearchRefinersContainerProps
       );
     } else {

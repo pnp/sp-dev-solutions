@@ -98,7 +98,7 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
 
             if (items.RelevantResults.length === 0) {
                 const selectedProperties = (this.props.searchService.selectedProperties) ? this.props.searchService.selectedProperties.join(',') : undefined;
-                const lastQuery = this.state.results.QueryKeywords + this.props.searchService.queryTemplate + selectedProperties;
+                const lastQuery = this.state.results.QueryKeywords + this.props.searchService.queryTemplate + selectedProperties + this.props.searchService.resultSourceId;
                 // Check if a search request has already been entered (to distinguish the first use scenario)
                 if (!this.props.showBlank && lastQuery && !areResultsLoading) {
                     renderWpContent =
@@ -210,9 +210,9 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
         let isPageChanged = false;
         let selectedPage = 1;
         let lastSelectedProperties = (this.props.searchService.selectedProperties) ? this.props.searchService.selectedProperties.join(',') : undefined;
-        let lastQuery = this.props.queryKeywords + this.props.searchService.queryTemplate + lastSelectedProperties;
+        let lastQuery = this.props.queryKeywords + this.props.searchService.queryTemplate + lastSelectedProperties + this.props.searchService.resultSourceId;
         let nextSelectedProperties = (nextProps.searchService.selectedProperties) ? nextProps.searchService.selectedProperties.join(',') : undefined;
-        let query = nextProps.queryKeywords + nextProps.searchService.queryTemplate + nextSelectedProperties;
+        let query = nextProps.queryKeywords + nextProps.searchService.queryTemplate + nextSelectedProperties + nextProps.searchService.resultSourceId;
 
         if (this.props.selectedPage !== nextProps.selectedPage) {
             executeSearch = true;

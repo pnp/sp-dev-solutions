@@ -55,6 +55,7 @@ import IPaginationSourceData from '../../models/IPaginationSourceData';
 import ISynonymTable from '../../models/ISynonym';
 import * as update from 'immutability-helper';
 import ISearchVerticalSourceData from '../../models/ISearchVerticalSourceData';
+import { ISearchVertical } from '../../models/ISearchVertical';
 
 export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchResultsWebPartProps> implements IDynamicDataCallables {
 
@@ -197,10 +198,22 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
                     if (getVerticalsCounts) {
 
                         const searchVerticalSourceData: ISearchVerticalSourceData = this._searchVerticalSourceData.tryGetValue();
+                        const otherVerticals = searchVerticalSourceData.verticalsConfiguration.filter(v => { return v.key !== searchVerticalSourceData.selectedVertical.key;});
+                        searchService.getSearchVerticalCounts(queryKeywords, otherVerticals).then((verticalsInfos) => {
 
-                        // Get counts search verticals (with current refinement filters for the current vertical)
-                        searchService.getSearchVerticalCounts(queryKeywords, searchVerticalSourceData, searchService.refinementFilters).then((verticalsInfos) => {
-                            this._verticalsInformation = verticalsInfos;
+                            let currentCount = results.PaginationInformation ? results.PaginationInformation.TotalRows : undefined;
+
+                            if (currentCount !== undefined && currentCount !== null) {
+                                // Add current vertical infos
+                                let currentVerticalInfos: ISearchVerticalInformation = {
+                                    Count: currentCount,
+                                    VerticalKey: searchVerticalSourceData.selectedVertical.key
+                                };
+
+                                verticalsInfos.push(currentVerticalInfos);
+                            }    
+    
+                            this._verticalsInformation = update(this._verticalsInformation , {$set : verticalsInfos});
                             this.context.dynamicDataSourceManager.notifyPropertyChanged(SearchComponentType.SearchResultsWebPart);
                         });
                     }
@@ -674,7 +687,7 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
             PropertyPaneTextField('queryTemplate', {
                 label: strings.QueryTemplateFieldLabel,
                 value: this.properties.queryTemplate,
-                disabled: this.properties.useSearchVerticals ? true : false,
+                disabled: this.properties.searchVerticalDataSourceReference ? true : false,
                 multiline: true,
                 resizable: true,
                 placeholder: strings.SearchQueryPlaceHolderText,
