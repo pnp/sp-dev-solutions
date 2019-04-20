@@ -260,6 +260,7 @@ The following out of the box [query variables](https://docs.microsoft.com/en-us/
 #### Custom query variables
 
 The following custom query variables are supported:
+
 |**Query variable**|**Definition**|
 |:-----|:-----|
 |{Page.&lt;FieldName&gt;}  <br/> | The value of a field on the page from where the query was issued. For example, if the page from where the query was issued contained a site column named "ContentOwner," specifying {Page.ContentOwner} would allow you to query for the value of "ContentOwner." FieldName is the internal name of the field. When used with taxonomy columns, use `{Page.<FieldName>.Label}` or `{Page.<FieldName>.TermID}` <br/> |
