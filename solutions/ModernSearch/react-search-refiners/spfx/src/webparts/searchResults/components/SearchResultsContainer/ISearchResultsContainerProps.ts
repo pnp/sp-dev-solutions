@@ -115,7 +115,6 @@ interface ISearchResultsContainerProps {
      * The selected page to show for the search results
      */
     selectedPage: number;
-
 }
 
 export default ISearchResultsContainerProps;

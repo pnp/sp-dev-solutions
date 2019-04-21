@@ -10,7 +10,7 @@ define([], function() {
     "EnableLocalizationLabel": "Activer la traduction des termes de taxonomie pour les filtres et les résultats",
     "EnableLocalizationOnLabel": "Traduction activée",
     "EnableLocalizationOffLabel": "Traduction  désactivée",
-    "NoResultMessage": "Il n'y a aucun résultat à afficher.",
+    "NoResultMessage": "Aucun résultat à afficher.",
     "FilterPanelTitle": "Filtres disponibles",
     "FilterResultsButtonLabel": "Filtrer",
     "SelectedFiltersLabel": "Filtre(s) appliqué(s)",

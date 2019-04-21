@@ -49,7 +49,7 @@ define([], function() {
           "isRequiredErrorMessage": 'La date de début est requise.',      
           "invalidInputErrorMessage": 'Format de date invalide.'
         },
-        "RefinerSortTypeLabel": "Type de tri du filtre",
+        "RefinerSortTypeLabel": "Trier selon ce critère",
         "RefinerSortTypeAlphabetical": "Alphabétique",
         "RefinerSortTypeByNumberOfResults": "Par nombre de résultats"
       }
