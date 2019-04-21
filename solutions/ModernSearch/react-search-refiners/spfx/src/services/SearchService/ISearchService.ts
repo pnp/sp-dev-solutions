@@ -25,8 +25,9 @@ interface ISearchService extends ISearchServiceConfiguration {
      * Retreives the result counts for each search vertical
      * @param queryText the search query text
      * @param searchVerticalsConfiguration the search verticals configuration
+     * @param enableQueryRules enable query rules or not
      */
-    getSearchVerticalCounts(queryText: string, searchVerticals: ISearchVertical[]): Promise<ISearchVerticalInformation[]>;
+    getSearchVerticalCounts(queryText: string, searchVerticals: ISearchVertical[], enableQueryRules: boolean): Promise<ISearchVerticalInformation[]>;
 }
 
  export default ISearchService;

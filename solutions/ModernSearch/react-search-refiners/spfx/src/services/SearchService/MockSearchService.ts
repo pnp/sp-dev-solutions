@@ -288,9 +288,10 @@ class MockSearchService implements ISearchService {
     /**
      * Retreives the result counts for each search vertical
      * @param queryText the search query text
-     * @param searchVerticalsConfiguration the search verticals configuration 
+     * @param searchVerticalsConfiguration the search verticals configuration
+     * @param enableQueryRules enable query rules or not
      */
-    public getSearchVerticalCounts(queryText: string, searchVerticals: ISearchVertical[]): Promise<ISearchVerticalInformation[]> {
+    public getSearchVerticalCounts(queryText: string, searchVerticals: ISearchVertical[], enableQueryRules: boolean): Promise<ISearchVerticalInformation[]> {
 
         let verticalInformation: ISearchVerticalInformation[] = [];
 

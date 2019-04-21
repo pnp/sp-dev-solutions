@@ -199,7 +199,7 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
 
                         const searchVerticalSourceData: ISearchVerticalSourceData = this._searchVerticalSourceData.tryGetValue();
                         const otherVerticals = searchVerticalSourceData.verticalsConfiguration.filter(v => { return v.key !== searchVerticalSourceData.selectedVertical.key;});
-                        searchService.getSearchVerticalCounts(queryKeywords, otherVerticals).then((verticalsInfos) => {
+                        searchService.getSearchVerticalCounts(queryKeywords, otherVerticals, searchService.enableQueryRules).then((verticalsInfos) => {
 
                             let currentCount = results.PaginationInformation ? results.PaginationInformation.TotalRows : undefined;
 

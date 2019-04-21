@@ -313,26 +313,32 @@ class SearchService implements ISearchService {
      * Retreives the result counts for each search vertical
      * @param queryText the search query text
      * @param searchVerticalsConfiguration the search verticals configuration
+     * @param enableQueryRules enable query rules or not
      */
-    public async getSearchVerticalCounts(queryText: string, searchVerticals: ISearchVertical[]): Promise<ISearchVerticalInformation[]> {
+    public async getSearchVerticalCounts(queryText: string, searchVerticals: ISearchVertical[], enableQueryRules: boolean): Promise<ISearchVerticalInformation[]> {
 
         const batch = this._localPnPSetup.createBatch();   
         const parser = new JSONParser();     
         const batchId = Guid.newGuid().toString();
         let verticalInfos: ISearchVerticalInformation[] = [];
-  
+ 
         const promises = searchVerticals.map(async vertical => {
 
             // Specify the same query parameters as the current vertical one to be sure to get the same total rows
             // POST request does not seem to work well with batching so we use a GET request here
             let url = `${this._pageContext.web.absoluteUrl}/_api/search/query`;
 
+            // When query rules are enabled, we need to set the row limit to minimum 1 to get data in the 'PrimaryQueryResult' property and get the 'TotalRows'
+            // More info here https://blog.mastykarz.nl/inconvenient-content-targeting-user-segments-search-rest-api/
+            const rowLimit: string = enableQueryRules ? '1' : '0';
+
             url = UrlHelper.addOrReplaceQueryStringParam(url, 'querytext', `'${queryText.replace(/'/g, "''")}'`);
-            url = UrlHelper.addOrReplaceQueryStringParam(url, 'rowlimit', '0');
+            url = UrlHelper.addOrReplaceQueryStringParam(url, 'rowlimit', rowLimit);
             url = UrlHelper.addOrReplaceQueryStringParam(url, 'querytemplate', `'${vertical.queryTemplate}'`);
             url = UrlHelper.addOrReplaceQueryStringParam(url, 'trimduplicates', "'false'");
             url = UrlHelper.addOrReplaceQueryStringParam(url, 'properties', "'EnableDynamicGroups:true,EnableMultiGeoSearch:true'");
             url = UrlHelper.addOrReplaceQueryStringParam(url, 'clienttype', "'ContentSearchRegular'");
+            url = UrlHelper.addOrReplaceQueryStringParam(url, 'enablequeryrules', `${enableQueryRules}`);
 
             if (vertical.resultSourceId) {
                 url = UrlHelper.addOrReplaceQueryStringParam(url, 'sourceid', `'${vertical.resultSourceId}'`);
@@ -353,10 +359,17 @@ class SearchService implements ISearchService {
         // Parse results and return counts for each vertical
         // We suppose the batch order follow the input verticals order
         response.map((result: any, index: number) => {
+
+            let currentCount = null;
             if (result.PrimaryQueryResult) {
+                currentCount = result.PrimaryQueryResult.RelevantResults.TotalRows;
+            }
+
+            // GET requests allow empty query text so we need to ensure there is actually a query to get the right count
+            if (currentCount !== null && !isEmpty(queryText)) {
                 verticalInfos.push(
                     {
-                        Count: result.PrimaryQueryResult ? result.PrimaryQueryResult.RelevantResults.TotalRows : null,
+                        Count: currentCount,
                         VerticalKey: searchVerticals[index].key
                     } as ISearchVerticalInformation
                 );
@@ -366,6 +379,9 @@ class SearchService implements ISearchService {
         return verticalInfos;
     }
 
+    /**
+     * Gets the current search service properties configuration
+     */
     public getConfiguration(): ISearchServiceConfiguration {
         return {
             enableQueryRules: this.enableQueryRules,
