@@ -32,7 +32,9 @@ export interface ISearchResultsWebPartProps {
     customTemplateFieldValues: ICustomTemplateFieldValue[];
     enableLocalization: boolean;
     useRefiners: boolean;
+    useSearchVerticals: boolean;
     refinerDataSourceReference: string;
+    searchVerticalDataSourceReference: string;
     paginationDataSourceReference: string;
     synonymList: ISynonymFieldConfiguration[];
 

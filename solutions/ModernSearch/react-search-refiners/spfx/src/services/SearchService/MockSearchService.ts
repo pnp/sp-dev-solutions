@@ -1,9 +1,11 @@
 import ISearchService from                                       './ISearchService';
-import { ISearchResults, IRefinementFilter, ISearchResult } from '../../models/ISearchResult';
+import { ISearchResults, IRefinementFilter, ISearchResult, ISearchVerticalInformation } from '../../models/ISearchResult';
 import { intersection, clone } from '@microsoft/sp-lodash-subset';
 import IRefinerConfiguration from '../../models/IRefinerConfiguration';
 import { Sort } from '@pnp/sp';
 import { ISearchServiceConfiguration } from '../../models/ISearchServiceConfiguration';
+import ISearchVerticalSourceData from '../../models/ISearchVerticalSourceData';
+import { ISearchVertical } from '../../models/ISearchVertical';
 
 class MockSearchService implements ISearchService {
 
@@ -195,7 +197,7 @@ class MockSearchService implements ISearchService {
 
     public search(query: string, pageNumber?: number): Promise<ISearchResults> {
          
-        const p1 = new Promise<ISearchResults>((resolve, reject) => {
+        const p1 = new Promise<ISearchResults>((resolve) => {
 
             const filters: string[] = [];
             let searchResults = clone(this._searchResults);
@@ -246,7 +248,7 @@ class MockSearchService implements ISearchService {
        
         let proposedSuggestions: string[] = [];
 
-        const p1 = new Promise<string[]>((resolve, reject) => {
+        const p1 = new Promise<string[]>((resolve) => {
             this._suggestions.map(suggestion => {
 
                 const idx = suggestion.toLowerCase().indexOf(keywords.toLowerCase());
@@ -281,6 +283,26 @@ class MockSearchService implements ISearchService {
             selectedProperties: this.selectedProperties,
             sortList: this.sortList
         };
+    }
+
+    /**
+     * Retreives the result counts for each search vertical
+     * @param queryText the search query text
+     * @param searchVerticalsConfiguration the search verticals configuration
+     * @param enableQueryRules enable query rules or not
+     */
+    public getSearchVerticalCounts(queryText: string, searchVerticals: ISearchVertical[], enableQueryRules: boolean): Promise<ISearchVerticalInformation[]> {
+
+        let verticalInformation: ISearchVerticalInformation[] = [];
+
+        verticalInformation = searchVerticals.map(vertical => {
+            return {
+                Count: Math.ceil(Math.random() * 10),
+                VerticalKey: vertical.key
+            } as ISearchVerticalInformation;
+        });
+
+        return Promise.resolve(verticalInformation);
     }
 }
 

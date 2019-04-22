@@ -10,7 +10,7 @@ define([], function () {
     "EnableLocalizationOnLabel": "Localization enabled",
     "EnableLocalizationOffLabel": "Localization disabled",
     "MaxResultsCount": "Number of items to retrieve per page",
-    "NoResultMessage": "There are no results to show",
+    "NoResultMessage": "No results to display",
     "FilterPanelTitle": "Available filters",
     "FilterResultsButtonLabel": "Filters",
     "SelectedFiltersLabel": "Selected filters",
