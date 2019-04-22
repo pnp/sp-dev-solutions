@@ -111,9 +111,9 @@
                         {{#eq item.contentclass 'STS_ListItem_851'}}
                             <div class="video-container">
                                 <div class="img-container">
-                                    <img class="img-preview video-preview-item" src="{{PictureThumbnailURL}}" data-url="{{DefaultEncodingURL}}" data-fileext="{{FileType}}"/>
+                                    <img class="img-preview video-preview-item" src="{{PictureThumbnailURL}}" data-src="{{PictureThumbnailURL}}" data-url="{{DefaultEncodingURL}}" data-fileext="{{FileType}}"/>
                                     <div class="hover">
-                                        <div class="${templateStyles.hoverIcon}"><i class="ms-Icon ms-Icon--ImageSearch" aria-hidden="true"></i></div>
+                                        <div class="${templateStyles.hoverIcon}"><i class="ms-Icon ms-Icon--Preview" aria-hidden="true"></i></div>
                                     </div>
                                 </div>
                             </div>
@@ -133,7 +133,7 @@
                                         <img class="document-preview-item img-preview" width="120" src="{{ServerRedirectedPreviewURL}}" data-src="{{ServerRedirectedPreviewURL}}" data-url="{{ServerRedirectedEmbedURL}}"/>
                                     {{/eq}}
                                     <div class="hover">
-                                        <div class="${templateStyles.hoverIcon}"><i class="ms-Icon ms-Icon--ImageSearch" aria-hidden="true"></i></div>
+                                        <div class="${templateStyles.hoverIcon}"><i class="ms-Icon ms-Icon--Preview" aria-hidden="true"></i></div>
                                     </div>
                                     </div>
                                 </div>

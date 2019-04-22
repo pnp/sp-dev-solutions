@@ -1,12 +1,11 @@
 import * as React from                                                 'react';
+import { IPreviewContainerProps, PreviewType } from './IPreviewContainerProps';
+import IPreviewContainerState from './IPreviewContainerState';
 import { Callout } from 'office-ui-fabric-react/lib/components/Callout';
 import { Spinner, SpinnerSize } from 'office-ui-fabric-react/lib/components/Spinner';
-import IVideoPreviewContainerProps from './IVideoPreviewContainerProps';
-import IVideoPreviewContainerState from './IVideoPreviewContainerState';
 import templateStyles from '../BaseTemplateService.module.scss';
 import { IconButton } from 'office-ui-fabric-react/lib/Button';
 import { Overlay } from 'office-ui-fabric-react/lib/Overlay';
-
 
 export interface IVideoPlayerProps {
     fileExtension: string;
@@ -21,14 +20,14 @@ export class VideoPlayer extends React.Component<IVideoPlayerProps, {}> {
     private _videoNode: any;
 
     public render() {
-        return  <video ref={ node => this._videoNode = node } className={`${templateStyles.videoPreview} video-js vjs-big-play-centered`}>
+        return  <video ref={ node => this._videoNode = node } className={`video-js vjs-big-play-centered`}>
                     <source src={this.props.videoUrl} type={`video/${this.props.fileExtension}`}/>
-                </video>
+                </video>;
     }
 
     public componentWillUnmount() {
         if (this._videoPlayer) {
-            this._videoPlayer.dispose()
+            this._videoPlayer.dispose();
         }
     }
 
@@ -55,31 +54,55 @@ export class VideoPlayer extends React.Component<IVideoPlayerProps, {}> {
 
 }
 
-export default class VideoPreviewContainer extends React.Component<IVideoPreviewContainerProps, IVideoPreviewContainerState> {
+export default class PreviewContainer extends React.Component<IPreviewContainerProps, IPreviewContainerState> {
 
-    public constructor(props: IVideoPreviewContainerProps) {
+    public constructor(props: IPreviewContainerProps) {
         super(props);
         this.state = {
             showCallout: false,
-            isLoading: false,
+            isLoading: true,
             isVideoPaused: false
         };
 
         this._onCloseCallout = this._onCloseCallout.bind(this);
     }
 
-    public render(): React.ReactElement<IVideoPreviewContainerProps> {
+    public render(): React.ReactElement<IPreviewContainerProps> {
+
+        let renderPreview: JSX.Element = null;
+
+        switch (this.props.previewType) {
+            case PreviewType.Document:
+                renderPreview = <div className={`${templateStyles.iframeContainer} ${this.state.isLoading ? templateStyles.hide : ''}`}>
+                                    <iframe 
+                                        src={this.props.elementUrl} frameBorder="0"
+                                        allowFullScreen
+                                        allowTransparency
+                                        onLoad={() => { this.setState({ isLoading: false}); }}
+                                    >
+                                    </iframe>;
+                                </div>;
+            break;
+
+            case PreviewType.Video:
+                renderPreview = <VideoPlayer fileExtension={this.props.videoProps.fileExtension} thumbnailSrc={this.props.previewImageUrl} videoUrl={this.props.elementUrl} isVideoPaused={this.state.isVideoPaused}/>;
+                break;
+
+            default:
+                break;
+        }
 
         let renderLoading: JSX.Element = this.state.isLoading ? <Overlay isDarkThemed={false} className={templateStyles.overlay}><Spinner size={ SpinnerSize.large }/></Overlay>: null;
-        let backgroundImage = this.state.isLoading ? `url('${this.props.thumbnailSrc}')` : 'none';
+        let backgroundImage = this.state.isLoading ? `url('${this.props.previewImageUrl}')` : 'none';
  
         return  <Callout 
                     gapSpace={0} 
                     target={this.props.targetElement} 
                     hidden={false} 
                     className={`${!this.state.showCallout ? templateStyles.hide : ''} ${templateStyles.calloutContainer}`}
-                    preventDismissOnScroll={true}
+                    onDismiss={this.props.previewType === PreviewType.Document ? this._onCloseCallout: null}
                     setInitialFocus={true}
+                    preventDismissOnScroll={true}
                     >
                     <div className={templateStyles.calloutHeader}>
                         <IconButton iconProps={{
@@ -89,7 +112,7 @@ export default class VideoPreviewContainer extends React.Component<IVideoPreview
                     </div>
                     <div className={templateStyles.calloutContentContainer} style={{backgroundImage: backgroundImage}}>
                         {renderLoading}
-                        <VideoPlayer fileExtension={this.props.fileExtension} thumbnailSrc={this.props.thumbnailSrc} videoUrl={this.props.videoUrl} isVideoPaused={this.state.isVideoPaused}/>
+                        {renderPreview}
                     </div>
                 </Callout>;
     }
@@ -97,10 +120,11 @@ export default class VideoPreviewContainer extends React.Component<IVideoPreview
     public componentDidMount() {
         this.setState({
             showCallout: this.props.showPreview,
+            isLoading: this.props.previewType === PreviewType.Video ? false : true
         });
-    }
+    }   
 
-    public componentWillReceiveProps(nextProps: IVideoPreviewContainerProps) {
+    public componentWillReceiveProps(nextProps: IPreviewContainerProps) {
         this.setState({
             showCallout: nextProps.showPreview,
             isVideoPaused: false

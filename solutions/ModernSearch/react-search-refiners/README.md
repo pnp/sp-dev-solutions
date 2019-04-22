@@ -1,6 +1,6 @@
 # SharePoint Framework modern search Web Parts
 
-![Version](https://img.shields.io/badge/version-3.3.0-green.svg)
+![Version](https://img.shields.io/badge/version-3.3.1-green.svg)
 
 ## Summary
 This solution allows you to build user friendly SharePoint search experiences using SPFx in the modern interface. The main features include:
@@ -283,7 +283,7 @@ This WP supports SharePoint best bets via SharePoint query rules:
 
 #### Elements previews
 
-Previews are available, **only for the list view**, for Office documents and Office 365 videos (not Microsoft Stream). The embed URL is directly taken from the `ServerRedirectedEmbedURL` managed property retrieved from the search results. 
+Previews are available by default for list and tiles layouts, for Office documents and Office 365 videos (not Microsoft Stream). The embed URL is directly taken from the `ServerRedirectedEmbedURL` managed property retrieved from the search results. 
 
 <p align="center">
   <img width="500px" src="./images/result_preview.png"/>
@@ -296,7 +296,21 @@ The WebPart must have the following selected properties in the configuration to 
 - ServerRedirectedEmbedURL
 - DefaultEncodingURL
 
-This preview is displayed as an _iframe_ when the user clicks on the corresponding preview image. DOM manipulations occur to add the _iframe_ container dynamically aside with the _<img/>_ container.
+This preview is displayed as an _iframe_ or a _video_ tag when the user clicks on the corresponding preview image or compliant HTML elementss. To enable the callout preview in your templates, your HTML elements must have the  `document-preview-item` or `video-preview-item` CSS class and provide the following attributes:
+
+- `data-src`: the URL of the preview image.
+- `data-url`: the URL of the iframe source or the video.
+- `data-fileext`: the file extension for the video (for video only).
+
+**Preview on documents**
+```
+<div class="document-preview-item" data-src="{{ServerRedirectedPreviewURL}}" data-url="{{Path}}">
+```
+
+**Preview on videos**
+```
+<img class="video-preview-item" src="{{PictureThumbnailURL}}" data-src="{{PictureThumbnailURL}}" data-url="{{DefaultEncodingURL}}" data-fileext="{{FileType}}"/>
+```
 
 ### Search Refiners
 

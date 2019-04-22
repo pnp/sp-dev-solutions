@@ -10,10 +10,8 @@ import { DomHelper } from '../../helpers/DomHelper';
 import { ISearchResultType, ResultTypeOperator } from '../../models/ISearchResultType';
 import * as React from 'react';
 import * as ReactDom from 'react-dom';
-import IDocumnentPreviewContainerProps from './DocumentPreviewContainer/IDocumentPreviewContainerProps';
-import DocumentPreviewContainer from './DocumentPreviewContainer/DocumentPreviewContainer';
-import VideoPreviewContainer from './VideoPreviewContainer/VideoPreviewContainer';
-import IVideoPreviewContainerProps from './VideoPreviewContainer/IVideoPreviewContainerProps';
+import PreviewContainer from './PreviewContainer/PreviewContainer';
+import { IPreviewContainerProps, PreviewType } from './PreviewContainer/IPreviewContainerProps';
 
 abstract class BaseTemplateService {
     public CurrentLocale = "en";
@@ -457,13 +455,14 @@ abstract class BaseTemplateService {
 
                 if (url) {
                     let renderElement = React.createElement(
-                        DocumentPreviewContainer,
+                        PreviewContainer,
                         {   
-                            iFrameUrl: url.replace('interactivepreview','embedview'),
+                            elementUrl: url.replace('interactivepreview','embedview'),
                             targetElement: thumbnailElt,
                             previewImageUrl: previewImgUrl,
-                            showPreview: true
-                        } as IDocumnentPreviewContainerProps  
+                            showPreview: true,
+                            previewType: PreviewType.Document
+                        } as IPreviewContainerProps  
                     );
                        
                     ReactDom.render(renderElement, el);
@@ -496,18 +495,21 @@ abstract class BaseTemplateService {
                 // Get infos about the video to render
                 const url = event.srcElement.getAttribute("data-url");
                 const fileExtension = event.srcElement.getAttribute("data-fileext");
-                const thumbnailSrc = event.srcElement.getAttribute("data-src");
+                const previewImgUrl: string = event.srcElement.getAttribute("data-src");
 
                 if (url && fileExtension) {
                     let renderElement = React.createElement(
-                        VideoPreviewContainer,
+                        PreviewContainer,
                         {   
-                            fileExtension: fileExtension,
+                            videoProps: {
+                                fileExtension: fileExtension
+                            },
                             showPreview: true,
                             targetElement: thumbnailElt,
-                            thumbnailSrc: thumbnailSrc,
-                            videoUrl: url
-                        } as IVideoPreviewContainerProps  
+                            previewImageUrl: previewImgUrl,
+                            elementUrl: url,
+                            previewType: PreviewType.Video                            
+                        } as IPreviewContainerProps  
                     );
                        
                     ReactDom.render(renderElement, el);
