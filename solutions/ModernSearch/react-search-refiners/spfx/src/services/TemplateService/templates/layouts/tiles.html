@@ -1,0 +1,52 @@
+<div class="template_root">
+    <div class="template_defaultCard">
+        {{#if showResultsCount}}
+            <div class="template_resultCount">
+                <label class="ms-fontWeight-semibold">{{getCountMessage totalRows keywords}}</label>
+            </div>
+        {{/if}}
+        <div class="ms-Grid"> 
+            <div class="ms-Grid-row">
+            {{#each items as |item|}}
+                <div class="ms-Grid-col ms-sm12 ms-md6 ms-lg4">
+                    {{#> resultTypes}}
+                        {{!-- The block below will be used as default item template if no result types matched --}}
+                        <div class="singleCard">
+                            {{#eq item.contentclass 'STS_ListItem_851'}}
+                                <div class="previewImg video-preview-item" style="background-image: url('{{getPreviewSrc item}}')" data-src="{{PictureThumbnailURL}}" data-url="{{DefaultEncodingURL}}" data-fileext="{{FileType}}">
+                                    <img class="cardFileIcon" src="{{iconSrc}}"/>
+                                </div>
+                            {{else}}
+                                {{#eq FileType 'pdf'}}
+                                <!-- Documents from OneDrive sites can't be viewed directly due to SAMEORIGIN iframe restrictions-->
+                                    {{#contains Path '-my.sharepoint'}}
+                                        <div class="previewImg document-preview-item" style="background-image: url('{{getPreviewSrc item}}')" data-src="{{ServerRedirectedPreviewURL}}" data-url="{{ServerRedirectedEmbedURL}}">
+                                            <img class="cardFileIcon" src="{{iconSrc}}"/>
+                                        </div>
+                                    {{else}}
+                                    <div class="previewImg document-preview-item" style="background-image: url('{{getPreviewSrc item}}')" data-src="{{ServerRedirectedPreviewURL}}" data-url="{{Path}}">
+                                        <img class="cardFileIcon" src="{{iconSrc}}"/>
+                                    </div>
+                                    {{/contains}}
+                                {{else}}
+                                    <div class="previewImg document-preview-item" style="background-image: url('{{getPreviewSrc item}}')" data-src="{{ServerRedirectedPreviewURL}}" data-url="{{ServerRedirectedEmbedURL}}">
+                                        <img class="cardFileIcon" src="{{iconSrc}}"/>
+                                    </div>
+                                {{/eq}}  
+                            {{/eq}} 
+                            <li class="ms-ListItem ms-ListItem--document" tabindex="0">
+                                <div class="cardInfo">
+                                    <span class="ms-ListItem-primaryText"><a href="{{getUrl item}}">{{Title}}</a></span>
+                                    <span class="ms-ListItem-secondaryText">{{getSummary HitHighlightedSummary}}</span>
+                                    <span class="ms-ListItem-tertiaryText">{{getDate Created "LL"}}</span> 
+                                    <div class="ms-ListItem-selectionTarget"></div>
+                                </div>
+                            </li>
+                        </div>
+                    {{/resultTypes}}
+                </div>
+            {{/each}}
+            </div>
+        </div>
+    </div>
+</div>

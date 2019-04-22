@@ -1,4 +1,3 @@
-import { html } from                               'common-tags';
 import BaseTemplateService from                    './BaseTemplateService';
 
 class MockTemplateService extends BaseTemplateService {
@@ -7,23 +6,7 @@ class MockTemplateService extends BaseTemplateService {
         this.CurrentLocale = locale;
     }
 
-    private readonly _mockFileContent: string = html`
-                                        <div class='template_root'>
-                                            <span><strong>Mocked external template</strong></span>
-                                            {{#if showResultsCount}}
-                                                <div class='template_resultCount'>
-                                                    <label class='ms-fontWeight-semibold'>{{getCountMessage totalRows keywords}}</label>
-                                                </div>
-                                            {{/if}}
-                                            <ul class='ms-List template_defaultList'>
-                                                {{#each items as |item|}}
-                                                    <li class='ms-ListItem ms-ListItem--image' tabindex='0'>
-                                                        <span class='ms-ListItem-primaryText'><a href='{{getUrl item}}'>{{Title}}</a></span>
-                                                    </li>
-                                                {{/each}}
-                                            </ul>
-                                        </div>
-                                        `;
+    private readonly _mockFileContent: string = require('./templates/layouts/mock.html');
 
     public getFileContent(fileUrl: string): Promise<string> {
 

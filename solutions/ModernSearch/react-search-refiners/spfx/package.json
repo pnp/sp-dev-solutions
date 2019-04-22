@@ -35,7 +35,6 @@
     "@types/react-dom": "16.0.5",
     "@types/sharepoint": "2013.1.9",
     "@types/webpack-env": "1.13.1",
-    "common-tags": "^1.8.0",
     "custom-event-polyfill": "^1.0.6",
     "downshift": "3.1.5",
     "es6-iterator": "^2.0.3",

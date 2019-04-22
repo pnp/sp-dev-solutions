@@ -1,0 +1,15 @@
+<style>
+    /* Insert your CSS here */
+</style>
+
+<div class="singleCard">
+    <div class="previewImg" style="background-image: url('{{getPreviewSrc item}}')">
+        <img class="cardFileIcon" src="{{iconSrc}}"/>
+    </div>
+    <li class="ms-ListItem ms-ListItem--document" tabindex="0">
+        <div class="cardInfo">
+            <span class="ms-ListItem-primaryText"><a href="{{getUrl item}}">{{Title}}</a></span>
+            <span class="ms-ListItem-secondaryText">{{getSummary HitHighlightedSummary}}</span>
+        </div>
+    </li>
+</div>
