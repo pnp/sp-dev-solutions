@@ -59,24 +59,24 @@ export default class LinkPickerPanel
 
           {/* Navigation on left of panel */}
           {this.state.showImageTab &&
-            <Nav initialSelectedKey="site" isOnTop={true}
+            <Nav selectedKey={this.state.navState.toString()} isOnTop={true} initialSelectedKey={NavState.site.toString()} 
             groups={[{
             links:[
               {
                 name: strings.LinkPickerSiteNav,
-                icon:"Globe", key:"site", url:"#",
+                icon:"Globe", key:NavState.site.toString(), url:"#",
                 onClick:this.onSiteNavClick.bind(this),
                 isExpanded: showDocPickerIFrame
               },
               {
                 name: strings.LinkPickerLinkNav,
-                icon:"Link", key:"link", url:"#",
+                icon:"Link", key:NavState.link.toString(), url:"#",
                 onClick:this.onLinkNavClick.bind(this),
                 isExpanded: showLinkEntryForm
               },
               {
                 name: strings.LinkPickerImageNav,
-                icon:"Photo2", key:"image", url:"#",
+                icon:"Photo2", key:NavState.image.toString(), url:"#",
                 onClick:this.onImageNavClick.bind(this),
                 isExpanded: showImageEntryForm
               }
@@ -84,18 +84,18 @@ export default class LinkPickerPanel
             }]}/>
           }
           {!this.state.showImageTab &&
-          <Nav initialSelectedKey="site" isOnTop={true}
+          <Nav selectedKey={this.state.navState.toString()} isOnTop={true} initialSelectedKey={NavState.site.toString()} 
             groups={[{
             links:[
               {
                 name: strings.LinkPickerSiteNav,
-                icon:"Globe", key:"site", url:"#",
+                icon:"Globe", key:NavState.site.toString(), url:"#",
                 onClick:this.onSiteNavClick.bind(this),
                 isExpanded: showDocPickerIFrame
               },
               {
                 name: strings.LinkPickerLinkNav,
-                icon:"Link", key:"link", url:"#",
+                icon:"Link", key:NavState.link.toString(), url:"#",
                 onClick:this.onLinkNavClick.bind(this),
                 isExpanded: showLinkEntryForm
               }
@@ -150,9 +150,17 @@ export default class LinkPickerPanel
   private rejectPickLink: () => void;
 
   // Public method to pick a link
-  public pickLink (): Promise<ILinkPickerChoice> {
+  public pickLink (currentUrl: string = ""): Promise<ILinkPickerChoice> {
+  
+    //set the current url as the optional input url
+    this.setState({
+      url: currentUrl,
+      isUrlValid: this.isValidLink(currentUrl)
+    }, () => {
       this.openLinkPanel();
-      return new Promise<ILinkPickerChoice>(
+    });
+    
+    return new Promise<ILinkPickerChoice>(
           (resolve, reject) => {
               this.resolvePickLink = resolve;
               this.rejectPickLink = reject;
@@ -160,13 +168,16 @@ export default class LinkPickerPanel
   }
 
   private openLinkPanel() {
-      this.addMessageListener();
-      this.setState({
-          isOpen: true,
-          navState: NavState.site,
-          isUrlValid: false,
-          url: ""
-      });
+    //and message listener for document selection iFrame  
+    this.addMessageListener();
+    
+    //set state to open link picker and set proper pane
+    this.setState({
+        isOpen: true,
+        navState: this.state.url ? NavState.link : NavState.site,
+        //isUrlValid: false, //no need to reset the valid state as already set
+        //url: "" //no need to reset the url in state, already set
+    });
   }
 
   private closeLinkPanel() {
@@ -242,7 +253,7 @@ export default class LinkPickerPanel
   }
 
   //Function to return url's of approved images
-  //TODO: allow >1 locaiton of featured images and make configurable
+  //TODO: allow >1 location of featured images and make configurable
   private getApprovedImages(){
     const images: Array<ApprovedImage> = [];
 
@@ -296,9 +307,7 @@ export default class LinkPickerPanel
 
      this.setState(
       {
-        navState: navState,
-        isUrlValid:false,
-        url: ""
+        navState: navState
       }
     );
     return false;

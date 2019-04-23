@@ -72,6 +72,7 @@
                 background-color: white;
                 border-color: white;
             }
+            /*
             &>i {
                 color: #333333;
                 padding: 5px;
@@ -83,6 +84,18 @@
                 cursor: move;
                 background-color: white;
             }
+            */
+            &>i {
+                padding: 5px 5px 0px;
+                color: #333;
+                font-size: 12px;
+                line-height: 22px;
+                text-align: center;
+                width: 32px;
+                cursor: move;
+                box-sizing: border-box;
+            }
+
             & :global .ms-Button.ms-Button--default :global .ms-Button-icon {
                 line-height: 15px;
                 height: 10px;
