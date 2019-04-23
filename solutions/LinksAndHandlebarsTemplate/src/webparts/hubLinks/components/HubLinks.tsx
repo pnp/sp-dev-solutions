@@ -124,10 +124,12 @@ export default class HubLinks extends React.Component<IHubLinksProps, IHubLinksS
   // ** Event handlers for link picker **
   private linkPickerPanel: LinkPickerPanel;
   // Open the link picker - called from onClick of Change (link) button
-  public openLinkPicker(event){
-    this.linkPickerPanel.pickLink().then(({name, url}) => {
+  public openLinkPicker(event: any, currentUrl: string = ""){
+
+    this.linkPickerPanel.pickLink(currentUrl).then(({name, url}) => {
       this.props.setUrl(url, name);
     });
+
   }
 
   public render(): React.ReactElement<IHubLinksProps> {
