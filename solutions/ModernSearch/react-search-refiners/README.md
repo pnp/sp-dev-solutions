@@ -268,6 +268,7 @@ The following custom query variables are supported:
 |{CurrentMonth}  <br/> | Today's month, 1-12 <br/> |
 |{CurrentDate}  <br/> | Today's date, 1-31 <br/> |
 |{QueryString.&lt;ParameterName&gt;} <br/> | A value from a query string in the URL of the current page. For example, if the URL of the current page contains a query string such as ItemNumber=567, you could obtain the value 567 by specifying {QueryString.ItemNumber}. <br/> |
+|{PageContext.&lt;ParameterName&gt;} <br/> | A value from the legacyPageContext object on the page. For example, if the legacyPageContext object of the current page contains a property "hubSiteId": "166aa115-7ae7-4c21-9e02-9e0c8872be28", you could obtain the value 166aa115-7ae7-4c21-9e02-9e0c8872be28 by specifying {PageContext.hubSiteId}. The property name is case sensitive!<br/> |
 
 #### Best bets
 
