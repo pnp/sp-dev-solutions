@@ -3,6 +3,7 @@ import { Text, Log } from "@microsoft/sp-core-library";
 import { ITokenService } from ".";
 import { UrlQueryParameterCollection } from '@microsoft/sp-core-library';
 import { PageContext } from "@microsoft/sp-page-context";
+import { Guid } from '@microsoft/sp-core-library';
 
 const LOG_SOURCE: string = '[SearchResultsWebPart_{0}]';
 
@@ -19,6 +20,7 @@ export class TokenService implements ITokenService {
         queryTemplate = await this.replacePageTokens(queryTemplate);
         queryTemplate = this.replaceDateTokens(queryTemplate);
         queryTemplate = this.replaceQueryStringTokens(queryTemplate);
+        queryTemplate = this.replaceHubSiteTokens(queryTemplate);
 
         return queryTemplate;
     }
@@ -95,6 +97,21 @@ export class TokenService implements ITokenService {
                 let qsProp = match[1];
                 let itemProp = decodeURIComponent(queryParameters.getValue(qsProp) || "");
                 queryTemplate = queryTemplate.replace(match[0], itemProp);
+                match = queryStringVariables.exec(reQueryTemplate);
+            }
+        }
+        return queryTemplate;
+    }
+
+    private replaceHubSiteTokens(queryTemplate: string) {
+        const queryStringVariables = /\{(?:PageContext)\.(.*?)\}/gi;
+        let reQueryTemplate = queryTemplate;
+        let match = queryStringVariables.exec(reQueryTemplate);
+        if (match != null)
+        {
+            while (match !== null) {
+                let pageContextProp = match[1];
+                queryTemplate = queryTemplate.replace(match[0], this._pageContext.legacyPageContext[pageContextProp] || '');
                 match = queryStringVariables.exec(reQueryTemplate);
             }
         }
