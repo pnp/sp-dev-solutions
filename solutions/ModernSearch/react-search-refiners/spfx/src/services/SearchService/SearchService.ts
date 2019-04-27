@@ -151,7 +151,6 @@ class SearchService implements ISearchService {
                 this._initialSearchResult = await this._localPnPSetup.search(searchQuery);
             }
 
-            const allItemsPromises: Promise<any>[] = [];
             let refinementResults: IRefinementResult[] = [];
 
             // Need to do this check
@@ -182,31 +181,21 @@ class SearchService implements ISearchService {
                 }
 
                 // Map search results
-                resultRows.map((elt) => {
+                let searchResults: ISearchResult[] = resultRows.map((elt) => {
 
-                    const p1 = new Promise<ISearchResult>((resolvep1, rejectp1) => {
+                    // Build item result dynamically
+                    // We can't type the response here because search results are by definition too heterogeneous so we treat them as key-value object
+                    let result: ISearchResult = {};
 
-                        // Build item result dynamically
-                        // We can't type the response here because search results are by definition too heterogeneous so we treat them as key-value object
-                        let result: ISearchResult = {};
-
-                        elt.Cells.map((item) => {
-                            result[item.Key] = item.Value;
-                        });
-
-                        // Get the icon source URL
-                        this._mapToIcon(result.Filename ? result.Filename : Text.format('.{0}', result.FileExtension)).then((iconUrl) => {
-
-                            result.iconSrc = iconUrl;
-                            resolvep1(result);
-
-                        }).catch((error) => {
-                            rejectp1(error);
-                        });
+                    elt.Cells.map((item) => {
+                        result[item.Key] = item.Value;
                     });
 
-                    allItemsPromises.push(p1);
+                    return result;
                 });
+
+                // Map results icon (using batch)
+                searchResults = await this._mapToIcons(searchResults);
 
                 // Map refinement results                    
                 refinementRows.map((refiner) => {
@@ -251,9 +240,6 @@ class SearchService implements ISearchService {
                     results.PromotedResults = promotedResults;
                 }
 
-                // Resolve all the promises once to get news
-                const relevantResults: ISearchResult[] = await Promise.all(allItemsPromises);
-
                 // Sort refiners according to the property pane value
                 refinementResults = sortBy(refinementResults, (refinement) => {
 
@@ -261,7 +247,7 @@ class SearchService implements ISearchService {
                     return sortedRefiners.indexOf(refinement.FilterName);
                 });
 
-                results.RelevantResults = relevantResults;
+                results.RelevantResults = searchResults;
                 results.RefinementResults = refinementResults;
                 results.PaginationInformation.TotalRows = this._initialSearchResult.TotalRows;
             }
@@ -397,26 +383,55 @@ class SearchService implements ISearchService {
     }
 
     /**
-     * Gets the icon corresponding to the file name extension
-     * @param filename The file name (ex: file.pdf)
+     * Gets the icons corresponding to the result file name extensions
+     * @param searchResults The raw search results
      */
-    private async _mapToIcon(filename: string): Promise<string> {
-
-        const webAbsoluteUrl = this._pageContext.web.absoluteUrl;
+    private async _mapToIcons(searchResults: ISearchResult[]): Promise<ISearchResult[]> {
 
         try {
-            let encodedFileName = filename ? filename.replace(/['']/g, '') : '';
-            const queryStringIndex = encodedFileName.indexOf('?');
-            if (queryStringIndex !== -1) { // filename with query string leads to 400 error.
-                encodedFileName = encodedFileName.slice(0, queryStringIndex);
-            }
-            const iconFileName = await this._localPnPSetup.web.mapToIcon(encodeURIComponent(encodedFileName), 1);
-            const iconUrl = webAbsoluteUrl + '/_layouts/15/images/' + iconFileName;
 
-            return iconUrl;
+            let updatedSearchResults = searchResults;
+
+            const batch = this._localPnPSetup.createBatch();   
+            const parser = new JSONParser();     
+            const batchId = Guid.newGuid().toString();
+
+            const promises = searchResults.map(async result => {
+                
+                const filename = result.Filename ? result.Filename : `.${result.FileExtension}`;
+
+                let encodedFileName = filename ? filename.replace(/['']/g, '') : '';
+                const queryStringIndex = encodedFileName.indexOf('?');
+                if (queryStringIndex !== -1) { // filename with query string leads to 400 error.
+                    encodedFileName = encodedFileName.slice(0, queryStringIndex);
+                }
+
+                let url = `${this._pageContext.web.absoluteUrl}/_api/web/maptoicon(filename='${encodeURIComponent(encodedFileName)}', progid='', size=1)`;
+
+                return batch.add(url, 'GET', {
+                    headers: {
+                        Accept: 'application/json; odata=nometadata'
+                    }
+                }, parser, batchId);
+            });
+
+            // Execute the batch
+            await batch.execute();
+
+            const response = await Promise.all(promises);
+
+            response.map((result: any, index: number) => {
+
+                if (result.value) {
+                    const iconUrl = this._pageContext.web.absoluteUrl + '/_layouts/15/images/' + result.value;
+                    updatedSearchResults[index].IconSrc = iconUrl;
+                }
+            });
+
+            return updatedSearchResults;
 
         } catch (error) {
-            Logger.write('[SearchService._mapToIcon()]: Error: ' + error, LogLevel.Error);
+            Logger.write('[SearchService._mapToIcons()]: Error: ' + error, LogLevel.Error);
             throw new Error(error);
         }
     }

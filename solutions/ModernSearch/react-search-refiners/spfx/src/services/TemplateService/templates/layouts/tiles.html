@@ -14,23 +14,23 @@
                         <div class="singleCard">
                             {{#eq item.contentclass 'STS_ListItem_851'}}
                                 <div class="previewImg video-preview-item" style="background-image: url('{{getPreviewSrc item}}')" data-src="{{PictureThumbnailURL}}" data-url="{{DefaultEncodingURL}}" data-fileext="{{FileType}}">
-                                    <img class="cardFileIcon" src="{{iconSrc}}"/>
+                                    <img class="cardFileIcon" src="{{IconSrc}}"/>
                                 </div>
                             {{else}}
                                 {{#eq FileType 'pdf'}}
                                 <!-- Documents from OneDrive sites can't be viewed directly due to SAMEORIGIN iframe restrictions-->
                                     {{#contains Path '-my.sharepoint'}}
                                         <div class="previewImg document-preview-item" style="background-image: url('{{getPreviewSrc item}}')" data-src="{{ServerRedirectedPreviewURL}}" data-url="{{ServerRedirectedEmbedURL}}">
-                                            <img class="cardFileIcon" src="{{iconSrc}}"/>
+                                            <img class="cardFileIcon" src="{{IconSrc}}"/>
                                         </div>
                                     {{else}}
                                     <div class="previewImg document-preview-item" style="background-image: url('{{getPreviewSrc item}}')" data-src="{{ServerRedirectedPreviewURL}}" data-url="{{Path}}">
-                                        <img class="cardFileIcon" src="{{iconSrc}}"/>
+                                        <img class="cardFileIcon" src="{{IconSrc}}"/>
                                     </div>
                                     {{/contains}}
                                 {{else}}
                                     <div class="previewImg document-preview-item" style="background-image: url('{{getPreviewSrc item}}')" data-src="{{ServerRedirectedPreviewURL}}" data-url="{{ServerRedirectedEmbedURL}}">
-                                        <img class="cardFileIcon" src="{{iconSrc}}"/>
+                                        <img class="cardFileIcon" src="{{IconSrc}}"/>
                                     </div>
                                 {{/eq}}  
                             {{/eq}} 
