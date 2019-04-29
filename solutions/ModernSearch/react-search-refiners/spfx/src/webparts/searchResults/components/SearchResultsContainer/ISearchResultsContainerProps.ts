@@ -66,12 +66,12 @@ interface ISearchResultsContainerProps {
     templateContent: string;
 
     /**
-     * The serverRelativeUrl for the current Site
+     * The site server relative url for the current Site
      */
     siteServerRelativeUrl: string;
 
     /**
-     * The serverRelativeUrl for the current Web
+     * The web server relative url for the current Web
      */
     webServerRelativeUrl: string;
 
@@ -101,8 +101,14 @@ interface ISearchResultsContainerProps {
      */
     strings: ISearchResultsWebPartStrings;
 
+    /**
+     * Enables taxonomy terms fro filters and results metadata
+     */
     enableLocalization: boolean;
 
+    /**
+     * Handler method when search results are updated
+     */
     onSearchResultsUpdate: SearchResultsOperationCallback;
 
     /* 

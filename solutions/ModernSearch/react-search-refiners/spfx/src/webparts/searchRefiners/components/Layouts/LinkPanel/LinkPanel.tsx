@@ -2,10 +2,7 @@ import * as React from                                                 'react';
 import ILinkPanelProps from                                          './ILinkPanelProps';
 import ILinkPanelState from                                          './ILinkPanelState';
 import { Panel, PanelType } from                                       'office-ui-fabric-react/lib/Panel';
-import { Checkbox } from                                               'office-ui-fabric-react/lib/Checkbox';
-import { IRefinementValue, IRefinementFilter } from '../../../../../models/ISearchResult';
 import { Label } from                                                  'office-ui-fabric-react/lib/Label';
-import { Text } from                                                   '@microsoft/sp-core-library';
 import * as update from                                                'immutability-helper';
 import {
     GroupedList,
@@ -13,9 +10,13 @@ import {
     IGroupDividerProps
 } from                                                                 'office-ui-fabric-react/lib/components/GroupedList/index';
 import { Scrollbars } from                                             'react-custom-scrollbars';
-import {ActionButton, Link} from 'office-ui-fabric-react';
+import {Link} from 'office-ui-fabric-react/lib/Link';
+import {ActionButton} from 'office-ui-fabric-react/lib/Button';
 import styles from './LinkPanel.module.scss';
 import * as strings from 'SearchRefinersWebPartStrings';
+import TemplateRenderer from '../../Templates/TemplateRenderer';
+import { IRefinementResult } from '../../../../../models/ISearchResult';
+import IRefinerConfiguration from '../../../../../models/IRefinerConfiguration';
 
 export default class LinkPanel extends React.Component<ILinkPanelProps, ILinkPanelState> {
 
@@ -24,15 +25,13 @@ export default class LinkPanel extends React.Component<ILinkPanelProps, ILinkPan
 
         this.state = {
             showPanel: false,
-            selectedFilters: [],
             expandedGroups: [],
+            valueToRemove: null
         };
 
         this._onTogglePanel = this._onTogglePanel.bind(this);
         this._onClosePanel = this._onClosePanel.bind(this);
-        this._addFilter = this._addFilter.bind(this);
-        this._removeFilter = this._removeFilter.bind(this);
-        this._isInFilterSelection = this._isInFilterSelection.bind(this);
+
         this._removeAllFilters = this._removeAllFilters.bind(this);
         this._onRenderHeader = this._onRenderHeader.bind(this);
         this._onRenderCell = this._onRenderCell.bind(this);
@@ -43,14 +42,14 @@ export default class LinkPanel extends React.Component<ILinkPanelProps, ILinkPan
         let items: JSX.Element[] = [];
         let groups: IGroup[] = [];
 
-        if (this.props.availableFilters.length === 0) return <span />;
+        if (this.props.refinementResults.length === 0) return <span />;
 
         // Initialize the Office UI grouped list
-        this.props.availableFilters.map((filter, i) => {
+        this.props.refinementResults.map((refinementResult, i) => {
 
             // Get group name
-            let groupName = filter.FilterName;
-            const configuredFilter = this.props.refinersConfiguration.filter(e => { return e.refinerName === filter.FilterName;});
+            let groupName = refinementResult.FilterName;
+            const configuredFilter = this.props.refinersConfiguration.filter(e => { return e.refinerName === refinementResult.FilterName;});
             groupName = configuredFilter.length > 0 && configuredFilter[0].displayValue ? configuredFilter[0].displayValue : groupName;
 
             groups.push({
@@ -59,45 +58,59 @@ export default class LinkPanel extends React.Component<ILinkPanelProps, ILinkPan
                 count: 1,
                 startIndex: i,
                 isDropEnabled: true,
-                isCollapsed: this.state.expandedGroups.indexOf(i) === -1 ? true : false,
+                isCollapsed: this.state.expandedGroups.indexOf(groupName) === -1 ? true : false
             });
 
+            // Get selected values for this specfic refiner
+            // This scenario happens due to the behavior of the Office UI Fabric GroupedList component who recreates child components when a greoup is collapsed/expanded, causing a state reset for sub components
+            // In this case we use the refiners global state to recreate the 'local' state for this component  
+            const selectedFilter = this.props.selectedFilters.filter(filter => { return filter.FilterName === refinementResult.FilterName;});
+            const selectedFilterValues = selectedFilter.length === 1 ? selectedFilter[0].Values : [];
+
+            // Check if the value to remove concerns this refinement result
+            let valueToRemove = null;
+            if (this.state.valueToRemove) {
+                if (refinementResult.Values.filter(value => { 
+                    return value.RefinementToken === this.state.valueToRemove.RefinementToken || refinementResult.FilterName === this.state.valueToRemove.RefinementName; }).length > 0
+                ) {
+                    valueToRemove = this.state.valueToRemove;
+                }
+            }
+
             items.push(
-                <div key={i}>
-                        {
-                            filter.Values.map((refinementValue: IRefinementValue, j) => {
-
-                                // Create a new IRefinementFilter with only the current refinement information
-                                const currentRefinement: IRefinementFilter = {
-                                    FilterName: filter.FilterName,
-                                    Value: refinementValue,
-                                };
-
-                                return (
-                                    <Checkbox
-                                        key={j}
-                                        checked={this._isInFilterSelection(currentRefinement)}
-                                        disabled={false}
-                                        label={Text.format(refinementValue.RefinementValue + ' ({0})', refinementValue.RefinementCount)}
-                                        onChange={(ev, checked: boolean) => {
-                                            // Every time we chek/uncheck a filter, a complete new search request is performed with current selected refiners
-                                            checked ? this._addFilter(currentRefinement) : this._removeFilter(currentRefinement);
-                                        }} />
-                                );
-                            })
-                        }
-                </div>
+                <TemplateRenderer 
+                    key={i} 
+                    refinementResult={refinementResult}
+                    shouldResetFilters={this.props.shouldResetFilters}
+                    templateType={configuredFilter[0].template}
+                    valueToRemove={valueToRemove}
+                    onFilterValuesUpdated={this.props.onFilterValuesUpdated}
+                    language={this.props.language}
+                    selectedValues={selectedFilterValues}
+                />
             );
         });
 
-        const renderSelectedFilters: JSX.Element[] = this.state.selectedFilters.map((filter) => {
+        const renderSelectedFilterValues: JSX.Element[] = this.props.selectedFilterValues.map((value) => {
+
+            // Get the 'display name' of the associated refiner for this value
+            const configuredRefiners = this.props.refinersConfiguration.filter(refiner => { return refiner.refinerName === value.RefinementName; });
+            let filterName = configuredRefiners.length === 1 ? configuredRefiners[0].displayValue : value.RefinementName;
+
+            // Date refiner value
+            if (/range\(.+\)/.test(value.RefinementToken) && value.RefinementName !== value.RefinementValue) {
+                filterName = `${filterName} ${value.RefinementValue}`;
+            }
 
             return (
                 <Label className={styles.filter}>
-                    <i className='ms-Icon ms-Icon--ClearFilter' onClick={() => { this._removeFilter(filter); }}></i>
-                    {filter.Value.RefinementName}
-                </Label>
-            );
+                    <i className='ms-Icon ms-Icon--ClearFilter' onClick={() => { 
+                        this.setState({
+                            valueToRemove: value
+                        });
+                    }}></i>
+                    {filterName}
+                </Label>);
         });
 
         const renderAvailableFilters = <GroupedList
@@ -107,13 +120,13 @@ export default class LinkPanel extends React.Component<ILinkPanelProps, ILinkPan
             className={styles.linkPanelLayout__filterPanel__body__group}
             groupProps={
                 {
-                    onRenderHeader: this._onRenderHeader,
+                    onRenderHeader: this._onRenderHeader
                 }
             }
             groups={groups} />;
 
-            const renderLinkRemoveAll = this.state.selectedFilters.length > 0 ?
-                                        (<div className={`${styles.linkPanelLayout__filterPanel__body__removeAllFilters} ${this.state.selectedFilters.length === 0 && "hiddenLink"}`}>
+            const renderLinkRemoveAll = this.props.hasSelectedValues ?
+                                        (<div className={`${styles.linkPanelLayout__filterPanel__body__removeAllFilters} ${this.props.hasSelectedValues && "hiddenLink"}`}>
                                                 <Link onClick={this._removeAllFilters}>
                                                     {strings.RemoveAllFiltersLabel}
                                                 </Link>
@@ -129,22 +142,22 @@ export default class LinkPanel extends React.Component<ILinkPanelProps, ILinkPan
                         onClick={this._onTogglePanel}
                     />
                 </div>
-                {(this.state.selectedFilters.length > 0) ?
+               {(this.props.selectedFilterValues.length > 0) ?
 
                     <div className={styles.linkPanelLayout__selectedFilters}>
-                        {renderSelectedFilters}
+                        {renderSelectedFilterValues}
                     </div>
                     : null
-                }
+               }
                 <Panel
                         isOpen={this.state.showPanel}
                         type={PanelType.medium}
                         isLightDismiss={true}
-                        
+                        isHiddenOnDismiss={true}
                         onDismiss={this._onClosePanel}
                         headerText={strings.FilterPanelTitle}
                         onRenderBody={() => {
-                            if (this.props.availableFilters.length > 0) {
+                            if (this.props.refinementResults.length > 0) {
                                 return (
                                     <Scrollbars style={{height: '100%'}}>
                                         <div className={styles.linkPanelLayout__filterPanel__body}>
@@ -167,19 +180,15 @@ export default class LinkPanel extends React.Component<ILinkPanelProps, ILinkPan
     }
 
     public componentDidMount() {
-        this.setState({
-            selectedFilters: []
-        });
+       this._initExpandedGroups(this.props.refinementResults, this.props.refinersConfiguration);
     }
 
     public componentWillReceiveProps(nextProps: ILinkPanelProps) {
+        this.setState({
+            valueToRemove: null
+        });
 
-        if (nextProps.resetSelectedFilters) {
-            // Reset the selected filter on new query
-            this.setState({
-                selectedFilters: []
-            });
-        }
+        this._initExpandedGroups(nextProps.refinementResults, nextProps.refinersConfiguration);
     }
 
     private _onRenderCell(nestingDepth: number, item: any, itemIndex: number) {
@@ -191,6 +200,7 @@ export default class LinkPanel extends React.Component<ILinkPanelProps, ILinkPan
     }
 
     private _onRenderHeader(props: IGroupDividerProps): JSX.Element {
+        
         return (
             <div className={ styles.linkPanelLayout__filterPanel__body__group__header }
                 style={props.groupIndex > 0 ? { marginTop: '10px' } : undefined }
@@ -199,14 +209,12 @@ export default class LinkPanel extends React.Component<ILinkPanelProps, ILinkPan
                     // Update the index for expanded groups to be able to keep it open after a re-render
                     const updatedExpandedGroups =
                         props.group.isCollapsed ?
-                            update(this.state.expandedGroups, { $push: [props.group.startIndex] }) :
-                            update(this.state.expandedGroups, { $splice: [[this.state.expandedGroups.indexOf(props.group.startIndex), 1]] });
+                            update(this.state.expandedGroups, { $push: [props.group.name] }) :
+                            update(this.state.expandedGroups, { $splice: [[this.state.expandedGroups.indexOf(props.group.name), 1]] });
 
                     this.setState({
                         expandedGroups: updatedExpandedGroups,
                     });
-
-                    props.onToggleCollapse(props.group);
                 }}>
                 <div className={styles.linkPanelLayout__filterPanel__body__headerIcon}>
                     <i className={props.group.isCollapsed ? 'ms-Icon ms-Icon--ChevronDown' : 'ms-Icon ms-Icon--ChevronUp'}></i>
@@ -224,51 +232,30 @@ export default class LinkPanel extends React.Component<ILinkPanelProps, ILinkPan
         this.setState({ showPanel: !this.state.showPanel });
     }
 
-    private _addFilter(filterToAdd: IRefinementFilter): void {
-
-        // Add the filter to the selected filters collection
-        let newFilters = update(this.state.selectedFilters, {$push: [filterToAdd]});
-        this._applyFilters(newFilters);
+    private _removeAllFilters() {        
+        this.props.onRemoveAllFilters();
     }
 
-    private _removeFilter(filterToRemove: IRefinementFilter): void {
-
-        // Remove the filter from the selected filters collection
-        let newFilters = this.state.selectedFilters.filter((elt) => {
-            return elt.Value.RefinementToken !== filterToRemove.Value.RefinementToken;
-        });
-
-        this._applyFilters(newFilters);
-    }
-
-    private _removeAllFilters(): void {
-        this._applyFilters([]);
-    }
-
-    /**
-     * Inner method to effectivly apply the refiners by calling back the parent component
-     * @param selectedFilters The filters to apply
+    /***
+     * Initializes expanded groups
+     * @param refinementResults the refinements results
+     * @param refinersConfiguration the current refiners configuration
      */
-    private _applyFilters(selectedFilters: IRefinementFilter[]): void {
+    private _initExpandedGroups(refinementResults: IRefinementResult[], refinersConfiguration: IRefinerConfiguration[]) {
 
-        // Save the selected filters
-        this.setState({
-            selectedFilters: selectedFilters,
+        refinementResults.map((refinementResult, i) => {
+
+            // Get group name
+            let groupName = refinementResult.FilterName;
+            const configuredFilter = refinersConfiguration.filter(e => { return e.refinerName === refinementResult.FilterName;});
+            groupName = configuredFilter.length > 0 && configuredFilter[0].displayValue ? configuredFilter[0].displayValue : groupName;
+            const showExpanded = configuredFilter.length > 0 && configuredFilter[0].showExpanded ? configuredFilter[0].showExpanded : false;
+
+            if (showExpanded) {
+                this.setState({
+                    expandedGroups: update(this.state.expandedGroups, { $push: [groupName] })
+                });
+            }
         });
-
-        this.props.onUpdateFilters(selectedFilters);
-    }
-
-    /**
-     * Checks if the current filter is present in the list of the selected filters
-     * @param filterToCheck The filter to check
-     */
-    private _isInFilterSelection(filterToCheck: IRefinementFilter): boolean {
-
-        let newFilters = this.state.selectedFilters.filter((filter) => {
-            return filter.Value.RefinementToken === filterToCheck.Value.RefinementToken;
-        });
-
-        return newFilters.length === 0 ? false : true;
     }
 }

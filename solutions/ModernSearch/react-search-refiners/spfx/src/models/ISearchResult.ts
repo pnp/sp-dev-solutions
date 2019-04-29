@@ -12,6 +12,11 @@ export interface IPaginationInformation {
     MaxResultsPerPage: number;
 }
 
+export interface ISearchVerticalInformation {
+    VerticalKey: string;
+    Count: number;
+}
+
 export interface ISearchResult {
     [key: string]: string;
     IconSrc?: string;
@@ -37,5 +42,11 @@ export interface IRefinementValue {
 
 export interface IRefinementFilter {
     FilterName: string;
-    Value: IRefinementValue;
+    Values: IRefinementValue[];
+    Operator: RefinementOperator;
+}
+
+export enum RefinementOperator {
+    OR = 'or',
+    AND = 'and'
 }

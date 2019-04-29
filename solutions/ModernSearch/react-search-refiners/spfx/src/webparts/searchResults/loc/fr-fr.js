@@ -10,7 +10,7 @@ define([], function() {
     "EnableLocalizationLabel": "Activer la traduction des termes de taxonomie pour les filtres et les résultats",
     "EnableLocalizationOnLabel": "Traduction activée",
     "EnableLocalizationOffLabel": "Traduction  désactivée",
-    "NoResultMessage": "Il n'y a aucun résultat à afficher.",
+    "NoResultMessage": "Aucun résultat à afficher.",
     "FilterPanelTitle": "Filtres disponibles",
     "FilterResultsButtonLabel": "Filtrer",
     "SelectedFiltersLabel": "Filtre(s) appliqué(s)",
@@ -76,6 +76,16 @@ define([], function() {
       "SortableFieldDisplayValueField": "Intitulé du champ à afficher",
       "EditSortableFieldsLabel": "Éditer les champs de tri",
       "EditSortLabel": "Éditer l'ordre de tri"
+    },
+    "Synonyms": {
+      "EditSynonymLabel": "Modifier les synonymes",
+      "SynonymListDescription": "Inclure tous les synonymes utilisés pour la recherche. Chaque terme sera bonifié avec tous les synonymes associés au moment de lancer la requête au serveur. Si un synonyme contient plus d'un mot, celui-ci doit être encapsulé par des double guillements.",
+      "SynonymPropertyPanelFieldLabel": "Configurer les synonymes",
+      "SynonymListTerm": "Terme",
+      "SynonymListSynonyms": "Synonymes",
+      "SynonymIsTwoWays": "Bidirectionnel?",
+      "SynonymListSynonymsExemple": "Portable, \"Tour et écran\"",
+      "SynonymListTermExemple": "Ordinateur"
     },
     "TermNotFound": "(Terme avec l'ID '{0}' non trouvé)",
     "UseDefaultSearchQueryKeywordsFieldLabel": "Utiliser une requête initiale",

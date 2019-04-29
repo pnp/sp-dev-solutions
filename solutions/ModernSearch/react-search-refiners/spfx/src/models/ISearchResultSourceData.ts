@@ -1,4 +1,4 @@
-import { IRefinementResult, IPaginationInformation } from "./ISearchResult";
+import { IRefinementResult, IPaginationInformation, ISearchVerticalInformation } from "./ISearchResult";
 import { ISearchServiceConfiguration } from "./ISearchServiceConfiguration";
 
 /**
@@ -24,6 +24,11 @@ interface ISearchResultSourceData {
      * The search service configuration
      */
     searchServiceConfiguration: ISearchServiceConfiguration;
+
+    /**
+     * The search verticals information
+     */
+    verticalsInformation: ISearchVerticalInformation[];
 }
 
 export default ISearchResultSourceData;

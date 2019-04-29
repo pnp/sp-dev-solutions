@@ -8,6 +8,7 @@ define([], function() {
     "PlaceHolderIconText": "Pagination de recherche Web Part",
     "PlaceHolderDescription": "Ce composant affiche la pagination de recherche",
     "CurrentPageLabel": "Page actuelle",
-    "ConnectToSearchResultsLabel": "Se connecter au composant de recherche"
+    "ConnectToSearchResultsLabel": "Se connecter au composant de recherche",
+    "ShowBlankEditInfoMessage": "Aucune information de pagination à afficher. Ce composant Web Part restera vide en mode affichage."
   }
 });

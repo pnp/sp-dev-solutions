@@ -30,6 +30,7 @@ import MockNlpService from '../../services/NlpService/MockNlpService';
 import NlpService from '../../services/NlpService/NlpService';
 import { PageOpenBehavior } from '../../helpers/UrlHelper';
 import SearchBoxContainer from './components/SearchBoxContainer/SearchBoxContainer';
+import { SearchComponentType } from '../../models/SearchComponentType';
 
 export default class SearchBoxWebPart extends BaseClientSideWebPart<ISearchBoxWebPartProps> implements IDynamicDataCallables {
 
@@ -51,14 +52,14 @@ export default class SearchBoxWebPart extends BaseClientSideWebPart<ISearchBoxWe
   }
 
   public render(): void {
-    console.log(this.properties);
+
     let inputValue = this.properties.defaultQueryKeywords.tryGetValue();
 
     if (inputValue && typeof(inputValue) === 'string') {
       
-      // Notify subsscriber a new value if available
+      // Notify subscriber a new value if available
+      this._searchQuery.rawInputValue = decodeURIComponent(inputValue);
       this.context.dynamicDataSourceManager.notifyPropertyChanged('searchQuery');
-      this._searchQuery.rawInputValue = inputValue;
     }
     
     const element: React.ReactElement<ISearchBoxContainerProps> = React.createElement(
@@ -88,7 +89,7 @@ export default class SearchBoxWebPart extends BaseClientSideWebPart<ISearchBoxWe
   public getPropertyDefinitions(): ReadonlyArray<IDynamicDataPropertyDefinition> {
     return [
       {
-          id: 'searchQuery',
+          id: SearchComponentType.SearchBoxWebPart,
           title: strings.DynamicData.SearchQueryPropertyLabel
       },
     ];
@@ -251,7 +252,7 @@ export default class SearchBoxWebPart extends BaseClientSideWebPart<ISearchBoxWe
         if (Environment.type === EnvironmentType.Local ) {
           this._searchService = new MockSearchService();
         } else {
-          this._searchService = new SearchService(this.context);        
+          this._searchService = new SearchService(this.context.pageContext, this.context.spHttpClient);        
         return "";
       }
     }

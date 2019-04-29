@@ -30,7 +30,8 @@ export default class SearchBoxContainer extends React.Component<ISearchBoxContai
       isRetrievingSuggestions: false,
       searchInputValue: '',
       termToSuggestFrom: null,
-      errorMessage: null
+      errorMessage: null,
+      showClearButton: false,
     };
 
     this._onSearch = this._onSearch.bind(this);
@@ -39,6 +40,15 @@ export default class SearchBoxContainer extends React.Component<ISearchBoxContai
   }
 
   private renderSearchBoxWithAutoComplete(): JSX.Element {
+    var clearButton = null;
+    if (this.state.showClearButton) {
+      clearButton = <IconButton iconProps={{
+                        iconName: 'Clear',
+                        iconType: IconType.default,
+                      }} onClick= {() => { this._onSearch(this.props.inputValue, true); } } className={ styles.clearBtn }>
+                    </IconButton>;
+    }
+
     return <Downshift
         onSelect={ this._onQuerySuggestionSelected }
         >
@@ -57,10 +67,17 @@ export default class SearchBoxContainer extends React.Component<ISearchBoxContai
                   placeholder: this.props.placeholderText ? this.props.placeholderText : strings.SearchInputPlaceholder,
                   onKeyDown: event => {
 
-                    // Submit search on "Enter" 
-                    if (event.keyCode === 13 && (!isOpen || (isOpen && highlightedIndex === null))) {
-                      this._onSearch(this.state.searchInputValue);
+                    if (!isOpen || (isOpen && highlightedIndex === null)) {
+                      if (event.keyCode === 13) {
+                        // Submit search on "Enter" 
+                        this._onSearch(this.state.searchInputValue);
+                      }
+                      else if (event.keyCode === 27) {
+                        // Clear search on "Escape" 
+                        this._onSearch(this.props.inputValue, true);
+                      }
                     }
+
                   }
               })}
               className={ styles.searchTextField }
@@ -70,6 +87,7 @@ export default class SearchBoxContainer extends React.Component<ISearchBoxContai
 
                   this.setState({
                     searchInputValue: value,
+                    showClearButton: true
                   });
 
                   if (this.state.selectedQuerySuggestions.length === 0) {
@@ -86,6 +104,7 @@ export default class SearchBoxContainer extends React.Component<ISearchBoxContai
                     }
                   }
               }}/>
+              {clearButton}
               <IconButton iconProps={{
                   iconName: 'Search',
                   iconType: IconType.default,
@@ -101,6 +120,15 @@ export default class SearchBoxContainer extends React.Component<ISearchBoxContai
   }
 
   private renderBasicSearchBox(): JSX.Element {
+    var clearButton = null;
+    if (this.state.showClearButton) {
+      clearButton = <IconButton iconProps={{
+                        iconName: 'Clear',
+                        iconType: IconType.default,
+                      }} onClick= {() => { this._onSearch(this.props.inputValue, true); } } className={ styles.clearBtn }>
+                    </IconButton>;
+    }
+
     return  <div className={ styles.searchFieldGroup }>
               <TextField 
                 className={ styles.searchTextField }
@@ -109,16 +137,23 @@ export default class SearchBoxContainer extends React.Component<ISearchBoxContai
                 onChanged={ (value) => {
                   this.setState({
                     searchInputValue: value,
+                    showClearButton: true
                   });
                 }}
                 onKeyDown={ (event) => {
 
-                    // Submit search on "Enter" 
                     if (event.keyCode === 13) {
+                      // Submit search on "Enter" 
                       this._onSearch(this.state.searchInputValue);
                     }
+                    else if (event.keyCode === 27) {
+                      // Clear search on "Escape" 
+                      this._onSearch(this.props.inputValue, true);
+                    }
+
                 }}
               />
+              {clearButton}
               <IconButton iconProps={{
                   iconName: 'Search',
                   iconType: IconType.default,
@@ -269,10 +304,10 @@ export default class SearchBoxContainer extends React.Component<ISearchBoxContai
    * Handler when a user enters new keywords
    * @param queryText The query text entered by the user
    */
-  public async _onSearch(queryText: string) {    
+  public async _onSearch(queryText: string, isReset: boolean = false) {    
 
     // Don't send empty value
-    if (queryText) {
+    if (queryText || isReset) {
 
       let query: ISearchQuery = {
         rawInputValue: queryText,
@@ -281,6 +316,7 @@ export default class SearchBoxContainer extends React.Component<ISearchBoxContai
 
       this.setState({
         searchInputValue: queryText,
+        showClearButton: !isReset
       });
 
       if (this.props.enableNlpService && this.props.NlpService && queryText) {

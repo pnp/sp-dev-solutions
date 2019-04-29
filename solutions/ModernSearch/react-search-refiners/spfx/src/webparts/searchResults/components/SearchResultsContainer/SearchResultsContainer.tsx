@@ -8,7 +8,7 @@ import { Logger, LogLevel } from '@pnp/logging';
 import * as strings from 'SearchResultsWebPartStrings';
 import { IRefinementValue, IRefinementResult, ISearchResult, ISearchResults } from '../../../../models/ISearchResult';
 import { Overlay } from 'office-ui-fabric-react/lib/Overlay';
-import { DisplayMode } from '@microsoft/sp-core-library';
+import { DisplayMode, Guid } from '@microsoft/sp-core-library';
 import { WebPartTitle } from "@pnp/spfx-controls-react/lib/WebPartTitle";
 import SearchResultsTemplate from '../Layouts/SearchResultsTemplate';
 import styles from '../SearchResultsWebPart.module.scss';
@@ -98,7 +98,7 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
 
             if (items.RelevantResults.length === 0) {
                 const selectedProperties = (this.props.searchService.selectedProperties) ? this.props.searchService.selectedProperties.join(',') : undefined;
-                const lastQuery = this.state.results.QueryKeywords + this.props.searchService.queryTemplate + selectedProperties;
+                const lastQuery = this.state.results.QueryKeywords + this.props.searchService.queryTemplate + selectedProperties + this.props.searchService.resultSourceId;
                 // Check if a search request has already been entered (to distinguish the first use scenario)
                 if (!this.props.showBlank && lastQuery && !areResultsLoading) {
                     renderWpContent =
@@ -114,9 +114,9 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
                 }
             } else {
 
-                let searchResultTemplate = <div></div>;
+                let renderSearchResultTemplate = <div></div>;
                  if(!this.props.useCodeRenderer) {
-                    searchResultTemplate =  (
+                    renderSearchResultTemplate = 
                         <SearchResultsTemplate
                             templateService={this.props.templateService}
                             templateContent={this.props.templateContent}
@@ -134,7 +134,7 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
                                     strings: strings
                                 }
                             }
-                        />);
+                        />;
                 }
                 renderWpContent =
                     <div>
@@ -142,7 +142,7 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
                         <div className={styles.searchWp__buttonBar}>{sortPanel}</div>
                         {renderOverlay}
                         <div id={this.state.mountingNodeId} />
-                        {searchResultTemplate}
+                        {renderSearchResultTemplate}
                     </div>;
             }
         }
@@ -210,9 +210,9 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
         let isPageChanged = false;
         let selectedPage = 1;
         let lastSelectedProperties = (this.props.searchService.selectedProperties) ? this.props.searchService.selectedProperties.join(',') : undefined;
-        let lastQuery = this.props.queryKeywords + this.props.searchService.queryTemplate + lastSelectedProperties;
+        let lastQuery = this.props.queryKeywords + this.props.searchService.queryTemplate + lastSelectedProperties + this.props.searchService.resultSourceId;
         let nextSelectedProperties = (nextProps.searchService.selectedProperties) ? nextProps.searchService.selectedProperties.join(',') : undefined;
-        let query = nextProps.queryKeywords + nextProps.searchService.queryTemplate + nextSelectedProperties;
+        let query = nextProps.queryKeywords + nextProps.searchService.queryTemplate + nextSelectedProperties + nextProps.searchService.resultSourceId;
 
         if (this.props.selectedPage !== nextProps.selectedPage) {
             executeSearch = true;
@@ -236,6 +236,9 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
             isPageChanged = false;
             selectedPage = 1;
             if (lastQuery !== query) {
+                // Reset current selected refinement filters when:
+                // - A search vertical is selected
+                // - A new query is performed via the search box of URL trigger
                 nextProps.searchService.refinementFilters = [];
             }
         }
@@ -390,15 +393,22 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
                 const isTerm = /L0\|#(.+)\|/.test(value.RefinementValue);
 
                 if (isTerm) {
-                    const termId = /L0\|#(.+)\|/.exec(value.RefinementValue)[1].substr(1);
 
-                    // The uniqueIdentifier is here to be able to match the original value with the localized one
-                    // We use the refinement token, which is unique
-                    termsToLocalize.push({
-                        uniqueIdentifier: value.RefinementToken,
-                        termId: termId,
-                        localizedTermLabel: null
-                    });
+                    // Check if it is a multi value term (i.e property bag proeprty formatted with ';')
+                    // The ';' is a reserved character so it can't appear in taxonomy labels
+                    const values = value.RefinementValue.split(';');
+                    values.map((term) => {
+                        let termId = /L0\|#(.+)\|/.exec(term)[1];
+                        termId = Guid.isValid(termId) ? termId : termId.substr(1);
+
+                        // The uniqueIdentifier is here to be able to match the original value with the localized one
+                        // We use the refinement token, which is unique
+                        termsToLocalize.push({
+                            uniqueIdentifier: value.RefinementToken,
+                            termId: termId,
+                            localizedTermLabel: null
+                        });
+                    }); 
                 }
             });
         });
@@ -424,15 +434,21 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
 
                     // It supposes the 'Label' property has been selected in the underlying call
                     // A term always have a default label so the collection can't be empty
-                    const localizedLabel = termFromTaxonomy["Labels"]._Child_Items_.filter((label: any) => {
+                    let  localizedLabel = termFromTaxonomy["Labels"]._Child_Items_.filter((label: any) => {
                         return label.Language === lcid;
                     });
+
+                    // Term does not have a translation for this LCID, get the default label
+                    if (localizedLabel.length === 0) {
+                        localizedLabel = termFromTaxonomy["Labels"]._Child_Items_;
+                    }
                     
                     localizedTerms.push({
                         uniqueIdentifier: termToLocalize.uniqueIdentifier,
                         termId: termToLocalize.termId,
-                        localizedTermLabel: localizedLabel.length > 0 ? localizedLabel[0].Value : termFromTaxonomy.Name
+                        localizedTermLabel: localizedLabel[0].Value
                     });
+
                 } else {
                     localizedTerms.push({
                         uniqueIdentifier: termToLocalize.uniqueIdentifier,
@@ -448,13 +464,16 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
 
                 filter.Values.map((value) => {
                     const existingFilters = localizedTerms.filter((e) => { return e.uniqueIdentifier === value.RefinementToken; });
+                                        
                     if (existingFilters.length > 0) {
-                        updatedValues.push({
-                            RefinementCount: value.RefinementCount,
-                            RefinementName: existingFilters[0].localizedTermLabel,
-                            RefinementToken: value.RefinementToken,
-                            RefinementValue: existingFilters[0].localizedTermLabel,
-                        } as IRefinementValue);
+                        existingFilters.map((existingFilter) => {
+                            updatedValues.push({
+                                RefinementCount: value.RefinementCount,
+                                RefinementName: existingFilter.localizedTermLabel,
+                                RefinementToken: value.RefinementToken,
+                                RefinementValue: existingFilter.localizedTermLabel,
+                            } as IRefinementValue);
+                        });
                     } else {
 
                         // Keep only terms (L0). The crawl property ows_taxid_xxx return term sets too.
@@ -580,9 +599,14 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
     
                             // It supposes the 'Label' property has been selected in the underlying service call
                             // A term always have a default label so the collection can't be empty
-                            const localizedLabel = taxonomyTerm["Labels"]._Child_Items_.filter((label: any) => {
+                            let localizedLabel = taxonomyTerm["Labels"]._Child_Items_.filter((label: any) => {
                                 return label.Language === lcid && label.IsDefaultForLanguage;
                             });
+
+                            // Term does not have a translation for this LCID, get the default label
+                            if (localizedLabel.length === 0) {
+                                localizedLabel = taxonomyTerm["Labels"]._Child_Items_;
+                            }
     
                             if (localizedLabel.length > 0) {
                                 // There is only one default label for a language 
@@ -648,7 +672,7 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
     }
 
     private handleResultUpdateBroadCast(results: ISearchResults) {
-        this.props.onSearchResultsUpdate(results, this.state.mountingNodeId);
+        this.props.onSearchResultsUpdate(results, this.state.mountingNodeId, this.props.searchService);
     }
 
     /**

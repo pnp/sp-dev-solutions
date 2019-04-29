@@ -26,6 +26,33 @@ declare interface ISearchRefinersWebPartStrings {
     EditRefinersLabel: string;
     EditSortLabel: string;
     AvailableRefinersLabel: string;
+    ApplyFiltersLabel: string;
+    ClearFiltersLabel: string;
+    ShowExpanded: string;
+    Templates: {
+      RefinementItemTemplateLabel: string;
+      MutliValueRefinementItemTemplateLabel: string;
+      DateRangeRefinementItemLabel: string;
+      DateFromLabel: string;
+      DateTolabel: string;
+      DatePickerStrings: {
+        months: string[],      
+        shortMonths: string[],      
+        days: string[],      
+        shortDays: string[],      
+        goToToday: string,
+        prevMonthAriaLabel: string,
+        nextMonthAriaLabel: string,
+        prevYearAriaLabel: string,
+        nextYearAriaLabel: string,
+        closeButtonAriaLabel: string,      
+        isRequiredErrorMessage: string,      
+        invalidInputErrorMessage: string
+      };
+      RefinerSortTypeLabel: string,
+      RefinerSortTypeAlphabetical: string,
+      RefinerSortTypeByNumberOfResults: string
+    }
   },
 }
 
