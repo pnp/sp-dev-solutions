@@ -1,5 +1,8 @@
+import { IGroup } from "office-ui-fabric-react/lib/components/GroupedList";
+
 interface IVerticalState {
-    expandedGroups?: string[];
+    groups?: IGroup[];
+    items?: JSX.Element[];
 }
 
 export default IVerticalState;
