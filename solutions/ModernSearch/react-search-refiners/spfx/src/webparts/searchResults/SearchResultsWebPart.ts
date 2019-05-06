@@ -27,7 +27,7 @@ import ISearchService from '../../services/SearchService/ISearchService';
 import ITaxonomyService from '../../services/TaxonomyService/ITaxonomyService';
 import ResultsLayoutOption from '../../models/ResultsLayoutOption';
 import TemplateService from '../../services/TemplateService/TemplateService';
-import { isEmpty, find } from '@microsoft/sp-lodash-subset';
+import { isEmpty, find, sortBy } from '@microsoft/sp-lodash-subset';
 import MockSearchService from '../../services/SearchService/MockSearchService';
 import MockTemplateService from '../../services/TemplateService/MockTemplateService';
 import SearchService from '../../services/SearchService/SearchService';
@@ -128,7 +128,7 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
         if (this._refinerSourceData) {
             const refinerSourceData: IRefinerSourceData = this._refinerSourceData.tryGetValue();
             if (refinerSourceData) {
-                refinerConfiguration = refinerSourceData.refinerConfiguration;
+                refinerConfiguration = sortBy(refinerSourceData.refinerConfiguration, 'sortIdx');
                 selectedFilters = refinerSourceData.selectedFilters;
                 this._searchService = update(this._searchService, {refinementFilters: { $set: selectedFilters }, refiners: { $set: refinerConfiguration }});
             }

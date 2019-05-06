@@ -7,7 +7,8 @@ import * as update from                                                'immutabi
 import {
     GroupedList,
     IGroup,
-    IGroupDividerProps
+    IGroupDividerProps,
+    IGroupedList
 } from                                                                 'office-ui-fabric-react/lib/components/GroupedList/index';
 import { Scrollbars } from                                             'react-custom-scrollbars';
 import {Link} from 'office-ui-fabric-react/lib/Link';
@@ -15,18 +16,22 @@ import {ActionButton} from 'office-ui-fabric-react/lib/Button';
 import styles from './LinkPanel.module.scss';
 import * as strings from 'SearchRefinersWebPartStrings';
 import TemplateRenderer from '../../Templates/TemplateRenderer';
-import { IRefinementResult } from '../../../../../models/ISearchResult';
+import { IRefinementResult, IRefinementValue } from '../../../../../models/ISearchResult';
 import IRefinerConfiguration from '../../../../../models/IRefinerConfiguration';
+import IFilterLayoutProps from '../IFilterLayoutProps';
+import { isEqual } from '@microsoft/sp-lodash-subset';
 
 export default class LinkPanel extends React.Component<ILinkPanelProps, ILinkPanelState> {
+
+    private _groupedList: IGroupedList;
 
     public constructor(props: ILinkPanelProps) {
         super(props);
 
         this.state = {
             showPanel: false,
-            expandedGroups: [],
-            valueToRemove: null
+            items: [],
+            groups: []
         };
 
         this._onTogglePanel = this._onTogglePanel.bind(this);
@@ -38,58 +43,6 @@ export default class LinkPanel extends React.Component<ILinkPanelProps, ILinkPan
     }
 
     public render(): React.ReactElement<ILinkPanelProps> {
-
-        let items: JSX.Element[] = [];
-        let groups: IGroup[] = [];
-
-        if (this.props.refinementResults.length === 0) return <span />;
-
-        // Initialize the Office UI grouped list
-        this.props.refinementResults.map((refinementResult, i) => {
-
-            // Get group name
-            let groupName = refinementResult.FilterName;
-            const configuredFilter = this.props.refinersConfiguration.filter(e => { return e.refinerName === refinementResult.FilterName;});
-            groupName = configuredFilter.length > 0 && configuredFilter[0].displayValue ? configuredFilter[0].displayValue : groupName;
-
-            groups.push({
-                key: i.toString(),
-                name: groupName,
-                count: 1,
-                startIndex: i,
-                isDropEnabled: true,
-                isCollapsed: this.state.expandedGroups.indexOf(groupName) === -1 ? true : false
-            });
-
-            // Get selected values for this specfic refiner
-            // This scenario happens due to the behavior of the Office UI Fabric GroupedList component who recreates child components when a greoup is collapsed/expanded, causing a state reset for sub components
-            // In this case we use the refiners global state to recreate the 'local' state for this component  
-            const selectedFilter = this.props.selectedFilters.filter(filter => { return filter.FilterName === refinementResult.FilterName;});
-            const selectedFilterValues = selectedFilter.length === 1 ? selectedFilter[0].Values : [];
-
-            // Check if the value to remove concerns this refinement result
-            let valueToRemove = null;
-            if (this.state.valueToRemove) {
-                if (refinementResult.Values.filter(value => { 
-                    return value.RefinementToken === this.state.valueToRemove.RefinementToken || refinementResult.FilterName === this.state.valueToRemove.RefinementName; }).length > 0
-                ) {
-                    valueToRemove = this.state.valueToRemove;
-                }
-            }
-
-            items.push(
-                <TemplateRenderer 
-                    key={i} 
-                    refinementResult={refinementResult}
-                    shouldResetFilters={this.props.shouldResetFilters}
-                    templateType={configuredFilter[0].template}
-                    valueToRemove={valueToRemove}
-                    onFilterValuesUpdated={this.props.onFilterValuesUpdated}
-                    language={this.props.language}
-                    selectedValues={selectedFilterValues}
-                />
-            );
-        });
 
         const renderSelectedFilterValues: JSX.Element[] = this.props.selectedFilterValues.map((value) => {
 
@@ -105,9 +58,8 @@ export default class LinkPanel extends React.Component<ILinkPanelProps, ILinkPan
             return (
                 <Label className={styles.filter}>
                     <i className='ms-Icon ms-Icon--ClearFilter' onClick={() => { 
-                        this.setState({
-                            valueToRemove: value
-                        });
+                        this._initItems(this.props, value);
+                        this._groupedList.forceUpdate();
                     }}></i>
                     {filterName}
                 </Label>);
@@ -115,7 +67,8 @@ export default class LinkPanel extends React.Component<ILinkPanelProps, ILinkPan
 
         const renderAvailableFilters = <GroupedList
             ref='groupedList'
-            items={items}
+            componentRef={ (g) => { this._groupedList = g; }}
+            items={this.state.items}
             onRenderCell={this._onRenderCell}
             className={styles.linkPanelLayout__filterPanel__body__group}
             groupProps={
@@ -123,7 +76,7 @@ export default class LinkPanel extends React.Component<ILinkPanelProps, ILinkPan
                     onRenderHeader: this._onRenderHeader
                 }
             }
-            groups={groups} />;
+            groups={this.state.groups} />;
 
             const renderLinkRemoveAll = this.props.hasSelectedValues ?
                                         (<div className={`${styles.linkPanelLayout__filterPanel__body__removeAllFilters} ${this.props.hasSelectedValues && "hiddenLink"}`}>
@@ -180,15 +133,22 @@ export default class LinkPanel extends React.Component<ILinkPanelProps, ILinkPan
     }
 
     public componentDidMount() {
-       this._initExpandedGroups(this.props.refinementResults, this.props.refinersConfiguration);
+        this._initGroups(this.props);
+        this._initItems(this.props);
     }
 
     public componentWillReceiveProps(nextProps: ILinkPanelProps) {
-        this.setState({
-            valueToRemove: null
-        });
+        let shouldReset = false;
 
-        this._initExpandedGroups(nextProps.refinementResults, nextProps.refinersConfiguration);
+        if (!isEqual(this.props.refinersConfiguration, nextProps.refinersConfiguration)) {
+            shouldReset = true;
+        }
+
+        this._initGroups(nextProps, shouldReset);
+        this._initItems(nextProps);
+
+        // Need to force an update manually because nor items or groups update will be considered as an update by the GroupedList component.
+        this._groupedList.forceUpdate();  
     }
 
     private _onRenderCell(nestingDepth: number, item: any, itemIndex: number) {
@@ -205,16 +165,7 @@ export default class LinkPanel extends React.Component<ILinkPanelProps, ILinkPan
             <div className={ styles.linkPanelLayout__filterPanel__body__group__header }
                 style={props.groupIndex > 0 ? { marginTop: '10px' } : undefined }
                 onClick={() => {
-
-                    // Update the index for expanded groups to be able to keep it open after a re-render
-                    const updatedExpandedGroups =
-                        props.group.isCollapsed ?
-                            update(this.state.expandedGroups, { $push: [props.group.name] }) :
-                            update(this.state.expandedGroups, { $splice: [[this.state.expandedGroups.indexOf(props.group.name), 1]] });
-
-                    this.setState({
-                        expandedGroups: updatedExpandedGroups,
-                    });
+                    props.onToggleCollapse(props.group);
                 }}>
                 <div className={styles.linkPanelLayout__filterPanel__body__headerIcon}>
                     <i className={props.group.isCollapsed ? 'ms-Icon ms-Icon--ChevronDown' : 'ms-Icon ms-Icon--ChevronUp'}></i>
@@ -241,21 +192,86 @@ export default class LinkPanel extends React.Component<ILinkPanelProps, ILinkPan
      * @param refinementResults the refinements results
      * @param refinersConfiguration the current refiners configuration
      */
-    private _initExpandedGroups(refinementResults: IRefinementResult[], refinersConfiguration: IRefinerConfiguration[]) {
+    private _initGroups(props: IFilterLayoutProps, shouldResetCollapse?: boolean) {
 
-        refinementResults.map((refinementResult, i) => {
+        let groups: IGroup[] = [];
+        props.refinementResults.map((refinementResult, i) => {
 
             // Get group name
             let groupName = refinementResult.FilterName;
-            const configuredFilter = refinersConfiguration.filter(e => { return e.refinerName === refinementResult.FilterName;});
-            groupName = configuredFilter.length > 0 && configuredFilter[0].displayValue ? configuredFilter[0].displayValue : groupName;
-            const showExpanded = configuredFilter.length > 0 && configuredFilter[0].showExpanded ? configuredFilter[0].showExpanded : false;
+            const configuredFilters = props.refinersConfiguration.filter(e => { return e.refinerName === refinementResult.FilterName;});
+            groupName = configuredFilters.length > 0 && configuredFilters[0].displayValue ? configuredFilters[0].displayValue : groupName;
+            let isCollapsed = true;
 
-            if (showExpanded) {
-                this.setState({
-                    expandedGroups: update(this.state.expandedGroups, { $push: [groupName] })
-                });
+            const existingGroups = this.state.groups.filter(g => { return g.name === groupName;});
+
+            if (existingGroups.length > 0 && !shouldResetCollapse) {
+                isCollapsed = existingGroups[0].isCollapsed;
+            } else {
+                isCollapsed = configuredFilters.length > 0 && configuredFilters[0].showExpanded ? !configuredFilters[0].showExpanded : true;
             }
+
+            let group: IGroup = {
+                key: i.toString(),
+                name: groupName,
+                count: 1,
+                startIndex: i,
+                isCollapsed: isCollapsed
+            };
+
+            groups.push(group);
+        });
+
+        this.setState({
+            groups: update(this.state.groups, { $set: groups })
+        });
+    }
+
+    /**
+     * Initializes items in for goups in the GroupedList
+     * @param refinementResults the refinements results
+     */
+    private _initItems(props: IFilterLayoutProps, refinementValueToRemove?: IRefinementValue): void {
+
+        let items: JSX.Element[] = [];
+
+        // Initialize the Office UI grouped list
+        props.refinementResults.map((refinementResult, i) => {
+
+            const configuredFilter = props.refinersConfiguration.filter(e => { return e.refinerName === refinementResult.FilterName; });
+
+            // Get selected values for this specfic refiner
+            // This scenario happens due to the behavior of the Office UI Fabric GroupedList component who recreates child components when a greoup is collapsed/expanded, causing a state reset for sub components
+            // In this case we use the refiners global state to recreate the 'local' state for this component
+            const selectedFilter = props.selectedFilters.filter(filter => { return filter.FilterName === refinementResult.FilterName; });
+            const selectedFilterValues = selectedFilter.length === 1 ? selectedFilter[0].Values : [];
+
+           // Check if the value to remove concerns this refinement result
+           let valueToRemove = null;
+           if (refinementValueToRemove) {
+               if (refinementResult.Values.filter(value => { 
+                   return value.RefinementToken ===refinementValueToRemove.RefinementToken || refinementResult.FilterName === refinementValueToRemove.RefinementName; }).length > 0
+               ) {
+                   valueToRemove = refinementValueToRemove;
+               }
+           }
+
+           items.push(
+               <TemplateRenderer 
+                   key={i} 
+                   refinementResult={refinementResult}
+                   shouldResetFilters={props.shouldResetFilters}
+                   templateType={configuredFilter[0].template}
+                   valueToRemove={valueToRemove}
+                   onFilterValuesUpdated={props.onFilterValuesUpdated}
+                   language={props.language}
+                   selectedValues={selectedFilterValues}
+               />
+           );
+        });
+
+        this.setState({
+            items: update(this.state.items, { $set: items })
         });
     }
 }
