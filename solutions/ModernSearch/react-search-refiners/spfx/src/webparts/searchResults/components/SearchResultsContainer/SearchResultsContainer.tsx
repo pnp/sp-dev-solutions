@@ -398,16 +398,19 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
                     // The ';' is a reserved character so it can't appear in taxonomy labels
                     const values = value.RefinementValue.split(';');
                     values.map((term) => {
-                        let termId = /L0\|#(.+)\|/.exec(term)[1];
-                        termId = Guid.isValid(termId) ? termId : termId.substr(1);
+                        let matches = /L0\|#(.+)\|/.exec(term);
 
-                        // The uniqueIdentifier is here to be able to match the original value with the localized one
-                        // We use the refinement token, which is unique
-                        termsToLocalize.push({
-                            uniqueIdentifier: value.RefinementToken,
-                            termId: termId,
-                            localizedTermLabel: null
-                        });
+                        if (matches.length > 0) {
+                            let termId = Guid.isValid(matches[1]) ? matches[1] : matches[1].substr(1);
+
+                            // The uniqueIdentifier is here to be able to match the original value with the localized one
+                            // We use the refinement token, which is unique
+                            termsToLocalize.push({
+                                uniqueIdentifier: value.RefinementToken,
+                                termId: termId,
+                                localizedTermLabel: null
+                            });
+                        }     
                     }); 
                 }
             });

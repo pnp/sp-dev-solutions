@@ -166,7 +166,7 @@ Setting | Description
 `{{actualResultsCount}}` | The actual number of results retreived.
 `{{keywords}}` | The search query.
 `{{getSummary HitHighlightedSummary}}` | Format the *HitHighlightedSummary* property with recognized words in bold.
-`{{getDate <date_managed_property> "<format>}}"` | Format the date with moment.ts according to the current language.
+`{{getDate <date_managed_property> "<format>}}"` | Format the date with moment.ts according to the current language. Date in the managed property should be on the form `2018-09-10T06:29:25.0000000Z` for the function to work.
 `{{getPreviewSrc item}}` | Determine the image thumbnail URL if applicable.
 `{{getUrl item}}` | Get the item URL. For a document, it means the URL to the Office Online instance or the direct URL (to download it).
 `{{getUrlField managed_propertyOWSURLH "URL/Title"}}` | Return the URL or Title part of a URL field managed property.
