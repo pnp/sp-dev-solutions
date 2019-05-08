@@ -1,22 +1,22 @@
 {
     "authSettings": {
-        "appId": "e87ab049-33ba-4339-a46c-88f589b1ee20",
-        "tenant": "thecollaborationcorner.com",
-        "resource": "https://collaborationcorner.sharepoint.com",
-        "certificateThumbPrint": "9D992CEA3E6A4D5D28F45530FF5309AB5220F984",
+        "appId": "00000000-0000-0000-0000-000000000000",
+        "tenant": "mytenant.onmicrosoft.com",
+        "resource": "https://mytenant.sharepoint.com",
+        "certificateThumbPrint": "",
         "certificatePath": ".\\config\\key.pem"
     },
     "sharePointSettings": {
-        "listId": "77157cc7-128f-47ef-917f-32a34c741cb3",
-        "webUrl": "https://collaborationcorner.sharepoint.com/teams/PnPIntranet"
+        "listId": "a9f80191-f743-4da8-aa89-f2f4c99f62b7",
+        "webUrl": "https://mytenant.sharepoint.com/sites/test"
     },
     "webhookSettings": {
         "subscriptionIdentifier": "site-provisioning-demo",
-        "notificationUrl": "http://79c784e7.ngrok.io/api/webhookhandler",
-        "targetEndpointUrl": "https://prod-06.canadaeast.logic.azure.com:443/workflows/21ac437f01474d738bedf42b40b40d80/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=00uM25zRDg2xuspYkV0WDWUPw9g0RHwLtobY6H0uSvU"
+        "notificationUrl": "https://demo-function.azurewebsites.net/api/webhookhandler?code=8rfaHoQQqszkTxZ3NXyrHP4yEIUym5A3J8KaVzgtSQQkrL9bM41bmQ==",
+        "targetEndpointUrl": "<my_logic_app_endpoint_URL>"
     },
     "azureStorageSettings": {
-        "connectionString": "DefaultEndpointsProtocol=https;AccountName=spaequoswebhooka04b;AccountKey=OZeqgZYeeB9vadCxU+0V4zfbh42BcnYyMWn6h2mvGfn9UPn6pzEhhGtLSMjIf9qxvqXEutuHZ1w7chqW5jO/Xg==;EndpointSuffix=core.windows.net",
+        "connectionString": "",
         "azureTableName": "WebhookStateTable"
     }
 }   
