@@ -1,0 +1,6 @@
+<testsuites name="jest tests" tests="1" failures="0" time="7.883">
+  <testsuite name="POST /api/webhookHandler" errors="0" failures="0" skipped="0" timestamp="2019-05-06T13:26:07" time="5.559" tests="1">
+    <testcase classname="POST /api/webhookHandler should reply with the same validation token" name="POST /api/webhookHandler should reply with the same validation token" time="1.061">
+    </testcase>
+  </testsuite>
+</testsuites>

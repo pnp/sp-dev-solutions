@@ -1,0 +1,13 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "LocalSettingsFilePath": ".\\config\\function_settings.dev.json",
+    "Azure_Function_Name": "demo-function",
+    "FUNCTIONS_WORKER_RUNTIME": "node",
+    "NODE_OPTIONS": "--inspect=5858"
+  },
+  "Host": {
+    "LocalHttpPort": 7071,
+    "CORS": "*"
+  }
+}
