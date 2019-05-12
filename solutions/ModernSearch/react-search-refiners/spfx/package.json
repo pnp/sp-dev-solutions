@@ -52,7 +52,7 @@
     "video.js": "^7.3.0"
   },
   "devDependencies": {
-    "@microsoft/rush-stack-compiler-3.3": "^0.2.12",
+    "@microsoft/rush-stack-compiler-3.3": "0.2.12",
     "@microsoft/sp-build-web": "1.8.2",
     "@microsoft/sp-module-interfaces": "1.8.2",
     "@microsoft/sp-tslint-rules": "1.8.2",
