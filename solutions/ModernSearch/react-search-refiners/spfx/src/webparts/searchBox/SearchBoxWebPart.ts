@@ -3,19 +3,21 @@ import * as ReactDom from 'react-dom';
 import { Version, Environment, Text, EnvironmentType } from '@microsoft/sp-core-library';
 import {
   BaseClientSideWebPart,
-  IPropertyPaneConfiguration,
-  PropertyPaneTextField,
-  IPropertyPaneField,
-  PropertyPaneCheckbox,
-  PropertyPaneDropdown,
-  PropertyPaneToggle,
-  PropertyPaneLabel,
   IWebPartPropertiesMetadata,
-  PropertyPaneHorizontalRule,
-  PropertyPaneDynamicFieldSet,
-  PropertyPaneDynamicField,
-  DynamicDataSharedDepth
 } from '@microsoft/sp-webpart-base';
+import { 
+  IPropertyPaneConfiguration, 
+  IPropertyPaneField, 
+  PropertyPaneCheckbox, 
+  PropertyPaneDropdown, 
+  PropertyPaneDynamicField, 
+  PropertyPaneDynamicFieldSet, 
+  PropertyPaneHorizontalRule,
+  PropertyPaneLabel, 
+  PropertyPaneTextField, 
+  PropertyPaneToggle, 
+  DynamicDataSharedDepth 
+} from "@microsoft/sp-property-pane";
 import * as strings from 'SearchBoxWebPartStrings';
 import ISearchBoxWebPartProps from './ISearchBoxWebPartProps';
 import { IDynamicDataCallables, IDynamicDataPropertyDefinition } from '@microsoft/sp-dynamic-data';

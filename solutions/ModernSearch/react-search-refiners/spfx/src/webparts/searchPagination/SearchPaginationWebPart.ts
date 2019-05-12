@@ -1,12 +1,8 @@
 import * as React from 'react';
 import * as ReactDom from 'react-dom';
 import { Version, DisplayMode } from '@microsoft/sp-core-library';
-import {
-  BaseClientSideWebPart,
-  IPropertyPaneConfiguration,
-  PropertyPaneDropdown
-} from '@microsoft/sp-webpart-base';
-
+import { BaseClientSideWebPart } from "@microsoft/sp-webpart-base";
+import { IPropertyPaneConfiguration, PropertyPaneDropdown } from "@microsoft/sp-property-pane";
 import * as strings from 'SearchPaginationWebPartStrings';
 import SearchPagination from './components/SearchPaginationContainer/SearchPaginationContainer';
 import { ISearchPaginationWebPartProps } from './ISearchPaginationWebPartProps';

@@ -7,9 +7,9 @@
   "manifestVersion": 2,
   "supportsFullBleed": true,
   "requiresCustomScript": false,
-
+  "supportedHosts": ["SharePointWebPart"],
   "preconfiguredEntries": [{
-    "groupId": "5c03119e-3074-46fd-976b-c60198311f70", // Other
+    "groupId": "5c03119e-3074-46fd-976b-c60198311f70",
     "group": { 
       "default": "PnP" 
     },
