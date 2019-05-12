@@ -1,11 +1,10 @@
 ﻿import * as React from 'react';
 import * as ReactDom from 'react-dom';
 import { Version, Text, Environment, EnvironmentType, DisplayMode } from '@microsoft/sp-core-library';
-import {
-    BaseClientSideWebPart,
+import { BaseClientSideWebPart, IWebPartPropertiesMetadata } from '@microsoft/sp-webpart-base';
+import {     
     IPropertyPaneConfiguration,
     PropertyPaneTextField,
-    IWebPartPropertiesMetadata,
     PropertyPaneDynamicFieldSet,
     PropertyPaneDynamicField,
     DynamicDataSharedDepth,
@@ -17,8 +16,8 @@ import {
     PropertyPaneChoiceGroup,
     PropertyPaneCheckbox,
     PropertyPaneHorizontalRule,
-    PropertyPaneDropdown,
-} from '@microsoft/sp-webpart-base';
+    PropertyPaneDropdown
+} from "@microsoft/sp-property-pane";
 import * as strings from 'SearchResultsWebPartStrings';
 import SearchResultsContainer from './components/SearchResultsContainer/SearchResultsContainer';
 import { ISearchResultsWebPartProps } from './ISearchResultsWebPartProps';
