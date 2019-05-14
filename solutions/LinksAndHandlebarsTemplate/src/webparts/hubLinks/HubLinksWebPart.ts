@@ -282,7 +282,12 @@ export default class HubLinksWebPart extends BaseClientSideWebPart<IHubLinksWebP
   }
 
   public openLinkSelector(event){
-    this.webpart.openLinkPicker(event);
+    var currentUrl: string = "";
+    if (this.activeIndex >= 0 && this.properties.hubLinksItems[this.activeIndex] && this.properties.hubLinksItems[this.activeIndex].URL) {
+      currentUrl = this.properties.hubLinksItems[this.activeIndex].URL;
+    }
+    //open the link picker, sending in the current url for reference
+    this.webpart.openLinkPicker(event, currentUrl);
   }
 
   public itemValidation(length: number, required: boolean, errorText: string, value: string): Promise<string> {
@@ -490,7 +495,9 @@ export default class HubLinksWebPart extends BaseClientSideWebPart<IHubLinksWebP
           {label: strings.ThemePrimaryColor, color: window["__themeState__"]["theme"]["themePrimary"]},
           {label: strings.ThemeSecondaryColor, color: window["__themeState__"]["theme"]["themeSecondary"]},
           {label: strings.ThemePrimaryColor, color: window["__themeState__"]["theme"]["themeTertiary"]},
-          {label: strings.ThemePrimaryText, color: window["__themeState__"]["theme"]["primaryText"]},
+          //primaryText no longer consistent
+          //{label: strings.ThemePrimaryText, color: window["__themeState__"]["theme"]["primaryText"]},
+          {label: strings.ThemePrimaryText, color: window["__themeState__"]["theme"]["bodyText"]},
           {label: strings.WhiteColor, color: window["__themeState__"]["theme"]["white"]},
           {label: strings.BlackColor, color: window["__themeState__"]["theme"]["black"]},          
         ];

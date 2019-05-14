@@ -28,6 +28,7 @@ define([], function() {
       "AvailableRefinersLabel": "Available refiners",
       "ApplyFiltersLabel": "Apply",
       "ClearFiltersLabel": "Clear",
+      "ShowExpanded": "Expand filter by default",
       "Templates": {
         "RefinementItemTemplateLabel": "Default refinement item",
         "MutliValueRefinementItemTemplateLabel": "Multi-value refinement item",
@@ -47,7 +48,10 @@ define([], function() {
           "closeButtonAriaLabel": 'Close date picker',      
           "isRequiredErrorMessage": 'Start date is required.',      
           "invalidInputErrorMessage": 'Invalid date format.'
-        }
+        },
+        "RefinerSortTypeLabel": "Refiner sort type",
+        "RefinerSortTypeAlphabetical": "Alphabetical",
+        "RefinerSortTypeByNumberOfResults": "By number of results"
       }
     },
   }

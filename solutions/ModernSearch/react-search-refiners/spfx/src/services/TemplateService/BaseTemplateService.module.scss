@@ -5,23 +5,59 @@
         flex-direction: column;
         z-index: 10;
     }
+  
+}
 
-    &.documentPreview {
-        display: flex;
-        flex-direction: column;
-        z-index: 10;
-    }    
+.calloutContainer {
 
-    .closeBtn {
-
-        padding-right: 10px;
-        padding-top: 10px;
+    .calloutHeader {
+        display: block;
         text-align: right;
+    }
+}
 
-        &:hover {
-            cursor: pointer;
+/* https://blog.theodo.fr/2018/01/responsive-iframes-css-trick/ */
+.calloutContentContainer {
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-bottom: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 500px;
+    min-height: 280px;
+    background-size: cover;
+    background-clip: content-box;
+    background-repeat: no-repeat;
+    background-origin: content-box;
+
+    .overlay {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+    }
+        
+    .iframeContainer {
+        position: relative;
+        overflow: hidden;
+        padding-top: 56.25%;
+        width: 100%;
+        
+        iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
         }
     }
+}
+
+.hide {
+    display: none;
 }
 
 .hoverIcon {
@@ -32,6 +68,7 @@
 
     margin-top: 5px;
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
 
     * + * {

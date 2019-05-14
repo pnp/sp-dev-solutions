@@ -1,24 +1,27 @@
 import * as Handlebars from 'handlebars';
 import ISearchService from './ISearchService';
-import { ISearchResults, ISearchResult, IRefinementResult, IRefinementValue, IRefinementFilter, IPromotedResult } from '../../models/ISearchResult';
-import { sp, SearchQuery, SearchResults, SPRest, Sort, SortDirection, SearchSuggestQuery } from '@pnp/sp';
+import { ISearchResults, ISearchResult, IRefinementResult, IRefinementValue, IRefinementFilter, IPromotedResult, ISearchVerticalInformation } from '../../models/ISearchResult';
+import { sp, SearchQuery, SearchResults, SPRest, Sort, SearchSuggestQuery } from '@pnp/sp';
 import { Logger, LogLevel, ConsoleListener } from '@pnp/logging';
-import { IWebPartContext } from '@microsoft/sp-webpart-base';
-import { Text } from '@microsoft/sp-core-library';
-import { sortBy, groupBy } from '@microsoft/sp-lodash-subset';
-const mapKeys: any = require('lodash/mapKeys');
-const mapValues: any = require('lodash/mapValues');
+import { Text, Guid } from '@microsoft/sp-core-library';
+import { sortBy, isEmpty, escape } from '@microsoft/sp-lodash-subset';
 import LocalizationHelper from '../../helpers/LocalizationHelper';
 import "@pnp/polyfill-ie11";
 import IRefinerConfiguration from '../../models/IRefinerConfiguration';
 import { ISearchServiceConfiguration } from '../../models/ISearchServiceConfiguration';
-
-declare var System: any;
+import { ITokenService, TokenService } from '../TokenService';
+import { PageContext } from '@microsoft/sp-page-context';
+import { SPHttpClient } from '@microsoft/sp-http';
+import ISynonymTable from '../../models/ISynonym';
+import { JSONParser } from '@pnp/odata';
+import { UrlHelper } from '../../helpers/UrlHelper';
+import { ISearchVertical } from '../../models/ISearchVertical';
 
 class SearchService implements ISearchService {
     private _initialSearchResult: SearchResults = null;
     private _resultsCount: number;
-    private _context: IWebPartContext;
+    private _pageContext: PageContext;
+    private _tokenService: ITokenService;
     private _selectedProperties: string[];
     private _queryTemplate: string;
     private _resultSourceId: string;
@@ -26,6 +29,7 @@ class SearchService implements ISearchService {
     private _enableQueryRules: boolean;
     private _refiners: IRefinerConfiguration[];
     private _refinementFilters: IRefinementFilter[];
+    private _synonymTable: ISynonymTable;
 
     public get resultsCount(): number { return this._resultsCount; }
     public set resultsCount(value: number) { this._resultsCount = value; }
@@ -51,10 +55,14 @@ class SearchService implements ISearchService {
     public set refinementFilters(value: IRefinementFilter[]) { this._refinementFilters = value; }
     public get refinementFilters(): IRefinementFilter[] { return this._refinementFilters; }
 
+    public set synonymTable(value: ISynonymTable) { this._synonymTable = value; }
+    public get synonymTable(): ISynonymTable { return this._synonymTable; }
+
     private _localPnPSetup: SPRest;
 
-    public constructor(webPartContext: IWebPartContext) {
-        this._context = webPartContext;
+    public constructor(pageContext: PageContext, spHttpClient: SPHttpClient) {
+        this._pageContext = pageContext;
+        this._tokenService = new TokenService(this._pageContext, spHttpClient);
 
         // Setup the PnP JS instance
         const consoleListener = new ConsoleListener();
@@ -67,7 +75,7 @@ class SearchService implements ISearchService {
             headers: {
                 Accept: 'application/json; odata=nometadata',
             },
-        }, this._context.pageContext.web.absoluteUrl);
+        }, this._pageContext.web.absoluteUrl);
     }
 
     /**
@@ -97,7 +105,7 @@ class SearchService implements ISearchService {
                 QueryPropertyValueTypeIndex: 3
             }
         }];
-        searchQuery.Querytext = query;
+        searchQuery.Querytext = this._injectSynonyms(query);
 
         // Disable query rules by default if not specified
         searchQuery.EnableQueryRules = this._enableQueryRules ? this._enableQueryRules : false;
@@ -108,7 +116,7 @@ class SearchService implements ISearchService {
 
         // To be able to use search query variable according to the current context
         // http://www.techmikael.com/2015/07/sharepoint-rest-do-support-query.html
-        searchQuery.QueryTemplate = this._queryTemplate;
+        searchQuery.QueryTemplate = await this._tokenService.replaceQueryVariables(this._queryTemplate);
 
         searchQuery.RowLimit = this._resultsCount ? this._resultsCount : 50;
         searchQuery.SelectProperties = this._selectedProperties;
@@ -143,7 +151,6 @@ class SearchService implements ISearchService {
                 this._initialSearchResult = await this._localPnPSetup.search(searchQuery);
             }
 
-            const allItemsPromises: Promise<any>[] = [];
             let refinementResults: IRefinementResult[] = [];
 
             // Need to do this check
@@ -174,31 +181,21 @@ class SearchService implements ISearchService {
                 }
 
                 // Map search results
-                resultRows.map((elt) => {
+                let searchResults: ISearchResult[] = resultRows.map((elt) => {
 
-                    const p1 = new Promise<ISearchResult>((resolvep1, rejectp1) => {
+                    // Build item result dynamically
+                    // We can't type the response here because search results are by definition too heterogeneous so we treat them as key-value object
+                    let result: ISearchResult = {};
 
-                        // Build item result dynamically
-                        // We can't type the response here because search results are by definition too heterogeneous so we treat them as key-value object
-                        let result: ISearchResult = {};
-
-                        elt.Cells.map((item) => {
-                            result[item.Key] = item.Value;
-                        });
-
-                        // Get the icon source URL
-                        this._mapToIcon(result.Filename ? result.Filename : Text.format('.{0}', result.FileExtension)).then((iconUrl) => {
-
-                            result.iconSrc = iconUrl;
-                            resolvep1(result);
-
-                        }).catch((error) => {
-                            rejectp1(error);
-                        });
+                    elt.Cells.map((item) => {
+                        result[item.Key] = item.Value;
                     });
 
-                    allItemsPromises.push(p1);
+                    return result;
                 });
+
+                // Map results icon (using batch)
+                searchResults = await this._mapToIcons(searchResults);
 
                 // Map refinement results                    
                 refinementRows.map((refiner) => {
@@ -243,9 +240,6 @@ class SearchService implements ISearchService {
                     results.PromotedResults = promotedResults;
                 }
 
-                // Resolve all the promises once to get news
-                const relevantResults: ISearchResult[] = await Promise.all(allItemsPromises);
-
                 // Sort refiners according to the property pane value
                 refinementResults = sortBy(refinementResults, (refinement) => {
 
@@ -253,7 +247,7 @@ class SearchService implements ISearchService {
                     return sortedRefiners.indexOf(refinement.FilterName);
                 });
 
-                results.RelevantResults = relevantResults;
+                results.RelevantResults = searchResults;
                 results.RefinementResults = refinementResults;
                 results.PaginationInformation.TotalRows = this._initialSearchResult.TotalRows;
             }
@@ -279,7 +273,7 @@ class SearchService implements ISearchService {
             count: 10,
             hitHighlighting: true,
             prefixMatch: true,
-            culture: LocalizationHelper.getLocaleId(this._context.pageContext.cultureInfo.currentUICultureName).toString()
+            culture: LocalizationHelper.getLocaleId(this._pageContext.cultureInfo.currentUICultureName).toString()
         };
 
         try {
@@ -301,6 +295,79 @@ class SearchService implements ISearchService {
         }
     }
 
+    /**
+     * Retreives the result counts for each search vertical
+     * @param queryText the search query text
+     * @param searchVerticalsConfiguration the search verticals configuration
+     * @param enableQueryRules enable query rules or not
+     */
+    public async getSearchVerticalCounts(queryText: string, searchVerticals: ISearchVertical[], enableQueryRules: boolean): Promise<ISearchVerticalInformation[]> {
+
+        const batch = this._localPnPSetup.createBatch();   
+        const parser = new JSONParser();     
+        const batchId = Guid.newGuid().toString();
+        let verticalInfos: ISearchVerticalInformation[] = [];
+ 
+        const promises = searchVerticals.map(async vertical => {
+
+            // Specify the same query parameters as the current vertical one to be sure to get the same total rows
+            // POST request does not seem to work well with batching so we use a GET request here
+            let url = `${this._pageContext.web.absoluteUrl}/_api/search/query`;
+
+            // When query rules are enabled, we need to set the row limit to minimum 1 to get data in the 'PrimaryQueryResult' property and get the 'TotalRows'
+            // More info here https://blog.mastykarz.nl/inconvenient-content-targeting-user-segments-search-rest-api/
+            const rowLimit: string = enableQueryRules ? '1' : '0';
+
+            url = UrlHelper.addOrReplaceQueryStringParam(url, 'querytext', `'${queryText.replace(/'/g, "''")}'`);
+            url = UrlHelper.addOrReplaceQueryStringParam(url, 'rowlimit', rowLimit);
+            url = UrlHelper.addOrReplaceQueryStringParam(url, 'querytemplate', `'${vertical.queryTemplate}'`);
+            url = UrlHelper.addOrReplaceQueryStringParam(url, 'trimduplicates', "'false'");
+            url = UrlHelper.addOrReplaceQueryStringParam(url, 'properties', "'EnableDynamicGroups:true,EnableMultiGeoSearch:true'");
+            url = UrlHelper.addOrReplaceQueryStringParam(url, 'clienttype', "'ContentSearchRegular'");
+            url = UrlHelper.addOrReplaceQueryStringParam(url, 'enablequeryrules', `${enableQueryRules}`);
+
+            if (vertical.resultSourceId) {
+                url = UrlHelper.addOrReplaceQueryStringParam(url, 'sourceid', `'${vertical.resultSourceId}'`);
+            }
+
+            return batch.add(url, 'GET', {
+                headers: {
+                    Accept: 'application/json; odata=nometadata'
+                }
+            }, parser, batchId);
+        });
+        
+        // Execute the batch
+        await batch.execute();
+
+        const response = await Promise.all(promises);
+
+        // Parse results and return counts for each vertical
+        // We suppose the batch order follow the input verticals order
+        response.map((result: any, index: number) => {
+
+            let currentCount = null;
+            if (result.PrimaryQueryResult) {
+                currentCount = result.PrimaryQueryResult.RelevantResults.TotalRows;
+            }
+
+            // GET requests allow empty query text so we need to ensure there is actually a query to get the right count
+            if (currentCount !== null && !isEmpty(queryText)) {
+                verticalInfos.push(
+                    {
+                        Count: currentCount,
+                        VerticalKey: searchVerticals[index].key
+                    } as ISearchVerticalInformation
+                );
+            }
+        });
+        
+        return verticalInfos;
+    }
+
+    /**
+     * Gets the current search service properties configuration
+     */
     public getConfiguration(): ISearchServiceConfiguration {
         return {
             enableQueryRules: this.enableQueryRules,
@@ -310,31 +377,61 @@ class SearchService implements ISearchService {
             resultSourceId: this.resultSourceId,
             resultsCount: this.resultsCount,
             selectedProperties: this.selectedProperties,
-            sortList: this.sortList
+            sortList: this.sortList,
+            synonymTable: this.synonymTable
         };
     }
 
     /**
-     * Gets the icon corresponding to the file name extension
-     * @param filename The file name (ex: file.pdf)
+     * Gets the icons corresponding to the result file name extensions
+     * @param searchResults The raw search results
      */
-    private async _mapToIcon(filename: string): Promise<string> {
-
-        const webAbsoluteUrl = this._context.pageContext.web.absoluteUrl;
+    private async _mapToIcons(searchResults: ISearchResult[]): Promise<ISearchResult[]> {
 
         try {
-            let encodedFileName = filename ? filename.replace(/['']/g, '') : '';
-            const queryStringIndex = encodedFileName.indexOf('?');
-            if (queryStringIndex !== -1) { // filename with query string leads to 400 error.
-                encodedFileName = encodedFileName.slice(0, queryStringIndex);
-            }
-            const iconFileName = await this._localPnPSetup.web.mapToIcon(encodeURIComponent(encodedFileName), 1);
-            const iconUrl = webAbsoluteUrl + '/_layouts/15/images/' + iconFileName;
 
-            return iconUrl;
+            let updatedSearchResults = searchResults;
+
+            const batch = this._localPnPSetup.createBatch();   
+            const parser = new JSONParser();     
+            const batchId = Guid.newGuid().toString();
+
+            const promises = searchResults.map(async result => {
+                
+                const filename = result.Filename ? result.Filename : `.${result.FileExtension}`;
+
+                let encodedFileName = filename ? filename.replace(/['']/g, '') : '';
+                const queryStringIndex = encodedFileName.indexOf('?');
+                if (queryStringIndex !== -1) { // filename with query string leads to 400 error.
+                    encodedFileName = encodedFileName.slice(0, queryStringIndex);
+                }
+
+                let url = `${this._pageContext.web.absoluteUrl}/_api/web/maptoicon(filename='${encodeURIComponent(encodedFileName)}', progid='', size=1)`;
+
+                return batch.add(url, 'GET', {
+                    headers: {
+                        Accept: 'application/json; odata=nometadata'
+                    }
+                }, parser, batchId);
+            });
+
+            // Execute the batch
+            await batch.execute();
+
+            const response = await Promise.all(promises);
+
+            response.map((result: any, index: number) => {
+
+                if (result.value) {
+                    const iconUrl = this._pageContext.web.absoluteUrl + '/_layouts/15/images/' + result.value;
+                    updatedSearchResults[index].IconSrc = iconUrl;
+                }
+            });
+
+            return updatedSearchResults;
 
         } catch (error) {
-            Logger.write('[SearchService._mapToIcon()]: Error: ' + error, LogLevel.Error);
+            Logger.write('[SearchService._mapToIcons()]: Error: ' + error, LogLevel.Error);
             throw new Error(error);
         }
     }
@@ -352,7 +449,7 @@ class SearchService implements ISearchService {
 
         if (matches) {
             matches.map(match => {
-                updatedInputValue = updatedInputValue.replace(match, (<any>window).searchHBHelper.moment(match, "LL", { lang: this._context.pageContext.cultureInfo.currentUICultureName }));
+                updatedInputValue = updatedInputValue.replace(match, (<any>window).searchHBHelper.moment(match, "LL", { lang: this._pageContext.cultureInfo.currentUICultureName }));
             });
         }
 
@@ -362,8 +459,9 @@ class SearchService implements ISearchService {
     /**
      * Build the refinement condition in FQL format
      * @param selectedFilters The selected filter array
+     * @param encodeTokens If true, encodes the taxonomy refinement tokens in UTF-8 to work with GET requests. Javascript encodes natively in UTF-16 by default.
      */
-    private _buildRefinementQueryString(selectedFilters: IRefinementFilter[]): string[] {
+    private _buildRefinementQueryString(selectedFilters: IRefinementFilter[], encodeTokens?: boolean): string[] {
 
         let refinementQueryConditions: string[] = [];
 
@@ -372,16 +470,77 @@ class SearchService implements ISearchService {
 
                 // A refiner can have multiple values selected in a multi or mon multi selection scenario
                 // The correct operator is determined by the refiner display template according to its behavior
-                const conditions = filter.Values.map(value => { return value.RefinementToken; });
+                const conditions = filter.Values.map(value => {
+
+                    return /ǂǂ/.test(value.RefinementToken) && encodeTokens ? encodeURIComponent(value.RefinementToken) : value.RefinementToken; 
+                });
                 refinementQueryConditions.push(`${filter.FilterName}:${filter.Operator}(${conditions.join(',')})`);
             } else {
                 if (filter.Values.length === 1) {
-                    refinementQueryConditions.push(`${filter.FilterName}:${filter.Values[0].RefinementToken}`);
+
+                    // See https://sharepoint.stackexchange.com/questions/258081/how-to-hex-encode-refiners/258161
+                    let refinementToken = /ǂǂ/.test(filter.Values[0].RefinementToken) && encodeTokens ? encodeURIComponent(filter.Values[0].RefinementToken) : filter.Values[0].RefinementToken;
+                    refinementQueryConditions.push(`${filter.FilterName}:${refinementToken}`);
                 }
             }
         });
 
         return refinementQueryConditions;
+    }
+
+    // Function to inject synonyms at run-time
+    private _injectSynonyms(query: string): string {
+
+        if (this._synonymTable && Object.keys(this._synonymTable).length > 0) {
+            // Remove complex query parts AND/OR/NOT/ANY/ALL/parenthasis/property queries/exclusions - can probably be improved            
+            const cleanQuery = query.replace(/(-\w+)|(-"\w+.*?")|(-?\w+[:=<>]+\w+)|(-?\w+[:=<>]+".*?")|((\w+)?\(.*?\))|(AND)|(OR)|(NOT)/g, '');
+            const queryParts: string[] = cleanQuery.match(/("[^"]+"|[^"\s]+)/g);
+
+            // code which should modify the current query based on context for each new query
+            if (queryParts) {
+
+                for (let i = 0; i < queryParts.length; i++) {
+                    const key = queryParts[i].toLowerCase();
+                    const value = this._synonymTable[key];
+
+                    if (value) {
+                        // Replace the current query part in the query with all the synonyms
+                        query = query.replace(queryParts[i],
+                            Text.format('({0} OR {1})',
+                                this._formatSynonym(queryParts[i]),
+                                this._formatSynonymsSearchQuery(value)));
+                    }
+                }
+            }
+        }
+        return query;
+    }
+
+    private _formatSynonym(value: string): string {
+        value = value.trim().replace(/"/g, '').trim();
+        value = '"' + value + '"';
+
+        return value;
+    }
+
+    private _formatSynonymsSearchQuery(items: string[]): string {
+        let result = '';
+
+        for (let i = 0; i < items.length; i++) {
+            let item = items[i];
+
+            if (item.length > 0) {
+                item = this._formatSynonym(item);
+
+                result += item;
+
+                if (i < items.length - 1) {
+                    result += ' OR ';
+                }
+            }
+        }
+
+        return result;
     }
 }
 

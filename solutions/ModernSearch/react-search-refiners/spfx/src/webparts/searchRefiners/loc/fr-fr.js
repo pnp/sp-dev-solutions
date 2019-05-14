@@ -28,6 +28,7 @@ define([], function() {
       "AvailableRefinersLabel": "Filtre(s) disponible(s)",
       "ApplyFiltersLabel": "Appliquer",
       "ClearFiltersLabel": "Effacer",
+      "ShowExpanded": "Mode développé par défaut",
       "Templates": {
         "RefinementItemTemplateLabel": "Filtre par défaut",
         "MutliValueRefinementItemTemplateLabel": "Filtre à valeurs multiples",
@@ -47,7 +48,10 @@ define([], function() {
           "closeButtonAriaLabel": 'Fermer le sélecteur de date',      
           "isRequiredErrorMessage": 'La date de début est requise.',      
           "invalidInputErrorMessage": 'Format de date invalide.'
-        }
+        },
+        "RefinerSortTypeLabel": "Trier selon ce critère",
+        "RefinerSortTypeAlphabetical": "Alphabétique",
+        "RefinerSortTypeByNumberOfResults": "Par nombre de résultats"
       }
     },
   }

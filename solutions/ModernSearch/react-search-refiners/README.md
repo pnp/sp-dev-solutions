@@ -1,13 +1,13 @@
 # SharePoint Framework modern search Web Parts
 
-![Version](https://img.shields.io/badge/version-3.1.1-green.svg)
+![Version](https://img.shields.io/badge/version-3.3.2-green.svg)
 
 ## Summary
 This solution allows you to build user friendly SharePoint search experiences using SPFx in the modern interface. The main features include:
 
 - Fully customizable SharePoint search query like the good old Content Search Web Part.
 - Can either use a static query or be connected to a search box component using SPFx dynamic data.
-- Live templating system with Handlebar to meet your requirements in terms of UI + builtin list and tiles templates. Can alos use template from an external file.
+- Live templating system with Handlebar to meet your requirements in terms of UI + builtin list and tiles templates. Can also use template from an external file.
 - Search results includings previews for Office documents and Office 365 videos.
 - Customizable refiners supporting multilingual values for taxonomy based filters.
 - Sortable results (unique field).
@@ -34,7 +34,8 @@ Search Box Web Part | Allows users to enter free text/KQL search queries connect
 Search Results Web Part | Performs static or dynamic search query with customizable parameters sorting and templating. An associated [blog post](http://thecollaborationcorner.com/2017/10/16/build-dynamic-sharepoint-search-experiences-with-refiners-and-paging-with-spfx-office-ui-fabric-and-pnp-js-library/) is available to give you more details about this Web Part implementation.
 Search Refiners | Allows users to configure refiners for a search results Web Part.
 Search Pagination | Allows users to configure pagination for a search results Web Part.
-Search Navigation | Allows users to configure navigation for a search results Web Part
+Search Navigation | Allows users to configure navigation for a search results Web Part.
+Search Verticals | Allows users to search in predefined scopes.
 
 **Back-end service(s)**
 
@@ -165,7 +166,7 @@ Setting | Description
 `{{actualResultsCount}}` | The actual number of results retreived.
 `{{keywords}}` | The search query.
 `{{getSummary HitHighlightedSummary}}` | Format the *HitHighlightedSummary* property with recognized words in bold.
-`{{getDate <date_managed_property> "<format>}}"` | Format the date with moment.ts according to the current language.
+`{{getDate <date_managed_property> "<format>}}"` | Format the date with moment.ts according to the current language. Date in the managed property should be on the form `2018-09-10T06:29:25.0000000Z` for the function to work.
 `{{getPreviewSrc item}}` | Determine the image thumbnail URL if applicable.
 `{{getUrl item}}` | Get the item URL. For a document, it means the URL to the Office Online instance or the direct URL (to download it).
 `{{getUrlField managed_propertyOWSURLH "URL/Title"}}` | Return the URL or Title part of a URL field managed property.
@@ -260,12 +261,14 @@ The following out of the box [query variables](https://docs.microsoft.com/en-us/
 
 The following custom query variables are supported:
 
-* {Page.&lt;column&gt;} - where column is the internal name of the column.
-   * When used with taxonomy columns, use `{Page.Column.Label}` or `{Page.Column.TermID}`
-* {CurrentYear} - Todays's date four digits, 2018
-* {CurrentMonth} - Today's month, 1-12
-* {CurrentDate} - Today's date, 1-31
-   * Sample query template: {searchTerms} Write>2010-{CurrentMonth}-{CurrentDate}
+|**Query variable**|**Definition**|
+|:-----|:-----|
+|{Page.&lt;FieldName&gt;}  <br/> | The value of a field on the page from where the query was issued. For example, if the page from where the query was issued contained a site column named "ContentOwner," specifying {Page.ContentOwner} would allow you to query for the value of "ContentOwner." FieldName is the internal name of the field. When used with taxonomy columns, use `{Page.<FieldName>.Label}` or `{Page.<FieldName>.TermID}` <br/> |
+|{CurrentYear}  <br/> | Todays's date four digits, 2018 <br/> |
+|{CurrentMonth}  <br/> | Today's month, 1-12 <br/> |
+|{CurrentDate}  <br/> | Today's date, 1-31 <br/> |
+|{QueryString.&lt;ParameterName&gt;} <br/> | A value from a query string in the URL of the current page. For example, if the URL of the current page contains a query string such as ItemNumber=567, you could obtain the value 567 by specifying {QueryString.ItemNumber}. <br/> |
+|{PageContext.&lt;ParameterName&gt;} <br/> | A value from the legacyPageContext object on the page. For example, if the legacyPageContext object of the current page contains a property "hubSiteId": "166aa115-7ae7-4c21-9e02-9e0c8872be28", you could obtain the value 166aa115-7ae7-4c21-9e02-9e0c8872be28 by specifying {PageContext.hubSiteId}. The property name is case sensitive!<br/> |
 
 #### Best bets
 
@@ -281,7 +284,7 @@ This WP supports SharePoint best bets via SharePoint query rules:
 
 #### Elements previews
 
-Previews are available, **only for the list view**, for Office documents and Office 365 videos (not Microsoft Stream). The embed URL is directly taken from the `ServerRedirectedEmbedURL` managed property retrieved from the search results. 
+Previews are available by default for list and tiles layouts, for Office documents and Office 365 videos (not Microsoft Stream). The embed URL is directly taken from the `ServerRedirectedEmbedURL` managed property retrieved from the search results. 
 
 <p align="center">
   <img width="500px" src="./images/result_preview.png"/>
@@ -294,7 +297,21 @@ The WebPart must have the following selected properties in the configuration to 
 - ServerRedirectedEmbedURL
 - DefaultEncodingURL
 
-This preview is displayed as an _iframe_ when the user clicks on the corresponding preview image. DOM manipulations occur to add the _iframe_ container dynamically aside with the _<img/>_ container.
+This preview is displayed as an _iframe_ or a _video_ tag when the user clicks on the corresponding preview image or compliant HTML elementss. To enable the callout preview in your templates, your HTML elements must have the  `document-preview-item` or `video-preview-item` CSS class and provide the following attributes:
+
+- `data-src`: the URL of the preview image.
+- `data-url`: the URL of the iframe source or the video.
+- `data-fileext`: the file extension for the video (for video only).
+
+**Preview on documents**
+```
+<div class="document-preview-item" data-src="{{ServerRedirectedPreviewURL}}" data-url="{{Path}}">
+```
+
+**Preview on videos**
+```
+<img class="video-preview-item" src="{{PictureThumbnailURL}}" data-src="{{PictureThumbnailURL}}" data-url="{{DefaultEncodingURL}}" data-fileext="{{FileType}}"/>
+```
 
 ### Search Refiners
 
@@ -340,6 +357,38 @@ This step is used to set up the navigation nodes, and needs to be done on all pa
 The you may either use the sitecollections theme colors, or use a custom color you choose in the settings pane.
 <img src="./images/ChangeColor.gif">
 
+### Search Verticals Web Part
+
+<p align="center"><img width="500px" src="./images/search_verticals.png"/><p>
+
+
+The search verticals Web Part allow users to search through predefined scopes (i.e videos, people, etc.). The behavior is different from the search navigation Web Part because here, we simply replace the query template and result source dynamically for a chosen vertical. To get it work, you simply need to connect the search verticals Web Part to a search results Web Part using the associated opton. Also, if you want to display counts for each verticals **when a new query is performed** (for instance a search box query or an URL fragment udpate), connect the search results Web Part to the search verticals one (two ways connection in this case).
+
+#### Verticals Options
+
+<table>
+  <tr>
+    <td>
+<p align="center"><img src="./images/search_verticals_propertypane.png"/><p>
+    </td>
+    <td>
+<p align="center"><img src="./images/search_verticals_propertypane2.png"/><p>
+    </td>
+  </tr>
+  <tr>
+    <td colspan=2>
+<p align="center"><img src="./images/search_verticals_propertypane3.png"/><p>
+    </td>
+  </tr>
+<table>
+
+
+Setting | Description 
+-------|----
+Search verticals | Configure the search verticals to display. When you set a query template or a result source id for a vertical, these override the ones in the connected search results. You can also set an icon for a vertical using [Office UI Fabric icons names](https://developer.microsoft.com/en-us/fabric#/styles/icons). The query keywords are shared across all verticals. For instance, if you need default results for tabs, just specify a default query in the connected search results Web Part (like `*`) and the `{searchTerms}` expression in your vertical query template. Also, selected refinement filters are reset, if present, when a new vertical is selected.
+Show results count | Indicates if the results count should be displayed for each vertical. In this case, you need to connect the Web Part to an existing search results Web Part on the page.
+
+
 ## Features
 This Web Part illustrates the following concepts on top of the SharePoint Framework:
 
@@ -349,7 +398,7 @@ This Web Part illustrates the following concepts on top of the SharePoint Framew
 - Using SharePoint taxonomy using JSOM in SPFx (filter translations)
 - Integrate the [@pnp/spfx-property-controls](https://github.com/SharePoint/sp-dev-fx-property-controls) in your solution (*PlaceHolder* control).
 - Integrate multiple Office UI Fabric components (DocumentCard, Panel, GroupedList, ...) to fit with the native Office 365 theme.
-- Use the React container component approach inspiring by the [react-todo-basic sample](https://github.com/SharePoint/sp-dev-fx-webparts/tree/master/samples/react-todo-basic).
+- Use the React container component approach inspiring by the [react-todo-basic sample](https://github.com/SharePoint/sp-dev-fx-webparts/tree/master/samples/react-todo-basic)
 
 <img src="https://telemetry.sharepointpnp.com/sp-dev-solutions/ModernSearch/react-search-refiners" />
 
@@ -381,6 +430,8 @@ Version|Date|Comments
 3.0.4.0 | Mar 21, 2019 | Fixed loading of Handlebars helpers when having multiple search parts on a page
 3.0.5.0 | Mar 26, 2019 | Fixed recreating SearchService on each render
 3.1.0.0 | Mar 30, 2019 | Added date range and multi value refiner templates
+3.2.0.0 | Apr 08, 2019 | Added support for QueryString token
+3.3.0.0 | Apr 20, 2019 | Added search verticals Web Part allwoing to search within predefined scopes using query template and result source.
 
 ## Important notice on upgrading the solution from pre v2.2.0.0
 **Due to code restucturing we have hit an edge case which impacts upgrades from previous versions. To solve the issue go to `https://<tenant>.sharepoint.com/sites/<appcatalog>/Lists/ComponentManifests` and remove the entries for SearchBox and Search Results, and then upload the .sppkg for the new release.**

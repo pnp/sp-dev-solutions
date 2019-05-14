@@ -11,7 +11,7 @@ import * as strings from 'SearchPaginationWebPartStrings';
 import SearchPagination from './components/SearchPaginationContainer/SearchPaginationContainer';
 import { ISearchPaginationWebPartProps } from './ISearchPaginationWebPartProps';
 import { Placeholder } from '@pnp/spfx-controls-react/lib/Placeholder';
-import { IDynamicDataCallables, IDynamicDataPropertyDefinition, IDynamicDataSource } from '@microsoft/sp-dynamic-data';
+import { IDynamicDataCallables, IDynamicDataPropertyDefinition } from '@microsoft/sp-dynamic-data';
 import { DynamicProperty } from '@microsoft/sp-component-base';
 import ISearchResultSourceData from '../../models/ISearchResultSourceData';
 import { SearchComponentType } from '../../models/SearchComponentType';
@@ -37,25 +37,24 @@ export default class SearchPaginationWebPart extends BaseClientSideWebPart<ISear
 
         if (searchResultSourceData) {
           searchPagination = searchResultSourceData.paginationInformation;
+          if (searchPagination)
+          {
+            this._currentPage = searchPagination.CurrentPage;
+          }
         }
       }      
 
-      if (searchPagination && searchPagination.TotalRows > 0)
-      {
-        this._currentPage = searchPagination.CurrentPage;
-        renderElement = React.createElement(
-          SearchPagination,
-          {
-            totalItems: searchPagination.TotalRows,
-            itemsCountPerPage: searchPagination.MaxResultsPerPage,
-            onPageUpdate: (page: number) => {
-              this._currentPage = page;
-              this.context.dynamicDataSourceManager.notifyPropertyChanged(SearchComponentType.PaginationWebPart);
-            },
-            currentPage: this._currentPage
-          }
-        );
-      }
+      renderElement = React.createElement(
+        SearchPagination,
+        {
+          paginationInformation: searchPagination,
+          onPageUpdate: (page: number) => {
+            this._currentPage = page;
+            this.context.dynamicDataSourceManager.notifyPropertyChanged(SearchComponentType.PaginationWebPart);
+          },
+          displayMode: this.displayMode
+        }
+      );
     }
     else {
       if (this.displayMode === DisplayMode.Edit) {
