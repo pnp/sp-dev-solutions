@@ -1,6 +1,5 @@
 import IDynamicDataService from "./IDynamicDataService";
 import { DynamicProperty, DynamicDataProvider } from "@microsoft/sp-component-base";
-import { IPropertyPaneDropdownOption } from "@microsoft/sp-webpart-base";
 import { IDynamicDataSource } from "@microsoft/sp-dynamic-data";
 import IDataSourceProperty from "../../models/IDataSourceProperty";
 

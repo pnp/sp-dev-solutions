@@ -3,6 +3,7 @@ import ISearchResultProps from './ISearchResultProps';
 import styles from './SearchResult.module.scss';
 import { PersonaCoin } from 'office-ui-fabric-react/lib/PersonaCoin';
 import * as moment from 'moment';
+import * as strings from 'CodeRendererApplicationCustomizerStrings';
 
 export default class SearchResult extends React.Component<ISearchResultProps, {}> {
     public render() {
@@ -22,7 +23,7 @@ export default class SearchResult extends React.Component<ISearchResultProps, {}
                                             <h3>{result.Title}</h3>
                                             <p>{result[this.props.subheaderFieldName]}</p>
                                             <ul>
-                                                <li>Oppdatert for {result.Updated ? this.fmtDateString(result.Updated) : this.fmtDateString(result.Created)}</li>
+                                                <li>{strings.UpdatedPrefix} {result.Updated ? this.fmtDateString(result.Updated) : this.fmtDateString(result.Created)}</li>
                                                 <li>{result.CreatedBy}</li>
                                             </ul>
                                         </header>

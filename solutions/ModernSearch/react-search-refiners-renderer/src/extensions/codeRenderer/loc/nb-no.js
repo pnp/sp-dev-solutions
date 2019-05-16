@@ -1,5 +1,5 @@
 define([], function() {
     return {
-        "UpdatedPrefix": "Updated"
+        "UpdatedPrefix": "Oppdatert for"
     }
 });

@@ -1,16 +1,16 @@
 import * as React from 'react';
 import * as ReactDom from 'react-dom';
 import { Version, DisplayMode } from '@microsoft/sp-core-library';
-import {
-  BaseClientSideWebPart,
-  IPropertyPaneConfiguration,
-  PropertyPaneTextField,
-  PropertyPaneToggle,
-  PropertyPaneDropdown,
-  IPropertyPaneField,
-  IPropertyPaneChoiceGroupOption,
-  PropertyPaneChoiceGroup
-} from '@microsoft/sp-webpart-base';
+import { BaseClientSideWebPart } from "@microsoft/sp-webpart-base";
+import { 
+  IPropertyPaneConfiguration, 
+  IPropertyPaneField, 
+  IPropertyPaneChoiceGroupOption, 
+  PropertyPaneChoiceGroup, 
+  PropertyPaneDropdown, 
+  PropertyPaneTextField, 
+  PropertyPaneToggle 
+} from "@microsoft/sp-property-pane";
 import { PropertyFieldCollectionData, CustomCollectionFieldType } from '@pnp/spfx-property-controls/lib/PropertyFieldCollectionData';
 import * as strings from 'SearchRefinersWebPartStrings';
 import { IRefinementFilter, IRefinementResult } from '../../models/ISearchResult';
