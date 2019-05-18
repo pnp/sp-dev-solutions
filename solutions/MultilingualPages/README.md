@@ -2,6 +2,8 @@
 
 ## Summary
 
+To see a live demo of the soultion check out the [video posted on the PnP YouTube channel](https://www.youtube.com/watch?v=i2rDqK6br5M).
+
 ### Multilingual Application Customizer
 
 This solution contains a application customizer and a web part that when used together provide a client side solution to managing multilingual pages in a SharePoint site collection.
