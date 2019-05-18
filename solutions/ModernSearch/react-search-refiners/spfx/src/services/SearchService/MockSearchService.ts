@@ -18,6 +18,7 @@ class MockSearchService implements ISearchService {
     private _enableQueryRules: boolean;
     private _refiners: IRefinerConfiguration[];
     private _refinementFilters: IRefinementFilter[];
+    private _queryCulture: number;
 
     public get resultsCount(): number { return this._resultsCount; }
     public set resultsCount(value: number) { this._resultsCount = value; }
@@ -42,6 +43,9 @@ class MockSearchService implements ISearchService {
 
     public set refinementFilters(value: IRefinementFilter[]) { this._refinementFilters = value; }
     public get refinementFilters(): IRefinementFilter[] { return this._refinementFilters; }
+
+    public get queryCulture(): number { return this._queryCulture; }
+    public set queryCulture(value: number) { this._queryCulture = value; }
 
     private _searchResults: ISearchResults;
 
@@ -281,12 +285,13 @@ class MockSearchService implements ISearchService {
             resultSourceId: this.resultSourceId,
             resultsCount: this.resultsCount,
             selectedProperties: this.selectedProperties,
-            sortList: this.sortList
+            sortList: this.sortList,
+            queryCulture: this.queryCulture
         };
     }
 
     /**
-     * Retreives the result counts for each search vertical
+     * Retrieves the result counts for each search vertical
      * @param queryText the search query text
      * @param searchVerticalsConfiguration the search verticals configuration
      * @param enableQueryRules enable query rules or not
@@ -303,6 +308,33 @@ class MockSearchService implements ISearchService {
         });
 
         return Promise.resolve(verticalInformation);
+    }
+
+    /**
+     * Gets all available languages for the search query
+     */
+    public getAvailableQueryLanguages() {
+        return Promise.resolve([
+            {
+                DisplayName:"English",
+                LanguageTag:"en-US",
+                Lcid:1033
+            },
+            { 
+                DisplayName: "German", 
+                LanguageTag: "de-DE", 
+                Lcid: 1031
+            },
+            {
+                DisplayName: "French", 
+                LanguageTag: "fr-FR", 
+                Lcid: 1036
+            },
+            {   DisplayName: "Irish",
+                LanguageTag: "ga-IE",
+                Lcid: 2108
+            }
+        ]);
     }
 }
 

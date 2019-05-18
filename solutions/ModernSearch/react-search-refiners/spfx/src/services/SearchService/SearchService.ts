@@ -1,7 +1,7 @@
 import * as Handlebars from 'handlebars';
 import ISearchService from './ISearchService';
 import { ISearchResults, ISearchResult, IRefinementResult, IRefinementValue, IRefinementFilter, IPromotedResult, ISearchVerticalInformation } from '../../models/ISearchResult';
-import { sp, SearchQuery, SearchResults, SPRest, Sort, SearchSuggestQuery } from '@pnp/sp';
+import { sp, SearchQuery, SearchResults, SPRest, Sort, SearchSuggestQuery, InstalledLanguages } from '@pnp/sp';
 import { Logger, LogLevel, ConsoleListener } from '@pnp/logging';
 import { Text, Guid } from '@microsoft/sp-core-library';
 import { sortBy, isEmpty, escape } from '@microsoft/sp-lodash-subset';
@@ -30,6 +30,7 @@ class SearchService implements ISearchService {
     private _refiners: IRefinerConfiguration[];
     private _refinementFilters: IRefinementFilter[];
     private _synonymTable: ISynonymTable;
+    private _queryCulture: number;
 
     public get resultsCount(): number { return this._resultsCount; }
     public set resultsCount(value: number) { this._resultsCount = value; }
@@ -57,6 +58,9 @@ class SearchService implements ISearchService {
 
     public set synonymTable(value: ISynonymTable) { this._synonymTable = value; }
     public get synonymTable(): ISynonymTable { return this._synonymTable; }
+
+    public get queryCulture(): number { return this._queryCulture; }
+    public set queryCulture(value: number) { this._queryCulture = value; }
 
     private _localPnPSetup: SPRest;
 
@@ -122,6 +126,11 @@ class SearchService implements ISearchService {
         searchQuery.SelectProperties = this._selectedProperties;
         searchQuery.TrimDuplicates = false;
         searchQuery.SortList = this._sortList ? this._sortList : [];
+
+        // https://docs.microsoft.com/en-us/previous-versions/office/sharepoint-csom/jj262828(v%3Doffice.15)
+        if (this._queryCulture) {
+            searchQuery.Culture = this._queryCulture;
+        }
 
         if (this.refiners) {
             // Get the refiners order specified in the property pane
@@ -318,13 +327,18 @@ class SearchService implements ISearchService {
             // More info here https://blog.mastykarz.nl/inconvenient-content-targeting-user-segments-search-rest-api/
             const rowLimit: string = enableQueryRules ? '1' : '0';
 
-            url = UrlHelper.addOrReplaceQueryStringParam(url, 'querytext', `'${queryText.replace(/'/g, "''")}'`);
+            // See http://www.silver-it.com/node/127 for quotes handling with GET requests
+            url = UrlHelper.addOrReplaceQueryStringParam(url, 'querytext', `'${encodeURIComponent(queryText.replace(/'/g, '\'\''))}'`);
             url = UrlHelper.addOrReplaceQueryStringParam(url, 'rowlimit', rowLimit);
             url = UrlHelper.addOrReplaceQueryStringParam(url, 'querytemplate', `'${vertical.queryTemplate}'`);
             url = UrlHelper.addOrReplaceQueryStringParam(url, 'trimduplicates', "'false'");
             url = UrlHelper.addOrReplaceQueryStringParam(url, 'properties', "'EnableDynamicGroups:true,EnableMultiGeoSearch:true'");
             url = UrlHelper.addOrReplaceQueryStringParam(url, 'clienttype', "'ContentSearchRegular'");
             url = UrlHelper.addOrReplaceQueryStringParam(url, 'enablequeryrules', `${enableQueryRules}`);
+
+            if (this._queryCulture) {
+                url = UrlHelper.addOrReplaceQueryStringParam(url, 'culture', `${this.queryCulture}`);
+            }
 
             if (vertical.resultSourceId) {
                 url = UrlHelper.addOrReplaceQueryStringParam(url, 'sourceid', `'${vertical.resultSourceId}'`);
@@ -366,6 +380,20 @@ class SearchService implements ISearchService {
     }
 
     /**
+     * Gets all available languages for the search query
+     */
+    public async getAvailableQueryLanguages(): Promise<any[]> {
+
+        try {
+            let languages: any = await this._localPnPSetup.web.regionalSettings.installedLanguages.get();
+            return languages.Items;
+
+        } catch (error) {
+            Logger.write('[SearchService._getQueryLanguages()]: Error: ' + error, LogLevel.Error);
+            throw new Error(error);
+        }
+    }
+    /**
      * Gets the current search service properties configuration
      */
     public getConfiguration(): ISearchServiceConfiguration {
@@ -378,8 +406,9 @@ class SearchService implements ISearchService {
             resultsCount: this.resultsCount,
             selectedProperties: this.selectedProperties,
             sortList: this.sortList,
-            synonymTable: this.synonymTable
-        };
+            synonymTable: this.synonymTable,
+            queryCulture: this.queryCulture
+        } as ISearchServiceConfiguration;
     }
 
     /**

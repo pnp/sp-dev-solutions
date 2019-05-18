@@ -37,5 +37,5 @@ export interface ISearchResultsWebPartProps {
     searchVerticalDataSourceReference: string;
     paginationDataSourceReference: string;
     synonymList: ISynonymFieldConfiguration[];
-
+    searchQueryLanguage: number;
 }
