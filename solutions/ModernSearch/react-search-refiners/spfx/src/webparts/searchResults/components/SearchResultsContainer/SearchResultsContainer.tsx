@@ -394,7 +394,7 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
 
                 if (isTerm) {
 
-                    // Check if it is a multi value term (i.e property bag proeprty formatted with ';')
+                    // Check if it is a multi value term (i.e property bag property formatted with ';')
                     // The ';' is a reserved character so it can't appear in taxonomy labels
                     const values = value.RefinementValue.split(';');
                     values.map((term) => {

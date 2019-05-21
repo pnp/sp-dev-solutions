@@ -1,7 +1,7 @@
 import * as Handlebars from 'handlebars';
 import ISearchService from './ISearchService';
 import { ISearchResults, ISearchResult, IRefinementResult, IRefinementValue, IRefinementFilter, IPromotedResult, ISearchVerticalInformation } from '../../models/ISearchResult';
-import { sp, SearchQuery, SearchResults, SPRest, Sort, SearchSuggestQuery, InstalledLanguages } from '@pnp/sp';
+import { sp, SearchQuery, SearchResults, SPRest, Sort, SearchSuggestQuery } from '@pnp/sp';
 import { Logger, LogLevel, ConsoleListener } from '@pnp/logging';
 import { Text, Guid } from '@microsoft/sp-core-library';
 import { sortBy, isEmpty, escape } from '@microsoft/sp-lodash-subset';
@@ -385,7 +385,7 @@ class SearchService implements ISearchService {
     public async getAvailableQueryLanguages(): Promise<any[]> {
 
         try {
-            let languages: any = await this._localPnPSetup.web.regionalSettings.installedLanguages.get();
+            let languages: any = await this._localPnPSetup.web.regionalSettings.installedLanguages.usingCaching().get();
             return languages.Items;
 
         } catch (error) {
