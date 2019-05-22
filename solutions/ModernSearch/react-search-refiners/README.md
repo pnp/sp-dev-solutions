@@ -115,7 +115,7 @@ Setting | Description
 -------|----
 Query template | The search query template in KQL format. You can use search variables here (like Path:{Site}).
 Result Source Identifier | The GUID of a SharePoint result source.
-Initial sort order | The initial search results sort order. You can use mutliple properties here. **By default, results are sorted by created date (ascending) and size (descending). Remove these values to reset default sorting** 
+Initial sort order | The initial search results sort order, where you can use one or multiple properties to sort by. **By default, results are sorted by created date (ascending) and size (descending). Remove these values to reset default sorting** 
 Sortable fields | The search managed properties to use for sorting. Make sure these are sortable. With SharePoint Online, you have to reuse the default ones to do so (RefinableStringXX etc.). The order is the same as they will appear in the sort panel. You can also provide your own custom labels using the following format RefinableString01:"You custom filter label",RefinableString02:"You custom filter label",... If no sortable fields are provided, the 'Sort' button will not be visible.
 Connect to a search refiners Web Part | If enable, select the search refiners Web Part to use on the current page to get selected filters. It is a 2 ways connection so don't forget to connect the targeted search refiners to the search results Web Part as well. 
 Enable Query Rules | Enable the query rules if applies. Turn this options  'on' to display your SharePoint Promoted results (links only).
