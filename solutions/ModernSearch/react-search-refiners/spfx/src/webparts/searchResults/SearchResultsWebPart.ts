@@ -16,7 +16,8 @@ import {
     PropertyPaneChoiceGroup,
     PropertyPaneCheckbox,
     PropertyPaneHorizontalRule,
-    PropertyPaneDropdown
+    PropertyPaneDropdown,
+    IPropertyPaneDropdownOption
 } from "@microsoft/sp-property-pane";
 import * as strings from 'SearchResultsWebPartStrings';
 import SearchResultsContainer from './components/SearchResultsContainer/SearchResultsContainer';
@@ -55,6 +56,8 @@ import ISynonymTable from '../../models/ISynonym';
 import * as update from 'immutability-helper';
 import ISearchVerticalSourceData from '../../models/ISearchVerticalSourceData';
 import { ISearchVertical } from '../../models/ISearchVertical';
+import LocalizationHelper from '../../helpers/LocalizationHelper';
+import { IDropdownOption } from 'office-ui-fabric-react/lib/Dropdown';
 
 export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchResultsWebPartProps> implements IDynamicDataCallables {
 
@@ -78,6 +81,8 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
     private _searchContainer: JSX.Element;
     private _synonymTable: ISynonymTable;
 
+    private _availableLanguages: IPropertyPaneDropdownOption[];
+
     /**
      * The template to display at render time
      */
@@ -86,6 +91,7 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
     public constructor() {
         super();
         this._templateContentToDisplay = '';
+        this._availableLanguages = [];
     }
 
     public async render(): Promise<void> {
@@ -151,6 +157,8 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
             }
         }
 
+        const currentLocaleId = LocalizationHelper.getLocaleId(this.context.pageContext.cultureInfo.currentCultureName);
+
         // Configure the provider before the query according to our needs
         this._searchService = update(this._searchService, {
             resultsCount: { $set: this.properties.maxResultsCount },
@@ -159,7 +167,8 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
             sortList: { $set: this._convertToSortList(this.properties.sortList) },
             enableQueryRules: { $set: this.properties.enableQueryRules },
             selectedProperties: { $set: this.properties.selectedProperties ? this.properties.selectedProperties.replace(/\s|,+$/g, '').split(',') : [] },                  
-            synonymTable: { $set: this._synonymTable }
+            synonymTable: { $set: this._synonymTable },
+            queryCulture: { $set: this.properties.searchQueryLanguage !== -1 ? this.properties.searchQueryLanguage : currentLocaleId}
         });
 
         const isValueConnected = !!this.properties.queryKeywords.tryGetSource();
@@ -397,6 +406,7 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
         this.properties.maxResultsCount = this.properties.maxResultsCount ? this.properties.maxResultsCount : 10;
         this.properties.resultTypes = Array.isArray(this.properties.resultTypes) ? this.properties.resultTypes : [];
         this.properties.synonymList = Array.isArray(this.properties.synonymList) ? this.properties.synonymList : [];
+        this.properties.searchQueryLanguage = this.properties.searchQueryLanguage ? this.properties.searchQueryLanguage : -1;
     }
 
     protected getPropertyPaneConfiguration(): IPropertyPaneConfiguration {
@@ -459,6 +469,17 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
 
         this._propertyFieldCodeEditor = PropertyFieldCodeEditor;
         this._propertyFieldCodeEditorLanguages = PropertyFieldCodeEditorLanguages;
+
+        if (this._availableLanguages.length == 0) {
+            const languages = await this._searchService.getAvailableQueryLanguages();
+        
+            this._availableLanguages = languages.map(language => {
+                return {
+                    key: language.Lcid,
+                    text: `${language.DisplayName} (${language.Lcid})`                
+                };
+            });
+        }
     }
 
     protected async onPropertyPaneFieldChanged(propertyPath: string) {
@@ -788,6 +809,14 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
                 label: strings.EnableLocalizationLabel,
                 onText: strings.EnableLocalizationOnLabel,
                 offText: strings.EnableLocalizationOffLabel
+            }),
+            PropertyPaneDropdown('searchQueryLanguage', {
+                label: strings.QueryCultureLabel,
+                options: [{
+                    key: -1,
+                    text: strings.QueryCultureUseUiLanguageLabel
+                } as IDropdownOption].concat(sortBy(this._availableLanguages,['text'])),
+                selectedKey: this.properties.searchQueryLanguage ? this.properties.searchQueryLanguage : 0
             }),
             PropertyFieldCollectionData('synonymList', {
                 manageBtnLabel: strings.Synonyms.EditSynonymLabel,

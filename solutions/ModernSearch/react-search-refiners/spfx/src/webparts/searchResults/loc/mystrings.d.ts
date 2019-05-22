@@ -109,6 +109,8 @@ declare interface ISearchResultsWebPartStrings {
     UseDefaultSearchQueryKeywordsFieldLabel: string;
     DefaultSearchQueryKeywordsFieldLabel: string;
     DefaultSearchQueryKeywordsFieldDescription: string;
+    QueryCultureLabel: string;
+    QueryCultureUseUiLanguageLabel: string;
 }
 
 declare module 'SearchResultsWebPartStrings' {
