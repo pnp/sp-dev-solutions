@@ -1,6 +1,5 @@
 import { ISearchResults, ISearchVerticalInformation, IRefinementFilter } from '../../models/ISearchResult';
 import { ISearchServiceConfiguration } from '../../models/ISearchServiceConfiguration';
-import ISearchVerticalSourceData from '../../models/ISearchVerticalSourceData';
 import { ISearchVertical } from '../../models/ISearchVertical';
 
 interface ISearchService extends ISearchServiceConfiguration {
@@ -28,6 +27,11 @@ interface ISearchService extends ISearchServiceConfiguration {
      * @param enableQueryRules enable query rules or not
      */
     getSearchVerticalCounts(queryText: string, searchVerticals: ISearchVertical[], enableQueryRules: boolean): Promise<ISearchVerticalInformation[]>;
+
+    /**
+     * Gets all available languages for the search query
+     */
+    getAvailableQueryLanguages(): Promise<any[]>;
 }
 
  export default ISearchService;
