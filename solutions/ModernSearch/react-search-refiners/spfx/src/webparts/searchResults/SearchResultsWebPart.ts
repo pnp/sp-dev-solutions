@@ -653,7 +653,6 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
 
         // Register result types inside the template      
         this._templateService.registerResultTypes(this.properties.resultTypes);
-
         this._templateContentToDisplay = templateContent;
     }
 

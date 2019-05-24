@@ -19,6 +19,7 @@ import LocalizationHelper from '../../../../helpers/LocalizationHelper';
 import { Text } from '@microsoft/sp-core-library';
 import { ILocalizableSearchResultProperty, ILocalizableSearchResult } from '../../../../models/ILocalizableSearchResults';
 import * as _ from '@microsoft/sp-lodash-subset';
+import TemplateService from '../../../../services/TemplateService/TemplateService';
 
 declare var System: any;
 
@@ -56,6 +57,13 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
         let renderOverlay: JSX.Element = null;
         let renderWebPartTitle: JSX.Element = null;
 
+        const sortPanel = <SortPanel 
+                                onUpdateSort={this._onUpdateSort} 
+                                sortableFieldsConfiguration={this.props.sortableFields} 
+                                sortDirection={this.state.sortDirection}
+                                sortField={this.state.sortField} />; 
+
+        // Loading behavior                        
         if (areResultsLoading) {
 
             if (items.RelevantResults.length > 0) {
@@ -65,86 +73,94 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
                     </Overlay>
                 </div>;
             } else {
-                let i = 0;
-                let renderShimmerElements: JSX.Element[] = [];
-                while (i < 4) {
-                    renderShimmerElements.push(
-                        <Shimmer 
-                        key={i}
-                        customElementsGroup={this._getShimmerElements()} 
-                        width="100%"
-                        style={{ marginBottom: "20px" }}                    
-                    />);
-                    i++;
+
+                let renderShimmerElements: JSX.Element = null;
+
+                const placeHolderContent = TemplateService.getPlaceholderMarkup(this.props.templateContent);
+
+                if (placeHolderContent) {
+                    // Load placeholder content
+                    renderShimmerElements = <SearchResultsTemplate
+                                                templateService={this.props.templateService}
+                                                templateContent={placeHolderContent}
+                                                templateContext={
+                                                    {
+                                                        items: [],
+                                                        showResultsCount: this.props.showResultsCount,
+                                                        maxResultsCount: this.props.searchService.resultsCount,
+                                                        strings: strings
+                                                    }
+                                                }
+                                            />;
+                } else {
+                    // Use default shimmers
+                    renderShimmerElements = this._getShimmerElements();
                 }
 
-                renderWpContent = <div>{ renderShimmerElements }</div>;
+                renderWpContent = renderShimmerElements;
             }
         }
 
-        
-        if (this.props.webPartTitle && this.props.webPartTitle.length > 0) {
-            renderWebPartTitle = <WebPartTitle title={this.props.webPartTitle} updateProperty={null} displayMode={DisplayMode.Read} />;
-        }
+        // WebPart content
+        if (items.RelevantResults.length === 0) {
+            const selectedProperties = (this.props.searchService.selectedProperties) ? this.props.searchService.selectedProperties.join(',') : undefined;
+            const lastQuery = this.state.results.QueryKeywords + this.props.searchService.queryTemplate + selectedProperties + this.props.searchService.resultSourceId;
 
-        const sortPanel = <SortPanel 
-                                onUpdateSort={this._onUpdateSort} 
-                                sortableFieldsConfiguration={this.props.sortableFields} 
-                                sortDirection={this.state.sortDirection}
-                                sortField={this.state.sortField} />; 
-        if (hasError) {
-            renderWpContent = <MessageBar messageBarType={MessageBarType.error}>{errorMessage}</MessageBar>;
-        } else {                                 
-
-            if (items.RelevantResults.length === 0) {
-                const selectedProperties = (this.props.searchService.selectedProperties) ? this.props.searchService.selectedProperties.join(',') : undefined;
-                const lastQuery = this.state.results.QueryKeywords + this.props.searchService.queryTemplate + selectedProperties + this.props.searchService.resultSourceId;
-                // Check if a search request has already been entered (to distinguish the first use scenario)
-                if (!this.props.showBlank && lastQuery && !areResultsLoading) {
-                    renderWpContent =
-                        <div>
-                            {renderWebPartTitle}
-                            <div className={styles.searchWp__buttonBar}>{sortPanel}</div>
-                            <div className={styles.searchWp__noresult}>{strings.NoResultMessage}</div>
-                        </div>;
-                } else {
-                    if (this.props.displayMode === DisplayMode.Edit && !areResultsLoading && this.props.showBlank) {
-                        renderWpContent = <MessageBar messageBarType={MessageBarType.info}>{strings.ShowBlankEditInfoMessage}</MessageBar>;
-                    }
-                }
-            } else {
-
-                let renderSearchResultTemplate = <div></div>;
-                 if(!this.props.useCodeRenderer) {
-                    renderSearchResultTemplate = 
-                        <SearchResultsTemplate
-                            templateService={this.props.templateService}
-                            templateContent={this.props.templateContent}
-                            templateContext={
-                                {
-                                    items: this.state.results.RelevantResults,
-                                    promotedResults: this.state.results.PromotedResults,
-                                    totalRows: this.state.results.PaginationInformation.TotalRows,
-                                    keywords: this.props.queryKeywords,
-                                    showResultsCount: this.props.showResultsCount,
-                                    siteUrl: this.props.siteServerRelativeUrl,
-                                    webUrl: this.props.webServerRelativeUrl,
-                                    maxResultsCount: this.props.searchService.resultsCount,
-                                    actualResultsCount: items.RelevantResults.length,
-                                    strings: strings
-                                }
-                            }
-                        />;
-                }
+            // Check if a search request has already been entered (to distinguish the first use scenario)
+            if (!this.props.showBlank && lastQuery && !areResultsLoading) {
                 renderWpContent =
                     <div>
                         {renderWebPartTitle}
                         <div className={styles.searchWp__buttonBar}>{sortPanel}</div>
-                        {renderOverlay}
-                        <div id={this.state.mountingNodeId} />
-                        {renderSearchResultTemplate}
+                        <div className={styles.searchWp__noresult}>{strings.NoResultMessage}</div>
                     </div>;
+            } else {
+                if (this.props.displayMode === DisplayMode.Edit && !areResultsLoading && this.props.showBlank) {
+                    renderWpContent = <MessageBar messageBarType={MessageBarType.info}>{strings.ShowBlankEditInfoMessage}</MessageBar>;
+                }
             }
+        } else {
+
+            let renderSearchResultTemplate = <div></div>;
+                if(!this.props.useCodeRenderer) {
+                renderSearchResultTemplate = 
+                    <SearchResultsTemplate
+                        templateService={this.props.templateService}
+                        templateContent={TemplateService.getTemplateMarkup(this.props.templateContent)}
+                        templateContext={
+                            {
+                                items: this.state.results.RelevantResults,
+                                promotedResults: this.state.results.PromotedResults,
+                                totalRows: this.state.results.PaginationInformation.TotalRows,
+                                keywords: this.props.queryKeywords,
+                                showResultsCount: this.props.showResultsCount,
+                                siteUrl: this.props.siteServerRelativeUrl,
+                                webUrl: this.props.webServerRelativeUrl,
+                                maxResultsCount: this.props.searchService.resultsCount,
+                                actualResultsCount: items.RelevantResults.length,
+                                strings: strings
+                            }
+                        }
+                    />;
+            }
+            renderWpContent =
+                <div>
+                    {renderWebPartTitle}
+                    <div className={styles.searchWp__buttonBar}>{sortPanel}</div>
+                    {renderOverlay}
+                    <div id={this.state.mountingNodeId} />
+                    {renderSearchResultTemplate}
+                </div>;
+        }
+        
+        // WebPart Title
+        if (this.props.webPartTitle && this.props.webPartTitle.length > 0) {
+            renderWebPartTitle = <WebPartTitle title={this.props.webPartTitle} updateProperty={null} displayMode={DisplayMode.Read} />;
+        }
+
+        // Error Message
+        if (hasError) {
+            renderWpContent = <MessageBar messageBarType={MessageBarType.error}>{errorMessage}</MessageBar>;
         }
         
         return (
@@ -230,7 +246,6 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
             || this.props.searchService.resultSourceId !== nextProps.searchService.resultSourceId
             || this.props.queryKeywords !== nextProps.queryKeywords
             || this.props.enableLocalization !== nextProps.enableLocalization
-            || this.props.rendererId !== nextProps.rendererId
             || this.props.customTemplateFieldValues !== nextProps.customTemplateFieldValues) {
             executeSearch = true;
             isPageChanged = false;
@@ -655,23 +670,39 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
     }
 
     private _getShimmerElements(): JSX.Element {
-        return <div style={{ display: 'flex' }}>
-                  <ShimmerElementsGroup
-                    shimmerElements={[
-                        { type: ElemType.line, width: 40, height: 40 },
-                        { type: ElemType.gap, width: 10, height: 40 }
-                    ]}
-                    />
-                    <ShimmerElementsGroup
-                    flexWrap={true}
-                    width="100%"
-                    shimmerElements={[
-                        { type: ElemType.line, width: '100%', height: 10 },
-                        { type: ElemType.line, width: '75%', height: 10 },
-                        { type: ElemType.gap, width: '25%', height: 20 }
-                    ]}
-                    />
-                </div>;
+
+        let i = 0;
+        let renderShimmerElements: JSX.Element[] = [];
+        const shimmerContent: JSX.Element = <div style={{ display: 'flex' }}>
+                                                <ShimmerElementsGroup
+                                                shimmerElements={[
+                                                    { type: ElemType.line, width: 40, height: 40 },
+                                                    { type: ElemType.gap, width: 10, height: 40 }
+                                                ]}
+                                                />
+                                                <ShimmerElementsGroup
+                                                flexWrap={true}
+                                                width="100%"
+                                                shimmerElements={[
+                                                    { type: ElemType.line, width: '100%', height: 10 },
+                                                    { type: ElemType.line, width: '75%', height: 10 },
+                                                    { type: ElemType.gap, width: '25%', height: 20 }
+                                                ]}
+                                                />
+                                            </div>;
+
+        while (i < 4) {
+            renderShimmerElements.push(
+                <Shimmer 
+                key={i}
+                customElementsGroup={shimmerContent} 
+                width="100%"
+                style={{ marginBottom: "20px" }}                    
+            />);
+            i++;
+        }
+
+        return <div>{renderShimmerElements}</div>;
     }
 
     private handleResultUpdateBroadCast(results: ISearchResults) {
