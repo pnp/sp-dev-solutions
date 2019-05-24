@@ -7,13 +7,13 @@ interface ISearchResultsTemplateContext {
     items: ISearchResult[];
     promotedResults?: IPromotedResult[];
     strings: ISearchResultsWebPartStrings;
-    totalRows: number;
-    keywords: string;
-    showResultsCount: boolean;
-    siteUrl: string;
-    webUrl: string;
+    totalRows?: number;
+    keywords?: string;
+    showResultsCount?: boolean;
+    siteUrl?: string;
+    webUrl?: string;
     maxResultsCount: number;
-    actualResultsCount: number;
+    actualResultsCount?: number;
 }
 
 export default ISearchResultsTemplateContext;
