@@ -183,7 +183,7 @@ Also the [Handlebars helpers](https://github.com/helpers/handlebars-helpers) (18
 The result types feature is a convenient way to split your templates according to results characteristics instead of making a huge central template with multiple conditions. They can be defined in 'inline' mode or using an external file. You can use the sorting option to determine to order of evaluation for each condition. 
 
 <p align="center">
-  <img width="5700px" src="./images/result_types.png"/>
+  <img width="500px" src="./images/result_types.png"/>
 </p>
 
 The following operators are supported:
@@ -209,6 +209,31 @@ To use it in your main template, just follow this pattern. This block is not man
 ```
 
 Handlebars [partials](https://handlebarsjs.com/partials.html) are used behind the scenes and conditions are built dynamically using a recursive if/else structure.
+
+#### Custom placeholders (i.e. shimmers)
+
+You can define your own placeholders according your template markup. They will be loaded automatically before the results are loaded. 
+
+<p align="center">
+  <img width="500px" src="./images/placeholders.png"/>
+</p>
+
+To do this, insert your HTML markup as follow in your template content:
+
+```
+<content id="placeholder">
+    <style>
+        /* Insert your CSS overrides here */
+    </style>
+
+    <div class="placeholder_root">
+      <!-- Your placeholder content -->
+    </div>
+
+</content>
+```
+
+Notice your template content must be enclosed in a `<content id="template">` tag if you define placeholders.
 
 #### Custom code renderers
 You may also define  your own renderers, which most often should be SPFx application customizers. These should use the resultservice to register themselves as renderers, and will upon registration be available as a rendering choice in the "Result Layouts" Section.
@@ -430,7 +455,8 @@ Version|Date|Comments
 3.0.5.0 | Mar 26, 2019 | Fixed recreating SearchService on each render
 3.1.0.0 | Mar 30, 2019 | Added date range and multi value refiner templates
 3.2.0.0 | Apr 08, 2019 | Added support for QueryString token
-3.3.0.0 | Apr 20, 2019 | Added search verticals Web Part allwoing to search within predefined scopes using query template and result source.
+3.3.0.0 | Apr 20, 2019 | Added search verticals Web Part allowing to search within predefined scopes using query template and result source.
+3.4.0.0 | May 23, 2019 | Added placeholders HTML markup by template instead of global.
 
 ## Important notice on upgrading the solution from pre v2.2.0.0
 **Due to code restucturing we have hit an edge case which impacts upgrades from previous versions. To solve the issue go to `https://<tenant>.sharepoint.com/sites/<appcatalog>/Lists/ComponentManifests` and remove the entries for SearchBox and Search Results, and then upload the .sppkg for the new release.**
