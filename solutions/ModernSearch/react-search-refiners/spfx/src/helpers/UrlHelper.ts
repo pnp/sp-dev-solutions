@@ -70,3 +70,8 @@ export enum PageOpenBehavior {
     "Self",
     "NewTab"
 }
+
+export enum QueryPathBehavior {
+    "URLFragment",
+    "QueryParameter"
+}

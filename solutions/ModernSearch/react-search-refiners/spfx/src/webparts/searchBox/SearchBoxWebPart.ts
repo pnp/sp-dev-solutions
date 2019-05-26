@@ -30,7 +30,7 @@ import MockSearchService from '../../services/SearchService/MockSearchService';
 import SearchService from '../../services/SearchService/SearchService';
 import MockNlpService from '../../services/NlpService/MockNlpService';
 import NlpService from '../../services/NlpService/NlpService';
-import { PageOpenBehavior } from '../../helpers/UrlHelper';
+import { PageOpenBehavior, QueryPathBehavior } from '../../helpers/UrlHelper';
 import SearchBoxContainer from './components/SearchBoxContainer/SearchBoxContainer';
 import { SearchComponentType } from '../../models/SearchComponentType';
 
@@ -70,6 +70,8 @@ export default class SearchBoxWebPart extends BaseClientSideWebPart<ISearchBoxWe
         searchInNewPage: this.properties.searchInNewPage,
         pageUrl: this.properties.pageUrl,
         openBehavior: this.properties.openBehavior,
+        queryPathBehavior: this.properties.queryPathBehavior,
+        queryStringParameter: this.properties.queryStringParameter,
         inputValue: this._searchQuery.rawInputValue,
         enableQuerySuggestions: this.properties.enableQuerySuggestions,
         searchService: this._searchService,
@@ -326,12 +328,13 @@ export default class SearchBoxWebPart extends BaseClientSideWebPart<ISearchBoxWe
         label: strings.SearchBoxEnableQuerySuggestions
       }),
       PropertyPaneHorizontalRule(),
-      PropertyPaneCheckbox('searchInNewPage', {
-        text: strings.SearchBoxSearchInNewPageLabel
-      }),
-      PropertyPaneHorizontalRule(),
       PropertyPaneTextField('placeholderText', {
         label: strings.SearchBoxPlaceholderTextLabel
+      }),
+      PropertyPaneHorizontalRule(),
+      PropertyPaneToggle("searchInNewPage", {
+        checked: false,
+        label: strings.SearchBoxSearchInNewPageLabel
       })
     ];
 
@@ -348,8 +351,35 @@ export default class SearchBoxWebPart extends BaseClientSideWebPart<ISearchBoxWe
             { key: PageOpenBehavior.Self, text: strings.SearchBoxSameTabOpenBehavior, index: 0 },
             { key: PageOpenBehavior.NewTab, text: strings.SearchBoxNewTabOpenBehavior, index: 1 }
           ],
-          disabled:  !this.properties.searchInNewPage,
+          disabled: !this.properties.searchInNewPage,
           selectedKey: 0
+        }),
+        PropertyPaneDropdown('queryPathBehavior', {
+          label:  strings.SearchBoxQueryPathBehaviorLabel,
+          options: [
+            { key: QueryPathBehavior.URLFragment, text: strings.SearchBoxUrlFragmentQueryPathBehavior, index: 0 },
+            { key: QueryPathBehavior.QueryParameter, text: strings.SearchBoxQueryStringQueryPathBehavior, index: 1 }
+          ],
+          disabled: !this.properties.searchInNewPage,
+          selectedKey: 0
+        })
+      ]);
+    }
+
+    if (this.properties.searchInNewPage && this.properties.queryPathBehavior === QueryPathBehavior.QueryParameter) {
+      searchBehaviorOptionsFields = searchBehaviorOptionsFields.concat([
+        PropertyPaneTextField('queryStringParameter', {
+          disabled: !this.properties.searchInNewPage || this.properties.searchInNewPage && this.properties.queryPathBehavior !== QueryPathBehavior.QueryParameter,
+          label: strings.SearchBoxQueryStringParameterName,
+          onGetErrorMessage: (value) => {
+            if (this.properties.queryPathBehavior === QueryPathBehavior.QueryParameter) {
+              if (value === null ||
+                value.trim().length === 0) {
+                return strings.SearchBoxQueryParameterNotEmpty;
+              }              
+            }
+            return '';
+          }
         })
       ]);
     }

@@ -11,6 +11,11 @@ declare interface ISearchBoxWebPartStrings {
   SearchBoxSameTabOpenBehavior: string;
   SearchBoxNewTabOpenBehavior: string;
   SearchBoxPageOpenBehaviorLabel: string;
+  SearchBoxQueryPathBehaviorLabel: string;
+  SearchBoxUrlFragmentQueryPathBehavior: string;
+  SearchBoxQueryStringQueryPathBehavior: string;
+  SearchBoxQueryStringParameterName: string;
+  SearchBoxQueryParameterNotEmpty: string;
   SearchBoxQueryNlpSettings: string;
   SearchBoxQueryNlpSettingsDescription: string;
   SearchBoxUserQueryNlpLabel: string;
