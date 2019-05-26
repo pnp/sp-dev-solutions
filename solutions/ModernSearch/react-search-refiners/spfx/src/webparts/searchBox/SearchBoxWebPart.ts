@@ -197,10 +197,6 @@ export default class SearchBoxWebPart extends BaseClientSideWebPart<ISearchBoxWe
     }
     
     this._bindHashChange();
-
-    if (propertyPath === 'enableNlpService') {
-      this.properties.enableDebugMode = !this.properties.enableDebugMode ? false : true;
-    }
   }
 
   /**
@@ -348,20 +344,20 @@ export default class SearchBoxWebPart extends BaseClientSideWebPart<ISearchBoxWe
         PropertyPaneDropdown('openBehavior', {
           label:  strings.SearchBoxPageOpenBehaviorLabel,
           options: [
-            { key: PageOpenBehavior.Self, text: strings.SearchBoxSameTabOpenBehavior, index: 0 },
-            { key: PageOpenBehavior.NewTab, text: strings.SearchBoxNewTabOpenBehavior, index: 1 }
+            { key: PageOpenBehavior.Self, text: strings.SearchBoxSameTabOpenBehavior },
+            { key: PageOpenBehavior.NewTab, text: strings.SearchBoxNewTabOpenBehavior }
           ],
           disabled: !this.properties.searchInNewPage,
-          selectedKey: 0
+          selectedKey: this.properties.openBehavior
         }),
         PropertyPaneDropdown('queryPathBehavior', {
           label:  strings.SearchBoxQueryPathBehaviorLabel,
           options: [
-            { key: QueryPathBehavior.URLFragment, text: strings.SearchBoxUrlFragmentQueryPathBehavior, index: 0 },
-            { key: QueryPathBehavior.QueryParameter, text: strings.SearchBoxQueryStringQueryPathBehavior, index: 1 }
+            { key: QueryPathBehavior.URLFragment, text: strings.SearchBoxUrlFragmentQueryPathBehavior },
+            { key: QueryPathBehavior.QueryParameter, text: strings.SearchBoxQueryStringQueryPathBehavior }
           ],
           disabled: !this.properties.searchInNewPage,
-          selectedKey: 0
+          selectedKey: this.properties.queryPathBehavior
         })
       ]);
     }
@@ -412,18 +408,14 @@ export default class SearchBoxWebPart extends BaseClientSideWebPart<ISearchBoxWe
                   description: Text.format(strings.SearchBoxServiceUrlDescription, window.location.host)
               }),
               PropertyPaneToggle("enableDebugMode", {
-                  checked: false,
                   label: strings.SearchBoxUseDebugModeLabel,
                   disabled: !this.properties.enableNlpService,
               }),
               PropertyPaneToggle("isStaging", {
-                checked: true,
                 label: strings.SearchBoxUseStagingEndpoint,
                 disabled: !this.properties.enableNlpService,
             }),
           );
-      } else {
-          this.properties.enableDebugMode = false;
       }
 
       return searchQueryOptimizationFields;

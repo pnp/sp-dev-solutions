@@ -374,7 +374,7 @@ export default class SearchBoxContainer extends React.Component<ISearchBoxContai
   public render(): React.ReactElement<ISearchBoxContainerProps> {
     let renderErrorMessage: JSX.Element = null;
 
-    const renderDebugInfos = this.props.enableDebugMode ?
+    const renderDebugInfos = this.props.enableNlpService && this.props.enableDebugMode ?
                               <NlpDebugPanel rawResponse={ this.state.enhancedQuery }/>:
                               null;
 
