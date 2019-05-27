@@ -2,7 +2,7 @@ import * as React from                               'react';
 import { ISearchBoxContainerProps } from             './ISearchBoxContainerProps';
 import * as strings from                             'SearchBoxWebPartStrings';
 import ISearchBoxContainerState from                 './ISearchBoxContainerState';
-import { UrlHelper, PageOpenBehavior } from          '../../../../helpers/UrlHelper';
+import { UrlHelper, PageOpenBehavior, QueryPathBehavior } from          '../../../../helpers/UrlHelper';
 import { MessageBar, MessageBarType } from           'office-ui-fabric-react/lib/MessageBar';
 import Downshift from                                'downshift';
 import { TextField } from                            'office-ui-fabric-react/lib/TextField';
@@ -341,12 +341,19 @@ export default class SearchBoxContainer extends React.Component<ISearchBoxContai
       }
 
       if (this.props.searchInNewPage) {
-        
-        // Send the query to the a new via the hash
-        const url = `${this.props.pageUrl}#${encodeURIComponent(queryText)}`;
+        const urlEncodedQueryText = encodeURIComponent(queryText);
 
+        const searchUrl = new URL(this.props.pageUrl);
+        if (this.props.queryPathBehavior === QueryPathBehavior.URLFragment) {
+          searchUrl.hash = urlEncodedQueryText;
+        }
+        else {
+          searchUrl.searchParams.append(this.props.queryStringParameter, urlEncodedQueryText);
+        }
+
+        // Send the query to the new page
         const behavior = this.props.openBehavior === PageOpenBehavior.NewTab ? '_blank' : '_self';
-        window.open(url, behavior);
+        window.open(searchUrl.href, behavior);
         
       } else {
 
@@ -367,7 +374,7 @@ export default class SearchBoxContainer extends React.Component<ISearchBoxContai
   public render(): React.ReactElement<ISearchBoxContainerProps> {
     let renderErrorMessage: JSX.Element = null;
 
-    const renderDebugInfos = this.props.enableDebugMode ?
+    const renderDebugInfos = this.props.enableNlpService && this.props.enableDebugMode ?
                               <NlpDebugPanel rawResponse={ this.state.enhancedQuery }/>:
                               null;
 

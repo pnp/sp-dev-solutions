@@ -135,7 +135,6 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
             if (refinerSourceData) {
                 refinerConfiguration = sortBy(refinerSourceData.refinerConfiguration, 'sortIdx');
                 selectedFilters = refinerSourceData.selectedFilters;
-                this._searchService = update(this._searchService, {refinementFilters: { $set: selectedFilters }, refiners: { $set: refinerConfiguration }});
             }
         }
 
@@ -168,7 +167,9 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
             enableQueryRules: { $set: this.properties.enableQueryRules },
             selectedProperties: { $set: this.properties.selectedProperties ? this.properties.selectedProperties.replace(/\s|,+$/g, '').split(',') : [] },                  
             synonymTable: { $set: this._synonymTable },
-            queryCulture: { $set: this.properties.searchQueryLanguage !== -1 ? this.properties.searchQueryLanguage : currentLocaleId}
+            queryCulture: { $set: this.properties.searchQueryLanguage !== -1 ? this.properties.searchQueryLanguage : currentLocaleId},
+            refinementFilters: { $set: selectedFilters }, 
+            refiners: { $set: refinerConfiguration }
         });
 
         const isValueConnected = !!this.properties.queryKeywords.tryGetSource();
