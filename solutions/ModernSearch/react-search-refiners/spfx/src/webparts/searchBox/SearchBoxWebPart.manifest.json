@@ -19,7 +19,19 @@
     "description": { "default": "Allows users to enter query keywords", "fr-fr": "Permets aux utilisateurs d'entrer des mots clÃ©s de recherche." },
     "officeFabricIconFontName": "Search",
     "properties": {
-      "defaultQueryKeywords": ""
+      "defaultQueryKeywords": "",
+      "searchInNewPage": false,
+      "pageUrl": "",
+      "queryPathBehavior": 0,
+      "queryStringParameter": "q",
+      "openBehavior": 0,
+      "enableQuerySuggestions": false,
+      "useDynamicDataSource": false,
+      "NlpServiceUrl": "",
+      "enableNlpService": false,
+      "enableDebugMode": false,
+      "isStaging": true,
+      "placeholderText": ""
     }
   }]
 }

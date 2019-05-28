@@ -1,52 +1,110 @@
-<div class="template_root">
-    <div class="template_defaultCard">
-        {{#if showResultsCount}}
-            <div class="template_resultCount">
-                <label class="ms-fontWeight-semibold">{{getCountMessage totalRows keywords}}</label>
-            </div>
-        {{/if}}
-        <div class="ms-Grid"> 
-            <div class="ms-Grid-row">
-            {{#each items as |item|}}
-                <div class="ms-Grid-col ms-sm12 ms-md6 ms-lg4">
-                    {{#> resultTypes}}
-                        {{!-- The block below will be used as default item template if no result types matched --}}
-                        <div class="singleCard">
-                            {{#eq item.contentclass 'STS_ListItem_851'}}
-                                <div class="previewImg video-preview-item" style="background-image: url('{{getPreviewSrc item}}')" data-src="{{PictureThumbnailURL}}" data-url="{{DefaultEncodingURL}}" data-fileext="{{FileType}}">
-                                    <img class="cardFileIcon" src="{{IconSrc}}"/>
-                                </div>
-                            {{else}}
-                                {{#eq FileType 'pdf'}}
-                                <!-- Documents from OneDrive sites can't be viewed directly due to SAMEORIGIN iframe restrictions-->
-                                    {{#contains Path '-my.sharepoint'}}
+<content id="template">
+    <div class="template_root">
+        <div class="template_defaultCard">
+            {{#if showResultsCount}}
+                <div class="template_resultCount">
+                    <label class="ms-fontWeight-semibold">{{getCountMessage totalRows keywords}}</label>
+                </div>
+            {{/if}}
+            <div class="ms-Grid"> 
+                <div class="ms-Grid-row">
+                {{#each items as |item|}}
+                    <div class="ms-Grid-col ms-sm12 ms-md6 ms-lg4">
+                        {{#> resultTypes}}
+                            {{!-- The block below will be used as default item template if no result types matched --}}
+                            <div class="singleCard">
+                                {{#eq item.contentclass 'STS_ListItem_851'}}
+                                    <div class="previewImg video-preview-item" style="background-image: url('{{getPreviewSrc item}}')" data-src="{{PictureThumbnailURL}}" data-url="{{DefaultEncodingURL}}" data-fileext="{{FileType}}">
+                                        <img class="cardFileIcon" src="{{IconSrc}}"/>
+                                    </div>
+                                {{else}}
+                                    {{#eq FileType 'pdf'}}
+                                    <!-- Documents from OneDrive sites can't be viewed directly due to SAMEORIGIN iframe restrictions-->
+                                        {{#contains Path '-my.sharepoint'}}
+                                            <div class="previewImg document-preview-item" style="background-image: url('{{getPreviewSrc item}}')" data-src="{{ServerRedirectedPreviewURL}}" data-url="{{ServerRedirectedEmbedURL}}">
+                                                <img class="cardFileIcon" src="{{IconSrc}}"/>
+                                            </div>
+                                        {{else}}
+                                        <div class="previewImg document-preview-item" style="background-image: url('{{getPreviewSrc item}}')" data-src="{{ServerRedirectedPreviewURL}}" data-url="{{Path}}">
+                                            <img class="cardFileIcon" src="{{IconSrc}}"/>
+                                        </div>
+                                        {{/contains}}
+                                    {{else}}
                                         <div class="previewImg document-preview-item" style="background-image: url('{{getPreviewSrc item}}')" data-src="{{ServerRedirectedPreviewURL}}" data-url="{{ServerRedirectedEmbedURL}}">
                                             <img class="cardFileIcon" src="{{IconSrc}}"/>
                                         </div>
-                                    {{else}}
-                                    <div class="previewImg document-preview-item" style="background-image: url('{{getPreviewSrc item}}')" data-src="{{ServerRedirectedPreviewURL}}" data-url="{{Path}}">
-                                        <img class="cardFileIcon" src="{{IconSrc}}"/>
+                                    {{/eq}}  
+                                {{/eq}} 
+                                <li class="ms-ListItem ms-ListItem--document" tabindex="0">
+                                    <div class="cardInfo">
+                                        <span class="ms-ListItem-primaryText"><a href="{{getUrl item}}">{{Title}}</a></span>
+                                        <span class="ms-ListItem-secondaryText">{{getSummary HitHighlightedSummary}}</span>
+                                        <span class="ms-ListItem-tertiaryText">{{getDate Created "LL"}}</span> 
+                                        <div class="ms-ListItem-selectionTarget"></div>
                                     </div>
-                                    {{/contains}}
-                                {{else}}
-                                    <div class="previewImg document-preview-item" style="background-image: url('{{getPreviewSrc item}}')" data-src="{{ServerRedirectedPreviewURL}}" data-url="{{ServerRedirectedEmbedURL}}">
-                                        <img class="cardFileIcon" src="{{IconSrc}}"/>
-                                    </div>
-                                {{/eq}}  
-                            {{/eq}} 
-                            <li class="ms-ListItem ms-ListItem--document" tabindex="0">
-                                <div class="cardInfo">
-                                    <span class="ms-ListItem-primaryText"><a href="{{getUrl item}}">{{Title}}</a></span>
-                                    <span class="ms-ListItem-secondaryText">{{getSummary HitHighlightedSummary}}</span>
-                                    <span class="ms-ListItem-tertiaryText">{{getDate Created "LL"}}</span> 
-                                    <div class="ms-ListItem-selectionTarget"></div>
-                                </div>
-                            </li>
-                        </div>
-                    {{/resultTypes}}
+                                </li>
+                            </div>
+                        {{/resultTypes}}
+                    </div>
+                {{/each}}
                 </div>
-            {{/each}}
             </div>
         </div>
     </div>
-</div>
+</content>
+
+<content id="placeholder">
+        <style>
+            .shimmerPrimaryText {
+                width: 100%;
+                position: relative;
+                padding: 0;
+                margin-top: 10px;
+                height: 10px;
+            }
+
+            .shimmerSecondaryText {
+                padding: 0;
+                width: 75%;
+                height: 10px;
+            }
+
+            .shimmerTertiaryText {
+                padding: 0;
+                width: 20%;
+                height: 10px;
+            }
+        </style>
+    
+        <div class="placeholder_root">
+            <div class="template_defaultCard">
+                {{#if showResultsCount}}
+                    <div class="template_resultCount">
+                        <span class="shimmer line" style="width: 20%"></span>
+                    </div>
+                {{/if}}
+                <div class="ms-Grid"> 
+                        <div class="ms-Grid-row">
+                        {{#times maxResultsCount}}
+                            <div class="ms-Grid-col ms-sm12 ms-md6 ms-lg4">
+                                    <div class="singleCard">
+                                        <div class="previewImg document-preview-item">
+                                            <div class="cardFileIcon shimmer"></div>
+                                        </div> 
+                                        <li class="ms-ListItem ms-ListItem--document" tabindex="0">
+                                            <div class="cardInfo">
+                                                <span class="shimmerPrimaryText shimmer line"></span>
+                                                <span class="shimmerSecondaryText shimmer line"></span>
+                                                <span class="shimmerTertiaryText shimmer line"></span> 
+                                            </div>
+                                        </li>
+                                    </div>
+                            </div>
+                            {{/times}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+    </content>
