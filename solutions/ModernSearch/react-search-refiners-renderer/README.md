@@ -1,4 +1,4 @@
-# Sharepoint Framework renderer for react-search-refiners
+# SharePoint Framework renderer for react-search-refiners
 
 ## Summary
 This sample is an example on how to use custom code renderers in the react-search-refiners project. Custom code renderers lets you render the search results from a react-search-refiners webpart in your own way, with whatever tools you prefer.

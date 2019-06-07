@@ -1,6 +1,6 @@
 # SharePoint Framework modern search Web Parts
 
-![Version](https://img.shields.io/badge/version-3.3.2-green.svg)
+![Version](https://img.shields.io/badge/version-3.4.0-green.svg)
 
 ## Summary
 This solution allows you to build user friendly SharePoint search experiences using SPFx in the modern interface. The main features include:
@@ -115,7 +115,7 @@ Setting | Description
 -------|----
 Query template | The search query template in KQL format. You can use search variables here (like Path:{Site}).
 Result Source Identifier | The GUID of a SharePoint result source.
-Initial sort order | The initial search results sort order. You can use mutliple properties here.
+Initial sort order | The initial search results sort order, where you can use one or multiple properties to sort by. **By default, results are sorted by created date (ascending) and size (descending). Remove these values to reset default sorting** 
 Sortable fields | The search managed properties to use for sorting. Make sure these are sortable. With SharePoint Online, you have to reuse the default ones to do so (RefinableStringXX etc.). The order is the same as they will appear in the sort panel. You can also provide your own custom labels using the following format RefinableString01:"You custom filter label",RefinableString02:"You custom filter label",... If no sortable fields are provided, the 'Sort' button will not be visible.
 Connect to a search refiners Web Part | If enable, select the search refiners Web Part to use on the current page to get selected filters. It is a 2 ways connection so don't forget to connect the targeted search refiners to the search results Web Part as well. 
 Enable Query Rules | Enable the query rules if applies. Turn this options  'on' to display your SharePoint Promoted results (links only).
@@ -132,7 +132,6 @@ Show result count | Shows the result count and entered keywords
 Connect to a search pagination Web Part	 | If enable, select the search pagination Web Part to use on the current page to get selected page. It is a 2 ways connection so don't forget to connect the targeted search pagination to the search results Web Part as well. 
 Result Layouts options | Choose the template to use to display search results. Some layouts are defined by default (List and Tiles) but you can create your own either by clinkg on the **"Custom"** tile, or **"Edit template"** from an existing chosen template. In custom mode, you can set an external template. It has to be in the same SharePoint tenant. Behind the scenes, the Office UI Fabric core CSS components are used in a isolated way. Custom code templates will also automaticly be displayed here upon registration.
 Result types | Allows you to set a custom template at item level according to a specific condition (ex: FileType equals 'pdf').
-Handlebars Helpers | Load [handlebar helpers](https://github.com/helpers/handlebars-helpers) to use in your template. Disable this option will make Web Part loading faster if you don't need them.
 
 ##### Miscellaneous: Taxonomy values dynamic translation
 
@@ -184,7 +183,7 @@ Also the [Handlebars helpers](https://github.com/helpers/handlebars-helpers) (18
 The result types feature is a convenient way to split your templates according to results characteristics instead of making a huge central template with multiple conditions. They can be defined in 'inline' mode or using an external file. You can use the sorting option to determine to order of evaluation for each condition. 
 
 <p align="center">
-  <img width="5700px" src="./images/result_types.png"/>
+  <img width="500px" src="./images/result_types.png"/>
 </p>
 
 The following operators are supported:
@@ -210,6 +209,31 @@ To use it in your main template, just follow this pattern. This block is not man
 ```
 
 Handlebars [partials](https://handlebarsjs.com/partials.html) are used behind the scenes and conditions are built dynamically using a recursive if/else structure.
+
+#### Custom placeholders (i.e. shimmers)
+
+You can define your own placeholders according your template markup. They will be loaded automatically before the results are loaded. 
+
+<p align="center">
+  <img width="500px" src="./images/placeholders.png"/>
+</p>
+
+To do this, insert your HTML markup as follow in your template content:
+
+```
+<content id="placeholder">
+    <style>
+        /* Insert your CSS overrides here */
+    </style>
+
+    <div class="placeholder_root">
+      <!-- Your placeholder content -->
+    </div>
+
+</content>
+```
+
+Notice your template content must be enclosed in a `<content id="template">` tag if you define placeholders.
 
 #### Custom code renderers
 You may also define  your own renderers, which most often should be SPFx application customizers. These should use the resultservice to register themselves as renderers, and will upon registration be available as a rendering choice in the "Result Layouts" Section.
@@ -431,7 +455,8 @@ Version|Date|Comments
 3.0.5.0 | Mar 26, 2019 | Fixed recreating SearchService on each render
 3.1.0.0 | Mar 30, 2019 | Added date range and multi value refiner templates
 3.2.0.0 | Apr 08, 2019 | Added support for QueryString token
-3.3.0.0 | Apr 20, 2019 | Added search verticals Web Part allwoing to search within predefined scopes using query template and result source.
+3.3.0.0 | Apr 20, 2019 | Added search verticals Web Part allowing to search within predefined scopes using query template and result source.
+3.4.0.0 | May 23, 2019 | Added placeholders HTML markup by template instead of global.
 
 ## Important notice on upgrading the solution from pre v2.2.0.0
 **Due to code restucturing we have hit an edge case which impacts upgrades from previous versions. To solve the issue go to `https://<tenant>.sharepoint.com/sites/<appcatalog>/Lists/ComponentManifests` and remove the entries for SearchBox and Search Results, and then upload the .sppkg for the new release.**

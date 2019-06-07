@@ -1,13 +1,8 @@
 import * as React from 'react';
 import * as ReactDom from 'react-dom';
 import { Version, Guid, DisplayMode } from '@microsoft/sp-core-library';
-import {
-  BaseClientSideWebPart,
-  IPropertyPaneConfiguration,
-  IPropertyPaneField,
-  PropertyPaneToggle,
-  PropertyPaneDropdown
-} from '@microsoft/sp-webpart-base';
+import { BaseClientSideWebPart } from "@microsoft/sp-webpart-base";
+import { IPropertyPaneConfiguration, IPropertyPaneField, PropertyPaneDropdown, PropertyPaneToggle } from "@microsoft/sp-property-pane";
 import * as strings from 'SearchVerticalsWebPartStrings';
 import { ISearchVerticalsWebPartProps } from './ISearchVerticalsWebPartProps';
 import ISearchVerticalsContainerProps from './components/SearchVerticalsContainer/ISearchVerticalsContainerProps';

@@ -87,6 +87,41 @@ abstract class BaseTemplateService {
     }
 
     /**
+     * Gets the template HTML markup in the full template content
+     * @param templateContent the full template content
+     */
+    public static getTemplateMarkup(templateContent: string): string {
+
+        const domParser = new DOMParser();
+        const htmlContent: Document = domParser.parseFromString(templateContent, 'text/html');
+    
+        let templates: any = htmlContent.getElementById('template');
+        if (templates && templates.innerHTML) {
+          
+            // Need to unescape '&gt;' for handlebars partials 
+            return templates.innerHTML.replace('&gt;', '>');
+        } else {
+            return templateContent;
+        }
+    }
+
+    /**
+     * Gets the placeholder HTML markup in the full template content
+     * @param templateContent the full template content
+     */
+    public static getPlaceholderMarkup(templateContent: string): string {
+        const domParser = new DOMParser();
+        const htmlContent: Document = domParser.parseFromString(templateContent, 'text/html');
+    
+        const placeHolders = htmlContent.getElementById('placeholder');
+        if (placeHolders && placeHolders.innerHTML) {
+          return placeHolders.innerHTML;
+        } else {
+            return null;
+        }
+    }
+
+    /**
      * Registers useful helpers for search results templates
      */
     private registerTemplateServices() {
@@ -134,8 +169,10 @@ abstract class BaseTemplateService {
         // <p>{{getDate Created "LL"}}</p>
         Handlebars.registerHelper("getDate", (date: string, format: string) => {
             try {
-                let d = (<any>window).searchHBHelper.moment(date, format, { lang: this.CurrentLocale, datejs: false });
-                return d;
+                if (new Date(date).toISOString() !== new Date(null).toISOString()) {
+                    let d = (<any>window).searchHBHelper.moment(date, format, { lang: this.CurrentLocale, datejs: false });
+                    return d;
+                }
             } catch (error) {
                 return date;
             }
@@ -172,6 +209,16 @@ abstract class BaseTemplateService {
                 result = uniq(array);
             }
             return result.length;
+        });
+
+        // Repeat the block N times
+        // https://stackoverflow.com/questions/11924452/iterating-over-basic-for-loop-using-handlebars-js
+        // <p>{{#times 10}}</p>
+        Handlebars.registerHelper('times', (n, block) => {
+            var accum = '';
+            for(var i = 0; i < n; ++i)
+                accum += block.fn(i);
+            return accum;
         });
     }
 
@@ -345,7 +392,7 @@ abstract class BaseTemplateService {
 
         let template = Handlebars.compile(templateContent);
         let result = template(templateContext);
-        if (result.indexOf("-preview-item") !== -1) {
+        if (result.indexOf("video-preview-item") !== -1) {
             await this._loadVideoLibrary();
         }
 
@@ -474,14 +521,13 @@ abstract class BaseTemplateService {
     private async _loadVideoLibrary() {
         // Load Videos-Js on Demand 
         // Webpack will create a other bundle loaded on demand just for this library
-        if ((<any>window).searchVideoJS !== undefined) {
-            return;
+        if ((<any>window).searchVideoJS === undefined) {
+            const videoJs = await import(
+                /* webpackChunkName: 'videos-js' */
+                './video-js'
+            );
+            (<any>window).searchVideoJS = videoJs.default.getVideoJs();
         }
-        const videoJs = await import(
-            /* webpackChunkName: 'videos-js' */
-            './video-js'
-        );
-        (<any>window).searchVideoJS = videoJs.default.getVideoJs();
     }
 
     private _initVideoPreviews() {

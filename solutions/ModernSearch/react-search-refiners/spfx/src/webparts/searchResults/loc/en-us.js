@@ -107,6 +107,8 @@ define([], function () {
       "GreaterThanOperator": "Greater than",
       "LessOrEqualOperator": "Less or equal",
       "LessThanOperator": "Less than"
-    }
+    },
+    "QueryCultureLabel": "Language of search request",
+    "QueryCultureUseUiLanguageLabel": "Use interface language"
   }
 });
