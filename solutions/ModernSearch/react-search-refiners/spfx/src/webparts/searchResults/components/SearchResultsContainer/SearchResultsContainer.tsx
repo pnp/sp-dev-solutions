@@ -20,6 +20,8 @@ import { Text } from '@microsoft/sp-core-library';
 import { ILocalizableSearchResultProperty, ILocalizableSearchResult } from '../../../../models/ILocalizableSearchResults';
 import * as _ from '@microsoft/sp-lodash-subset';
 import TemplateService from '../../../../services/TemplateService/TemplateService';
+import ISearchService from '../../../../services/SearchService/ISearchService';
+import { isEqual } from '@microsoft/sp-lodash-subset';
 
 declare var System: any;
 
@@ -122,7 +124,7 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
         } else {
 
             let renderSearchResultTemplate = <div></div>;
-                if(!this.props.useCodeRenderer) {
+            if (!this.props.useCodeRenderer) {
                 renderSearchResultTemplate = 
                     <SearchResultsTemplate
                         templateService={this.props.templateService}
@@ -143,6 +145,7 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
                         }
                     />;
             }
+            
             renderWpContent =
                 <div>
                     {renderWebPartTitle}
@@ -181,16 +184,7 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
                     areResultsLoading: true,
                 });
 
-                const searchResults = await this.props.searchService.search(this.props.queryKeywords, this.props.selectedPage);
-
-                // Translates taxonomy refiners and result values by using terms ID
-                if (this.props.enableLocalization) {
-                    const localizedFilters = await this._getLocalizedFilters(searchResults.RefinementResults);
-                    searchResults.RefinementResults = localizedFilters;
-
-                    const localizedResults = await this._getLocalizedMetadata(searchResults.RelevantResults);
-                    searchResults.RelevantResults = localizedResults;
-                }
+                const searchResults = await this._getSearchResults(this.props, 1);
                 
                 this.setState({
                     results: searchResults,
@@ -222,39 +216,31 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
     }
 
     public async componentWillReceiveProps(nextProps: ISearchResultsContainerProps) {
-        let executeSearch = false;
-        let isPageChanged = false;
-        let selectedPage = 1;
-        let lastSelectedProperties = (this.props.searchService.selectedProperties) ? this.props.searchService.selectedProperties.join(',') : undefined;
-        let lastQuery = this.props.queryKeywords + this.props.searchService.queryTemplate + lastSelectedProperties + this.props.searchService.resultSourceId;
-        let nextSelectedProperties = (nextProps.searchService.selectedProperties) ? nextProps.searchService.selectedProperties.join(',') : undefined;
-        let query = nextProps.queryKeywords + nextProps.searchService.queryTemplate + nextSelectedProperties + nextProps.searchService.resultSourceId;
 
-        if (this.props.selectedPage !== nextProps.selectedPage) {
-            executeSearch = true;
-            isPageChanged = true;
-            selectedPage = nextProps.selectedPage;
-        }
+        let executeSearch = false;
+        let isPageUpdated = false;
+        let selectedPage = 1;
 
         // New props are passed to the component when the search query has been changed
-        if (JSON.stringify(this.props.searchService.refiners) !== JSON.stringify(nextProps.searchService.refiners)
-            || JSON.stringify(this.props.searchService.refinementFilters) != JSON.stringify(nextProps.searchService.refinementFilters)
-            || JSON.stringify(this.props.searchService.sortList) !== JSON.stringify(nextProps.searchService.sortList)
-            || this.props.searchService.resultsCount !== nextProps.searchService.resultsCount
-            || this.props.searchService.enableQueryRules !== nextProps.searchService.enableQueryRules
-            || lastQuery !== query
-            || this.props.searchService.resultSourceId !== nextProps.searchService.resultSourceId
-            || this.props.queryKeywords !== nextProps.queryKeywords
-            || this.props.enableLocalization !== nextProps.enableLocalization
-            || this.props.customTemplateFieldValues !== nextProps.customTemplateFieldValues) {
+        if (!isEqual(this.props, nextProps)) {
+
             executeSearch = true;
-            isPageChanged = false;
-            selectedPage = 1;
+            
+            const lastSelectedProperties = (this.props.searchService.selectedProperties) ? this.props.searchService.selectedProperties.join(',') : undefined;
+            const lastQuery = this.props.queryKeywords + this.props.searchService.queryTemplate + lastSelectedProperties + this.props.searchService.resultSourceId;
+            const nextSelectedProperties = (nextProps.searchService.selectedProperties) ? nextProps.searchService.selectedProperties.join(',') : undefined;
+            const query = nextProps.queryKeywords + nextProps.searchService.queryTemplate + nextSelectedProperties + nextProps.searchService.resultSourceId;
+
             if (lastQuery !== query) {
                 // Reset current selected refinement filters when:
-                // - A search vertical is selected
-                // - A new query is performed via the search box of URL trigger
+                // - A search vertical is selected (i.e. query template is different)
+                // - A new query is performed via the search box of URL trigger (query keywords is different)
                 nextProps.searchService.refinementFilters = [];
+            }
+
+            if (this.props.selectedPage !== nextProps.selectedPage) {
+                selectedPage = nextProps.selectedPage;
+                isPageUpdated = true;
             }
         }
 
@@ -269,24 +255,13 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
                         errorMessage: ""
                     });
 
-                    if (isPageChanged)
-                    {
+                    if (isPageUpdated) {
                         // Set the focus at the top of the component
                         this._searchWpRef.focus();
                     }
 
-                    // We reset the page number and refinement filters
-                    const searchResults = await nextProps.searchService.search(nextProps.queryKeywords, selectedPage);
-
-                    // Translates taxonomy refiners and result values by using terms ID
-                    if (nextProps.enableLocalization) {
-                        const localizedFilters = await this._getLocalizedFilters(searchResults.RefinementResults);
-                        searchResults.RefinementResults = localizedFilters;
-
-                        const localizedResults = await this._getLocalizedMetadata(searchResults.RelevantResults);
-                        searchResults.RelevantResults = localizedResults;
-                    }
-
+                    const searchResults = await this._getSearchResults(nextProps, selectedPage);
+                
                     this.setState({
                         results: searchResults,
                         areResultsLoading: false
@@ -354,10 +329,10 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
 
             this.props.searchService.sortList = [{Property: sortField, Direction: sortDirection}];
 
-            try
-            {
-                const searchResults = await this.props.searchService.search(this.props.queryKeywords, 1);
+            try {
 
+                const searchResults = await this._getSearchResults(this.props, 1);
+                
                 this.setState({
                     results: searchResults,
                     areResultsLoading: false,
@@ -388,11 +363,12 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
      * By default SharePoint stores the taxonomy values according to the current site language. Because we can't create a communication site in French (as of 08/12/2017)
      * we need to do the translation afterwards
      * @param rawFilters The raw refinement results to translate coming from SharePoint search results
+     * @param currentUICultureName the current culture UI name (ex: 'en-US')
      */
-    private async _getLocalizedFilters(rawFilters: IRefinementResult[]): Promise<IRefinementResult[]> {
+    private async _getLocalizedFilters(rawFilters: IRefinementResult[], currentUICultureName: string): Promise<IRefinementResult[]> {
 
         // Get the current lcid according to current page language
-        const lcid = LocalizationHelper.getLocaleId(this.props.currentUICultureName);
+        const lcid = LocalizationHelper.getLocaleId(currentUICultureName);
 
         let termsToLocalize: { uniqueIdentifier: string, termId: string, localizedTermLabel: string }[] = [];
         let updatedFilters = [];
@@ -524,11 +500,12 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
     /**
      * Translates all result taxonomy values (owsTaxId...) according the current culture
      * @param rawResults The raw search results to translate coming from SharePoint search
+     * @param currentUICultureName the current culture UI name (ex: 'en-US')
      */
-    private async _getLocalizedMetadata(rawResults: ISearchResult[]): Promise<ISearchResult[]> {
+    private async _getLocalizedMetadata(rawResults: ISearchResult[], currentUICultureName: string): Promise<ISearchResult[]> {
 
         // Get the current lcid according to current page language
-        const lcid = LocalizationHelper.getLocaleId(this.props.currentUICultureName);
+        const lcid = LocalizationHelper.getLocaleId(currentUICultureName);
 
         let resultsToLocalize: ILocalizableSearchResult[] = [];
 
@@ -667,6 +644,28 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
         } else {
             return rawResults;
         }
+    }
+
+    /**
+     * Retrieves search results according to the search parameters in component properties and page number
+     * @param props the current component properties
+     * @param pageNumber the page number to retrieve
+     */
+    private async _getSearchResults(props: ISearchResultsContainerProps, pageNumber?: number): Promise<ISearchResults> {
+
+        // Get search results
+        const searchResults = await props.searchService.search(props.queryKeywords, pageNumber);
+
+        // Translates taxonomy refiners and result values by using terms ID if applicable
+        if (props.enableLocalization) {
+            const localizedFilters = await this._getLocalizedFilters(searchResults.RefinementResults, props.currentUICultureName);
+            searchResults.RefinementResults = localizedFilters;
+
+            const localizedResults = await this._getLocalizedMetadata(searchResults.RelevantResults, props.currentUICultureName);
+            searchResults.RelevantResults = localizedResults;
+        }
+
+        return searchResults;
     }
 
     private _getShimmerElements(): JSX.Element {
