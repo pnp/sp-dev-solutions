@@ -103,6 +103,16 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
             }
         }
 
+        // WebPart Title
+        if (this.props.webPartTitle && this.props.webPartTitle.length > 0) {
+            renderWebPartTitle = <WebPartTitle title={this.props.webPartTitle} updateProperty={null} displayMode={DisplayMode.Read} />;
+        }
+
+        // Error Message
+        if (hasError) {
+            renderWpContent = <MessageBar messageBarType={MessageBarType.error}>{errorMessage}</MessageBar>;
+        }
+
         // WebPart content
         if (items.RelevantResults.length === 0) {
             const selectedProperties = (this.props.searchService.selectedProperties) ? this.props.searchService.selectedProperties.join(',') : undefined;
@@ -155,17 +165,7 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
                     {renderSearchResultTemplate}
                 </div>;
         }
-        
-        // WebPart Title
-        if (this.props.webPartTitle && this.props.webPartTitle.length > 0) {
-            renderWebPartTitle = <WebPartTitle title={this.props.webPartTitle} updateProperty={null} displayMode={DisplayMode.Read} />;
-        }
-
-        // Error Message
-        if (hasError) {
-            renderWpContent = <MessageBar messageBarType={MessageBarType.error}>{errorMessage}</MessageBar>;
-        }
-        
+               
         return (
             <div className={styles.searchWp}>
                 <div tabIndex={-1} ref={ (ref) => { this._searchWpRef = ref; }}></div>
