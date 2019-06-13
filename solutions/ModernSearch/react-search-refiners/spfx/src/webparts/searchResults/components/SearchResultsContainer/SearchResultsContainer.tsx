@@ -215,38 +215,39 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
         }
     }
 
-    public async componentWillReceiveProps(nextProps: ISearchResultsContainerProps) {
+    public async componentDidUpdate(prevProps: ISearchResultsContainerProps) {
 
         let executeSearch = false;
         let isPageUpdated = false;
         let selectedPage = 1;
 
         // New props are passed to the component when the search query has been changed
-        if (!isEqual(this.props, nextProps)) {
+        if (!isEqual(this.props, prevProps)) {
 
             executeSearch = true;
             
-            const lastSelectedProperties = (this.props.searchService.selectedProperties) ? this.props.searchService.selectedProperties.join(',') : undefined;
-            const lastQuery = this.props.queryKeywords + this.props.searchService.queryTemplate + lastSelectedProperties + this.props.searchService.resultSourceId;
-            const nextSelectedProperties = (nextProps.searchService.selectedProperties) ? nextProps.searchService.selectedProperties.join(',') : undefined;
-            const query = nextProps.queryKeywords + nextProps.searchService.queryTemplate + nextSelectedProperties + nextProps.searchService.resultSourceId;
+            const lastSelectedProperties = (prevProps.searchService.selectedProperties) ? prevProps.searchService.selectedProperties.join(',') : undefined;
+            const lastQuery = prevProps.queryKeywords + prevProps.searchService.queryTemplate + lastSelectedProperties + prevProps.searchService.resultSourceId;
+            const nextSelectedProperties = (this.props.searchService.selectedProperties) ? this.props.searchService.selectedProperties.join(',') : undefined;
+            const query = this.props.queryKeywords + this.props.searchService.queryTemplate + nextSelectedProperties + this.props.searchService.resultSourceId;
 
             if (lastQuery !== query) {
                 // Reset current selected refinement filters when:
                 // - A search vertical is selected (i.e. query template is different)
                 // - A new query is performed via the search box of URL trigger (query keywords is different)
-                nextProps.searchService.refinementFilters = [];
+                this.props.searchService.refinementFilters = [];
             }
 
-            if (this.props.selectedPage !== nextProps.selectedPage) {
-                selectedPage = nextProps.selectedPage;
+            if (this.props.selectedPage !== prevProps.selectedPage) {
+                selectedPage = this.props.selectedPage;
                 isPageUpdated = true;
             }
         }
 
         if (executeSearch) {
+
             // Don't perform search is there is no keywords
-            if (nextProps.queryKeywords) {
+            if (this.props.queryKeywords) {
                 try {
                     // Clear selected filters on a new query or new refiners
                     this.setState({
@@ -260,7 +261,7 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
                         this._searchWpRef.focus();
                     }
 
-                    const searchResults = await this._getSearchResults(nextProps, selectedPage);
+                    const searchResults = await this._getSearchResults(this.props, selectedPage);
                 
                     this.setState({
                         results: searchResults,
@@ -294,8 +295,8 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
             }
         } else {
             // Refresh the template without making a new search query because we don't need to
-            if (this.props.templateContent !== nextProps.templateContent ||
-                this.props.showResultsCount !== nextProps.showResultsCount) {
+            if (this.props.templateContent !== this.props.templateContent ||
+                this.props.showResultsCount !==  this.props.showResultsCount) {
 
                 // Reset template errors if it has
                 if (this.state.hasError) {
