@@ -1,15 +1,7 @@
 
 .template_root, .placeholder_root {
-    /* Load global variables and mixins for components. Order is important here because we want theming variables from SPFx instead of default */
-    @import '~office-ui-fabric/dist/sass/Fabric.scss';
-    @import '~@microsoft/sp-office-ui-fabric-core/dist/sass/_SPFabricCore.scss';
 
-    /* Import individual Office UI Fabric component styles to be able to use them in HTML templates. See https://developer.microsoft.com/en-us/fabric-js for markup*/
-    @import '~office-ui-fabric/dist/components/Button/Button.scss';
-    @import '~office-ui-fabric/dist/components/Label/Label.scss';
-    @import '~office-ui-fabric/dist/components/List/List.scss';
-    @import '~office-ui-fabric/dist/components/ListItem/ListItem.scss';
-    @import '~@microsoft/sp-office-ui-fabric-core/dist/sass/FabricCore.scss';
+    @import '~office-ui-fabric-react/dist/sass/Fabric.scss';
 
     .template_defaultList {
     

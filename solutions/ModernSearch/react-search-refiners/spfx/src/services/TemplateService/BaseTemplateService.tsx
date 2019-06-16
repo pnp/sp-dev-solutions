@@ -12,6 +12,52 @@ import * as React from 'react';
 import * as ReactDom from 'react-dom';
 import PreviewContainer from './PreviewContainer/PreviewContainer';
 import { IPreviewContainerProps, PreviewType } from './PreviewContainer/IPreviewContainerProps';
+import * as ReactDOMServer from 'react-dom/server';
+import {
+    DocumentCard,
+    DocumentCardActivity,
+    DocumentCardPreview,
+    DocumentCardTitle,
+    DocumentCardImage,
+    IDocumentCardProps,
+    DocumentCardType,
+    IDocumentCardStyleProps,
+    IDocumentCardStyles,
+    IDocumentCardPreviewProps,
+    IDocumentCardPreviewStyleProps,
+    IDocumentCardPreviewStyles,
+    IDocumentCardTitleStyleProps,
+    IDocumentCardImageStyleProps,
+    IDocumentCardImageProps,
+    IDocumentCardImageStyles,
+    IDocumentCardActivityStyleProps,
+    IDocumentCardActivityStyles,
+  } from 'office-ui-fabric-react/lib/DocumentCard';
+  import { configureLoadStyles } from '@microsoft/load-themed-styles';
+  import { mergeStyles, mergeStyleSets } from '@uifabric/merge-styles';
+import * as documentCardGetStyles from 'office-ui-fabric-react/lib/components/DocumentCard/DocumentCard.styles';
+import * as documentTitleGetStyles from 'office-ui-fabric-react/lib/components/DocumentCard/DocumentCardTitle.styles';
+import * as documentCardPreviewGetStyles from 'office-ui-fabric-react/lib/components/DocumentCard/DocumentCardPreview.styles';
+import * as documentCardImageGetStyles from 'office-ui-fabric-react/lib/components/DocumentCard/DocumentCardImage.styles';
+import * as documentCardActivityGetStyles from 'office-ui-fabric-react/lib/components/DocumentCard/DocumentCardActivity.styles';
+import * as personaCoinGetStyles from 'office-ui-fabric-react/lib/components/Persona/PersonaCoin/PersonaCoin.styles';
+import * as imageGetStyles from 'office-ui-fabric-react/lib/components/Image/Image.styles';
+
+import { IconType, IIconStyleProps } from 'office-ui-fabric-react/lib/Icon';
+import {
+    loadTheme,
+    styled,
+    classNamesFunction,
+    getTheme,
+    PrimaryButton,
+    ImageFit,
+    IPersonaCoinStyleProps,
+    PersonaSize,
+    IPersonaStyles,
+    IPersonaCoinStyles,
+    IImageStyleProps,
+    IImageStyles
+  } from "office-ui-fabric-react";
 
 abstract class BaseTemplateService {
     public CurrentLocale = "en";
@@ -22,7 +68,7 @@ abstract class BaseTemplateService {
     }
 
     private async LoadHandlebarsHelpers() {
-        if ((<any>window).searchHBHelper !== undefined) {
+        if ((window as any).searchHBHelper !== undefined) {
             // early check - seems to never hit(?)
             return;
         }
@@ -30,10 +76,10 @@ abstract class BaseTemplateService {
             /* webpackChunkName: 'search-handlebars-helpers' */
             'handlebars-helpers'
         );
-        if ((<any>window).searchHBHelper !== undefined) {
+        if ((window as any).searchHBHelper !== undefined) {
             return;
         }
-        (<any>window).searchHBHelper = component({
+        (window as any).searchHBHelper = component({
             handlebars: Handlebars
         });
     }
@@ -51,7 +97,55 @@ abstract class BaseTemplateService {
      * @returns the template HTML markup
      */
     public static getTilesDefaultTemplate(): string {
-        return require('./templates/layouts/tiles.html');
+
+/*const theme = getTheme();
+
+            const props: IDocumentCardStyleProps = {
+                actionable:false,
+                compact: false,
+                theme: getTheme()
+            };
+
+            const styes = getStyles(props);
+
+            const getClassNames = classNamesFunction<IDocumentCardStyleProps, IDocumentCardStyles>();
+
+            const classNames = getClassNames(styes, );
+            
+
+            return require('./templates/layouts/default.html');*/
+
+            const previewProps: IDocumentCardPreviewProps = {
+                previewImages: [
+                  {
+                    name: '{{Title}}',
+                    previewImageSrc: "{{getPreviewSrc item}}",
+                    iconSrc: "{{IconSrc}}",
+                    imageFit: ImageFit.center,
+                    width: 318,
+                    height: 196
+                  }
+                ]
+              };
+          
+              const documentCardHtml = ReactDOMServer.renderToString(
+                <DocumentCard onClickHref="{{getUrl item}}">
+                    <DocumentCardImage height={150} imageFit={ImageFit.cover} imageSrc="{{IconSrc}}" />
+                    <DocumentCardTitle
+                        title="{{Title}}"
+                        shouldTruncate={true}
+                    />
+                    <DocumentCardActivity
+                        activity="{{Created}}"
+                        people={[{ name: '{{Author}}', profileImageSrc: "https://static2.sharepointonline.com/files/fabric/office-ui-fabric-react-assets/persona-female.png" }]}
+                    />
+                </DocumentCard>
+              );
+    
+              const template: string = require('./templates/layouts/tiles.html');
+              return template.replace('$DocumentCard', documentCardHtml);
+
+        // require('./templates/layouts/tiles.html');
     }
 
     /**
@@ -75,7 +169,10 @@ abstract class BaseTemplateService {
      * @returns the template HTML markup
      */
     public static getDefaultResultTypeTileItem(): string {
-        return require('./templates/resultTypes/default_tile.html');
+
+        
+       return require('./templates/resultTypes/default_tile.html');
+        
     }
 
     /**
@@ -170,7 +267,7 @@ abstract class BaseTemplateService {
         Handlebars.registerHelper("getDate", (date: string, format: string) => {
             try {
                 if (new Date(date).toISOString() !== new Date(null).toISOString()) {
-                    let d = (<any>window).searchHBHelper.moment(date, format, { lang: this.CurrentLocale, datejs: false });
+                    let d = (window as any).searchHBHelper.moment(date, format, { lang: this.CurrentLocale, datejs: false });
                     return d;
                 }
             } catch (error) {
@@ -227,6 +324,131 @@ abstract class BaseTemplateService {
      * @returns the compiled HTML template string 
      */
     public async processTemplate(templateContext: any, templateContent: string): Promise<string> {
+
+        // Office UI Fabric styles
+
+        // Get the current loaded theme
+        const theme = getTheme();
+
+        const customDocumentCardStyles = {
+            pnpDocumentCard: {
+                margin: 10
+            }
+        };
+
+        // DocumentCard
+        const documentCardProps: IDocumentCardStyleProps = {
+            actionable:true,
+            compact: false,
+            theme: theme
+        };
+
+        const documentCardStyles = mergeStyleSets(documentCardGetStyles.getStyles(documentCardProps), customDocumentCardStyles);
+        const documentCardClassNames = classNamesFunction<IDocumentCardStyleProps, IDocumentCardStyles>()(documentCardStyles);
+
+        // DocumentCardPreview
+        const documentCardPreviewProps: IDocumentCardPreviewStyleProps = {
+            theme: theme,
+            isFileList: false,
+        };
+
+        const customDocumentPreviewStyles = {
+            pnpDocumentPreview: {
+                selectors: {
+                    ':hover': {
+                      opacity: 0.3
+                    }
+                  }
+            }
+        };
+
+        const documentCardPreviewStyles = mergeStyleSets(documentCardPreviewGetStyles.getStyles(documentCardPreviewProps), customDocumentPreviewStyles);
+        const documentCardPreviewClassNames = classNamesFunction<IDocumentCardPreviewStyleProps, IDocumentCardPreviewStyles>()(documentCardPreviewStyles);
+
+        // DocumentImage
+        const documentCardImageProps: IDocumentCardImageStyleProps = {
+            theme: theme,
+            imageFit: ImageFit.centerCover,
+            iconProps:{
+                iconName: 'Search',
+                iconType: IconType.default
+            }
+        };
+
+        const documentCardImageStyles = documentCardImageGetStyles.getStyles(documentCardImageProps);
+        const documentCardImageClassNames = classNamesFunction<IDocumentCardImageStyleProps, IDocumentCardImageStyles>()(documentCardImageStyles)
+
+        // DocumentCardTitle
+        const documentCardTitleProps: IDocumentCardTitleStyleProps = {
+            theme: theme
+        };
+
+        const documentCardTitleStyles = documentTitleGetStyles.getStyles(documentCardTitleProps);
+        const documentCardTitleClassNames = classNamesFunction<IDocumentCardPreviewStyleProps, IDocumentCardPreviewStyles>()(documentCardTitleStyles)
+
+        const documentCardActivityProps: IDocumentCardActivityStyleProps = {
+            theme: theme,
+            multiplePeople: true,
+        };
+
+        const customActivityStyles = {
+            pnpAdditionalCardDetails: {
+                marginLeft: 56
+            }
+        };
+
+        const documentCardActivityStyles = mergeStyleSets(documentCardActivityGetStyles.getStyles(documentCardActivityProps),customActivityStyles)
+        const documentCardActivityClassNames = classNamesFunction<IDocumentCardActivityStyleProps, IDocumentCardActivityStyles>()(documentCardActivityStyles);
+
+        // Persona coin
+        const personaCoinProps: IPersonaCoinStyleProps = {
+            size: PersonaSize.small,
+            theme: theme,
+            showUnknownPersonaCoin: true,
+            coinSize: 32
+        };
+
+        const personaCoinStyles = personaCoinGetStyles.getStyles(personaCoinProps);
+        const personaCoinClassNames = classNamesFunction<IPersonaCoinStyleProps, IPersonaCoinStyles>()(personaCoinStyles);
+        
+        // Image 
+        const imageProps: IImageStyleProps = {
+            shouldFadeIn: false,
+            isCover: true,
+            isLoaded: true,
+            theme: theme,
+            shouldStartVisible: true
+        };
+
+        const personaImageProps: IImageStyleProps  = {
+            shouldFadeIn: true,
+            isNotImageFit: true,
+            height: 32,
+            width: 32,            
+            isLoaded: true,
+            theme: theme,
+            shouldStartVisible: true,
+            isNone: true,
+            maximizeFrame: true
+        }
+
+        const imageStlyes = imageGetStyles.getStyles(imageProps); 
+        const imageClassNames = classNamesFunction<IImageStyleProps, IImageStyles>()(imageStlyes);
+
+        const personaImageStyles = imageGetStyles.getStyles(personaImageProps); 
+        const personaImageClassNames = classNamesFunction<IImageStyleProps, IImageStyles>()(personaImageStyles);
+
+        templateContext.styles = {
+            documentCard: documentCardClassNames,
+            documentCardPreview: documentCardPreviewClassNames,
+            documentCardTitle: documentCardTitleClassNames,
+            documentCardImage: documentCardImageClassNames,
+            documentCardActivity: documentCardActivityClassNames,
+            personaCoin: personaCoinClassNames,
+            image: imageClassNames,
+            personaImage: personaImageClassNames
+        };     
+
         // Process the Handlebars template
         const handlebarFunctionNames = [
             "getDate",
@@ -521,12 +743,12 @@ abstract class BaseTemplateService {
     private async _loadVideoLibrary() {
         // Load Videos-Js on Demand 
         // Webpack will create a other bundle loaded on demand just for this library
-        if ((<any>window).searchVideoJS === undefined) {
+        if ((window as any).searchVideoJS === undefined) {
             const videoJs = await import(
                 /* webpackChunkName: 'videos-js' */
                 './video-js'
             );
-            (<any>window).searchVideoJS = videoJs.default.getVideoJs();
+            (window as any).searchVideoJS = videoJs.default.getVideoJs();
         }
     }
 
