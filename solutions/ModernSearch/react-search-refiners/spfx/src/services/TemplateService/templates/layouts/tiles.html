@@ -107,18 +107,31 @@
                         <div class="ms-Grid-row">
                         {{#times maxResultsCount}}
                             <div class="ms-Grid-col ms-sm12 ms-md6 ms-lg4">
-                                    <div class="singleCard">
-                                        <div class="previewImg document-preview-item">
-                                            <div class="cardFileIcon shimmer"></div>
-                                        </div> 
-                                        <li class="ms-ListItem ms-ListItem--document" tabindex="0">
-                                            <div class="cardInfo">
-                                                <span class="shimmerPrimaryText shimmer line"></span>
-                                                <span class="shimmerSecondaryText shimmer line"></span>
-                                                <span class="shimmerTertiaryText shimmer line"></span> 
-                                            </div>
-                                        </li>
+                                <div tabindex="0" data-is-focusable="true" role="link" class="{{styles.documentCard.root}} {{styles.documentCard.pnpDocumentCard}}">
+                                    <div class="{{styles.documentCardPreview.root}} {{styles.documentCardPreview.pnpDocumentPreview}}">
+                                        <div class="{{styles.image.root}} shimmer" style="width: 318px; height: 196px;">
+                                        </div>
                                     </div>
+                                    <div class="{{styles.documentCardTitle.root}} shimmer line"></div>
+                                    <div class="{{styles.documentCardActivity.root}}">
+                                        <div class="{{styles.documentCardActivity.avatars}}">
+                                            <div class="{{styles.documentCardActivity.avatar}}">
+                                                <div role="presentation" size="11" class="{{styles.personaCoin.coin}}">
+                                                        <div class="{{styles.personaCoin.imageArea}} shimmer" style="width: 32px; height: 32px;">
+                                                        </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="{{styles.documentCardActivity.details}}">
+                                            <span class="{{styles.documentCardActivity.name}} shimmer line"></span>
+                                            <span class="{{styles.documentCardActivity.activity}} shimmer line"></span>
+                                        </div>
+                                        <div class="{{styles.documentCardActivity.pnpAdditionalCardDetails}}">
+                                            <span class="{{styles.documentCardActivity.activity}} shimmer line">
+                                            </span>	
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             {{/times}}
                         </div>

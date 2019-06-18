@@ -24,16 +24,21 @@ import { getTheme } from '@uifabric/styling';
 
 export default class Styling {
 
+    /***
+     * Gets the default Office UI Fabric CSS class names used by React components to be able to use them in Handlebars templates
+     * See https://github.com/OfficeDev/office-ui-fabric-react/wiki/Component-Styling
+     */
     public static getOfficeUiTilesStyles(): any {
-        // Office UI Fabric styles
 
+        // The DocumentCard component is an aggregation of multiple React components so we need to get styles for every individual components.
+        // In the Handlebars template, you need then to follow the same HTML markup with associated classes to get the same experience as the complete React component.
         // Get the current loaded theme
         const theme = getTheme();
 
-        // DocumentCard styles
+        // DocumentCard component styles
         const customDocumentCardStyles = {
             pnpDocumentCard: {
-                margin: 10
+                marginBottom: 15
             }
         };
 
@@ -46,7 +51,7 @@ export default class Styling {
         const documentCardStyles = mergeStyleSets(documentCardGetStyles.getStyles(documentCardProps), customDocumentCardStyles);
         const documentCardClassNames = classNamesFunction<IDocumentCardStyleProps, IDocumentCardStyles>()(documentCardStyles);
 
-        // DocumentCardPreview
+        // DocumentCardPreview component
         const customDocumentPreviewStyles = {
             pnpDocumentPreview: {
                 selectors: {
@@ -65,7 +70,7 @@ export default class Styling {
         const documentCardPreviewStyles = mergeStyleSets(documentCardPreviewGetStyles.getStyles(documentCardPreviewProps), customDocumentPreviewStyles);
         const documentCardPreviewClassNames = classNamesFunction<IDocumentCardPreviewStyleProps, IDocumentCardPreviewStyles>()(documentCardPreviewStyles);
 
-        // DocumentImage
+        // DocumentImage component
         const documentCardImageProps: IDocumentCardImageStyleProps = {
             theme: theme,
             imageFit: ImageFit.center
@@ -74,7 +79,7 @@ export default class Styling {
         const documentCardImageStyles = documentCardImageGetStyles.getStyles(documentCardImageProps);
         const documentCardImageClassNames = classNamesFunction<IDocumentCardImageStyleProps, IDocumentCardImageStyles>()(documentCardImageStyles)
 
-        // DocumentCardTitle
+        // DocumentCardTitle component
         const documentCardTitleProps: IDocumentCardTitleStyleProps = {
             theme: theme
         };
@@ -82,7 +87,7 @@ export default class Styling {
         const documentCardTitleStyles = documentTitleGetStyles.getStyles(documentCardTitleProps);
         const documentCardTitleClassNames = classNamesFunction<IDocumentCardPreviewStyleProps, IDocumentCardPreviewStyles>()(documentCardTitleStyles)
 
-        // DocumentActivity
+        // DocumentActivity component
         const customActivityStyles = {
             pnpAdditionalCardDetails: {
                 marginLeft: 56
@@ -97,7 +102,7 @@ export default class Styling {
         const documentCardActivityStyles = mergeStyleSets(documentCardActivityGetStyles.getStyles(documentCardActivityProps),customActivityStyles)
         const documentCardActivityClassNames = classNamesFunction<IDocumentCardActivityStyleProps, IDocumentCardActivityStyles>()(documentCardActivityStyles);
 
-        // PersonaCoin
+        // PersonaCoin component
         const personaCoinProps: IPersonaCoinStyleProps = {
             size: PersonaSize.small,
             theme: theme,
@@ -108,7 +113,6 @@ export default class Styling {
         const personaCoinStyles = personaCoinGetStyles.getStyles(personaCoinProps);
         const personaCoinClassNames = classNamesFunction<IPersonaCoinStyleProps, IPersonaCoinStyles>()(personaCoinStyles);
         
-
         const personaImageProps: IImageStyleProps  = {
             shouldFadeIn: true,
             isNotImageFit: true,
