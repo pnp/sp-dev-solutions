@@ -11,49 +11,49 @@
                 <div class="ms-Grid-row">
                 {{#each items as |item|}}
                     <div class="ms-Grid-col ms-sm12 ms-md6 ms-lg4">
-                        {{#> resultTypes}}
+                        {{#> resultTypes styles=../styles}}
                             {{!-- The block below will be used as default item template if no result types matched --}}
-                            <div tabindex="0" data-is-focusable="true" role="link" class="{{../styles.documentCard.root}} {{../styles.documentCard.pnpDocumentCard}}">
-                                <div class="{{../styles.documentCardPreview.root}} {{../styles.documentCardPreview.pnpDocumentPreview}}">
+                            <div tabindex="0" data-is-focusable="true" role="link" class="{{styles.documentCard.root}} {{styles.documentCard.pnpDocumentCard}}">
+                                <div class="{{styles.documentCardPreview.root}} {{styles.documentCardPreview.pnpDocumentPreview}}">
                                    <div>
-                                      <div class="{{../styles.image.root}}" style="width: 318px; height: 196px;">
+                                      <div class="{{styles.image.root}}" style="width: 318px; height: 196px;">
                                         {{#eq item.contentclass 'STS_ListItem_851'}}
-                                            <img class="{{../styles.image.image}} video-preview-item" src="{{getPreviewSrc item}}" data-src="{{PictureThumbnailURL}}" data-url="{{DefaultEncodingURL}}" data-fileext="{{FileType}}">
+                                            <img class="{{styles.image.image}} video-preview-item" src="{{getPreviewSrc this}}" data-src="{{PictureThumbnailURL}}" data-url="{{DefaultEncodingURL}}" data-fileext="{{FileType}}">
                                         {{else}}
                                             {{#eq FileType 'pdf'}}
                                             <!-- Documents from OneDrive sites can't be viewed directly due to SAMEORIGIN iframe restrictions-->
                                                 {{#contains Path '-my.sharepoint'}}.
-                                                    <img class="{{../styles.image.image}} document-preview-item" src="{{getPreviewSrc item}}" data-src="{{ServerRedirectedPreviewURL}}" data-url="{{ServerRedirectedEmbedURL}}">
+                                                    <img class="{{styles.image.image}} document-preview-item" src="{{getPreviewSrc this}}" data-src="{{ServerRedirectedPreviewURL}}" data-url="{{ServerRedirectedEmbedURL}}">
                                                 {{else}}
-                                                <img class="{{../styles.image.image}} document-preview-item" src="{{getPreviewSrc item}}" data-src="{{ServerRedirectedPreviewURL}}" data-url="{{Path}}">
+                                                <img class="{{styles.image.image}} document-preview-item" src="{{getPreviewSrc this}}" data-src="{{ServerRedirectedPreviewURL}}" data-url="{{Path}}">
                                                 {{/contains}}
                                             {{else}}
-                                                <img class="{{../styles.image.image}} document-preview-item" src="{{getPreviewSrc item}}" data-src="{{ServerRedirectedPreviewURL}}" data-url="{{ServerRedirectedEmbedURL}}">
+                                                <img class="{{styles.image.image}} document-preview-item" src="{{getPreviewSrc this}}" data-src="{{ServerRedirectedPreviewURL}}" data-url="{{ServerRedirectedEmbedURL}}">
                                             {{/eq}}  
                                          {{/eq}} 
                                      </div>
-                                      <div class="{{../styles.documentCardPreview.icon}}"><img class="{{../styles.personaImage.root}}" src="{{IconSrc}}" role="presentation" alt=""></div>
+                                      <div class="{{styles.documentCardPreview.icon}}"><img class="{{styles.personaImage.root}}" src="{{IconSrc}}" role="presentation" alt=""></div>
                                    </div>
                                 </div>
-                                <div class="{{../styles.documentCardTitle.root}}" title="{{Title}}">{{Title}}</div>
-                                <div class="{{../styles.documentCardActivity.root}}">
-                                   <div class="{{../styles.documentCardActivity.avatars}}">
-                                      <div class="{{../styles.documentCardActivity.avatar}}">
-                                         <div role="presentation" size="11" class="{{../styles.personaCoin.coin}}">
-                                                 <div class="{{../styles.personaCoin.imageArea}}" style="width: 32px; height: 32px;">
+                                <div class="{{styles.documentCardTitle.root}}" title="{{Title}}">{{Title}}</div>
+                                <div class="{{styles.documentCardActivity.root}}">
+                                   <div class="{{styles.documentCardActivity.avatars}}">
+                                      <div class="{{styles.documentCardActivity.avatar}}">
+                                         <div role="presentation" size="11" class="{{styles.personaCoin.coin}}">
+                                                 <div class="{{styles.personaCoin.imageArea}}" style="width: 32px; height: 32px;">
                                                  {{#with (split AuthorOWSUSER "|")}}		
-                                                     <img class="{{../../styles.personaCoin.image}}" src="/_layouts/15/userphoto.aspx?size=L&username={{[0]}}" alt="">
+                                                     <img class="{{../styles.personaCoin.image}}" src="/_layouts/15/userphoto.aspx?size=L&username={{[0]}}" alt="">
                                                  {{/with}}
                                                  </div>
                                          </div>
                                       </div>
                                    </div>
-                                   <div class="{{../styles.documentCardActivity.details}}">
-                                       <span class="{{../styles.documentCardActivity.name}}">{{Author}}</span>
-                                       <span class="{{../styles.documentCardActivity.activity}}">{{getDate ModifiedOWSDATE 'LL'}}</span>
+                                   <div class="{{styles.documentCardActivity.details}}">
+                                       <span class="{{styles.documentCardActivity.name}}">{{Author}}</span>
+                                       <span class="{{styles.documentCardActivity.activity}}">{{getDate ModifiedOWSDATE 'LL'}}</span>
                                    </div>
-                                   <div class="{{../styles.documentCardActivity.pnpAdditionalCardDetails}}">
-                                       <span class="{{../styles.documentCardActivity.activity}}">
+                                   <div class="{{styles.documentCardActivity.pnpAdditionalCardDetails}}">
+                                       <span class="{{styles.documentCardActivity.activity}}">
                                              {{#if owstaxidmetadataalltagsinfo}}
                                                  <i class="ms-Icon ms-Icon--Tag" aria-hidden="true"></i>
                                                  {{#each (split owstaxidmetadataalltagsinfo ",") as |tag| }}                                                        
@@ -63,7 +63,7 @@
                                        </span>	
                                    </div>
                                 </div>
-                             </div>
+                            </div>
                         {{/resultTypes}}
                     </div>
                 {{/each}}

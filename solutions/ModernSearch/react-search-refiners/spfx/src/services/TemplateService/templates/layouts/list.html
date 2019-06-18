@@ -29,7 +29,7 @@
         <ul class="ms-List template_defaultList">
             {{#each items as |item|}}
                 <li class="template_listItem" tabindex="0">
-                    {{#> resultTypes}}
+                    {{#> resultTypes this}}
                         {{!-- The block below will be used as default item template if no result types matched --}}
                         <div class="template_result">
                                 <img class="template_icon" src="{{IconSrc}}"/>
