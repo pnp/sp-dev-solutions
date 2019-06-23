@@ -20,22 +20,29 @@ export interface IInstagramWebPartProps {
 const TOKEN_KEY: string = 'access_token';
 
 export default class InstagramWebPart extends BaseClientSideWebPart<IInstagramWebPartProps> {
+  
   private _provider: DataProvider;
-  private _feedResponse: IFeedResponse;
+  private _feedResponse?: IFeedResponse;
 
   public onInit(): Promise<void> {
+
+    // try to get the Instagram access token from the URL, if any
     const tokenIndex: number = window.location.hash.indexOf(TOKEN_KEY);
     if (tokenIndex > -1) {
       const temp: string | undefined = window.location.hash.substr(tokenIndex);
       const tokenValue: string | undefined = temp.substr(TOKEN_KEY.length + 1);
       if (tokenValue) {
+        // if we've got the access token, store it in the properties
+        // of the current instance of the web part
         this.properties.accessToken = tokenValue;
       }
     }
     
     const { accessToken, feedUrl }: IInstagramWebPartProps = this.properties;
 
+    // if we have an access token
     if (accessToken) {
+      // let's get the feed from Instagram
       this._provider = new DataProvider(accessToken, this.context.httpClient, feedUrl);
       return this._fetchFeed();
     } else {
@@ -66,7 +73,6 @@ export default class InstagramWebPart extends BaseClientSideWebPart<IInstagramWe
   }
   
   private onConfigure = (): void => {
-    // Context of the web part
     this.context.propertyPane.open();
   }
 
@@ -79,8 +85,10 @@ export default class InstagramWebPart extends BaseClientSideWebPart<IInstagramWe
   }
 
   protected getPropertyPaneConfiguration(): IPropertyPaneConfiguration {  
+    
     const canSignIn: boolean = (this.properties.accessToken == undefined);
     const canSignOut: boolean = !!this.properties.accessToken;
+
     return {  
       pages: [
         {
@@ -117,6 +125,7 @@ export default class InstagramWebPart extends BaseClientSideWebPart<IInstagramWe
                     icon: 'SignIn',
                     disabled: !canSignIn,
                     onClick: () => {
+                      // force an Authentication roundtrip
                       window.location.href = this._authUrl;
                     }
                   }),
@@ -126,7 +135,10 @@ export default class InstagramWebPart extends BaseClientSideWebPart<IInstagramWe
                     icon: 'SignOut',
                     disabled: !canSignOut,
                     onClick: () => {
+                      // clear the access token and the response feed
                       this.properties.accessToken = undefined;
+                      this._feedResponse = undefined;
+                      // force UI refresh
                       this.render();
                     }
                   })
@@ -139,7 +151,11 @@ export default class InstagramWebPart extends BaseClientSideWebPart<IInstagramWe
   }
 
   private get _authUrl(): string {
-    return Text.format(this.properties.authUrl, this.properties.clientId, window.location.href);
+    return Text.format(this.properties.authUrl, 
+      this.properties.clientId, 
+      window.location.href.indexOf('#') > 0 ?
+        window.location.href.substr(0, window.location.href.indexOf('#'))
+        : window.location.href);
   }
 
   private _fetchFeed = (): Promise<void> => {
