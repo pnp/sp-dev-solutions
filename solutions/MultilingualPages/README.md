@@ -2,6 +2,8 @@
 
 ## Summary
 
+To see a live demo of the soultion check out the [video posted on the PnP YouTube channel](https://www.youtube.com/watch?v=i2rDqK6br5M).
+
 ### Multilingual Application Customizer
 
 This solution contains a application customizer and a web part that when used together provide a client side solution to managing multilingual pages in a SharePoint site collection.
@@ -114,6 +116,7 @@ MultilingualPages | Dave Feldman (Takeda) - [@bostonmusicdave](https://twitter.c
 
 Version|Date|Comments
 -------|----|--------
+1.6.3|May 14, 2019|Fix issue with redirectorPageUrl being undefined.
 1.6.2|April 9, 2019|Generalize move page message.
 1.6.1|April 8, 2019|Initial release
 

@@ -92,7 +92,7 @@ export class MultilingualPanel extends React.Component<IMultilingualPanelProps, 
     let currentLanguage: ITranslation = new Translation();
     let otherLanguages: ITranslation[] = [];
     try {
-      let redirectorPage = (this.props.currentPage.RedirectorPage.length > 0);
+      let redirectorPage = (this.props.currentPage.RedirectorPage && this.props.currentPage.RedirectorPage.length > 0);
       let redirectorPageUrl = this.props.currentPage.RedirectorPage;
       this.props.languages.forEach((lang) => {
         if (lang.code == this.props.currentPage.LanguageFolder) {
@@ -109,7 +109,7 @@ export class MultilingualPanel extends React.Component<IMultilingualPanelProps, 
             if (t.Page.Id === t.Page.MasterTranslationPage) {
               pageNotMaster = true;
               masterPageUrl = t.Page.Url;
-              redirectorPage = (t.Page.RedirectorPage.length > 0);
+              redirectorPage = (t.Page.RedirectorPage && t.Page.RedirectorPage.length > 0);
               redirectorPageUrl = t.Page.RedirectorPage;
             }
           }
@@ -436,15 +436,15 @@ export class MultilingualPanel extends React.Component<IMultilingualPanelProps, 
     //Don't Render if currentLangugage hasn't or couldn't be initialized
     if (!this.state.currentLanguage) return null;
     //Render
-    let masterTranslation: ITranslation = (this.state.pageNotMaster)? 
+    let masterTranslation: ITranslation = (this.state.pageNotMaster) ?
       lodash.find(this.state.otherLanguages, t => {
-        if(t.Page) { 
-          return (t.Page.Id === t.Page.MasterTranslationPage); 
-        } else { 
+        if (t.Page) {
+          return (t.Page.Id === t.Page.MasterTranslationPage);
+        } else {
           return false;
         }
       })
-      :this.state.currentLanguage;
+      : this.state.currentLanguage;
     return (
       <div className={styles.multilingualPanel + ((this.props.editMode && this.props.showPanel) ? ' ' + styles.show : '')}>
         <div className={styles.hidePanel} onClick={this.props.setShowPanel}>
@@ -466,7 +466,7 @@ export class MultilingualPanel extends React.Component<IMultilingualPanelProps, 
           <PageInformation class={styles.pageInfoCont} translation={masterTranslation} selected={true} savePage={this.props.savePage}></PageInformation>
           <Label className={"ms-fontWeight-semibold"}>Other Translations: </Label>
           {this.state.otherLanguages && this.state.otherLanguages.map((t: ITranslation) => {
-            if(t.Page && (t.Page.Id === t.Page.MasterTranslationPage)) return null;
+            if (t.Page && (t.Page.Id === t.Page.MasterTranslationPage)) return null;
             return (
               <div key={t.TranslationLanguage.code} className={styles.translationToggle}>
                 <Toggle
@@ -475,7 +475,7 @@ export class MultilingualPanel extends React.Component<IMultilingualPanelProps, 
                   onChanged={(checked?) => { this.doTranslation(t.TranslationLanguage.code, checked); }}
                   disabled={this.state.pageNotMaster}
                 />
-                <PageInformation class={styles.desc} translation={t} selected={(t.Page || this.state.translateAdd.indexOf(t.TranslationLanguage.code) > -1)?true:false} savePage={this.props.savePage}></PageInformation>
+                <PageInformation class={styles.desc} translation={t} selected={(t.Page || this.state.translateAdd.indexOf(t.TranslationLanguage.code) > -1) ? true : false} savePage={this.props.savePage}></PageInformation>
               </div>
             );
           })}
@@ -487,7 +487,7 @@ export class MultilingualPanel extends React.Component<IMultilingualPanelProps, 
             onChanged={this.doRedirectorPage}
             disabled={this.state.pageNotMaster}
           />
-          {this.state.redirectorPageUrl.length > 0 &&
+          {this.state.redirectorPage && this.state.redirectorPageUrl && this.state.redirectorPageUrl.length > 0 &&
             <Label>{document.location.origin}{this.state.redirectorPageUrl}</Label>
           }
           {this.state.lockedTranslations && !this.state.replaceAllPages &&
