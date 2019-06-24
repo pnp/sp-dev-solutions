@@ -1,23 +1,25 @@
-## Instagram Web Part
+# Instagram Web Part
 
-Demo Web Part demonstrating how to consume an Instagram feed from within a SharePoint Framework solution.
+## Summary
+
+Sample Web Part demonstrating how to consume an Instagram feed from within a SharePoint Framework solution.
 
 ![Instagram Web Part in action](./assets/InstagramWebPartIntroVideo.gif)
 
-### Building the code
+## Used SharePoint Framework Version 
 
-```bash
-git clone the repo
-npm i
-gulp bundle --ship
-gulp package-solution --ship
-```
+![SPFx v1.8.2](https://img.shields.io/badge/SPFx-1.8.2-green.svg)
 
-This package produces the following:
+## Applies to
 
-* sharepoint/solution/insta-webpart.sppkg - the package to install in the App Catalog of your target tenant
+* [SharePoint Framework](https://dev.office.com/sharepoint)
+* [Office 365 tenant](https://dev.office.com/sharepoint/docs/spfx/set-up-your-development-environment)
 
-## Installation
+## Prerequisites
+
+You need a valid Instagram account and a client app registered in Instagram. 
+
+### Installation
 
 1. From the **sharepoint/solution** folder, add the **insta-webpart.sppkg** file to the tenant app catalog in your SharePoint tenant.
 
@@ -26,11 +28,11 @@ This package produces the following:
 3. Configure the Web Part and sign-in into Instagram (follow instruction in section [Configuration](#Configuration))
 
 <a name="Configuration"></a>
-## Configuration
+### Configuration
 
 In order to configure the Instagram Web Part you need to have a valid developer account for Instagram and you need to configure a client app in your Instagram developer's dashboard.
 
-### Signup as an Instagram developer
+#### Signup as an Instagram developer
 
 If you already signed up as an Instagram developer, you can skip this section and go straigth to the [Registering an Instagram client app](#RegisteringClientApp) section.
 
@@ -41,7 +43,7 @@ If you already signed up as an Instagram developer, you can skip this section an
 3. Click the **"Register Your Application"** button and fill in the "Developer Signup" page, providing your data.
 
 <a name="RegisteringClientApp"></a>
-### Registering an Instagram client app
+#### Registering an Instagram client app
 
 1. Open your browser and navigate to the [Developer](https://www.instagram.com/developer/) section of Instagram.
 
@@ -57,4 +59,45 @@ If you already signed up as an Instagram developer, you can skip this section an
 
 7. The first time you will use the Web Part, you will see a message like "This app is in sandbox mode and can only be authorized by sandbox users." click the **"Authorize"** button to proceed.
 
-Enjoy the Instagram Web Part.
+## Solution
+
+Solution|Author(s)
+--------|---------
+InstagramWebPart| Various authors
+
+## Version history
+
+Version|Date|Comments
+-------|----|--------
+1.1|June 25, 2019|Upgraded to SPFx 1.8.x
+1.0|September 25, 2018|Initial release
+
+## Disclaimer
+
+**THIS CODE IS PROVIDED *AS IS* WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING ANY IMPLIED WARRANTIES OF FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.**
+
+---
+
+## Minimal Path to Awesome
+
+* Clone this repository
+* Move to right solution folder
+* in the command line run:
+  * `npm install`
+  * `gulp bundle --ship`
+  * `gulp package-solution --ship`
+
+This package produces the following:
+
+* sharepoint/solution/insta-webpart.sppkg - the package to install in the App Catalog of your target tenant
+
+## Features
+
+The Web Part shows how to consume an external service like Instagram using a REST API secured with an Access Token.
+This sample illustrates the following concepts:
+
+* Consume an external API (Instagram)
+* Acquire an Access Token to consume the API
+* Manage the settings needed to consume the API
+
+<img src="https://telemetry.sharepointpnp.com/sp-dev-solutions/solutions/InstagramWebPart" />
