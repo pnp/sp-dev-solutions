@@ -17,7 +17,40 @@ Sample Web Part demonstrating how to consume an Instagram feed from within a Sha
 
 ## Prerequisites
 
-You need a valid Instagram account and a client app registered in Instagram. 
+You need a valid Instagram account and a client app registered in Instagram. See the [PathToAwesome](#PathToAwesome) section.
+
+## Solution
+
+Solution|Author(s)
+--------|---------
+InstagramWebPart| Various authors
+
+## Version history
+
+Version|Date|Comments
+-------|----|--------
+1.1|June 25, 2019|Upgraded to SPFx 1.8.x
+1.0|September 25, 2018|Initial release
+
+## Disclaimer
+
+**THIS CODE IS PROVIDED *AS IS* WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING ANY IMPLIED WARRANTIES OF FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.**
+
+---
+
+<a name="PathToAwesome"></a>
+## Minimal Path to Awesome
+
+* Clone this repository
+* Move to right solution folder
+* in the command line run:
+  * `npm install`
+  * `gulp bundle --ship`
+  * `gulp package-solution --ship`
+
+This package produces the following:
+
+* sharepoint/solution/insta-webpart.sppkg - the package to install in the App Catalog of your target tenant
 
 ### Installation
 
@@ -58,38 +91,6 @@ If you already signed up as an Instagram developer, you can skip this section an
 6. Now go back to the Instagram Web Part and login with Instagram clicking the **"Sign In"** button in the property pane.
 
 7. The first time you will use the Web Part, you will see a message like "This app is in sandbox mode and can only be authorized by sandbox users." click the **"Authorize"** button to proceed.
-
-## Solution
-
-Solution|Author(s)
---------|---------
-InstagramWebPart| Various authors
-
-## Version history
-
-Version|Date|Comments
--------|----|--------
-1.1|June 25, 2019|Upgraded to SPFx 1.8.x
-1.0|September 25, 2018|Initial release
-
-## Disclaimer
-
-**THIS CODE IS PROVIDED *AS IS* WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING ANY IMPLIED WARRANTIES OF FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.**
-
----
-
-## Minimal Path to Awesome
-
-* Clone this repository
-* Move to right solution folder
-* in the command line run:
-  * `npm install`
-  * `gulp bundle --ship`
-  * `gulp package-solution --ship`
-
-This package produces the following:
-
-* sharepoint/solution/insta-webpart.sppkg - the package to install in the App Catalog of your target tenant
 
 ## Features
 
