@@ -340,7 +340,7 @@ export default class SearchBoxContainer extends React.Component<ISearchBoxContai
         }
       }
 
-      if (this.props.searchInNewPage) {
+      if (this.props.searchInNewPage && !isReset) {
         const urlEncodedQueryText = encodeURIComponent(queryText);
 
         const searchUrl = new URL(this.props.pageUrl);
