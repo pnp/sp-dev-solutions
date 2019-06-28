@@ -1,4 +1,10 @@
-@import '~@microsoft/sp-office-ui-fabric-core/dist/sass/_SPFabricCore.scss';
+//
+// These mixins and CSS classes are copy-pasted from @microsoft/sp-office-ui-fabric-core@1.6.0, which was the latest version to include them
+// These represent a set of functionality which is no longer provided by SPFx in the newer versions
+// Including them here is a workaround to still offer the theme color functionality while using newer versions of SPFx
+// Having them here is a fix to override values that are included from a deprecated package (office-ui-fabric)
+// This whole functionality has to be overhauled at some point
+//
 
 // Theme colors
 @mixin ms-fontColor-themeDarker {
