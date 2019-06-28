@@ -13,6 +13,8 @@ import * as ReactDom from 'react-dom';
 import PreviewContainer from './PreviewContainer/PreviewContainer';
 import { IPreviewContainerProps, PreviewType } from './PreviewContainer/IPreviewContainerProps';
 import Styling from './Styling';
+import { DocumentCardWebComponent } from './components/documentcard-component';
+import '@webcomponents/custom-elements';
 
 abstract class BaseTemplateService {
     public CurrentLocale = "en";
@@ -20,6 +22,9 @@ abstract class BaseTemplateService {
     constructor() {
         // Registers all helpers
         this.registerTemplateServices();
+
+        // Register web components
+        customElements.define('document-card', DocumentCardWebComponent);
     }
 
     private async LoadHandlebarsHelpers() {
