@@ -21,7 +21,9 @@
                                     href="{{getUrl item}}" 
                                     author="{{../Author}}" 
                                     profile-image="/_layouts/15/userphoto.aspx?size=L&username={{[0]}}"
-                                    icon-src={{../IconSrc}}>
+                                    icon-src="{{../IconSrc}}"
+                                    preview-url="{{../ServerRedirectedEmbedURL}}"
+                                >
                                 </document-card>
                             {{/with}}
                         {{/resultTypes}}

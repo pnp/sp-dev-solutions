@@ -489,7 +489,7 @@ abstract class BaseTemplateService {
     /**
      * Initializes the previews on search results for documents and videos. Called when a template is updated/changed
      */
-    public initPreviewElements(): void {
+    public static initPreviewElements(): void {
         this._initVideoPreviews();
         this._initDocumentPreviews();
     }
@@ -498,7 +498,7 @@ abstract class BaseTemplateService {
 
     public abstract ensureFileResolves(fileUrl: string): Promise<void>;
 
-    private _initDocumentPreviews() {
+    private static _initDocumentPreviews() {
 
         const nodes = document.querySelectorAll('.document-preview-item');
 
@@ -540,7 +540,7 @@ abstract class BaseTemplateService {
         }
     }
 
-    private _initVideoPreviews() {
+    private static _initVideoPreviews() {
         const nodes = document.querySelectorAll('.video-preview-item');
 
         DomHelper.forEach(nodes, ((index, el) => {
