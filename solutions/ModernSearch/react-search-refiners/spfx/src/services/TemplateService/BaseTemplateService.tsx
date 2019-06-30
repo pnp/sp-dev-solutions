@@ -13,7 +13,9 @@ import * as ReactDom from 'react-dom';
 import PreviewContainer from './PreviewContainer/PreviewContainer';
 import { IPreviewContainerProps, PreviewType } from './PreviewContainer/IPreviewContainerProps';
 import Styling from './Styling';
-import { DocumentCardWebComponent } from './components/documentcard-component';
+import { DocumentCardWebComponent } from './components/documentcard';
+import { DetailsListWebComponent } from './components/detailslist';
+import { VideoCardWebComponent } from './components/videocard';
 import '@webcomponents/custom-elements';
 
 abstract class BaseTemplateService {
@@ -24,7 +26,7 @@ abstract class BaseTemplateService {
         this.registerTemplateServices();
 
         // Register web components
-        customElements.define('document-card', DocumentCardWebComponent);
+        this.registerWebComponents()        
     }
 
     private async LoadHandlebarsHelpers() {
@@ -226,6 +228,42 @@ abstract class BaseTemplateService {
                 accum += block.fn(i);
             return accum;
         });
+
+        // Stringify an object
+        // <p>{{#stringify myObj}}</p>
+        Handlebars.registerHelper('stringify', (obj) => {
+            return JSON.stringify(obj);
+        });
+    }
+
+    /**
+     * Registers web components on the current page to be able to use them in the Handlebars template
+     */
+    private registerWebComponents() {
+
+        const webComponents = [
+            {
+                name: 'document-card',
+                class: DocumentCardWebComponent
+            },
+            {
+                name: 'details-list',
+                class: DetailsListWebComponent
+
+            },
+            {
+                name: 'video-card',
+                class: VideoCardWebComponent
+
+            }
+        ];
+
+        // Registers custom HTML elements
+        webComponents.map(wc => {
+            if (!customElements.get(wc.name)) {
+                customElements.define(wc.name,wc.class);
+            }
+        });
     }
 
     /**
@@ -401,7 +439,7 @@ abstract class BaseTemplateService {
 
         let template = Handlebars.compile(templateContent);
         let result = template(templateContext)
-        if (result.indexOf("video-preview-item") !== -1) {
+        if (result.indexOf("video-preview-item") || result.indexOf("video-card") !== -1) {
             await this._loadVideoLibrary();
         }
 
