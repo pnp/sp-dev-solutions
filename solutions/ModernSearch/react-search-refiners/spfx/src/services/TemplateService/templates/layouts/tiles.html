@@ -11,20 +11,23 @@
                 <div class="ms-Grid-row">
                 {{#each items as |item|}}
                     <div class="ms-Grid-col ms-sm12 ms-md6 ms-lg4">
-                        {{#> resultTypes styles=../styles}}
+                        {{#> resultTypes}}
                             {{!-- The block below will be used as default item template if no result types matched --}}
-                            {{#with (split AuthorOWSUSER "|")}}	
-                                <document-card 
-                                    title="{{../Title}}" 
-                                    preview-image="{{getPreviewSrc item}}" 
-                                    date="{{../Created}}" 
-                                    href="{{getUrl item}}" 
-                                    author="{{../Author}}" 
-                                    profile-image="/_layouts/15/userphoto.aspx?size=L&username={{[0]}}"
-                                    icon-src="{{../IconSrc}}"
-                                    preview-url="{{../ServerRedirectedEmbedURL}}"
-                                >
-                                </document-card>
+                            {{#with (split AuthorOWSUSER "|")}}
+                            {{#eq item.contentclass 'STS_ListItem_851'}}
+                                <video-card title="{{item.Title}}" preview-image="{{getPreviewSrc item}}" preview-url="{{item.DefaultEncodingURL}}" date="{{item.Created}}" href="{{getUrl item}}" author="{{item.Author}}" profile-image="/_layouts/15/userphoto.aspx?size=L&username={{[0]}}" icon-src="{{item.IconSrc}}" file-extension="{{item.FileType}}"></video-card>
+                            {{else}}
+                                {{#eq item.FileType 'pdf'}}
+                                <!-- Documents from OneDrive sites can't be viewed directly due to SAMEORIGIN iframe restrictions-->
+                                    {{#contains Path '-my.sharepoint'}}
+                                        <document-card title="{{item.Title}}" preview-image="{{getPreviewSrc item}}" preview-url="{{item.ServerRedirectedEmbedURL}}" date="{{item.Created}}" href="{{getUrl item}}" author="{{item.Author}}" profile-image="/_layouts/15/userphoto.aspx?size=L&username={{[0]}}" icon-src="{{item.IconSrc}}"></document-card>
+                                    {{else}}
+                                        <document-card title="{{item.Title}}" preview-image="{{getPreviewSrc item}}" preview-url="{{item.Path}}" date="{{item.Created}}" href="{{getUrl item}}" author="{{item.Author}}" profile-image="/_layouts/15/userphoto.aspx?size=L&username={{[0]}}" icon-src="{{item.IconSrc}}"></document-card>
+                                    {{/contains}}
+                                {{else}}
+                                    <document-card title="{{item.Title}}" preview-image="{{getPreviewSrc item}}" preview-url="{{item.ServerRedirectedEmbedURL}}" date="{{item.Created}}" href="{{getUrl item}}" author="{{item.Author}}" profile-image="/_layouts/15/userphoto.aspx?size=L&username={{[0]}}" icon-src="{{item.IconSrc}}"></document-card>
+                                {{/eq}}  
+                            {{/eq}} 
                             {{/with}}
                         {{/resultTypes}}
                     </div>
