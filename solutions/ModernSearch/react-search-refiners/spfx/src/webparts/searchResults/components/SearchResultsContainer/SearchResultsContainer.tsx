@@ -20,7 +20,6 @@ import { Text } from '@microsoft/sp-core-library';
 import { ILocalizableSearchResultProperty, ILocalizableSearchResult } from '../../../../models/ILocalizableSearchResults';
 import * as _ from '@microsoft/sp-lodash-subset';
 import TemplateService from '../../../../services/TemplateService/TemplateService';
-import ISearchService from '../../../../services/SearchService/ISearchService';
 import { isEqual } from '@microsoft/sp-lodash-subset';
 
 declare var System: any;
@@ -133,26 +132,29 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
             }
         } else {
 
+            let templateContext = {
+                items: this.state.results.RelevantResults,
+                promotedResults: this.state.results.PromotedResults,
+                totalRows: this.state.results.PaginationInformation.TotalRows,
+                keywords: this.props.queryKeywords,
+                showResultsCount: this.props.showResultsCount,
+                siteUrl: this.props.siteServerRelativeUrl,
+                webUrl: this.props.webServerRelativeUrl,
+                maxResultsCount: this.props.searchService.resultsCount,
+                actualResultsCount: items.RelevantResults.length,
+                strings: strings
+            };
+
+            // Merge with property pane template parameters
+            templateContext = {...templateContext, ...this.props.templateParameters};
+
             let renderSearchResultTemplate = <div></div>;
             if (!this.props.useCodeRenderer) {
                 renderSearchResultTemplate = 
                     <SearchResultsTemplate
                         templateService={this.props.templateService}
                         templateContent={TemplateService.getTemplateMarkup(this.props.templateContent)}
-                        templateContext={
-                            {
-                                items: this.state.results.RelevantResults,
-                                promotedResults: this.state.results.PromotedResults,
-                                totalRows: this.state.results.PaginationInformation.TotalRows,
-                                keywords: this.props.queryKeywords,
-                                showResultsCount: this.props.showResultsCount,
-                                siteUrl: this.props.siteServerRelativeUrl,
-                                webUrl: this.props.webServerRelativeUrl,
-                                maxResultsCount: this.props.searchService.resultsCount,
-                                actualResultsCount: items.RelevantResults.length,
-                                strings: strings
-                            }
-                        }
+                        templateContext={ templateContext }
                     />;
             }
             

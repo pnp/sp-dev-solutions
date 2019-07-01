@@ -111,6 +111,11 @@ declare interface ISearchResultsWebPartStrings {
     DefaultSearchQueryKeywordsFieldDescription: string;
     QueryCultureLabel: string;
     QueryCultureUseUiLanguageLabel: string;
+    TemplateParameters: {
+        TemplateParametersGroupName: string;
+        EnableItemPreview: string;
+        ShowFileIcon: string;
+    }
 }
 
 declare module 'SearchResultsWebPartStrings' {

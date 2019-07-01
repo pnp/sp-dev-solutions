@@ -15,17 +15,17 @@
                             {{!-- The block below will be used as default item template if no result types matched --}}
                             {{#with (split AuthorOWSUSER "|")}}
                             {{#eq item.contentclass 'STS_ListItem_851'}}
-                                <video-card title="{{item.Title}}" preview-image="{{getPreviewSrc item}}" preview-url="{{item.DefaultEncodingURL}}" date="{{item.Created}}" href="{{getUrl item}}" author="{{item.Author}}" profile-image="/_layouts/15/userphoto.aspx?size=L&username={{[0]}}" icon-src="{{item.IconSrc}}" file-extension="{{item.FileType}}"></video-card>
+                                <video-card title="{{item.Title}}" preview-image="{{getPreviewSrc item}}" preview-url="{{item.DefaultEncodingURL}}" date="{{getDate item.Created 'LL'}}" href="{{getUrl item}}" author="{{item.Author}}" profile-image="/_layouts/15/userphoto.aspx?size=L&username={{[0]}}" icon-src="{{item.IconSrc}}" file-extension="{{item.FileType}}"></video-card>
                             {{else}}
                                 {{#eq item.FileType 'pdf'}}
                                 <!-- Documents from OneDrive sites can't be viewed directly due to SAMEORIGIN iframe restrictions-->
                                     {{#contains Path '-my.sharepoint'}}
-                                        <document-card title="{{item.Title}}" preview-image="{{getPreviewSrc item}}" preview-url="{{item.ServerRedirectedEmbedURL}}" date="{{item.Created}}" href="{{getUrl item}}" author="{{item.Author}}" profile-image="/_layouts/15/userphoto.aspx?size=L&username={{[0]}}" icon-src="{{item.IconSrc}}"></document-card>
+                                        <document-card title="{{item.Title}}" preview-image="{{getPreviewSrc item}}" preview-url="{{item.ServerRedirectedEmbedURL}}" date="{{getDate item.Created 'LL'}}" href="{{getUrl item}}" author="{{item.Author}}" profile-image="/_layouts/15/userphoto.aspx?size=L&username={{[0]}}" icon-src="{{item.IconSrc}}" enable-preview="{{@root.enablePreview}}"></document-card>
                                     {{else}}
-                                        <document-card title="{{item.Title}}" preview-image="{{getPreviewSrc item}}" preview-url="{{item.Path}}" date="{{item.Created}}" href="{{getUrl item}}" author="{{item.Author}}" profile-image="/_layouts/15/userphoto.aspx?size=L&username={{[0]}}" icon-src="{{item.IconSrc}}"></document-card>
+                                        <document-card title="{{item.Title}}" preview-image="{{getPreviewSrc item}}" preview-url="{{item.Path}}" date="{{getDate item.Created 'LL'}}" href="{{getUrl item}}" author="{{item.Author}}" profile-image="/_layouts/15/userphoto.aspx?size=L&username={{[0]}}" icon-src="{{item.IconSrc}}" enable-preview="{{@root.enablePreview}}" show-file-icon="{{@root.showFileIcon}}"></document-card>
                                     {{/contains}}
                                 {{else}}
-                                    <document-card title="{{item.Title}}" preview-image="{{getPreviewSrc item}}" preview-url="{{item.ServerRedirectedEmbedURL}}" date="{{item.Created}}" href="{{getUrl item}}" author="{{item.Author}}" profile-image="/_layouts/15/userphoto.aspx?size=L&username={{[0]}}" icon-src="{{item.IconSrc}}"></document-card>
+                                    <document-card title="{{item.Title}}" preview-image="{{getPreviewSrc item}}" preview-url="{{item.ServerRedirectedEmbedURL}}" date="{{getDate item.Created 'LL'}}" href="{{getUrl item}}" author="{{item.Author}}" profile-image="/_layouts/15/userphoto.aspx?size=L&username={{[0]}}" icon-src="{{item.IconSrc}}" enable-preview="{{@root.enablePreview}}" show-file-icon="{{@root.showFileIcon}}"></document-card>
                                 {{/eq}}  
                             {{/eq}} 
                             {{/with}}
@@ -38,71 +38,24 @@
     </div>
 </content>
 
-<content id="placeholder">
-        <style>
-            .shimmerPrimaryText {
-                width: 100%;
-                position: relative;
-                padding: 0;
-                margin-top: 10px;
-                height: 10px;
-            }
-
-            .shimmerSecondaryText {
-                padding: 0;
-                width: 75%;
-                height: 10px;
-            }
-
-            .shimmerTertiaryText {
-                padding: 0;
-                width: 20%;
-                height: 10px;
-            }
-        </style>
-    
-        <div class="placeholder_root">
-            <div class="template_defaultCard">
-                {{#if showResultsCount}}
-                    <div class="template_resultCount">
-                        <span class="shimmer line" style="width: 20%"></span>
-                    </div>
-                {{/if}}
-                <div class="ms-Grid"> 
-                        <div class="ms-Grid-row">
-                        {{#times maxResultsCount}}
-                            <div class="ms-Grid-col ms-sm12 ms-md6 ms-lg4">
-                                <div tabindex="0" data-is-focusable="true" role="link" class="{{styles.documentCard.root}} {{styles.documentCard.pnpDocumentCard}}">
-                                    <div class="{{styles.documentCardPreview.root}} {{styles.documentCardPreview.pnpDocumentPreview}}">
-                                        <div class="{{styles.image.root}} shimmer" style="width: 318px; height: 196px;">
-                                        </div>
-                                    </div>
-                                    <div class="{{styles.documentCardTitle.root}} shimmer line"></div>
-                                    <div class="{{styles.documentCardActivity.root}}">
-                                        <div class="{{styles.documentCardActivity.avatars}}">
-                                            <div class="{{styles.documentCardActivity.avatar}}">
-                                                <div role="presentation" size="11" class="{{styles.personaCoin.coin}}">
-                                                        <div class="{{styles.personaCoin.imageArea}} shimmer" style="width: 32px; height: 32px;">
-                                                        </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="{{styles.documentCardActivity.details}}">
-                                            <span class="{{styles.documentCardActivity.name}} shimmer line"></span>
-                                            <span class="{{styles.documentCardActivity.activity}} shimmer line"></span>
-                                        </div>
-                                        <div class="{{styles.documentCardActivity.pnpAdditionalCardDetails}}">
-                                            <span class="{{styles.documentCardActivity.activity}} shimmer line">
-                                            </span>	
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            {{/times}}
+<content id="placeholder">   
+    <div class="placeholder_root">
+        <div class="template_defaultCard">
+            {{#if showResultsCount}}
+                <div class="template_resultCount">
+                    <span class="shimmer line" style="width: 20%"></span>
+                </div>
+            {{/if}}
+            <div class="ms-Grid"> 
+                    <div class="ms-Grid-row">
+                    {{#times maxResultsCount}}
+                        <div class="ms-Grid-col ms-sm12 ms-md6 ms-lg4">
+                            <document-card-shimmers></document-card-shimmers>
                         </div>
+                    {{/times}}
                     </div>
                 </div>
             </div>
         </div>
-    
-    </content>
+    </div>
+</content>

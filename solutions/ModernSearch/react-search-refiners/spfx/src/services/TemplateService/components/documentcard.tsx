@@ -2,34 +2,19 @@ import * as ReactDOM from 'react-dom';
 import * as React from                                                 'react';
 import "@webcomponents/webcomponentsjs/webcomponents-bundle";
 import '@webcomponents/webcomponentsjs/custom-elements-es5-adapter.js';
-import { DocumentCardComponent, IDocumentCardComponentProps } from '../DocumentCardComponent/DocumentCardComponent'
-import { camelCase } from '@microsoft/sp-lodash-subset';
+import { DocumentCardComponent } from '../DocumentCardComponent/DocumentCardComponent'
+import { BaseWebComponent } from './BaseWebComponent';
 
-export class DocumentCardWebComponent extends HTMLElement {
-    constructor() {
+export class DocumentCardWebComponent extends BaseWebComponent {
+   
+   public constructor() {
        super(); 
-    }
- 
-    connectedCallback() {
+   }
 
-      // Get all custom element attributes
-      let props: IDocumentCardComponentProps = {};
-      
-      this.getAttributeNames().map((attr) => {
+   public connectedCallback() {
 
-         if (this.attributes.getNamedItem(attr)) {
-
-            // HTML custom element attributes should match the React component props using a camel case transformation (ex: 'preview-image' => previewImage) 
-            props[camelCase(attr)] = this.attributes.getNamedItem(attr).value;
-         }         
-      });
-
+      let props = this.resolveAttributes();
       const documentCarditem = <DocumentCardComponent {...props}/>;
-
-       ReactDOM.render(documentCarditem, this);
-    }
- 
-    disconnectedCallback(){
-       ReactDOM.unmountComponentAtNode(this);
-    }    
+      ReactDOM.render(documentCarditem, this);
+   }    
 }

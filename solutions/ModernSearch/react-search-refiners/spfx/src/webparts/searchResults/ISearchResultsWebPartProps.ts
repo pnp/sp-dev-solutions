@@ -38,4 +38,5 @@ export interface ISearchResultsWebPartProps {
     paginationDataSourceReference: string;
     synonymList: ISynonymFieldConfiguration[];
     searchQueryLanguage: number;
+    templateParameters: { [key:string]: any };
 }

@@ -109,6 +109,11 @@ define([], function () {
       "LessThanOperator": "Less than"
     },
     "QueryCultureLabel": "Language of search request",
-    "QueryCultureUseUiLanguageLabel": "Use interface language"
+    "QueryCultureUseUiLanguageLabel": "Use interface language",
+    "TemplateParameters": {
+      "TemplateParametersGroupName": "Options d'affichage",
+      "EnableItemPreview": "Activer l'aperçu de résultat",
+      "ShowFileIcon": "Afficher l'icône de fichier"
+    }
   }
 });

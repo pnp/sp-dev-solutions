@@ -2,32 +2,19 @@ import * as ReactDOM from 'react-dom';
 import * as React from                                                 'react';
 import "@webcomponents/webcomponentsjs/webcomponents-bundle";
 import '@webcomponents/webcomponentsjs/custom-elements-es5-adapter.js';
-import { camelCase } from '@microsoft/sp-lodash-subset';
-import { DetailsListComponent, DetailsListComponentProps } from '../DetailsListComponent/DetailsListComponent';
+import { DetailsListComponent } from '../DetailsListComponent/DetailsListComponent';
+import { BaseWebComponent } from './BaseWebComponent';
 
-export class DetailsListWebComponent extends HTMLElement {
-    constructor() {
-       super(); 
-    }
- 
-    connectedCallback() {
+export class DetailsListWebComponent extends BaseWebComponent {
 
-      // Get all custom element attributes
-      let props: DetailsListComponentProps = {};
-      
-      this.getAttributeNames().map((attr) => {
+   public constructor() {
+      super(); 
+   }
 
-         if (this.attributes.getNamedItem(attr)) {
-            props[camelCase(attr)] = this.attributes.getNamedItem(attr).value;
-         }         
-      });
+   public connectedCallback() {
 
+      let props = this.resolveAttributes();
       const documentCarditem = <DetailsListComponent {...props}/>;
-
-       ReactDOM.render(documentCarditem, this);
-    }
- 
-    disconnectedCallback(){
-       ReactDOM.unmountComponentAtNode(this);
-    }    
+      ReactDOM.render(documentCarditem, this);
+   }
 }

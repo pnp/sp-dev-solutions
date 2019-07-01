@@ -66,6 +66,11 @@ interface ISearchResultsContainerProps {
     templateContent: string;
 
     /**
+     * Template parameters from Web Part property pane
+     */
+    templateParameters: { [key:string]: any };
+
+    /**
      * The site server relative url for the current Site
      */
     siteServerRelativeUrl: string;

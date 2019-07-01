@@ -1,7 +1,7 @@
 ﻿import * as React from 'react';
 import * as ReactDom from 'react-dom';
 import { Version, Text, Environment, EnvironmentType, DisplayMode } from '@microsoft/sp-core-library';
-import { BaseClientSideWebPart, IWebPartPropertiesMetadata } from '@microsoft/sp-webpart-base';
+import { BaseClientSideWebPart, IWebPartPropertiesMetadata, IPropertyPaneGroup } from '@microsoft/sp-webpart-base';
 import {     
     IPropertyPaneConfiguration,
     PropertyPaneTextField,
@@ -80,6 +80,11 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
     private _searchContainer: JSX.Element;
     private _synonymTable: ISynonymTable;
 
+    /**
+     * Available property pane options from Web Components
+     */
+    private _templatePropertyPaneOptions: IPropertyPaneField<any>[];
+
     private _availableLanguages: IPropertyPaneDropdownOption[];
 
     /**
@@ -91,12 +96,13 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
         super();
         this._templateContentToDisplay = '';
         this._availableLanguages = [];
+        this._templatePropertyPaneOptions = [];
     }
 
     public async render(): Promise<void> {
         // Determine the template content to display
         // In the case of an external template is selected, the render is done asynchronously waiting for the content to be fetched
-        await this._getTemplateContent();
+        await this._initTemplate();
 
         this.renderCompleted();
     }
@@ -185,6 +191,7 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
                 displayMode: this.displayMode,
                 templateService: this._templateService,
                 templateContent: this._templateContentToDisplay,
+                templateParameters: this.properties.templateParameters,
                 webPartTitle: this.properties.webPartTitle,
                 currentUICultureName: this.context.pageContext.cultureInfo.currentUICultureName,
                 siteServerRelativeUrl: this.context.pageContext.site.serverRelativeUrl,
@@ -407,9 +414,24 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
         this.properties.resultTypes = Array.isArray(this.properties.resultTypes) ? this.properties.resultTypes : [];
         this.properties.synonymList = Array.isArray(this.properties.synonymList) ? this.properties.synonymList : [];
         this.properties.searchQueryLanguage = this.properties.searchQueryLanguage ? this.properties.searchQueryLanguage : -1;
+        this.properties.templateParameters = this.properties.templateParameters ? this.properties.templateParameters : {}; 
     }
 
     protected getPropertyPaneConfiguration(): IPropertyPaneConfiguration {
+
+        const templateParametersGroup = this._getTemplateFieldsGroup();
+
+        let stylingPageGroups: IPropertyPaneGroup[] = [
+            {
+                groupName: strings.StylingSettingsGroupName,
+                groupFields: this._getStylingFields(),
+                isCollapsed: false
+            },                        
+        ];
+
+        if (templateParametersGroup) {
+            stylingPageGroups.push(templateParametersGroup);
+        }
 
         return {
             pages: [
@@ -418,28 +440,22 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
                         description: strings.SearchQuerySettingsGroupName
                     },
                     groups: [
-                        this._getSearchQueryFields()
+                        this._getSearchQueryFields()                    
                     ]
                 },
-                {
-                    header: {
-                        description: strings.SearchSettingsGroupName
-                    },
+                {                   
                     groups: [
                         {
-                            groupFields: this._getSearchSettingsFields()
+                            groupFields: this._getSearchSettingsFields(),
+                            isCollapsed: false,
+                            groupName: strings.SearchSettingsGroupName
                         }
-                    ]
+                    ],
+                    displayGroupsAsAccordion: true
                 },
                 {
-                    header: {
-                        description: strings.StylingSettingsGroupName
-                    },
-                    groups: [
-                        {
-                            groupFields: this._getStylingFields()
-                        }
-                    ]
+                    groups: stylingPageGroups,
+                    displayGroupsAsAccordion: true
                 }
             ]
         };
@@ -540,7 +556,7 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
         if (propertyPath.localeCompare('selectedLayout') === 0) {
             // Refresh setting the right template for the property pane
             if (!this.codeRendererIsSelected()) {
-                await this._getTemplateContent();
+                await this._initTemplate();
             }
             if (this.codeRendererIsSelected) {
                 this.properties.customTemplateFieldValues = undefined;
@@ -621,39 +637,27 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
     }
 
     /**
-     * Get the correct results template content according to the property pane current configuration
+     * Init the template according to the property pane current configuration
      * @returns the template content as a string
      */
-    private async _getTemplateContent(): Promise<void> {
+    private async _initTemplate(): Promise<void> {
 
-        let templateContent = null;
+        if (this.properties.selectedLayout === ResultsLayoutOption.Custom) {
+            
+            if (this.properties.externalTemplateUrl) {
+                this._templateContentToDisplay = await this._templateService.getFileContent(this.properties.externalTemplateUrl);
+            } else {
+                this._templateContentToDisplay = this.properties.inlineTemplateText ? this.properties.inlineTemplateText : TemplateService.getTemplateContent(ResultsLayoutOption.Custom);
+            }
+        } else {
 
-        switch (this.properties.selectedLayout) {
-            case ResultsLayoutOption.List:
-                templateContent = TemplateService.getListDefaultTemplate();
-                break;
-
-            case ResultsLayoutOption.Tiles:
-                templateContent = TemplateService.getTilesDefaultTemplate();
-                break;
-
-            case ResultsLayoutOption.Custom:
-
-                if (this.properties.externalTemplateUrl) {
-                    templateContent = await this._templateService.getFileContent(this.properties.externalTemplateUrl);
-                } else {
-                    templateContent = this.properties.inlineTemplateText ? this.properties.inlineTemplateText : TemplateService.getBlankDefaultTemplate();
-                }
-
-                break;
-
-            default:
-                break;
+            // Builtin templates with options
+            this._templateContentToDisplay = TemplateService.getTemplateContent(this.properties.selectedLayout);
+            this._templatePropertyPaneOptions = TemplateService.getTemplateParameters(this.properties.selectedLayout, this.properties);
         }
 
         // Register result types inside the template      
         this._templateService.registerResultTypes(this.properties.resultTypes);
-        this._templateContentToDisplay = templateContent;
     }
 
     /**
@@ -978,7 +982,6 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
                 groupFields: [
                     PropertyPaneDynamicFieldSet({
                         label: strings.SearchQueryKeywordsFieldLabel,
-
                         fields: [
                             PropertyPaneDynamicField('queryKeywords', {
                                 label: strings.SearchQueryKeywordsFieldLabel
@@ -1204,6 +1207,7 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
                 onGetErrorMessage: this._onTemplateUrlChange.bind(this)
             }));
         }
+
         if (this.codeRendererIsSelected()) {
             const currentCodeRenderer = find(this._codeRenderers, (renderer) => renderer.id === (this.properties.selectedLayout as any));
             if (!this.properties.customTemplateFieldValues) {
@@ -1245,6 +1249,25 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
         }
 
         return stylingFields;
+    }
+
+    /**
+     * Gets template parameters fields
+     */
+    private _getTemplateFieldsGroup(): IPropertyPaneGroup {
+
+        let templateFieldsGroup: IPropertyPaneGroup = null;
+
+        if (this._templatePropertyPaneOptions.length > 0) {
+
+            templateFieldsGroup = {
+                groupFields: this._templatePropertyPaneOptions,
+                isCollapsed: false,
+                groupName: strings.TemplateParameters.TemplateParametersGroupName
+            };
+        } 
+
+        return templateFieldsGroup;
     }
 
     protected getCodeRenderers(): IPropertyPaneChoiceGroupOption[] {

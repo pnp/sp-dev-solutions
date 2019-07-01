@@ -12,11 +12,14 @@ import * as React from 'react';
 import * as ReactDom from 'react-dom';
 import PreviewContainer from './PreviewContainer/PreviewContainer';
 import { IPreviewContainerProps, PreviewType } from './PreviewContainer/IPreviewContainerProps';
-import Styling from './Styling';
-import { DocumentCardWebComponent } from './components/documentcard';
-import { DetailsListWebComponent } from './components/detailslist';
-import { VideoCardWebComponent } from './components/videocard';
+import { DocumentCardWebComponent } from './components/DocumentCard';
+import { DetailsListWebComponent } from './components/DetailsList';
+import { VideoCardWebComponent } from './components/VideoCard';
+import { DocumentCardShimmersWebComponent } from './components/shimmers/DocumentCardShimmers';
 import '@webcomponents/custom-elements';
+import { IPropertyPaneField, PropertyPaneToggle} from '@microsoft/sp-property-pane';
+import ResultsLayoutOption from '../../models/ResultsLayoutOption';
+import { ISearchResultsWebPartProps } from '../../webparts/searchResults/ISearchResultsWebPartProps';
 
 abstract class BaseTemplateService {
     public CurrentLocale = "en";
@@ -47,27 +50,56 @@ abstract class BaseTemplateService {
     }
 
     /**
-     * Gets the default Handlebars list item template used in list layout
+     * Gets the default Handlebars template content used for a specific layout
      * @returns the template HTML markup
      */
-    public static getListDefaultTemplate(): string {
-        return require('./templates/layouts/list.html');
+    public static getTemplateContent(layout: ResultsLayoutOption): string {
+
+        switch (layout) {
+
+            case ResultsLayoutOption.List:
+                return require('./templates/layouts/list.html');
+
+            case ResultsLayoutOption.Tiles:
+                return require('./templates/layouts/tiles.html');
+
+            case ResultsLayoutOption.Custom:
+                return require('./templates/layouts/default.html');
+
+            default:
+                return null;
+        }
     }
 
     /**
-     * Gets the default Handlebars list item template used in list layout
-     * @returns the template HTML markup
+     * Gets template parameters
+     * @param layout the selected layout
+     * @param properties the Web Part properties
      */
-    public static getTilesDefaultTemplate(): string {
-        return require('./templates/layouts/tiles.html');
-    }
+    public static getTemplateParameters(layout: ResultsLayoutOption, properties: ISearchResultsWebPartProps): IPropertyPaneField<any>[] {
 
-    /**
-     * Gets the default Handlebars custom blank item template
-     * @returns the template HTML markup
-     */
-    public static getBlankDefaultTemplate(): string {
-        return require('./templates/layouts/default.html');
+        switch (layout) {
+
+            case ResultsLayoutOption.List:
+                return [];
+
+            case ResultsLayoutOption.Tiles:
+                return [
+                    
+                    // Careful, the property names should match the React components props. These will be injected in the Handlebars template context and passed as web component attributes
+                    PropertyPaneToggle('templateParameters.enablePreview', {
+                        label: strings.TemplateParameters.EnableItemPreview,                        
+                        checked: properties.templateParameters.enablePreview  !== null || properties.templateParameters.enablePreview !== undefined ? properties.templateParameters.enablePreview : true
+                    }),
+                    PropertyPaneToggle('templateParameters.showFileIcon', {
+                        label: strings.TemplateParameters.ShowFileIcon,                        
+                        checked: properties.templateParameters.showFileIcon  !== null || properties.templateParameters.showFileIcon !== undefined ? properties.templateParameters.showFileIcon : true
+                    })
+                ];
+
+            default:
+                return [];
+        }
     }
 
     /**
@@ -247,6 +279,10 @@ abstract class BaseTemplateService {
                 class: DocumentCardWebComponent
             },
             {
+                name: 'document-card-shimmers',
+                class: DocumentCardShimmersWebComponent
+            },
+            {
                 name: 'details-list',
                 class: DetailsListWebComponent
 
@@ -254,7 +290,6 @@ abstract class BaseTemplateService {
             {
                 name: 'video-card',
                 class: VideoCardWebComponent
-
             }
         ];
 
@@ -272,8 +307,6 @@ abstract class BaseTemplateService {
      */
     public async processTemplate(templateContext: any, templateContent: string): Promise<string> {
     
-        templateContext.styles = Styling.getOfficeUiTilesStyles();
-
         // Process the Handlebars template
         const handlebarFunctionNames = [
             "getDate",

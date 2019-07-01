@@ -11,7 +11,7 @@ import { Link } from 'office-ui-fabric-react/lib/Link';
  */
 export interface IDocumentCardComponentProps {
 
-    // Placeholder fields
+    // Content properties
     title?: string; 
     href?: string; 
     previewImage? :string;
@@ -22,6 +22,9 @@ export interface IDocumentCardComponentProps {
     iconSrc?: string;
     fileExtension?: string;
 
+    // Behavior properties
+    enablePreview?: boolean;
+    showFileIcon?: boolean;
     isVideo?: boolean;
 }
 
@@ -45,7 +48,7 @@ export class DocumentCardComponent extends React.Component<IDocumentCardComponen
 
         let renderPreviewCallout = null;
         
-        if (this.state.showCallout) {
+        if (this.state.showCallout && this.props.previewUrl) {
 
             renderPreviewCallout = <PreviewContainer
                 elementUrl={this.props.previewUrl}
@@ -65,7 +68,7 @@ export class DocumentCardComponent extends React.Component<IDocumentCardComponen
                 name: this.props.title,
                 previewImageSrc: this.props.previewImage,
                 imageFit: ImageFit.cover,
-                iconSrc: this.props.isVideo ? '' : this.props.iconSrc,
+                iconSrc: this.props.isVideo || !this.props.showFileIcon ? '' : this.props.iconSrc,
                 width: 318,
                 height: 196
               }
@@ -121,16 +124,15 @@ export class DocumentCardComponent extends React.Component<IDocumentCardComponen
                         }}>
                             <DocumentCardTitle
                                 title={this.props.title}
-                                shouldTruncate={true}
-                
-                            />
+                                shouldTruncate={false}                
+                            />                           
                         </Link>
                         <DocumentCardActivity
                         activity={this.props.date}
                         people={[{ name: this.props.author, profileImageSrc: this.props.profileImage}]}
                         />           
                     </DocumentCard>
-                    {renderPreviewCallout}
+                    { this.props.enablePreview ? renderPreviewCallout : null}
                 </div>;
     }
 }
