@@ -20,6 +20,7 @@ import '@webcomponents/custom-elements';
 import { IPropertyPaneField, PropertyPaneToggle} from '@microsoft/sp-property-pane';
 import ResultsLayoutOption from '../../models/ResultsLayoutOption';
 import { ISearchResultsWebPartProps } from '../../webparts/searchResults/ISearchResultsWebPartProps';
+import { PropertyFieldCollectionData, CustomCollectionFieldType } from '@pnp/spfx-property-controls/lib/PropertyFieldCollectionData';
 
 abstract class BaseTemplateService {
     public CurrentLocale = "en";
@@ -57,7 +58,7 @@ abstract class BaseTemplateService {
 
         switch (layout) {
 
-            case ResultsLayoutOption.List:
+            case ResultsLayoutOption.DetailsList:
                 return require('./templates/layouts/list.html');
 
             case ResultsLayoutOption.Tiles:
@@ -80,8 +81,79 @@ abstract class BaseTemplateService {
 
         switch (layout) {
 
-            case ResultsLayoutOption.List:
-                return [];
+            case ResultsLayoutOption.DetailsList:
+
+            return [
+                    PropertyFieldCollectionData('templateParameters.detailsListColumns', {
+                        manageBtnLabel: strings.TemplateParameters.ManagedDetailsListColumnLabel,
+                        key: 'templateParameters.detailsListColumns',
+                        panelHeader: strings.TemplateParameters.ManagedDetailsListColumnLabel,
+                        panelDescription: strings.TemplateParameters.ManagedDetailsListColumnDescription,
+                        enableSorting: true,
+                        label: strings.TemplateParameters.ManagedDetailsListColumnLabel,
+                        value: properties.templateParameters.detailsListColumns,
+                        fields: [
+                            {
+                                id: 'name',
+                                title: "Column display name",
+                                type: CustomCollectionFieldType.string,
+                                required: true,
+                            },
+                            {
+                                id: 'value',
+                                title: "Value to do display",
+                                type: CustomCollectionFieldType.string,
+                                required: true,
+                            },
+                            {
+                                id: 'minWidth',
+                                title: "Minimum width (px)",
+                                type: CustomCollectionFieldType.number,
+                                required: false,
+                                defaultValue: 50
+                            },
+                            {
+                                id: 'maxWidth',
+                                title: "Maximum width (px)",
+                                type: CustomCollectionFieldType.number,
+                                required: false,
+                                defaultValue: 310
+                            },
+                            {
+                                id: 'enableSorting',
+                                title: "Enable sorting",
+                                type: CustomCollectionFieldType.boolean,
+                                defaultValue: false,
+                                required: false                                
+                            },
+                            {
+                                id: 'isResizable',
+                                title: "Is resizable",
+                                type: CustomCollectionFieldType.boolean,
+                                defaultValue: false,
+                                required: false                                
+                            },
+                            {
+                                id: 'isMultiline',
+                                title: "Is multiline",
+                                type: CustomCollectionFieldType.boolean,
+                                defaultValue: false,
+                                required: false          
+                            },
+                            {
+                                id: 'isResultItemLink',
+                                title: "Is link to result item",
+                                type: CustomCollectionFieldType.boolean,
+                                defaultValue: false,
+                                required: false          
+                            },                                                        
+                        ]
+                    }),
+                    PropertyPaneToggle('templateParameters.showFileIcon', {
+                        label: strings.TemplateParameters.ShowFileIcon,                        
+                        checked: properties.templateParameters.showFileIcon  !== null || properties.templateParameters.showFileIcon !== undefined ? properties.templateParameters.showFileIcon : true
+                    })                    
+                ];
 
             case ResultsLayoutOption.Tiles:
                 return [

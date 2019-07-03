@@ -40,7 +40,7 @@ define([], function () {
     "DialogButtonText": "Edit template",
     "DialogTitle": "Edit results template",
     "SaveButtonText": "Save",
-    "ListLayoutOption": "List",
+    "ListLayoutOption": "Details List",
     "TilesLayoutOption": "Tiles",
     "CustomLayoutOption": "Custom",
     "ResultsLayoutLabel": "Results layout",
@@ -113,7 +113,9 @@ define([], function () {
     "TemplateParameters": {
       "TemplateParametersGroupName": "Options d'affichage",
       "EnableItemPreview": "Activer l'aperçu de résultat",
-      "ShowFileIcon": "Afficher l'icône de fichier"
+      "ShowFileIcon": "Afficher l'icône de fichier",
+      "ManagedDetailsListColumnDescription": "Add/remove columns for the details list layout",
+      "ManagedDetailsListColumnLabel": "Manage columns",
     }
   }
 });

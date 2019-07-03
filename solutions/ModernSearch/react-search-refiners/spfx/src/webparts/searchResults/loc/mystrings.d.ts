@@ -115,6 +115,8 @@ declare interface ISearchResultsWebPartStrings {
         TemplateParametersGroupName: string;
         EnableItemPreview: string;
         ShowFileIcon: string;
+        ManagedDetailsListColumnDescription: string;
+        ManagedDetailsListColumnLabel: string;
     }
 }
 

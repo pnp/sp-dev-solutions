@@ -1,5 +1,5 @@
 enum ResultsLayoutOption {
-    List,
+    DetailsList,
     Tiles,
     Custom
 }

@@ -296,7 +296,7 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
         }
 
         // Set the default search results layout
-        this.properties.selectedLayout = this.properties.selectedLayout ? this.properties.selectedLayout : ResultsLayoutOption.List;
+        this.properties.selectedLayout = this.properties.selectedLayout ? this.properties.selectedLayout : ResultsLayoutOption.DetailsList;
 
         this.context.dynamicDataSourceManager.initializeSource(this);
         this._synonymTable = this._convertToSynonymTable(this.properties.synonymList);
@@ -1019,7 +1019,7 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
                     officeFabricIconFontName: 'List'
                 },
                 text: strings.ListLayoutOption,
-                key: ResultsLayoutOption.List,
+                key: ResultsLayoutOption.DetailsList,
             },
             {
                 iconProps: {
@@ -1044,7 +1044,7 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
         let dialogTextFieldValue;
         if (!this.codeRendererIsSelected()) {
             switch (this.properties.selectedLayout) {
-                case ResultsLayoutOption.List:
+                case ResultsLayoutOption.DetailsList:
                     dialogTextFieldValue = BaseTemplateService.getDefaultResultTypeListItem();
                     break;
 

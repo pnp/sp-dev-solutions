@@ -113,7 +113,9 @@ define([], function() {
     "TemplateParameters": {
       "TemplateParametersGroupName": "Template options",
       "EnableItemPreview": "Enable result preview",
-      "ShowFileIcon": "Show file icon"
+      "ShowFileIcon": "Show file icon",
+      "ManagedDetailsListColumnDescription": "Ajouter ou supprimer des colonnes pour cet afficahge",
+      "ManagedDetailsListColumnLabel": "Gérer les colonnes",
     }
   }
 });

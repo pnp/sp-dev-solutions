@@ -10,7 +10,7 @@
                 <label class="ms-fontWeight-semibold">{{getCountMessage totalRows keywords}}</label>
             </div>
         {{/if}}
-        <details-list items="{{stringify items}}"></details-list>
+        <details-list items="{{stringify items}}" columns-configuration="{{stringify detailsListColumns}}" show-file-icon="{{@root.showFileIcon}}"></details-list>
     </div>
 </content>
 

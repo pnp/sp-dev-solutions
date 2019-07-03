@@ -6,6 +6,7 @@ import { DetailsList, DetailsListLayoutMode, Selection, SelectionMode, IColumn }
 import { MarqueeSelection } from 'office-ui-fabric-react/lib/MarqueeSelection';
 import { mergeStyleSets } from 'office-ui-fabric-react/lib/Styling';
 import { ISearchResult } from '../../../models/ISearchResult';
+import * as Handlebars from 'handlebars';
 
 const classNames = mergeStyleSets({
   fileIconHeaderIcon: {
@@ -50,8 +51,22 @@ const controlStyles = {
   }
 };
 
+export interface IDetailsListColumnConfiguration{
+  name: string;
+  value: string;
+  maxWidth: string;
+  minWidth: string;
+  enableSorting: boolean;
+  isResizable: boolean;
+  isMultiline: boolean;
+  isResultItemLink: boolean;
+}
+
 export interface DetailsListComponentProps {
     items?: string;
+    columnsConfiguration?: string;
+    showFileIcon?: boolean;
+    enableFiltering?: boolean;
 }
 
 export interface IDetailsListComponentState {
@@ -70,84 +85,96 @@ export class DetailsListComponent extends React.Component<DetailsListComponentPr
     this._allItems = this.props.items ? JSON.parse(this.props.items) : [];
 
     const columns: IColumn[] = [
-      {
-        key: 'column1',
-        name: 'File Type',
-        className: classNames.fileIconCell,
-        iconClassName: classNames.fileIconHeaderIcon,
-        ariaLabel: 'Column operations for File type, Press to sort on File type',
-        iconName: 'Page',
-        isIconOnly: true,
-        fieldName: 'IconSrc',
-        minWidth: 16,
-        maxWidth: 16,
-        onColumnClick: this._onColumnClick,
-        onRender: (item: ISearchResult) => {
-          return <img src={item.IconSrc} className={classNames.fileIconImg} alt={item.fileType + ' file icon'} />;
-        }
-      },
-      {
-        key: 'column2',
-        name: 'Name',
-        fieldName: 'Title',
-        minWidth: 210,
-        maxWidth: 350,
-        isRowHeader: true,
-        isResizable: true,
-        isSorted: true,
-        isSortedDescending: false,
-        sortAscendingAriaLabel: 'Sorted A to Z',
-        sortDescendingAriaLabel: 'Sorted Z to A',
-        onColumnClick: this._onColumnClick,
-        data: 'string',
-        isPadded: true
-      },
-      {
-        key: 'column3',
-        name: 'Date Modified',
-        fieldName: 'dateModifiedValue',
-        minWidth: 70,
-        maxWidth: 90,
-        isResizable: true,
-        onColumnClick: this._onColumnClick,
-        data: 'number',
-        onRender: (item: ISearchResult) => {
-          return <span>{item.Modifed}</span>;
-        },
-        isPadded: true
-      },
-      {
-        key: 'column4',
-        name: 'Modified By',
-        fieldName: 'Author',
-        minWidth: 70,
-        maxWidth: 90,
-        isResizable: true,
-        isCollapsible: true,
-        data: 'string',
-        onColumnClick: this._onColumnClick,
-        onRender: (item: ISearchResult) => {
-          return <span>{item.Author}</span>;
-        },
-        isPadded: true
-      },
-      {
-        key: 'column5',
-        name: 'File Size',
-        fieldName: 'Size',
-        minWidth: 70,
-        maxWidth: 90,
-        isResizable: true,
-        isCollapsible: true,
-        data: 'number',
-        onColumnClick: this._onColumnClick,
-        onRender: (item: ISearchResult) => {
-          return <span>{item.Size}</span>;
-        }
-      }
     ];
 
+    // Show file icon pption
+    if (this.props.showFileIcon) {
+      columns.push(
+        {
+          key: 'column1',
+          name: 'File Type',
+          className: classNames.fileIconCell,
+          iconClassName: classNames.fileIconHeaderIcon,
+          ariaLabel: 'Column operations for File type, Press to sort on File type',
+          iconName: 'Page',
+          isIconOnly: true,
+          fieldName: 'IconSrc',
+          minWidth: 16,
+          maxWidth: 16,
+          onColumnClick: this._onColumnClick,
+          onRender: (item: ISearchResult) => {
+            return <img src={item.IconSrc} className={classNames.fileIconImg} alt={item.fileType + ' file icon'} />;
+          }
+        }
+      );
+    }
 
+    // Build columns dynamically
+    if (this.props.columnsConfiguration) {
+      JSON.parse(this.props.columnsConfiguration).map((column: IDetailsListColumnConfiguration) => {
+        columns.push(
+          {
+            key: column.name,
+            name: column.name,
+            fieldName: column.value,
+            minWidth: parseInt(column.minWidth),
+            maxWidth: parseInt(column.maxWidth),
+            isRowHeader: true,
+            isResizable: column.isResizable === true,
+            isMultiline: column.isMultiline === true,
+            isSorted: column.enableSorting === true,
+            isSortedDescending: false,
+            sortAscendingAriaLabel: 'Sorted A to Z',
+            sortDescendingAriaLabel: 'Sorted Z to A',
+            onColumnClick: column.enableSorting ? this._onColumnClick : null,
+            data: 'string',
+            isPadded: true,
+            onRender: (item: ISearchResult) => {
+
+              let value: any = item[column.value];
+              let renderColumnValue: JSX.Element = null;
+              let hasError: boolean = false;
+
+              // Check if the value in an Handlebars expression
+              if (/\{\{([^}]+)\}\}/.test(column.value)) {
+
+                try {
+                  // Create a temp context with the current so we cab use global registered helper on the current item
+                  const tempTemplateContent = `
+                    {{#with item as |item|}}
+                      ${column.value}
+                    {{/with}}
+                  `;
+
+                  let template = Handlebars.compile(tempTemplateContent);
+
+                  // Pass the current item as context
+                  value = template({
+                    item: item
+                  });
+
+                  value = value ? value.trim() : null;
+                  
+                } catch (error) {
+                  hasError = true;
+                  value = `<span style="color:red;font-style: italic">${`Error: ${error.message}`}</span>`;
+                }
+              }
+
+              renderColumnValue = <span title={!hasError ? value : ''} dangerouslySetInnerHTML={{ __html: value }}></span>;
+
+              // Make the value clickable to the corresponding result item 
+              if (column.isResultItemLink) {
+                renderColumnValue = <a href={item.ServerRedirectedURL ? item.ServerRedirectedURL : item.Path}>{renderColumnValue}</a>;
+              }
+            
+              return renderColumnValue;
+            },
+          },
+        )
+      });
+    }
+      
     this.state = {
       items: this._allItems,
       columns: columns,
@@ -158,13 +185,17 @@ export class DetailsListComponent extends React.Component<DetailsListComponentPr
   public render() {
     const { columns, isCompactMode, items } = this.state;
 
+    let renderFilter: JSX.Element = null;
+
+    if (this.props.enableFiltering) {
+      renderFilter = <div className={classNames.controlWrapper}>
+        <TextField label="Filter by name:" onChange={this._onChangeText.bind(this)} styles={controlStyles} />
+      </div>
+    }
+
     return (
       <Fabric>
-        <div className={classNames.controlWrapper}>
-  
-          <TextField label="Filter by name:" onChange={this._onChangeText.bind(this)} styles={controlStyles} />
-        </div>
-       
+        {renderFilter}
         <MarqueeSelection selection={this._selection}>
           <DetailsList
             items={items}

@@ -48,7 +48,7 @@ export class DocumentCardComponent extends React.Component<IDocumentCardComponen
 
         let renderPreviewCallout = null;
         
-        if (this.state.showCallout && this.props.previewUrl) {
+        if (this.state.showCallout && this.props.previewUrl && this.props.enablePreview) {
 
             renderPreviewCallout = <PreviewContainer
                 elementUrl={this.props.previewUrl}
@@ -76,16 +76,20 @@ export class DocumentCardComponent extends React.Component<IDocumentCardComponen
         };
 
         const playButtonStyles: React.CSSProperties = {
-            color: '#3b3a39',
+            color: '#fff',
             padding: '15px',
-            backgroundColor: '#edebe9',
+            backgroundColor: 'gray',
             left: '50%',
             top: '50%',
             transform: 'translate(-50%, -50%)',
             position: 'absolute',
             zIndex: 1,
-            opacity: 0.7,
-            borderRadius: '50%'
+            opacity: 0.9,
+            borderRadius: '50%',
+            borderColor: '#fff',
+            borderWidth: 4,
+            borderStyle: 'solid',
+            display: 'flex',
         };
       
         return <div>
@@ -132,7 +136,7 @@ export class DocumentCardComponent extends React.Component<IDocumentCardComponen
                         people={[{ name: this.props.author, profileImageSrc: this.props.profileImage}]}
                         />           
                     </DocumentCard>
-                    { this.props.enablePreview ? renderPreviewCallout : null}
+                    {renderPreviewCallout}
                 </div>;
     }
 }

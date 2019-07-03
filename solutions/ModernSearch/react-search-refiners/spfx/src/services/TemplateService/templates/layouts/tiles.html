@@ -15,7 +15,7 @@
                             {{!-- The block below will be used as default item template if no result types matched --}}
                             {{#with (split AuthorOWSUSER "|")}}
                             {{#eq item.contentclass 'STS_ListItem_851'}}
-                                <video-card title="{{item.Title}}" preview-image="{{getPreviewSrc item}}" preview-url="{{item.DefaultEncodingURL}}" date="{{getDate item.Created 'LL'}}" href="{{getUrl item}}" author="{{item.Author}}" profile-image="/_layouts/15/userphoto.aspx?size=L&username={{[0]}}" icon-src="{{item.IconSrc}}" file-extension="{{item.FileType}}"></video-card>
+                                <video-card title="{{item.Title}}" preview-image="{{getPreviewSrc item}}" preview-url="{{item.DefaultEncodingURL}}" date="{{getDate item.Created 'LL'}}" href="{{getUrl item}}" author="{{item.Author}}" profile-image="/_layouts/15/userphoto.aspx?size=L&username={{[0]}}" icon-src="{{item.IconSrc}}" file-extension="{{item.FileType}}" enable-preview="{{@root.enablePreview}}"></video-card>
                             {{else}}
                                 {{#eq item.FileType 'pdf'}}
                                 <!-- Documents from OneDrive sites can't be viewed directly due to SAMEORIGIN iframe restrictions-->
