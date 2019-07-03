@@ -105,6 +105,31 @@ abstract class BaseTemplateService {
                                 type: CustomCollectionFieldType.string,
                                 required: true,
                             },
+                           /* {
+                                id: 'sortField',
+                                title: "Managed",
+                                type: CustomCollectionFieldType.custom,                        
+                                onCustomRender: (field, value, onUpdate, item, itemId) => {
+                                    return React.createElement(CollectionDataSearchPropertyList, {
+                                       currentItem: item,
+                                       field: field,
+                                       onUpdate: onUpdate,
+                                       pageContext: this.ctx.pageContext,
+                                       spHttpClient: this.ctx.spHttpClient,
+                                       validateSortable: true,
+                                       availableProperties: this._availableManagedProperties,
+                                       onUpdateAvailableProperties: (properties: IComboBoxOption[]) => {
+        
+                                            // Save the value in the data source to avoid fetching it again if user reopens the panel
+                                            this._availableManagedProperties = properties;
+        
+                                            // Refresh all fields in the collection data control so they can use the new list
+                                            (this.ctx as WebPartContext).propertyPane.refresh();
+                                       }
+                                    } as ICollectionDataSearchPropertyListProps);
+                                },
+                                required: true
+                            },*/
                             {
                                 id: 'minWidth',
                                 title: "Minimum width (px)",

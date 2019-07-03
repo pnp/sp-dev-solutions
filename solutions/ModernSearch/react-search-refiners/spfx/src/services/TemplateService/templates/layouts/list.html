@@ -10,7 +10,7 @@
                 <label class="ms-fontWeight-semibold">{{getCountMessage totalRows keywords}}</label>
             </div>
         {{/if}}
-        <details-list items="{{stringify items}}" columns-configuration="{{stringify detailsListColumns}}" show-file-icon="{{@root.showFileIcon}}"></details-list>
+        <details-list items="{{stringify items}}" columns-configuration="{{stringify detailsListColumns}}" show-file-icon="{{@root.showFileIcon}}" ></details-list>
     </div>
 </content>
 
@@ -25,29 +25,7 @@
                 <span class="shimmer line" style="width: 20%"></span>
             </div>
         {{/if}}
-        <ul class="ms-List template_defaultList">
-            {{#times maxResultsCount}}   
-                <li class="template_listItem" tabindex="0">
-                    <div class="template_result">
-                            <div class="template_icon shimmer"></div>
-                            <div class="template_contentContainer">
-                                <span class="shimmer line" style="width: 60%"></span>
-                                <span class="shimmer line" style="width: 100%"></span>
-                                <span class="shimmer line" style="width: 100%"></span>
-                                <span class="shimmer line" style="width: 35%"></span>
-                                <span class="shimmer line" style="width: 20%"></span>                       
-                            </div>
-                    </div>
-                    <div class="template_previewContainer ms-hiddenSm">                           
-                        <div class="doc-container">
-                            <div class="img-container">
-                                <div class="shimmer img-preview" style="width: 120px;height: 70px;"></div>
-                            </div>
-                        </div>
-                    </div>
-                </li>
-            {{/times}}
-        </ul>
+        <details-list columns-configuration="{{stringify @root.detailsListColumns}}" show-file-icon="{{@root.showFileIcon}}" show-shimmers="true"></details-list>
     </div>
 
 </content>

@@ -7,6 +7,7 @@ import { MarqueeSelection } from 'office-ui-fabric-react/lib/MarqueeSelection';
 import { mergeStyleSets } from 'office-ui-fabric-react/lib/Styling';
 import { ISearchResult } from '../../../models/ISearchResult';
 import * as Handlebars from 'handlebars';
+import { ShimmeredDetailsList } from 'office-ui-fabric-react/lib/ShimmeredDetailsList';
 
 const classNames = mergeStyleSets({
   fileIconHeaderIcon: {
@@ -67,6 +68,11 @@ export interface DetailsListComponentProps {
     columnsConfiguration?: string;
     showFileIcon?: boolean;
     enableFiltering?: boolean;
+
+    /**
+     * If true, the details list shimers are displayed
+     */
+    showShimmers?: boolean;
 }
 
 export interface IDetailsListComponentState {
@@ -76,7 +82,6 @@ export interface IDetailsListComponentState {
 }
 
 export class DetailsListComponent extends React.Component<DetailsListComponentProps, IDetailsListComponentState> {
-  private _selection: Selection;
   private _allItems: ISearchResult[];
 
   constructor(props: DetailsListComponentProps) {
@@ -196,8 +201,7 @@ export class DetailsListComponent extends React.Component<DetailsListComponentPr
     return (
       <Fabric>
         {renderFilter}
-        <MarqueeSelection selection={this._selection}>
-          <DetailsList
+          <ShimmeredDetailsList
             items={items}
             compact={isCompactMode}
             columns={columns}
@@ -205,13 +209,12 @@ export class DetailsListComponent extends React.Component<DetailsListComponentPr
             setKey="set"
             layoutMode={DetailsListLayoutMode.justified}
             isHeaderVisible={true}
-            selection={this._selection}
+            enableShimmer={this.props.showShimmers}
             selectionPreservedOnEmptyClick={true}
             enterModalSelectionOnTouch={true}
             ariaLabelForSelectionColumn="Toggle selection"
             ariaLabelForSelectAllCheckbox="Toggle selection for all items"
           />
-        </MarqueeSelection>
       </Fabric>
     );
   }
