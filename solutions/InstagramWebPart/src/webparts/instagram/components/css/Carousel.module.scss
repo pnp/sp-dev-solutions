@@ -1,0 +1,53 @@
+@import "../themedFabric.Common.module.scss";
+
+@-webkit-keyframes fadeIn {
+    from { opacity: 0; -webkit-animation-timing-function: $ms-animation-ease-2; }
+    to { opacity: 1; }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; animation-timing-function: $ms-animation-ease-2; }
+    to { opacity: 1; }
+}
+
+.carouselContainer {
+  position: relative;
+
+  .sliderButtons {
+    opacity: 0;
+  }
+
+  &:hover {
+    .sliderButtons {
+      opacity: 1;
+      :global { @include ms-fadeIn100; }
+    }
+  }
+
+  &.filmStrip {
+    margin: 0 -10px;
+
+    :global(.slick-slide) {
+      box-sizing: border-box;
+      padding: 0 10px;
+    }
+  }
+}
+
+.currentActiveItem {
+  @include ms-font-l;
+  text-align: center;
+  padding: 16px;
+  color: $ms-color-neutralSecondary;
+}
+
+.screenReaderOnly {
+  position: absolute;
+  text-indent: -9999px;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  border: 0;
+}
