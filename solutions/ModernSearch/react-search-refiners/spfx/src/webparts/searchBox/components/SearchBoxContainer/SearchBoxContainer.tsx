@@ -2,7 +2,7 @@ import * as React from                               'react';
 import { ISearchBoxContainerProps } from             './ISearchBoxContainerProps';
 import * as strings from                             'SearchBoxWebPartStrings';
 import ISearchBoxContainerState from                 './ISearchBoxContainerState';
-import { UrlHelper, PageOpenBehavior, QueryPathBehavior } from          '../../../../helpers/UrlHelper';
+import { PageOpenBehavior, QueryPathBehavior } from  '../../../../helpers/UrlHelper';
 import { MessageBar, MessageBarType } from           'office-ui-fabric-react/lib/MessageBar';
 import Downshift from                                'downshift';
 import { TextField } from                            'office-ui-fabric-react/lib/TextField';
