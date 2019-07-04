@@ -383,7 +383,7 @@ abstract class BaseTemplateService {
         for (let i = 0; i < handlebarFunctionNames.length; i++) {
             const element = handlebarFunctionNames[i];
 
-            let regEx = new RegExp("{{#.*?" + element + ".*?}}", "m");
+            let regEx = new RegExp("{{#?.*?" + element + ".*?}}", "m");
             if (regEx.test(templateContent)) {
                 await this.LoadHandlebarsHelpers();
                 break;
