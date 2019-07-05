@@ -21,7 +21,7 @@ define([], function() {
     "SearchBoxUserQueryNlpLabel": "Use Natural Language Processing service",
     "SearchBoxServiceUrlLabel": "Service URL",
     "SearchBoxServiceUrlDescription": "Notice: make sure the server allows cross-origin calls from this domain ('{0}') in CORS settings.",
-    "SearchBoxServiceUrlErrorMessage": "Please specifiy a valid URL",
+    "SearchBoxServiceUrlErrorMessage": "Please specify a valid URL",
     "SearchBoxUseDebugModeLabel": "Enable debug mode",
     "SearchBoxUseStagingEndpoint": "Use LUIS staging endpoint",
     "UrlNotResolvedErrorMessage": "URL '{0}' can't be resolved. Error: '{1}'.",

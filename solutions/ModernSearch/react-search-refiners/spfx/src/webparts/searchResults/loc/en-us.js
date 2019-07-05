@@ -31,7 +31,7 @@ define([], function () {
     "InvalidResultSourceIdMessage": "Invalid identifier",
     "EnableQueryRulesLabel": "Enable query rules",
     "StylingSettingsGroupName": "Styling options",
-    "SelectedPropertiesFieldDescription": "Speficies the properties to retrieve from the search results.",
+    "SelectedPropertiesFieldDescription": "Specifies the properties to retrieve from the search results.",
     "SearchQueryKeywordsFieldDescription": "Use pre-defined search query keywords to retrieve a static set of results.",
     "CountMessageLong": "<b>{0}</b> results for '<em>{1}</em>'",
     "CountMessageShort": "<b>{0}</b> results",
@@ -79,7 +79,7 @@ define([], function () {
     },
     "Synonyms": {
       "EditSynonymLabel": "Edit synonyms",
-      "SynonymListDescription": "Specify all the synonyms that will be used when searching. Each term a search will be enchanced with all the associated synonyms when the query is sent to the server. If a synonym contains more than one word, it has to be wrapped in double quotes.",
+      "SynonymListDescription": "Specify all the synonyms that will be used when searching. Each term a search will be enhanced with all the associated synonyms when the query is sent to the server. If a synonym contains more than one word, it has to be wrapped in double quotes.",
       "SynonymPropertyPanelFieldLabel": "Configure synonyms",
       "SynonymListTerm": "Term",
       "SynonymListSynonyms": "Synonyms",
