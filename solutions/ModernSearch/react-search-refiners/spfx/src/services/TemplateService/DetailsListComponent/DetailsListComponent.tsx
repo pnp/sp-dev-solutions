@@ -1,9 +1,7 @@
 import * as React from 'react';
 import { TextField } from 'office-ui-fabric-react/lib/TextField';
-import { Toggle } from 'office-ui-fabric-react/lib/Toggle';
 import { Fabric } from 'office-ui-fabric-react/lib/Fabric';
-import { DetailsList, DetailsListLayoutMode, Selection, SelectionMode, IColumn } from 'office-ui-fabric-react/lib/DetailsList';
-import { MarqueeSelection } from 'office-ui-fabric-react/lib/MarqueeSelection';
+import { DetailsListLayoutMode,  SelectionMode, IColumn } from 'office-ui-fabric-react/lib/DetailsList';
 import { mergeStyleSets } from 'office-ui-fabric-react/lib/Styling';
 import { ISearchResult } from '../../../models/ISearchResult';
 import * as Handlebars from 'handlebars';
@@ -55,6 +53,7 @@ const controlStyles = {
 export interface IDetailsListColumnConfiguration{
   name: string;
   value: string;
+  useHandlebarsExpr: boolean;
   maxWidth: string;
   minWidth: string;
   enableSorting: boolean;
@@ -141,15 +140,11 @@ export class DetailsListComponent extends React.Component<DetailsListComponentPr
               let hasError: boolean = false;
 
               // Check if the value in an Handlebars expression
-              if (/\{\{([^}]+)\}\}/.test(column.value)) {
+              if (column.useHandlebarsExpr) {
 
                 try {
                   // Create a temp context with the current so we cab use global registered helper on the current item
-                  const tempTemplateContent = `
-                    {{#with item as |item|}}
-                      ${column.value}
-                    {{/with}}
-                  `;
+                  const tempTemplateContent = `{{#with item as |item|}}${column.value}{{/with}}`;
 
                   let template = Handlebars.compile(tempTemplateContent);
 
@@ -162,8 +157,9 @@ export class DetailsListComponent extends React.Component<DetailsListComponentPr
                   
                 } catch (error) {
                   hasError = true;
-                  value = `<span style="color:red;font-style: italic">${`Error: ${error.message}`}</span>`;
+                  value = `<span style="color:red;font-style: italic" title="${error.message}">${`Error: ${error.message}`}</span>`;
                 }
+
               }
 
               renderColumnValue = <span title={!hasError ? value : ''} dangerouslySetInnerHTML={{ __html: value }}></span>;

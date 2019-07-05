@@ -97,6 +97,8 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
         this._templateContentToDisplay = '';
         this._availableLanguages = [];
         this._templatePropertyPaneOptions = [];
+
+        this.onPropertyPaneFieldChanged = this.onPropertyPaneFieldChanged.bind(this);
     }
 
     public async render(): Promise<void> {
@@ -474,7 +476,7 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
         // Code editor component for result types
         this._textDialogComponent = await import(
             /* webpackChunkName: 'search-property-pane' */
-            '../controls/TextDialog'
+            '../../controls/TextDialog'
         );
 
         // tslint:disable-next-line:no-shadowed-variable

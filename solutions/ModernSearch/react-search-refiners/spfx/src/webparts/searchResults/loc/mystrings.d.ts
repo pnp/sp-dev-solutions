@@ -115,8 +115,12 @@ declare interface ISearchResultsWebPartStrings {
         TemplateParametersGroupName: string;
         EnableItemPreview: string;
         ShowFileIcon: string;
-        ManagedDetailsListColumnDescription: string;
-        ManagedDetailsListColumnLabel: string;
+        ManageDetailsListColumnDescription: string;
+        ManageTilesFieldsLabel: string;
+        ManageTilesFieldsPanelDescriptionLabel: string;
+        ManageDetailsListColumnLabel: string;
+        DocumentCardNameFieldLabel: string;
+        DocumentCardValueFieldLabel: string;
     }
 }
 

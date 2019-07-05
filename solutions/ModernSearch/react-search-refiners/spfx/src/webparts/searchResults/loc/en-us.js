@@ -114,8 +114,12 @@ define([], function () {
       "TemplateParametersGroupName": "Options d'affichage",
       "EnableItemPreview": "Activer l'aperçu de résultat",
       "ShowFileIcon": "Afficher l'icône de fichier",
-      "ManagedDetailsListColumnDescription": "Add/remove columns for the details list layout",
-      "ManagedDetailsListColumnLabel": "Manage columns",
+      "ManageDetailsListColumnDescription": "Add/remove columns for the details list layout",
+      "ManageDetailsListColumnLabel": "Manage columns",
+      "ManageTilesFieldsLabel": "Manage fields",
+      "ManageTilesFieldsPanelDescriptionLabel": "Map here your corresponding the fields for the tiles layout. You can use Handlebars expressions in the value field.",
+      "DocumentCardNameFieldLabel": "Name",
+      "DocumentCardValueFieldLabel": "Value"
     }
   }
 });

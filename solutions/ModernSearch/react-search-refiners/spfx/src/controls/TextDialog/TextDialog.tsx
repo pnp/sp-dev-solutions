@@ -12,6 +12,8 @@ import 'brace/mode/html';
 import 'brace/theme/monokai';
 import 'brace/ext/language_tools';
 import { Link } from 'office-ui-fabric-react/lib/Link';
+import { TextField } from 'office-ui-fabric-react/lib/TextField';
+import { Icon } from 'office-ui-fabric-react/lib/Icon';
 
 export default class TextDialog extends React.Component<ITextDialogProps, ITextDialogState> {
 
@@ -78,12 +80,12 @@ export default class TextDialog extends React.Component<ITextDialogProps, ITextD
     public render() {
         return (
             <div>		
-				<Link label={ this.props.strings.dialogButtonLabel } 
-						onClick={ this.showDialog.bind(this) }
-						disabled={ this.props.disabled }>
-						{ this.props.strings.dialogButtonText }
-				</Link>
 
+				<div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+					<TextField value={this.state.dialogText} readOnly={true} styles={{ root: { width: '100%', marginRight: 15, fontSize: 'small', fontFamily: 'Courier New' }}}/>
+					<Icon iconName='CodeEdit' onClick={ this.showDialog.bind(this) } styles={{ root: { fontSize: 20, cursor: 'pointer' }}}/>
+				</div>
+				
 				<Dialog type={ DialogType.normal }
 						isOpen={ this.state.showDialog }
 						onDismiss={ this.cancelDialog.bind(this) }

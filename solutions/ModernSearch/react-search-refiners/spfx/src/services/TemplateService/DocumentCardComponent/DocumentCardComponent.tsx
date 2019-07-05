@@ -4,6 +4,8 @@ import { ImageFit } from 'office-ui-fabric-react/lib/Image';
 import PreviewContainer from '../PreviewContainer/PreviewContainer';
 import { PreviewType } from '../PreviewContainer/IPreviewContainerProps';
 import { Link } from 'office-ui-fabric-react/lib/Link';
+import { IDocumentCardFieldsConfiguration } from "../BaseTemplateService";
+import * as Handlebars from 'handlebars';
 
 /**
  * Document card props. These properties are retrieved from the web component attributes. They must be camel case.
@@ -11,7 +13,13 @@ import { Link } from 'office-ui-fabric-react/lib/Link';
  */
 export interface IDocumentCardComponentProps {
 
-    // Content properties
+    // Context
+    item?: string;
+
+    // Fields configuration object
+    fieldsConfiguration?: string;
+
+    // Individual content properties
     title?: string; 
     href?: string; 
     previewImage? :string;
@@ -47,17 +55,18 @@ export class DocumentCardComponent extends React.Component<IDocumentCardComponen
     public render() {
 
         let renderPreviewCallout = null;
+        let processedProps = this._processFieldsConfiguration();
         
-        if (this.state.showCallout && this.props.previewUrl && this.props.enablePreview) {
+        if (this.state.showCallout && processedProps.previewUrl && this.props.enablePreview) {
 
             renderPreviewCallout = <PreviewContainer
-                elementUrl={this.props.previewUrl}
-                previewImageUrl={this.props.previewImage}
-                previewType={this.props.isVideo ? PreviewType.Video : PreviewType.Document}
+                elementUrl={processedProps.previewUrl}
+                previewImageUrl={processedProps.previewImage}
+                previewType={processedProps.isVideo ? PreviewType.Video : PreviewType.Document}
                 targetElement={this.documentCardPreviewRef.current}
                 showPreview={this.state.showCallout}
                 videoProps={{
-                    fileExtension: this.props.fileExtension
+                    fileExtension: processedProps.fileExtension
                 }}
             />;
         }
@@ -65,10 +74,10 @@ export class DocumentCardComponent extends React.Component<IDocumentCardComponen
         const previewProps: IDocumentCardPreviewProps = {
             previewImages: [
               {
-                name: this.props.title,
-                previewImageSrc: this.props.previewImage,
+                name: processedProps.title,
+                previewImageSrc: processedProps.previewImage,
                 imageFit: ImageFit.cover,
-                iconSrc: this.props.isVideo || !this.props.showFileIcon ? '' : this.props.iconSrc,
+                iconSrc: this.props.isVideo || !this.props.showFileIcon ? '' : processedProps.iconSrc,
                 width: 318,
                 height: 196
               }
@@ -117,7 +126,7 @@ export class DocumentCardComponent extends React.Component<IDocumentCardComponen
                             }
                             <DocumentCardPreview {...previewProps} />
                         </div>
-                        <Link href={this.props.href} target='_blank' styles={{
+                        <Link href={processedProps.href} target='_blank' styles={{
                             root: {
                                 selectors: {
                                     ':hover': {
@@ -127,16 +136,63 @@ export class DocumentCardComponent extends React.Component<IDocumentCardComponen
                             }
                         }}>
                             <DocumentCardTitle
-                                title={this.props.title}
+                                title={processedProps.title}
                                 shouldTruncate={false}                
                             />                           
                         </Link>
                         <DocumentCardActivity
-                        activity={this.props.date}
-                        people={[{ name: this.props.author, profileImageSrc: this.props.profileImage}]}
+                        activity={processedProps.date}
+                        people={[{ name: processedProps.author, profileImageSrc: processedProps.profileImage}]}
                         />           
                     </DocumentCard>
                     {renderPreviewCallout}
                 </div>;
+    }
+
+    private _processFieldsConfiguration(): IDocumentCardComponentProps {
+
+        let processedProps: IDocumentCardComponentProps = {};
+
+        if (this.props.fieldsConfiguration && this.props.item) {
+
+            // Get item properties
+            const item = JSON.parse(this.props.item);
+
+            // Use configuration
+            const configuration: IDocumentCardFieldsConfiguration[] = JSON.parse(this.props.fieldsConfiguration);
+            configuration.map(configuration => { 
+                
+                let processedValue = item[configuration.value];
+                
+                if (configuration.useHandlebarsExpr ) {
+                    
+                    try {
+                        // Create a temp context with the current so we cab use global registered helper on the current item
+                        const tempTemplateContent = `{{#with item as |item|}}${configuration.value}{{/with}}`;
+                        let template = Handlebars.compile(tempTemplateContent);
+
+                        // Pass the current item as context
+                        processedValue = template({
+                            item: item
+                        });
+
+                        processedValue = processedValue ? processedValue.trim() : null;
+
+                    } catch (error) {
+                        processedValue = `###Error: ${error.message}###`;
+                    }
+                }
+
+                processedProps[configuration.field] = processedValue;
+            });
+
+            return processedProps;
+        } else {
+
+            // Use inline attributes 
+            processedProps = this.props;
+        }
+
+        return processedProps;
     }
 }

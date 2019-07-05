@@ -114,8 +114,12 @@ define([], function() {
       "TemplateParametersGroupName": "Template options",
       "EnableItemPreview": "Enable result preview",
       "ShowFileIcon": "Show file icon",
-      "ManagedDetailsListColumnDescription": "Ajouter ou supprimer des colonnes pour cet afficahge",
-      "ManagedDetailsListColumnLabel": "Gérer les colonnes",
+      "ManageDetailsListColumnDescription": "Ajouter ou supprimer des colonnes pour cet afficahge",
+      "ManageDetailsListColumnLabel": "Gérer les colonnes",
+      "ManageTilesFieldsLabel": "Gérer les champs",
+      "ManageTilesFieldsPanelDescriptionLabel": "Associer vos champs à ceux de l'affichage en tuiles. Vous pouvez spécifier une expression Handlebars en tant que valeur.",
+      "DocumentCardNameFieldLabel": "Nom",
+      "DocumentCardValueFieldLabel": "Valeur"
     }
   }
 });

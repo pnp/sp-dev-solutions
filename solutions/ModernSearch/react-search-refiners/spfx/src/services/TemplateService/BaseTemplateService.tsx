@@ -21,6 +21,31 @@ import { IPropertyPaneField, PropertyPaneToggle} from '@microsoft/sp-property-pa
 import ResultsLayoutOption from '../../models/ResultsLayoutOption';
 import { ISearchResultsWebPartProps } from '../../webparts/searchResults/ISearchResultsWebPartProps';
 import { PropertyFieldCollectionData, CustomCollectionFieldType } from '@pnp/spfx-property-controls/lib/PropertyFieldCollectionData';
+import { TemplateValueFieldEditor, ITemplateValueFieldEditorProps } from '../../controls/TemplateValueFieldEditor/TemplateValueFieldEditor'
+import { IDetailsListColumnConfiguration } from './DetailsListComponent/DetailsListComponent';
+
+export interface IDocumentCardFieldsConfiguration {
+
+    /**
+     * The name of the field
+     */
+    name: string;
+
+    /**
+     * The field name for the inner DocumentCardComponent props
+     */
+    field: string;
+
+    /**
+     * The value of the field
+     */
+    value: string;
+
+    /**
+     * Indiciates if the calue is an Handlebars expression
+     */
+    useHandlebarsExpr: boolean;
+}
 
 abstract class BaseTemplateService {
     public CurrentLocale = "en";
@@ -83,53 +108,86 @@ abstract class BaseTemplateService {
 
             case ResultsLayoutOption.DetailsList:
 
+            // Setup default values
+            if (!properties.templateParameters.detailsListColumns) {
+                properties.templateParameters.detailsListColumns = [
+                    {
+                        name: 'Title',
+                        value: 'Title',
+                        useHandlebarsExpr: false,
+                        minWidth: '80',
+                        maxWidth: '300',
+                        enableSorting: true,
+                        isMultiline: false,
+                        isResizable: true,
+                        isResultItemLink: true                        
+                    },
+                    {
+                        name: 'Created',
+                        value: "{{getDate Created 'LL'}}",
+                        useHandlebarsExpr: true,
+                        minWidth: '80',
+                        maxWidth: '120',
+                        enableSorting: false,
+                        isMultiline: false,
+                        isResizable: false,
+                        isResultItemLink: false                        
+                    },
+                    {
+                        name: 'HitHighlightedSummary',
+                        value: "{{getSummary HitHighlightedSummary}}",
+                        useHandlebarsExpr: true,
+                        minWidth: '80',
+                        maxWidth: '300',
+                        enableSorting: false,
+                        isMultiline: true,
+                        isResizable: false,
+                        isResultItemLink: false                        
+                    }
+                ] as IDetailsListColumnConfiguration[];
+            }
+
+            if (properties.templateParameters.showFileIcon !== undefined || properties.templateParameters.showFileIcon !== null) {
+                properties.templateParameters.showFileIcon = true;
+            }
+
             return [
                     PropertyFieldCollectionData('templateParameters.detailsListColumns', {
-                        manageBtnLabel: strings.TemplateParameters.ManagedDetailsListColumnLabel,
+                        manageBtnLabel: strings.TemplateParameters.ManageDetailsListColumnLabel,
                         key: 'templateParameters.detailsListColumns',
-                        panelHeader: strings.TemplateParameters.ManagedDetailsListColumnLabel,
-                        panelDescription: strings.TemplateParameters.ManagedDetailsListColumnDescription,
+                        panelHeader: strings.TemplateParameters.ManageDetailsListColumnLabel,
+                        panelDescription: strings.TemplateParameters.ManageDetailsListColumnDescription,
                         enableSorting: true,
-                        label: strings.TemplateParameters.ManagedDetailsListColumnLabel,
+                        label: strings.TemplateParameters.ManageDetailsListColumnLabel,
                         value: properties.templateParameters.detailsListColumns,
                         fields: [
                             {
                                 id: 'name',
                                 title: "Column display name",
                                 type: CustomCollectionFieldType.string,
-                                required: true,
+                                required: true,                               
                             },
                             {
                                 id: 'value',
                                 title: "Value to do display",
-                                type: CustomCollectionFieldType.string,
+                                type: CustomCollectionFieldType.custom,
                                 required: true,
-                            },
-                           /* {
-                                id: 'sortField',
-                                title: "Managed",
-                                type: CustomCollectionFieldType.custom,                        
                                 onCustomRender: (field, value, onUpdate, item, itemId) => {
-                                    return React.createElement(CollectionDataSearchPropertyList, {
-                                       currentItem: item,
-                                       field: field,
-                                       onUpdate: onUpdate,
-                                       pageContext: this.ctx.pageContext,
-                                       spHttpClient: this.ctx.spHttpClient,
-                                       validateSortable: true,
-                                       availableProperties: this._availableManagedProperties,
-                                       onUpdateAvailableProperties: (properties: IComboBoxOption[]) => {
-        
-                                            // Save the value in the data source to avoid fetching it again if user reopens the panel
-                                            this._availableManagedProperties = properties;
-        
-                                            // Refresh all fields in the collection data control so they can use the new list
-                                            (this.ctx as WebPartContext).propertyPane.refresh();
-                                       }
-                                    } as ICollectionDataSearchPropertyListProps);
-                                },
-                                required: true
-                            },*/
+                                    return React.createElement(TemplateValueFieldEditor, {
+                                        currentItem: item,
+                                        field: field,
+                                        useHandlebarsExpr: item.useHandlebarsExpr,
+                                        onUpdate: onUpdate,
+                                        value: value
+                                    } as ITemplateValueFieldEditorProps);
+                                }
+                            },
+                            {
+                                id: 'useHandlebarsExpr',
+                                type: CustomCollectionFieldType.boolean,
+                                defaultValue: false,
+                                title: "Use expression"
+                            },
                             {
                                 id: 'minWidth',
                                 title: "Minimum width (px)",
@@ -146,28 +204,28 @@ abstract class BaseTemplateService {
                             },
                             {
                                 id: 'enableSorting',
-                                title: "Enable sorting",
+                                title: "Sortable",
                                 type: CustomCollectionFieldType.boolean,
                                 defaultValue: false,
                                 required: false                                
                             },
                             {
                                 id: 'isResizable',
-                                title: "Is resizable",
+                                title: "Resizable",
                                 type: CustomCollectionFieldType.boolean,
                                 defaultValue: false,
                                 required: false                                
                             },
                             {
                                 id: 'isMultiline',
-                                title: "Is multiline",
+                                title: "Multiline",
                                 type: CustomCollectionFieldType.boolean,
                                 defaultValue: false,
                                 required: false          
                             },
                             {
                                 id: 'isResultItemLink',
-                                title: "Is link to result item",
+                                title: "Link to item",
                                 type: CustomCollectionFieldType.boolean,
                                 defaultValue: false,
                                 required: false          
@@ -181,9 +239,64 @@ abstract class BaseTemplateService {
                 ];
 
             case ResultsLayoutOption.Tiles:
+
+                // Setup default values
+                if (!properties.templateParameters.documentCardFields) {
+
+                    properties.templateParameters.documentCardFields = [
+                        { name: 'Title', field: 'title', value: "Title", useHandlebarsExpr: false },
+                        { name: 'Preview Image', field: 'previewImage',  value: "{{{getPreviewSrc item}}}", useHandlebarsExpr: true },
+                        { name: 'Preview URL', field: 'previewUrl' , value: "{{#eq item.contentclass 'STS_ListItem_851'}}{{{item.DefaultEncodingURL}}}{{else}}{{#eq item.FileType 'pdf'}}<!-- Documents from OneDrive sites can't be viewed directly due to SAMEORIGIN iframe restrictions-->{{#contains Path '-my.sharepoint'}}{{{item.ServerRedirectedEmbedURL}}}{{else}}{{{item.Path}}}{{/contains}}{{else}}{{{item.ServerRedirectedEmbedURL}}}{{/eq}}{{/eq}} ", useHandlebarsExpr: true },
+                        { name: 'Date', field: 'date', value: "{{getDate item.Created 'LL'}}", useHandlebarsExpr: true },
+                        { name: 'URL', field: 'href', value: "{{getUrl item}}", useHandlebarsExpr: true },
+                        { name: 'Author', field: 'author', value: "Author", useHandlebarsExpr: false },
+                        { name: 'Profile Image', field: 'profileImage', value: "{{#with (split AuthorOWSUSER '|')}}/_layouts/15/userphoto.aspx?size=L&username={{[0]}}{{/with}}", useHandlebarsExpr: true  },
+                        { name: 'IconSrc', field: 'iconSrc', value: "IconSrc", useHandlebarsExpr: false },
+                        { name: 'File Extension', field: 'fileExtension', value: "FileType", useHandlebarsExpr: false }
+                    ] as IDocumentCardFieldsConfiguration[];
+                }
+
                 return [
                     
                     // Careful, the property names should match the React components props. These will be injected in the Handlebars template context and passed as web component attributes
+                    PropertyFieldCollectionData('templateParameters.documentCardFields', {
+                        manageBtnLabel: strings.TemplateParameters.ManageTilesFieldsLabel,
+                        key: 'templateParameters.documentCardFields',
+                        panelHeader: strings.TemplateParameters.ManageTilesFieldsLabel,
+                        panelDescription: strings.TemplateParameters.ManageTilesFieldsPanelDescriptionLabel,
+                        enableSorting: false,
+                        disableItemCreation: true,
+                        disableItemDeletion: true,
+                        label: strings.TemplateParameters.ManageDetailsListColumnLabel,
+                        value: properties.templateParameters.documentCardFields,
+                        fields: [
+                            {
+                                id: 'name',
+                                type: CustomCollectionFieldType.string,
+                                disableEdit: true,
+                                title: strings.TemplateParameters.DocumentCardNameFieldLabel
+                            },
+                            {
+                                id: 'value',
+                                type: CustomCollectionFieldType.custom,
+                                title: strings.TemplateParameters.DocumentCardValueFieldLabel,
+                                onCustomRender: (field, value, onUpdate, item, itemId) => {
+                                    return React.createElement(TemplateValueFieldEditor, {
+                                        currentItem: item,
+                                        field: field,
+                                        useHandlebarsExpr: item.useHandlebarsExpr,
+                                        onUpdate: onUpdate,
+                                        value: value
+                                    } as ITemplateValueFieldEditorProps);
+                                }
+                            },
+                            {
+                                id: 'useHandlebarsExpr',
+                                type: CustomCollectionFieldType.boolean,
+                                title: "Use Handlebars expression"
+                            }
+                        ]
+                    }),
                     PropertyPaneToggle('templateParameters.enablePreview', {
                         label: strings.TemplateParameters.EnableItemPreview,                        
                         checked: properties.templateParameters.enablePreview  !== null || properties.templateParameters.enablePreview !== undefined ? properties.templateParameters.enablePreview : true
@@ -191,7 +304,7 @@ abstract class BaseTemplateService {
                     PropertyPaneToggle('templateParameters.showFileIcon', {
                         label: strings.TemplateParameters.ShowFileIcon,                        
                         checked: properties.templateParameters.showFileIcon  !== null || properties.templateParameters.showFileIcon !== undefined ? properties.templateParameters.showFileIcon : true
-                    })
+                    }),
                 ];
 
             default:
@@ -267,7 +380,7 @@ abstract class BaseTemplateService {
         // Usage: <a href="{{url item}}">
         Handlebars.registerHelper("getUrl", (item: ISearchResult) => {
             if (!isEmpty(item))
-                return item.ServerRedirectedURL ? item.ServerRedirectedURL : item.Path;
+                return new Handlebars.SafeString(item.ServerRedirectedURL ? item.ServerRedirectedURL : item.Path);
         });
 
         // Return the search result count message
@@ -291,7 +404,7 @@ abstract class BaseTemplateService {
                 else if (!isEmpty(item.ServerRedirectedPreviewURL)) previewSrc = item.ServerRedirectedPreviewURL;
             }
 
-            return previewSrc;
+            return new Handlebars.SafeString(previewSrc);
         });
 
         // Return the highlighted summary of the search result item
@@ -328,7 +441,7 @@ abstract class BaseTemplateService {
                 }
                 return urlField.substr(separatorPos + 1).trim();
             }
-            return urlField;
+            return new Handlebars.SafeString(urlField);
         });
 
         // Return the unique count based on an array or property of an object in the array
