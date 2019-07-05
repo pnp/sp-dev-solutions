@@ -77,6 +77,7 @@ declare interface ISearchResultsWebPartStrings {
         SortableFieldDisplayValueField: string;
         EditSortableFieldsLabel: string;
         EditSortLabel: string;
+        SortInvalidSortableFieldMessage: string;
     },
     Synonyms: {
         EditSynonymLabel: string;

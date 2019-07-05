@@ -4,12 +4,19 @@ import * as strings from 'SearchResultsWebPartStrings';
 import { PropertyFieldCodeEditorLanguages } from '@pnp/spfx-property-controls/lib/PropertyFieldCodeEditor';
 import { TextDialog } from '../TextDialog';
 import { ICustomCollectionField } from '@pnp/spfx-property-controls/lib/PropertyFieldCollectionData';
-import { Icon } from 'office-ui-fabric-react/lib/Icon';
+import { SearchManagedProperties } from '../SearchManagedProperties/SearchManagedProperties';
+import { IComboBoxOption } from 'office-ui-fabric-react/lib/ComboBox';
+import ISearchService from '../../services/SearchService/ISearchService';
 
 export interface ITemplateValueFieldEditorState {
 }
 
 export interface ITemplateValueFieldEditorProps {
+
+    /**
+     * The search service instance
+     */
+    searchService: ISearchService;
     
     /**
      * The field mode to render
@@ -35,6 +42,28 @@ export interface ITemplateValueFieldEditorProps {
      * The default value to display in the field
      */
     value: any;
+
+    /**
+     * Handler to validate the field at row level
+     * @param fieldId the field id
+     * @param errorMsg the error message to display
+     */
+    onCustomFieldValidation(fieldId: string, errorMsg: string);
+
+    /**
+     * Callback when the list of managed properties is fetched by the control
+     */
+    onUpdateAvailableProperties: (properties: IComboBoxOption[]) => void;
+
+    /**
+     * The list of available manged properties
+     */
+    availableProperties: IComboBoxOption[];
+
+    /**
+     * Indicates whether or not we should check if the selected proeprty is sortable or not
+     */
+    validateSortable?: boolean;
 }
 
 export class TemplateValueFieldEditor extends React.Component<ITemplateValueFieldEditorProps, ITemplateValueFieldEditorState> {
@@ -49,20 +78,21 @@ export class TemplateValueFieldEditor extends React.Component<ITemplateValueFiel
 
         if (this.props.useHandlebarsExpr) {
             renderField =   <TextDialog
-                                    language={PropertyFieldCodeEditorLanguages.Handlebars}
-                                    dialogTextFieldValue={this.props.value}
-                                    onChanged={(fieldValue) => {
-                                        this.props.onUpdate(this.props.field.id, fieldValue);
-                                    }}
-                                    strings={{
-                                        cancelButtonText: strings.CancelButtonText,
-                                        dialogButtonText: "Edit Handlebars expression",
-                                        dialogTitle: "Add Handlebars expression",
-                                        saveButtonText: strings.SaveButtonText
-                                    }}
-                                />;
+                                language={PropertyFieldCodeEditorLanguages.Handlebars}
+                                dialogTextFieldValue={this.props.value}
+                                onChanged={(fieldValue) => {
+                                    this.props.onUpdate(this.props.field.id, fieldValue);
+                                }}
+                                strings={{
+                                    cancelButtonText: strings.CancelButtonText,
+                                    dialogButtonText: "Edit Handlebars expression",
+                                    dialogTitle: "Add Handlebars expression",
+                                    saveButtonText: strings.SaveButtonText
+                                }}
+                            />;
         } else {
-            renderField = <TextField styles={{
+
+           /* renderField = <TextField styles={{
                 root: {
                     width: '100%',
                     marginRight: 10
@@ -72,7 +102,18 @@ export class TemplateValueFieldEditor extends React.Component<ITemplateValueFiel
                 this.props.onUpdate(this.props.field.id, newValue);
             }}
             defaultValue={this.props.value}
-            />;
+            />;*/
+
+            renderField =   <SearchManagedProperties 
+                                currentItem={this.props.currentItem} 
+                                field={this.props.field} 
+                                onUpdate={this.props.onUpdate}
+                                availableProperties={this.props.availableProperties}
+                                onUpdateAvailableProperties={this.props.onUpdateAvailableProperties}
+                                searchService={this.props.searchService}
+                                validateSortable={this.props.validateSortable}
+                                onCustomFieldValidation={this.props.onCustomFieldValidation}
+                            />;
         }
             
         return renderField;

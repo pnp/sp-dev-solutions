@@ -75,7 +75,8 @@ define([], function() {
       "SortableFieldManagedPropertyField": "Propriété gérée de tri",
       "SortableFieldDisplayValueField": "Intitulé du champ à afficher",
       "EditSortableFieldsLabel": "Éditer les champs de tri",
-      "EditSortLabel": "Éditer l'ordre de tri"
+      "EditSortLabel": "Éditer l'ordre de tri",
+      "SortInvalidSortableFieldMessage": "Cette propriété n'est pas triable"
     },
     "Synonyms": {
       "EditSynonymLabel": "Modifier les synonymes",

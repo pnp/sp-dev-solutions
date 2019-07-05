@@ -1,25 +1,19 @@
 import * as React from 'react';
 import { ComboBox, IComboBoxOption } from 'office-ui-fabric-react/lib/ComboBox';
 import { ICustomCollectionField } from '@pnp/spfx-property-controls/lib/PropertyFieldCollectionData';
-import { ISPHttpClientConfiguration, SPHttpClient, SPHttpClientConfiguration, ODataVersion } from '@microsoft/sp-http';
-import { PageContext } from '@microsoft/sp-page-context';
-import { Log } from '@microsoft/sp-core-library';
 import { Spinner, SpinnerSize } from 'office-ui-fabric-react/lib/components/Spinner';
 import { isEqual } from '@microsoft/sp-lodash-subset';
-import { IRefinementResult } from '../../models/ISearchResult';
+import ISearchService from '../../services/SearchService/ISearchService';
+import * as strings from 'SearchResultsWebPartStrings';
 
 const LOADING_KEY = 'LOADING';
 
 export interface ISearchManagedPropertiesProps {
-    /**
-     * The current page context
-     */
-    pageContext: PageContext;
 
     /**
-     * An SPHttpClient instance
+     * The search service instance
      */
-    spHttpClient: SPHttpClient;
+    searchService: ISearchService;
 
     /**
      * The current CollectionData item (i.e. row)
@@ -49,7 +43,7 @@ export interface ISearchManagedPropertiesProps {
     onUpdateAvailableProperties: (properties: IComboBoxOption[]) => void;
 
     /**
-     * The list of available manged properties
+     * The list of available managed properties already fetched once
      */
     availableProperties: IComboBoxOption[];
 
@@ -57,6 +51,11 @@ export interface ISearchManagedPropertiesProps {
      * Indicates whether or not we should check if the selected proeprty is sortable or not
      */
     validateSortable?: boolean;
+
+    /**
+     * Indicates whether or not we should allow multiple selection
+     */
+    allowMultiSelect?: boolean;
 }
 
 export interface ISearchManagedPropertiesState {
@@ -85,13 +84,21 @@ export interface ISearchManagedPropertiesState {
 export class SearchManagedProperties extends React.Component<ISearchManagedPropertiesProps, ISearchManagedPropertiesState> {
 
     public constructor(props: ISearchManagedPropertiesProps) {
-        
         super(props);
+
+        let initialValue: string = '';
+
+        // Initializes default value
+        if (props.currentItem && props.field) {
+            if (props.currentItem[props.field.id]) {
+                initialValue = props.currentItem[props.field.id];
+            }
+        }
 
         this.state = {
             errorMessage: null,
-            options: props.availableProperties,
-            initialDisplayValue: props.currentItem.sortField ? props.currentItem.sortField : ''
+            options: props.availableProperties ? props.availableProperties : [],
+            initialDisplayValue: initialValue
         };
 
         this.getAvailableSearchProperties = this.getAvailableSearchProperties.bind(this);
@@ -103,6 +110,7 @@ export class SearchManagedProperties extends React.Component<ISearchManagedPrope
         
         return <ComboBox
             allowFreeform={true}
+            multiSelect={this.props.allowMultiSelect !== null ? this.props.allowMultiSelect : false }
             autoComplete='on'
             selectedKey={this.state.selectedOptionKey}
             text={this.state.initialDisplayValue}
@@ -135,10 +143,10 @@ export class SearchManagedProperties extends React.Component<ISearchManagedPrope
         });
 
         if (this.props.validateSortable) {
-            const isSortable = await this.validateSortableProperty(option.text);
+            const isSortable = await this.props.searchService.validateSortableProperty(option.text);
 
             if (!isSortable) {
-                this.props.onCustomFieldValidation(this.props.field.id, "Error");
+                this.props.onCustomFieldValidation(this.props.field.id, strings.);
             } else {
                 this.props.onUpdate(this.props.field.id, option.text);
                 this.props.onCustomFieldValidation(this.props.field.id, '');
@@ -154,114 +162,53 @@ export class SearchManagedProperties extends React.Component<ISearchManagedPrope
      */
     private async getAvailableSearchProperties(): Promise<IComboBoxOption[]> {
 
-        let properties: IComboBoxOption[] = [];
+        let options: IComboBoxOption[] = [];
 
         // Case when user opens the dropdown multiple times on the same field
         if (this.state.options.length > 0) {
-            properties = this.state.options;
+            options = this.state.options;
         } else {
 
-            try {
-
-                // Create a special item to display a spinner (see onRenderOption method)
-                this.setState({
-                    options: [
-                        {
-                            key: LOADING_KEY,
-                            text: '',
-                            disabled: true,
-                            styles: {
-                                flexContainer: {
-                                    selectors: {
-                                        'span': {
-                                            margin: '0 auto',
-                                        }
+            // Create a special item to display a spinner (see onRenderOption method)
+            this.setState({
+                options: [
+                    {
+                        key: LOADING_KEY,
+                        text: '',
+                        disabled: true,
+                        styles: {
+                            flexContainer: {
+                                selectors: {
+                                    'span': {
+                                        margin: '0 auto',
                                     }
                                 }
                             }
                         }
-                    ]
-                });
+                    }
+                ]
+            });
 
-                const spSearchConfig: ISPHttpClientConfiguration = {
-                    defaultODataVersion: ODataVersion.v3
-                };
-                    
-                const clientConfigODataV3: SPHttpClientConfiguration = SPHttpClient.configurations.v1.overrideWith(spSearchConfig);
-                
-                const url = `${this.props.pageContext.web.absoluteUrl}/_api/search/query?querytext='*'&refiners='ManagedProperties(filter=1000/0/*)'&RowLimit=1`;
-                const response = await this.props.spHttpClient.get(url, clientConfigODataV3);
-    
-                if (response.ok) {
-                    const searchResponse: any = await response.json();
-    
-                    let refinementResultsRows = searchResponse.PrimaryQueryResult.RefinementResults;
-                    const refinementRows: IRefinementResult[] = refinementResultsRows ? refinementResultsRows.Refiners : [];
-                    
-                    refinementRows.map((refiner) => {
-    
-                        properties = refiner.Values.map((item) => {
-                            return {
-                                text: item.RefinementName,
-                                key: item.RefinementName                            
-                            } as IComboBoxOption;
-                        });
-                    });
-                    
-                } else {
-                    throw new Error(response.statusText);
-                }
-    
-            } catch (error) {
-                const errorMessage = error ? error.message : `Failed to get all avaialble managed properties`;
-                Log.error("ValoSearchDataSource::getAvailableSearchProperties", new Error(`Error: '${error}'`));
-                throw new Error(errorMessage);
-            }
+            // Get managed properties and build dropdown options
+            const searchManagedProperties = await this.props.searchService.getAvailableManagedProperties();
+
+            searchManagedProperties.map(managedProperty => {
+
+                options.push({
+                    key: managedProperty.name,
+                    text: managedProperty.name
+                } as IComboBoxOption);
+            });                      
         }
         
-        // Return managed properties sorted alphabetically (ascending)
-        properties = properties.sort((a, b) => {
-            if (a.text.toLowerCase() > b.text.toLowerCase()) return 1;
-            if (b.text.toLowerCase() > a.text.toLowerCase()) return -1;
-            return 0;
-        });
-
         // Pass list to the parent to save it for other fields
-        this.props.onUpdateAvailableProperties(properties);
+        this.props.onUpdateAvailableProperties(options);
 
         this.setState({
-            options: properties
+            options: options
         });
 
-        return properties;
-    }
-
-    /**
-     * Checks if the provided manage property is sortable
-     * @param property the managed property to verify
-     */
-    private async validateSortableProperty(property: string): Promise<boolean> {
-
-        if (property) {
-
-            try {
-                            
-                const url = `${this.props.pageContext.web.absoluteUrl}/_api/search/query?querytext='*'&sortlist='${property}:ascending'&RowLimit=1&selectproperties='Path'`;
-                const response = await this.props.spHttpClient.get(url, SPHttpClient.configurations.v1);
-                
-                if (response.ok) {
-                    return true;
-                } else {
-                    return false;
-                }
-            } catch (error) {
-                const errorMessage = error ? error.message : `Failed to get managed property sortable behavior`;
-                Log.error("ValoSearchDataSource::validateSortableProperty", new Error(`Error: '${error}'`));
-                throw new Error(errorMessage);
-            }
-        }
-            
-        return true;
+        return options;
     }
 
     private onRenderOption(option: IComboBoxOption): JSX.Element {

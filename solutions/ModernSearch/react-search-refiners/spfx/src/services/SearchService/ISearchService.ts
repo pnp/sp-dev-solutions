@@ -1,6 +1,7 @@
 import { ISearchResults, ISearchVerticalInformation, IRefinementFilter } from '../../models/ISearchResult';
 import { ISearchServiceConfiguration } from '../../models/ISearchServiceConfiguration';
 import { ISearchVertical } from '../../models/ISearchVertical';
+import IManagedPropertyInfo from '../../models/IManagedPropertyInfo';
 
 interface ISearchService extends ISearchServiceConfiguration {
     /**
@@ -19,6 +20,17 @@ interface ISearchService extends ISearchServiceConfiguration {
      * Retrieve the configuration of the search service
      */
     getConfiguration(): ISearchServiceConfiguration;
+
+    /**
+     * Gets available search managed properties in the search schema
+     */
+    getAvailableManagedProperties(): Promise<IManagedPropertyInfo[]>;
+
+    /**
+     * Checks if the provided manage property is sortable or not
+     * @param property the managed property to verify
+     */
+    validateSortableProperty(property: string): Promise<boolean>;
 
     /**
      * Retreives the result counts for each search vertical

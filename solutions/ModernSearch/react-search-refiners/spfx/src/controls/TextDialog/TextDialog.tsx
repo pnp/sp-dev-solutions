@@ -107,7 +107,9 @@ export default class TextDialog extends React.Component<ITextDialogProps, ITextD
 						showGutter= { true }
 						onChange={ this.onDialogTextChanged.bind(this) }
 						value={ this.state.dialogText }
+						highlightActiveLine={ true }
 						name="CodeEditor"
+						enableBasicAutocompletion={true}
 						/>
 
 					<DialogFooter>

@@ -6,6 +6,7 @@ import { Sort } from '@pnp/sp';
 import { ISearchServiceConfiguration } from '../../models/ISearchServiceConfiguration';
 import ISearchVerticalSourceData from '../../models/ISearchVerticalSourceData';
 import { ISearchVertical } from '../../models/ISearchVertical';
+import IManagedPropertyInfo from '../../models/IManagedPropertyInfo';
 
 class MockSearchService implements ISearchService {
 
@@ -311,6 +312,25 @@ class MockSearchService implements ISearchService {
     }
 
     /**
+     * Gets available search managed properties in the search schema
+     */
+    public async getAvailableManagedProperties(): Promise<IManagedPropertyInfo[]> {
+
+        let managedProperties: IManagedPropertyInfo[] = [
+            { name: 'Created' },
+            { name: 'AuthorOWSUSER'},
+            { name: 'CreatedBy' },
+            { name: 'Title'},
+            { name: 'Modified' },
+            { name: 'ModifiedBy'},
+            { name: 'FileType' },
+            { name: 'Size'}
+        ];
+
+        return Promise.resolve(managedProperties);
+    }
+
+    /**
      * Gets all available languages for the search query
      */
     public getAvailableQueryLanguages() {
@@ -335,6 +355,14 @@ class MockSearchService implements ISearchService {
                 Lcid: 2108
             }
         ]);
+    }
+
+    /**
+     * Checks if the provided manage property is sortable or not
+     * @param property the managed property to verify
+     */
+    public async validateSortableProperty(property: string): Promise<boolean> {
+        return Promise.resolve(true);
     }
 }
 

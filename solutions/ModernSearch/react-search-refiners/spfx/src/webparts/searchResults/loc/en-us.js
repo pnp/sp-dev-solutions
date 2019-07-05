@@ -75,7 +75,8 @@ define([], function () {
       "SortableFieldManagedPropertyField": "Sort managed property",
       "SortableFieldDisplayValueField": "Field name to display",
       "EditSortableFieldsLabel": "Edit sortable fields",
-      "EditSortLabel": "Edit sort order"
+      "EditSortLabel": "Edit sort order",
+      "SortInvalidSortableFieldMessage": "This property is not sortable"
     },
     "Synonyms": {
       "EditSynonymLabel": "Edit synonyms",

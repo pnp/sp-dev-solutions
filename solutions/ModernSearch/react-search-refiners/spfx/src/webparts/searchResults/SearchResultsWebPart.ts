@@ -57,6 +57,8 @@ import * as update from 'immutability-helper';
 import ISearchVerticalSourceData from '../../models/ISearchVerticalSourceData';
 import LocalizationHelper from '../../helpers/LocalizationHelper';
 import { IDropdownOption } from 'office-ui-fabric-react/lib/Dropdown';
+import { IComboBoxOption } from 'office-ui-fabric-react/lib/ComboBox';
+import { SearchManagedProperties, ISearchManagedPropertiesProps } from '../../controls/SearchManagedProperties/SearchManagedProperties';
 
 export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchResultsWebPartProps> implements IDynamicDataCallables {
 
@@ -92,13 +94,20 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
      */
     private _templateContentToDisplay: string;
 
+    /**
+     * The list of available managed managed properties (managed globally for all proeprty pane fiels if needed)
+     */
+    private _availableManagedProperties: IComboBoxOption[];
+
     public constructor() {
         super();
         this._templateContentToDisplay = '';
         this._availableLanguages = [];
         this._templatePropertyPaneOptions = [];
+        this._availableManagedProperties = [];
 
         this.onPropertyPaneFieldChanged = this.onPropertyPaneFieldChanged.bind(this);
+        this._onUpdateAvailableProperties = this._onUpdateAvailableProperties.bind(this);
     }
 
     public async render(): Promise<void> {
@@ -280,8 +289,8 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
 
         } else {
             this._taxonomyService = new TaxonomyService(this.context.pageContext.site.absoluteUrl);
-            this._templateService = new TemplateService(this.context.spHttpClient, this.context.pageContext.cultureInfo.currentUICultureName);
             this._searchService = new SearchService(this.context.pageContext, this.context.spHttpClient);
+            this._templateService = new TemplateService(this.context.spHttpClient, this.context.pageContext.cultureInfo.currentUICultureName, this._searchService);
         }
 
         this._resultService = new ResultService();
@@ -655,7 +664,7 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
 
             // Builtin templates with options
             this._templateContentToDisplay = TemplateService.getTemplateContent(this.properties.selectedLayout);
-            this._templatePropertyPaneOptions = TemplateService.getTemplateParameters(this.properties.selectedLayout, this.properties);
+            this._templatePropertyPaneOptions = this._templateService.getTemplateParameters(this.properties.selectedLayout, this.properties, this._onUpdateAvailableProperties, this._availableManagedProperties);
         }
 
         // Register result types inside the template      
@@ -736,9 +745,22 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
                     {
                         id: 'sortField',
                         title: "Field name",
-                        type: CustomCollectionFieldType.string,
+                        type: CustomCollectionFieldType.custom,
                         required: true,
-                        placeholder: '\"Created\", \"Size\", etc.'
+                        onCustomRender: (field, value, onUpdate, item, itemId, onCustomFieldValidation) => {
+                            // Need to specify a React key to avoid item duplication when adding a new row
+                            return React.createElement("div", {key : itemId},
+                                React.createElement(SearchManagedProperties, {
+                                currentItem: item,
+                                field: field,
+                                onCustomFieldValidation: onCustomFieldValidation,
+                                onUpdate: onUpdate,
+                                searchService: this._searchService,
+                                validateSortable: true,
+                                availableProperties: this._availableManagedProperties,
+                                onUpdateAvailableProperties: this._onUpdateAvailableProperties
+                            } as ISearchManagedPropertiesProps));
+                        }
                     },
                     {
                         id: 'sortDirection',
@@ -770,10 +792,23 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
                     {
                         id: 'sortField',
                         title: strings.Sort.SortableFieldManagedPropertyField,
-                        type: CustomCollectionFieldType.string,
-                        placeholder: '\"Created\", \"Size\", etc.',
-                        required: true
-                    },
+                        type: CustomCollectionFieldType.custom,
+                        required: true,
+                        onCustomRender: (field, value, onUpdate, item, itemId, onCustomFieldValidation) => {
+                            // Need to specify a React key to avoid item duplication when adding a new row
+                            return React.createElement("div", {key : itemId},
+                                React.createElement(SearchManagedProperties, {
+                                currentItem: item,
+                                field: field,
+                                onCustomFieldValidation: onCustomFieldValidation,
+                                onUpdate: onUpdate,
+                                searchService: this._searchService,
+                                validateSortable: true,
+                                availableProperties: this._availableManagedProperties,
+                                onUpdateAvailableProperties: this._onUpdateAvailableProperties
+                            } as ISearchManagedPropertiesProps));
+                        }
+                    },                    
                     {
                         id: 'displayValue',
                         title: strings.Sort.SortableFieldDisplayValueField,
@@ -1325,5 +1360,18 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
         }
 
         throw new Error('Bad property id');
+    }
+
+    /**
+     * Handler when the list of available managed properties is fetched by a property pane control¸
+     * @param properties the fetched properties
+     */
+    private _onUpdateAvailableProperties(properties: IComboBoxOption[]) {
+
+        // Save the value in the root Web Part class to avoid fetching it again if the property list is requested again by any other property pane control
+        this._availableManagedProperties = properties;
+
+        // Refresh all fields in the collection data controls so they can use the new list
+        this.context.propertyPane.refresh();
     }
 }
