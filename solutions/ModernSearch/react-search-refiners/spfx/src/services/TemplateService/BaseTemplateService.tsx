@@ -27,29 +27,6 @@ import { IComboBoxOption } from 'office-ui-fabric-react/lib/ComboBox';
 import SearchService from '../SearchService/SearchService';
 import ISearchService from '../SearchService/ISearchService';
 
-export interface IDocumentCardFieldsConfiguration {
-
-    /**
-     * The name of the field
-     */
-    name: string;
-
-    /**
-     * The field name for the inner DocumentCardComponent props
-     */
-    field: string;
-
-    /**
-     * The value of the field
-     */
-    value: string;
-
-    /**
-     * Indiciates if the calue is an Handlebars expression
-     */
-    useHandlebarsExpr: boolean;
-}
-
 abstract class BaseTemplateService {
 
     public CurrentLocale = "en";

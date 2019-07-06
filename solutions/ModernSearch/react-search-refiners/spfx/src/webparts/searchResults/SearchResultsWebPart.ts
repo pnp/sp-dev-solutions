@@ -26,7 +26,7 @@ import BaseTemplateService from '../../services/TemplateService/BaseTemplateServ
 import ISearchService from '../../services/SearchService/ISearchService';
 import ITaxonomyService from '../../services/TaxonomyService/ITaxonomyService';
 import ResultsLayoutOption from '../../models/ResultsLayoutOption';
-import TemplateService from '../../services/TemplateService/TemplateService';
+import { TemplateService } from '../../services/TemplateService/TemplateService';
 import { isEmpty, find, sortBy } from '@microsoft/sp-lodash-subset';
 import MockSearchService from '../../services/SearchService/MockSearchService';
 import MockTemplateService from '../../services/TemplateService/MockTemplateService';

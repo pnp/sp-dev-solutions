@@ -36,6 +36,8 @@ export class DocumentCardShimmers extends React.Component<{}, {}> {
                                                                     flexWrap={true}
                                                                     width="100%"                                                                    
                                                                     shimmerElements={[
+                                                                        { type: ElemType.line, width: '30%', height: 11 },
+                                                                        { type: ElemType.gap, width: '70%', height: 11 },
                                                                         { type: ElemType.line, width: '100%', height: 13 },
                                                                         { type: ElemType.line, width: '60%', height: 13 },
                                                                         { type: ElemType.gap, width: '40%', height: 20 }

@@ -92,27 +92,33 @@ export class TemplateValueFieldEditor extends React.Component<ITemplateValueFiel
                             />;
         } else {
 
-           /* renderField = <TextField styles={{
-                root: {
-                    width: '100%',
-                    marginRight: 10
+            let initialValue: string = '';
+
+            if (this.props.currentItem && this.props.field) {
+                if (this.props.currentItem[this.props.field.id]) {
+                    initialValue = this.props.currentItem[this.props.field.id];
                 }
-            }}
-            onChange={(ev: React.FormEvent<HTMLInputElement>, newValue?: string) => {
-                this.props.onUpdate(this.props.field.id, newValue);
-            }}
-            defaultValue={this.props.value}
-            />;*/
+            }
 
             renderField =   <SearchManagedProperties 
-                                currentItem={this.props.currentItem} 
-                                field={this.props.field} 
-                                onUpdate={this.props.onUpdate}
+                                defaultSelectedKeys={ initialValue }
+                                onUpdate={ (newValue: string, isSortable?: boolean) => { 
+
+                                    if (this.props.validateSortable) {
+                                        if (!isSortable) {
+                                            this.props.onCustomFieldValidation(this.props.field.id, strings.Sort.SortInvalidSortableFieldMessage);
+                                        } else {
+                                            this.props.onUpdate(this.props.field.id, newValue);
+                                            this.props.onCustomFieldValidation(this.props.field.id, '');
+                                        }
+                                    } else {
+                                        this.props.onUpdate(this.props.field.id, newValue);
+                                    }
+                                }}
                                 availableProperties={this.props.availableProperties}
                                 onUpdateAvailableProperties={this.props.onUpdateAvailableProperties}
                                 searchService={this.props.searchService}
                                 validateSortable={this.props.validateSortable}
-                                onCustomFieldValidation={this.props.onCustomFieldValidation}
                             />;
         }
             

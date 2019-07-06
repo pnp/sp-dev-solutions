@@ -33,14 +33,6 @@ const classNames = mergeStyleSets({
   controlWrapper: {
     display: 'flex',
     flexWrap: 'wrap'
-  },
-  exampleToggle: {
-    display: 'inline-block',
-    marginBottom: '10px',
-    marginRight: '30px'
-  },
-  selectionDetails: {
-    marginBottom: '20px'
   }
 });
 const controlStyles = {
@@ -50,22 +42,74 @@ const controlStyles = {
   }
 };
 
-export interface IDetailsListColumnConfiguration{
+export interface IDetailsListColumnConfiguration {
+
+  /**
+   * The name of the column
+   */
   name: string;
+
+  /**
+   * The value of the column
+   */
   value: string;
+
+  /**
+   * Indicates if the value is an Handlebars expression
+   */
   useHandlebarsExpr: boolean;
+
+  /**
+   * Column maximum width in px
+   */
   maxWidth: string;
+
+  /**
+   * Column minimum width in px
+   */
   minWidth: string;
+
+  /**
+   * Enable sorting on the column
+   */
   enableSorting: boolean;
+
+  /**
+   * Enable column dynamic resize
+   */
   isResizable: boolean;
+
+  /**
+   * Enable multiline column
+   */
   isMultiline: boolean;
+
+  /**
+   * If true, the column value will be wrapped by the item link
+   */
   isResultItemLink: boolean;
 }
 
 export interface DetailsListComponentProps {
+
+    /**
+     * Current items
+     */
     items?: string;
+
+    /**
+     * The columns configuration
+     */
     columnsConfiguration?: string;
+
+    /**
+     * Show the file icon or not in the first column
+     */
     showFileIcon?: boolean;
+
+    /**
+     * Enble the filtering on the columns
+     */
     enableFiltering?: boolean;
 
     /**
@@ -159,7 +203,6 @@ export class DetailsListComponent extends React.Component<DetailsListComponentPr
                   hasError = true;
                   value = `<span style="color:red;font-style: italic" title="${error.message}">${`Error: ${error.message}`}</span>`;
                 }
-
               }
 
               renderColumnValue = <span title={!hasError ? value : ''} dangerouslySetInnerHTML={{ __html: value }}></span>;

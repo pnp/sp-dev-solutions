@@ -112,13 +112,13 @@ define([], function() {
     "QueryCultureLabel": "Query Language",
     "QueryCultureUseUiLanguageLabel": "Same as UI language",
     "TemplateParameters": {
-      "TemplateParametersGroupName": "Template options",
-      "EnableItemPreview": "Enable result preview",
-      "ShowFileIcon": "Show file icon",
-      "ManageDetailsListColumnDescription": "Ajouter ou supprimer des colonnes pour cet afficahge",
+      "TemplateParametersGroupName": "Options d'affichage",
+      "EnableItemPreview": "Activer l'aperçu de résultat",
+      "ShowFileIcon": "Afficher l'icône de fichier",
+      "ManageDetailsListColumnDescription": "Ajouter, modifier ou supprimer des colonnes pour cet affichage.  Vous pouvez soit utiliser la valeur d'une propriété de recherche directement ou bien spécifier une expression Handlebars en tant que valeur. Pour chacun des champ, vous pouvez également injecter votre propre code HTML",
       "ManageDetailsListColumnLabel": "Gérer les colonnes",
-      "ManageTilesFieldsLabel": "Gérer les champs",
-      "ManageTilesFieldsPanelDescriptionLabel": "Associer vos champs à ceux de l'affichage en tuiles. Vous pouvez spécifier une expression Handlebars en tant que valeur.",
+      "ManageTilesFieldsLabel": "Gérer les champs de la carte",
+      "ManageTilesFieldsPanelDescriptionLabel": "Ici vous pouvez associer la valeur de chaque champ aux zone de la carte correspondantes. Vous pouvez soit utiliser la valeur d'une propriété de recherche directement ou bien spécifier une expression Handlebars en tant que valeur. Pour certains champ, lorsque indiqué, vous pouvez également injecter votre propre code HTML.",
       "DocumentCardNameFieldLabel": "Nom",
       "DocumentCardValueFieldLabel": "Valeur"
     }

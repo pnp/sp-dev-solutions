@@ -1,4 +1,4 @@
-import BaseTemplateService, { IDocumentCardFieldsConfiguration } from                    './BaseTemplateService';
+import BaseTemplateService from                    './BaseTemplateService';
 import { SPHttpClient, SPHttpClientResponse } from '@microsoft/sp-http';
 import ISearchService from '../SearchService/ISearchService';
 import ResultsLayoutOption from '../../models/ResultsLayoutOption';
@@ -10,11 +10,45 @@ import * as React from 'react';
 import { TemplateValueFieldEditor, ITemplateValueFieldEditorProps } from '../../controls/TemplateValueFieldEditor/TemplateValueFieldEditor';
 import * as strings from 'SearchResultsWebPartStrings';
 import { IComboBoxOption } from 'office-ui-fabric-react/lib/ComboBox';
+import { Icon, IIconProps } from 'office-ui-fabric-react/lib/Icon';
 
-class TemplateService extends BaseTemplateService {
+export interface IDocumentCardFieldsConfiguration {
+
+    /**
+     * The name of the field
+     */
+    name: string;
+
+    /**
+     * The field name for the inner DocumentCardComponent props
+     */
+    field: string;
+
+    /**
+     * The value of the field
+     */
+    value: string;
+
+    /**
+     * Indiciates if the calue is an Handlebars expression
+     */
+    useHandlebarsExpr: boolean;
+
+    /**
+     * Indicates if the field supports HTML markup ibnjection
+     */
+    supportHtml: boolean;
+}
+
+export class TemplateService extends BaseTemplateService {
 
     private _spHttpClient: SPHttpClient;
     private _searchService: ISearchService;
+
+    /**
+     * The list of available managed managed properties (managed globally for all proeprty pane fiels if needed)
+     */
+    private _availableManagedProperties: IComboBoxOption[];
 
     constructor(spHttpClient: SPHttpClient, locale: string, searchService: ISearchService) {
 
@@ -77,6 +111,8 @@ class TemplateService extends BaseTemplateService {
      * @param availableProperties the list of available managed properties already fetched once (Optional)
      */
     public getTemplateParameters(layout: ResultsLayoutOption, properties: ISearchResultsWebPartProps, onUpdateAvailableProperties?: (properties: IComboBoxOption[]) => void, availableProperties?: IComboBoxOption[]): IPropertyPaneField<any>[] {
+
+
 
         switch (layout) {
 
@@ -154,8 +190,15 @@ class TemplateService extends BaseTemplateService {
                                             useHandlebarsExpr: item.useHandlebarsExpr,
                                             onUpdate: onUpdate,
                                             value: value,
-                                            onUpdateAvailableProperties: onUpdateAvailableProperties ? onUpdateAvailableProperties : () => {},
-                                            availableProperties: availableProperties ? availableProperties : [],
+                                            onUpdateAvailableProperties: (properties: IComboBoxOption[]) => {
+
+                                                // Keep the list state for all collection data rows
+                                                this._availableManagedProperties = properties;
+
+                                                // Share the list for other controls in the property pane
+                                                onUpdateAvailableProperties(properties)
+                                            },
+                                            availableProperties: this._availableManagedProperties ? this._availableManagedProperties : [],
                                             searchService: this._searchService,
                                             validateSortable: false,
                                             onCustomFieldValidation: onCustomFieldValidation
@@ -215,7 +258,7 @@ class TemplateService extends BaseTemplateService {
                     }),
                     PropertyPaneToggle('templateParameters.showFileIcon', {
                         label: strings.TemplateParameters.ShowFileIcon,                        
-                        checked: properties.templateParameters.showFileIcon  !== null || properties.templateParameters.showFileIcon !== undefined ? properties.templateParameters.showFileIcon : true
+                        checked: properties.templateParameters.showFileIcon
                     })                    
                 ];
 
@@ -225,15 +268,17 @@ class TemplateService extends BaseTemplateService {
                 if (!properties.templateParameters.documentCardFields) {
 
                     properties.templateParameters.documentCardFields = [
-                        { name: 'Title', field: 'title', value: "Title", useHandlebarsExpr: false },
-                        { name: 'Preview Image', field: 'previewImage',  value: "{{{getPreviewSrc item}}}", useHandlebarsExpr: true },
-                        { name: 'Preview URL', field: 'previewUrl' , value: "{{#eq item.contentclass 'STS_ListItem_851'}}{{{item.DefaultEncodingURL}}}{{else}}{{#eq item.FileType 'pdf'}}<!-- Documents from OneDrive sites can't be viewed directly due to SAMEORIGIN iframe restrictions-->{{#contains Path '-my.sharepoint'}}{{{item.ServerRedirectedEmbedURL}}}{{else}}{{{item.Path}}}{{/contains}}{{else}}{{{item.ServerRedirectedEmbedURL}}}{{/eq}}{{/eq}} ", useHandlebarsExpr: true },
-                        { name: 'Date', field: 'date', value: "{{getDate item.Created 'LL'}}", useHandlebarsExpr: true },
-                        { name: 'URL', field: 'href', value: "{{getUrl item}}", useHandlebarsExpr: true },
-                        { name: 'Author', field: 'author', value: "Author", useHandlebarsExpr: false },
-                        { name: 'Profile Image', field: 'profileImage', value: "{{#with (split AuthorOWSUSER '|')}}/_layouts/15/userphoto.aspx?size=L&username={{[0]}}{{/with}}", useHandlebarsExpr: true  },
-                        { name: 'IconSrc', field: 'iconSrc', value: "IconSrc", useHandlebarsExpr: false },
-                        { name: 'File Extension', field: 'fileExtension', value: "FileType", useHandlebarsExpr: false }
+                        { name: 'Title', field: 'title', value: "Title", useHandlebarsExpr: false, supportHtml: false },
+                        { name: 'Location', field: 'location', value: `<a class="ms-Link" href="{{SPSiteUrl}}">{{SiteTitle}}</a>`, useHandlebarsExpr: true, supportHtml: true },
+                        { name: 'Tags', field: 'tags', value: `{{#if owstaxidmetadataalltagsinfo}}<i class='ms-Icon ms-Icon--Tag' aria-hidden='true'></i> {{#each (split owstaxidmetadataalltagsinfo ',') as |tag| }}<a class="ms-Link" href="#owstaxidmetadataalltagsinfo:'{{trim tag}}'">{{tag}}</a>{{/each}}{{/if}}`, useHandlebarsExpr: true, supportHtml: true },
+                        { name: 'Preview Image', field: 'previewImage',  value: "{{{getPreviewSrc item}}}", useHandlebarsExpr: true, supportHtml: false },
+                        { name: 'Preview URL', field: 'previewUrl' , value: "{{#eq item.contentclass 'STS_ListItem_851'}}{{{item.DefaultEncodingURL}}}{{else}}{{#eq item.FileType 'pdf'}}<!-- Documents from OneDrive sites can't be viewed directly due to SAMEORIGIN iframe restrictions-->{{#contains Path '-my.sharepoint'}}{{{item.ServerRedirectedEmbedURL}}}{{else}}{{{item.Path}}}{{/contains}}{{else}}{{{item.ServerRedirectedEmbedURL}}}{{/eq}}{{/eq}} ", useHandlebarsExpr: true, supportHtml: false },
+                        { name: 'Date', field: 'date', value: "{{getDate item.Created 'LL'}}", useHandlebarsExpr: true, supportHtml: false },
+                        { name: 'URL', field: 'href', value: "{{getUrl item}}", useHandlebarsExpr: true, supportHtml: false },
+                        { name: 'Author', field: 'author', value: "Author", useHandlebarsExpr: false, supportHtml: false },
+                        { name: 'Profile Image', field: 'profileImage', value: "{{#with (split AuthorOWSUSER '|')}}/_layouts/15/userphoto.aspx?size=L&username={{[0]}}{{/with}}", useHandlebarsExpr: true, supportHtml: false  },
+                        { name: 'IconSrc', field: 'iconSrc', value: "{{IconSrc}}", useHandlebarsExpr: true, supportHtml: false },
+                        { name: 'File Extension', field: 'fileExtension', value: "FileType", useHandlebarsExpr: false, supportHtml: false }
                     ] as IDocumentCardFieldsConfiguration[];
                 }
 
@@ -258,6 +303,17 @@ class TemplateService extends BaseTemplateService {
                                 title: strings.TemplateParameters.DocumentCardNameFieldLabel
                             },
                             {
+                                id: 'supportHtml',
+                                type: CustomCollectionFieldType.custom,
+                                disableEdit: true,
+                                title: "HTML",
+                                onCustomRender: (field, value, onUpdate, item, itemId, onCustomFieldValidation) => {
+                                    if (item.supportHtml) {
+                                        return React.createElement(Icon, { iconName: 'CheckMark' } as IIconProps);
+                                    }
+                                }
+                            },
+                            {
                                 id: 'value',
                                 type: CustomCollectionFieldType.custom,
                                 title: strings.TemplateParameters.DocumentCardValueFieldLabel,
@@ -269,8 +325,15 @@ class TemplateService extends BaseTemplateService {
                                             useHandlebarsExpr: item.useHandlebarsExpr,
                                             onUpdate: onUpdate,
                                             value: value,
-                                            onUpdateAvailableProperties: onUpdateAvailableProperties ? onUpdateAvailableProperties : () => {},
-                                            availableProperties: availableProperties ? availableProperties : [],
+                                            onUpdateAvailableProperties: (properties: IComboBoxOption[]) => {
+
+                                                // Keep the list state for all collection data rows
+                                                this._availableManagedProperties = properties;
+
+                                                // Share the list for other controls in the property pane
+                                                onUpdateAvailableProperties(properties)
+                                            },
+                                            availableProperties: this._availableManagedProperties ? this._availableManagedProperties : [],
                                             searchService: this._searchService,
                                             validateSortable: false,
                                             onCustomFieldValidation: onCustomFieldValidation
@@ -301,5 +364,3 @@ class TemplateService extends BaseTemplateService {
     }
 
 }
-
-export default TemplateService;

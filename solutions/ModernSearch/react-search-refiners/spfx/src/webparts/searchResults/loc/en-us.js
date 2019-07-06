@@ -112,13 +112,13 @@ define([], function () {
     "QueryCultureLabel": "Language of search request",
     "QueryCultureUseUiLanguageLabel": "Use interface language",
     "TemplateParameters": {
-      "TemplateParametersGroupName": "Options d'affichage",
-      "EnableItemPreview": "Activer l'aperçu de résultat",
-      "ShowFileIcon": "Afficher l'icône de fichier",
-      "ManageDetailsListColumnDescription": "Add/remove columns for the details list layout",
+      "TemplateParametersGroupName": "Template options",
+      "EnableItemPreview": "Enable result preview",
+      "ShowFileIcon": "Show file icon",
+      "ManageDetailsListColumnDescription": "Add, update or remove columns for the details list layout. You can use either the managed property value directly without any transformation or use an Handlebars expression in the value field. HTML is supported for all fields as well.",
       "ManageDetailsListColumnLabel": "Manage columns",
-      "ManageTilesFieldsLabel": "Manage fields",
-      "ManageTilesFieldsPanelDescriptionLabel": "Map here your corresponding the fields for the tiles layout. You can use Handlebars expressions in the value field.",
+      "ManageTilesFieldsLabel": "Manage card fields",
+      "ManageTilesFieldsPanelDescriptionLabel": "Here you can map each field values with the corresponding card placeholders. You can use either the managed property value directly without any transformation or use an Handlebars expression in the value field. Also, when indicated, you can also inject your own HTML code in some fields.",
       "DocumentCardNameFieldLabel": "Name",
       "DocumentCardValueFieldLabel": "Value"
     }

@@ -1,11 +1,14 @@
 import * as React from "react";
-import { IDocumentCardPreviewProps, DocumentCard, DocumentCardPreview, DocumentCardTitle, DocumentCardActivity, DocumentCardType } from 'office-ui-fabric-react/lib/DocumentCard';
+import { IDocumentCardPreviewProps, DocumentCard, DocumentCardPreview, DocumentCardTitle, DocumentCardActivity, DocumentCardType, DocumentCardLocation, DocumentCardDetails, IDocumentCardLocationStyleProps, IDocumentCardLocationStyles } from 'office-ui-fabric-react/lib/DocumentCard';
 import { ImageFit } from 'office-ui-fabric-react/lib/Image';
 import PreviewContainer from '../PreviewContainer/PreviewContainer';
 import { PreviewType } from '../PreviewContainer/IPreviewContainerProps';
 import { Link } from 'office-ui-fabric-react/lib/Link';
-import { IDocumentCardFieldsConfiguration } from "../BaseTemplateService";
+import { IDocumentCardFieldsConfiguration } from "../TemplateService";
 import * as Handlebars from 'handlebars';
+import { getTheme, mergeStyleSets } from '@uifabric/styling';
+import { classNamesFunction } from "@uifabric/utilities";
+import * as documentCardLocationGetStyles from 'office-ui-fabric-react/lib/components/DocumentCard/DocumentCardLocation.styles';
 
 /**
  * Document card props. These properties are retrieved from the web component attributes. They must be camel case.
@@ -21,6 +24,8 @@ export interface IDocumentCardComponentProps {
 
     // Individual content properties
     title?: string; 
+    location?: string;
+    tags?:string;
     href?: string; 
     previewImage? :string;
     date?: string;
@@ -76,7 +81,7 @@ export class DocumentCardComponent extends React.Component<IDocumentCardComponen
               {
                 name: processedProps.title,
                 previewImageSrc: processedProps.previewImage,
-                imageFit: ImageFit.cover,
+                imageFit: ImageFit.centerCover,
                 iconSrc: this.props.isVideo || !this.props.showFileIcon ? '' : processedProps.iconSrc,
                 width: 318,
                 height: 196
@@ -100,7 +105,18 @@ export class DocumentCardComponent extends React.Component<IDocumentCardComponen
             borderStyle: 'solid',
             display: 'flex',
         };
-      
+
+        // Get the current loaded theme
+        const theme = getTheme();
+
+        // DocumentCard Location styles
+        const documentCardLocationProps: IDocumentCardLocationStyleProps = {
+            theme: theme
+        };
+
+        const documentCardLocationStyles = mergeStyleSets(documentCardLocationGetStyles.getStyles(documentCardLocationProps));
+        const documentCardLocationClassNames = classNamesFunction<IDocumentCardLocationStyleProps, IDocumentCardLocationStyles>()(documentCardLocationStyles);
+        
         return <div>
                     <DocumentCard 
                         onClick={() => {
@@ -126,6 +142,9 @@ export class DocumentCardComponent extends React.Component<IDocumentCardComponen
                             }
                             <DocumentCardPreview {...previewProps} />
                         </div>
+                        { processedProps.location ? 
+                            <div className={documentCardLocationClassNames.root} dangerouslySetInnerHTML={{ __html: processedProps.location }}></div> : null
+                        }
                         <Link href={processedProps.href} target='_blank' styles={{
                             root: {
                                 selectors: {
@@ -135,15 +154,20 @@ export class DocumentCardComponent extends React.Component<IDocumentCardComponen
                                 }
                             }
                         }}>
-                            <DocumentCardTitle
-                                title={processedProps.title}
-                                shouldTruncate={false}                
-                            />                           
+                        <DocumentCardTitle
+                            title={processedProps.title}
+                            shouldTruncate={false}                
+                        />                         
                         </Link>
-                        <DocumentCardActivity
-                        activity={processedProps.date}
-                        people={[{ name: processedProps.author, profileImageSrc: processedProps.profileImage}]}
-                        />           
+                        { processedProps.tags ? 
+                            <div className={documentCardLocationClassNames.root} dangerouslySetInnerHTML={{ __html: processedProps.tags }}></div> : null
+                        }
+                        { processedProps.author ?
+                            <DocumentCardActivity
+                            activity={processedProps.date}
+                            people={[{ name: processedProps.author, profileImageSrc: processedProps.profileImage}]}
+                            /> : null 
+                        }     
                     </DocumentCard>
                     {renderPreviewCallout}
                 </div>;
@@ -167,7 +191,7 @@ export class DocumentCardComponent extends React.Component<IDocumentCardComponen
                 if (configuration.useHandlebarsExpr ) {
                     
                     try {
-                        // Create a temp context with the current so we cab use global registered helper on the current item
+                        // Create a temp context with the current so we can use global registered helpers on the current item
                         const tempTemplateContent = `{{#with item as |item|}}${configuration.value}{{/with}}`;
                         let template = Handlebars.compile(tempTemplateContent);
 

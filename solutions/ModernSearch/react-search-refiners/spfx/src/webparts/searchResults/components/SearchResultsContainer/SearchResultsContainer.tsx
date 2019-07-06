@@ -19,7 +19,7 @@ import LocalizationHelper from '../../../../helpers/LocalizationHelper';
 import { Text } from '@microsoft/sp-core-library';
 import { ILocalizableSearchResultProperty, ILocalizableSearchResult } from '../../../../models/ILocalizableSearchResults';
 import * as _ from '@microsoft/sp-lodash-subset';
-import TemplateService from '../../../../services/TemplateService/TemplateService';
+import { TemplateService } from '../../../../services/TemplateService/TemplateService';
 import { isEqual } from '@microsoft/sp-lodash-subset';
 
 declare var System: any;

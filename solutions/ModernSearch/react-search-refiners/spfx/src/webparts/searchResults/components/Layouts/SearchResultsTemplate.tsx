@@ -2,7 +2,7 @@ import * as React from                                                 'react';
 import ISearchResultsTemplateProps from './ISearchResultsTemplateProps';
 import ISearchResultsTemplateState from './ISearchResultsTemplateState';
 import                                  './SearchResultsTemplate.scss';
-import TemplateService from '../../../../services/TemplateService/TemplateService';
+import { TemplateService } from '../../../../services/TemplateService/TemplateService';
 
 export default class SearchResultsTemplate extends React.Component<ISearchResultsTemplateProps, ISearchResultsTemplateState> {
 
