@@ -7,7 +7,7 @@
         "includeClientSideAssets": true,
         "features": [{
             "title": "Code renderer for React Search Refiners",
-            "description": "",
+            "description": "Code and persona renderer",
             "id": "cbc3a036-8112-4a19-a924-4bfe45af2675",
             "version": "1.0.1.0",
             "assets": {
