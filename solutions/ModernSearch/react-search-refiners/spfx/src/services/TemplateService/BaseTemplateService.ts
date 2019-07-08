@@ -3,7 +3,7 @@ import 'core-js/modules/es6.string.includes.js';
 import 'core-js/modules/es6.number.is-nan.js';
 import * as Handlebars from 'handlebars';
 import { ISearchResult } from '../../models/ISearchResult';
-import { isEmpty, uniqBy, uniq } from '@microsoft/sp-lodash-subset';
+import { isEmpty, uniqBy, uniq, trimEnd } from '@microsoft/sp-lodash-subset';
 import * as strings from 'SearchResultsWebPartStrings';
 import { Text } from '@microsoft/sp-core-library';
 import { DomHelper } from '../../helpers/DomHelper';
@@ -94,10 +94,10 @@ abstract class BaseTemplateService {
 
         const domParser = new DOMParser();
         const htmlContent: Document = domParser.parseFromString(templateContent, 'text/html');
-    
+
         let templates: any = htmlContent.getElementById('template');
         if (templates && templates.innerHTML) {
-          
+
             // Need to unescape '&gt;' for handlebars partials 
             return templates.innerHTML.replace('&gt;', '>');
         } else {
@@ -112,10 +112,10 @@ abstract class BaseTemplateService {
     public static getPlaceholderMarkup(templateContent: string): string {
         const domParser = new DOMParser();
         const htmlContent: Document = domParser.parseFromString(templateContent, 'text/html');
-    
+
         const placeHolders = htmlContent.getElementById('placeholder');
         if (placeHolders && placeHolders.innerHTML) {
-          return placeHolders.innerHTML;
+            return placeHolders.innerHTML;
         } else {
             return null;
         }
@@ -167,9 +167,17 @@ abstract class BaseTemplateService {
 
         // Return the formatted date according to current locale using moment.js
         // <p>{{getDate Created "LL"}}</p>
-        Handlebars.registerHelper("getDate", (date: string, format: string) => {
+        Handlebars.registerHelper("getDate", (date: string, format: string, timeHandling?: number) => {
             try {
                 if (new Date(date).toISOString() !== new Date(null).toISOString()) {
+                    if (typeof timeHandling === "number") {
+                        if (timeHandling === 1) {
+                            date = trimEnd(date, "Z");
+                        } else if (timeHandling === 2) {
+                            let idx = date.indexOf('T');
+                            date = date.substr(0, idx) + "T00:00:00";
+                        }
+                    }
                     let d = (<any>window).searchHBHelper.moment(date, format, { lang: this.CurrentLocale, datejs: false });
                     return d;
                 }
@@ -216,7 +224,7 @@ abstract class BaseTemplateService {
         // <p>{{#times 10}}</p>
         Handlebars.registerHelper('times', (n, block) => {
             var accum = '';
-            for(var i = 0; i < n; ++i)
+            for (var i = 0; i < n; ++i)
                 accum += block.fn(i);
             return accum;
         });
@@ -503,15 +511,15 @@ abstract class BaseTemplateService {
                 if (url) {
                     let renderElement = React.createElement(
                         PreviewContainer,
-                        {   
-                            elementUrl: url.replace('interactivepreview','embedview'),
+                        {
+                            elementUrl: url.replace('interactivepreview', 'embedview'),
                             targetElement: thumbnailElt,
                             previewImageUrl: previewImgUrl,
                             showPreview: true,
                             previewType: PreviewType.Document
-                        } as IPreviewContainerProps  
+                        } as IPreviewContainerProps
                     );
-                       
+
                     ReactDom.render(renderElement, el);
                 }
             });
@@ -546,7 +554,7 @@ abstract class BaseTemplateService {
                 if (url && fileExtension) {
                     let renderElement = React.createElement(
                         PreviewContainer,
-                        {   
+                        {
                             videoProps: {
                                 fileExtension: fileExtension
                             },
@@ -554,12 +562,12 @@ abstract class BaseTemplateService {
                             targetElement: thumbnailElt,
                             previewImageUrl: previewImgUrl,
                             elementUrl: url,
-                            previewType: PreviewType.Video                            
-                        } as IPreviewContainerProps  
+                            previewType: PreviewType.Video
+                        } as IPreviewContainerProps
                     );
-                       
+
                     ReactDom.render(renderElement, el);
-                }               
+                }
             });
         }));
     }
