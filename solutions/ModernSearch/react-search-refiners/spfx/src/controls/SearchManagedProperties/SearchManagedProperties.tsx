@@ -60,6 +60,11 @@ export interface ISearchManagedPropertiesProps {
 export interface ISearchManagedPropertiesState {
     
     /**
+     * The current selected key
+     */
+    selectedOptionKey?: string | number;
+
+    /**
      * The current selected keys if the control is multiline
      */
     selectedOptionKeys?: string[];
@@ -81,6 +86,7 @@ export class SearchManagedProperties extends React.Component<ISearchManagedPrope
         super(props);
 
         this.state = {
+            selectedOptionKey: '',
             selectedOptionKeys: [],
             options: [],
             initialDisplayValue: null,
@@ -101,6 +107,7 @@ export class SearchManagedProperties extends React.Component<ISearchManagedPrope
             renderCombo =   <ComboBox
                                 label={this.props.label}
                                 allowFreeform={true}
+                                selectedKey={this.state.selectedOptionKey}
                                 autoComplete='on'                                
                                 text={ this.state.initialDisplayValue }
                                 onChange={this.onChange}
@@ -171,7 +178,8 @@ export class SearchManagedProperties extends React.Component<ISearchManagedPrope
             
             // User selected/de-selected an existing option
             this.setState({
-                initialDisplayValue: undefined
+                initialDisplayValue: undefined,
+                selectedOptionKey: option.key
             });
 
             this.props.onUpdate(option.key, isSortable);
@@ -196,7 +204,7 @@ export class SearchManagedProperties extends React.Component<ISearchManagedPrope
 
             this.setState({
                 options: options,
-
+                selectedOptionKey: option.key,
                 initialDisplayValue: undefined
             });
 
