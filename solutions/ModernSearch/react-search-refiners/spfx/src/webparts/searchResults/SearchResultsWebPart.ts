@@ -99,7 +99,6 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
         // Determine the template content to display
         // In the case of an external template is selected, the render is done asynchronously waiting for the content to be fetched
         await this._getTemplateContent();
-
         if (this.displayMode === DisplayMode.Edit) {
             const { Placeholder } = await import(
                 /* webpackChunkName: 'search-property-pane' */
@@ -280,7 +279,19 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
 
         } else {
             this._taxonomyService = new TaxonomyService(this.context.pageContext.site.absoluteUrl);
-            this._templateService = new TemplateService(this.context.spHttpClient, this.context.pageContext.cultureInfo.currentUICultureName);
+
+            let timeZoneBias = {
+                WebBias: this.context.pageContext.legacyPageContext.webTimeZoneData.Bias,
+                WebDST: this.context.pageContext.legacyPageContext.webTimeZoneData.DaylightBias,
+                UserBias: null,
+                UserDST: null
+            };
+            if (this.context.pageContext.legacyPageContext.userTimeZoneData) {
+                timeZoneBias.UserBias = this.context.pageContext.legacyPageContext.userTimeZoneData.Bias;
+                timeZoneBias.UserDST = this.context.pageContext.legacyPageContext.userTimeZoneData.DaylightBias;
+            }
+
+            this._templateService = new TemplateService(this.context.spHttpClient, this.context.pageContext.cultureInfo.currentUICultureName, timeZoneBias);
             this._searchService = new SearchService(this.context.pageContext, this.context.spHttpClient);
         }
 

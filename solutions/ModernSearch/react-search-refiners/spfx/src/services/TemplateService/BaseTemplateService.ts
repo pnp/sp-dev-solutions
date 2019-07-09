@@ -15,10 +15,27 @@ import { IPreviewContainerProps, PreviewType } from './PreviewContainer/IPreview
 
 abstract class BaseTemplateService {
     public CurrentLocale = "en";
+    public TimeZoneBias = {
+        WebBias: 0,
+        UserBias: 0,
+        WebDST: 0,
+        UserDST: 0
+    };
+    private DayLightSavings = true;
 
     constructor() {
         // Registers all helpers
         this.registerTemplateServices();
+        
+        this.DayLightSavings = this.isDST();
+    }
+
+    private isDST(){
+        let today = new Date();
+        var jan = new Date(today.getFullYear(), 0, 1);
+        var jul = new Date(today.getFullYear(), 6, 1);
+        let stdTimeZoneOffset = Math.max(jan.getTimezoneOffset(), jul.getTimezoneOffset());
+        return today.getTimezoneOffset() < stdTimeZoneOffset;
     }
 
     private async LoadHandlebarsHelpers() {
@@ -121,6 +138,13 @@ abstract class BaseTemplateService {
         }
     }
 
+    private addMinutes(date: Date, minutes: number, dst: number) {
+        if (this.DayLightSavings) {
+            minutes += dst;
+        }
+        return new Date(date.getTime() + minutes * 60000);
+    }
+
     /**
      * Registers useful helpers for search results templates
      */
@@ -169,13 +193,20 @@ abstract class BaseTemplateService {
         // <p>{{getDate Created "LL"}}</p>
         Handlebars.registerHelper("getDate", (date: string, format: string, timeHandling?: number) => {
             try {
-                if (new Date(date).toISOString() !== new Date(null).toISOString()) {
+                let itemDate = new Date(date);
+                if (itemDate.toISOString() !== new Date(null).toISOString()) {
                     if (typeof timeHandling === "number") {
-                        if (timeHandling === 1) {
+                        if (timeHandling === 1) { // show as Z in UI
                             date = trimEnd(date, "Z");
-                        } else if (timeHandling === 2) {
+                        } else if (timeHandling === 2) { // strip time part
                             let idx = date.indexOf('T');
-                            date = date.substr(0, idx) + "T00:00:00";
+                            date = date.substr(0, idx) + "T00:00:00"; 
+                        } else if (timeHandling === 3) { // show as web region
+                            date = this.addMinutes(itemDate, -this.TimeZoneBias.WebBias, -this.TimeZoneBias.WebDST).toISOString();
+                            date = trimEnd(date, "Z");
+                        } else if (timeHandling === 4 && this.TimeZoneBias.UserBias) { // show as user region if any
+                            date = this.addMinutes(itemDate, -this.TimeZoneBias.UserBias, -this.TimeZoneBias.UserDST).toISOString();
+                            date = trimEnd(date, "Z");
                         }
                     }
                     let d = (<any>window).searchHBHelper.moment(date, format, { lang: this.CurrentLocale, datejs: false });
