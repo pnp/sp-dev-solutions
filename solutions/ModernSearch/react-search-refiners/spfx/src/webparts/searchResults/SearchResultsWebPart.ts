@@ -59,6 +59,7 @@ import LocalizationHelper from '../../helpers/LocalizationHelper';
 import { IDropdownOption } from 'office-ui-fabric-react/lib/Dropdown';
 import { IComboBoxOption } from 'office-ui-fabric-react/lib/ComboBox';
 import { SearchManagedProperties, ISearchManagedPropertiesProps } from '../../controls/SearchManagedProperties/SearchManagedProperties';
+import { PropertyPaneSearchManagedProperties } from '../../controls/PropertyPaneSearchManagedProperties/PropertyPaneSearchManagedProperties';
 
 export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchResultsWebPartProps> implements IDynamicDataCallables {
 
@@ -748,13 +749,20 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
                         type: CustomCollectionFieldType.custom,
                         required: true,
                         onCustomRender: (field, value, onUpdate, item, itemId, onCustomFieldValidation) => {
+
                             // Need to specify a React key to avoid item duplication when adding a new row
                             return React.createElement("div", {key : itemId},
                                 React.createElement(SearchManagedProperties, {
-                                currentItem: item,
-                                field: field,
-                                onCustomFieldValidation: onCustomFieldValidation,
-                                onUpdate: onUpdate,
+                                defaultSelectedKey: item[field.id] ? item[field.id] : '',
+                                onUpdate: (newValue: any, isSortable: boolean) => { 
+
+                                    if (!isSortable) {
+                                        onCustomFieldValidation(field.id, strings.Sort.SortInvalidSortableFieldMessage);
+                                    } else {
+                                        onUpdate(field.id, newValue);
+                                        onCustomFieldValidation(field.id, '');
+                                    }
+                                },
                                 searchService: this._searchService,
                                 validateSortable: true,
                                 availableProperties: this._availableManagedProperties,
@@ -798,10 +806,16 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
                             // Need to specify a React key to avoid item duplication when adding a new row
                             return React.createElement("div", {key : itemId},
                                 React.createElement(SearchManagedProperties, {
-                                currentItem: item,
-                                field: field,
-                                onCustomFieldValidation: onCustomFieldValidation,
-                                onUpdate: onUpdate,
+                                defaultSelectedKey: item[field.id] ? item[field.id] : '',
+                                onUpdate: (newValue: any, isSortable: boolean) => { 
+
+                                    if (!isSortable) {
+                                        onCustomFieldValidation(field.id, strings.Sort.SortInvalidSortableFieldMessage);
+                                    } else {
+                                        onUpdate(field.id, newValue);
+                                        onCustomFieldValidation(field.id, '');
+                                    }
+                                },
                                 searchService: this._searchService,
                                 validateSortable: true,
                                 availableProperties: this._availableManagedProperties,
@@ -828,13 +842,29 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
                 label: strings.EnableQueryRulesLabel,
                 checked: this.properties.enableQueryRules,
             }),
-            PropertyPaneTextField('selectedProperties', {
+            /*PropertyPaneTextField('selectedProperties', {
                 label: strings.SelectedPropertiesFieldLabel,
-                description: strings.SelectedPropertiesFieldDescription,
+                ,
                 multiline: true,
                 resizable: true,
                 value: this.properties.selectedProperties,
                 deferredValidationTime: 300
+            }),*/
+            new PropertyPaneSearchManagedProperties('selectedProperties', {
+                label: strings.SelectedPropertiesFieldLabel,
+                description: strings.SelectedPropertiesFieldDescription,
+                allowMultiSelect: true,
+                availableProperties: this._availableManagedProperties,
+                defaultSelectedKeys: this.properties.selectedProperties.split(","),
+                onPropertyChange: (propertyPath: string, newValue: any) => { 
+                    this.properties[propertyPath] = newValue.join(','); 
+                    this.onPropertyPaneFieldChanged(propertyPath);
+
+                    // Refresh the WP with new selected properties
+                    this.render();
+                },
+                onUpdateAvailableProperties: this._onUpdateAvailableProperties,
+                searchService: this._searchService,
             }),
             PropertyPaneSlider('maxResultsCount', {
                 label: strings.MaxResultsCount,
@@ -1152,8 +1182,22 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
                         {
                             id: 'property',
                             title: strings.ResultTypes.ConditionPropertyLabel,
-                            type: CustomCollectionFieldType.string,
+                            type: CustomCollectionFieldType.custom,
                             required: true,
+                            onCustomRender: (field, value, onUpdate, item, itemId, onCustomFieldValidation) => {
+                                // Need to specify a React key to avoid item duplication when adding a new row
+                                return React.createElement("div", {key : itemId},
+                                React.createElement(SearchManagedProperties, {
+                                defaultSelectedKey: item[field.id] ? item[field.id] : '',
+                                onUpdate: (newValue: any, isSortable: boolean) => { 
+                                    onUpdate(field.id, newValue);
+                                },
+                                searchService: this._searchService,
+                                validateSortable: false,
+                                availableProperties: this._availableManagedProperties,
+                                onUpdateAvailableProperties: this._onUpdateAvailableProperties
+                                } as ISearchManagedPropertiesProps));
+                            }
                         },
                         {
                             id: 'operator',
@@ -1371,7 +1415,8 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
         // Save the value in the root Web Part class to avoid fetching it again if the property list is requested again by any other property pane control
         this._availableManagedProperties = properties;
 
-        // Refresh all fields in the collection data controls so they can use the new list
+        // Refresh all fields so other property controls can use the new list 
         this.context.propertyPane.refresh();
+        this.render();
     }
 }

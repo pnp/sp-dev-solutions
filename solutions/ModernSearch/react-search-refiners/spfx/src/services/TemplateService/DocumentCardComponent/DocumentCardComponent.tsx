@@ -6,9 +6,9 @@ import { PreviewType } from '../PreviewContainer/IPreviewContainerProps';
 import { Link } from 'office-ui-fabric-react/lib/Link';
 import { IDocumentCardFieldsConfiguration } from "../TemplateService";
 import * as Handlebars from 'handlebars';
-import { getTheme, mergeStyleSets } from '@uifabric/styling';
-import { classNamesFunction } from "@uifabric/utilities";
 import * as documentCardLocationGetStyles from 'office-ui-fabric-react/lib/components/DocumentCard/DocumentCardLocation.styles';
+import { getTheme, mergeStyleSets } from "office-ui-fabric-react/lib/Styling";
+import { classNamesFunction } from "office-ui-fabric-react/lib/Utilities";
 
 /**
  * Document card props. These properties are retrieved from the web component attributes. They must be camel case.

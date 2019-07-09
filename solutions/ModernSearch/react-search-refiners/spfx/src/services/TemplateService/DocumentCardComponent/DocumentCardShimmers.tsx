@@ -2,6 +2,7 @@ import * as React from "react";
 import { Shimmer, ShimmerElementType as ElemType, ShimmerElementsGroup } from 'office-ui-fabric-react/lib/Shimmer';
 
 export class DocumentCardShimmers extends React.Component<{}, {}> {
+    
     public render() {
 
         const shimmerContent: JSX.Element = <div style={{ 

@@ -215,7 +215,7 @@ export class DetailsListComponent extends React.Component<DetailsListComponentPr
               return renderColumnValue;
             },
           },
-        )
+        );
       });
     }
       
@@ -233,8 +233,8 @@ export class DetailsListComponent extends React.Component<DetailsListComponentPr
 
     if (this.props.enableFiltering) {
       renderFilter = <div className={classNames.controlWrapper}>
-        <TextField label="Filter by name:" onChange={this._onChangeText.bind(this)} styles={controlStyles} />
-      </div>
+        <TextField label="Filter by name:" onChange={this._onChangeText.bind(this)} styles={controlStyles} />;
+      </div>;
     }
 
     return (
@@ -251,8 +251,6 @@ export class DetailsListComponent extends React.Component<DetailsListComponentPr
             enableShimmer={this.props.showShimmers}
             selectionPreservedOnEmptyClick={true}
             enterModalSelectionOnTouch={true}
-            ariaLabelForSelectionColumn="Toggle selection"
-            ariaLabelForSelectAllCheckbox="Toggle selection for all items"
           />
       </Fabric>
     );

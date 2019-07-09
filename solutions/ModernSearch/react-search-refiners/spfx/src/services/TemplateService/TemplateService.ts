@@ -112,7 +112,8 @@ export class TemplateService extends BaseTemplateService {
      */
     public getTemplateParameters(layout: ResultsLayoutOption, properties: ISearchResultsWebPartProps, onUpdateAvailableProperties?: (properties: IComboBoxOption[]) => void, availableProperties?: IComboBoxOption[]): IPropertyPaneField<any>[] {
 
-
+        // Get available properties coming from other controls if there are
+        this._availableManagedProperties = availableProperties;
 
         switch (layout) {
 
@@ -157,7 +158,7 @@ export class TemplateService extends BaseTemplateService {
                 ] as IDetailsListColumnConfiguration[];
             }
 
-            if (properties.templateParameters.showFileIcon !== undefined || properties.templateParameters.showFileIcon !== null) {
+            if (properties.templateParameters.showFileIcon === undefined || properties.templateParameters.showFileIcon === null) {
                 properties.templateParameters.showFileIcon = true;
             }
 
@@ -190,13 +191,13 @@ export class TemplateService extends BaseTemplateService {
                                             useHandlebarsExpr: item.useHandlebarsExpr,
                                             onUpdate: onUpdate,
                                             value: value,
-                                            onUpdateAvailableProperties: (properties: IComboBoxOption[]) => {
+                                            onUpdateAvailableProperties: (options: IComboBoxOption[]) => {
 
                                                 // Keep the list state for all collection data rows
-                                                this._availableManagedProperties = properties;
+                                                this._availableManagedProperties = options;
 
                                                 // Share the list for other controls in the property pane
-                                                onUpdateAvailableProperties(properties)
+                                                onUpdateAvailableProperties(options);
                                             },
                                             availableProperties: this._availableManagedProperties ? this._availableManagedProperties : [],
                                             searchService: this._searchService,
@@ -272,7 +273,7 @@ export class TemplateService extends BaseTemplateService {
                         { name: 'Location', field: 'location', value: `<a class="ms-Link" href="{{SPSiteUrl}}">{{SiteTitle}}</a>`, useHandlebarsExpr: true, supportHtml: true },
                         { name: 'Tags', field: 'tags', value: `{{#if owstaxidmetadataalltagsinfo}}<i class='ms-Icon ms-Icon--Tag' aria-hidden='true'></i> {{#each (split owstaxidmetadataalltagsinfo ',') as |tag| }}<a class="ms-Link" href="#owstaxidmetadataalltagsinfo:'{{trim tag}}'">{{tag}}</a>{{/each}}{{/if}}`, useHandlebarsExpr: true, supportHtml: true },
                         { name: 'Preview Image', field: 'previewImage',  value: "{{{getPreviewSrc item}}}", useHandlebarsExpr: true, supportHtml: false },
-                        { name: 'Preview URL', field: 'previewUrl' , value: "{{#eq item.contentclass 'STS_ListItem_851'}}{{{item.DefaultEncodingURL}}}{{else}}{{#eq item.FileType 'pdf'}}<!-- Documents from OneDrive sites can't be viewed directly due to SAMEORIGIN iframe restrictions-->{{#contains Path '-my.sharepoint'}}{{{item.ServerRedirectedEmbedURL}}}{{else}}{{{item.Path}}}{{/contains}}{{else}}{{{item.ServerRedirectedEmbedURL}}}{{/eq}}{{/eq}} ", useHandlebarsExpr: true, supportHtml: false },
+                        { name: 'Preview URL', field: 'previewUrl' , value: "{{#eq contentclass 'STS_ListItem_851'}}{{{DefaultEncodingURL}}}{{else}}{{#eq FileType 'pdf'}}<!-- Documents from OneDrive sites can't be viewed directly due to SAMEORIGIN iframe restrictions-->{{#contains Path '-my.sharepoint'}}{{{ServerRedirectedEmbedURL}}}{{else}}{{{Path}}}{{/contains}}{{else}}{{{ServerRedirectedEmbedURL}}}{{/eq}}{{/eq}} ", useHandlebarsExpr: true, supportHtml: false },
                         { name: 'Date', field: 'date', value: "{{getDate item.Created 'LL'}}", useHandlebarsExpr: true, supportHtml: false },
                         { name: 'URL', field: 'href', value: "{{getUrl item}}", useHandlebarsExpr: true, supportHtml: false },
                         { name: 'Author', field: 'author', value: "Author", useHandlebarsExpr: false, supportHtml: false },
@@ -331,7 +332,7 @@ export class TemplateService extends BaseTemplateService {
                                                 this._availableManagedProperties = properties;
 
                                                 // Share the list for other controls in the property pane
-                                                onUpdateAvailableProperties(properties)
+                                                onUpdateAvailableProperties(properties);
                                             },
                                             availableProperties: this._availableManagedProperties ? this._availableManagedProperties : [],
                                             searchService: this._searchService,

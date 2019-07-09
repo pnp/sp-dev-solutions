@@ -42,7 +42,7 @@
         "handlebars": "^4.0.12",
         "handlebars-helpers": "0.8.4",
         "immutability-helper": "2.4.0",
-        "office-ui-fabric-react": "6.143.0",
+        "office-ui-fabric-react": "6.194.0",
         "react": "16.7.0",
         "react-ace": "7.0.2",
         "react-custom-scrollbars": "4.2.1",

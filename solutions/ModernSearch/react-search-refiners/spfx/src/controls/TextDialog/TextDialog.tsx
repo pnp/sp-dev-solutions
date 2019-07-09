@@ -1,6 +1,6 @@
 import * as React                               from 'react';
 import { Dialog, DialogType, DialogFooter } 	from 'office-ui-fabric-react/lib/Dialog';
-import { Button, ButtonType } 			        from 'office-ui-fabric-react/lib/Button';
+import { Button, ButtonType, PrimaryButton } 			        from 'office-ui-fabric-react/lib/Button';
 import { ITextDialogProps }                  	from './ITextDialogProps';
 import { ITextDialogState }                  	from './ITextDialogState';
 import AceEditor 								from 'react-ace';
@@ -86,14 +86,17 @@ export default class TextDialog extends React.Component<ITextDialogProps, ITextD
 					<Icon iconName='CodeEdit' onClick={ this.showDialog.bind(this) } styles={{ root: { fontSize: 20, cursor: 'pointer' }}}/>
 				</div>
 				
-				<Dialog type={ DialogType.normal }
-						isOpen={ this.state.showDialog }
+				<Dialog hidden={ !this.state.showDialog }
+						dialogContentProps={{
+							subText: this.props.strings.dialogTitle,
+							type: DialogType.normal
+						}}
 						onDismiss={ this.cancelDialog.bind(this) }
 						title={ this.props.strings.dialogTitle }
-						subText={ this.props.strings.dialogSubText }
-						isBlocking={ true }
+
 						modalProps={
 							{
+								isBlocking: true,
 								containerClassName: 'ms-dialogMainOverride ' + styles.textDialog,
 							}
 						}>
@@ -108,13 +111,18 @@ export default class TextDialog extends React.Component<ITextDialogProps, ITextD
 						onChange={ this.onDialogTextChanged.bind(this) }
 						value={ this.state.dialogText }
 						highlightActiveLine={ true }
+						editorProps={
+							{
+								$blockScrolling: Infinity
+							}
+						}					
 						name="CodeEditor"
 						enableBasicAutocompletion={true}
 						/>
 
 					<DialogFooter>
-						<Button buttonType={ ButtonType.primary } onClick={ this.saveDialog.bind(this) }>{ this.props.strings.saveButtonText }</Button>
-						<Button onClick={ this.cancelDialog.bind(this) }>{ this.props.strings.cancelButtonText }</Button>
+						<PrimaryButton buttonType={ ButtonType.primary } onClick={ this.saveDialog.bind(this) }>{ this.props.strings.saveButtonText }</PrimaryButton>
+						<PrimaryButton onClick={ this.cancelDialog.bind(this) }>{ this.props.strings.cancelButtonText }</PrimaryButton>
 					</DialogFooter>
 				</Dialog>
             </div>

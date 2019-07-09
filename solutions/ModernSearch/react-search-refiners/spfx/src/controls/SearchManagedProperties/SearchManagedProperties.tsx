@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { ComboBox, IComboBoxOption } from 'office-ui-fabric-react/lib/ComboBox';
-import { ICustomCollectionField } from '@pnp/spfx-property-controls/lib/PropertyFieldCollectionData';
+import { ComboBox, IComboBoxOption, IComboBox, SelectableOptionMenuItemType } from 'office-ui-fabric-react/lib/ComboBox';
 import { Spinner, SpinnerSize } from 'office-ui-fabric-react/lib/components/Spinner';
 import { isEqual } from '@microsoft/sp-lodash-subset';
 import ISearchService from '../../services/SearchService/ISearchService';
 import * as strings from 'SearchResultsWebPartStrings';
+import * as update from 'immutability-helper';
 
 const LOADING_KEY = 'LOADING';
 
@@ -16,26 +16,19 @@ export interface ISearchManagedPropertiesProps {
     searchService: ISearchService;
 
     /**
-     * The current CollectionData item (i.e. row)
+     * The default selected key
      */
-    currentItem: any;
+    defaultSelectedKey?: string;
 
     /**
-     * The current field on the row
+     * The default selected key
      */
-    field: ICustomCollectionField;
+    defaultSelectedKeys?: string [];
 
     /**
      * Handler when a field value is updated
      */
-    onUpdate: (fieldId: string, value: any) => {};
-
-    /**
-     * Handler to validate the field at row level
-     * @param fieldId the field id
-     * @param errorMsg the error message to display
-     */
-    onCustomFieldValidation(fieldId: string, errorMsg: string);
+    onUpdate: (value: any, isSortable?: boolean) => void;
 
     /**
      * Callback when the list of managed properties is fetched by the control
@@ -56,22 +49,23 @@ export interface ISearchManagedPropertiesProps {
      * Indicates whether or not we should allow multiple selection
      */
     allowMultiSelect?: boolean;
+
+    /**
+     * The field label
+     */
+    label?: string;
+
 }
 
 export interface ISearchManagedPropertiesState {
-
+    
     /**
-     * Error message to display in the field
+     * The current selected keys if the control is multiline
      */
-    errorMessage: string;
+    selectedOptionKeys?: string[];
 
     /**
-     * The current selected key
-     */
-    selectedOptionKey?: string | number;
-
-    /**
-     * The initial value to show in the combo box
+     * The initial value to show in the combo box for a single value
      */
     initialDisplayValue: string;
 
@@ -86,42 +80,72 @@ export class SearchManagedProperties extends React.Component<ISearchManagedPrope
     public constructor(props: ISearchManagedPropertiesProps) {
         super(props);
 
-        let initialValue: string = '';
-
-        // Initializes default value
-        if (props.currentItem && props.field) {
-            if (props.currentItem[props.field.id]) {
-                initialValue = props.currentItem[props.field.id];
-            }
-        }
-
         this.state = {
-            errorMessage: null,
-            options: props.availableProperties ? props.availableProperties : [],
-            initialDisplayValue: initialValue
+            selectedOptionKeys: [],
+            options: [],
+            initialDisplayValue: null,
         };
 
         this.getAvailableSearchProperties = this.getAvailableSearchProperties.bind(this);
-        this.onChanged = this.onChanged.bind(this);
+        this.onChange = this.onChange.bind(this);
+        this.onChangeMulti = this.onChangeMulti.bind(this);
         this.onRenderOption = this.onRenderOption.bind(this);
     }
 
     public render() {
+
+        let renderCombo = null;
+
+        if (!this.props.allowMultiSelect) {
+
+            renderCombo =   <ComboBox
+                                label={this.props.label}
+                                allowFreeform={true}
+                                autoComplete='on'                                
+                                text={ this.state.initialDisplayValue }
+                                onChange={this.onChange}
+                                useComboBoxAsMenuWidth={true}
+                                onResolveOptions={this.getAvailableSearchProperties}
+                                options={this.state.options}
+                                placeholder={ strings.ManagedPropertiesListPlaceHolder }
+                                onRenderOption={this.onRenderOption}
+                            />;
+        } else {
+
+            renderCombo =   <ComboBox
+                                label={this.props.label}
+                                allowFreeform={true}
+                                selectedKey={ this.state.selectedOptionKeys }
+                                autoComplete='on'                                
+                                text={ this.state.initialDisplayValue }
+                                onChange={this.onChangeMulti}
+                                useComboBoxAsMenuWidth={true}
+                                onResolveOptions={this.getAvailableSearchProperties}
+                                options={this.state.options}
+                                placeholder={ strings.ManagedPropertiesListPlaceHolder }
+                                multiSelect
+                                onRenderOption={this.onRenderOption}
+                            />;
+        }
+
+        return renderCombo;
+    }
+
+    public componentDidMount() {
         
-        return <ComboBox
-            allowFreeform={true}
-            multiSelect={this.props.allowMultiSelect !== null ? this.props.allowMultiSelect : false }
-            autoComplete='on'
-            selectedKey={this.state.selectedOptionKey}
-            text={this.state.initialDisplayValue}
-            onChanged={this.onChanged}
-            useComboBoxAsMenuWidth={true}
-            onResolveOptions={this.getAvailableSearchProperties}
-            errorMessage={this.state.errorMessage}
-            placeholder='Select managed property'
-            options={this.state.options}
-            onRenderOption={this.onRenderOption}
-        />;
+        let initialValue = null;
+
+        if (this.props.allowMultiSelect) {
+            initialValue = this.props.defaultSelectedKeys ? this.props.defaultSelectedKeys.toString() : '';
+        } else {
+            initialValue = this.props.defaultSelectedKey ? this.props.defaultSelectedKey : '';
+        }
+
+        this.setState({
+            selectedOptionKeys: this.props.defaultSelectedKeys,
+            options: this.props.availableProperties ? this.props.availableProperties : [],
+            initialDisplayValue: initialValue
+        });
     }
 
     public componentDidUpdate(prevProps: ISearchManagedPropertiesProps, prevState: ISearchManagedPropertiesState) {
@@ -135,26 +159,107 @@ export class SearchManagedProperties extends React.Component<ISearchManagedPrope
         }
     }
 
-    public async onChanged(option: IComboBoxOption, index: number, value: string, submitPendingValueEvent: any) {
+    public async onChange(event: React.FormEvent<IComboBox>, option?: IComboBoxOption, index?: number, value?: string) {
 
-        this.setState({
-            selectedOptionKey: option.key,
-            initialDisplayValue: undefined
-        });
+        let isSortable = null;
 
-        if (this.props.validateSortable) {
-            const isSortable = await this.props.searchService.validateSortableProperty(option.text);
+        if (option) {
 
-            if (!isSortable) {
-                this.props.onCustomFieldValidation(this.props.field.id, strings.);
-            } else {
-                this.props.onUpdate(this.props.field.id, option.text);
-                this.props.onCustomFieldValidation(this.props.field.id, '');
+            if (this.props.validateSortable) {
+                isSortable = await this.props.searchService.validateSortableProperty(option.text);
+            }
+            
+            // User selected/de-selected an existing option
+            this.setState({
+                initialDisplayValue: undefined
+            });
+
+            this.props.onUpdate(option.key, isSortable);
+            
+
+        } else if (value !== undefined) {
+
+            if (this.props.validateSortable) {
+                isSortable = await this.props.searchService.validateSortableProperty(option.text);
             }
 
-        } else {
-            this.props.onUpdate(this.props.field.id, option.text);
-        }     
+            // User typed a freeform option
+            const newOption: IComboBoxOption = { key: value, text: value };
+            let options = update(this.state.options, {$push: [newOption] });
+
+            // Re-sort ascending after adding free values
+            options = options.sort((a, b) => {
+            if (a.text.toLowerCase() > b.text.toLowerCase()) return 1;
+                if (b.text.toLowerCase() > a.text.toLowerCase()) return -1;
+                return 0;
+            });
+
+            this.setState({
+                options: options,
+
+                initialDisplayValue: undefined
+            });
+
+            this.props.onUpdate(newOption.key, isSortable);
+
+            // Update the shared list with new entry
+            this.props.onUpdateAvailableProperties(options);
+        }
+    }
+
+
+    public async onChangeMulti(event: React.FormEvent<IComboBox>, option?: IComboBoxOption, index?: number, value?: string) {
+
+        let selectedKeys = this.state.selectedOptionKeys;
+
+        if (option) {
+            const selectedKeyIdx = this.state.selectedOptionKeys.indexOf(option.key as string);
+
+            if (option.selected && selectedKeyIdx === -1) {
+
+                selectedKeys = update(this.state.selectedOptionKeys, {$push: [option.key] });
+
+                this.setState({
+                    selectedOptionKeys: selectedKeys,
+                    initialDisplayValue: undefined
+                });
+
+            } else {
+
+                selectedKeys = update(this.state.selectedOptionKeys, { $splice: [[selectedKeyIdx, 1]] });
+
+                this.setState({
+                    selectedOptionKeys: selectedKeys,
+                    initialDisplayValue: undefined
+                });
+            }
+
+            this.props.onUpdate(selectedKeys);
+
+          } else if (value !== undefined) {
+
+            // User typed a freeform option
+            const newOption: IComboBoxOption = { key: value, text: value };
+            selectedKeys = update(this.state.selectedOptionKeys, {$push: [newOption.key] });
+            let options = update(this.state.options, {$push: [newOption] });
+
+            // Re-sort ascending after adding free values
+            options = options.sort((a, b) => {
+            if (a.text.toLowerCase() > b.text.toLowerCase()) return 1;
+                if (b.text.toLowerCase() > a.text.toLowerCase()) return -1;
+                return 0;
+            });
+
+            this.setState({
+                options: options,
+                initialDisplayValue: undefined
+            });
+
+           this.props.onUpdate(selectedKeys);
+
+           // Update the shared list with new entry
+           this.props.onUpdateAvailableProperties(options);
+        } 
     }
 
     /**
@@ -162,12 +267,12 @@ export class SearchManagedProperties extends React.Component<ISearchManagedPrope
      */
     private async getAvailableSearchProperties(): Promise<IComboBoxOption[]> {
 
-        let options: IComboBoxOption[] = [];
-
         // Case when user opens the dropdown multiple times on the same field
         if (this.state.options.length > 0) {
-            options = this.state.options;
+            return this.state.options;
         } else {
+
+            let options: IComboBoxOption[] = [];
 
             // Create a special item to display a spinner (see onRenderOption method)
             this.setState({
@@ -176,49 +281,81 @@ export class SearchManagedProperties extends React.Component<ISearchManagedPrope
                         key: LOADING_KEY,
                         text: '',
                         disabled: true,
+                        itemType: SelectableOptionMenuItemType.Header,
                         styles: {
-                            flexContainer: {
+                            flexContainer: {                                
                                 selectors: {
                                     'span': {
                                         margin: '0 auto',
                                     }
                                 }
-                            }
+                            },
+
                         }
                     }
                 ]
             });
 
             // Get managed properties and build dropdown options
-            const searchManagedProperties = await this.props.searchService.getAvailableManagedProperties();
-
+            let searchManagedProperties = await this.props.searchService.getAvailableManagedProperties();
             searchManagedProperties.map(managedProperty => {
 
                 options.push({
                     key: managedProperty.name,
-                    text: managedProperty.name
+                    text: managedProperty.name,
                 } as IComboBoxOption);
-            });                      
+            });      
+            
+            if (!this.props.allowMultiSelect) {
+                // If default selected properties are not in the list we add them a free text
+                if (options.filter(e => { return e.key === this.props.defaultSelectedKey; }).length === 0) {
+                    options.push({
+                        key: this.props.defaultSelectedKey,
+                        text:this.props.defaultSelectedKey as string,
+                    });
+                }
+            } else {
+                this.props.defaultSelectedKeys.map(defaultKey => {
+
+                    if (options.filter(e => { return e.key === defaultKey; }).length === 0) {
+                        options.push({
+                            key: defaultKey,
+                            text: defaultKey as string,
+                        });
+                    }
+                });
+            }
+
+            // Re-sort ascending after adding free values
+            options = options.sort((a, b) => {
+            if (a.text.toLowerCase() > b.text.toLowerCase()) return 1;
+                if (b.text.toLowerCase() > a.text.toLowerCase()) return -1;
+                return 0;
+            });
+
+            this.setState({
+                options: options,
+                selectedOptionKeys: this.props.defaultSelectedKeys,
+                initialDisplayValue: undefined
+            });
+
+            // Pass list to the parent to save it for other fields
+            this.props.onUpdateAvailableProperties(options);
+
+            return options;
         }
-        
-        // Pass list to the parent to save it for other fields
-        this.props.onUpdateAvailableProperties(options);
-
-        this.setState({
-            options: options
-        });
-
-        return options;
     }
 
     private onRenderOption(option: IComboBoxOption): JSX.Element {
 
         if (option.key === LOADING_KEY) {
             return (
-                <Spinner size={SpinnerSize.small}></Spinner>
+                <div style={{height: '100%'}}>
+                    <Spinner styles={{root: { height: '100%' }}} key={option.key} size={SpinnerSize.small}></Spinner>
+                </div>
               );
         } else {
-            return <span>{option.text}</span>;
+            return <span key={option.key}>{option.text}</span>;
         }
     }
 }

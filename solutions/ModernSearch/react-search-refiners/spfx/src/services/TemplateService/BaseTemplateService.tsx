@@ -17,15 +17,10 @@ import { DetailsListWebComponent } from './components/DetailsList';
 import { VideoCardWebComponent } from './components/VideoCard';
 import { DocumentCardShimmersWebComponent } from './components/shimmers/DocumentCardShimmers';
 import '@webcomponents/custom-elements';
-import { IPropertyPaneField, PropertyPaneToggle} from '@microsoft/sp-property-pane';
+import { IPropertyPaneField } from '@microsoft/sp-property-pane';
 import ResultsLayoutOption from '../../models/ResultsLayoutOption';
 import { ISearchResultsWebPartProps } from '../../webparts/searchResults/ISearchResultsWebPartProps';
-import { PropertyFieldCollectionData, CustomCollectionFieldType } from '@pnp/spfx-property-controls/lib/PropertyFieldCollectionData';
-import { TemplateValueFieldEditor, ITemplateValueFieldEditorProps } from '../../controls/TemplateValueFieldEditor/TemplateValueFieldEditor'
-import { IDetailsListColumnConfiguration } from './DetailsListComponent/DetailsListComponent';
 import { IComboBoxOption } from 'office-ui-fabric-react/lib/ComboBox';
-import SearchService from '../SearchService/SearchService';
-import ISearchService from '../SearchService/ISearchService';
 
 abstract class BaseTemplateService {
 
@@ -37,7 +32,7 @@ abstract class BaseTemplateService {
         this.registerTemplateServices();
 
         // Register web components
-        this.registerWebComponents()        
+        this.registerWebComponents();        
     }
 
     private async LoadHandlebarsHelpers() {
@@ -499,39 +494,44 @@ abstract class BaseTemplateService {
             templateContent = await this.getFileContent(currentResultType.externalTemplateUrl);
         }
 
-        let handlebarsToken = currentResultType.value.match(/^\{\{(.*)\}\}$/);
+        if (currentResultType.value) {
 
-        let operator = currentResultType.operator;
-        let param1 = currentResultType.property;
+            let handlebarsToken = currentResultType.value.match(/^\{\{(.*)\}\}$/);
 
-        // Use a token or a string value
-        let param2 = handlebarsToken ? handlebarsToken[1] : `"${currentResultType.value}"`;
-
-        // Operator: "Starts With"
-        if (currentResultType.operator === ResultTypeOperator.StartsWith) {
-            param1 = `"${currentResultType.value}"`;
-            param2 = `${currentResultType.property}`;
-        }
-
-        // Operator: "Not null"
-        if (currentResultType.operator === ResultTypeOperator.NotNull) {
-            param2 = null;
-        }
-
-        const baseCondition = `{{#${operator} ${param1} ${param2 || ""}}} 
-                                    ${templateContent}`;
-
-        if (currentIdx === resultTypes.length - 1) {
-            // Renders inner content set in the 'resultTypes' partial
-            conditionBlockContent = "{{> @partial-block }}";
+            let operator = currentResultType.operator;
+            let param1 = currentResultType.property;
+    
+            // Use a token or a string value
+            let param2 = handlebarsToken ? handlebarsToken[1] : `"${currentResultType.value}"`;
+    
+            // Operator: "Starts With"
+            if (currentResultType.operator === ResultTypeOperator.StartsWith) {
+                param1 = `"${currentResultType.value}"`;
+                param2 = `${currentResultType.property}`;
+            }
+    
+            // Operator: "Not null"
+            if (currentResultType.operator === ResultTypeOperator.NotNull) {
+                param2 = null;
+            }
+    
+            const baseCondition = `{{#${operator} ${param1} ${param2 || ""}}} 
+                                        ${templateContent}`;
+    
+            if (currentIdx === resultTypes.length - 1) {
+                // Renders inner content set in the 'resultTypes' partial
+                conditionBlockContent = "{{> @partial-block }}";
+            } else {
+                conditionBlockContent = await this._buildCondition(resultTypes, resultTypes[currentIdx + 1], currentIdx + 1);
+            }
+    
+            return `${baseCondition}   
+                    {{else}} 
+                        ${conditionBlockContent}
+                    {{/${operator}}}`;
         } else {
-            conditionBlockContent = await this._buildCondition(resultTypes, resultTypes[currentIdx + 1], currentIdx + 1);
+             return '';
         }
-
-        return `${baseCondition}   
-                {{else}} 
-                    ${conditionBlockContent}
-                {{/${operator}}}`;
     }
 
     /**

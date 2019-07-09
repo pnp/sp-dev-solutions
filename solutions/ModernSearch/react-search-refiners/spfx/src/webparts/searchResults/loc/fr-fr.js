@@ -121,6 +121,7 @@ define([], function() {
       "ManageTilesFieldsPanelDescriptionLabel": "Ici vous pouvez associer la valeur de chaque champ aux zone de la carte correspondantes. Vous pouvez soit utiliser la valeur d'une propriété de recherche directement ou bien spécifier une expression Handlebars en tant que valeur. Pour certains champ, lorsque indiqué, vous pouvez également injecter votre propre code HTML.",
       "DocumentCardNameFieldLabel": "Nom",
       "DocumentCardValueFieldLabel": "Valeur"
-    }
+    },
+    "ManagedPropertiesListPlaceHolder": "Ajouter une propriété gérée"
   }
 });

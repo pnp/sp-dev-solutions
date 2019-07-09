@@ -123,6 +123,7 @@ declare interface ISearchResultsWebPartStrings {
         DocumentCardNameFieldLabel: string;
         DocumentCardValueFieldLabel: string;
     }
+    ManagedPropertiesListPlaceHolder: string;
 }
 
 declare module 'SearchResultsWebPartStrings' {

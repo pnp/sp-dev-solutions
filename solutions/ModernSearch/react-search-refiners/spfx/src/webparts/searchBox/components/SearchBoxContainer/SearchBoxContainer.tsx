@@ -134,7 +134,7 @@ export default class SearchBoxContainer extends React.Component<ISearchBoxContai
                 className={ styles.searchTextField }
                 placeholder={ this.props.placeholderText ? this.props.placeholderText : strings.SearchInputPlaceholder }
                 value={ this.state.searchInputValue }
-                onChanged={ (value) => {
+                onChange={ (ev, value) => {
                   this.setState({
                     searchInputValue: value,
                     showClearButton: true

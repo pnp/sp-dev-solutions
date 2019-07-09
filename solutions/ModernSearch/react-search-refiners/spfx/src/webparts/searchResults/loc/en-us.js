@@ -121,6 +121,7 @@ define([], function () {
       "ManageTilesFieldsPanelDescriptionLabel": "Here you can map each field values with the corresponding card placeholders. You can use either the managed property value directly without any transformation or use an Handlebars expression in the value field. Also, when indicated, you can also inject your own HTML code in some fields.",
       "DocumentCardNameFieldLabel": "Name",
       "DocumentCardValueFieldLabel": "Value"
-    }
+    },
+    "ManagedPropertiesListPlaceHolder": "Select a managed property"
   }
 });

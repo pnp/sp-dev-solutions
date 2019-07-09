@@ -34,7 +34,11 @@ export default class CheckboxTemplate extends React.Component<IBaseRefinerTempla
 
                                 return (
                                 <Checkbox
-                                    style={{padding: '10px'}}
+                                    styles={{
+                                        root:{
+                                            padding: 10
+                                        }
+                                    }}
                                     key={j}                                    
                                     checked={this._isValueInFilterSelection(refinementValue)}
                                     label={Text.format(refinementValue.RefinementValue + ' ({0})', refinementValue.RefinementCount)}
