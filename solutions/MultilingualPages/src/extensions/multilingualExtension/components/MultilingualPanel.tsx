@@ -252,7 +252,7 @@ export class MultilingualPanel extends React.Component<IMultilingualPanelProps, 
 
   private async getFileItemId(destUrl: string): Promise<number> {
     let item;
-    destUrl = destUrl.replace("&", "%26"); // replace & as it would introduce a new query string parameter
+    destUrl = destUrl.replace(/&/g, "%26"); // replace & as it would inadvertently introduce a new query string parameter
     while (!item) {
       try {
         let items = await sp.web.lists.getByTitle("Site Pages").items.filter(`FileRef%20eq%20%27${destUrl}%27`).select("Id").get<{ Id: number }[]>();
