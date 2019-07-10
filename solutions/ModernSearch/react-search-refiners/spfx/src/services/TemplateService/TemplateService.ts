@@ -112,57 +112,57 @@ export class TemplateService extends BaseTemplateService {
      */
     public getTemplateParameters(layout: ResultsLayoutOption, properties: ISearchResultsWebPartProps, onUpdateAvailableProperties?: (properties: IComboBoxOption[]) => void, availableProperties?: IComboBoxOption[]): IPropertyPaneField<any>[] {
 
-        // Get available properties coming from other controls if there are
+        // Get available properties coming from other property pane controls if there are
         this._availableManagedProperties = availableProperties;
 
         switch (layout) {
 
             case ResultsLayoutOption.DetailsList:
 
-            // Setup default values
-            if (!properties.templateParameters.detailsListColumns) {
-                properties.templateParameters.detailsListColumns = [
-                    {
-                        name: 'Title',
-                        value: 'Title',
-                        useHandlebarsExpr: false,
-                        minWidth: '80',
-                        maxWidth: '300',
-                        enableSorting: true,
-                        isMultiline: false,
-                        isResizable: true,
-                        isResultItemLink: true                        
-                    },
-                    {
-                        name: 'Created',
-                        value: "{{getDate Created 'LL'}}",
-                        useHandlebarsExpr: true,
-                        minWidth: '80',
-                        maxWidth: '120',
-                        enableSorting: false,
-                        isMultiline: false,
-                        isResizable: false,
-                        isResultItemLink: false                        
-                    },
-                    {
-                        name: 'Summary',
-                        value: "{{getSummary HitHighlightedSummary}}",
-                        useHandlebarsExpr: true,
-                        minWidth: '80',
-                        maxWidth: '300',
-                        enableSorting: false,
-                        isMultiline: true,
-                        isResizable: false,
-                        isResultItemLink: false                        
-                    }
-                ] as IDetailsListColumnConfiguration[];
-            }
+                // Setup default values
+                if (!properties.templateParameters.detailsListColumns) {
+                    properties.templateParameters.detailsListColumns = [
+                        {
+                            name: 'Title',
+                            value: 'Title',
+                            useHandlebarsExpr: false,
+                            minWidth: '80',
+                            maxWidth: '300',
+                            enableSorting: true,
+                            isMultiline: false,
+                            isResizable: true,
+                            isResultItemLink: true                        
+                        },
+                        {
+                            name: 'Created',
+                            value: "{{getDate Created 'LL'}}",
+                            useHandlebarsExpr: true,
+                            minWidth: '80',
+                            maxWidth: '120',
+                            enableSorting: false,
+                            isMultiline: false,
+                            isResizable: false,
+                            isResultItemLink: false                        
+                        },
+                        {
+                            name: 'Summary',
+                            value: "{{getSummary HitHighlightedSummary}}",
+                            useHandlebarsExpr: true,
+                            minWidth: '80',
+                            maxWidth: '300',
+                            enableSorting: false,
+                            isMultiline: true,
+                            isResizable: false,
+                            isResultItemLink: false                        
+                        }
+                    ] as IDetailsListColumnConfiguration[];
+                }
 
-            if (properties.templateParameters.showFileIcon === undefined || properties.templateParameters.showFileIcon === null) {
-                properties.templateParameters.showFileIcon = true;
-            }
+                if (properties.templateParameters.showFileIcon === undefined || properties.templateParameters.showFileIcon === null) {
+                    properties.templateParameters.showFileIcon = true;
+                }
 
-            return [
+                return [
                     PropertyFieldCollectionData('templateParameters.detailsListColumns', {
                         manageBtnLabel: strings.TemplateParameters.ManageDetailsListColumnLabel,
                         key: 'templateParameters.detailsListColumns',
@@ -174,13 +174,13 @@ export class TemplateService extends BaseTemplateService {
                         fields: [
                             {
                                 id: 'name',
-                                title: "Column display name",
+                                title: strings.TemplateParameters.DisplayNameColumnLabel,
                                 type: CustomCollectionFieldType.string,
                                 required: true,                               
                             },
                             {
                                 id: 'value',
-                                title: "Value to do display",
+                                title:strings.TemplateParameters.ValueColumnLabel,
                                 type: CustomCollectionFieldType.custom,
                                 required: true,
                                 onCustomRender: (field, value, onUpdate, item, itemId, onCustomFieldValidation) => {
@@ -196,7 +196,7 @@ export class TemplateService extends BaseTemplateService {
                                                 // Keep the list state for all collection data rows
                                                 this._availableManagedProperties = options;
 
-                                                // Share the list for other controls in the property pane
+                                                // Share the list for other controls in the property pane (not only the collection data control)
                                                 onUpdateAvailableProperties(options);
                                             },
                                             availableProperties: this._availableManagedProperties ? this._availableManagedProperties : [],
@@ -211,46 +211,46 @@ export class TemplateService extends BaseTemplateService {
                                 id: 'useHandlebarsExpr',
                                 type: CustomCollectionFieldType.boolean,
                                 defaultValue: false,
-                                title: "Use expression"
+                                title: strings.TemplateParameters.UseHandlebarsExpressionLabel
                             },
                             {
                                 id: 'minWidth',
-                                title: "Minimum width (px)",
+                                title: strings.TemplateParameters.MinimumWidthColumnLabel,
                                 type: CustomCollectionFieldType.number,
                                 required: false,
                                 defaultValue: 50
                             },
                             {
                                 id: 'maxWidth',
-                                title: "Maximum width (px)",
+                                title: strings.TemplateParameters.MaximumWidthColumnLabel,
                                 type: CustomCollectionFieldType.number,
                                 required: false,
                                 defaultValue: 310
                             },
                             {
                                 id: 'enableSorting',
-                                title: "Sortable",
+                                title: strings.TemplateParameters.SortableColumnLabel,
                                 type: CustomCollectionFieldType.boolean,
                                 defaultValue: false,
                                 required: false                                
                             },
                             {
                                 id: 'isResizable',
-                                title: "Resizable",
+                                title: strings.TemplateParameters.ResizableColumnLabel,
                                 type: CustomCollectionFieldType.boolean,
                                 defaultValue: false,
                                 required: false                                
                             },
                             {
                                 id: 'isMultiline',
-                                title: "Multiline",
+                                title: strings.TemplateParameters.MultilineColumnLabel,
                                 type: CustomCollectionFieldType.boolean,
                                 defaultValue: false,
                                 required: false          
                             },
                             {
                                 id: 'isResultItemLink',
-                                title: "Link to item",
+                                title: strings.TemplateParameters.LinkToItemColumnLabel,
                                 type: CustomCollectionFieldType.boolean,
                                 defaultValue: false,
                                 required: false          
@@ -307,7 +307,7 @@ export class TemplateService extends BaseTemplateService {
                                 id: 'supportHtml',
                                 type: CustomCollectionFieldType.custom,
                                 disableEdit: true,
-                                title: "HTML",
+                                title: strings.TemplateParameters.SupportHTMLColumnLabel,
                                 onCustomRender: (field, value, onUpdate, item, itemId, onCustomFieldValidation) => {
                                     if (item.supportHtml) {
                                         return React.createElement(Icon, { iconName: 'CheckMark' } as IIconProps);
@@ -345,7 +345,7 @@ export class TemplateService extends BaseTemplateService {
                             {
                                 id: 'useHandlebarsExpr',
                                 type: CustomCollectionFieldType.boolean,
-                                title: "Use Handlebars expression"
+                                title: strings.TemplateParameters.UseHandlebarsExpressionLabel
                             }
                         ]
                     }),

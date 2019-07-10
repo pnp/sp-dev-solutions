@@ -1,4 +1,5 @@
 enum ResultsLayoutOption {
+    SimpleList,
     DetailsList,
     Tiles,
     Custom

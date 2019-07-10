@@ -166,6 +166,9 @@ export class SearchManagedProperties extends React.Component<ISearchManagedPrope
         }
     }
 
+    /**
+     * Handler when a value is selected or manually added in the list
+     */
     public async onChange(event: React.FormEvent<IComboBox>, option?: IComboBoxOption, index?: number, value?: string) {
 
         let isSortable = null;
@@ -215,7 +218,9 @@ export class SearchManagedProperties extends React.Component<ISearchManagedPrope
         }
     }
 
-
+    /**
+     * Handler when a value is selected/unselected or manually added in the list
+     */
     public async onChangeMulti(event: React.FormEvent<IComboBox>, option?: IComboBoxOption, index?: number, value?: string) {
 
         let selectedKeys = this.state.selectedOptionKeys;

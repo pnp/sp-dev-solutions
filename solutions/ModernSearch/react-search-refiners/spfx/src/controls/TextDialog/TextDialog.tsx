@@ -1,6 +1,6 @@
 import * as React                               from 'react';
 import { Dialog, DialogType, DialogFooter } 	from 'office-ui-fabric-react/lib/Dialog';
-import { Button, ButtonType, PrimaryButton } 			        from 'office-ui-fabric-react/lib/Button';
+import { ButtonType, PrimaryButton } 			from 'office-ui-fabric-react/lib/Button';
 import { ITextDialogProps }                  	from './ITextDialogProps';
 import { ITextDialogState }                  	from './ITextDialogState';
 import AceEditor 								from 'react-ace';
@@ -11,7 +11,6 @@ import 'brace';
 import 'brace/mode/html';
 import 'brace/theme/monokai';
 import 'brace/ext/language_tools';
-import { Link } from 'office-ui-fabric-react/lib/Link';
 import { TextField } from 'office-ui-fabric-react/lib/TextField';
 import { Icon } from 'office-ui-fabric-react/lib/Icon';
 

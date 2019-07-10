@@ -1,9 +1,9 @@
 
 .template_root, .placeholder_root {
 
-    @import '~office-ui-fabric-react/dist/sass/Fabric.scss';
-
     .template_defaultList {
+
+        padding: 0;
     
         strong {
             color: "[theme: themePrimary, default: #005a9e]";
@@ -14,6 +14,7 @@
             display:flex;
             display: -ms-flexbox;
             padding: 10px;
+            min-height: 110px;
             justify-content: space-between;
 
             img.img-preview  {
@@ -37,6 +38,7 @@
                 display: -ms-flexbox;
                 flex-direction: column;
                 margin-right: 15px;
+                justify-content: space-between;
             }
             
             .template_previewContainer {
@@ -98,6 +100,7 @@
         }
     }
     
+    // Legacy CSS for backward compatibility, now replaced by Office UI Fabric controls
     .template_defaultCard {
 
         .singleCard {

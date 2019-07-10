@@ -71,9 +71,12 @@ abstract class BaseTemplateService {
 
         switch (layout) {
 
-            case ResultsLayoutOption.DetailsList:
-                return require('./templates/layouts/list.html');
+            case ResultsLayoutOption.SimpleList:
+                return require('./templates/layouts/simple-list.html');
 
+            case ResultsLayoutOption.DetailsList:
+                return require('./templates/layouts/details-list.html');
+            
             case ResultsLayoutOption.Tiles:
                 return require('./templates/layouts/tiles.html');
 
@@ -530,7 +533,7 @@ abstract class BaseTemplateService {
                         ${conditionBlockContent}
                     {{/${operator}}}`;
         } else {
-             return '';
+            return '';
         }
     }
 

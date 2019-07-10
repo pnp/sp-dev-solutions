@@ -40,7 +40,8 @@ define([], function () {
     "DialogButtonText": "Edit template",
     "DialogTitle": "Edit results template",
     "SaveButtonText": "Save",
-    "ListLayoutOption": "Details List",
+    "SimpleListLayoutOption": "Simple list",
+    "DetailsListLayoutOption": "Details list",
     "TilesLayoutOption": "Tiles",
     "CustomLayoutOption": "Custom",
     "ResultsLayoutLabel": "Results layout",
@@ -95,6 +96,7 @@ define([], function () {
     "ResultTypes": {
       "ResultTypeslabel": "Result Types",
       "ResultTypesDescription": "Add here the display templates to use for result items according to one ore more conditions. Conditions are evaluated in the configured order and external template takes precedence over inline templates. Make sure the managed properties you use are present in the 'Selected Properties' of this Web Part.",
+      "InlineTemplateContentLabel": "Inline template",
       "EditResultTypesLabel": "Edit Result Types",
       "ConditionPropertyLabel": "Managed Property",
       "ConditionValueLabel": "Condition Value",
@@ -120,7 +122,17 @@ define([], function () {
       "ManageTilesFieldsLabel": "Manage card fields",
       "ManageTilesFieldsPanelDescriptionLabel": "Here you can map each field values with the corresponding card placeholders. You can use either the managed property value directly without any transformation or use an Handlebars expression in the value field. Also, when indicated, you can also inject your own HTML code in some fields.",
       "DocumentCardNameFieldLabel": "Name",
-      "DocumentCardValueFieldLabel": "Value"
+      "DocumentCardValueFieldLabel": "Value",
+      "ValueColumnLabel": "Column value",
+      "DisplayNameColumnLabel": "Column display name",
+      "UseHandlebarsExpressionLabel": "Use Handlebars expression",
+      "MinimumWidthColumnLabel": "Minimum width (px)",
+      "MaximumWidthColumnLabel": "Maximum width (px)",
+      "SortableColumnLabel": "Sortable",
+      "ResizableColumnLabel": "Resizable",
+      "MultilineColumnLabel": "Multiline",
+      "LinkToItemColumnLabel": "Link to item",
+      "SupportHTMLColumnLabel": "Can HTML"
     },
     "ManagedPropertiesListPlaceHolder": "Select a managed property"
   }

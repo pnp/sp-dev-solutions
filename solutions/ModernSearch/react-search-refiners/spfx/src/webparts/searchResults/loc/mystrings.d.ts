@@ -42,7 +42,8 @@ declare interface ISearchResultsWebPartStrings {
     DialogTitle: string;
     SaveButtonText: string;
     ResultsLayoutLabel: string;
-    ListLayoutOption: string;
+    SimpleListLayoutOption: string;
+    DetailsListLayoutOption: string;
     TilesLayoutOption: string;
     CustomLayoutOption: string;
     TemplateUrlFieldLabel: string;
@@ -92,6 +93,7 @@ declare interface ISearchResultsWebPartStrings {
     ResultTypes: {
         ResultTypeslabel: string;
         ResultTypesDescription: string;
+        InlineTemplateContentLabel: string;
         EditResultTypesLabel: string;
         ConditionPropertyLabel: string;
         ConditionValueLabel: string;
@@ -122,6 +124,16 @@ declare interface ISearchResultsWebPartStrings {
         ManageDetailsListColumnLabel: string;
         DocumentCardNameFieldLabel: string;
         DocumentCardValueFieldLabel: string;
+        ValueColumnLabel: string;
+        DisplayNameColumnLabel: string;
+        UseHandlebarsExpressionLabel: string;
+        MinimumWidthColumnLabel: string;
+        MaximumWidthColumnLabel: string;
+        SortableColumnLabel: string;
+        ResizableColumnLabel: string;
+        MultilineColumnLabel: string;
+        LinkToItemColumnLabel: string;
+        SupportHTMLColumnLabel: string;
     }
     ManagedPropertiesListPlaceHolder: string;
 }

@@ -187,7 +187,8 @@ export class DetailsListComponent extends React.Component<DetailsListComponentPr
               if (column.useHandlebarsExpr) {
 
                 try {
-                  // Create a temp context with the current so we cab use global registered helper on the current item
+
+                    // Create a temp context with the current so we cab use global registered helper on the current item
                   const tempTemplateContent = `{{#with item as |item|}}${column.value}{{/with}}`;
 
                   let template = Handlebars.compile(tempTemplateContent);

@@ -40,7 +40,8 @@ define([], function() {
     "DialogButtonText": "Éditer le modèle",
     "DialogTitle": "Éditer le modèle de résulat",
     "SaveButtonText": "Enregistrer",
-    "ListLayoutOption": "Liste",
+    "SimpleListLayoutOption": "List simple",
+    "DetailsListLayoutOption": "Liste détailléé",
     "TilesLayoutOption": "Tuiles",
     "CustomLayoutOption": "Personnalisé",
     "ResultsLayoutLabel": "Disposition des résultats",
@@ -95,6 +96,7 @@ define([], function() {
     "ResultTypes": {
       "ResultTypeslabel": "Types de résultats",
       "ResultTypesDescription": "Ajoutez ici les modèles d'affichage à utiliser pour les éléments correspondant à une ou plusieurs conditions. Les conditions sont évaluées dans l'ordre et les modèles externes ont priorité sur ceux définis à même le composant. Vérifiez également que les propriétés gérées de recherche utilisées comme conditions sont présentes dans le paramètre 'Propriétés à récupérer' de ce Web Part.",
+      "InlineTemplateContentLabel": "Contenu du modèle",
       "EditResultTypesLabel": "Éditer les types de résultats",
       "ConditionPropertyLabel": "Propriété gérée",
       "ConditionValueLabel": "Valeur de la condition",
@@ -120,7 +122,17 @@ define([], function() {
       "ManageTilesFieldsLabel": "Gérer les champs de la carte",
       "ManageTilesFieldsPanelDescriptionLabel": "Ici vous pouvez associer la valeur de chaque champ aux zone de la carte correspondantes. Vous pouvez soit utiliser la valeur d'une propriété de recherche directement ou bien spécifier une expression Handlebars en tant que valeur. Pour certains champ, lorsque indiqué, vous pouvez également injecter votre propre code HTML.",
       "DocumentCardNameFieldLabel": "Nom",
-      "DocumentCardValueFieldLabel": "Valeur"
+      "DocumentCardValueFieldLabel": "Valeur",
+      "ValueColumnLabel": "Valeur",
+      "DisplayNameColumnLabel": "Intitulé de la colonne",
+      "UseHandlebarsExpressionLabel": "Utiliser une expression Handlebars",
+      "MinimumWidthColumnLabel": "Largeur minimum (px)",
+      "MaximumWidthColumnLabel": "Largeur maximum (px)",
+      "SortableColumnLabel": "Triable",
+      "ResizableColumnLabel": "Extensible",
+      "MultilineColumnLabel": "Plusieurs lignes",
+      "LinkToItemColumnLabel": "Lien vers l'élément",
+      "SupportHTMLColumnLabel": "Supporte HTML"
     },
     "ManagedPropertiesListPlaceHolder": "Ajouter une propriété gérée"
   }

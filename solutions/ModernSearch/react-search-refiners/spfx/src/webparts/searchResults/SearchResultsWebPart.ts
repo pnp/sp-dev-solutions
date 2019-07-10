@@ -1085,7 +1085,14 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
                 iconProps: {
                     officeFabricIconFontName: 'List'
                 },
-                text: strings.ListLayoutOption,
+                text: strings.SimpleListLayoutOption,
+                key: ResultsLayoutOption.SimpleList,
+            },
+            {
+                iconProps: {
+                    officeFabricIconFontName: 'Table'
+                },
+                text: strings.DetailsListLayoutOption,
                 key: ResultsLayoutOption.DetailsList,
             },
             {
@@ -1248,7 +1255,7 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
                         },
                         {
                             id: "inlineTemplateContent",
-                            title: "Inline template",
+                            title: strings.ResultTypes.InlineTemplateContentLabel,
                             type: CustomCollectionFieldType.custom,
                             onCustomRender: (field, value, onUpdate) => {
                                 return (
@@ -1407,7 +1414,7 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
     }
 
     /**
-     * Handler when the list of available managed properties is fetched by a property pane control¸
+     * Handler when the list of available managed properties is fetched by a property pane control¸or a field in a collection data control
      * @param properties the fetched properties
      */
     private _onUpdateAvailableProperties(properties: IComboBoxOption[]) {
