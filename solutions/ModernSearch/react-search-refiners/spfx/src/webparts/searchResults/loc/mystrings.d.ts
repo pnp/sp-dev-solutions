@@ -17,8 +17,9 @@ declare interface ISearchResultsWebPartStrings {
     FilterPanelTitle: string;
     FilterResultsButtonLabel: string;
     SelectedFiltersLabel: string;
+    SearchResultsLabel: string;
     RemoveAllFiltersLabel: string;
-    ShowPagingLabel: string;
+    UsePaginationWebPartLabel: string;
     ShowResultsCountLabel: string;
     ShowBlankLabel: string;
     ShowBlankEditInfoMessage: string;
@@ -40,6 +41,7 @@ declare interface ISearchResultsWebPartStrings {
     DialogButtonText: string;
     DialogTitle: string;
     SaveButtonText: string;
+    ResultsLayoutLabel: string;
     ListLayoutOption: string;
     TilesLayoutOption: string;
     CustomLayoutOption: string;
@@ -51,6 +53,9 @@ declare interface ISearchResultsWebPartStrings {
     HandlebarsHelpersDescription: string;
     PromotedResultsLabel: string;
     PanelCloseButtonAria:string;
+    UseRefinersWebPartLabel: string;
+    UseRefinersFromComponentLabel: string;
+    UsePaginationFromComponentLabel: string;
     customTemplateFieldsLabel: string;  
     customTemplateFieldsPanelHeader: string;  
     customTemplateFieldsConfigureButtonLabel: string;  
@@ -73,13 +78,15 @@ declare interface ISearchResultsWebPartStrings {
         EditSortableFieldsLabel: string;
         EditSortLabel: string;
     },
-    Refiners: {
-        RefinersFieldLabel: string;
-        RefinersFieldDescription: string;
-        RefinerManagedPropertyField: string;
-        RefinerDisplayValueField: string;
-        EditRefinersLabel: string;
-        EditSortLabel: string;
+    Synonyms: {
+        EditSynonymLabel: string;
+        SynonymListDescription: string;
+        SynonymPropertyPanelFieldLabel: string;
+        SynonymListTerm: string;
+        SynonymListSynonyms: string;
+        SynonymIsTwoWays: string;
+        SynonymListSynonymsExemple: string;
+        SynonymListTermExemple: string;
     },
     ResultTypes: {
         ResultTypeslabel: string;
@@ -102,6 +109,8 @@ declare interface ISearchResultsWebPartStrings {
     UseDefaultSearchQueryKeywordsFieldLabel: string;
     DefaultSearchQueryKeywordsFieldLabel: string;
     DefaultSearchQueryKeywordsFieldDescription: string;
+    QueryCultureLabel: string;
+    QueryCultureUseUiLanguageLabel: string;
 }
 
 declare module 'SearchResultsWebPartStrings' {

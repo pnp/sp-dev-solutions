@@ -303,7 +303,7 @@ export default class PropertyFieldCamlQueryFieldMappingHost extends React.Compon
 
         switch(field.kind){
           case SPFieldType.Boolean:
-            const val = element.value.toLocaleLowerCase().trim();
+            const val = element.value ? element.value.toLocaleLowerCase().trim() : "false";
             if(element.operator==="Ne")
               conditions.push(CamlBuilder.Expression().BooleanField(element.field).NotEqualTo(val==="yes" || val==="true" || val==="1"));
             else

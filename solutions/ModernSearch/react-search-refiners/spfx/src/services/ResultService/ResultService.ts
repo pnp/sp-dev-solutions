@@ -24,8 +24,15 @@ export interface ICustomTemplateFieldValue {
 export class ResultService implements IResultService {
     private SEARCH_CHANGED_EVENT_NAME: string = "pnp-spfx-search-changed";
     private SEARCH_RENDERERS_OBJECT_NAME: string = "pnp-spfx-search-renderers";
+    private _results: ISearchResults;
+    public get results(): ISearchResults { return this._results; }
+
+    private _isLoading: boolean;
+    public get isLoading(): boolean { return this._isLoading; }
+    public set isLoading(status: boolean) { this._isLoading = status; }
 
     public updateResultData(results: ISearchResults, rendererId: string, mountNode: string, customTemplateFieldValues?: ICustomTemplateFieldValue[]) {
+        this._results = results;
         let searchEvent: ISearchEvent = new CustomEvent(this.SEARCH_CHANGED_EVENT_NAME);
         searchEvent.rendererId = rendererId;
         searchEvent.results = results; 

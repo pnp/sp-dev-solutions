@@ -1,0 +1,13 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
+  "solution": {
+    "name": "insta-webpart-client-side-solution",
+    "id": "7ce362ee-19a4-4c94-8b1d-bb86aeae6f9e",
+    "version": "1.0.0.0",
+    "includeClientSideAssets": true,
+    "skipFeatureDeployment": true
+  },
+  "paths": {
+    "zippedPackage": "solution/insta-webpart.sppkg"
+  }
+}

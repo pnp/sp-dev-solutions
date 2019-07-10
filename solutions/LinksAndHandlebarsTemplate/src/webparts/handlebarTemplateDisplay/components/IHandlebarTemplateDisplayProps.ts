@@ -9,7 +9,7 @@ export interface IHandlebarTemplateDisplayProps {
   serverRelativeUrl: string;
   instanceId: string;
   templateUrl: string;
-  template: string;
+  template: TemplateSpecification;
   isOptimized: boolean;
   cssUrl: string;
   jsUrl: string;

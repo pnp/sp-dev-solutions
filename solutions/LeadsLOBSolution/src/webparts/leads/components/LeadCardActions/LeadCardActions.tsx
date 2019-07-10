@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { DocumentCardActions } from "office-ui-fabric-react/lib/DocumentCard";
 import { ILeadCardActionsProps } from ".";
 import { IconButton } from 'office-ui-fabric-react/lib/Button';
 import { Icon } from 'office-ui-fabric-react/lib/Icon';

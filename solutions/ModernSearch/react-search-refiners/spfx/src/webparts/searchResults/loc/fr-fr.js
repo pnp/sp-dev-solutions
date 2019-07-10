@@ -10,12 +10,13 @@ define([], function() {
     "EnableLocalizationLabel": "Activer la traduction des termes de taxonomie pour les filtres et les résultats",
     "EnableLocalizationOnLabel": "Traduction activée",
     "EnableLocalizationOffLabel": "Traduction  désactivée",
-    "NoResultMessage": "Il n'y a aucun résultat à afficher.",
+    "NoResultMessage": "Aucun résultat à afficher.",
     "FilterPanelTitle": "Filtres disponibles",
     "FilterResultsButtonLabel": "Filtrer",
-    "SelectedFiltersLabel": "Filtre(s) appliqué(s):",
+    "SelectedFiltersLabel": "Filtre(s) appliqué(s)",
+    "SearchResultsLabel": "Résultats d recherche",
     "RemoveAllFiltersLabel": "Supprimer tous les filtres",
-    "ShowPagingLabel": "Afficher la pagination",
+    "UsePaginationWebPartLabel": "Connectez un Web Part de pagination de recherche",
     "ShowResultsCountLabel": "Afficher le nombre de résultats",
     "ShowBlankLabel": "Ne rien afficher si aucun résultat",
     "ShowBlankEditInfoMessage": "Aucun résultat pour cette requête. Ce composant Web Part restera vide en mode affichage conformément aux paramètres.",
@@ -24,8 +25,8 @@ define([], function() {
     "EmptyFieldErrorMessage": "Ce champ ne peut pas être vide",    
     "PlaceHolderEditLabel": "Éditer",
     "PlaceHolderConfigureBtnLabel": "Configurer",
-    "PlaceHolderIconText": "Web Part de recherche avec affinements",
-    "PlaceHolderDescription": "Ce composant affiche une liste de résulats de recherche avec pagination et des filtres configurables",
+    "PlaceHolderIconText": "Web Part de recherche",
+    "PlaceHolderDescription": "Ce composant affiche une liste de résulats de recherche avec pagination",
     "ResultSourceIdLabel": "Identifiant de l'origine de résultats",
     "InvalidResultSourceIdMessage": "Identifiant invalide",
     "EnableQueryRulesLabel": "Activer les règles de requête",
@@ -42,6 +43,7 @@ define([], function() {
     "ListLayoutOption": "Liste",
     "TilesLayoutOption": "Tuiles",
     "CustomLayoutOption": "Personnalisé",
+    "ResultsLayoutLabel": "Disposition des résultats",
     "TemplateUrlFieldLabel": "Utiliser un fichier modèle externe",
     "TemplateUrlPlaceholder": "https://myfile.html",
     "ErrorTemplateExtension": "Le file modèle doit être un fichier .htm ou .html valide",
@@ -50,6 +52,9 @@ define([], function() {
     "HandlebarsHelpersDescription": "Activer les fonctions de moment et handlebars helpers. Voir https://github.com/SharePoint/sp-dev-fx-webparts/blob/master/samples/react-search-refiners/README.md#available-tokens pour plus d'informations.",
     "PromotedResultsLabel": "Résultat(s) promu(s)",
     "PanelCloseButtonAria":"Proche",
+    "UseRefinersWebPartLabel": "Connectez un Web Part de filtres de recherche",
+    "UseRefinersFromComponentLabel": "Utiliser les filtres à partir de ce composant",
+    "UsePaginationFromComponentLabel": "Utiliser la pagination à partir de ce composant",
     "customTemplateFieldsLabel": "Valeurs de champ de modèle personnalisé",
     "customTemplateFieldsPanelHeader": "Valeurs de champ de modèle personnalisé",
     "customTemplateFieldsConfigureButtonLabel": "Configurer",
@@ -72,12 +77,15 @@ define([], function() {
       "EditSortableFieldsLabel": "Éditer les champs de tri",
       "EditSortLabel": "Éditer l'ordre de tri"
     },
-    "Refiners": {
-      "RefinersFieldLabel": "Filtres",
-      "RefinersFieldDescription": "Configurez ici les propriétés gerées à utiliser comme filtres. Si il n'existe pas de valeurs pour le filtre spécifié, il n'apparaîtra pas dans le panneau.",
-      "RefinerManagedPropertyField": "Propriété gérée de filtre",
-      "RefinerDisplayValueField": "Intitulé du filtre à afficher",
-      "EditRefinersLabel": "Éditer les filtres"
+    "Synonyms": {
+      "EditSynonymLabel": "Modifier les synonymes",
+      "SynonymListDescription": "Inclure tous les synonymes utilisés pour la recherche. Chaque terme sera bonifié avec tous les synonymes associés au moment de lancer la requête au serveur. Si un synonyme contient plus d'un mot, celui-ci doit être encapsulé par des double guillements.",
+      "SynonymPropertyPanelFieldLabel": "Configurer les synonymes",
+      "SynonymListTerm": "Terme",
+      "SynonymListSynonyms": "Synonymes",
+      "SynonymIsTwoWays": "Bidirectionnel?",
+      "SynonymListSynonymsExemple": "Portable, \"Tour et écran\"",
+      "SynonymListTermExemple": "Ordinateur"
     },
     "TermNotFound": "(Terme avec l'ID '{0}' non trouvé)",
     "UseDefaultSearchQueryKeywordsFieldLabel": "Utiliser une requête initiale",
@@ -99,6 +107,8 @@ define([], function() {
       "GreaterThanOperator": "Supérieur à",
       "LessOrEqualOperator": "Inférieur ou égal",
       "LessThanOperator": "Inférieur"
-    }
+    },
+    "QueryCultureLabel": "Query Language",
+    "QueryCultureUseUiLanguageLabel": "Same as UI language"
   }
 });

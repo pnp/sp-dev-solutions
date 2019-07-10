@@ -1,49 +1,37 @@
-import { ISearchResults, IRefinementFilter } from '../../models/ISearchResult';
-import { Sort } from '@pnp/sp';
+import { ISearchResults, ISearchVerticalInformation, IRefinementFilter } from '../../models/ISearchResult';
+import { ISearchServiceConfiguration } from '../../models/ISearchServiceConfiguration';
+import { ISearchVertical } from '../../models/ISearchVertical';
 
-interface ISearchService {
-
-    /**
-     * Determines the number of items ot retrieve in REST requests
-     */
-    resultsCount: number;
-    
-    /**
-     * Selected managed properties to retrieve when a search query is performed 
-     */
-    selectedProperties: string[];
-    
-    /**
-     * Determines the query template to apply in REST requests
-     */
-    queryTemplate?: string;
-
-    /**
-     * The SharePoint result source id to target
-     */
-    resultSourceId?: string;
-
-    /**
-     * The sort order of the results
-     */
-    sortList?: Sort[];
-
-    /**
-     * Indicates wheter or not the query rules should be applied in the query
-     */
-    enableQueryRules?: boolean;
-
+interface ISearchService extends ISearchServiceConfiguration {
     /**
      * Perfoms a search query.
      * @returns ISearchResults object. Use the 'RelevantResults' property to acces results proeprties (returned as key/value pair object => item.[<Managed property name>])
      */
-    search(kqlQuery: string, refiners?: string, refinementFilters?: IRefinementFilter[], pageNumber?: number): Promise<ISearchResults>;
+    search(kqlQuery: string, pageNumber?: number): Promise<ISearchResults>;
 
     /**
      * Retrieves search query suggestions
      * @param query the term to suggest from
      */
     suggest(query: string): Promise<string[]>;
+
+    /**
+     * Retrieve the configuration of the search service
+     */
+    getConfiguration(): ISearchServiceConfiguration;
+
+    /**
+     * Retreives the result counts for each search vertical
+     * @param queryText the search query text
+     * @param searchVerticalsConfiguration the search verticals configuration
+     * @param enableQueryRules enable query rules or not
+     */
+    getSearchVerticalCounts(queryText: string, searchVerticals: ISearchVertical[], enableQueryRules: boolean): Promise<ISearchVerticalInformation[]>;
+
+    /**
+     * Gets all available languages for the search query
+     */
+    getAvailableQueryLanguages(): Promise<any[]>;
 }
 
  export default ISearchService;

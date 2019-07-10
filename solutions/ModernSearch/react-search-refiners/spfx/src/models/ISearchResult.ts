@@ -1,8 +1,20 @@
 export interface ISearchResults {
+    QueryKeywords: string;
+    PaginationInformation?: IPaginationInformation;
     RelevantResults: ISearchResult[];
     RefinementResults: IRefinementResult[];
     PromotedResults?: IPromotedResult[];
-    TotalRows?: number;
+}
+
+export interface IPaginationInformation {
+    CurrentPage: number;
+    TotalRows: number;
+    MaxResultsPerPage: number;
+}
+
+export interface ISearchVerticalInformation {
+    VerticalKey: string;
+    Count: number;
 }
 
 export interface ISearchResult {
@@ -30,5 +42,11 @@ export interface IRefinementValue {
 
 export interface IRefinementFilter {
     FilterName: string;
-    Value: IRefinementValue;
+    Values: IRefinementValue[];
+    Operator: RefinementOperator;
+}
+
+export enum RefinementOperator {
+    OR = 'or',
+    AND = 'and'
 }

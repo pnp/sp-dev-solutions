@@ -1,4 +1,5 @@
 declare interface ICodeRendererApplicationCustomizerStrings {
+    UpdatedPrefix: string;
 }
 
 declare module 'CodeRendererApplicationCustomizerStrings' {

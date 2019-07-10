@@ -12,12 +12,13 @@
       "webRoot": "${workspaceRoot}",
       "sourceMaps": true,
       "sourceMapPathOverrides": {
+        "webpack:///.././src/*": "${webRoot}/src/*",
         "webpack:///../../../src/*": "${webRoot}/src/*",
         "webpack:///../../../../src/*": "${webRoot}/src/*",
         "webpack:///../../../../../../src/*": "${webRoot}/src/*",
         "webpack:///../../../../../../../src/*": "${webRoot}/src/*",
         "webpack:///../../../../../../../../src/*": "${webRoot}/src/*",
-        "webpack:///../../../../../../../../../src/*": "${webRoot}/src/*"
+        "webpack:///../../../../../../../../../src/*": "${webRoot}/src/*",
       },
       "runtimeArgs": [
         "--remote-debugging-port=9222"
@@ -27,10 +28,11 @@
       "name": "Hosted workbench",
       "type": "chrome",
       "request": "launch",
-      "url": "https://collaborationcorner.sharepoint.com/teams/PnPIntranet/SitePages/Search-Page.aspx",
+      "url": "https://collaborationcorner.sharepoint.com/teams/PnPIntranet/_layouts/workbench.aspx",
       "webRoot": "${workspaceRoot}",
       "sourceMaps": true,
       "sourceMapPathOverrides": {
+        "webpack:///.././src/*": "${webRoot}/src/*",
         "webpack:///../../../src/*": "${webRoot}/src/*",
         "webpack:///../../../../src/*": "${webRoot}/src/*",
         "webpack:///../../../../../../src/*": "${webRoot}/src/*",

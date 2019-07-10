@@ -1,8 +1,9 @@
-# Sharepoint Framework renderer for react-search-refiners
+# SharePoint Framework renderer for react-search-refiners
 
 ## Summary
 This sample is an example on how to use custom code renderers in the react-search-refiners project. Custom code renderers lets you render the search results from a react-search-refiners webpart in your own way, with whatever tools you prefer.
 Typically, you will use SPFx Application Customizers to mount these renderers, but you may also use SPFx Webparts. This sample contains a SPFx Application Customizer which uses React and Office-UI-Fabric-React to render the search results. 
+This package containes two seperate rendereres: a basic renderer and a persona renderer for rendering searches after people. 
 
 <p align="center">
   <img src="./img/coderenderer.gif"/>
@@ -24,7 +25,9 @@ react-search-refiners-renderers | Tarald Gåsbakk - [@taraldga](http://www.twitt
 ## Version history
 Version|Date|Comments
 -------|----|--------
-1.0 | Jan 06, 2019 | Initial release
+1.0.0 | Jan 06, 2019 | Initial release
+1.0.0 | Mar 05, 2019 | Added Persona renderer
+1.0.1 | Mar 16, 2019 | Fixed hardcoded profile image url in Persona renderer. Updated some files to be in sync with Search solution
 
 ## Minimal Path to Awesome
 
@@ -56,3 +59,10 @@ By registering a field-name in the 'customFields' value, you may expose them to 
 <p align="center">
   <img src="./img/coderenderertemplate.gif"/>
 </p>
+
+
+### Using the Persona renderer
+In order to make the persona-renderer work as is when installing the ready-made package, you need to fetch the following properties:
+PrefferedName,WorkEmail,WorkPhone,JobTitle,OfficeNumber,Title,PictureURL,FirstName,LastName,userName,Path
+
+<img src="https://telemetry.sharepointpnp.com/sp-dev-solutions/ModernSearch/react-search-refiners-renderer" />

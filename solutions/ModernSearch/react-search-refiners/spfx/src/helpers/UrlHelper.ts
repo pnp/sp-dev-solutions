@@ -6,7 +6,7 @@ export class UrlHelper {
      * @param  {String} url   The URL to get the value from (optional)
      * @return {String}       The field value
      */
-    public static getQueryStringParam(field: string , url: string ) {
+    public static getQueryStringParam(field: string , url: string ): string {
         const href = url ? url : window.location.href;
         const reg = new RegExp( "[?&#]" + field + "=([^&#]*)", "i" );
         const qs = reg.exec(href);
@@ -18,7 +18,7 @@ export class UrlHelper {
      * @param {String} sourceURL The source URL
      * @return {String}       The updated URL
      */
-    public static removeQueryStringParam(field: string , sourceURL: string ) {
+    public static removeQueryStringParam(field: string , sourceURL: string ): string {
         let rtn = sourceURL.split("?")[0];
         let param = null;
         let paramsArr = [];
@@ -46,7 +46,7 @@ export class UrlHelper {
      * @param param The query string parameter to add or replace
      * @param value The new value
      */
-    public static addOrReplaceQueryStringParam(url: string, param: string, value: string) {
+    public static addOrReplaceQueryStringParam(url: string, param: string, value: string): string {
         const re = new RegExp("[\\?&]" + param + "=([^&#]*)");
         const match = re.exec(url);
         let delimiter;
@@ -69,4 +69,9 @@ export class UrlHelper {
 export enum PageOpenBehavior {
     "Self",
     "NewTab"
+}
+
+export enum QueryPathBehavior {
+    "URLFragment",
+    "QueryParameter"
 }

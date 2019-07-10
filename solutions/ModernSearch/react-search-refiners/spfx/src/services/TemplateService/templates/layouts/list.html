@@ -1,0 +1,126 @@
+﻿<content id="template">
+
+    <style>
+        /* Insert your CSS overrides here */
+    </style>
+
+    <div class="template_root">
+        {{#if showResultsCount}}
+            <div class="template_resultCount">
+                <label class="ms-fontWeight-semibold">{{getCountMessage totalRows keywords}}</label>
+            </div>
+        {{/if}}
+        {{#if promotedResults}}
+            <ul class="ms-List template_defaultList template_promotedResults">
+            <li class="ms-fontWeight-semibold title">{{strings.PromotedResultsLabel}}</li>
+            {{#each promotedResults as |promotedResult|}}
+                <li class="ms-ListItem-primaryText">
+                    <div>
+                        <i class="ms-Icon ms-Icon--MiniLink" aria-hidden="true"></i>
+                    </div>
+                    <div>
+                        <a class="ms-font-l" href="{{Url}}">{{Title}}</a>
+                        <div class="ms-font-s">{{Description}}</div>
+                    </div>
+                </li>
+            {{/each}}
+            </ul>
+        {{/if}}
+        <ul class="ms-List template_defaultList">
+            {{#each items as |item|}}
+                <li class="template_listItem" tabindex="0">
+                    {{#> resultTypes}}
+                        {{!-- The block below will be used as default item template if no result types matched --}}
+                        <div class="template_result">
+                                <img class="template_icon" src="{{IconSrc}}"/>
+                                <div class="template_contentContainer">
+                                    <span class=""><a href="{{getUrl item}}">{{Title}}</a></span>
+                                    <span class="">{{getSummary HitHighlightedSummary}}</span>
+                                    <span class=""><span>{{getDate Created "LL"}}</span></span>   
+                                    <div class="${templateStyles.tags}">
+                                        {{#if owstaxidmetadataalltagsinfo}}
+                                            <i class="ms-Icon ms-Icon--Tag" aria-hidden="true"></i>
+                                            {{#each (split owstaxidmetadataalltagsinfo ",") as |tag| }}                                                    
+                                                <a href="#owstaxidmetadataalltagsinfo:'{{trim tag}}'">{{tag}}</a>
+                                            {{/each}}
+                                        {{/if}}
+                                    </div>
+                                </div>
+                        </div>
+                        <div class="template_previewContainer ms-hiddenSm">                           
+                            {{#eq item.contentclass 'STS_ListItem_851'}}
+                                <div class="video-container">
+                                    <div class="img-container">
+                                        <img class="img-preview video-preview-item" src="{{PictureThumbnailURL}}" data-src="{{PictureThumbnailURL}}" data-url="{{DefaultEncodingURL}}" data-fileext="{{FileType}}"/>
+                                        <div class="hover">
+                                            <div><i class="ms-Icon ms-Icon--Preview" aria-hidden="true"></i></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {{/eq}}                                
+                            {{#eq item.contentclass 'STS_ListItem_DocumentLibrary'}}
+                                {{#if ServerRedirectedPreviewURL}}
+                                    <div class="doc-container">
+                                        <div class="img-container">
+                                        {{#eq FileType 'pdf'}}
+                                            <!-- Documents from OneDrive sites can't be viewed directly due to SAMEORIGIN iframe restrictions-->
+                                            {{#contains Path '-my.sharepoint'}}
+                                                <img class="document-preview-item img-preview" width="120" src="{{ServerRedirectedPreviewURL}}" data-src="{{ServerRedirectedPreviewURL}}" data-url="{{ServerRedirectedEmbedURL}}"/>
+                                            {{else}}
+                                                <img class="document-preview-item img-preview" width="120" src="{{ServerRedirectedPreviewURL}}" data-src="{{ServerRedirectedPreviewURL}}" data-url="{{Path}}"/>
+                                            {{/contains}}
+                                        {{else}}
+                                            <img class="document-preview-item img-preview" width="120" src="{{ServerRedirectedPreviewURL}}" data-src="{{ServerRedirectedPreviewURL}}" data-url="{{ServerRedirectedEmbedURL}}"/>
+                                        {{/eq}}
+                                        <div class="hover">
+                                            <div><i class="ms-Icon ms-Icon--Preview" aria-hidden="true"></i></div>
+                                        </div>
+                                        </div>
+                                    </div>
+                                {{/if}}
+                            {{/eq}}
+                        </div>
+                    {{/resultTypes}}
+                </li>
+            {{/each}}
+        </ul>
+    </div>
+</content>
+
+<content id="placeholder">
+    <style>
+        /* Insert your CSS overrides here */
+    </style>
+
+    <div class="placeholder_root">
+        {{#if showResultsCount}}
+            <div class="template_resultCount">
+                <span class="shimmer line" style="width: 20%"></span>
+            </div>
+        {{/if}}
+        <ul class="ms-List template_defaultList">
+            {{#times maxResultsCount}}   
+                <li class="template_listItem" tabindex="0">
+                    <div class="template_result">
+                            <div class="template_icon shimmer"></div>
+                            <div class="template_contentContainer">
+                                <span class="shimmer line" style="width: 60%"></span>
+                                <span class="shimmer line" style="width: 100%"></span>
+                                <span class="shimmer line" style="width: 100%"></span>
+                                <span class="shimmer line" style="width: 35%"></span>
+                                <span class="shimmer line" style="width: 20%"></span>                       
+                            </div>
+                    </div>
+                    <div class="template_previewContainer ms-hiddenSm">                           
+                        <div class="doc-container">
+                            <div class="img-container">
+                                <div class="shimmer img-preview" style="width: 120px;height: 70px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            {{/times}}
+        </ul>
+    </div>
+
+</content>

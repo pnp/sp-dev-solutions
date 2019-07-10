@@ -7,7 +7,8 @@
   "manifestVersion": 2,
   "supportsFullBleed": true,
   "requiresCustomScript": false,
-
+  "supportedHosts": ["SharePointWebPart"],
+  "loadLegacyFabricCss": true,
   "preconfiguredEntries": [
     {
         "groupId": "5c03119e-3074-46fd-976b-c60198311f70",
@@ -15,12 +16,12 @@
             "default": "PnP"
         },
         "title": {
-            "default": "Search Results with Refiners",
+            "default": "Search Results",
             "fr-fr": "Résultats de recherche"
         },
         "description": {
-            "default": "Displays search results with customizable dynamic refiners",
-            "fr-fr": "Affiche des résulats de recherche avec filtres personnalisables"
+            "default": "Displays search results",
+            "fr-fr": "Affiche des résulats de recherche"
         },
         "officeFabricIconFontName": "SearchAndApps",
         "properties": {
@@ -36,20 +37,6 @@
                     "sortDirection": 2
                 }
             ],
-            "refiners": [
-                {
-                    "refinerName": "Created",
-                    "displayValue": "Created Date"
-                },
-                {
-                    "refinerName": "Size",
-                    "displayValue": "Size of the file"
-                },
-                {
-                    "refinerName": "owstaxidmetadataalltagsinfo",
-                    "displayValue": "Tags"
-                }
-            ],
             "selectedProperties": "Title,Path,Created,Filename,SiteLogo,PreviewUrl,PictureThumbnailURL,ServerRedirectedPreviewURL,ServerRedirectedURL,HitHighlightedSummary,FileType,contentclass,ServerRedirectedEmbedURL,DefaultEncodingURL,owstaxidmetadataalltagsinfo",
             "enableQueryRules": false,
             "maxResultsCount": 10,
@@ -58,7 +45,12 @@
             "webPartTitle": "",
             "enableLocalization": true,
             "useDefaultSearchQuery": false,
-            "resultTypes": []
+            "resultTypes": [],
+            "useExternalRefinersDisplay": false,
+            "useExternalPaginationDisplay": false,
+            "selectedPage": 1,
+            "appliedRefiners": [],
+            "refinersConfiguration": []
         }
     }
   ]
