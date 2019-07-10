@@ -134,6 +134,6 @@ define([], function () {
       "LinkToItemColumnLabel": "Link to item",
       "SupportHTMLColumnLabel": "Can HTML"
     },
-    "ManagedPropertiesListPlaceHolder": "Select a managed property"
+    "ManagedPropertiesListPlaceHolder": "Select or add a managed property"
   }
 });

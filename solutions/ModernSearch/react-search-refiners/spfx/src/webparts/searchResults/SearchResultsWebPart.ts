@@ -751,7 +751,7 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
                         onCustomRender: (field, value, onUpdate, item, itemId, onCustomFieldValidation) => {
 
                             // Need to specify a React key to avoid item duplication when adding a new row
-                            return React.createElement("div", {key : itemId},
+                            return React.createElement("div", {key : `${field.id}-${itemId}`},
                                 React.createElement(SearchManagedProperties, {
                                 defaultSelectedKey: item[field.id] ? item[field.id] : '',
                                 onUpdate: (newValue: any, isSortable: boolean) => { 
@@ -804,7 +804,7 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
                         required: true,
                         onCustomRender: (field, value, onUpdate, item, itemId, onCustomFieldValidation) => {
                             // Need to specify a React key to avoid item duplication when adding a new row
-                            return React.createElement("div", {key : itemId},
+                            return React.createElement("div", {key : `${field.id}-${itemId}`},
                                 React.createElement(SearchManagedProperties, {
                                 defaultSelectedKey: item[field.id] ? item[field.id] : '',
                                 onUpdate: (newValue: any, isSortable: boolean) => { 
@@ -842,14 +842,6 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
                 label: strings.EnableQueryRulesLabel,
                 checked: this.properties.enableQueryRules,
             }),
-            /*PropertyPaneTextField('selectedProperties', {
-                label: strings.SelectedPropertiesFieldLabel,
-                ,
-                multiline: true,
-                resizable: true,
-                value: this.properties.selectedProperties,
-                deferredValidationTime: 300
-            }),*/
             new PropertyPaneSearchManagedProperties('selectedProperties', {
                 label: strings.SelectedPropertiesFieldLabel,
                 description: strings.SelectedPropertiesFieldDescription,

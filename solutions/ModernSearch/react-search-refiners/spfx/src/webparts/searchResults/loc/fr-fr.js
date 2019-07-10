@@ -134,6 +134,6 @@ define([], function() {
       "LinkToItemColumnLabel": "Lien vers l'élément",
       "SupportHTMLColumnLabel": "Supporte HTML"
     },
-    "ManagedPropertiesListPlaceHolder": "Ajouter une propriété gérée"
+    "ManagedPropertiesListPlaceHolder": "Sélectionnez ou ajoutez une propriété gérée"
   }
 });

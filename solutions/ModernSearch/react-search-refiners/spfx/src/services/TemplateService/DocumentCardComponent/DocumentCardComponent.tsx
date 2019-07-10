@@ -16,13 +16,13 @@ import { classNamesFunction } from "office-ui-fabric-react/lib/Utilities";
  */
 export interface IDocumentCardComponentProps {
 
-    // Context
+    // Item context
     item?: string;
 
     // Fields configuration object
     fieldsConfiguration?: string;
 
-    // Individual content properties
+    // Individual content properties (i.e web component attributes)
     title?: string; 
     location?: string;
     tags?:string;
@@ -81,7 +81,7 @@ export class DocumentCardComponent extends React.Component<IDocumentCardComponen
               {
                 name: processedProps.title,
                 previewImageSrc: processedProps.previewImage,
-                imageFit: ImageFit.centerCover,
+                imageFit: ImageFit.cover,
                 iconSrc: this.props.isVideo || !this.props.showFileIcon ? '' : processedProps.iconSrc,
                 width: 318,
                 height: 196
@@ -128,7 +128,8 @@ export class DocumentCardComponent extends React.Component<IDocumentCardComponen
                         {
                             root: {
                                 marginBottom: 15,
-                                display: 'block'
+                                display: 'block',
+                                minHeight: 301
                             }
                         }
                     }

@@ -58,11 +58,6 @@ export interface ISearchManagedPropertiesProps {
 }
 
 export interface ISearchManagedPropertiesState {
-    
-    /**
-     * The current selected key
-     */
-    selectedOptionKey?: string | number;
 
     /**
      * The current selected keys if the control is multiline
@@ -86,10 +81,9 @@ export class SearchManagedProperties extends React.Component<ISearchManagedPrope
         super(props);
 
         this.state = {
-            selectedOptionKey: '',
             selectedOptionKeys: [],
             options: [],
-            initialDisplayValue: null,
+            initialDisplayValue: null
         };
 
         this.getAvailableSearchProperties = this.getAvailableSearchProperties.bind(this);
@@ -105,11 +99,10 @@ export class SearchManagedProperties extends React.Component<ISearchManagedPrope
         if (!this.props.allowMultiSelect) {
 
             renderCombo =   <ComboBox
+                                text={ this.state.initialDisplayValue }
                                 label={this.props.label}
                                 allowFreeform={true}
-                                selectedKey={this.state.selectedOptionKey}
                                 autoComplete='on'                                
-                                text={ this.state.initialDisplayValue }
                                 onChange={this.onChange}
                                 useComboBoxAsMenuWidth={true}
                                 onResolveOptions={this.getAvailableSearchProperties}
@@ -160,8 +153,9 @@ export class SearchManagedProperties extends React.Component<ISearchManagedPrope
         if (this.props.availableProperties && !isEqual(this.props.availableProperties, prevProps.availableProperties)) {
 
             // Initializes the options with the ones fetched from other fields (only for performance purpose to avoid re fecthing it)
+            // https://github.com/OfficeDev/office-ui-fabric-react/issues/9162
             this.setState({
-                options: this.props.availableProperties
+                options: this.props.availableProperties.map(x => ({...x})) 
             });
         }
     }
@@ -175,23 +169,24 @@ export class SearchManagedProperties extends React.Component<ISearchManagedPrope
 
         if (option) {
 
+            this.setState({
+                initialDisplayValue: option.key as string
+            });
+
             if (this.props.validateSortable) {
                 isSortable = await this.props.searchService.validateSortableProperty(option.text);
             }
             
-            // User selected/de-selected an existing option
-            this.setState({
-                initialDisplayValue: undefined,
-                selectedOptionKey: option.key
-            });
-
             this.props.onUpdate(option.key, isSortable);
             
-
         } else if (value !== undefined) {
 
+            this.setState({
+                initialDisplayValue: value as string
+            });
+
             if (this.props.validateSortable) {
-                isSortable = await this.props.searchService.validateSortableProperty(option.text);
+                isSortable = await this.props.searchService.validateSortableProperty(value);
             }
 
             // User typed a freeform option
@@ -205,16 +200,14 @@ export class SearchManagedProperties extends React.Component<ISearchManagedPrope
                 return 0;
             });
 
-            this.setState({
-                options: options,
-                selectedOptionKey: option.key,
-                initialDisplayValue: undefined
-            });
-
             this.props.onUpdate(newOption.key, isSortable);
 
             // Update the shared list with new entry
             this.props.onUpdateAvailableProperties(options);
+
+            this.setState({
+                options: options.map(x => ({...x}))
+            });
         }
     }
 
@@ -264,7 +257,7 @@ export class SearchManagedProperties extends React.Component<ISearchManagedPrope
             });
 
             this.setState({
-                options: options,
+                options: options.map(x => ({...x})),
                 initialDisplayValue: undefined
             });
 
@@ -348,8 +341,7 @@ export class SearchManagedProperties extends React.Component<ISearchManagedPrope
 
             this.setState({
                 options: options,
-                selectedOptionKeys: this.props.defaultSelectedKeys,
-                initialDisplayValue: undefined
+                selectedOptionKeys: this.props.defaultSelectedKeys
             });
 
             // Pass list to the parent to save it for other fields

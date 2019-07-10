@@ -184,7 +184,7 @@ export class TemplateService extends BaseTemplateService {
                                 type: CustomCollectionFieldType.custom,
                                 required: true,
                                 onCustomRender: (field, value, onUpdate, item, itemId, onCustomFieldValidation) => {
-                                    return React.createElement("div", { key: itemId }, 
+                                    return React.createElement("div", { key: `${field.id}-${itemId}` }, 
                                         React.createElement(TemplateValueFieldEditor, {
                                             currentItem: item,
                                             field: field,
@@ -319,7 +319,7 @@ export class TemplateService extends BaseTemplateService {
                                 type: CustomCollectionFieldType.custom,
                                 title: strings.TemplateParameters.DocumentCardValueFieldLabel,
                                 onCustomRender: (field, value, onUpdate, item, itemId, onCustomFieldValidation) => {
-                                    return React.createElement("div", { key: itemId }, 
+                                    return React.createElement("div", { key: `${field.id}-${itemId}` }, 
                                         React.createElement(TemplateValueFieldEditor, {
                                             currentItem: item,
                                             field: field,
