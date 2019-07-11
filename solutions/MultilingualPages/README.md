@@ -95,6 +95,9 @@ The Multilingual Redirector web parts job is to redirect the user to the page ap
 
 ## Prerequisites
 
+### Required Permissions
+The first installation in a tenant will require tenant admin permissions; see Language Configuration for details.
+
 ### Languages Configuration
 
 Languages that the solution supports will be defined in a [SharePoint Online Tenant Property](https://docs.microsoft.com/en-us/sharepoint/dev/spfx/tenant-properties). The powershell that creates the property is included in the `deployment` folder in the `LanguageConfigTenantProperty.ps1` file. You will need tenant admin privileges to create this property but everyone has rights to read the property.
@@ -105,6 +108,13 @@ The value of the custom property is a stringified JSON object that represents th
 * Description
 
 Please see an example file in the [languages.json](./deployment/languages.json) file.
+
+### Tooling
+Node.js version >=8.9.4 <9.0.0 is required to build this project.
+
+## Known Issues
+
+The user adding this app to a site must use SharePoint in English. This is due to [#175](https://github.com/SharePoint/sp-dev-solutions/issues/175) and [#207](https://github.com/SharePoint/sp-dev-solutions/issues/207) and does not affect normal users.
 
 ## Solution
 
