@@ -184,8 +184,8 @@ export class DocumentCardComponent extends React.Component<IDocumentCardComponen
             const item = JSON.parse(this.props.item);
 
             // Use configuration
-            const configuration: IDocumentCardFieldsConfiguration[] = JSON.parse(this.props.fieldsConfiguration);
-            configuration.map(configuration => { 
+            const fieldsConfiguration: IDocumentCardFieldsConfiguration[] = JSON.parse(this.props.fieldsConfiguration);
+            fieldsConfiguration.map(configuration => { 
                 
                 let processedValue = item[configuration.value];
                 

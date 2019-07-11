@@ -79,6 +79,6 @@ export class DocumentCardShimmers extends React.Component<{}, {}> {
                                                 </div>
                                                 
                                             </div>;
-       return shimmerContent;
+        return shimmerContent;
     }
 }

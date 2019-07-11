@@ -326,13 +326,13 @@ export class TemplateService extends BaseTemplateService {
                                             useHandlebarsExpr: item.useHandlebarsExpr,
                                             onUpdate: onUpdate,
                                             value: value,
-                                            onUpdateAvailableProperties: (properties: IComboBoxOption[]) => {
+                                            onUpdateAvailableProperties: (options: IComboBoxOption[]) => {
 
                                                 // Keep the list state for all collection data rows
-                                                this._availableManagedProperties = properties;
+                                                this._availableManagedProperties = options;
 
                                                 // Share the list for other controls in the property pane
-                                                onUpdateAvailableProperties(properties);
+                                                onUpdateAvailableProperties(options);
                                             },
                                             availableProperties: this._availableManagedProperties ? this._availableManagedProperties : [],
                                             searchService: this._searchService,

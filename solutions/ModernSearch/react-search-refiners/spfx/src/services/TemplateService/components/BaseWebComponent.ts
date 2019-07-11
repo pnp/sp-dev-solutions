@@ -7,7 +7,7 @@ export abstract class BaseWebComponent extends HTMLElement {
     
     protected connectedCallback() {
         throw 'Not implemented';
-    };
+    }
     
     protected disconnectedCallback() {
         ReactDOM.unmountComponentAtNode(this);
@@ -39,5 +39,4 @@ export abstract class BaseWebComponent extends HTMLElement {
          
         return props;
     }
-
 }

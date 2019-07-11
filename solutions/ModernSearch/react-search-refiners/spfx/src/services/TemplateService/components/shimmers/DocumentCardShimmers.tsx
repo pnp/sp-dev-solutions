@@ -1,6 +1,6 @@
 import * as ReactDOM from 'react-dom';
 import * as React from                                                 'react';
-import { DocumentCardShimmers } from '../../DocumentCardComponent/DocumentCardShimmers'
+import { DocumentCardShimmers } from '../../DocumentCardComponent/DocumentCardShimmers';
 import { BaseWebComponent } from '../BaseWebComponent';
 
 export class DocumentCardShimmersWebComponent extends BaseWebComponent {

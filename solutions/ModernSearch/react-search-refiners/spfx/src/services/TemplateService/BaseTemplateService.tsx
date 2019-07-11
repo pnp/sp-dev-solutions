@@ -457,7 +457,7 @@ abstract class BaseTemplateService {
         }
 
         let template = Handlebars.compile(templateContent);
-        let result = template(templateContext)
+        let result = template(templateContext);
         if (result.indexOf("video-preview-item") || result.indexOf("video-card") !== -1) {
             await this._loadVideoLibrary();
         }

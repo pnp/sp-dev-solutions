@@ -5,9 +5,6 @@ import * as ReactDom from 'react-dom';
 import ISearchService from "../../services/SearchService/ISearchService";
 import { IComboBoxOption } from "office-ui-fabric-react/lib/ComboBox";
 
-export interface IPropertyPaneSearchManagedPropertiesInternalProps extends IPropertyPaneSearchManagedPropertiesProps, IPropertyPaneCustomFieldProps {
-}
-
 /**
  * Defines only relevant properties
  */
@@ -57,6 +54,9 @@ export interface IPropertyPaneSearchManagedPropertiesProps {
      * Indicates whether or not we should allow multiple selection
      */
     allowMultiSelect?: boolean;
+}
+
+export interface IPropertyPaneSearchManagedPropertiesInternalProps extends IPropertyPaneSearchManagedPropertiesProps, IPropertyPaneCustomFieldProps {
 }
 
 export class PropertyPaneSearchManagedProperties implements IPropertyPaneField<IPropertyPaneSearchManagedPropertiesProps> {

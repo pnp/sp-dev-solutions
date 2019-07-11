@@ -261,7 +261,7 @@ export class DetailsListComponent extends React.Component<DetailsListComponentPr
     this.setState({
       items: text ? this._allItems.filter(i => i.Title.toLowerCase().indexOf(text) > -1) : this._allItems
     });
-  };
+  }
 
   private _onColumnClick = (ev: React.MouseEvent<HTMLElement>, column: IColumn): void => {
     const { columns, items } = this.state;
@@ -281,7 +281,7 @@ export class DetailsListComponent extends React.Component<DetailsListComponentPr
       columns: newColumns,
       items: newItems
     });
-  };
+  }
 }
 
 function _copyAndSort<T>(items: T[], columnKey: string, isSortedDescending?: boolean): T[] {
