@@ -38,7 +38,21 @@
                 display: -ms-flexbox;
                 flex-direction: column;
                 margin-right: 15px;
-                justify-content: space-between;
+            }
+
+            .template_title {
+                font-size: 16px;
+                margin-bottom: 10px;
+            }
+
+            .template_tags {
+                display: flex;
+                align-items: center;
+                margin-top: 5px;
+
+                i {
+                    margin-right: 5px;
+                }
             }
             
             .template_previewContainer {

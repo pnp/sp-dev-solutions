@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { TextField } from 'office-ui-fabric-react/lib/TextField';
 import { Fabric } from 'office-ui-fabric-react/lib/Fabric';
-import { DetailsListLayoutMode,  SelectionMode, IColumn } from 'office-ui-fabric-react/lib/DetailsList';
+import { DetailsListLayoutMode, SelectionMode, IColumn } from 'office-ui-fabric-react/lib/DetailsList';
 import { mergeStyleSets } from 'office-ui-fabric-react/lib/Styling';
 import { ISearchResult } from '../../../models/ISearchResult';
 import * as Handlebars from 'handlebars';

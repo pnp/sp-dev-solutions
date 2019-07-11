@@ -132,7 +132,7 @@ define([], function () {
       "ResizableColumnLabel": "Resizable",
       "MultilineColumnLabel": "Multiline",
       "LinkToItemColumnLabel": "Link to item",
-      "SupportHTMLColumnLabel": "Can HTML"
+      "SupportHTMLColumnLabel": "Allow HTML"
     },
     "ManagedPropertiesListPlaceHolder": "Select or add a managed property"
   }

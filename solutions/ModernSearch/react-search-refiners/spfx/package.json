@@ -17,6 +17,7 @@
         "@microsoft/sp-dialog": "1.8.2",
         "@microsoft/sp-loader": "1.8.2",
         "@microsoft/sp-lodash-subset": "1.8.2",
+        "@microsoft/sp-property-pane": "1.8.2",
         "@microsoft/sp-webpart-base": "1.8.2",
         "@pnp/common": "1.3.3",
         "@pnp/logging": "1.3.3",

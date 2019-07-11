@@ -1,5 +1,7 @@
 import * as ReactDOM from 'react-dom';
 import { camelCase } from '@microsoft/sp-lodash-subset';
+import "@webcomponents/webcomponentsjs/webcomponents-bundle";
+import '@webcomponents/webcomponentsjs/custom-elements-es5-adapter.js';
 
 export abstract class BaseWebComponent extends HTMLElement {
     
@@ -19,11 +21,12 @@ export abstract class BaseWebComponent extends HTMLElement {
         
         let props = {};
 
-        this.getAttributeNames().map((attr) => {
+        for (let i =0;i < this.attributes.length;i++) {
 
-            if (this.attributes.getNamedItem(attr)) {
+            if (this.attributes.item(i)) {
 
-                let value = this.attributes.getNamedItem(attr).value;   
+                let value = this.attributes.item(i).value; 
+                let attr = this.attributes.item(i).name;  
 
                 // Booleans
                 if (/^(true|false)$/.test(value)) {
@@ -32,7 +35,7 @@ export abstract class BaseWebComponent extends HTMLElement {
                     props[camelCase(attr)] = value;
                 }
             }         
-         });
+        }
          
         return props;
     }
