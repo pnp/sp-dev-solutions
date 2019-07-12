@@ -5,14 +5,11 @@
 
     <div class="template_root">
         <ul class="ms-List">
-            {{#each items as |item|}}
-                {{#> resultTypes}}
-                    {{!-- The block below will be used as default item template if no result types matched --}}
-                    <li class="ms-ListItem ms-ListItem--image" tabindex="0">
-                        <span class="ms-ListItem-primaryText"><a href="{{getUrl item}}">{{Title}}</a></span>
-                    </li>
-                {{/resultTypes}}
-            {{/each}}
+            {{#each items as |item|}} {{#> resultTypes}} {{!-- The block below will be used as default item template if no result types matched --}}
+            <li class="ms-ListItem ms-ListItem--image" tabindex="0">
+                <span class="ms-ListItem-primaryText"><a class="ms-fontColor-themePrimary" href="{{getUrl item}}">{{Title}}</a></span>
+            </li>
+            {{/resultTypes}} {{/each}}
         </ul>
     </div>
 </content>
@@ -24,10 +21,10 @@
 
     <div class="placeholder_root">
         <ul class="ms-List">
-            {{#times maxResultsCount}}   
-                <li class="ms-ListItem ms-ListItem--image" tabindex="0">
-                    <span class="shimmer line" style="width: 100%"></span>
-                </li>
+            {{#times maxResultsCount}}
+            <li class="ms-ListItem ms-ListItem--image" tabindex="0">
+                <span class="shimmer line" style="width: 100%"></span>
+            </li>
             {{/times}}
         </ul>
     </div>
