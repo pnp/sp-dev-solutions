@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ComboBox, IComboBoxOption, IComboBox, SelectableOptionMenuItemType } from 'office-ui-fabric-react/lib/ComboBox';
+import { ComboBox, IComboBoxOption, IComboBox, SelectableOptionMenuItemType, IComboBoxStyles } from 'office-ui-fabric-react/lib/ComboBox';
 import { Spinner, SpinnerSize } from 'office-ui-fabric-react/lib/components/Spinner';
 import { isEqual } from '@microsoft/sp-lodash-subset';
 import ISearchService from '../../services/SearchService/ISearchService';
@@ -60,6 +60,11 @@ export interface ISearchManagedPropertiesProps {
 export interface ISearchManagedPropertiesState {
 
     /**
+     * The current selected keys if the control is single value
+     */
+    selectedOptionKey?: string;
+
+    /**
      * The current selected keys if the control is multiline
      */
     selectedOptionKeys?: string[];
@@ -81,6 +86,7 @@ export class SearchManagedProperties extends React.Component<ISearchManagedPrope
         super(props);
 
         this.state = {
+            selectedOptionKey: null,
             selectedOptionKeys: [],
             options: [],
             initialDisplayValue: null
@@ -96,10 +102,12 @@ export class SearchManagedProperties extends React.Component<ISearchManagedPrope
 
         let renderCombo = null;
 
+
         if (!this.props.allowMultiSelect) {
 
             renderCombo =   <ComboBox
-                                text={ this.state.initialDisplayValue }
+                                selectedKey={ this.state.selectedOptionKey }
+                                text={ this.state.initialDisplayValue }                      
                                 label={this.props.label}
                                 allowFreeform={true}
                                 autoComplete='on'                                
@@ -155,7 +163,7 @@ export class SearchManagedProperties extends React.Component<ISearchManagedPrope
             // Initializes the options with the ones fetched from other fields (only for performance purpose to avoid re fecthing it)
             // https://github.com/OfficeDev/office-ui-fabric-react/issues/9162
             this.setState({
-                options: this.props.availableProperties.map(x => ({...x})) 
+                options: this.props.availableProperties.map(x => ({...x}))
             });
         }
     }
@@ -170,7 +178,8 @@ export class SearchManagedProperties extends React.Component<ISearchManagedPrope
         if (option) {
 
             this.setState({
-                initialDisplayValue: option.key as string
+                initialDisplayValue: undefined,
+                selectedOptionKey: option.key as string,
             });
 
             if (this.props.validateSortable) {
@@ -182,7 +191,8 @@ export class SearchManagedProperties extends React.Component<ISearchManagedPrope
         } else if (value !== undefined) {
 
             this.setState({
-                initialDisplayValue: value as string
+                selectedOptionKey: value,
+                initialDisplayValue: undefined
             });
 
             if (this.props.validateSortable) {
@@ -341,7 +351,9 @@ export class SearchManagedProperties extends React.Component<ISearchManagedPrope
 
             this.setState({
                 options: options,
-                selectedOptionKeys: this.props.defaultSelectedKeys
+                selectedOptionKeys: this.props.defaultSelectedKeys,
+                selectedOptionKey: this.props.defaultSelectedKey,
+                initialDisplayValue: undefined
             });
 
             // Pass list to the parent to save it for other fields

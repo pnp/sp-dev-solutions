@@ -1,5 +1,5 @@
 import * as React from "react";
-import { IDocumentCardPreviewProps, DocumentCard, DocumentCardPreview, DocumentCardTitle, DocumentCardActivity, DocumentCardType, DocumentCardLocation, DocumentCardDetails, IDocumentCardLocationStyleProps, IDocumentCardLocationStyles } from 'office-ui-fabric-react/lib/DocumentCard';
+import { IDocumentCardPreviewProps, DocumentCard, DocumentCardPreview, DocumentCardTitle, DocumentCardActivity, DocumentCardType, DocumentCardLocation, DocumentCardDetails, IDocumentCardLocationStyleProps, IDocumentCardLocationStyles, IDocumentCardStyleProps, IDocumentCardStyles } from 'office-ui-fabric-react/lib/DocumentCard';
 import { ImageFit } from 'office-ui-fabric-react/lib/Image';
 import PreviewContainer from '../PreviewContainer/PreviewContainer';
 import { PreviewType } from '../PreviewContainer/IPreviewContainerProps';
@@ -9,6 +9,7 @@ import * as Handlebars from 'handlebars';
 import * as documentCardLocationGetStyles from 'office-ui-fabric-react/lib/components/DocumentCard/DocumentCardLocation.styles';
 import { getTheme, mergeStyleSets } from "office-ui-fabric-react/lib/Styling";
 import { classNamesFunction } from "office-ui-fabric-react/lib/Utilities";
+import { DocumentCardDetailsBase } from "office-ui-fabric-react/lib/components/DocumentCard/DocumentCardDetails.base";
 
 /**
  * Document card props. These properties are retrieved from the web component attributes. They must be camel case.
@@ -39,6 +40,7 @@ export interface IDocumentCardComponentProps {
     enablePreview?: boolean;
     showFileIcon?: boolean;
     isVideo?: boolean;
+    isCompact?: boolean;
 }
 
 export interface IDocumentCardComponentState {
@@ -76,17 +78,17 @@ export class DocumentCardComponent extends React.Component<IDocumentCardComponen
             />;
         }
         
-        const previewProps: IDocumentCardPreviewProps = {
+        let previewProps: IDocumentCardPreviewProps = {
             previewImages: [
               {
                 name: processedProps.title,
                 previewImageSrc: processedProps.previewImage,
-                imageFit: ImageFit.cover,
+                imageFit: ImageFit.centerCover,
                 iconSrc: this.props.isVideo || !this.props.showFileIcon ? '' : processedProps.iconSrc,
                 width: 318,
-                height: 196
+                height: 196,
               }
-            ]
+            ],
         };
 
         const playButtonStyles: React.CSSProperties = {
@@ -116,6 +118,17 @@ export class DocumentCardComponent extends React.Component<IDocumentCardComponen
 
         const documentCardLocationStyles = mergeStyleSets(documentCardLocationGetStyles.getStyles(documentCardLocationProps));
         const documentCardLocationClassNames = classNamesFunction<IDocumentCardLocationStyleProps, IDocumentCardLocationStyles>()(documentCardLocationStyles);
+
+        const documentCardStyles: IDocumentCardStyles = {
+            root: {
+                marginBottom: 15,
+                minHeight: 301
+            }
+        };
+
+        if (this.props.isCompact) {
+            documentCardStyles.root["minHeight"] = '100%';
+        }
         
         return <div>
                     <DocumentCard 
@@ -124,18 +137,10 @@ export class DocumentCardComponent extends React.Component<IDocumentCardComponen
                             showCallout: true
                         });
                     }}
-                    styles={
-                        {
-                            root: {
-                                marginBottom: 15,
-                                display: 'block',
-                                minHeight: 301
-                            }
-                        }
-                    }
-                    type={DocumentCardType.normal}
+                    styles={documentCardStyles}
+                    type={ this.props.isCompact ? DocumentCardType.compact : DocumentCardType.normal }
                     >
-                        <div ref={this.documentCardPreviewRef} style={{ position: 'relative'}}>
+                        <div ref={this.documentCardPreviewRef} style={{ position: 'relative', height: '100%'}}>
                             { this.props.isVideo ? 
                                 <div style={ playButtonStyles }>
                                     <i className="ms-Icon ms-Icon--Play ms-font-xl" aria-hidden="true"></i>
@@ -143,32 +148,34 @@ export class DocumentCardComponent extends React.Component<IDocumentCardComponen
                             }
                             <DocumentCardPreview {...previewProps} />
                         </div>
-                        { processedProps.location ? 
-                            <div className={documentCardLocationClassNames.root} dangerouslySetInnerHTML={{ __html: processedProps.location }}></div> : null
-                        }
-                        <Link href={processedProps.href} target='_blank' styles={{
-                            root: {
-                                selectors: {
-                                    ':hover': {
-                                      textDecoration: 'underline'
-                                    }
+                            <DocumentCardDetails>
+                                { processedProps.location && !this.props.isCompact ? 
+                                    <div className={documentCardLocationClassNames.root} dangerouslySetInnerHTML={{ __html: processedProps.location }}></div> : null
                                 }
-                            }
-                        }}>
-                        <DocumentCardTitle
-                            title={processedProps.title}
-                            shouldTruncate={false}                
-                        />                         
-                        </Link>
-                        { processedProps.tags ? 
-                            <div className={documentCardLocationClassNames.root} dangerouslySetInnerHTML={{ __html: processedProps.tags }}></div> : null
-                        }
-                        { processedProps.author ?
-                            <DocumentCardActivity
-                            activity={processedProps.date}
-                            people={[{ name: processedProps.author, profileImageSrc: processedProps.profileImage}]}
-                            /> : null 
-                        }     
+                                <Link href={processedProps.href} target='_blank' styles={{
+                                    root: {
+                                        selectors: {
+                                            ':hover': {
+                                            textDecoration: 'underline'
+                                            }
+                                        }
+                                    }
+                                }}>
+                                <DocumentCardTitle
+                                    title={processedProps.title}
+                                    shouldTruncate={false}                
+                                />                         
+                                </Link>
+                                { processedProps.tags && !this.props.isCompact ? 
+                                    <div className={documentCardLocationClassNames.root} dangerouslySetInnerHTML={{ __html: processedProps.tags }}></div> : null
+                                }
+                                { processedProps.author ?
+                                    <DocumentCardActivity
+                                    activity={processedProps.date}
+                                    people={[{ name: processedProps.author, profileImageSrc: processedProps.profileImage}]}
+                                    /> : null 
+                                }
+                            </DocumentCardDetails>
                     </DocumentCard>
                     {renderPreviewCallout}
                 </div>;

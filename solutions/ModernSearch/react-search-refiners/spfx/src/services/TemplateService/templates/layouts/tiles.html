@@ -14,9 +14,9 @@
                         {{#> resultTypes item=item}}
                             {{!-- The block below will be used as default item template if no result types matched --}}
                             {{#eq item.contentclass 'STS_ListItem_851'}}
-                                <video-card item="{{stringify item}}" fields-configuration="{{stringify @root.documentCardFields}}" enable-preview="{{@root.enablePreview}}"></video-card>
+                                <video-card item="{{stringify item}}" fields-configuration="{{stringify @root.documentCardFields}}" enable-preview="{{@root.enablePreview}}" show-file-icon="{{@root.showFileIcon}}" is-compact="{{@root.isCompact}}"></video-card>
                             {{else}}
-                                <document-card item="{{stringify item}}" fields-configuration="{{stringify @root.documentCardFields}}" enable-preview="{{@root.enablePreview}}" show-file-icon="{{@root.showFileIcon}}"></document-card>
+                                <document-card item="{{stringify item}}" fields-configuration="{{stringify @root.documentCardFields}}" enable-preview="{{@root.enablePreview}}" show-file-icon="{{@root.showFileIcon}}" is-compact="{{@root.isCompact}}"></document-card>
                             {{/eq}} 
                         {{/resultTypes}}
                     </div>
@@ -39,7 +39,7 @@
                     <div class="ms-Grid-row">
                     {{#times maxResultsCount}}
                         <div class="ms-Grid-col ms-sm12 ms-md6 ms-lg4">
-                            <document-card-shimmers></document-card-shimmers>
+                            <document-card-shimmers is-compact="{{@root.isCompact}}"></document-card-shimmers>
                         </div>
                     {{/times}}
                     </div>

@@ -92,16 +92,8 @@ export class TemplateValueFieldEditor extends React.Component<ITemplateValueFiel
                             />;
         } else {
 
-            let initialValue: string = '';
-
-            if (this.props.currentItem && this.props.field) {
-                if (this.props.currentItem[this.props.field.id]) {
-                    initialValue = this.props.currentItem[this.props.field.id];
-                }
-            }
-
             renderField =   <SearchManagedProperties 
-                                defaultSelectedKey={ initialValue }
+                                defaultSelectedKey={ this.props.value }
                                 onUpdate={ (newValue: string, isSortable?: boolean) => { 
 
                                     if (this.props.validateSortable) {

@@ -116,15 +116,20 @@ export interface DetailsListComponentProps {
      * If true, the details list shimers are displayed
      */
     showShimmers?: boolean;
+
+    /**
+     * If the details lsit should be compact
+     */
+    isCompact?: boolean;
 }
 
 export interface IDetailsListComponentState {
   columns: IColumn[];
   items: ISearchResult[];
-  isCompactMode: boolean;
 }
 
 export class DetailsListComponent extends React.Component<DetailsListComponentProps, IDetailsListComponentState> {
+
   private _allItems: ISearchResult[];
 
   constructor(props: DetailsListComponentProps) {
@@ -188,7 +193,7 @@ export class DetailsListComponent extends React.Component<DetailsListComponentPr
 
                 try {
 
-                    // Create a temp context with the current so we cab use global registered helper on the current item
+                    // Create a temp context with the current so we can use global registered helper on the current item
                   const tempTemplateContent = `{{#with item as |item|}}${column.value}{{/with}}`;
 
                   let template = Handlebars.compile(tempTemplateContent);
@@ -222,13 +227,12 @@ export class DetailsListComponent extends React.Component<DetailsListComponentPr
       
     this.state = {
       items: this._allItems,
-      columns: columns,
-      isCompactMode: false
+      columns: columns
     };
   }
 
   public render() {
-    const { columns, isCompactMode, items } = this.state;
+    const { columns, items } = this.state;
 
     let renderFilter: JSX.Element = null;
 
@@ -243,7 +247,7 @@ export class DetailsListComponent extends React.Component<DetailsListComponentPr
         {renderFilter}
           <ShimmeredDetailsList
             items={items}
-            compact={isCompactMode}
+            compact={this.props.isCompact}
             columns={columns}
             selectionMode={SelectionMode.none}
             setKey="set"

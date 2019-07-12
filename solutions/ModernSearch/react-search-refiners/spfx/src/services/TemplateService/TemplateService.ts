@@ -260,7 +260,11 @@ export class TemplateService extends BaseTemplateService {
                     PropertyPaneToggle('templateParameters.showFileIcon', {
                         label: strings.TemplateParameters.ShowFileIcon,                        
                         checked: properties.templateParameters.showFileIcon
-                    })                    
+                    }),
+                    PropertyPaneToggle('templateParameters.isCompact', {
+                        label: strings.TemplateParameters.CompactModeLabel,                        
+                        checked: properties.templateParameters.isCompact  !== null || properties.templateParameters.isCompact !== undefined ? properties.templateParameters.isCompact : true
+                    })                            
                 ];
 
             case ResultsLayoutOption.Tiles:
@@ -357,6 +361,10 @@ export class TemplateService extends BaseTemplateService {
                         label: strings.TemplateParameters.ShowFileIcon,                        
                         checked: properties.templateParameters.showFileIcon  !== null || properties.templateParameters.showFileIcon !== undefined ? properties.templateParameters.showFileIcon : true
                     }),
+                    PropertyPaneToggle('templateParameters.isCompact', {
+                        label: strings.TemplateParameters.CompactModeLabel,               
+                        checked: properties.templateParameters.isCompact  !== null || properties.templateParameters.isCompact !== undefined ? properties.templateParameters.isCompact : true
+                    })                    
                 ];
 
             default:

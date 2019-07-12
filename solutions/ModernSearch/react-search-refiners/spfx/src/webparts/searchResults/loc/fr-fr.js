@@ -132,7 +132,8 @@ define([], function() {
       "ResizableColumnLabel": "Extensible",
       "MultilineColumnLabel": "Plusieurs lignes",
       "LinkToItemColumnLabel": "Lien vers l'élément",
-      "SupportHTMLColumnLabel": "Supporte HTML"
+      "SupportHTMLColumnLabel": "Supporte HTML",
+      "CompactModeLabel": "Mode compact"
     },
     "ManagedPropertiesListPlaceHolder": "Sélectionnez ou ajoutez une propriété gérée"
   }

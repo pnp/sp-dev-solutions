@@ -134,6 +134,7 @@ declare interface ISearchResultsWebPartStrings {
         MultilineColumnLabel: string;
         LinkToItemColumnLabel: string;
         SupportHTMLColumnLabel: string;
+        CompactModeLabel: string;
     }
     ManagedPropertiesListPlaceHolder: string;
 }
