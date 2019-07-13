@@ -60,11 +60,6 @@ export interface ISearchManagedPropertiesProps {
 export interface ISearchManagedPropertiesState {
 
     /**
-     * The current selected keys if the control is single value
-     */
-    selectedOptionKey?: string;
-
-    /**
      * The current selected keys if the control is multiline
      */
     selectedOptionKeys?: string[];
@@ -86,7 +81,6 @@ export class SearchManagedProperties extends React.Component<ISearchManagedPrope
         super(props);
 
         this.state = {
-            selectedOptionKey: null,
             selectedOptionKeys: [],
             options: [],
             initialDisplayValue: null
@@ -106,7 +100,6 @@ export class SearchManagedProperties extends React.Component<ISearchManagedPrope
         if (!this.props.allowMultiSelect) {
 
             renderCombo =   <ComboBox
-                                selectedKey={ this.state.selectedOptionKey }
                                 text={ this.state.initialDisplayValue }                      
                                 label={this.props.label}
                                 allowFreeform={true}
@@ -178,8 +171,7 @@ export class SearchManagedProperties extends React.Component<ISearchManagedPrope
         if (option) {
 
             this.setState({
-                initialDisplayValue: undefined,
-                selectedOptionKey: option.key as string,
+                initialDisplayValue: option.key as string,
             });
 
             if (this.props.validateSortable) {
@@ -191,8 +183,7 @@ export class SearchManagedProperties extends React.Component<ISearchManagedPrope
         } else if (value !== undefined) {
 
             this.setState({
-                selectedOptionKey: value,
-                initialDisplayValue: undefined
+                initialDisplayValue: value
             });
 
             if (this.props.validateSortable) {
@@ -352,8 +343,6 @@ export class SearchManagedProperties extends React.Component<ISearchManagedPrope
             this.setState({
                 options: options,
                 selectedOptionKeys: this.props.defaultSelectedKeys,
-                selectedOptionKey: this.props.defaultSelectedKey,
-                initialDisplayValue: undefined
             });
 
             // Pass list to the parent to save it for other fields
