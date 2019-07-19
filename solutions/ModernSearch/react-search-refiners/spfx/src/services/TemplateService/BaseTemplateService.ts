@@ -26,11 +26,11 @@ abstract class BaseTemplateService {
     constructor() {
         // Registers all helpers
         this.registerTemplateServices();
-        
+
         this.DayLightSavings = this.isDST();
     }
 
-    private isDST(){
+    private isDST() {
         let today = new Date();
         var jan = new Date(today.getFullYear(), 0, 1);
         var jul = new Date(today.getFullYear(), 6, 1);
@@ -39,6 +39,20 @@ abstract class BaseTemplateService {
     }
 
     private async LoadHandlebarsHelpers() {
+        if ((<any>window).searchMoment !== undefined) {
+            // early check - seems to never hit(?)
+            return;
+        }
+        let moment = await import(
+            /* webpackChunkName: 'search-handlebars-helpers' */
+            'moment'
+        );
+        if ((<any>window).searchMoment !== undefined) {
+            return;
+        }
+        (<any>window).searchMoment = moment;
+
+
         if ((<any>window).searchHBHelper !== undefined) {
             // early check - seems to never hit(?)
             return;
@@ -145,6 +159,13 @@ abstract class BaseTemplateService {
         return new Date(date.getTime() + minutes * 60000);
     }
 
+    private momentHelper(str, pattern, lang) {
+        // if no args are passed, return a formatted date
+        let moment = (<any>window).searchMoment;
+        moment.locale(lang);
+        return moment(new Date(str)).format(pattern);
+    }
+
     /**
      * Registers useful helpers for search results templates
      */
@@ -200,7 +221,7 @@ abstract class BaseTemplateService {
                             date = trimEnd(date, "Z");
                         } else if (timeHandling === 2) { // strip time part
                             let idx = date.indexOf('T');
-                            date = date.substr(0, idx) + "T00:00:00"; 
+                            date = date.substr(0, idx) + "T00:00:00";
                         } else if (timeHandling === 3) { // show as web region
                             date = this.addMinutes(itemDate, -this.TimeZoneBias.WebBias, -this.TimeZoneBias.WebDST).toISOString();
                             date = trimEnd(date, "Z");
@@ -209,8 +230,7 @@ abstract class BaseTemplateService {
                             date = trimEnd(date, "Z");
                         }
                     }
-                    let d = (<any>window).searchHBHelper.moment(date, format, { lang: this.CurrentLocale, datejs: false });
-                    return d;
+                    return this.momentHelper(date, format, this.CurrentLocale);
                 }
             } catch (error) {
                 return date;
