@@ -81,3 +81,5 @@ configBeta/
 # dotenv environment variables file
 .env
 
+
+solutions/MultilingualPages/\.vscode/settings\.json

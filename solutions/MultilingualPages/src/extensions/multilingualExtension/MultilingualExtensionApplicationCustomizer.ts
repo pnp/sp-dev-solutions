@@ -155,12 +155,12 @@ export default class MultilingualExtensionApplicationCustomizer
     return `${pathName.substring(start)}`;
   }
 
-  private stopDataInterception() {
-    var els = document.querySelectorAll('a');
-    for (var i = 0; i < els.length; i++) {
-      els[i].setAttribute("data-interception", "off");
-    }
-  }
+  // private stopDataInterception() {
+  //   var els = document.querySelectorAll('a');
+  //   for (var i = 0; i < els.length; i++) {
+  //     els[i].setAttribute("data-interception", "off");
+  //   }
+  // }
 }
 
 (() => {

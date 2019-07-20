@@ -179,6 +179,14 @@ class SearchService implements ISearchService {
 
                 const refinementRows: any = refinementResultsRows ? refinementResultsRows.Refiners : [];
                 if (refinementRows.length > 0 && (<any>window).searchHBHelper === undefined) {
+                    const moment = await import(
+                        /* webpackChunkName: 'search-handlebars-helpers' */
+                        'moment'
+                    );
+                    if ((<any>window).searchMoment === undefined) {
+                        (<any>window).searchMoment = moment;
+                    }
+
                     const component = await import(
                         /* webpackChunkName: 'search-handlebars-helpers' */
                         'handlebars-helpers'
@@ -313,11 +321,11 @@ class SearchService implements ISearchService {
      */
     public async getSearchVerticalCounts(queryText: string, searchVerticals: ISearchVertical[], enableQueryRules: boolean): Promise<ISearchVerticalInformation[]> {
 
-        const batch = this._localPnPSetup.createBatch();   
-        const parser = new JSONParser();     
+        const batch = this._localPnPSetup.createBatch();
+        const parser = new JSONParser();
         const batchId = Guid.newGuid().toString();
         let verticalInfos: ISearchVerticalInformation[] = [];
- 
+
         const promises = searchVerticals.map(async vertical => {
 
             // Specify the same query parameters as the current vertical one to be sure to get the same total rows
@@ -351,7 +359,7 @@ class SearchService implements ISearchService {
                 }
             }, parser, batchId);
         });
-        
+
         // Execute the batch
         await batch.execute();
 
@@ -376,7 +384,7 @@ class SearchService implements ISearchService {
                 );
             }
         });
-        
+
         return verticalInfos;
     }
 
@@ -488,12 +496,12 @@ class SearchService implements ISearchService {
 
             let updatedSearchResults = searchResults;
 
-            const batch = this._localPnPSetup.createBatch();   
-            const parser = new JSONParser();     
+            const batch = this._localPnPSetup.createBatch();
+            const parser = new JSONParser();
             const batchId = Guid.newGuid().toString();
 
             const promises = searchResults.map(async result => {
-                
+
                 const filename = result.Filename ? result.Filename : `.${result.FileExtension}`;
 
                 let encodedFileName = filename ? filename.replace(/['']/g, '') : '';
@@ -545,11 +553,18 @@ class SearchService implements ISearchService {
 
         if (matches) {
             matches.map(match => {
-                updatedInputValue = updatedInputValue.replace(match, (<any>window).searchHBHelper.moment(match, "LL", { lang: this._pageContext.cultureInfo.currentUICultureName }));
+                updatedInputValue = updatedInputValue.replace(match, this.momentHelper(match, "LL", this._pageContext.cultureInfo.currentUICultureName));
             });
         }
 
         return updatedInputValue;
+    }
+
+    private momentHelper(str, pattern, lang) {
+        // if no args are passed, return a formatted date
+        let moment = (<any>window).searchMoment;
+        moment.locale(lang);
+        return moment(new Date(str)).format(pattern);
     }
 
     /**
@@ -568,7 +583,7 @@ class SearchService implements ISearchService {
                 // The correct operator is determined by the refiner display template according to its behavior
                 const conditions = filter.Values.map(value => {
 
-                    return /ǂǂ/.test(value.RefinementToken) && encodeTokens ? encodeURIComponent(value.RefinementToken) : value.RefinementToken; 
+                    return /ǂǂ/.test(value.RefinementToken) && encodeTokens ? encodeURIComponent(value.RefinementToken) : value.RefinementToken;
                 });
                 refinementQueryConditions.push(`${filter.FilterName}:${filter.Operator}(${conditions.join(',')})`);
             } else {

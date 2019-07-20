@@ -1,4 +1,4 @@
-import BaseTemplateService from                    './BaseTemplateService';
+import BaseTemplateService from './BaseTemplateService';
 import { SPHttpClient, SPHttpClientResponse } from '@microsoft/sp-http';
 import ISearchService from '../SearchService/ISearchService';
 import ResultsLayoutOption from '../../models/ResultsLayoutOption';
@@ -50,13 +50,14 @@ export class TemplateService extends BaseTemplateService {
      */
     private _availableManagedProperties: IComboBoxOption[];
 
-    constructor(spHttpClient: SPHttpClient, locale: string, searchService: ISearchService) {
+    constructor(spHttpClient: SPHttpClient, locale: string, searchService: ISearchService, timeZoneBias?: any) {
 
         super();
 
         this._searchService = searchService;
         this._spHttpClient = spHttpClient;
         this.CurrentLocale = locale;
+        this.TimeZoneBias = timeZoneBias;
     }
 
     /**
@@ -67,8 +68,8 @@ export class TemplateService extends BaseTemplateService {
 
         try {
             const response: SPHttpClientResponse = await this._spHttpClient.get(fileUrl, SPHttpClient.configurations.v1);
-            if(response.ok) {
-                return await response.text();              
+            if (response.ok) {
+                return await response.text();
             }
             else {
                 throw response.statusText;
@@ -86,12 +87,12 @@ export class TemplateService extends BaseTemplateService {
 
         try {
             const response: SPHttpClientResponse = await this._spHttpClient.get(fileUrl, SPHttpClient.configurations.v1);
-            if(response.ok) {
+            if (response.ok) {
 
-                if(response.url.indexOf('AccessDenied.aspx') > -1){
+                if (response.url.indexOf('AccessDenied.aspx') > -1) {
                     throw 'Access Denied';
-                } 
-                
+                }
+
                 return;
             }
             else {

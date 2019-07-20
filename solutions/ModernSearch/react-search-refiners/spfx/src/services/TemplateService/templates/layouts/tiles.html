@@ -3,13 +3,13 @@
     <div class="template_root">
         <div class="template_defaultCard">
             {{#if showResultsCount}}
-                <div class="template_resultCount">
-                    <label class="ms-fontWeight-semibold">{{getCountMessage totalRows keywords}}</label>
-                </div>
+            <div class="template_resultCount">
+                <label class="ms-fontWeight-semibold">{{getCountMessage totalRows keywords}}</label>
+            </div>
             {{/if}}
-            <div class="ms-Grid"> 
+            <div class="ms-Grid">
                 <div class="ms-Grid-row">
-                {{#each items as |item|}}
+                    {{#each items as |item|}}
                     <div class="ms-Grid-col ms-sm12 ms-md6 ms-lg4">
                         {{#> resultTypes item=item}}
                             {{!-- The block below will be used as default item template if no result types matched --}}
@@ -20,7 +20,7 @@
                             {{/eq}} 
                         {{/resultTypes}}
                     </div>
-                {{/each}}
+                    {{/each}}
                 </div>
             </div>
         </div>
@@ -43,6 +43,7 @@
                         </div>
                     {{/times}}
                     </div>
+                    {{/times}}
                 </div>
             </div>
         </div>

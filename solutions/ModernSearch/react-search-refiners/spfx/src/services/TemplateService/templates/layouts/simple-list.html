@@ -24,7 +24,7 @@
                     </div>
                 </li>
             {{/each}}
-            </ul>
+        </ul>
         {{/if}}
         <ul class="template_defaultList">
             {{#each items as |item|}}
@@ -47,41 +47,25 @@
                                     </div>
                                 </div>
                         </div>
-                        <div class="template_previewContainer ms-hiddenSm">                           
-                            {{#eq item.contentclass 'STS_ListItem_851'}}
-                                <div class="video-container">
-                                    <div class="img-container">
-                                        <img class="img-preview video-preview-item" src="{{PictureThumbnailURL}}" data-src="{{PictureThumbnailURL}}" data-url="{{DefaultEncodingURL}}" data-fileext="{{FileType}}"/>
-                                        <div class="hover">
-                                            <div><i class="ms-Icon ms-Icon--Preview" aria-hidden="true"></i></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            {{/eq}}                                
-                            {{#eq item.contentclass 'STS_ListItem_DocumentLibrary'}}
-                                {{#if ServerRedirectedPreviewURL}}
-                                    <div class="doc-container">
-                                        <div class="img-container">
-                                        {{#eq FileType 'pdf'}}
-                                            <!-- Documents from OneDrive sites can't be viewed directly due to SAMEORIGIN iframe restrictions-->
-                                            {{#contains Path '-my.sharepoint'}}
-                                                <img class="document-preview-item img-preview" width="120" src="{{ServerRedirectedPreviewURL}}" data-src="{{ServerRedirectedPreviewURL}}" data-url="{{ServerRedirectedEmbedURL}}"/>
-                                            {{else}}
-                                                <img class="document-preview-item img-preview" width="120" src="{{ServerRedirectedPreviewURL}}" data-src="{{ServerRedirectedPreviewURL}}" data-url="{{Path}}"/>
-                                            {{/contains}}
-                                        {{else}}
-                                            <img class="document-preview-item img-preview" width="120" src="{{ServerRedirectedPreviewURL}}" data-src="{{ServerRedirectedPreviewURL}}" data-url="{{ServerRedirectedEmbedURL}}"/>
-                                        {{/eq}}
-                                        <div class="hover">
-                                            <div><i class="ms-Icon ms-Icon--Preview" aria-hidden="true"></i></div>
-                                        </div>
-                                        </div>
-                                    </div>
-                                {{/if}}
-                            {{/eq}}
+                    </div>
+                    {{/eq}} {{#eq item.contentclass 'STS_ListItem_DocumentLibrary'}} {{#if ServerRedirectedPreviewURL}}
+                    <div class="doc-container">
+                        <div class="img-container">
+                            {{#eq FileType 'pdf'}}
+                            <!-- Documents from OneDrive sites can't be viewed directly due to SAMEORIGIN iframe restrictions-->
+                            {{#contains Path '-my.sharepoint'}}
+                            <img class="document-preview-item img-preview" width="120" src="{{ServerRedirectedPreviewURL}}" data-src="{{ServerRedirectedPreviewURL}}" data-url="{{ServerRedirectedEmbedURL}}" /> {{else}}
+                            <img class="document-preview-item img-preview" width="120" src="{{ServerRedirectedPreviewURL}}" data-src="{{ServerRedirectedPreviewURL}}" data-url="{{Path}}" /> {{/contains}} {{else}}
+                            <img class="document-preview-item img-preview" width="120" src="{{ServerRedirectedPreviewURL}}" data-src="{{ServerRedirectedPreviewURL}}" data-url="{{ServerRedirectedEmbedURL}}" /> {{/eq}}
+                            <div class="hover">
+                                <div><i class="ms-Icon ms-Icon--Preview" aria-hidden="true"></i></div>
+                            </div>
                         </div>
-                    {{/resultTypes}}
-                </li>
+                    </div>
+                    {{/if}} {{/eq}}
+                </div>
+                {{/resultTypes}}
+            </li>
             {{/each}}
         </ul>
     </div>
@@ -94,9 +78,9 @@
 
     <div class="placeholder_root">
         {{#if showResultsCount}}
-            <div class="template_resultCount">
-                <span class="shimmer line" style="width: 20%"></span>
-            </div>
+        <div class="template_resultCount">
+            <span class="shimmer line" style="width: 20%"></span>
+        </div>
         {{/if}}
         <ul class="template_defaultList">
             {{#times maxResultsCount}}   
@@ -111,14 +95,15 @@
                                 <span class="shimmer line" style="width: 20%"></span>                       
                             </div>
                     </div>
-                    <div class="template_previewContainer ms-hiddenSm">                           
-                        <div class="doc-container">
-                            <div class="img-container">
-                                <div class="shimmer img-preview" style="width: 120px;height: 70px;"></div>
-                            </div>
+                </div>
+                <div class="template_previewContainer ms-hiddenSm">
+                    <div class="doc-container">
+                        <div class="img-container">
+                            <div class="shimmer img-preview" style="width: 120px;height: 70px;"></div>
                         </div>
                     </div>
-                </li>
+                </div>
+            </li>
             {{/times}}
         </ul>
     </div>

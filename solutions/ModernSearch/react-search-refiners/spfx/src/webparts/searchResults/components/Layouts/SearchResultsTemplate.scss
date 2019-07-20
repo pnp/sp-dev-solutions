@@ -1,6 +1,12 @@
 
 .template_root, .placeholder_root {
 
+    /* 
+     * Override theming CSS classes from deprecated Office UI Fabric with values from SPFx
+     * Workaround for SPFx > 1.6.0, where these CSS classes were removed from sp-office-ui-fabric-core package
+     */
+    @import './SearchResultsTemplateThemeColors.scss';
+
     .template_defaultList {
 
         padding: 0;
