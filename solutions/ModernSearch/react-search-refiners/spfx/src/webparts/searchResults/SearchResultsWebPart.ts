@@ -58,7 +58,6 @@ import { IDropdownOption } from 'office-ui-fabric-react/lib/Dropdown';
 import { IComboBoxOption } from 'office-ui-fabric-react/lib/ComboBox';
 import { SearchManagedProperties, ISearchManagedPropertiesProps } from '../../controls/SearchManagedProperties/SearchManagedProperties';
 import { PropertyPaneSearchManagedProperties } from '../../controls/PropertyPaneSearchManagedProperties/PropertyPaneSearchManagedProperties';
-import { CustomCollectionFieldType } from '@pnp/spfx-property-controls/lib/PropertyFieldCollectionData';
 
 export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchResultsWebPartProps> implements IDynamicDataCallables {
 
@@ -99,7 +98,7 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
     private _templateContentToDisplay: string;
 
     /**
-     * The list of available managed managed properties (managed globally for all proeprty pane fiels if needed)
+     * The list of available managed managed properties (managed globally for all property pane fiels if needed)
      */
     private _availableManagedProperties: IComboBoxOption[];
 
@@ -774,7 +773,7 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
                     {
                         id: 'sortField',
                         title: "Field name",
-                        type: CustomCollectionFieldType.custom,
+                        type: this._customCollectionFieldType.custom,
                         required: true,
                         onCustomRender: (field, value, onUpdate, item, itemId, onCustomFieldValidation) => {
 
@@ -828,7 +827,7 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
                     {
                         id: 'sortField',
                         title: strings.Sort.SortableFieldManagedPropertyField,
-                        type: CustomCollectionFieldType.custom,
+                        type: this._customCollectionFieldType.custom,
                         required: true,
                         onCustomRender: (field, value, onUpdate, item, itemId, onCustomFieldValidation) => {
                             // Need to specify a React key to avoid item duplication when adding a new row
@@ -1121,13 +1120,20 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
                 },
                 text: strings.TilesLayoutOption,
                 key: ResultsLayoutOption.Tiles
+            },
+            {
+                iconProps: {
+                    officeFabricIconFontName: 'Code'
+                },
+                text: strings.DebugLayoutOption,
+                key: ResultsLayoutOption.Debug
             }
         ] as IPropertyPaneChoiceGroupOption[];
 
         layoutOptions.push(...this.getCodeRenderers());
         layoutOptions.push({
             iconProps: {
-                officeFabricIconFontName: 'Code'
+                officeFabricIconFontName: 'CodeEdit'
             },
             text: strings.CustomLayoutOption,
             key: ResultsLayoutOption.Custom,
@@ -1209,7 +1215,7 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
                         {
                             id: 'property',
                             title: strings.ResultTypes.ConditionPropertyLabel,
-                            type: CustomCollectionFieldType.custom,
+                            type: this._customCollectionFieldType.custom,
                             required: true,
                             onCustomRender: (field, value, onUpdate, item, itemId, onCustomFieldValidation) => {
                                 // Need to specify a React key to avoid item duplication when adding a new row
@@ -1276,7 +1282,7 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
                         {
                             id: "inlineTemplateContent",
                             title: strings.ResultTypes.InlineTemplateContentLabel,
-                            type: CustomCollectionFieldType.custom,
+                            type: this._customCollectionFieldType.custom,
                             onCustomRender: (field, value, onUpdate) => {
                                 return (
                                     React.createElement("div", null,

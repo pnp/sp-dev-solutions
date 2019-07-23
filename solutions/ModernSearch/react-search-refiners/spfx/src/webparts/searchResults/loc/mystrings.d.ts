@@ -45,6 +45,7 @@ declare interface ISearchResultsWebPartStrings {
     SimpleListLayoutOption: string;
     DetailsListLayoutOption: string;
     TilesLayoutOption: string;
+    DebugLayoutOption: string;
     CustomLayoutOption: string;
     TemplateUrlFieldLabel: string;
     TemplateUrlPlaceholder: string;

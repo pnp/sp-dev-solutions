@@ -44,6 +44,7 @@ define([], function () {
     "DetailsListLayoutOption": "Details list",
     "TilesLayoutOption": "Tiles",
     "CustomLayoutOption": "Custom",
+    "DebugLayoutOption": "Debug",
     "ResultsLayoutLabel": "Results layout",
     "TemplateUrlFieldLabel": "Use an external template URL",
     "TemplateUrlPlaceholder": "https://myfile.html",

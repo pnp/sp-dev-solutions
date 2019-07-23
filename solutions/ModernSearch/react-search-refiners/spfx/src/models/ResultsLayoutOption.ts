@@ -2,7 +2,8 @@ enum ResultsLayoutOption {
     SimpleList,
     DetailsList,
     Tiles,
-    Custom
+    Custom,
+    Debug
 }
 
 export default ResultsLayoutOption;

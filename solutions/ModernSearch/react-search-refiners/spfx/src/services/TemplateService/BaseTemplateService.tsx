@@ -15,6 +15,7 @@ import { IPreviewContainerProps, PreviewType } from './PreviewContainer/IPreview
 import { DocumentCardWebComponent } from './components/DocumentCard';
 import { DetailsListWebComponent } from './components/DetailsList';
 import { VideoCardWebComponent } from './components/VideoCard';
+import { DebugViewWebComponent } from './components/DebugView';
 import { DocumentCardShimmersWebComponent } from './components/shimmers/DocumentCardShimmers';
 import '@webcomponents/custom-elements';
 import { IPropertyPaneField } from '@microsoft/sp-property-pane';
@@ -110,6 +111,9 @@ abstract class BaseTemplateService {
             
             case ResultsLayoutOption.Tiles:
                 return require('./templates/layouts/tiles.html');
+
+            case ResultsLayoutOption.Debug:
+                return require('./templates/layouts/debug.html');
 
             case ResultsLayoutOption.Custom:
                 return require('./templates/layouts/default.html');
@@ -305,12 +309,6 @@ abstract class BaseTemplateService {
                 accum += block.fn(i);
             return accum;
         });
-
-        // Stringify an object
-        // <p>{{#stringify myObj}}</p>
-        Handlebars.registerHelper('stringify', (obj) => {
-            return JSON.stringify(obj);
-        });
     }
 
     /**
@@ -335,6 +333,10 @@ abstract class BaseTemplateService {
             {
                 name: 'video-card',
                 class: VideoCardWebComponent
+            },
+            {
+                name: 'debug-view',
+                class: DebugViewWebComponent
             }
         ];
 
@@ -466,7 +468,6 @@ abstract class BaseTemplateService {
             "parseJSON",
             "pick",
             "JSONstringify",
-            "stringify",
             "absolute",
             "dirname",
             "relative",

@@ -10,7 +10,7 @@
                 <label class="ms-fontWeight-semibold">{{getCountMessage totalRows keywords}}</label>
             </div>
         {{/if}}
-        <details-list items="{{stringify items}}" columns-configuration="{{stringify detailsListColumns}}" show-file-icon="{{@root.showFileIcon}}" is-compact="{{@root.isCompact}}"></details-list>
+        <details-list items="{{JSONstringify items}}" columns-configuration="{{JSONstringify detailsListColumns}}" show-file-icon="{{@root.showFileIcon}}" is-compact="{{@root.isCompact}}"></details-list>
     </div>
 </content>
 
@@ -25,7 +25,7 @@
                 <span class="shimmer line" style="width: 20%"></span>
             </div>
         {{/if}}
-        <details-list columns-configuration="{{stringify @root.detailsListColumns}}" show-file-icon="{{@root.showFileIcon}}" is-compact="{{@root.isCompact}}" show-shimmers="true"></details-list>
+        <details-list columns-configuration="{{JSONstringify @root.detailsListColumns}}" show-file-icon="{{@root.showFileIcon}}" is-compact="{{@root.isCompact}}" show-shimmers="true"></details-list>
     </div>
 
 </content>

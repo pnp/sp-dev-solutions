@@ -42,6 +42,7 @@ define([], function () {
     "SaveButtonText": "Guardar",
     "ListLayoutOption": "Lista",
     "TilesLayoutOption": "Tiles",
+    "DebugLayoutOption": "Depurar",
     "CustomLayoutOption": "Personalizado",
     "ResultsLayoutLabel": "Diseño de resultados",
     "TemplateUrlFieldLabel": "Utilice una URL de plantilla externa",

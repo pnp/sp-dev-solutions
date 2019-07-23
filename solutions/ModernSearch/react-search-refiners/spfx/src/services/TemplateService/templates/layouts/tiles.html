@@ -14,9 +14,9 @@
                         {{#> resultTypes item=item}}
                             {{!-- The block below will be used as default item template if no result types matched --}}
                             {{#eq item.contentclass 'STS_ListItem_851'}}
-                                <video-card item="{{stringify item}}" fields-configuration="{{stringify @root.documentCardFields}}" enable-preview="{{@root.enablePreview}}" show-file-icon="{{@root.showFileIcon}}" is-compact="{{@root.isCompact}}"></video-card>
+                                <video-card item="{{JSONstringify item}}" fields-configuration="{{JSONstringify @root.documentCardFields}}" enable-preview="{{@root.enablePreview}}" show-file-icon="{{@root.showFileIcon}}" is-compact="{{@root.isCompact}}"></video-card>
                             {{else}}
-                                <document-card item="{{stringify item}}" fields-configuration="{{stringify @root.documentCardFields}}" enable-preview="{{@root.enablePreview}}" show-file-icon="{{@root.showFileIcon}}" is-compact="{{@root.isCompact}}"></document-card>
+                                <document-card item="{{JSONstringify item}}" fields-configuration="{{JSONstringify @root.documentCardFields}}" enable-preview="{{@root.enablePreview}}" show-file-icon="{{@root.showFileIcon}}" is-compact="{{@root.isCompact}}"></document-card>
                             {{/eq}} 
                         {{/resultTypes}}
                     </div>
