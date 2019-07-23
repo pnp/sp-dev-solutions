@@ -36,7 +36,7 @@ define([], function() {
     "CountMessageLong": "<b>{0}</b> résultats pour '<em>{1}</em>'",
     "CountMessageShort": "<b>{0}</b> résultats",
     "CancelButtonText": "Annuler",
-    "DialogButtonLabel": "Styles",
+    "DialogButtonLabel": "Éditer le modèle",
     "DialogButtonText": "Éditer le modèle",
     "DialogTitle": "Éditer le modèle de résulat",
     "SaveButtonText": "Enregistrer",

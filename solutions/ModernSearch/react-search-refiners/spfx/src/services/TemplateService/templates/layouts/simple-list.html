@@ -46,26 +46,30 @@
                                         {{/if}}
                                     </div>
                                 </div>
+                                {{#eq item.contentclass 'STS_ListItem_DocumentLibrary'}} 
+                                    {{#if ServerRedirectedPreviewURL}}
+                                        <div class="doc-container">
+                                            <div class="img-container">
+                                                {{#eq FileType 'pdf'}}
+                                                    <!-- Documents from OneDrive sites can't be viewed directly due to SAMEORIGIN iframe restrictions-->
+                                                    {{#contains Path '-my.sharepoint'}}
+                                                        <img class="document-preview-item img-preview" width="120" src="{{ServerRedirectedPreviewURL}}" data-src="{{ServerRedirectedPreviewURL}}" data-url="{{ServerRedirectedEmbedURL}}" /> 
+                                                    {{else}}
+                                                        <img class="document-preview-item img-preview" width="120" src="{{ServerRedirectedPreviewURL}}" data-src="{{ServerRedirectedPreviewURL}}" data-url="{{Path}}" /> 
+                                                    {{/contains}} 
+                                                {{else}}
+                                                    <img class="document-preview-item img-preview" width="120" src="{{ServerRedirectedPreviewURL}}" data-src="{{ServerRedirectedPreviewURL}}" data-url="{{ServerRedirectedEmbedURL}}" /> 
+                                                {{/eq}}
+                                                <div class="hover">
+                                                    <div><i class="ms-Icon ms-Icon--Preview" aria-hidden="true"></i></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {{/if}} 
+                                {{/eq}}
                         </div>
-                    </div>
-                    {{/eq}} {{#eq item.contentclass 'STS_ListItem_DocumentLibrary'}} {{#if ServerRedirectedPreviewURL}}
-                    <div class="doc-container">
-                        <div class="img-container">
-                            {{#eq FileType 'pdf'}}
-                            <!-- Documents from OneDrive sites can't be viewed directly due to SAMEORIGIN iframe restrictions-->
-                            {{#contains Path '-my.sharepoint'}}
-                            <img class="document-preview-item img-preview" width="120" src="{{ServerRedirectedPreviewURL}}" data-src="{{ServerRedirectedPreviewURL}}" data-url="{{ServerRedirectedEmbedURL}}" /> {{else}}
-                            <img class="document-preview-item img-preview" width="120" src="{{ServerRedirectedPreviewURL}}" data-src="{{ServerRedirectedPreviewURL}}" data-url="{{Path}}" /> {{/contains}} {{else}}
-                            <img class="document-preview-item img-preview" width="120" src="{{ServerRedirectedPreviewURL}}" data-src="{{ServerRedirectedPreviewURL}}" data-url="{{ServerRedirectedEmbedURL}}" /> {{/eq}}
-                            <div class="hover">
-                                <div><i class="ms-Icon ms-Icon--Preview" aria-hidden="true"></i></div>
-                            </div>
-                        </div>
-                    </div>
-                    {{/if}} {{/eq}}
-                </div>
-                {{/resultTypes}}
-            </li>
+                    {{/resultTypes}}
+                </li>
             {{/each}}
         </ul>
     </div>
