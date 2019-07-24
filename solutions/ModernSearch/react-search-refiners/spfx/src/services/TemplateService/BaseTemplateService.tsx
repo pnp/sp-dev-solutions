@@ -538,8 +538,13 @@ abstract class BaseTemplateService {
             Handlebars.registerPartial('resultTypes', template);
         } else {
             Handlebars.registerPartial('resultTypes', '{{> @partial-block }}');
-
         }
+    }
+
+
+    public registerSlider() {
+        let template = Handlebars.compile("<slider template={{> @partial-block}}></slider>");
+        Handlebars.registerPartial('resultTypes', template);                    
     }
 
     /**

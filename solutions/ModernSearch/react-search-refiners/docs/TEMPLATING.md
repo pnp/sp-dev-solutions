@@ -1,0 +1,187 @@
+# Modern Search solution - Templating documentation
+
+## Available layouts ##
+
+By default, the search results Web Part comes with multiples layouts. All layouts rely on Handlebars templates. The templating feature comes directly from the original [react-content-query-webpart](https://github.com/SharePoint/sp-dev-fx-webparts/tree/master/samples/react-content-query-webpart) so thanks to @spplante!
+
+Some provided templates embed web components (via custom HTML elements) wrapping Office UI Fabric React controls (ex: DetailsList, DocumentCard). For those, you can only customize them using the provided template options and placeholders and it means you don't have access to their underlying HTML markup.
+
+### Simple List
+
+Displays the search results as a simple list with previews:
+
+<p align="center">
+  <img width="100%" src="../images/simple_list_layout.png"/>
+</p>
+
+### Details List
+
+Displays the search results inside a tabular view using the associated Office UI Fabric [DetailsList control](https://developer.microsoft.com/en-us/fabric#/controls/web/detailslist):
+
+<p align="center">
+  <img width="100%" src="../images/details_list_layout.png"/>
+</p>
+
+#### Template options
+
+| Option | Description
+| ------ | ---------------
+| **Manage columns** | Allows you to build you own table view by adding or removing columns dynamically. For each column, you get the following options:<br><p align="center"><img width="100%" src="../images/details_list_manage_columns.png"/></p><ul><li>**Column name**: the column name to display.</li><li>**Minimum width in px**: the minimum width of the column.</li><li>**Maximum width in px**: the maximum width of the column.</li><li>**Sortable**: allows you to sort column values alphabetically when the column header is clicked (ascending or descending).</li><li>**Resizable**: allows you to resize the column dynamically in display mode.</li><li>**Multiline**: if the column column should be multiline. By default only ellipsis (...) will be display for larger text.</li><li>**Link to item**: if enabled, wrap the column value with an URL link pointing to the search result item (i.e. Path). This option is especially suitable for the 'Title' column.</li><li>**Column value**: you can choose here either a managed property value (from the list or as free text) without any transformation or use an Handlebars expression by clicking on the checkbox next to it. In this case, all helpers from the main template are available and you can also add you own HTML markup in the column value:<br><p align="center"><img width="500px" src="../images/details_list_hb_expr.png"/><br><br><img width="500px" src="../images/details_list_hb_expr2.png"/></p></ul>
+| **Show file icon** | Hide or display the file icon in the first column.
+| **Compact mode** | Display the details list in compact mode. 
+
+### Document Card
+
+Displays search results as cards view using the associated Office UI Fabric [DocumentCard control](https://developer.microsoft.com/en-us/fabric#/controls/web/documentcard):
+
+<p align="center"><img width="100%" src="../images/documentcards_layout.png"/></p>
+
+**Note**: you can still manage the number of cards displayed by row by changing the grid CSS classes directly in the template:
+
+```
+{{#each items as |item|}}
+  <div class="ms-Grid-col ms-sm12 ms-md6 ms-lg4"> <!-- 3 cards by row here for large screen resolution -->
+    ...
+  </div>
+{{/each}}
+```
+
+#### Template options
+
+| Option | Description
+| ------ | ---------------
+| **Manage card fields** | Allows you to define you own values for card placeholder fields. By default, the document card fields come with predefined mappings but you can set your own.<br><p align="center"><img width="100%" src="../images/documentcards_manage_fields.png"/></p>As a field value, you can choose either a managed property value (from the list or as free text) and without any transformation or use an Handlebars expression by clicking on the checkbox next to it. In this case, all helpers from the main template are available. Also, if the field doesn't have the **'Allow HTML'** indication flag enabled, it means the value will be always interpreted as text, whatever if you set an HTML value. Otherwise, your value will be interpreted as HTML for those fields (ex: '_Location_' and '_Tags_' placeholder fields). If you don't set a value for those fields (i.e an empty value), they won't appear in the UI:<br><p align="center"><img width="200px" src="../images/documentcards_html_fields.png"/></p>
+| **Enable result preview** | If enabled, displays a preview callout when the document card image is clicked.
+| **Show file icon** | Hide or display the file icon in the card.
+| **Compact mode** | Display the cards in compact mode. 
+
+### Debug View
+
+Displays search result items and global Handlebars context in a debug view (read only):
+
+<p align="center"><img width="100%" src="../images/debug_layout.png"/></p>
+
+## Customize templates with Handlebars ##
+
+If provided layouts don't meet your requirements, you can modifiy them or start from scratch using Handlebars and the following helpers/features:
+
+<p align="center">
+  <img width="500px" src="../images/edit_template.png"/>
+</p>
+
+### Handlebars helpers
+
+The following custom helpers are available in addition to the [handlebars-helpers](https://github.com/helpers/handlebars-helpers):
+
+Setting | Description
+-------|----
+`{{showResultsCount}}` | Boolean flag corresponding to the associated in the property pane.
+`{{totalRows}}` | The result count.
+`{{maxResultsCount}}` | The number of results configured to retrieve in the web part.
+`{{actualResultsCount}}` | The actual number of results retrived.
+`{{keywords}}` | The search query.
+`{{getSummary HitHighlightedSummary}}` | Format the *HitHighlightedSummary* property with recognized words in bold.
+`{{getDate <date_managed_property> "<format>" <time handling>}}` | Format the date with moment.ts according to the current language. Date in the managed property should be on the form `2018-09-10T06:29:25.0000000Z` for the function to work.<p>&lt;time handling&gt; is optional and takes <ul><li>0 = format to browsers time zone (default)</li><li>1 = ignore Z time and handle as browsers local time zone</li><li>2 = strip time and set to 00:00:00 in browsers local time zone</li><li>3 = display in the time zone for the current web</li><li>4 = display in the time zone from the uers profile</li>
+`{{getPreviewSrc item}}` | Determine the image thumbnail URL if applicable.
+`{{getUrl item}}` | Get the item URL. For a document, it means the URL to the Office Online instance or the direct URL (to download it).
+`{{getUrlField managed_propertyOWSURLH "URL/Title"}}` | Return the URL or Title part of a URL field managed property.
+`{{getCountMessage totalRows <?keywords>}}` | Display a friendly message displaying the result and the entered keywords.
+`{{<search_managed_property_name>}}` | Any valid search managed property returned in the results set. These are typically managed properties set in the *"Selected properties"* setting in the property pane. You don't need to prefix them with `item.` if you are in the "each" loop.
+`{{webUrl}}` | The current web relative url. Use `{{../webUrl}}` inside a loop.
+`{{siteUrl}}` | The current site relative url. Use `{{../siteUrl}}` inside a loop.
+`{{getUniqueCount items "property"}}` | Get the unique count of a property over the result set (or another array)
+`{{getUniqueCount array}}` | Get the unique count of objects in an array. Example: [1,1,1,2,2,4] would return `3`.
+
+You can also define your own in the *BaseTemplateService.ts* file. See [helper-moment](https://github.com/helpers/helper-moment) for date samples using moment.
+
+### Use result types
+
+Use the result types features form the property pane options to split your templates according to results characteristics instead of making a huge central template with multiple conditions. They can be defined in 'inline' mode or using an external file. You can also use the sorting option to determine to order of evaluation for each condition.
+
+<p align="center">
+  <img width="500px" src="../images/result_types.png"/>
+</p>
+
+The following operators are supported:
+- Equals
+- Contains
+- StartsWith
+- Greater Or Equal
+- Less Or Equal
+- Less than
+- Greater than
+- Is not null
+
+To use it in your main template, just follow this pattern. This block is not mandatory.
+
+```
+{{#> resultTypes}}
+  {{!-- The block below will be used as default item template if no result types matched --}}
+  <div class="template_result">
+      <!-- Your default template markup -->
+  </div>
+{{/resultTypes}}
+```
+
+Handlebars [partials](https://handlebarsjs.com/partials.html) are used behind the scenes and conditions are built dynamically using a recursive if/else structure.
+
+### Elements previews
+
+Previews are available by default for the simple list layout, for Office documents and Office 365 videos (not Microsoft Stream). The embed URL is directly taken from the `ServerRedirectedEmbedURL` managed property retrieved from the search results.
+
+<p align="center">
+  <img width="500px" src="../images/result_preview.png"/>
+</p>
+
+The WebPart must have the following selected properties in the configuration to get the preview feature work (they are set by default):
+- ServerRedirectedPreviewURL
+- ServerRedirectedURL
+- contentclass
+- ServerRedirectedEmbedURL
+- DefaultEncodingURL
+
+This preview is displayed as an _iframe_ or a _video_ tag when the user clicks on the corresponding preview image or compliant HTML elements. To enable the callout preview in your templates, your HTML elements must have the  `document-preview-item` or `video-preview-item` CSS class and provide the following attributes:
+
+- `data-src`: the URL of the preview image.
+- `data-url`: the URL of the iframe source or the video.
+- `data-fileext`: the file extension for the video (for video only).
+
+**Preview on documents**
+```
+<img class="document-preview-item" data-src="{{ServerRedirectedPreviewURL}}" data-url="{{Path}}"/>
+```
+
+**Preview on videos**
+```
+<img class="video-preview-item" src="{{PictureThumbnailURL}}" data-src="{{PictureThumbnailURL}}" data-url="{{DefaultEncodingURL}}" data-fileext="{{FileType}}"/>
+```
+
+### Custom placeholders (i.e. shimmers)
+
+You can define your own placeholders according your template markup. They will be loaded automatically before the results are loaded.
+
+<p align="center">
+  <img width="500px" src="../images/placeholders.png"/>
+</p>
+
+To do this, insert your HTML markup as follow in your template content:
+
+```
+<content id="placeholder">
+    <style>
+        /* Insert your CSS overrides here */
+    </style>
+
+    <div class="placeholder_root">
+      <!-- Your placeholder content -->
+    </div>
+
+</content>
+```
+
+Notice your template content must be enclosed in a `<content id="template">` tag if you define placeholders.
+
+### Custom code renderers
+You may also define  your own renderers, which most often should be SPFx application customizers. These should use the resultservice to register themselves as renderers, and will upon registration be available as a rendering choice in the "Result Layouts" Section.
+
+More information about custom code renderers may be found in a [seperate sample](../react-search-refiners-renderer), which showcases such a renderer.
