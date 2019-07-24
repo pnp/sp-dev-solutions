@@ -46,6 +46,7 @@
                                         {{/if}}
                                     </div>
                                 </div>
+                                <div class="template_previewContainer ms-hiddenSm">
                                 {{#eq item.contentclass 'STS_ListItem_DocumentLibrary'}} 
                                     {{#if ServerRedirectedPreviewURL}}
                                         <div class="doc-container">
@@ -67,6 +68,7 @@
                                         </div>
                                     {{/if}} 
                                 {{/eq}}
+                                </div>
                         </div>
                     {{/resultTypes}}
                 </li>
@@ -88,24 +90,23 @@
         {{/if}}
         <ul class="template_defaultList">
             {{#times maxResultsCount}}   
-                <li class="template_listItem" tabindex="0">
-                    <div class="template_result">
-                            <div class="template_icon shimmer"></div>
-                            <div class="template_contentContainer">
-                                <span class="shimmer line" style="width: 60%"></span>
-                                <span class="shimmer line" style="width: 100%"></span>
-                                <span class="shimmer line" style="width: 100%"></span>
-                                <span class="shimmer line" style="width: 35%"></span>
-                                <span class="shimmer line" style="width: 20%"></span>                       
-                            </div>
-                    </div>
-                </div>
-                <div class="template_previewContainer ms-hiddenSm">
-                    <div class="doc-container">
-                        <div class="img-container">
-                            <div class="shimmer img-preview" style="width: 120px;height: 70px;"></div>
+            <li class="template_listItem" tabindex="0">
+                <div class="template_result">
+                        <div class="template_icon shimmer"></div>
+                        <div class="template_contentContainer">
+                            <span class="shimmer line" style="width: 60%"></span>
+                            <span class="shimmer line" style="width: 100%"></span>
+                            <span class="shimmer line" style="width: 100%"></span>
+                            <span class="shimmer line" style="width: 35%"></span>
+                            <span class="shimmer line" style="width: 20%"></span>                       
                         </div>
-                    </div>
+                        <div class="template_previewContainer ms-hiddenSm">
+                            <div class="doc-container">
+                                <div class="img-container">
+                                    <div class="shimmer img-preview" style="width: 120px;height: 70px;"></div>
+                                </div>
+                            </div>
+                        </div>
                 </div>
             </li>
             {{/times}}
