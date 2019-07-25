@@ -1,5 +1,6 @@
 import * as React from 'react';
 import Flickity from 'flickity';
+import 'flickity-imagesloaded';
 import 'flickity/dist/flickity.min.css';
 import * as ReactDOM from 'react-dom';
 import * as Handlebars from 'handlebars';
@@ -17,7 +18,7 @@ export interface ISliderState {
 export default class Slider extends React.Component<ISliderProps, ISliderState> {
 
     private flickityNode: HTMLElement;
-    private flickity: any;
+    private flickityInstance: any;
 
     constructor(props) {
         super(props);
@@ -29,8 +30,9 @@ export default class Slider extends React.Component<ISliderProps, ISliderState> 
         this.refreshFlickity = this.refreshFlickity.bind(this);
     }
 
-    public componentDidMount() {
-        this.flickity = new Flickity(this.flickityNode, this.props.options || {});
+    public async componentDidMount() {
+        
+        this.flickityInstance = new Flickity(this.flickityNode, this.props.options || {});        
 
         this.setState({
             flickityReady: true,
@@ -38,18 +40,16 @@ export default class Slider extends React.Component<ISliderProps, ISliderState> 
     }
 
     private refreshFlickity() {
-        this.flickity.reloadCells();
-        this.flickity.resize();
-        this.flickity.updateDraggable();
+        this.flickityInstance.deactivate();
+        this.flickityInstance.reloadCells();
+        this.flickityInstance.resize();
+        this.flickityInstance.updateDraggable();
+        this.flickityInstance.activate();
     }
 
-    public componentWillUnmount() {
-        this.flickity.destroy();
-    }
-
-    public componentDidUpdate(prevProps, prevState) {
+    public componentDidUpdate(prevProps: any, prevState) {
         const flickityDidBecomeActive = !prevState.flickityReady && this.state.flickityReady;
-        const childrenDidChange = prevProps.children !== this.props.children;
+        const childrenDidChange = prevProps.children.length !== (this.props.children as any).length;
 
         if (flickityDidBecomeActive || childrenDidChange) {
             this.refreshFlickity();
@@ -71,9 +71,9 @@ export default class Slider extends React.Component<ISliderProps, ISliderState> 
 
     public render() {
         return [
-            <div className={'test'} key="flickityBase" ref={node => (this.flickityNode = node)} />,
+            <div className="carousel" key="flickityBase" ref={node => (this.flickityNode = node)} />,
             this.renderPortal(),
-        ].filter(Boolean);
+          ].filter(Boolean);
     }
 }
 
@@ -103,6 +103,11 @@ export interface ISliderOptions {
      * Indicates if the slider should page dots
      */
     showPageDots?: boolean;
+
+    /**
+     * At the end of cells, wrap-around to the other end for infinite scrolling.
+     */
+    wrapAround?: boolean;
 }
 
 export interface ISliderComponentProps {
@@ -151,10 +156,12 @@ export class SliderComponent extends React.Component<ISliderComponentProps, ISli
                         options={{
                             autoPlay: autoPlayValue,
                             pauseAutoPlayOnHover: sliderOptions.pauseAutoPlayOnHover,
-                            wrapAround: true,
+                            wrapAround: sliderOptions.wrapAround,
+                            lazyLoad: true,
                             groupCells: sliderOptions.numberOfSlides,
                             adaptiveHeight: true,
-                            pageDots: sliderOptions.showPageDots
+                            pageDots: sliderOptions.showPageDots,
+                            imagesLoaded: true
                         }}
                         >
                         {items.map((item, index) => {

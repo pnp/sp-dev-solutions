@@ -40,6 +40,7 @@
         "downshift": "3.1.5",
         "es6-iterator": "^2.0.3",
         "flickity": "^2.2.1",
+        "flickity-imagesloaded": "^2.0.0",
         "handlebars": "^4.0.12",
         "handlebars-helpers": "0.8.4",
         "immutability-helper": "2.4.0",

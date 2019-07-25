@@ -142,6 +142,7 @@ declare interface ISearchResultsWebPartStrings {
         SliderPauseAutoPlayOnHover: string;
         SliderGroupCells: string;
         SliderShowPageDots: string;
+        SliderWrapAround: string;
     }
     ManagedPropertiesListPlaceHolder: string;
 }

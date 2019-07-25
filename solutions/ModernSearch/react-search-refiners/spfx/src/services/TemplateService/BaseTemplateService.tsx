@@ -162,7 +162,6 @@ abstract class BaseTemplateService {
 
         let templates: any = htmlContent.getElementById('template');
         if (templates && templates.innerHTML) {
-
             // Need to unescape '&gt;' for handlebars partials 
             return templates.innerHTML.replace('&gt;', '>');
         } else {
@@ -180,7 +179,8 @@ abstract class BaseTemplateService {
 
         const placeHolders = htmlContent.getElementById('placeholder');
         if (placeHolders && placeHolders.innerHTML) {
-            return placeHolders.innerHTML;
+            // Need to unescape '&gt;' for handlebars partials 
+            return placeHolders.innerHTML.replace('&gt;', '>');
         } else {
             return null;
         }

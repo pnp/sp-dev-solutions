@@ -419,8 +419,12 @@ export class TemplateService extends BaseTemplateService {
                     PropertyPaneToggle('templateParameters.sliderOptions.showPageDots', {
                         label: strings.TemplateParameters.SliderShowPageDots,               
                         checked: properties.templateParameters.sliderOptions.showPageDots !== null || properties.templateParameters.sliderOptions.showPageDots !== undefined ? properties.templateParameters.sliderOptions.showPageDots : true
+                    }),
+                    PropertyPaneToggle('templateParameters.sliderOptions.wrapAround', {
+                        label: strings.TemplateParameters.SliderWrapAround,               
+                        checked: properties.templateParameters.sliderOptions.wrapAround !== null || properties.templateParameters.sliderOptions.wrapAround !== undefined ? properties.templateParameters.sliderOptions.wrapAround : true
                     })
-                ])
+                ]);
 
                 return groupFields;
 

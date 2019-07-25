@@ -140,7 +140,8 @@ define([], function() {
       "SliderAutoPlay": "Lecture automatique",
       "SliderPauseAutoPlayOnHover": "Pause lors du survolement",
       "SliderGroupCells": "Nombre d'éléments à grouper par slide",
-      "SliderShowPageDots": "Afficher la navigation"
+      "SliderShowPageDots": "Afficher la navigation",
+      "SliderWrapAround": "Défilement inifini"
     },
     "ManagedPropertiesListPlaceHolder": "Sélectionnez ou ajoutez une propriété gérée"
   }

@@ -55,6 +55,48 @@ Displays search results as cards view using the associated Office UI Fabric [Doc
 | **Show file icon** | Hide or display the file icon in the card.
 | **Compact mode** | Display the cards in compact mode. 
 
+### Slider
+
+Displays search results as a carousel using the [Flickity library](https://flickity.metafizzy.co/) (the same used in the [PnP Starter Intranet solution](https://github.com/SharePoint/PnP/blob/master/Solutions/Business.StarterIntranet/app/src/components/Carousel/CarouselViewModel.ts)).
+
+<p align="center"><img width="100%" src="../images/slider_layout.png"/></p>
+
+
+### Customize slide content
+
+By default, documents card are displayed in the slider but you can add your own HTML markup for each slide inside the `{{#>slider}}` Handlebars partial:
+
+```
+{{#>slider items=(JSONstringify @root.items 2) options=(JSONstringify @root.sliderOptions)}}
+    <!-- Slide content goes here -->
+    <div class="slide">
+        <!-- Your HTML markup -->
+    </div>                
+{{/slider}}
+```
+Item properties and all Handlebars helpers are available inside the partial block (Ex: `{{Title}}`). However, to use them you must escape every Handlebars expression with the `'\'` character (ex: `{{Title}}` becomes `\{{Title}}`).
+
+This is because we don't want these expressions to be interpreted by the global Handlebars context. Actually, we use an internal compilation process with the item context so we need the raw expression to output the item properties and helpers correctly. For instance if you want an image carousel only, your HTML markup would be:
+
+```
+{{#>slider items=(JSONstringify @root.items 2) options=(JSONstringify @root.sliderOptions)}}
+    <img src="\{{getPreviewSrc item}}"/>              
+{{/slider}}
+```
+
+In the case of images, the slider is smart enough to adjsut the height automatically so you don't need to specify explicit values. However, you can set an arbitrary size for the slides updating the CSS `slide` class.
+
+#### Template options
+
+| Option | Description
+| ------ | ---------------
+| **Auto play** | If enabled, slides move automatically every X seconds.
+| **Auto play duration** | Move elements every X seconds.
+| **Pause on hover** | If enabled, pause the slider on mouse hover.
+| **Number of elements to group together in slides** | Groups cells together in slides.
+| **Show page dots** | Enable or disable slider navigation. You can adjust the dots position by updating the `.flickity-page-dots` CSS class.
+| **Infinite scrolling** | Enable or disable infinite scrolling on the carousel. 
+
 ### Debug View
 
 Displays search result items and global Handlebars context in a debug view (read only):
