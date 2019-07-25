@@ -16,6 +16,7 @@ import { DocumentCardWebComponent } from './components/DocumentCard';
 import { DetailsListWebComponent } from './components/DetailsList';
 import { VideoCardWebComponent } from './components/VideoCard';
 import { DebugViewWebComponent } from './components/DebugView';
+import { SliderWebComponent } from './components/Slider';
 import { DocumentCardShimmersWebComponent } from './components/shimmers/DocumentCardShimmers';
 import '@webcomponents/custom-elements';
 import { IPropertyPaneField } from '@microsoft/sp-property-pane';
@@ -111,6 +112,9 @@ abstract class BaseTemplateService {
             
             case ResultsLayoutOption.Tiles:
                 return require('./templates/layouts/tiles.html');
+
+            case ResultsLayoutOption.Slider:
+                return require('./templates/layouts/slider.html');
 
             case ResultsLayoutOption.Debug:
                 return require('./templates/layouts/debug.html');
@@ -337,6 +341,10 @@ abstract class BaseTemplateService {
             {
                 name: 'debug-view',
                 class: DebugViewWebComponent
+            },
+            {
+                name: 'slider-component',
+                class: SliderWebComponent
             }
         ];
 
@@ -346,6 +354,10 @@ abstract class BaseTemplateService {
                 customElements.define(wc.name,wc.class);
             }
         });
+
+        // Register slider component as partial 
+        let sliderTemplate = Handlebars.compile(`<slider-component items="{{items}}" options="{{options}}" template="{{@partial-block}}"></slider-component>`);
+        Handlebars.registerPartial('slider', sliderTemplate,);
     }
 
     /**
@@ -541,11 +553,6 @@ abstract class BaseTemplateService {
         }
     }
 
-
-    public registerSlider() {
-        let template = Handlebars.compile("<slider template={{> @partial-block}}></slider>");
-        Handlebars.registerPartial('resultTypes', template);                    
-    }
 
     /**
      * Builds the Handlebars nested conditions recursively to reflect the result types configuration

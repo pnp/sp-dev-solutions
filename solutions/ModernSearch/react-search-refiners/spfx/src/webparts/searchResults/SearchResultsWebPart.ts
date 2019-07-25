@@ -1123,6 +1123,13 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
             },
             {
                 iconProps: {
+                    officeFabricIconFontName: 'Slideshow'
+                },
+                text: strings.SliderLayoutOption,
+                key: ResultsLayoutOption.Slider
+            },
+            {
+                iconProps: {
                     officeFabricIconFontName: 'Code'
                 },
                 text: strings.DebugLayoutOption,

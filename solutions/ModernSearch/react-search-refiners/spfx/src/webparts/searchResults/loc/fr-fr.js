@@ -45,6 +45,7 @@ define([], function() {
     "TilesLayoutOption": "Tuiles",
     "CustomLayoutOption": "Personnalisé",
     "DebugLayoutOption": "Débogage",
+    "SliderLayoutOption": "Caroussel",
     "ResultsLayoutLabel": "Disposition des résultats",
     "TemplateUrlFieldLabel": "Utiliser un fichier modèle externe",
     "TemplateUrlPlaceholder": "https://myfile.html",
@@ -134,7 +135,12 @@ define([], function() {
       "MultilineColumnLabel": "Plusieurs lignes",
       "LinkToItemColumnLabel": "Lien vers l'élément",
       "SupportHTMLColumnLabel": "Supporte HTML",
-      "CompactModeLabel": "Mode compact"
+      "CompactModeLabel": "Mode compact",
+      "SliderAutoPlayDuration": "Avancer les slides toutes les X millisecondes",
+      "SliderAutoPlay": "Lecture automatique",
+      "SliderPauseAutoPlayOnHover": "Pause lors du survolement",
+      "SliderGroupCells": "Nombre d'éléments à grouper par slide",
+      "SliderShowPageDots": "Afficher la navigation"
     },
     "ManagedPropertiesListPlaceHolder": "Sélectionnez ou ajoutez une propriété gérée"
   }

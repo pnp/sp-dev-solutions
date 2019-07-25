@@ -3,14 +3,16 @@ import { SPHttpClient, SPHttpClientResponse } from '@microsoft/sp-http';
 import ISearchService from '../SearchService/ISearchService';
 import ResultsLayoutOption from '../../models/ResultsLayoutOption';
 import { ISearchResultsWebPartProps } from '../../webparts/searchResults/ISearchResultsWebPartProps';
-import { IPropertyPaneField, PropertyPaneToggle } from '@microsoft/sp-property-pane';
+import { IPropertyPaneField, PropertyPaneToggle, PropertyPaneSlider } from '@microsoft/sp-property-pane';
 import { IDetailsListColumnConfiguration } from './DetailsListComponent/DetailsListComponent';
 import { PropertyFieldCollectionData, CustomCollectionFieldType } from '@pnp/spfx-property-controls/lib/PropertyFieldCollectionData';
 import * as React from 'react';
 import { TemplateValueFieldEditor, ITemplateValueFieldEditorProps } from '../../controls/TemplateValueFieldEditor/TemplateValueFieldEditor';
+import { PropertyFieldSpinButton } from '@pnp/spfx-property-controls/lib/PropertyFieldSpinButton';
 import * as strings from 'SearchResultsWebPartStrings';
 import { IComboBoxOption } from 'office-ui-fabric-react/lib/ComboBox';
 import { Icon, IIconProps } from 'office-ui-fabric-react/lib/Icon';
+import { ISliderOptions } from './SliderComponent/SliderComponent';
 
 export interface IDocumentCardFieldsConfiguration {
 
@@ -367,6 +369,60 @@ export class TemplateService extends BaseTemplateService {
                         checked: properties.templateParameters.isCompact  !== null || properties.templateParameters.isCompact !== undefined ? properties.templateParameters.isCompact : true
                     })                    
                 ];
+
+            case ResultsLayoutOption.Slider:
+
+                if (!properties.templateParameters.sliderOptions) {
+                    properties.templateParameters.sliderOptions = {
+                        autoPlay: true,
+                        autoPlayDuration: 4000,
+                        pauseAutoPlayOnHover: true,
+                        numberOfSlides: 3,
+                        showPageDots: true
+                    } as ISliderOptions;
+                }
+
+                let groupFields: IPropertyPaneField<any>[] = [
+                    PropertyPaneToggle('templateParameters.sliderOptions.autoPlay', {
+                        label: strings.TemplateParameters.SliderAutoPlay,                
+                        checked: properties.templateParameters.sliderOptions.autoPlay !== null || properties.templateParameters.sliderOptions.autoPlay !== undefined ? properties.templateParameters.sliderOptions.autoPlay : true
+                    })
+                ];
+
+                if (properties.templateParameters.sliderOptions.autoPlay) {
+
+                    const autoPlayFields = [
+                        PropertyPaneSlider('templateParameters.sliderOptions.autoPlayDuration', {
+                            label: strings.TemplateParameters.SliderAutoPlayDuration, 
+                            min: 1,
+                            max: 60,
+                            showValue: true,
+                            step: 1            
+                        }),
+                        PropertyPaneToggle('templateParameters.sliderOptions.pauseAutoPlayOnHover', {
+                            label: strings.TemplateParameters.SliderPauseAutoPlayOnHover,              
+                            checked: properties.templateParameters.sliderOptions.pauseAutoPlayOnHover !== null || properties.templateParameters.sliderOptions.pauseAutoPlayOnHover !== undefined ? properties.templateParameters.sliderOptions.pauseAutoPlayOnHover : true
+                        })
+                    ];
+
+                    groupFields = groupFields.concat(autoPlayFields);
+                }
+
+                groupFields = groupFields.concat([
+                    PropertyPaneSlider('templateParameters.sliderOptions.numberOfSlides', {
+                        label: strings.TemplateParameters.SliderGroupCells,  
+                        min: 1,
+                        max: 5,
+                        showValue: true,
+                        step: 1            
+                    }),
+                    PropertyPaneToggle('templateParameters.sliderOptions.showPageDots', {
+                        label: strings.TemplateParameters.SliderShowPageDots,               
+                        checked: properties.templateParameters.sliderOptions.showPageDots !== null || properties.templateParameters.sliderOptions.showPageDots !== undefined ? properties.templateParameters.sliderOptions.showPageDots : true
+                    })
+                ])
+
+                return groupFields;
 
             default:
                 return [];

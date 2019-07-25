@@ -45,6 +45,7 @@ define([], function () {
     "DebugLayoutOption": "Depurar",
     "CustomLayoutOption": "Personalizado",
     "ResultsLayoutLabel": "Diseño de resultados",
+    "SliderLayoutOption": "Carrusel",
     "TemplateUrlFieldLabel": "Utilice una URL de plantilla externa",
     "TemplateUrlPlaceholder": "https://myfile.html",
     "ErrorTemplateExtension": "La plantilla debe ser un archivo. htm o. html válido",

@@ -39,17 +39,18 @@
         "custom-event-polyfill": "^1.0.6",
         "downshift": "3.1.5",
         "es6-iterator": "^2.0.3",
+        "flickity": "^2.2.1",
         "handlebars": "^4.0.12",
         "handlebars-helpers": "0.8.4",
         "immutability-helper": "2.4.0",
+        "moment": "2.24.0",
         "office-ui-fabric-react": "6.194.0",
         "react": "16.7.0",
         "react-ace": "7.0.2",
         "react-custom-scrollbars": "4.2.1",
         "react-dom": "16.7.0",
         "react-js-pagination": "3.0.2",
-        "video.js": "^7.6.0",
-        "moment": "2.24.0"
+        "video.js": "^7.6.0"
     },
     "devDependencies": {
         "@microsoft/rush-stack-compiler-3.3": "0.2.24",

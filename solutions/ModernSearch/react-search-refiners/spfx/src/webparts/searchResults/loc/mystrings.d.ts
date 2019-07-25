@@ -45,6 +45,7 @@ declare interface ISearchResultsWebPartStrings {
     SimpleListLayoutOption: string;
     DetailsListLayoutOption: string;
     TilesLayoutOption: string;
+    SliderLayoutOption: string;
     DebugLayoutOption: string;
     CustomLayoutOption: string;
     TemplateUrlFieldLabel: string;
@@ -136,6 +137,11 @@ declare interface ISearchResultsWebPartStrings {
         LinkToItemColumnLabel: string;
         SupportHTMLColumnLabel: string;
         CompactModeLabel: string;
+        SliderAutoPlayDuration: string;
+        SliderAutoPlay: string;
+        SliderPauseAutoPlayOnHover: string;
+        SliderGroupCells: string;
+        SliderShowPageDots: string;
     }
     ManagedPropertiesListPlaceHolder: string;
 }

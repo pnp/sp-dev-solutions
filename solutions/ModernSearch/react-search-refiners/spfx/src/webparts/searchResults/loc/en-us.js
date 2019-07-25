@@ -45,6 +45,7 @@ define([], function () {
     "TilesLayoutOption": "Tiles",
     "CustomLayoutOption": "Custom",
     "DebugLayoutOption": "Debug",
+    "SliderLayoutOption": "Carousel",
     "ResultsLayoutLabel": "Results layout",
     "TemplateUrlFieldLabel": "Use an external template URL",
     "TemplateUrlPlaceholder": "https://myfile.html",
@@ -134,7 +135,12 @@ define([], function () {
       "MultilineColumnLabel": "Multiline",
       "LinkToItemColumnLabel": "Link to item",
       "SupportHTMLColumnLabel": "Allow HTML",
-      "CompactModeLabel": "Compact mode"
+      "CompactModeLabel": "Compact mode",
+      "SliderAutoPlayDuration": "Advance element every (seconds)",
+      "SliderAutoPlay": "Auto play",
+      "SliderPauseAutoPlayOnHover": "Pause on hover",
+      "SliderGroupCells": "Number of elements to group together in slides",
+      "SliderShowPageDots": "Show page dots"
     },
     "ManagedPropertiesListPlaceHolder": "Select or add a managed property"
   }
