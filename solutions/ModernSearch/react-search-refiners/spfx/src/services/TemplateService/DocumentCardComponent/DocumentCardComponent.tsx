@@ -9,7 +9,6 @@ import * as Handlebars from 'handlebars';
 import * as documentCardLocationGetStyles from 'office-ui-fabric-react/lib/components/DocumentCard/DocumentCardLocation.styles';
 import { getTheme, mergeStyleSets } from "office-ui-fabric-react/lib/Styling";
 import { classNamesFunction } from "office-ui-fabric-react/lib/Utilities";
-import { DocumentCardDetailsBase } from "office-ui-fabric-react/lib/components/DocumentCard/DocumentCardDetails.base";
 
 /**
  * Document card props. These properties are retrieved from the web component attributes. They must be camel case.
