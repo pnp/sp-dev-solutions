@@ -36,13 +36,16 @@ define([], function() {
     "CountMessageLong": "<b>{0}</b> résultats pour '<em>{1}</em>'",
     "CountMessageShort": "<b>{0}</b> résultats",
     "CancelButtonText": "Annuler",
-    "DialogButtonLabel": "Styles",
+    "DialogButtonLabel": "Éditer le modèle",
     "DialogButtonText": "Éditer le modèle",
     "DialogTitle": "Éditer le modèle de résulat",
     "SaveButtonText": "Enregistrer",
-    "ListLayoutOption": "Liste",
+    "SimpleListLayoutOption": "List simple",
+    "DetailsListLayoutOption": "Liste détailléé",
     "TilesLayoutOption": "Tuiles",
     "CustomLayoutOption": "Personnalisé",
+    "DebugLayoutOption": "Débogage",
+    "SliderLayoutOption": "Caroussel",
     "ResultsLayoutLabel": "Disposition des résultats",
     "TemplateUrlFieldLabel": "Utiliser un fichier modèle externe",
     "TemplateUrlPlaceholder": "https://myfile.html",
@@ -75,7 +78,8 @@ define([], function() {
       "SortableFieldManagedPropertyField": "Propriété gérée de tri",
       "SortableFieldDisplayValueField": "Intitulé du champ à afficher",
       "EditSortableFieldsLabel": "Éditer les champs de tri",
-      "EditSortLabel": "Éditer l'ordre de tri"
+      "EditSortLabel": "Éditer l'ordre de tri",
+      "SortInvalidSortableFieldMessage": "Cette propriété n'est pas triable"
     },
     "Synonyms": {
       "EditSynonymLabel": "Modifier les synonymes",
@@ -94,6 +98,7 @@ define([], function() {
     "ResultTypes": {
       "ResultTypeslabel": "Types de résultats",
       "ResultTypesDescription": "Ajoutez ici les modèles d'affichage à utiliser pour les éléments correspondant à une ou plusieurs conditions. Les conditions sont évaluées dans l'ordre et les modèles externes ont priorité sur ceux définis à même le composant. Vérifiez également que les propriétés gérées de recherche utilisées comme conditions sont présentes dans le paramètre 'Propriétés à récupérer' de ce Web Part.",
+      "InlineTemplateContentLabel": "Contenu du modèle",
       "EditResultTypesLabel": "Éditer les types de résultats",
       "ConditionPropertyLabel": "Propriété gérée",
       "ConditionValueLabel": "Valeur de la condition",
@@ -109,6 +114,35 @@ define([], function() {
       "LessThanOperator": "Inférieur"
     },
     "QueryCultureLabel": "Query Language",
-    "QueryCultureUseUiLanguageLabel": "Same as UI language"
+    "QueryCultureUseUiLanguageLabel": "Same as UI language",
+    "TemplateParameters": {
+      "TemplateParametersGroupName": "Options d'affichage",
+      "EnableItemPreview": "Activer l'aperçu de résultat",
+      "ShowFileIcon": "Afficher l'icône de fichier",
+      "ManageDetailsListColumnDescription": "Ajouter, modifier ou supprimer des colonnes pour cet affichage.  Vous pouvez soit utiliser la valeur d'une propriété de recherche directement ou bien spécifier une expression Handlebars en tant que valeur. Pour chacun des champ, vous pouvez également injecter votre propre code HTML",
+      "ManageDetailsListColumnLabel": "Gérer les colonnes",
+      "ManageTilesFieldsLabel": "Gérer les champs de la carte",
+      "ManageTilesFieldsPanelDescriptionLabel": "Ici vous pouvez associer la valeur de chaque champ aux zone de la carte correspondantes. Vous pouvez soit utiliser la valeur d'une propriété de recherche directement ou bien spécifier une expression Handlebars en tant que valeur. Pour certains champ, lorsque indiqué, vous pouvez également injecter votre propre code HTML.",
+      "DocumentCardNameFieldLabel": "Nom",
+      "DocumentCardValueFieldLabel": "Valeur",
+      "ValueColumnLabel": "Valeur",
+      "DisplayNameColumnLabel": "Intitulé de la colonne",
+      "UseHandlebarsExpressionLabel": "Utiliser une expression Handlebars",
+      "MinimumWidthColumnLabel": "Largeur minimum (px)",
+      "MaximumWidthColumnLabel": "Largeur maximum (px)",
+      "SortableColumnLabel": "Triable",
+      "ResizableColumnLabel": "Extensible",
+      "MultilineColumnLabel": "Plusieurs lignes",
+      "LinkToItemColumnLabel": "Lien vers l'élément",
+      "SupportHTMLColumnLabel": "Supporte HTML",
+      "CompactModeLabel": "Mode compact",
+      "SliderAutoPlayDuration": "Avancer les slides toutes les X millisecondes",
+      "SliderAutoPlay": "Lecture automatique",
+      "SliderPauseAutoPlayOnHover": "Pause lors du survolement",
+      "SliderGroupCells": "Nombre d'éléments à grouper par slide",
+      "SliderShowPageDots": "Afficher la navigation",
+      "SliderWrapAround": "Défilement inifini"
+    },
+    "ManagedPropertiesListPlaceHolder": "Sélectionnez ou ajoutez une propriété gérée"
   }
 });

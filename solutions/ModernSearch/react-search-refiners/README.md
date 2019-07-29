@@ -1,13 +1,13 @@
 # SharePoint Framework modern search Web Parts
 
-![Version](https://img.shields.io/badge/version-3.5.0-green.svg)
+![Version](https://img.shields.io/badge/version-3.6.0-green.svg)
 
 ## Summary
 This solution allows you to build user friendly SharePoint search experiences using SPFx in the modern interface. The main features include:
 
 - Fully customizable SharePoint search query like the good old Content Search Web Part.
 - Can either use a static query or be connected to a search box component using SPFx dynamic data.
-- Live templating system with Handlebar to meet your requirements in terms of UI + built-in list and tiles templates. Can also use template from an external file.
+- Live templating system with Handlebar to meet your requirements in terms of UI + built-in layouts. Can also use template from an external file.
 - Search results including previews for Office documents and Office 365 videos.
 - Customizable refiners supporting multilingual values for taxonomy based filters.
 - Sortable results (unique field).
@@ -44,7 +44,7 @@ Service | Description
 Search Query Enhancer | Sample Azure function to demonstrate the use of Microsoft LUIS and other cognitive services to interpret user intents and enhance the search box query accordingly.
 
 ## Used SharePoint Framework Version
-![drop](https://img.shields.io/badge/drop-1.7.1-green.svg)
+![drop](https://img.shields.io/badge/drop-1.8.2-green.svg)
 
 ## Applies to
 
@@ -115,11 +115,12 @@ Setting | Description
 -------|----
 Query template | The search query template in KQL format. You can use search variables here (like Path:{Site}).
 Result Source Identifier | The GUID of a SharePoint result source.
-Initial sort order | The initial search results sort order, where you can use one or multiple properties to sort by. **By default, results are sorted by created date (ascending) and size (descending). Remove these values to reset default sorting**
-Sortable fields | The search managed properties to use for sorting. Make sure these are sortable. With SharePoint Online, you have to reuse the default ones to do so (RefinableStringXX etc.). The order is the same as they will appear in the sort panel. You can also provide your own custom labels using the following format RefinableString01:"You custom filter label",RefinableString02:"You custom filter label",... If no sortable fields are provided, the 'Sort' button will not be visible.
+Sort order | The initial search results sort order, where you can use one or multiple properties to sort by. **By default, results are sorted by created date (ascending) and size (descending). Remove these values to reset default sorting**
+Sortable fields | The search managed properties to use for sorting. With SharePoint Online, you have to reuse the default ones to do so (RefinableStringXX etc.). The order is the same as they will appear in the sort panel. You can also provide your own custom labels using the following format RefinableString01:"You custom filter label",RefinableString02:"You custom filter label",... If no sortable fields are provided, the 'Sort' button will not be visible.
 Connect to a search refiners Web Part | If enable, select the search refiners Web Part to use on the current page to get selected filters. It is a 2 ways connection so don't forget to connect the targeted search refiners to the search results Web Part as well.
+Connect to a search verticals Web Part | If enable, select the search verticals Web Part to connect to.
 Enable Query Rules | Enable the query rules if applies. Turn this options  'on' to display your SharePoint Promoted results (links only).
-Selected properties | The search managed properties to retrieve. You can use these properties then in your Handlebar template with the syntax (`item.property_name`).
+Selected properties | The search managed properties to retrieve. You can select them from a predefined list or add them as free text if not listed. Then, these properties are available in your Handlebars template with the syntax (`item.property_name` or `property_name` inside the `{{#each}}` loop).
 Number of items to retrieve per page | Quite explicit. The paging behavior is done directly by the search API (See the *SearchDataProvider.ts* file), not by the code on post-render.
 
 #### Styling Options
@@ -130,7 +131,7 @@ Web Part Title | Shows a title for this Web Part. Set blank if you don't want a 
 Show blank if no result | Shows nothing if there is no result
 Show result count | Shows the result count and entered keywords
 Connect to a search pagination Web Part	 | If enable, select the search pagination Web Part to use on the current page to get selected page. It is a 2 ways connection so don't forget to connect the targeted search pagination to the search results Web Part as well.
-Result Layouts options | Choose the template to use to display search results. Some layouts are defined by default (List and Tiles) but you can create your own either by clicking on the **"Custom"** tile, or **"Edit template"** from an existing chosen template. In custom mode, you can set an external template. It has to be in the same SharePoint tenant. Behind the scenes, the Office UI Fabric core CSS components are used in a isolated way. Custom code templates will also automatically be displayed here upon registration.
+Result Layouts options | Choose the template to use to display search results. Some layouts are defined by default but you can create your own either by clicking on the **"Custom"** tile, or **"Edit template"** from an existing chosen template. In custom mode, you can set an external template. It has to be in the same SharePoint tenant. Behind the scenes, the Office UI React controls are used. Custom code templates will also automatically be displayed here upon registration. See the [TEMPLATING.md documentation](./docs/TEMPLATING.md) for more information about templating.
 Result types | Allows you to set a custom template at item level according to a specific condition (ex: FileType equals 'pdf').
 
 ##### Miscellaneous: Taxonomy values dynamic translation
@@ -147,98 +148,7 @@ The search results Web Part supports automatic translation for taxonomy based fi
 
 ---
 
-#### Templates with Handlebars
 
-This Web Part allows you change customize the way you display your search results. The templating feature comes directly from the original [react-content-query-webpart](https://github.com/SharePoint/sp-dev-fx-webparts/tree/master/samples/react-content-query-webpart) so thanks to @spplante!
-
-<p align="center">
-  <img width="500px" src="./images/edit_template.png"/>
-</p>
-
-##### Available tokens
-
-Setting | Description
--------|----
-`{{showResultsCount}}` | Boolean flag corresponding to the associated in the property pane.
-`{{totalRows}}` | The result count.
-`{{maxResultsCount}}` | The number of results configured to retrieve in the web part.
-`{{actualResultsCount}}` | The actual number of results retrived.
-`{{keywords}}` | The search query.
-`{{getSummary HitHighlightedSummary}}` | Format the *HitHighlightedSummary* property with recognized words in bold.
-`{{getDate <date_managed_property> "<format>" <time handling>}}` | Format the date with moment.ts according to the current language. Date in the managed property should be on the form `2018-09-10T06:29:25.0000000Z` for the function to work.<p>&lt;time handling&gt; is optional and takes <ul><li>0 = format to browsers time zone (default)</li><li>1 = ignore Z time and handle as browsers local time zone</li><li>2 = strip time and set to 00:00:00 in browsers local time zone</li><li>3 = display in the time zone for the current web</li><li>4 = display in the time zone from the uers profile</li>
-`{{getPreviewSrc item}}` | Determine the image thumbnail URL if applicable.
-`{{getUrl item}}` | Get the item URL. For a document, it means the URL to the Office Online instance or the direct URL (to download it).
-`{{getUrlField managed_propertyOWSURLH "URL/Title"}}` | Return the URL or Title part of a URL field managed property.
-`{{getCountMessage totalRows <?keywords>}}` | Display a friendly message displaying the result and the entered keywords.
-`{{<search_managed_property_name>}}` | Any valid search managed property returned in the results set. These are typically managed properties set in the *"Selected properties"* setting in the property pane. You don't need to prefix them with `item.` if you are in the "each" loop.
-`{{webUrl}}` | The current web relative url. Use `{{../webUrl}}` inside a loop.
-`{{siteUrl}}` | The current site relative url. Use `{{../siteUrl}}` inside a loop.
-`{{getUniqueCount items "property"}}` | Get the unique count of a property over the result set (or another array)
-`{{getUniqueCount array}}` | Get the unique count of objects in an array. Example: [1,1,1,2,2,4] would return `3`.
-
-Also the [Handlebars helpers](https://github.com/helpers/handlebars-helpers) (188 helpers) are also available. You can also define your own in the *BaseTemplateService.ts* file. See [helper-moment](https://github.com/helpers/helper-moment) for date samples using moment.
-
-##### Use result types
-
-The result types feature is a convenient way to split your templates according to results characteristics instead of making a huge central template with multiple conditions. They can be defined in 'inline' mode or using an external file. You can use the sorting option to determine to order of evaluation for each condition.
-
-<p align="center">
-  <img width="500px" src="./images/result_types.png"/>
-</p>
-
-The following operators are supported:
-- Equals
-- Contains
-- StartsWith
-- Greater Or Equal
-- Less Or Equal
-- Less than
-- Greater than
-- Is not null
-
-To use it in your main template, just follow this pattern. This block is not mandatory.
-
-```
-{{#> resultTypes}}
-  {{!-- The block below will be used as default item template if no result types matched --}}
-  <div class="template_result">
-      <!-- Your default template markup -->
-  </div>
-
-{{/resultTypes}}
-```
-
-Handlebars [partials](https://handlebarsjs.com/partials.html) are used behind the scenes and conditions are built dynamically using a recursive if/else structure.
-
-#### Custom placeholders (i.e. shimmers)
-
-You can define your own placeholders according your template markup. They will be loaded automatically before the results are loaded.
-
-<p align="center">
-  <img width="500px" src="./images/placeholders.png"/>
-</p>
-
-To do this, insert your HTML markup as follow in your template content:
-
-```
-<content id="placeholder">
-    <style>
-        /* Insert your CSS overrides here */
-    </style>
-
-    <div class="placeholder_root">
-      <!-- Your placeholder content -->
-    </div>
-
-</content>
-```
-
-Notice your template content must be enclosed in a `<content id="template">` tag if you define placeholders.
-
-#### Custom code renderers
-You may also define  your own renderers, which most often should be SPFx application customizers. These should use the resultservice to register themselves as renderers, and will upon registration be available as a rendering choice in the "Result Layouts" Section.
-
-More information about custom code renderers may be found in a [seperate sample](../react-search-refiners-renderer), which showcases such a renderer.
 
 #### Out of the box query variables
 
@@ -305,37 +215,6 @@ This WP supports SharePoint best bets via SharePoint query rules:
 <p align="center">
   <img width="500px" src="./images/best_bets.png"/>
 </p>
-
-#### Elements previews
-
-Previews are available by default for list and tiles layouts, for Office documents and Office 365 videos (not Microsoft Stream). The embed URL is directly taken from the `ServerRedirectedEmbedURL` managed property retrieved from the search results.
-
-<p align="center">
-  <img width="500px" src="./images/result_preview.png"/>
-</p>
-
-The WebPart must have the following selected properties in the configuration to get the preview feature work (they are set by default):
-- ServerRedirectedPreviewURL
-- ServerRedirectedURL
-- contentclass
-- ServerRedirectedEmbedURL
-- DefaultEncodingURL
-
-This preview is displayed as an _iframe_ or a _video_ tag when the user clicks on the corresponding preview image or compliant HTML elements. To enable the callout preview in your templates, your HTML elements must have the  `document-preview-item` or `video-preview-item` CSS class and provide the following attributes:
-
-- `data-src`: the URL of the preview image.
-- `data-url`: the URL of the iframe source or the video.
-- `data-fileext`: the file extension for the video (for video only).
-
-**Preview on documents**
-```
-<div class="document-preview-item" data-src="{{ServerRedirectedPreviewURL}}" data-url="{{Path}}">
-```
-
-**Preview on videos**
-```
-<img class="video-preview-item" src="{{PictureThumbnailURL}}" data-src="{{PictureThumbnailURL}}" data-url="{{DefaultEncodingURL}}" data-fileext="{{FileType}}"/>
-```
 
 ### Search Refiners
 
@@ -458,6 +337,7 @@ Version|Date|Comments
 3.3.0.0 | Apr 20, 2019 | Added search verticals Web Part allowing to search within predefined scopes using query template and result source.
 3.4.0.0 | May 23, 2019 | Added placeholders HTML markup by template instead of global.
 3.5.0.0 | July 8th, 2019 | Fixes: Taxonomy tags, web part header, theme colors, search box clearing, loading of handlebars helpers. Added Spanish locale. Optimized CSS references (may break in custom templates if you used some of the OUIF styles). Optimized bundle size for run-time. Added more options for time zone handling with `getDate`.
+3.6.0.0 | July 20th, 2019 | <ul><li>Removed the deprecated 'office-ui-fabric' module and updated layouts with the Office UI React components by wrapping them with web components.</li><li>Added a DetailsList and Debug layouts + template options for 'Tiles' (placeholders fileds, etc.) and 'Details List' (column builder, etc.).</li><li>Updated property pane fields (Search Results and Refiners WP) to use a dynamic search managed properties list instead of text values.</li></ul>
 
 ## Important notice on upgrading the solution from pre v2.2.0.0
 **Due to code restructuring we have hit an edge case which impacts upgrades from previous versions. To solve the issue go to `https://<tenant>.sharepoint.com/sites/<appcatalog>/Lists/ComponentManifests` and remove the entries for SearchBox and Search Results, and then upload the .sppkg for the new release.**

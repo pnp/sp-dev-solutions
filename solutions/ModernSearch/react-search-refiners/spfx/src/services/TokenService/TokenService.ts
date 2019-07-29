@@ -38,7 +38,7 @@ export class TokenService implements ITokenService {
                 if (response.ok) {
                     let result = await response.json();
                     let itemRow = JSON.parse(result.value);
-                    item = itemRow.Data.Row[0];
+                    item = Object.keys(itemRow.Data.Row[0]).reduce((c, k) => (c[k.toLowerCase()] = itemRow.Data.Row[0][k], c), {});   
                 }
                 else {
                     throw response.statusText;
@@ -62,7 +62,7 @@ export class TokenService implements ITokenService {
                     }
                 }
                 else {
-                    itemProp = item[pageProp];
+                    itemProp = item[pageProp.toLowerCase()];
                 }
                 if (itemProp && itemProp.indexOf(' ') !== -1) {
                     // add quotes to multi term values

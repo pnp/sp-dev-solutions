@@ -36,13 +36,16 @@ define([], function () {
     "CountMessageLong": "<b>{0}</b> results for '<em>{1}</em>'",
     "CountMessageShort": "<b>{0}</b> results",
     "CancelButtonText": "Cancel",
-    "DialogButtonLabel": "Styles",
+    "DialogButtonLabel": "Edit template",
     "DialogButtonText": "Edit template",
     "DialogTitle": "Edit results template",
     "SaveButtonText": "Save",
-    "ListLayoutOption": "List",
+    "SimpleListLayoutOption": "Simple list",
+    "DetailsListLayoutOption": "Details list",
     "TilesLayoutOption": "Tiles",
     "CustomLayoutOption": "Custom",
+    "DebugLayoutOption": "Debug",
+    "SliderLayoutOption": "Carousel",
     "ResultsLayoutLabel": "Results layout",
     "TemplateUrlFieldLabel": "Use an external template URL",
     "TemplateUrlPlaceholder": "https://myfile.html",
@@ -75,7 +78,8 @@ define([], function () {
       "SortableFieldManagedPropertyField": "Sort managed property",
       "SortableFieldDisplayValueField": "Field name to display",
       "EditSortableFieldsLabel": "Edit sortable fields",
-      "EditSortLabel": "Edit sort order"
+      "EditSortLabel": "Edit sort order",
+      "SortInvalidSortableFieldMessage": "This property is not sortable"
     },
     "Synonyms": {
       "EditSynonymLabel": "Edit synonyms",
@@ -94,6 +98,7 @@ define([], function () {
     "ResultTypes": {
       "ResultTypeslabel": "Result Types",
       "ResultTypesDescription": "Add here the display templates to use for result items according to one ore more conditions. Conditions are evaluated in the configured order and external template takes precedence over inline templates. Make sure the managed properties you use are present in the 'Selected Properties' of this Web Part.",
+      "InlineTemplateContentLabel": "Inline template",
       "EditResultTypesLabel": "Edit Result Types",
       "ConditionPropertyLabel": "Managed Property",
       "ConditionValueLabel": "Condition Value",
@@ -109,6 +114,35 @@ define([], function () {
       "LessThanOperator": "Less than"
     },
     "QueryCultureLabel": "Language of search request",
-    "QueryCultureUseUiLanguageLabel": "Use interface language"
+    "QueryCultureUseUiLanguageLabel": "Use interface language",
+    "TemplateParameters": {
+      "TemplateParametersGroupName": "Template options",
+      "EnableItemPreview": "Enable result preview",
+      "ShowFileIcon": "Show file icon",
+      "ManageDetailsListColumnDescription": "Add, update or remove columns for the details list layout. You can use either the managed property value directly without any transformation or use an Handlebars expression in the value field. HTML is supported for all fields as well.",
+      "ManageDetailsListColumnLabel": "Manage columns",
+      "ManageTilesFieldsLabel": "Manage card fields",
+      "ManageTilesFieldsPanelDescriptionLabel": "Here you can map each field values with the corresponding card placeholders. You can use either the managed property value directly without any transformation or use an Handlebars expression in the value field. Also, when indicated, you can also inject your own HTML code in some fields.",
+      "DocumentCardNameFieldLabel": "Name",
+      "DocumentCardValueFieldLabel": "Value",
+      "ValueColumnLabel": "Column value",
+      "DisplayNameColumnLabel": "Column display name",
+      "UseHandlebarsExpressionLabel": "Use Handlebars expression",
+      "MinimumWidthColumnLabel": "Minimum width (px)",
+      "MaximumWidthColumnLabel": "Maximum width (px)",
+      "SortableColumnLabel": "Sortable",
+      "ResizableColumnLabel": "Resizable",
+      "MultilineColumnLabel": "Multiline",
+      "LinkToItemColumnLabel": "Link to item",
+      "SupportHTMLColumnLabel": "Allow HTML",
+      "CompactModeLabel": "Compact mode",
+      "SliderAutoPlayDuration": "Advance element every (seconds)",
+      "SliderAutoPlay": "Auto play",
+      "SliderPauseAutoPlayOnHover": "Pause on hover",
+      "SliderGroupCells": "Number of elements to group together in slides",
+      "SliderShowPageDots": "Show page dots",
+      "SliderWrapAround": "Infinite scrolling"
+    },
+    "ManagedPropertiesListPlaceHolder": "Select or add a managed property"
   }
 });

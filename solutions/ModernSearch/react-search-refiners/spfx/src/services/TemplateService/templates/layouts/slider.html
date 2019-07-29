@@ -1,0 +1,57 @@
+<content id="template">
+    <style>
+        .template_root .slide {
+            width: 318px;
+            height: 360px;
+            margin: 5px;
+        }
+        
+        .flickity-page-dots { 
+            bottom: 5px; 
+        }
+    </style>
+
+    <div class="template_root">
+        {{#>slider items=(JSONstringify @root.items 2) options=(JSONstringify @root.sliderOptions)}}
+            <div class="slide">
+                \{{#with (split AuthorOWSUSER '|')}}
+                    <document-card 	title="\{{../Title}}" 
+                                    location="\{{../SiteTitle}}"
+                                    preview-image="\{{getPreviewSrc item}}" 
+                                    preview-url="\{{../ServerRedirectedEmbedURL}}" 
+                                    date="\{{getDate ../Created 'LL'}}" 
+                                    href="\{{getUrl item}}" 
+                                    author="\{{../Author}}" 
+                                    profile-image="/_layouts/15/userphoto.aspx?size=L&username=\{{[0]}}" 
+                                    icon-src="\{{../IconSrc}}"
+                                    enable-preview="false" 
+                                    show-file-icon="true">
+                    </document-card>
+                \{{/with}}
+            </div>                
+        {{/slider}}
+    </div>
+</content>
+
+<content id="placeholder"> 
+
+    <style>
+        .placeholder_root .slide {
+            width: 318px;
+            height: 360px;
+            margin: 5px;
+        }
+        
+        .flickity-page-dots { 
+            bottom: 10px; 
+        }
+    </style>
+
+    <div class="placeholder_root">
+        {{#>slider items="[{},{},{},{},{}]" options=(JSONstringify @root.sliderOptions)}}
+            <div class="slide">
+                <document-card-shimmers is-compact="\{{@root.isCompact}}"></document-card-shimmers>
+            </div>                
+        {{/slider}}
+    </div>
+</content>
