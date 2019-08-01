@@ -32,7 +32,7 @@ export interface IDocumentCardFieldsConfiguration {
     value: string;
 
     /**
-     * Indiciates if the calue is an Handlebars expression
+     * Indicates if the calue is an Handlebars expression
      */
     useHandlebarsExpr: boolean;
 

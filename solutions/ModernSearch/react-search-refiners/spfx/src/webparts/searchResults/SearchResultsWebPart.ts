@@ -27,7 +27,7 @@ import ISearchService from '../../services/SearchService/ISearchService';
 import ITaxonomyService from '../../services/TaxonomyService/ITaxonomyService';
 import ResultsLayoutOption from '../../models/ResultsLayoutOption';
 import { TemplateService } from '../../services/TemplateService/TemplateService';
-import { isEmpty, find, sortBy } from '@microsoft/sp-lodash-subset';
+import { isEmpty, find, sortBy, cloneDeep } from '@microsoft/sp-lodash-subset';
 import MockSearchService from '../../services/SearchService/MockSearchService';
 import MockTemplateService from '../../services/TemplateService/MockTemplateService';
 import SearchService from '../../services/SearchService/SearchService';
@@ -1453,7 +1453,7 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
     private _onUpdateAvailableProperties(properties: IComboBoxOption[]) {
 
         // Save the value in the root Web Part class to avoid fetching it again if the property list is requested again by any other property pane control
-        this._availableManagedProperties = properties;
+        this._availableManagedProperties = cloneDeep(properties);
 
         // Refresh all fields so other property controls can use the new list 
         this.context.propertyPane.refresh();
