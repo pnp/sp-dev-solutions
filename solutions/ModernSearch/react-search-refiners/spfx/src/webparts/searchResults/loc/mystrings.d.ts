@@ -42,8 +42,11 @@ declare interface ISearchResultsWebPartStrings {
     DialogTitle: string;
     SaveButtonText: string;
     ResultsLayoutLabel: string;
-    ListLayoutOption: string;
+    SimpleListLayoutOption: string;
+    DetailsListLayoutOption: string;
     TilesLayoutOption: string;
+    SliderLayoutOption: string;
+    DebugLayoutOption: string;
     CustomLayoutOption: string;
     TemplateUrlFieldLabel: string;
     TemplateUrlPlaceholder: string;
@@ -77,6 +80,7 @@ declare interface ISearchResultsWebPartStrings {
         SortableFieldDisplayValueField: string;
         EditSortableFieldsLabel: string;
         EditSortLabel: string;
+        SortInvalidSortableFieldMessage: string;
     },
     Synonyms: {
         EditSynonymLabel: string;
@@ -91,6 +95,7 @@ declare interface ISearchResultsWebPartStrings {
     ResultTypes: {
         ResultTypeslabel: string;
         ResultTypesDescription: string;
+        InlineTemplateContentLabel: string;
         EditResultTypesLabel: string;
         ConditionPropertyLabel: string;
         ConditionValueLabel: string;
@@ -111,6 +116,35 @@ declare interface ISearchResultsWebPartStrings {
     DefaultSearchQueryKeywordsFieldDescription: string;
     QueryCultureLabel: string;
     QueryCultureUseUiLanguageLabel: string;
+    TemplateParameters: {
+        TemplateParametersGroupName: string;
+        EnableItemPreview: string;
+        ShowFileIcon: string;
+        ManageDetailsListColumnDescription: string;
+        ManageTilesFieldsLabel: string;
+        ManageTilesFieldsPanelDescriptionLabel: string;
+        ManageDetailsListColumnLabel: string;
+        DocumentCardNameFieldLabel: string;
+        DocumentCardValueFieldLabel: string;
+        ValueColumnLabel: string;
+        DisplayNameColumnLabel: string;
+        UseHandlebarsExpressionLabel: string;
+        MinimumWidthColumnLabel: string;
+        MaximumWidthColumnLabel: string;
+        SortableColumnLabel: string;
+        ResizableColumnLabel: string;
+        MultilineColumnLabel: string;
+        LinkToItemColumnLabel: string;
+        SupportHTMLColumnLabel: string;
+        CompactModeLabel: string;
+        SliderAutoPlayDuration: string;
+        SliderAutoPlay: string;
+        SliderPauseAutoPlayOnHover: string;
+        SliderGroupCells: string;
+        SliderShowPageDots: string;
+        SliderWrapAround: string;
+    }
+    ManagedPropertiesListPlaceHolder: string;
 }
 
 declare module 'SearchResultsWebPartStrings' {

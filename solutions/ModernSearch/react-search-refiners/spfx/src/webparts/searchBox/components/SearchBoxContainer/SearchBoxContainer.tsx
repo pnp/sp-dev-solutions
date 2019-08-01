@@ -2,7 +2,7 @@ import * as React from                               'react';
 import { ISearchBoxContainerProps } from             './ISearchBoxContainerProps';
 import * as strings from                             'SearchBoxWebPartStrings';
 import ISearchBoxContainerState from                 './ISearchBoxContainerState';
-import { UrlHelper, PageOpenBehavior, QueryPathBehavior } from          '../../../../helpers/UrlHelper';
+import { PageOpenBehavior, QueryPathBehavior } from  '../../../../helpers/UrlHelper';
 import { MessageBar, MessageBarType } from           'office-ui-fabric-react/lib/MessageBar';
 import Downshift from                                'downshift';
 import { TextField } from                            'office-ui-fabric-react/lib/TextField';
@@ -134,7 +134,7 @@ export default class SearchBoxContainer extends React.Component<ISearchBoxContai
                 className={ styles.searchTextField }
                 placeholder={ this.props.placeholderText ? this.props.placeholderText : strings.SearchInputPlaceholder }
                 value={ this.state.searchInputValue }
-                onChanged={ (value) => {
+                onChange={ (ev, value) => {
                   this.setState({
                     searchInputValue: value,
                     showClearButton: true
@@ -340,7 +340,7 @@ export default class SearchBoxContainer extends React.Component<ISearchBoxContai
         }
       }
 
-      if (this.props.searchInNewPage) {
+      if (this.props.searchInNewPage && !isReset) {
         const urlEncodedQueryText = encodeURIComponent(queryText);
 
         const searchUrl = new URL(this.props.pageUrl);

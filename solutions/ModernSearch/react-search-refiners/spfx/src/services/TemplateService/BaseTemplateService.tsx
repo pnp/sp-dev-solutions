@@ -3,7 +3,7 @@ import 'core-js/modules/es6.string.includes.js';
 import 'core-js/modules/es6.number.is-nan.js';
 import * as Handlebars from 'handlebars';
 import { ISearchResult } from '../../models/ISearchResult';
-import { isEmpty, uniqBy, uniq } from '@microsoft/sp-lodash-subset';
+import { isEmpty, uniqBy, uniq, trimEnd } from '@microsoft/sp-lodash-subset';
 import * as strings from 'SearchResultsWebPartStrings';
 import { Text } from '@microsoft/sp-core-library';
 import { DomHelper } from '../../helpers/DomHelper';
@@ -12,17 +12,64 @@ import * as React from 'react';
 import * as ReactDom from 'react-dom';
 import PreviewContainer from './PreviewContainer/PreviewContainer';
 import { IPreviewContainerProps, PreviewType } from './PreviewContainer/IPreviewContainerProps';
+import { DocumentCardWebComponent } from './components/DocumentCard';
+import { DetailsListWebComponent } from './components/DetailsList';
+import { VideoCardWebComponent } from './components/VideoCard';
+import { DebugViewWebComponent } from './components/DebugView';
+import { SliderWebComponent } from './components/Slider';
+import { DocumentCardShimmersWebComponent } from './components/shimmers/DocumentCardShimmers';
+import '@webcomponents/custom-elements';
+import { IPropertyPaneField } from '@microsoft/sp-property-pane';
+import ResultsLayoutOption from '../../models/ResultsLayoutOption';
+import { ISearchResultsWebPartProps } from '../../webparts/searchResults/ISearchResultsWebPartProps';
+import { IComboBoxOption } from 'office-ui-fabric-react/lib/ComboBox';
 
 abstract class BaseTemplateService {
+
     public CurrentLocale = "en";
+    public TimeZoneBias = {
+        WebBias: 0,
+        UserBias: 0,
+        WebDST: 0,
+        UserDST: 0
+    };
+    private DayLightSavings = true;
 
     constructor() {
+
         // Registers all helpers
         this.registerTemplateServices();
+
+        // Register web components
+        this.registerWebComponents();       
+
+        this.DayLightSavings = this.isDST();
+    }
+
+    private isDST() {
+        let today = new Date();
+        var jan = new Date(today.getFullYear(), 0, 1);
+        var jul = new Date(today.getFullYear(), 6, 1);
+        let stdTimeZoneOffset = Math.max(jan.getTimezoneOffset(), jul.getTimezoneOffset());
+        return today.getTimezoneOffset() < stdTimeZoneOffset;
     }
 
     private async LoadHandlebarsHelpers() {
-        if ((<any>window).searchHBHelper !== undefined) {
+        if ((window as any).searchMoment !== undefined) {
+            // early check - seems to never hit(?)
+            return;
+        }
+        let moment = await import(
+            /* webpackChunkName: 'search-handlebars-helpers' */
+            'moment'
+        );
+        if ((window as any).searchMoment !== undefined) {
+            return;
+        }
+        (window as any).searchMoment = moment;
+
+
+        if ((window as any).searchHBHelper !== undefined) {
             // early check - seems to never hit(?)
             return;
         }
@@ -30,36 +77,54 @@ abstract class BaseTemplateService {
             /* webpackChunkName: 'search-handlebars-helpers' */
             'handlebars-helpers'
         );
-        if ((<any>window).searchHBHelper !== undefined) {
+        if ((window as any).searchHBHelper !== undefined) {
             return;
         }
-        (<any>window).searchHBHelper = component({
+        (window as any).searchHBHelper = component({
             handlebars: Handlebars
         });
     }
 
     /**
-     * Gets the default Handlebars list item template used in list layout
-     * @returns the template HTML markup
+     * Gets template parameters according to the specified layout
+     * @param layout the selected layout
+     * @param properties the Web Part properties
+     * @param onUpdateAvailableProperties callback when the list of managed properties is fetched by the control (Optional)
+     * @param availableProperties the list of available managed properties already fetched once (Optional)
      */
-    public static getListDefaultTemplate(): string {
-        return require('./templates/layouts/list.html');
+    public getTemplateParameters(layout: ResultsLayoutOption, properties: ISearchResultsWebPartProps, onUpdateAvailableProperties?: (properties: IComboBoxOption[]) => void, availableProperties?: IComboBoxOption[]): IPropertyPaneField<any>[] {
+        return [];
     }
 
     /**
-     * Gets the default Handlebars list item template used in list layout
+     * Gets the default Handlebars template content used for a specific layout
      * @returns the template HTML markup
      */
-    public static getTilesDefaultTemplate(): string {
-        return require('./templates/layouts/tiles.html');
-    }
+    public static getTemplateContent(layout: ResultsLayoutOption): string {
 
-    /**
-     * Gets the default Handlebars custom blank item template
-     * @returns the template HTML markup
-     */
-    public static getBlankDefaultTemplate(): string {
-        return require('./templates/layouts/default.html');
+        switch (layout) {
+
+            case ResultsLayoutOption.SimpleList:
+                return require('./templates/layouts/simple-list.html');
+
+            case ResultsLayoutOption.DetailsList:
+                return require('./templates/layouts/details-list.html');
+            
+            case ResultsLayoutOption.Tiles:
+                return require('./templates/layouts/tiles.html');
+
+            case ResultsLayoutOption.Slider:
+                return require('./templates/layouts/slider.html');
+
+            case ResultsLayoutOption.Debug:
+                return require('./templates/layouts/debug.html');
+
+            case ResultsLayoutOption.Custom:
+                return require('./templates/layouts/default.html');
+
+            default:
+                return null;
+        }
     }
 
     /**
@@ -75,7 +140,7 @@ abstract class BaseTemplateService {
      * @returns the template HTML markup
      */
     public static getDefaultResultTypeTileItem(): string {
-        return require('./templates/resultTypes/default_tile.html');
+       return require('./templates/resultTypes/default_tile.html');
     }
 
     /**
@@ -94,10 +159,9 @@ abstract class BaseTemplateService {
 
         const domParser = new DOMParser();
         const htmlContent: Document = domParser.parseFromString(templateContent, 'text/html');
-    
+
         let templates: any = htmlContent.getElementById('template');
         if (templates && templates.innerHTML) {
-          
             // Need to unescape '&gt;' for handlebars partials 
             return templates.innerHTML.replace('&gt;', '>');
         } else {
@@ -112,13 +176,28 @@ abstract class BaseTemplateService {
     public static getPlaceholderMarkup(templateContent: string): string {
         const domParser = new DOMParser();
         const htmlContent: Document = domParser.parseFromString(templateContent, 'text/html');
-    
+
         const placeHolders = htmlContent.getElementById('placeholder');
         if (placeHolders && placeHolders.innerHTML) {
-          return placeHolders.innerHTML;
+            // Need to unescape '&gt;' for handlebars partials 
+            return placeHolders.innerHTML.replace('&gt;', '>');
         } else {
             return null;
         }
+    }
+
+    private addMinutes(date: Date, minutes: number, dst: number) {
+        if (this.DayLightSavings) {
+            minutes += dst;
+        }
+        return new Date(date.getTime() + minutes * 60000);
+    }
+
+    private momentHelper(str, pattern, lang) {
+        // if no args are passed, return a formatted date
+        let moment = (window as any).searchMoment;
+        moment.locale(lang);
+        return moment(new Date(str)).format(pattern);
     }
 
     /**
@@ -130,7 +209,7 @@ abstract class BaseTemplateService {
         // Usage: <a href="{{url item}}">
         Handlebars.registerHelper("getUrl", (item: ISearchResult) => {
             if (!isEmpty(item))
-                return item.ServerRedirectedURL ? item.ServerRedirectedURL : item.Path;
+                return new Handlebars.SafeString(item.ServerRedirectedURL ? item.ServerRedirectedURL : item.Path);
         });
 
         // Return the search result count message
@@ -154,7 +233,7 @@ abstract class BaseTemplateService {
                 else if (!isEmpty(item.ServerRedirectedPreviewURL)) previewSrc = item.ServerRedirectedPreviewURL;
             }
 
-            return previewSrc;
+            return new Handlebars.SafeString(previewSrc);
         });
 
         // Return the highlighted summary of the search result item
@@ -167,11 +246,25 @@ abstract class BaseTemplateService {
 
         // Return the formatted date according to current locale using moment.js
         // <p>{{getDate Created "LL"}}</p>
-        Handlebars.registerHelper("getDate", (date: string, format: string) => {
+        Handlebars.registerHelper("getDate", (date: string, format: string, timeHandling?: number) => {
             try {
-                if (new Date(date).toISOString() !== new Date(null).toISOString()) {
-                    let d = (<any>window).searchHBHelper.moment(date, format, { lang: this.CurrentLocale, datejs: false });
-                    return d;
+                let itemDate = new Date(date);
+                if (itemDate.toISOString() !== new Date(null).toISOString()) {
+                    if (typeof timeHandling === "number") {
+                        if (timeHandling === 1) { // show as Z in UI
+                            date = trimEnd(date, "Z");
+                        } else if (timeHandling === 2) { // strip time part
+                            let idx = date.indexOf('T');
+                            date = date.substr(0, idx) + "T00:00:00";
+                        } else if (timeHandling === 3) { // show as web region
+                            date = this.addMinutes(itemDate, -this.TimeZoneBias.WebBias, -this.TimeZoneBias.WebDST).toISOString();
+                            date = trimEnd(date, "Z");
+                        } else if (timeHandling === 4 && this.TimeZoneBias.UserBias) { // show as user region if any
+                            date = this.addMinutes(itemDate, -this.TimeZoneBias.UserBias, -this.TimeZoneBias.UserDST).toISOString();
+                            date = trimEnd(date, "Z");
+                        }
+                    }
+                    return this.momentHelper(date, format, this.CurrentLocale);
                 }
             } catch (error) {
                 return date;
@@ -191,7 +284,7 @@ abstract class BaseTemplateService {
                 }
                 return urlField.substr(separatorPos + 1).trim();
             }
-            return urlField;
+            return new Handlebars.SafeString(urlField);
         });
 
         // Return the unique count based on an array or property of an object in the array
@@ -216,10 +309,55 @@ abstract class BaseTemplateService {
         // <p>{{#times 10}}</p>
         Handlebars.registerHelper('times', (n, block) => {
             var accum = '';
-            for(var i = 0; i < n; ++i)
+            for (var i = 0; i < n; ++i)
                 accum += block.fn(i);
             return accum;
         });
+    }
+
+    /**
+     * Registers web components on the current page to be able to use them in the Handlebars template
+     */
+    private registerWebComponents() {
+
+        const webComponents = [
+            {
+                name: 'document-card',
+                class: DocumentCardWebComponent
+            },
+            {
+                name: 'document-card-shimmers',
+                class: DocumentCardShimmersWebComponent
+            },
+            {
+                name: 'details-list',
+                class: DetailsListWebComponent
+
+            },
+            {
+                name: 'video-card',
+                class: VideoCardWebComponent
+            },
+            {
+                name: 'debug-view',
+                class: DebugViewWebComponent
+            },
+            {
+                name: 'slider-component',
+                class: SliderWebComponent
+            }
+        ];
+
+        // Registers custom HTML elements
+        webComponents.map(wc => {
+            if (!customElements.get(wc.name)) {
+                customElements.define(wc.name,wc.class);
+            }
+        });
+
+        // Register slider component as partial 
+        let sliderTemplate = Handlebars.compile(`<slider-component items="{{items}}" options="{{options}}" template="{{@partial-block}}"></slider-component>`);
+        Handlebars.registerPartial('slider', sliderTemplate,);
     }
 
     /**
@@ -227,6 +365,7 @@ abstract class BaseTemplateService {
      * @returns the compiled HTML template string 
      */
     public async processTemplate(templateContext: any, templateContent: string): Promise<string> {
+    
         // Process the Handlebars template
         const handlebarFunctionNames = [
             "getDate",
@@ -341,7 +480,6 @@ abstract class BaseTemplateService {
             "parseJSON",
             "pick",
             "JSONstringify",
-            "stringify",
             "absolute",
             "dirname",
             "relative",
@@ -383,7 +521,7 @@ abstract class BaseTemplateService {
         for (let i = 0; i < handlebarFunctionNames.length; i++) {
             const element = handlebarFunctionNames[i];
 
-            let regEx = new RegExp("{{#.*?" + element + ".*?}}", "m");
+            let regEx = new RegExp("{{#?.*?" + element + ".*?}}", "m");
             if (regEx.test(templateContent)) {
                 await this.LoadHandlebarsHelpers();
                 break;
@@ -392,7 +530,7 @@ abstract class BaseTemplateService {
 
         let template = Handlebars.compile(templateContent);
         let result = template(templateContext);
-        if (result.indexOf("video-preview-item") !== -1) {
+        if (result.indexOf("video-preview-item") || result.indexOf("video-card") !== -1) {
             await this._loadVideoLibrary();
         }
 
@@ -415,6 +553,7 @@ abstract class BaseTemplateService {
         }
     }
 
+
     /**
      * Builds the Handlebars nested conditions recursively to reflect the result types configuration
      * @param resultTypes the configured result types from the property pane 
@@ -430,39 +569,44 @@ abstract class BaseTemplateService {
             templateContent = await this.getFileContent(currentResultType.externalTemplateUrl);
         }
 
-        let handlebarsToken = currentResultType.value.match(/^\{\{(.*)\}\}$/);
+        if (currentResultType.value) {
 
-        let operator = currentResultType.operator;
-        let param1 = currentResultType.property;
+            let handlebarsToken = currentResultType.value.match(/^\{\{(.*)\}\}$/);
 
-        // Use a token or a string value
-        let param2 = handlebarsToken ? handlebarsToken[1] : `"${currentResultType.value}"`;
-
-        // Operator: "Starts With"
-        if (currentResultType.operator === ResultTypeOperator.StartsWith) {
-            param1 = `"${currentResultType.value}"`;
-            param2 = `${currentResultType.property}`;
-        }
-
-        // Operator: "Not null"
-        if (currentResultType.operator === ResultTypeOperator.NotNull) {
-            param2 = null;
-        }
-
-        const baseCondition = `{{#${operator} ${param1} ${param2 || ""}}} 
-                                    ${templateContent}`;
-
-        if (currentIdx === resultTypes.length - 1) {
-            // Renders inner content set in the 'resultTypes' partial
-            conditionBlockContent = "{{> @partial-block }}";
+            let operator = currentResultType.operator;
+            let param1 = currentResultType.property;
+    
+            // Use a token or a string value
+            let param2 = handlebarsToken ? handlebarsToken[1] : `"${currentResultType.value}"`;
+    
+            // Operator: "Starts With"
+            if (currentResultType.operator === ResultTypeOperator.StartsWith) {
+                param1 = `"${currentResultType.value}"`;
+                param2 = `${currentResultType.property}`;
+            }
+    
+            // Operator: "Not null"
+            if (currentResultType.operator === ResultTypeOperator.NotNull) {
+                param2 = null;
+            }
+    
+            const baseCondition = `{{#${operator} ${param1} ${param2 || ""}}} 
+                                        ${templateContent}`;
+    
+            if (currentIdx === resultTypes.length - 1) {
+                // Renders inner content set in the 'resultTypes' partial
+                conditionBlockContent = "{{> @partial-block }}";
+            } else {
+                conditionBlockContent = await this._buildCondition(resultTypes, resultTypes[currentIdx + 1], currentIdx + 1);
+            }
+    
+            return `${baseCondition}   
+                    {{else}} 
+                        ${conditionBlockContent}
+                    {{/${operator}}}`;
         } else {
-            conditionBlockContent = await this._buildCondition(resultTypes, resultTypes[currentIdx + 1], currentIdx + 1);
+            return '';
         }
-
-        return `${baseCondition}   
-                {{else}} 
-                    ${conditionBlockContent}
-                {{/${operator}}}`;
     }
 
     /**
@@ -479,7 +623,7 @@ abstract class BaseTemplateService {
     /**
      * Initializes the previews on search results for documents and videos. Called when a template is updated/changed
      */
-    public initPreviewElements(): void {
+    public static initPreviewElements(): void {
         this._initVideoPreviews();
         this._initDocumentPreviews();
     }
@@ -488,7 +632,7 @@ abstract class BaseTemplateService {
 
     public abstract ensureFileResolves(fileUrl: string): Promise<void>;
 
-    private _initDocumentPreviews() {
+    private static _initDocumentPreviews() {
 
         const nodes = document.querySelectorAll('.document-preview-item');
 
@@ -503,15 +647,15 @@ abstract class BaseTemplateService {
                 if (url) {
                     let renderElement = React.createElement(
                         PreviewContainer,
-                        {   
-                            elementUrl: url.replace('interactivepreview','embedview'),
+                        {
+                            elementUrl: url.replace('interactivepreview', 'embedview'),
                             targetElement: thumbnailElt,
                             previewImageUrl: previewImgUrl,
                             showPreview: true,
                             previewType: PreviewType.Document
-                        } as IPreviewContainerProps  
+                        } as IPreviewContainerProps
                     );
-                       
+
                     ReactDom.render(renderElement, el);
                 }
             });
@@ -521,16 +665,16 @@ abstract class BaseTemplateService {
     private async _loadVideoLibrary() {
         // Load Videos-Js on Demand 
         // Webpack will create a other bundle loaded on demand just for this library
-        if ((<any>window).searchVideoJS === undefined) {
+        if ((window as any).searchVideoJS === undefined) {
             const videoJs = await import(
                 /* webpackChunkName: 'videos-js' */
                 './video-js'
             );
-            (<any>window).searchVideoJS = videoJs.default.getVideoJs();
+            (window as any).searchVideoJS = videoJs.default.getVideoJs();
         }
     }
 
-    private _initVideoPreviews() {
+    private static _initVideoPreviews() {
         const nodes = document.querySelectorAll('.video-preview-item');
 
         DomHelper.forEach(nodes, ((index, el) => {
@@ -546,7 +690,7 @@ abstract class BaseTemplateService {
                 if (url && fileExtension) {
                     let renderElement = React.createElement(
                         PreviewContainer,
-                        {   
+                        {
                             videoProps: {
                                 fileExtension: fileExtension
                             },
@@ -554,12 +698,12 @@ abstract class BaseTemplateService {
                             targetElement: thumbnailElt,
                             previewImageUrl: previewImgUrl,
                             elementUrl: url,
-                            previewType: PreviewType.Video                            
-                        } as IPreviewContainerProps  
+                            previewType: PreviewType.Video
+                        } as IPreviewContainerProps
                     );
-                       
+
                     ReactDom.render(renderElement, el);
-                }               
+                }
             });
         }));
     }

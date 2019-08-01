@@ -6,6 +6,7 @@ import { Sort } from '@pnp/sp';
 import { ISearchServiceConfiguration } from '../../models/ISearchServiceConfiguration';
 import ISearchVerticalSourceData from '../../models/ISearchVerticalSourceData';
 import { ISearchVertical } from '../../models/ISearchVertical';
+import IManagedPropertyInfo from '../../models/IManagedPropertyInfo';
 
 class MockSearchService implements ISearchService {
 
@@ -60,6 +61,11 @@ class MockSearchService implements ISearchService {
                     Created: '2017-07-22T15:38:54.0000000Z',
                     RefinementTokenValues: 'ǂǂ446f63756d656e74,ǂǂ45647563617465',
                     ContentCategory: 'Document',
+                    PreviewUrl: 'https://via.placeholder.com/400',
+                    Author: 'Michele Clark',
+                    SPSiteUrl: 'https://www.microsoft.com',
+                    SiteTitle: 'Site 1',
+                    owstaxidmetadataalltagsinfo: "L0|#03f88cf2c-a641-4bca-8861-7e363f5d9a0f|Tag 1"
                 },
                 {
                     Title: 'Document 2 - Category 2',
@@ -67,27 +73,46 @@ class MockSearchService implements ISearchService {
                     Created: '2017-07-22T15:38:54.0000000Z',
                     RefinementTokenValues: 'ǂǂ446f63756d656e74,ǂǂ416476697365',
                     ContentCategory: 'Document',
+                    PreviewUrl: 'https://via.placeholder.com/400',
+                    Author: 'John Doe',
+                    SPSiteUrl: 'https://www.microsoft.com',
+                    SiteTitle: 'Site 1',
+                    owstaxidmetadataalltagsinfo: "L0|#0ce7eb131-c322-4a46-a398-383b0ec0f3c3|Tag 2,L0|#03f88cf2c-a641-4bca-8861-7e363f5d9a0f|Tag 1"
                 },
                 {
                     Title: 'Form 1',
                     Path: 'http://form1.ca',
                     Created: '2017-07-22T15:38:54.0000000Z',
                     RefinementTokenValues:  'ǂǂ466f726d',
-                    ContentCategory: 'Form',              
+                    ContentCategory: 'Form',
+                    PreviewUrl: 'https://via.placeholder.com/400',
+                    Author: 'John Doe',
+                    SPSiteUrl: 'https://www.microsoft.com',
+                    SiteTitle: 'Site 2',
+                    owstaxidmetadataalltagsinfo: "L0|#03f88cf2c-a641-4bca-8861-7e363f5d9a0f|Tag 1"              
                 },
                 {
                     Title: 'Video 1 - Category 1',
                     Path: 'https://www.youtube.com/watch?v=S93e6UU7y9o',
                     Created: '2017-07-22T15:38:54.0000000Z',
                     RefinementTokenValues: 'ǂǂ566964656f,ǂǂ45647563617465',
-                    ContentCategory: 'Video',                    
+                    ContentCategory: 'Video',
+                    PreviewUrl: 'https://via.placeholder.com/400',
+                    Author: 'Aaron Painter',
+                    SiteTitle: 'Site 2',
+                    owstaxidmetadataalltagsinfo: "L0|#0ce7eb131-c322-4a46-a398-383b0ec0f3c3|Tag 2"                                        
                 },
                 {
                     Title: 'Video 2 - Category 2',
                     Path: 'https://www.youtube.com/watch?v=8Nl_dKVQ1O8',
                     Created: '2017-07-22T15:38:54.0000000Z',
                     RefinementTokenValues: 'ǂǂ566964656f,ǂǂ416476697365',
-                    ContentCategory: 'Video',                                                
+                    ContentCategory: 'Video',
+                    PreviewUrl: 'https://via.placeholder.com/400',
+                    Author: 'Aaron Painter',
+                    SPSiteUrl: 'https://www.microsoft.com',
+                    SiteTitle: 'Site 3',
+                    owstaxidmetadataalltagsinfo: "L0|#01257a103-d2a1-43c4-8c07-6138527a88b7|Tag 3"               
                 },                                   
             ],
             RefinementResults: [
@@ -311,6 +336,25 @@ class MockSearchService implements ISearchService {
     }
 
     /**
+     * Gets available search managed properties in the search schema
+     */
+    public async getAvailableManagedProperties(): Promise<IManagedPropertyInfo[]> {
+
+        let managedProperties: IManagedPropertyInfo[] = [
+            { name: 'Created' },
+            { name: 'AuthorOWSUSER'},
+            { name: 'CreatedBy' },
+            { name: 'Title'},
+            { name: 'Modified' },
+            { name: 'ModifiedBy'},
+            { name: 'FileType' },
+            { name: 'Size'}
+        ];
+
+        return Promise.resolve(managedProperties);
+    }
+
+    /**
      * Gets all available languages for the search query
      */
     public getAvailableQueryLanguages() {
@@ -335,6 +379,14 @@ class MockSearchService implements ISearchService {
                 Lcid: 2108
             }
         ]);
+    }
+
+    /**
+     * Checks if the provided manage property is sortable or not
+     * @param property the managed property to verify
+     */
+    public async validateSortableProperty(property: string): Promise<boolean> {
+        return Promise.resolve(true);
     }
 }
 

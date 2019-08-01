@@ -1,7 +1,7 @@
 import ISearchService from '../../../../services/SearchService/ISearchService';
 import ITaxonomyService from '../../../../services/TaxonomyService/ITaxonomyService';
 import { DisplayMode } from '@microsoft/sp-core-library';
-import TemplateService from '../../../../services/TemplateService/TemplateService';
+import { TemplateService } from '../../../../services/TemplateService/TemplateService';
 import { Sort } from '@pnp/sp';
 import ISortableFieldConfiguration from '../../../../models/ISortableFieldConfiguration';
 import { ISearchResultType } from '../../../../models/ISearchResultType';
@@ -64,6 +64,11 @@ interface ISearchResultsContainerProps {
      * The template raw content to display
      */
     templateContent: string;
+
+    /**
+     * Template parameters from Web Part property pane
+     */
+    templateParameters: { [key:string]: any };
 
     /**
      * The site server relative url for the current Site

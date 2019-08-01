@@ -13,7 +13,8 @@ import {
   PropertyPaneToggle,
   PropertyPaneCheckbox
 } from '@microsoft/sp-webpart-base';
-import Handlebars = require('handlebars');
+//import * as Handlebars = require('handlebars');
+import * as Handlebars from 'handlebars';
 import * as strings from 'handlebarTemplateDisplayStrings';
 import HandlebarTemplateDisplay from './components/HandlebarTemplateDisplay';
 import { IHandlebarTemplateDisplayProps } from './components/IHandlebarTemplateDisplayProps';
@@ -107,7 +108,7 @@ export default class HandlebarTemplateDisplayWebPart extends BaseClientSideWebPa
         if(this.properties.optimizedTemplate && this.displayMode===DisplayMode.Edit){
             this.context.spHttpClient.get(this.properties.handlebarTemplateUrl, SPHttpClient.configurations.v1,{method:"GET",mode:"no-cors"}).then((templateResponse)=>{
               templateResponse.text().then((s)=>{
-                const template = Handlebars.precompile(s);
+                const template: TemplateSpecification = Handlebars.precompile(s);
                 this.properties.precompiledTemplate = template.toString();
                 element.props.template = template;
                 this.webpart = ReactDom.render(element, this.domElement);
@@ -165,7 +166,7 @@ export default class HandlebarTemplateDisplayWebPart extends BaseClientSideWebPa
         if(this.properties.optimizedTemplate && this.displayMode===DisplayMode.Edit){
           this.context.spHttpClient.get(this.properties.handlebarTemplateUrl, SPHttpClient.configurations.v1).then((templateResponse)=>{
             templateResponse.text().then((s)=>{
-              const template = Handlebars.precompile(s);
+              const template: TemplateSpecification = Handlebars.precompile(s);
               this.properties.precompiledTemplate = template.toString();
               element.props.template = template;
               this.webpart = ReactDom.render(element, this.domElement);

@@ -27,12 +27,18 @@ export default class CheckboxTemplate extends React.Component<IBaseRefinerTempla
     
     public render() {
 
+
         return <div>
                     {
                         this.props.refinementResult.Values.map((refinementValue: IRefinementValue, j) => {
 
                                 return (
                                 <Checkbox
+                                    styles={{
+                                        root:{
+                                            padding: 10
+                                        }
+                                    }}
                                     key={j}                                    
                                     checked={this._isValueInFilterSelection(refinementValue)}
                                     label={Text.format(refinementValue.RefinementValue + ' ({0})', refinementValue.RefinementCount)}

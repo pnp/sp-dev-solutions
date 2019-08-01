@@ -1,17 +1,15 @@
 
 .template_root, .placeholder_root {
-    /* Load global variables and mixins for components. Order is important here because we want theming variables from SPFx instead of default */
-    @import '~office-ui-fabric/dist/sass/Fabric.scss';
-    @import '~@microsoft/sp-office-ui-fabric-core/dist/sass/_SPFabricCore.scss';
 
-    /* Import individual Office UI Fabric component styles to be able to use them in HTML templates. See https://developer.microsoft.com/en-us/fabric-js for markup*/
-    @import '~office-ui-fabric/dist/components/Button/Button.scss';
-    @import '~office-ui-fabric/dist/components/Label/Label.scss';
-    @import '~office-ui-fabric/dist/components/List/List.scss';
-    @import '~office-ui-fabric/dist/components/ListItem/ListItem.scss';
-    @import '~@microsoft/sp-office-ui-fabric-core/dist/sass/FabricCore.scss';
+    /* 
+     * Override theming CSS classes from deprecated Office UI Fabric with values from SPFx
+     * Workaround for SPFx > 1.6.0, where these CSS classes were removed from sp-office-ui-fabric-core package
+     */
+    @import './SearchResultsTemplateThemeColors.scss';
 
     .template_defaultList {
+
+        padding: 0;
     
         strong {
             color: "[theme: themePrimary, default: #005a9e]";
@@ -22,6 +20,7 @@
             display:flex;
             display: -ms-flexbox;
             padding: 10px;
+            min-height: 110px;
             justify-content: space-between;
 
             img.img-preview  {
@@ -45,6 +44,21 @@
                 display: -ms-flexbox;
                 flex-direction: column;
                 margin-right: 15px;
+            }
+
+            .template_title {
+                font-size: 16px;
+                margin-bottom: 10px;
+            }
+
+            .template_tags {
+                display: flex;
+                align-items: center;
+                margin-top: 5px;
+
+                i {
+                    margin-right: 5px;
+                }
             }
             
             .template_previewContainer {
@@ -106,6 +120,7 @@
         }
     }
     
+    // Legacy CSS for backward compatibility, now replaced by Office UI Fabric controls
     .template_defaultCard {
 
         .singleCard {

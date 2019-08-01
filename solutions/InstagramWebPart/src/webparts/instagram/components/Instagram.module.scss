@@ -1,0 +1,87 @@
+@import "~office-ui-fabric-react/dist/sass/References.scss";
+
+$fontSize: 12px;
+$logoSize: 30px;
+$cardSize: 184px;
+$captionContainerWidth: $cardSize;
+$captionLabelWidth: 140px;
+$tagsOffset: 5px;
+
+.instagram {
+  .title {
+    padding-left: 10px;
+  }
+
+  .card {
+    width: $cardSize;
+    height: $cardSize;
+    position: relative;
+  }
+  
+  .tags {
+    position: absolute;
+    top: $tagsOffset;
+    left: $tagsOffset;
+    color: white;
+    font-size: 20px;
+    z-index: 1;
+  }
+  
+  .captionContainer {
+    position: absolute;
+    background: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.65) 100%);
+    color: white;
+    position: absolute;
+    bottom: 0;
+    font-size: $fontSize;
+    width: $captionContainerWidth;
+    @include ms-left(0);
+  
+    .captionLabel {
+      padding: $tagsOffset;
+      line-height: 20px;
+      width: $captionLabelWidth;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+      display: inline-block;
+    }
+  
+    .logo {
+      @include ms-float(right);
+      width: 29px;
+      height: 29px;
+      display: inline-block;
+      padding-right: $tagsOffset;
+    }
+  }
+  
+  :global(.slick-prev) {
+    z-index: 1;
+    @include ms-left(0);
+  }
+  
+  :global(.slick-next) {
+    z-index: 0;
+    @include ms-right(12px);
+  }
+  
+  :global(.slick-next:before), :global(.slick-prev:before) {
+    color: $ms-color-neutralLight !important;
+  }
+  
+  .hint {
+    color: $ms-color-neutralLighter;
+  }
+  
+  .noResults {
+    background-color: $ms-color-infoBackground;
+    line-height: 90px;
+    @include ms-fontSize-xl;
+    text-align: center;
+  
+    .label {
+      color: $ms-color-green;
+    }
+  }
+}
