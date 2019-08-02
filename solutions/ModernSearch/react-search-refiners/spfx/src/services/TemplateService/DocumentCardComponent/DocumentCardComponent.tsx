@@ -4,7 +4,7 @@ import { ImageFit } from 'office-ui-fabric-react/lib/Image';
 import PreviewContainer from '../PreviewContainer/PreviewContainer';
 import { PreviewType } from '../PreviewContainer/IPreviewContainerProps';
 import { Link } from 'office-ui-fabric-react/lib/Link';
-import { IDocumentCardFieldsConfiguration } from "../TemplateService";
+import { IComponentFieldsConfiguration, TemplateService } from "../TemplateService";
 import * as Handlebars from 'handlebars';
 import * as documentCardLocationGetStyles from 'office-ui-fabric-react/lib/components/DocumentCard/DocumentCardLocation.styles';
 import { getTheme, mergeStyleSets } from "office-ui-fabric-react/lib/Styling";
@@ -61,7 +61,11 @@ export class DocumentCardComponent extends React.Component<IDocumentCardComponen
     public render() {
 
         let renderPreviewCallout = null;
-        let processedProps = this._processFieldsConfiguration();
+        let processedProps: IDocumentCardComponentProps = this.props;
+
+        if (this.props.fieldsConfiguration && this.props.item) {
+            processedProps = TemplateService.processFieldsConfiguration<IDocumentCardComponentProps>(this.props.fieldsConfiguration, this.props.item);
+        }
         
         if (this.state.showCallout && processedProps.previewUrl && this.props.enablePreview) {
 
@@ -178,52 +182,5 @@ export class DocumentCardComponent extends React.Component<IDocumentCardComponen
                     </DocumentCard>
                     {renderPreviewCallout}
                 </div>;
-    }
-
-    private _processFieldsConfiguration(): IDocumentCardComponentProps {
-
-        let processedProps: IDocumentCardComponentProps = {};
-
-        if (this.props.fieldsConfiguration && this.props.item) {
-
-            // Get item properties
-            const item = JSON.parse(this.props.item);
-
-            // Use configuration
-            const fieldsConfiguration: IDocumentCardFieldsConfiguration[] = JSON.parse(this.props.fieldsConfiguration);
-            fieldsConfiguration.map(configuration => { 
-                
-                let processedValue = item[configuration.value];
-                
-                if (configuration.useHandlebarsExpr ) {
-                    
-                    try {
-                        // Create a temp context with the current so we can use global registered helpers on the current item
-                        const tempTemplateContent = `{{#with item as |item|}}${configuration.value}{{/with}}`;
-                        let template = Handlebars.compile(tempTemplateContent);
-
-                        // Pass the current item as context
-                        processedValue = template({
-                            item: item
-                        });
-
-                        processedValue = processedValue ? processedValue.trim() : null;
-
-                    } catch (error) {
-                        processedValue = `###Error: ${error.message}###`;
-                    }
-                }
-
-                processedProps[configuration.field] = processedValue;
-            });
-
-            return processedProps;
-        } else {
-
-            // Use inline attributes 
-            processedProps = this.props;
-        }
-
-        return processedProps;
     }
 }

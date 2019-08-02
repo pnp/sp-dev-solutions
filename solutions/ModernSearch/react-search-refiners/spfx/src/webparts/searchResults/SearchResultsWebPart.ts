@@ -311,9 +311,8 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
                 timeZoneBias.UserDST = this.context.pageContext.legacyPageContext.userTimeZoneData.DaylightBias;
             }
 
-            this._templateService = new TemplateService(this.context.spHttpClient, this.context.pageContext.cultureInfo.currentUICultureName, this._searchService, timeZoneBias);
             this._searchService = new SearchService(this.context.pageContext, this.context.spHttpClient);
-            this._templateService = new TemplateService(this.context.spHttpClient, this.context.pageContext.cultureInfo.currentUICultureName, this._searchService);
+            this._templateService = new TemplateService(this.context.spHttpClient, this.context.pageContext.cultureInfo.currentUICultureName, this._searchService, timeZoneBias, this.context);
         }
 
         this._resultService = new ResultService();
@@ -1127,6 +1126,13 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
                 },
                 text: strings.SliderLayoutOption,
                 key: ResultsLayoutOption.Slider
+            },
+            {
+                iconProps: {
+                    officeFabricIconFontName: 'People'
+                },
+                text: strings.PeopleLayoutOption,
+                key: ResultsLayoutOption.People
             },
             {
                 iconProps: {

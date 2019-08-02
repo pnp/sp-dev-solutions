@@ -46,6 +46,7 @@ declare interface ISearchResultsWebPartStrings {
     DetailsListLayoutOption: string;
     TilesLayoutOption: string;
     SliderLayoutOption: string;
+    PeopleLayoutOption: string;
     DebugLayoutOption: string;
     CustomLayoutOption: string;
     TemplateUrlFieldLabel: string;
@@ -124,8 +125,10 @@ declare interface ISearchResultsWebPartStrings {
         ManageTilesFieldsLabel: string;
         ManageTilesFieldsPanelDescriptionLabel: string;
         ManageDetailsListColumnLabel: string;
-        DocumentCardNameFieldLabel: string;
-        DocumentCardValueFieldLabel: string;
+        ManagePeopleFieldsLabel: string;
+        ManagePeopleFieldsPanelDescriptionLabel: string;
+        PlaceholderNameFieldLabel: string;
+        PlaceholderValueFieldLabel: string;
         ValueColumnLabel: string;
         DisplayNameColumnLabel: string;
         UseHandlebarsExpressionLabel: string;
