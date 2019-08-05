@@ -17,8 +17,10 @@ import { DetailsListWebComponent } from './components/DetailsList';
 import { VideoCardWebComponent } from './components/VideoCard';
 import { DebugViewWebComponent } from './components/debugView';
 import { SliderWebComponent } from './components/slider';
-import { PersonaWebComponent } from './components/persona';
+import { LivePersonaWebComponent } from './components/livepersona';
+import { PersonaCardWebComponent } from './components/personacard';
 import { DocumentCardShimmersWebComponent } from './components/shimmers/DocumentCardShimmers';
+import { PersonaCardShimmersWebComponent } from './components/shimmers/PersonaCardShimmers';
 import '@webcomponents/custom-elements';
 import { IPropertyPaneField } from '@microsoft/sp-property-pane';
 import ResultsLayoutOption from '../../models/ResultsLayoutOption';
@@ -173,7 +175,7 @@ abstract class BaseTemplateService {
         let templates: any = htmlContent.getElementById('template');
         if (templates && templates.innerHTML) {
             // Need to unescape '&gt;' for handlebars partials 
-            return templates.innerHTML.replace('&gt;', '>');
+            return templates.innerHTML.replace(/\&gt;/g, '>');
         } else {
             return templateContent;
         }
@@ -190,7 +192,7 @@ abstract class BaseTemplateService {
         const placeHolders = htmlContent.getElementById('placeholder');
         if (placeHolders && placeHolders.innerHTML) {
             // Need to unescape '&gt;' for handlebars partials 
-            return placeHolders.innerHTML.replace('&gt;', '>');
+            return placeHolders.innerHTML.replace(/\&gt;/g, '>');
         } else {
             return null;
         }
@@ -357,8 +359,16 @@ abstract class BaseTemplateService {
                 class: SliderWebComponent
             },
             {
-                name: 'persona-component',
-                class: PersonaWebComponent
+                name: 'persona-card',
+                class: PersonaCardWebComponent
+            },
+            {
+                name: 'persona-card-shimmers',
+                class: PersonaCardShimmersWebComponent
+            },
+            {
+                name: 'live-persona',
+                class: LivePersonaWebComponent
             }
         ];
 
@@ -374,6 +384,10 @@ abstract class BaseTemplateService {
         // Register slider component as partial 
         let sliderTemplate = Handlebars.compile(`<slider-component items="{{items}}" options="{{options}}" template="{{@partial-block}}"></slider-component>`);
         Handlebars.registerPartial('slider', sliderTemplate,);
+
+        // Register live persona wrapper as partial
+        let livePersonaTemplate = Handlebars.compile(`<live-persona upn="{{upn}}" disable-hover="{{disableHover}}" template="{{@partial-block}}"></live-persona>`);
+        Handlebars.registerPartial('livepersona', livePersonaTemplate,);
     }
 
     /**

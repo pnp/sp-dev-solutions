@@ -124,7 +124,7 @@ define([], function () {
       "ManageDetailsListColumnLabel": "Manage columns",
       "ManageTilesFieldsLabel": "Manage card fields",
       "ManagePeopleFieldsLabel": "Manage persona fields",
-      "ManagePeopleFieldsPanelDescriptionLabel": "Here you can map each field values with the corresponding persona placeholders. You can use either the managed property value directly without any transformation or use an Handlebars expression in the value field. Also, when indicated, you can also inject your own HTML code in some fields.",
+      "ManagePeopleFieldsPanelDescriptionLabel": "Here you can map each field values with the corresponding persona placeholders. You can use either the managed property value directly without any transformation or use an Handlebars expression in the value field.",
       "ManageTilesFieldsPanelDescriptionLabel": "Here you can map each field values with the corresponding card placeholders. You can use either the managed property value directly without any transformation or use an Handlebars expression in the value field. Also, when indicated, you can also inject your own HTML code in some fields.",
       "PlaceholderNameFieldLabel": "Name",
       "PlaceholderValueFieldLabel": "Value",
@@ -144,7 +144,14 @@ define([], function () {
       "SliderPauseAutoPlayOnHover": "Pause on hover",
       "SliderGroupCells": "Number of elements to group together in slides",
       "SliderShowPageDots": "Show page dots",
-      "SliderWrapAround": "Infinite scrolling"
+      "SliderWrapAround": "Infinite scrolling",
+      "PersonaSizeOptionsLabel": "Picture size",
+      "PersonaSizeExtraSmall": "Extra small",
+      "PersonaSizeSmall": "Small",
+      "PersonaSizeRegular": "Regular",
+      "PersonaSizeLarge": "Large",
+      "PersonaSizeExtraLarge": "Extra large",
+      "LivePersonaDisableHover": "Disable info on hover"
     },
     "ManagedPropertiesListPlaceHolder": "Select or add a managed property"
   }

@@ -124,7 +124,7 @@ define([], function() {
       "ManageDetailsListColumnLabel": "Gérer les colonnes",
       "ManageTilesFieldsLabel": "Gérer les champs de la carte",
       "ManagePeopleFieldsLabel": "Gérer les champs de personne",
-      "ManagePeopleFieldsPanelDescriptionLabel": "Ici vous pouvez associer la valeur de chaque champ aux zone d'élement 'Personne' correspondantes. Vous pouvez soit utiliser la valeur d'une propriété de recherche directement ou bien spécifier une expression Handlebars en tant que valeur. Pour certains champ, lorsque indiqué, vous pouvez également injecter votre propre code HTML.",
+      "ManagePeopleFieldsPanelDescriptionLabel": "Ici vous pouvez associer la valeur de chaque champ aux zone d'élement 'Personne' correspondantes. Vous pouvez soit utiliser la valeur d'une propriété de recherche directement ou bien spécifier une expression Handlebars en tant que valeur.",
       "ManageTilesFieldsPanelDescriptionLabel": "Ici vous pouvez associer la valeur de chaque champ aux zone de la carte correspondantes. Vous pouvez soit utiliser la valeur d'une propriété de recherche directement ou bien spécifier une expression Handlebars en tant que valeur. Pour certains champ, lorsque indiqué, vous pouvez également injecter votre propre code HTML.",
       "PlaceholderNameFieldLabel": "Nom",
       "PlaceholderValueFieldLabel": "Valeur",
@@ -144,7 +144,14 @@ define([], function() {
       "SliderPauseAutoPlayOnHover": "Pause lors du survolement",
       "SliderGroupCells": "Nombre d'éléments à grouper par slide",
       "SliderShowPageDots": "Afficher la navigation",
-      "SliderWrapAround": "Défilement inifini"
+      "SliderWrapAround": "Défilement inifini",
+      "PersonaSizeOptionsLabel": "Taille de l'image",
+      "PersonaSizeExtraSmall": "Très petit",
+      "PersonaSizeSmall": "Petit",
+      "PersonaSizeRegular": "Normal",
+      "PersonaSizeLarge": "Grand",
+      "PersonaSizeExtraLarge": "Très grand",
+      "LivePersonaDisableHover": "Désactiver l'affichage des informations au survolement"
     },
     "ManagedPropertiesListPlaceHolder": "Sélectionnez ou ajoutez une propriété gérée"
   }

@@ -1,10 +1,9 @@
 import * as ReactDOM from 'react-dom';
 import * as React from 'react';
-import { PersonaComponent } from '../PersonaComponent/PersonaComponent';
+import { PersonaCardComponent } from '../PersonaCardComponent/PersonaCardComponent';
 import { BaseWebComponent } from './BaseWebComponent';
-import { WebPartContext } from '@microsoft/sp-webpart-base';
 
-export class PersonaWebComponent extends BaseWebComponent {
+export class PersonaCardWebComponent extends BaseWebComponent {
    
    constructor() {
        super();
@@ -13,7 +12,7 @@ export class PersonaWebComponent extends BaseWebComponent {
    public connectedCallback() {
 
       let props = this.resolveAttributes();
-      const personaItem = <PersonaComponent {...props} ctx={this._ctx}/>;
+      const personaItem = <PersonaCardComponent {...props}/>;
       ReactDOM.render(personaItem, this);
    }    
 }

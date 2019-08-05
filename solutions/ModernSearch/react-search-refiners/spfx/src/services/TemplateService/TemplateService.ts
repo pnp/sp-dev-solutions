@@ -8,13 +8,12 @@ import { IDetailsListColumnConfiguration } from './DetailsListComponent/DetailsL
 import { PropertyFieldCollectionData, CustomCollectionFieldType } from '@pnp/spfx-property-controls/lib/PropertyFieldCollectionData';
 import * as React from 'react';
 import { TemplateValueFieldEditor, ITemplateValueFieldEditorProps } from '../../controls/TemplateValueFieldEditor/TemplateValueFieldEditor';
-import { PropertyFieldSpinButton } from '@pnp/spfx-property-controls/lib/PropertyFieldSpinButton';
 import * as strings from 'SearchResultsWebPartStrings';
 import { IComboBoxOption } from 'office-ui-fabric-react/lib/ComboBox';
 import { Icon, IIconProps } from 'office-ui-fabric-react/lib/Icon';
 import { ISliderOptions } from './SliderComponent/SliderComponent';
 import { cloneDeep } from '@microsoft/sp-lodash-subset';
-import { WebPartContext } from '@microsoft/sp-webpart-base';
+import { WebPartContext, PropertyPaneChoiceGroup } from '@microsoft/sp-webpart-base';
 
 const PEOPLE_RESULT_SOURCEID = 'b09a7990-05ea-4af9-81ef-edfab16c4e31';
 
@@ -483,7 +482,7 @@ export class TemplateService extends BaseTemplateService {
         if (!properties.templateParameters.peopleFields) {
 
             properties.templateParameters.peopleFields = [
-                { name: 'Image Url', field: 'imageUrl', value: "{{#with (split AccountName '|')}}/_layouts/15/userphoto.aspx?size=L&username={{[0]}}{{/with}}", useHandlebarsExpr: true, supportHtml: false },
+                { name: 'Image Url', field: 'imageUrl', value: "{{#with (split AccountName '|')}}/_layouts/15/userphoto.aspx?size=L&username={{[2]}}{{/with}}", useHandlebarsExpr: true, supportHtml: false },
                 { name: 'Primary Text', field: 'text', value: "{{FirstName}} {{LastName}}", useHandlebarsExpr: true, supportHtml: false },
                 { name: 'Secondary Text', field: 'secondaryText', value: "JobTitle", useHandlebarsExpr: false, supportHtml: false },
                 { name: 'Tertiary Text', field: 'tertiaryText',  value: "{{#with (split AccountName '|')}}{{[2]}}{{/with}}", useHandlebarsExpr: true, supportHtml: false },
@@ -499,6 +498,10 @@ export class TemplateService extends BaseTemplateService {
         if (!properties.resultSourceId) {
             properties.resultSourceId = PEOPLE_RESULT_SOURCEID; // Local People results
             properties.queryTemplate = '{searchTerms}';
+        }
+
+        if (!properties.templateParameters.personaSize) {
+            properties.templateParameters.personaSize = 14;
         }
 
         return [
@@ -555,7 +558,36 @@ export class TemplateService extends BaseTemplateService {
                         title: strings.TemplateParameters.UseHandlebarsExpressionLabel
                     }
                 ]
-            })                  
+            }),
+            PropertyPaneChoiceGroup('templateParameters.personaSize', {
+                label: strings.TemplateParameters.PersonaSizeOptionsLabel,
+                options: [
+                    {
+                        key: 11,
+                        text: strings.TemplateParameters.PersonaSizeExtraSmall
+                    },
+                    {
+                        key: 12,
+                        text: strings.TemplateParameters.PersonaSizeSmall
+                    },
+                    {
+                        key: 13,
+                        text: strings.TemplateParameters.PersonaSizeRegular
+                    },
+                    {
+                        key: 14,
+                        text: strings.TemplateParameters.PersonaSizeLarge
+                    },
+                    {
+                        key: 15,
+                        text: strings.TemplateParameters.PersonaSizeExtraLarge
+                    }
+                ]
+            }),   
+            PropertyPaneToggle('templateParameters.disableHover', {
+                label: strings.TemplateParameters.LivePersonaDisableHover,               
+                checked: properties.templateParameters.disableHover !== null || properties.templateParameters.disableHover !== undefined ? properties.templateParameters.disableHover : false
+            })          
         ];
     }
 

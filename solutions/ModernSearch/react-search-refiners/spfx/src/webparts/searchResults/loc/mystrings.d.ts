@@ -146,6 +146,13 @@ declare interface ISearchResultsWebPartStrings {
         SliderGroupCells: string;
         SliderShowPageDots: string;
         SliderWrapAround: string;
+        PersonaSizeOptionsLabel: string,
+        PersonaSizeExtraSmall: string;
+        PersonaSizeSmall: string;
+        PersonaSizeRegular: string;
+        PersonaSizeLarge: string;
+        PersonaSizeExtraLarge: string;
+        LivePersonaDisableHover: string;
     }
     ManagedPropertiesListPlaceHolder: string;
 }

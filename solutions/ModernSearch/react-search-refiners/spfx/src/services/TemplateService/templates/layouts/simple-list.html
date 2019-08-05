@@ -35,8 +35,17 @@
                                 <img class="template_icon" src="{{IconSrc}}"/>
                                 <div class="template_contentContainer">
                                     <span class="template_title"><a href="{{getUrl item}}">{{Title}}</a></span>
-                                    <span>{{getSummary HitHighlightedSummary}}</span>
-                                    <span>{{getDate Created "LL"}}</span>   
+                                    <span>
+                                        {{getSummary HitHighlightedSummary}}
+                                        <span class="template_author">
+                                            {{#with (split AuthorOWSUSER '|')}}
+                                                {{#>livepersona upn=[0] disableHover=false}}
+                                                {{../[1]}}
+                                                {{/livepersona}}
+                                            {{/with}}
+                                        </span>
+                                    </span>
+                                    <span>{{getDate Created "LL"}}</span> 
                                     <div class="template_tags">
                                         {{#if owstaxidmetadataalltagsinfo}}
                                             <i class="ms-Icon ms-Icon--Tag" aria-hidden="true"></i>

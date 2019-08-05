@@ -682,6 +682,9 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
 
         if (this.properties.selectedLayout === ResultsLayoutOption.Custom) {
             
+            // Reset options
+            this._templatePropertyPaneOptions = [];
+
             if (this.properties.externalTemplateUrl) {
                 this._templateContentToDisplay = await this._templateService.getFileContent(this.properties.externalTemplateUrl);
             } else {
