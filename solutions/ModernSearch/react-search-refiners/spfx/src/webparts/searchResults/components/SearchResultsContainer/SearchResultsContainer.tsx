@@ -83,7 +83,8 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
                     items: [],
                     showResultsCount: this.props.showResultsCount,
                     maxResultsCount: this.props.searchService.resultsCount,
-                    strings: strings
+                    strings: strings,
+                    themeVariant: this.props.themeVariant
                 };
 
                 // Merge with property pane template parameters
@@ -145,7 +146,8 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
                 webUrl: this.props.webServerRelativeUrl,
                 maxResultsCount: this.props.searchService.resultsCount,
                 actualResultsCount: items.RelevantResults.length,
-                strings: strings
+                strings: strings,
+                themeVariant: this.props.themeVariant
             };
 
             // Merge with property pane template parameters

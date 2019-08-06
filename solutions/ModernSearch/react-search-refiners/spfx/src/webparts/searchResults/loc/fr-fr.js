@@ -106,6 +106,7 @@ define([], function() {
       "CondtionOperatorValue": "Opérateur",
       "ExternalUrlLabel": "URL du template externe",
       "EqualOperator": "Égal",
+      "NotEqualOperator": "N'est pas égal",
       "ContainsOperator": "Contient",
       "StartsWithOperator": "Commence par",
       "NotNullOperator": "N'est pas nul",

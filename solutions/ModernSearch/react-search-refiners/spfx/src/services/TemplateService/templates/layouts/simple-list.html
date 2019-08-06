@@ -2,6 +2,10 @@
 
     <style>
         /* Insert your CSS overrides here */
+        .example-themePrimary a {
+            color: {{@root.themeVariant.palette.themePrimary}};
+        }
+        
     </style>
 
     <div class="template_root">
@@ -34,19 +38,19 @@
                         <div class="template_result">
                                 <img class="template_icon" src="{{IconSrc}}"/>
                                 <div class="template_contentContainer">
-                                    <span class="template_title"><a href="{{getUrl item}}">{{Title}}</a></span>
+                                    <span class="template_title example-themePrimary"><a href="{{getUrl item}}">{{Title}}</a></span>
                                     <span>
                                         {{getSummary HitHighlightedSummary}}
                                         <span class="template_author">
                                             {{#with (split AuthorOWSUSER '|')}}
                                                 {{#>livepersona upn=[0] disableHover=false}}
-                                                {{../[1]}}
+                                                    {{../[1]}}
                                                 {{/livepersona}}
                                             {{/with}}
                                         </span>
                                     </span>
                                     <span>{{getDate Created "LL"}}</span> 
-                                    <div class="template_tags">
+                                    <div class="template_tags example-themePrimary">
                                         {{#if owstaxidmetadataalltagsinfo}}
                                             <i class="ms-Icon ms-Icon--Tag" aria-hidden="true"></i>
                                             {{#each (split owstaxidmetadataalltagsinfo ",") as |tag| }}                                                    

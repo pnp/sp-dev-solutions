@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as ReactDom from 'react-dom';
 import { Version, DisplayMode } from '@microsoft/sp-core-library';
-import { DynamicProperty } from '@microsoft/sp-component-base';
+import { DynamicProperty, ThemeChangedEventArgs, ThemeProvider } from '@microsoft/sp-component-base';
 import { BaseClientSideWebPart } from "@microsoft/sp-webpart-base";
 import { IPropertyPaneConfiguration, PropertyPaneDropdown, PropertyPaneToggle } from "@microsoft/sp-property-pane";
 import { Placeholder } from '@pnp/spfx-controls-react/lib/Placeholder';
@@ -20,6 +20,7 @@ export default class SearchNavigationWebPart extends BaseClientSideWebPart<ISear
     private _propertyFieldColorPickerStyle;
     private _dynamicDataService: IDynamicDataService;
     private _queryKeywordsSourceData: DynamicProperty<ISearchQuery>;
+    private _themeProvider: ThemeProvider;
 
     public render(): void {
         let renderElement: JSX.Element = React.createElement('div', null);
@@ -75,6 +76,8 @@ export default class SearchNavigationWebPart extends BaseClientSideWebPart<ISear
     protected onInit(): Promise<void> {
         this._dynamicDataService = new DynamicDataService(this.context.dynamicDataProvider);
         this.ensureDataSourceConnection();
+
+        this.initThemeVariant();
     
         return Promise.resolve();
     }
@@ -186,5 +189,25 @@ export default class SearchNavigationWebPart extends BaseClientSideWebPart<ISear
         if (propertyPath.localeCompare('queryKeywordsDataSourceReference') === 0) {
             this.ensureDataSourceConnection();
         }
+    }
+
+    /**
+     * Initializes theme variant properties
+     */
+    private initThemeVariant(): void {
+
+        // Consume the new ThemeProvider service
+        this._themeProvider = this.context.serviceScope.consume(ThemeProvider.serviceKey);
+
+        // Register a handler to be notified if the theme variant changes
+        this._themeProvider.themeChangedEvent.add(this, this._handleThemeChangedEvent.bind(this));
+    }
+
+    /**
+     * Update the current theme variant reference and re-render.
+     * @param args The new theme
+     */
+    private _handleThemeChangedEvent(args: ThemeChangedEventArgs): void {
+        this.render();
     }
 }

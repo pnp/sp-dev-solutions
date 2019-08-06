@@ -2,7 +2,13 @@
 
 ## Available layouts ##
 
-By default, the search results Web Part comes with multiples layouts. All layouts rely on Handlebars templates. The templating feature comes directly from the original [react-content-query-webpart](https://github.com/SharePoint/sp-dev-fx-webparts/tree/master/samples/react-content-query-webpart) so thanks to @spplante!
+By default, the search results Web Part comes with multiples layouts. All layouts rely on Handlebars templates. 
+
+<p align="center">
+  <img width="300px" src="../images/all_layouts.png"/>
+</p>
+
+The templating feature comes directly from the original [react-content-query-webpart](https://github.com/SharePoint/sp-dev-fx-webparts/tree/master/samples/react-content-query-webpart) so thanks to @spplante!
 
 Some provided templates embed web components (via custom HTML elements) wrapping Office UI Fabric React controls (ex: DetailsList, DocumentCard). For those, you can only customize them using the provided template options and placeholders and it means you don't have access to their underlying HTML markup.
 
@@ -92,9 +98,11 @@ Or only person cards:
             <persona-card 
                 image-url="/_layouts/15/userphoto.aspx?size=L&username=\{{[2]}}"
                 text="\{{../FirstName}} \{{../LastName}}"
-                secondaryText="\{{../JobTitle}}"
-                tertiaryText="\{{[2]}}"
-                optionalText="\{{../WorkPhone}}">
+                secondary-text="\{{../JobTitle}}"
+                tertiary-text="\{{[2]}}"
+                optional-text="\{{../WorkPhone}}"
+                persona-size="14"
+                >
             </persona-card>
         \{{/with}}
     </div>                
@@ -134,6 +142,20 @@ Displays people with details when hovered:
 | **Picture size** | The size of the person picture to isplay. The more the size is and the more information will be displayed for each item and vice versa.
 | **Pause on hover** | If enabled, pause the slider on mouse hover.
 | **Disable info on hover** | Disable the hover behavior for people info panel.
+
+##### Use the 'Live Persona' wrapper control
+
+Any HTML element in your Handlebars template can be wrapped with the 'LivePersona' React control to display more information about an user. The usage is as follow: you need to pass the UPN of the user to make it work and add your content inside the partial block. Careful, the `@root` context variable isn't available in the partial content so you need to reference any global variable by its relative path (ex: `../../myVariable`):
+
+```
+{{#with (split AuthorOWSUSER '|')}}
+    {{#>livepersona upn=[0] disableHover=false}} <!-- [0] is equal to the user UPN -->
+        {{../[1]}} <!-- Display the author display name -->
+    {{/livepersona}}
+{{/with}}
+```
+
+You can see an example of this in the 'Simple list' HTML template.
 
 ## Customize templates with Handlebars ##
 
@@ -178,6 +200,7 @@ Use the result types features form the property pane options to split your templ
 
 The following operators are supported:
 - Equals
+- Not equals
 - Contains
 - StartsWith
 - Greater Or Equal
@@ -254,6 +277,20 @@ To do this, insert your HTML markup as follow in your template content:
 ```
 
 Notice your template content must be enclosed in a `<content id="template">` tag if you define placeholders.
+
+### Work with SharePoint theme
+
+A `themeVariant` variable is available in the root Handlebars context. It contains all current theme information that can use in your CSS classes or inline styles. Example:
+
+```
+<style>
+    .example-themePrimary a {
+        color: {{@root.themeVariant.palette.themePrimary}};
+    }
+</style>
+```
+
+To see all available values, you can inspect the `themeVariant` objetc using the 'Debug View' layout. Notice the values are udpated dynamically every time you udpate the theme through the UI.
 
 ### Custom code renderers
 You may also define  your own renderers, which most often should be SPFx application customizers. These should use the resultservice to register themselves as renderers, and will upon registration be available as a rendering choice in the "Result Layouts" Section.
