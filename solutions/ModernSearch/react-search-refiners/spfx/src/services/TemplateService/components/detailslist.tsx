@@ -12,7 +12,7 @@ export class DetailsListWebComponent extends BaseWebComponent {
    public connectedCallback() {
 
       let props = this.resolveAttributes();
-      const documentCarditem = <DetailsListComponent {...props}/>;
-      ReactDOM.render(documentCarditem, this);
+      const detailsListComponent = <DetailsListComponent {...props} themeVariant={this._themeVariant}/>;
+      ReactDOM.render(detailsListComponent, this);
    }
 }

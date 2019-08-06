@@ -13,7 +13,7 @@ export class DocumentCardWebComponent extends BaseWebComponent {
    public connectedCallback() {
 
       let props = this.resolveAttributes();
-      const documentCarditem = <DocumentCardComponent {...props}/>;
+      const documentCarditem = <DocumentCardComponent {...props} themeVariant={this._themeVariant}/>;
       ReactDOM.render(documentCarditem, this);
    }    
 }
