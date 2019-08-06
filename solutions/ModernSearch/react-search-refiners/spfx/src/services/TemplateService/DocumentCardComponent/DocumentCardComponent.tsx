@@ -9,6 +9,7 @@ import * as Handlebars from 'handlebars';
 import * as documentCardLocationGetStyles from 'office-ui-fabric-react/lib/components/DocumentCard/DocumentCardLocation.styles';
 import { getTheme, mergeStyleSets } from "office-ui-fabric-react/lib/Styling";
 import { classNamesFunction } from "office-ui-fabric-react/lib/Utilities";
+import { IReadonlyTheme } from "@microsoft/sp-component-base";
 
 /**
  * Document card props. These properties are retrieved from the web component attributes. They must be camel case.
@@ -40,6 +41,11 @@ export interface IDocumentCardComponentProps {
     showFileIcon?: boolean;
     isVideo?: boolean;
     isCompact?: boolean;
+
+    /**
+     * The current theme settings
+     */
+    themeVariant?: IReadonlyTheme;
 }
 
 export interface IDocumentCardComponentState {
@@ -64,7 +70,7 @@ export class DocumentCardComponent extends React.Component<IDocumentCardComponen
         let processedProps: IDocumentCardComponentProps = this.props;
 
         if (this.props.fieldsConfiguration && this.props.item) {
-            processedProps = TemplateService.processFieldsConfiguration<IDocumentCardComponentProps>(this.props.fieldsConfiguration, this.props.item);
+            processedProps = TemplateService.processFieldsConfiguration<IDocumentCardComponentProps>(this.props.fieldsConfiguration, this.props.item, this.props.themeVariant);
         }
         
         if (this.state.showCallout && processedProps.previewUrl && this.props.enablePreview) {

@@ -28,6 +28,7 @@ import { ISearchResultsWebPartProps } from '../../webparts/searchResults/ISearch
 import { IComboBoxOption } from 'office-ui-fabric-react/lib/ComboBox';
 import { IComponentFieldsConfiguration } from './TemplateService';
 import { WebPartContext } from '@microsoft/sp-webpart-base';
+import { ThemeProvider, IReadonlyTheme } from '@microsoft/sp-component-base';
 
 abstract class BaseTemplateService {
 
@@ -344,7 +345,6 @@ abstract class BaseTemplateService {
             {
                 name: 'details-list',
                 class: DetailsListWebComponent
-
             },
             {
                 name: 'video-card',
@@ -372,11 +372,16 @@ abstract class BaseTemplateService {
             }
         ];
 
+        // Added theme variant to be available in components
+        const themeProvider = this._ctx.serviceScope.consume(ThemeProvider.serviceKey);
+        const themeVariant = themeProvider.tryGetTheme();
+
         // Registers custom HTML elements
         webComponents.map(wc => {
             if (!customElements.get(wc.name)) {
                 // Set the arbitrary property to all instances to get the WebPart context available in components (ex: PersonaCard)
                 wc.class.prototype._ctx = this._ctx;
+                wc.class.prototype._themeVariant = themeVariant;
                 customElements.define(wc.name,wc.class);
             }
         });
@@ -571,8 +576,9 @@ abstract class BaseTemplateService {
      * Replaces item field values with field mapping values configuration
      * @param fieldsConfigurationAsString the fields configuration as stringified object
      * @param itemAsString the item context as stringified object
+     * @param themeVariant the current theem variant
      */
-    public static processFieldsConfiguration<T>(fieldsConfigurationAsString: string, itemAsString: string): T {
+    public static processFieldsConfiguration<T>(fieldsConfigurationAsString: string, itemAsString: string, themeVariant?: IReadonlyTheme): T {
 
         let processedProps = {};
 
@@ -593,9 +599,7 @@ abstract class BaseTemplateService {
                     let template = Handlebars.compile(tempTemplateContent);
 
                     // Pass the current item as context
-                    processedValue = template({
-                        item: item
-                    });
+                    processedValue = template({ item: item }, { data: { themeVariant: themeVariant }});
 
                     processedValue = processedValue ? processedValue.trim() : null;
 
