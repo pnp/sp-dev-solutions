@@ -105,7 +105,7 @@ export class SearchManagedProperties extends React.Component<ISearchManagedPrope
                                 autoComplete='on'                                
                                 onChange={this.onChange}
                                 useComboBoxAsMenuWidth={true}
-                                onResolveOptions={this.getAvailableSearchProperties}
+                                onMenuOpen={this.getAvailableSearchProperties}
                                 options={this.state.options}
                                 placeholder={ strings.ManagedPropertiesListPlaceHolder }
                                 onRenderOption={this.onRenderOption}
@@ -120,7 +120,7 @@ export class SearchManagedProperties extends React.Component<ISearchManagedPrope
                                 text={ this.state.initialDisplayValue }
                                 onChange={this.onChangeMulti}
                                 useComboBoxAsMenuWidth={true}
-                                onResolveOptions={this.getAvailableSearchProperties}
+                                onMenuOpen={this.getAvailableSearchProperties}
                                 options={this.state.options}
                                 placeholder={ strings.ManagedPropertiesListPlaceHolder }
                                 multiSelect
@@ -271,11 +271,11 @@ export class SearchManagedProperties extends React.Component<ISearchManagedPrope
     /**
      * Gets all available search managed properties
      */
-    private async getAvailableSearchProperties(): Promise<IComboBoxOption[]> {
+    private async getAvailableSearchProperties(): Promise<void> {
 
         // Case when user opens the dropdown multiple times on the same field
         if (this.state.options.length > 0) {
-            return this.state.options;
+            return;
         } else {
 
             let options: IComboBoxOption[] = [];
@@ -346,12 +346,10 @@ export class SearchManagedProperties extends React.Component<ISearchManagedPrope
 
             // Pass list to the parent to save it for other fields
             this.props.onUpdateAvailableProperties(options);
-
-            return options;
         }
     }
 
-    private onRenderOption(option: IComboBoxOption): JSX.Element {
+    private onRenderOption(option: IComboBoxOption, defaultRender?: (props?: IComboBoxOption) => JSX.Element): JSX.Element {
 
         if (option.key === LOADING_KEY) {
             return (
@@ -360,7 +358,7 @@ export class SearchManagedProperties extends React.Component<ISearchManagedPrope
                 </div>
               );
         } else {
-            return <span key={option.key}>{option.text}</span>;
+            return defaultRender(option);
         }
     }
 }

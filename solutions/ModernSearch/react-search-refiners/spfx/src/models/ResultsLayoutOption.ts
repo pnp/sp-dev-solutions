@@ -3,6 +3,7 @@ enum ResultsLayoutOption {
     DetailsList,
     Tiles,
     Slider,
+    People,
     Custom,
     Debug
 }

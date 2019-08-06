@@ -51,7 +51,7 @@ export default class TextDialog extends React.Component<ITextDialogProps, ITextD
 	 * Closes the dialog without notifying the parent for any changes
 	 *************************************************************************************/
 	private cancelDialog() {
-		this.setState({ dialogText: this.state.dialogText, showDialog: false });
+		this.setState({ dialogText: this.props.dialogTextFieldValue, showDialog: false });
 	}
 
 

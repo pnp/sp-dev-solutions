@@ -2,9 +2,13 @@ import * as ReactDOM from 'react-dom';
 import { camelCase } from '@microsoft/sp-lodash-subset';
 import "@webcomponents/webcomponentsjs/webcomponents-bundle";
 import '@webcomponents/webcomponentsjs/custom-elements-es5-adapter.js';
+import { WebPartContext } from '@microsoft/sp-webpart-base';
 
 export abstract class BaseWebComponent extends HTMLElement {
-    
+
+    // Property set by the BaseTemplateService via prototype
+    public _ctx: WebPartContext;
+
     protected connectedCallback() {
         throw 'Not implemented';
     }

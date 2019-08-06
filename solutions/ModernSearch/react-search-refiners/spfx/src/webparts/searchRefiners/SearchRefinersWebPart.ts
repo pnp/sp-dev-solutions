@@ -33,6 +33,7 @@ import MockSearchService from '../../services/SearchService/MockSearchService';
 import SearchService from '../../services/SearchService/SearchService';
 import ISearchService from '../../services/SearchService/ISearchService';
 import { IComboBoxOption } from 'office-ui-fabric-react/lib/ComboBox';
+import { cloneDeep } from '@microsoft/sp-lodash-subset';
 
 export default class SearchRefinersWebPart extends BaseClientSideWebPart<ISearchRefinersWebPartProps> implements IDynamicDataCallables {
 
@@ -414,7 +415,7 @@ export default class SearchRefinersWebPart extends BaseClientSideWebPart<ISearch
   private _onUpdateAvailableProperties(properties: IComboBoxOption[]) {
 
     // Save the value in the root Web Part class to avoid fetching it again if the property list is requested again by any other property pane control
-    this._availableManagedProperties = properties;
+    this._availableManagedProperties = cloneDeep(properties);
 
     // Refresh all fields so other property controls can use the new list 
     this.context.propertyPane.refresh();

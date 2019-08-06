@@ -1,4 +1,4 @@
-import { ISearchResults, IRefinementResult } from '../../../../models/ISearchResult';
+import { ISearchResults } from '../../../../models/ISearchResult';
 import { SortDirection } from "@pnp/sp";
 
 interface ISearchResultsContainerState {
