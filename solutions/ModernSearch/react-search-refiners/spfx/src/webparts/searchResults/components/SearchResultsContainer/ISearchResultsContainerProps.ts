@@ -6,6 +6,7 @@ import ISortableFieldConfiguration from '../../../../models/ISortableFieldConfig
 import { ISearchResultType } from '../../../../models/ISearchResultType';
 import {ICustomTemplateFieldValue} from '../../../../services/ResultService/ResultService';
 import SearchResultsOperationCallback from '../../../../models/SearchResultsOperationCallback';
+import { IReadonlyTheme } from '@microsoft/sp-component-base';
 
 interface ISearchResultsContainerProps {
 
@@ -119,6 +120,11 @@ interface ISearchResultsContainerProps {
      * The selected page to show for the search results
      */
     selectedPage: number;
+
+    /**
+     * The current theme variant
+     */
+    themeVariant: IReadonlyTheme | undefined;
 }
 
 export default ISearchResultsContainerProps;

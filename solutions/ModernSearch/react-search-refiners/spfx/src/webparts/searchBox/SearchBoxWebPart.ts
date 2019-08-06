@@ -33,6 +33,7 @@ import NlpService from '../../services/NlpService/NlpService';
 import { PageOpenBehavior, QueryPathBehavior } from '../../helpers/UrlHelper';
 import SearchBoxContainer from './components/SearchBoxContainer/SearchBoxContainer';
 import { SearchComponentType } from '../../models/SearchComponentType';
+import { ThemeProvider, ThemeChangedEventArgs } from '@microsoft/sp-component-base';
 
 export default class SearchBoxWebPart extends BaseClientSideWebPart<ISearchBoxWebPartProps> implements IDynamicDataCallables {
 
@@ -40,6 +41,7 @@ export default class SearchBoxWebPart extends BaseClientSideWebPart<ISearchBoxWe
   private _searchService: ISearchService;
   private _serviceHelper: ServiceHelper;
   private _nlpService: INlpService;
+  private _themeProvider: ThemeProvider;
 
   constructor() {
     super();
@@ -150,6 +152,8 @@ export default class SearchBoxWebPart extends BaseClientSideWebPart<ISearchBoxWe
     
     this.initSearchService();
     this.initNlpService();
+
+    this.initThemeVariant();
 
     this._bindHashChange();
 
@@ -431,5 +435,25 @@ export default class SearchBoxWebPart extends BaseClientSideWebPart<ISearchBoxWe
     } else {
         window.removeEventListener('hashchange', this.render); 
     }
+  }
+
+  /**
+   * Initializes theme variant properties
+   */
+  private initThemeVariant(): void {
+
+    // Consume the new ThemeProvider service
+    this._themeProvider = this.context.serviceScope.consume(ThemeProvider.serviceKey);
+
+    // Register a handler to be notified if the theme variant changes
+    this._themeProvider.themeChangedEvent.add(this, this._handleThemeChangedEvent.bind(this));
+  }
+
+  /**
+   * Update the current theme variant reference and re-render.
+   * @param args The new theme
+   */
+  private _handleThemeChangedEvent(args: ThemeChangedEventArgs): void {
+      this.render();
   }
 }

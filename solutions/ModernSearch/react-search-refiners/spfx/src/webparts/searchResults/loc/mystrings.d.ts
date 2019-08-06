@@ -103,6 +103,7 @@ declare interface ISearchResultsWebPartStrings {
         CondtionOperatorValue: string;
         ExternalUrlLabel: string;
         EqualOperator: string;
+        NotEqualOperator: string;
         ContainsOperator: string;
         StartsWithOperator: string;
         NotNullOperator: string;
