@@ -8,6 +8,7 @@
 
 export enum ResultTypeOperator {
     Equal = 'eq',
+    NotEqual = 'isnt',
     LessThan = 'lt',
     GreaterThan = 'gt',
     LessOrEqual = 'lte',

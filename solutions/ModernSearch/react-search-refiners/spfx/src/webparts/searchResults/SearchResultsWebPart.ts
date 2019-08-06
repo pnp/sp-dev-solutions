@@ -44,7 +44,7 @@ import { IDynamicDataCallables, IDynamicDataPropertyDefinition } from '@microsof
 import { IRefinementFilter, ISearchVerticalInformation } from '../../models/ISearchResult';
 import IDynamicDataService from '../../services/DynamicDataService/IDynamicDataService';
 import { DynamicDataService } from '../../services/DynamicDataService/DynamicDataService';
-import { DynamicProperty } from '@microsoft/sp-component-base';
+import { DynamicProperty, ThemeProvider, IReadonlyTheme, ThemeChangedEventArgs } from '@microsoft/sp-component-base';
 import IRefinerSourceData from '../../models/IRefinerSourceData';
 import IRefinerConfiguration from '../../models/IRefinerConfiguration';
 import { SearchComponentType } from '../../models/SearchComponentType';
@@ -101,6 +101,9 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
      * The list of available managed managed properties (managed globally for all property pane fiels if needed)
      */
     private _availableManagedProperties: IComboBoxOption[];
+
+    private _themeProvider: ThemeProvider;
+    private _themeVariant: IReadonlyTheme;
 
     public constructor() {
         super();
@@ -259,7 +262,8 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
 
                     // Send notification to the connected components
                     this.context.dynamicDataSourceManager.notifyPropertyChanged(SearchComponentType.SearchResultsWebPart);
-                }
+                },
+                themeVariant: this._themeVariant
             } as ISearchResultsContainerProps
         );
 
@@ -291,6 +295,9 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
     protected async onInit(): Promise<void> {
 
         this.initializeRequiredProperties();
+
+        // Get current theme info
+        this.initThemeVariant();
 
         if (Environment.type === EnvironmentType.Local) {
             this._taxonomyService = new MockTaxonomyService();
@@ -1260,6 +1267,10 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
                                     text: strings.ResultTypes.EqualOperator
                                 },
                                 {
+                                    key: ResultTypeOperator.NotEqual,
+                                    text: strings.ResultTypes.NotEqualOperator
+                                },
+                                {
                                     key: ResultTypeOperator.Contains,
                                     text: strings.ResultTypes.ContainsOperator
                                 },
@@ -1466,6 +1477,29 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
 
         // Refresh all fields so other property controls can use the new list 
         this.context.propertyPane.refresh();
+        this.render();
+    }
+
+    /**
+     * Initializes theme variant properties
+     */
+    private initThemeVariant(): void {
+        // Consume the new ThemeProvider service
+        this._themeProvider = this.context.serviceScope.consume(ThemeProvider.serviceKey);
+
+        // If it exists, get the theme variant
+        this._themeVariant = this._themeProvider.tryGetTheme();
+
+        // Register a handler to be notified if the theme variant changes
+        this._themeProvider.themeChangedEvent.add(this, this._handleThemeChangedEvent.bind(this));
+    }
+
+    /**
+     * Update the current theme variant reference and re-render.
+     * @param args The new theme
+     */
+    private _handleThemeChangedEvent(args: ThemeChangedEventArgs): void {
+        this._themeVariant = args.theme;
         this.render();
     }
 }
