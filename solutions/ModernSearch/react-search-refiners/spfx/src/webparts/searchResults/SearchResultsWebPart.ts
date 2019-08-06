@@ -27,7 +27,7 @@ import ISearchService from '../../services/SearchService/ISearchService';
 import ITaxonomyService from '../../services/TaxonomyService/ITaxonomyService';
 import ResultsLayoutOption from '../../models/ResultsLayoutOption';
 import { TemplateService } from '../../services/TemplateService/TemplateService';
-import { isEmpty, find, sortBy } from '@microsoft/sp-lodash-subset';
+import { isEmpty, find, sortBy, cloneDeep } from '@microsoft/sp-lodash-subset';
 import MockSearchService from '../../services/SearchService/MockSearchService';
 import MockTemplateService from '../../services/TemplateService/MockTemplateService';
 import SearchService from '../../services/SearchService/SearchService';
@@ -311,9 +311,8 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
                 timeZoneBias.UserDST = this.context.pageContext.legacyPageContext.userTimeZoneData.DaylightBias;
             }
 
-            this._templateService = new TemplateService(this.context.spHttpClient, this.context.pageContext.cultureInfo.currentUICultureName, this._searchService, timeZoneBias);
             this._searchService = new SearchService(this.context.pageContext, this.context.spHttpClient);
-            this._templateService = new TemplateService(this.context.spHttpClient, this.context.pageContext.cultureInfo.currentUICultureName, this._searchService);
+            this._templateService = new TemplateService(this.context.spHttpClient, this.context.pageContext.cultureInfo.currentUICultureName, this._searchService, timeZoneBias, this.context);
         }
 
         this._resultService = new ResultService();
@@ -683,6 +682,9 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
 
         if (this.properties.selectedLayout === ResultsLayoutOption.Custom) {
             
+            // Reset options
+            this._templatePropertyPaneOptions = [];
+
             if (this.properties.externalTemplateUrl) {
                 this._templateContentToDisplay = await this._templateService.getFileContent(this.properties.externalTemplateUrl);
             } else {
@@ -1130,6 +1132,13 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
             },
             {
                 iconProps: {
+                    officeFabricIconFontName: 'People'
+                },
+                text: strings.PeopleLayoutOption,
+                key: ResultsLayoutOption.People
+            },
+            {
+                iconProps: {
                     officeFabricIconFontName: 'Code'
                 },
                 text: strings.DebugLayoutOption,
@@ -1453,7 +1462,7 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
     private _onUpdateAvailableProperties(properties: IComboBoxOption[]) {
 
         // Save the value in the root Web Part class to avoid fetching it again if the property list is requested again by any other property pane control
-        this._availableManagedProperties = properties;
+        this._availableManagedProperties = cloneDeep(properties);
 
         // Refresh all fields so other property controls can use the new list 
         this.context.propertyPane.refresh();
