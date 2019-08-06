@@ -46,6 +46,7 @@ define([], function () {
     "CustomLayoutOption": "Custom",
     "DebugLayoutOption": "Debug",
     "SliderLayoutOption": "Carousel",
+    "PeopleLayoutOption": "People",
     "ResultsLayoutLabel": "Results layout",
     "TemplateUrlFieldLabel": "Use an external template URL",
     "TemplateUrlPlaceholder": "https://myfile.html",
@@ -122,9 +123,11 @@ define([], function () {
       "ManageDetailsListColumnDescription": "Add, update or remove columns for the details list layout. You can use either the managed property value directly without any transformation or use an Handlebars expression in the value field. HTML is supported for all fields as well.",
       "ManageDetailsListColumnLabel": "Manage columns",
       "ManageTilesFieldsLabel": "Manage card fields",
+      "ManagePeopleFieldsLabel": "Manage persona fields",
+      "ManagePeopleFieldsPanelDescriptionLabel": "Here you can map each field values with the corresponding persona placeholders. You can use either the managed property value directly without any transformation or use an Handlebars expression in the value field.",
       "ManageTilesFieldsPanelDescriptionLabel": "Here you can map each field values with the corresponding card placeholders. You can use either the managed property value directly without any transformation or use an Handlebars expression in the value field. Also, when indicated, you can also inject your own HTML code in some fields.",
-      "DocumentCardNameFieldLabel": "Name",
-      "DocumentCardValueFieldLabel": "Value",
+      "PlaceholderNameFieldLabel": "Name",
+      "PlaceholderValueFieldLabel": "Value",
       "ValueColumnLabel": "Column value",
       "DisplayNameColumnLabel": "Column display name",
       "UseHandlebarsExpressionLabel": "Use Handlebars expression",
@@ -141,7 +144,14 @@ define([], function () {
       "SliderPauseAutoPlayOnHover": "Pause on hover",
       "SliderGroupCells": "Number of elements to group together in slides",
       "SliderShowPageDots": "Show page dots",
-      "SliderWrapAround": "Infinite scrolling"
+      "SliderWrapAround": "Infinite scrolling",
+      "PersonaSizeOptionsLabel": "Picture size",
+      "PersonaSizeExtraSmall": "Extra small",
+      "PersonaSizeSmall": "Small",
+      "PersonaSizeRegular": "Regular",
+      "PersonaSizeLarge": "Large",
+      "PersonaSizeExtraLarge": "Extra large",
+      "LivePersonaDisableHover": "Disable info on hover"
     },
     "ManagedPropertiesListPlaceHolder": "Select or add a managed property"
   }

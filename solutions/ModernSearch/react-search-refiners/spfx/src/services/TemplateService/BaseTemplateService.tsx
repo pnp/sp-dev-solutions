@@ -15,16 +15,23 @@ import { IPreviewContainerProps, PreviewType } from './PreviewContainer/IPreview
 import { DocumentCardWebComponent } from './components/DocumentCard';
 import { DetailsListWebComponent } from './components/DetailsList';
 import { VideoCardWebComponent } from './components/VideoCard';
-import { DebugViewWebComponent } from './components/DebugView';
-import { SliderWebComponent } from './components/Slider';
+import { DebugViewWebComponent } from './components/debugView';
+import { SliderWebComponent } from './components/slider';
+import { LivePersonaWebComponent } from './components/livepersona';
+import { PersonaCardWebComponent } from './components/personacard';
 import { DocumentCardShimmersWebComponent } from './components/shimmers/DocumentCardShimmers';
+import { PersonaCardShimmersWebComponent } from './components/shimmers/PersonaCardShimmers';
 import '@webcomponents/custom-elements';
 import { IPropertyPaneField } from '@microsoft/sp-property-pane';
 import ResultsLayoutOption from '../../models/ResultsLayoutOption';
 import { ISearchResultsWebPartProps } from '../../webparts/searchResults/ISearchResultsWebPartProps';
 import { IComboBoxOption } from 'office-ui-fabric-react/lib/ComboBox';
+import { IComponentFieldsConfiguration } from './TemplateService';
+import { WebPartContext } from '@microsoft/sp-webpart-base';
 
 abstract class BaseTemplateService {
+
+    private _ctx: WebPartContext;
 
     public CurrentLocale = "en";
     public TimeZoneBias = {
@@ -35,7 +42,9 @@ abstract class BaseTemplateService {
     };
     private DayLightSavings = true;
 
-    constructor() {
+    constructor(ctx?: WebPartContext) {
+
+        this._ctx = ctx;
 
         // Registers all helpers
         this.registerTemplateServices();
@@ -112,6 +121,9 @@ abstract class BaseTemplateService {
             
             case ResultsLayoutOption.Tiles:
                 return require('./templates/layouts/tiles.html');
+            
+            case ResultsLayoutOption.People:
+                return require('./templates/layouts/people.html');
 
             case ResultsLayoutOption.Slider:
                 return require('./templates/layouts/slider.html');
@@ -163,7 +175,7 @@ abstract class BaseTemplateService {
         let templates: any = htmlContent.getElementById('template');
         if (templates && templates.innerHTML) {
             // Need to unescape '&gt;' for handlebars partials 
-            return templates.innerHTML.replace('&gt;', '>');
+            return templates.innerHTML.replace(/\&gt;/g, '>');
         } else {
             return templateContent;
         }
@@ -180,7 +192,7 @@ abstract class BaseTemplateService {
         const placeHolders = htmlContent.getElementById('placeholder');
         if (placeHolders && placeHolders.innerHTML) {
             // Need to unescape '&gt;' for handlebars partials 
-            return placeHolders.innerHTML.replace('&gt;', '>');
+            return placeHolders.innerHTML.replace(/\&gt;/g, '>');
         } else {
             return null;
         }
@@ -345,12 +357,26 @@ abstract class BaseTemplateService {
             {
                 name: 'slider-component',
                 class: SliderWebComponent
+            },
+            {
+                name: 'persona-card',
+                class: PersonaCardWebComponent
+            },
+            {
+                name: 'persona-card-shimmers',
+                class: PersonaCardShimmersWebComponent
+            },
+            {
+                name: 'live-persona',
+                class: LivePersonaWebComponent
             }
         ];
 
         // Registers custom HTML elements
         webComponents.map(wc => {
             if (!customElements.get(wc.name)) {
+                // Set the arbitrary property to all instances to get the WebPart context available in components (ex: PersonaCard)
+                wc.class.prototype._ctx = this._ctx;
                 customElements.define(wc.name,wc.class);
             }
         });
@@ -358,6 +384,10 @@ abstract class BaseTemplateService {
         // Register slider component as partial 
         let sliderTemplate = Handlebars.compile(`<slider-component items="{{items}}" options="{{options}}" template="{{@partial-block}}"></slider-component>`);
         Handlebars.registerPartial('slider', sliderTemplate,);
+
+        // Register live persona wrapper as partial
+        let livePersonaTemplate = Handlebars.compile(`<live-persona upn="{{upn}}" disable-hover="{{disableHover}}" template="{{@partial-block}}"></live-persona>`);
+        Handlebars.registerPartial('livepersona', livePersonaTemplate,);
     }
 
     /**
@@ -535,6 +565,49 @@ abstract class BaseTemplateService {
         }
 
         return result;
+    }
+
+    /**
+     * Replaces item field values with field mapping values configuration
+     * @param fieldsConfigurationAsString the fields configuration as stringified object
+     * @param itemAsString the item context as stringified object
+     */
+    public static processFieldsConfiguration<T>(fieldsConfigurationAsString: string, itemAsString: string): T {
+
+        let processedProps = {};
+
+        // Get item properties
+        const item = JSON.parse(itemAsString);
+
+        // Use configuration
+        const fieldsConfiguration: IComponentFieldsConfiguration[] = JSON.parse(fieldsConfigurationAsString);
+        fieldsConfiguration.map(configuration => { 
+            
+            let processedValue = item[configuration.value];
+            
+            if (configuration.useHandlebarsExpr && configuration.value) {
+                
+                try {
+                    // Create a temp context with the current so we can use global registered helpers on the current item
+                    const tempTemplateContent = `{{#with item as |item|}}${configuration.value}{{/with}}`;
+                    let template = Handlebars.compile(tempTemplateContent);
+
+                    // Pass the current item as context
+                    processedValue = template({
+                        item: item
+                    });
+
+                    processedValue = processedValue ? processedValue.trim() : null;
+
+                } catch (error) {
+                    processedValue = `###Error: ${error.message}###`;
+                }
+            }
+
+            processedProps[configuration.field] = processedValue;
+        });
+
+        return processedProps as T;        
     }
 
     /**

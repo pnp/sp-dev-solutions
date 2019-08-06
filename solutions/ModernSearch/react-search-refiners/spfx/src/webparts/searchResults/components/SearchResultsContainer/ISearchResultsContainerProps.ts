@@ -2,7 +2,6 @@ import ISearchService from '../../../../services/SearchService/ISearchService';
 import ITaxonomyService from '../../../../services/TaxonomyService/ITaxonomyService';
 import { DisplayMode } from '@microsoft/sp-core-library';
 import { TemplateService } from '../../../../services/TemplateService/TemplateService';
-import { Sort } from '@pnp/sp';
 import ISortableFieldConfiguration from '../../../../models/ISortableFieldConfiguration';
 import { ISearchResultType } from '../../../../models/ISearchResultType';
 import {ICustomTemplateFieldValue} from '../../../../services/ResultService/ResultService';

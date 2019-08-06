@@ -61,7 +61,6 @@ Displays search results as a carousel using the [Flickity library](https://flick
 
 <p align="center"><img width="100%" src="../images/slider_layout.png"/></p>
 
-
 ### Customize slide content
 
 By default, documents card are displayed in the slider but you can add your own HTML markup for each slide inside the `{{#>slider}}` Handlebars partial:
@@ -84,6 +83,24 @@ This is because we don't want these expressions to be interpreted by the global 
 {{/slider}}
 ```
 
+Or only person cards:
+
+```
+{{#>slider items=(JSONstringify @root.items 2) options=(JSONstringify @root.sliderOptions)}}
+    <div class="slide">
+      \{{#with (split AccountName '|')}}
+            <persona-card 
+                image-url="/_layouts/15/userphoto.aspx?size=L&username=\{{[2]}}"
+                text="\{{../FirstName}} \{{../LastName}}"
+                secondaryText="\{{../JobTitle}}"
+                tertiaryText="\{{[2]}}"
+                optionalText="\{{../WorkPhone}}">
+            </persona-card>
+        \{{/with}}
+    </div>                
+{{/slider}}
+```
+
 In the case of images, the slider is smart enough to adjsut the height automatically so you don't need to specify explicit values. However, you can set an arbitrary size for the slides updating the CSS `slide` class.
 
 #### Template options
@@ -102,6 +119,21 @@ In the case of images, the slider is smart enough to adjsut the height automatic
 Displays search result items and global Handlebars context in a debug view (read only):
 
 <p align="center"><img width="100%" src="../images/debug_layout.png"/></p>
+
+#### People View
+
+Displays people with details when hovered:
+
+<p align="center"><img width="300px" src="../images/people_layout.png"/></p>
+
+#### Template options
+
+| Option | Description
+| ------ | ---------------
+| **Manage persona fields** | Allows you to define you own values for card placeholder fields. Like the document card, by default, the persona card fields come with predefined mappings but you can set your own.
+| **Picture size** | The size of the person picture to isplay. The more the size is and the more information will be displayed for each item and vice versa.
+| **Pause on hover** | If enabled, pause the slider on mouse hover.
+| **Disable info on hover** | Disable the hover behavior for people info panel.
 
 ## Customize templates with Handlebars ##
 
