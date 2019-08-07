@@ -183,8 +183,8 @@ Setting | Description
 `{{getUrlField managed_propertyOWSURLH "URL/Title"}}` | Return the URL or Title part of a URL field managed property.
 `{{getCountMessage totalRows <?keywords>}}` | Display a friendly message displaying the result and the entered keywords.
 `{{<search_managed_property_name>}}` | Any valid search managed property returned in the results set. These are typically managed properties set in the *"Selected properties"* setting in the property pane. You don't need to prefix them with `item.` if you are in the "each" loop.
-`{{webUrl}}` | The current web relative url. Use `{{../webUrl}}` inside a loop.
-`{{siteUrl}}` | The current site relative url. Use `{{../siteUrl}}` inside a loop.
+`{{webUrl}}` | The current web relative url. Use `{{@root/webUrl}}` inside a loop.
+`{{siteUrl}}` | The current site relative url. Use `{{@root/siteUrl}}` inside a loop.
 `{{getUniqueCount items "property"}}` | Get the unique count of a property over the result set (or another array)
 `{{getUniqueCount array}}` | Get the unique count of objects in an array. Example: [1,1,1,2,2,4] would return `3`.
 
