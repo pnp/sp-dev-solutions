@@ -1,15 +1,16 @@
-import BaseTemplateService from                    './BaseTemplateService';
+import BaseTemplateService from './BaseTemplateService';
 import { SPHttpClient, SPHttpClientResponse } from '@microsoft/sp-http';
 
 class TemplateService extends BaseTemplateService {
 
     private _spHttpClient: SPHttpClient;
 
-    constructor(spHttpClient: SPHttpClient, locale: string) {
+    constructor(spHttpClient: SPHttpClient, locale: string, timeZoneBias?: any) {
 
         super();
         this._spHttpClient = spHttpClient;
         this.CurrentLocale = locale;
+        this.TimeZoneBias = timeZoneBias;
     }
 
     /**
@@ -20,8 +21,8 @@ class TemplateService extends BaseTemplateService {
 
         try {
             const response: SPHttpClientResponse = await this._spHttpClient.get(fileUrl, SPHttpClient.configurations.v1);
-            if(response.ok) {
-                return await response.text();              
+            if (response.ok) {
+                return await response.text();
             }
             else {
                 throw response.statusText;
@@ -39,12 +40,12 @@ class TemplateService extends BaseTemplateService {
 
         try {
             const response: SPHttpClientResponse = await this._spHttpClient.get(fileUrl, SPHttpClient.configurations.v1);
-            if(response.ok) {
+            if (response.ok) {
 
-                if(response.url.indexOf('AccessDenied.aspx') > -1){
+                if (response.url.indexOf('AccessDenied.aspx') > -1) {
                     throw 'Access Denied';
-                } 
-                
+                }
+
                 return;
             }
             else {

@@ -1,15 +1,41 @@
 
 .template_root, .placeholder_root {
-    /* Load global variables and mixins for components. Order is important here because we want theming variables from SPFx instead of default */
-    @import '~office-ui-fabric/dist/sass/Fabric.scss';
-    @import '~@microsoft/sp-office-ui-fabric-core/dist/sass/_SPFabricCore.scss';
+    /* 
+     * Load global variables and mixins for deprecated Office UI Fabric components.
+     */
+    @import '~office-ui-fabric/dist/sass/Fabric.Utilities.Output.scss';
+    @import '~office-ui-fabric/dist/sass/Fabric.Color.Variables.scss';
+    @import '~office-ui-fabric/dist/sass/Fabric.Typography.Variables.scss';
+    @import '~office-ui-fabric/dist/sass/Fabric.Icons.scss';
+    @import '~office-ui-fabric/dist/sass/Fabric.Responsive.Variables.scss';
+    @import '~office-ui-fabric/dist/sass/Fabric.Responsive.Utilities.Variables.scss';
+    
+    /* 
+     * Override theming mixins and variables with values from SPFx instead of deprecated Office UI Fabric
+     * Imported, deprecated Office UI Fabric components will now use the newer mixins and variables
+     */
+    @import '~@microsoft/sp-office-ui-fabric-core/dist/sass/SPFabricCore.scss';
 
-    /* Import individual Office UI Fabric component styles to be able to use them in HTML templates. See https://developer.microsoft.com/en-us/fabric-js for markup*/
+    /* 
+     * Import individual deprecated Office UI Fabric component styles to be able to use them in HTML templates.
+     * See https://developer.microsoft.com/en-us/fabric-js for markup
+     */
     @import '~office-ui-fabric/dist/components/Button/Button.scss';
     @import '~office-ui-fabric/dist/components/Label/Label.scss';
     @import '~office-ui-fabric/dist/components/List/List.scss';
     @import '~office-ui-fabric/dist/components/ListItem/ListItem.scss';
+
+    /* 
+     * Import the new sp-office-ui-fabric-core styles
+     * Collisions with deprecated Office UI Fabric styles will be overwritten
+     */
     @import '~@microsoft/sp-office-ui-fabric-core/dist/sass/FabricCore.scss';
+
+    /* 
+     * Override theming CSS classes from deprecated Office UI Fabric with values from SPFx
+     * Workaround for SPFx > 1.6.0, where these CSS classes were removed from sp-office-ui-fabric-core package
+     */
+    @import './SearchResultsTemplateThemeColors.scss';
 
     .template_defaultList {
     

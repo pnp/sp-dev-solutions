@@ -2,7 +2,7 @@
 import * as ReactDom from 'react-dom';
 import { Version, Text, Environment, EnvironmentType, DisplayMode } from '@microsoft/sp-core-library';
 import { BaseClientSideWebPart, IWebPartPropertiesMetadata } from '@microsoft/sp-webpart-base';
-import {     
+import {
     IPropertyPaneConfiguration,
     PropertyPaneTextField,
     PropertyPaneDynamicFieldSet,
@@ -34,8 +34,6 @@ import SearchService from '../../services/SearchService/SearchService';
 import TaxonomyService from '../../services/TaxonomyService/TaxonomyService';
 import MockTaxonomyService from '../../services/TaxonomyService/MockTaxonomyService';
 import ISearchResultsContainerProps from './components/SearchResultsContainer/ISearchResultsContainerProps';
-import { Placeholder, IPlaceholderProps } from '@pnp/spfx-controls-react/lib/Placeholder';
-import { PropertyFieldCollectionData, CustomCollectionFieldType } from '@pnp/spfx-property-controls/lib/PropertyFieldCollectionData';
 import { SortDirection, Sort } from '@pnp/sp';
 import { ISortFieldConfiguration, ISortFieldDirection } from '../../models/ISortFieldConfiguration';
 import { ISynonymFieldConfiguration } from '../../models/ISynonymFieldConfiguration';
@@ -55,7 +53,6 @@ import IPaginationSourceData from '../../models/IPaginationSourceData';
 import ISynonymTable from '../../models/ISynonym';
 import * as update from 'immutability-helper';
 import ISearchVerticalSourceData from '../../models/ISearchVerticalSourceData';
-import { ISearchVertical } from '../../models/ISearchVertical';
 import LocalizationHelper from '../../helpers/LocalizationHelper';
 import { IDropdownOption } from 'office-ui-fabric-react/lib/Dropdown';
 
@@ -66,6 +63,10 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
     private _templateService: BaseTemplateService;
     private _textDialogComponent = null;
     private _propertyFieldCodeEditor = null;
+    private _placeholder = null;
+    private _propertyFieldCollectionData = null;
+    private _customCollectionFieldType = null;
+
     private _propertyFieldCodeEditorLanguages = null;
     private _resultService: IResultService;
 
@@ -98,6 +99,13 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
         // Determine the template content to display
         // In the case of an external template is selected, the render is done asynchronously waiting for the content to be fetched
         await this._getTemplateContent();
+        if (this.displayMode === DisplayMode.Edit) {
+            const { Placeholder } = await import(
+                /* webpackChunkName: 'search-property-pane' */
+                '@pnp/spfx-controls-react/lib/Placeholder'
+            );
+            this._placeholder = Placeholder;
+        }
 
         this.renderCompleted();
     }
@@ -165,10 +173,10 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
             resultSourceId: { $set: sourceId },
             sortList: { $set: this._convertToSortList(this.properties.sortList) },
             enableQueryRules: { $set: this.properties.enableQueryRules },
-            selectedProperties: { $set: this.properties.selectedProperties ? this.properties.selectedProperties.replace(/\s|,+$/g, '').split(',') : [] },                  
+            selectedProperties: { $set: this.properties.selectedProperties ? this.properties.selectedProperties.replace(/\s|,+$/g, '').split(',') : [] },
             synonymTable: { $set: this._synonymTable },
-            queryCulture: { $set: this.properties.searchQueryLanguage !== -1 ? this.properties.searchQueryLanguage : currentLocaleId},
-            refinementFilters: { $set: selectedFilters }, 
+            queryCulture: { $set: this.properties.searchQueryLanguage !== -1 ? this.properties.searchQueryLanguage : currentLocaleId },
+            refinementFilters: { $set: selectedFilters },
             refiners: { $set: refinerConfiguration }
         });
 
@@ -207,7 +215,7 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
                     if (getVerticalsCounts) {
 
                         const searchVerticalSourceData: ISearchVerticalSourceData = this._searchVerticalSourceData.tryGetValue();
-                        const otherVerticals = searchVerticalSourceData.verticalsConfiguration.filter(v => { return v.key !== searchVerticalSourceData.selectedVertical.key;});
+                        const otherVerticals = searchVerticalSourceData.verticalsConfiguration.filter(v => { return v.key !== searchVerticalSourceData.selectedVertical.key; });
                         searchService.getSearchVerticalCounts(queryKeywords, otherVerticals, searchService.enableQueryRules).then((verticalsInfos) => {
 
                             let currentCount = results.PaginationInformation ? results.PaginationInformation.TotalRows : undefined;
@@ -220,9 +228,9 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
                                 };
 
                                 verticalsInfos.push(currentVerticalInfos);
-                            }    
-    
-                            this._verticalsInformation = update(this._verticalsInformation , {$set : verticalsInfos});
+                            }
+
+                            this._verticalsInformation = update(this._verticalsInformation, { $set: verticalsInfos });
                             this.context.dynamicDataSourceManager.notifyPropertyChanged(SearchComponentType.SearchResultsWebPart);
                         });
                     }
@@ -235,23 +243,22 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
             } as ISearchResultsContainerProps
         );
 
-        const placeholder: React.ReactElement<IPlaceholderProps> = React.createElement(
-            Placeholder,
-            {
-                iconName: strings.PlaceHolderEditLabel,
-                iconText: strings.PlaceHolderIconText,
-                description: strings.PlaceHolderDescription,
-                buttonLabel: strings.PlaceHolderConfigureBtnLabel,
-                onConfigure: this._setupWebPart.bind(this)
-            }
-        );
-
         if (isValueConnected && !this.properties.useDefaultSearchQuery ||
             isValueConnected && this.properties.useDefaultSearchQuery && this.properties.defaultSearchQuery ||
             !isValueConnected && !isEmpty(queryKeywords)) {
             renderElement = this._searchContainer;
         } else {
             if (this.displayMode === DisplayMode.Edit) {
+                const placeholder: React.ReactElement<any> = React.createElement(
+                    this._placeholder,
+                    {
+                        iconName: strings.PlaceHolderEditLabel,
+                        iconText: strings.PlaceHolderIconText,
+                        description: strings.PlaceHolderDescription,
+                        buttonLabel: strings.PlaceHolderConfigureBtnLabel,
+                        onConfigure: this._setupWebPart.bind(this)
+                    }
+                );
                 renderElement = placeholder;
             } else {
                 renderElement = React.createElement('div', null);
@@ -272,14 +279,26 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
 
         } else {
             this._taxonomyService = new TaxonomyService(this.context.pageContext.site.absoluteUrl);
-            this._templateService = new TemplateService(this.context.spHttpClient, this.context.pageContext.cultureInfo.currentUICultureName);
+
+            let timeZoneBias = {
+                WebBias: this.context.pageContext.legacyPageContext.webTimeZoneData.Bias,
+                WebDST: this.context.pageContext.legacyPageContext.webTimeZoneData.DaylightBias,
+                UserBias: null,
+                UserDST: null
+            };
+            if (this.context.pageContext.legacyPageContext.userTimeZoneData) {
+                timeZoneBias.UserBias = this.context.pageContext.legacyPageContext.userTimeZoneData.Bias;
+                timeZoneBias.UserDST = this.context.pageContext.legacyPageContext.userTimeZoneData.DaylightBias;
+            }
+
+            this._templateService = new TemplateService(this.context.spHttpClient, this.context.pageContext.cultureInfo.currentUICultureName, timeZoneBias);
             this._searchService = new SearchService(this.context.pageContext, this.context.spHttpClient);
         }
 
         this._resultService = new ResultService();
         this._codeRenderers = this._resultService.getRegisteredRenderers();
         this._dynamicDataService = new DynamicDataService(this.context.dynamicDataProvider);
-        this._verticalsInformation= [];
+        this._verticalsInformation = [];
 
         this.ensureDataSourceConnection();
 
@@ -319,20 +338,19 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
     private _convertToSynonymTable(synonymList: ISynonymFieldConfiguration[]): ISynonymTable {
         let synonymsTable: ISynonymTable = {};
 
-        if (synonymList)
-        {
+        if (synonymList) {
             synonymList.forEach(item => {
                 const currentTerm = item.Term.toLowerCase();
                 const currentSynonyms = this._splitSynonyms(item.Synonyms);
-    
+
                 //add to array
                 synonymsTable[currentTerm] = currentSynonyms;
-    
+
                 if (item.TwoWays) {
                     // Loop over the list of synonyms
                     let tempSynonyms: string[] = currentSynonyms;
                     tempSynonyms.push(currentTerm.trim());
-    
+
                     currentSynonyms.forEach(s => {
                         synonymsTable[s.toLowerCase().trim()] = tempSynonyms.filter(f => { return f !== s; });
                     });
@@ -467,17 +485,23 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
             /* webpackChunkName: 'search-property-pane' */
             '@pnp/spfx-property-controls/lib/PropertyFieldCodeEditor'
         );
-
         this._propertyFieldCodeEditor = PropertyFieldCodeEditor;
         this._propertyFieldCodeEditorLanguages = PropertyFieldCodeEditorLanguages;
 
+        const { PropertyFieldCollectionData, CustomCollectionFieldType } = await import(
+            /* webpackChunkName: 'search-property-pane' */
+            '@pnp/spfx-property-controls/lib/PropertyFieldCollectionData'
+        );
+        this._propertyFieldCollectionData = PropertyFieldCollectionData;
+        this._customCollectionFieldType = CustomCollectionFieldType;
+
         if (this._availableLanguages.length == 0) {
             const languages = await this._searchService.getAvailableQueryLanguages();
-        
+
             this._availableLanguages = languages.map(language => {
                 return {
                     key: language.Lcid,
-                    text: `${language.DisplayName} (${language.Lcid})`                
+                    text: `${language.DisplayName} (${language.Lcid})`
                 };
             });
         }
@@ -513,7 +537,7 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
             if (!this.properties.useSearchVerticals) {
                 this.properties.searchVerticalDataSourceReference = undefined;
                 this._searchVerticalSourceData = undefined;
-                this._verticalsInformation= [];
+                this._verticalsInformation = [];
                 this.context.dynamicDataSourceManager.notifyPropertyChanged(SearchComponentType.SearchResultsWebPart);
             }
         }
@@ -719,7 +743,7 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
                 onGetErrorMessage: this.validateSourceId.bind(this),
                 deferredValidationTime: 300
             }),
-            PropertyFieldCollectionData('sortList', {
+            this._propertyFieldCollectionData('sortList', {
                 manageBtnLabel: strings.Sort.EditSortLabel,
                 key: 'sortList',
                 enableSorting: true,
@@ -731,14 +755,14 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
                     {
                         id: 'sortField',
                         title: "Field name",
-                        type: CustomCollectionFieldType.string,
+                        type: this._customCollectionFieldType.string,
                         required: true,
                         placeholder: '\"Created\", \"Size\", etc.'
                     },
                     {
                         id: 'sortDirection',
                         title: "Direction",
-                        type: CustomCollectionFieldType.dropdown,
+                        type: this._customCollectionFieldType.dropdown,
                         required: true,
                         options: [
                             {
@@ -753,7 +777,7 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
                     }
                 ]
             }),
-            PropertyFieldCollectionData('sortableFields', {
+            this._propertyFieldCollectionData('sortableFields', {
                 manageBtnLabel: strings.Sort.EditSortableFieldsLabel,
                 key: 'sortableFields',
                 enableSorting: true,
@@ -765,14 +789,14 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
                     {
                         id: 'sortField',
                         title: strings.Sort.SortableFieldManagedPropertyField,
-                        type: CustomCollectionFieldType.string,
+                        type: this._customCollectionFieldType.string,
                         placeholder: '\"Created\", \"Size\", etc.',
                         required: true
                     },
                     {
                         id: 'displayValue',
                         title: strings.Sort.SortableFieldDisplayValueField,
-                        type: CustomCollectionFieldType.string
+                        type: this._customCollectionFieldType.string
                     }
                 ]
             }),
@@ -815,10 +839,10 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
                 options: [{
                     key: -1,
                     text: strings.QueryCultureUseUiLanguageLabel
-                } as IDropdownOption].concat(sortBy(this._availableLanguages,['text'])),
+                } as IDropdownOption].concat(sortBy(this._availableLanguages, ['text'])),
                 selectedKey: this.properties.searchQueryLanguage ? this.properties.searchQueryLanguage : 0
             }),
-            PropertyFieldCollectionData('synonymList', {
+            this._propertyFieldCollectionData('synonymList', {
                 manageBtnLabel: strings.Synonyms.EditSynonymLabel,
                 key: 'synonymList',
                 enableSorting: false,
@@ -830,21 +854,21 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
                     {
                         id: 'Term',
                         title: strings.Synonyms.SynonymListTerm,
-                        type: CustomCollectionFieldType.string,
+                        type: this._customCollectionFieldType.string,
                         required: true,
                         placeholder: strings.Synonyms.SynonymListTermExemple
                     },
                     {
                         id: 'Synonyms',
                         title: strings.Synonyms.SynonymListSynonyms,
-                        type: CustomCollectionFieldType.string,
+                        type: this._customCollectionFieldType.string,
                         required: true,
-                        placeholder: strings.Synonyms.SynonymListSynonymsExemple 
+                        placeholder: strings.Synonyms.SynonymListSynonymsExemple
                     },
                     {
                         id: 'TwoWays',
                         title: strings.Synonyms.SynonymIsTwoWays,
-                        type: CustomCollectionFieldType.boolean,
+                        type: this._customCollectionFieldType.boolean,
                         required: false
                     }
                 ]
@@ -1101,7 +1125,7 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
                     key: 'inlineTemplateTextCodeEditor',
                     language: this._propertyFieldCodeEditorLanguages.Handlebars
                 }),
-                PropertyFieldCollectionData('resultTypes', {
+                this._propertyFieldCollectionData('resultTypes', {
                     manageBtnLabel: strings.ResultTypes.EditResultTypesLabel,
                     key: 'resultTypes',
                     panelHeader: strings.ResultTypes.EditResultTypesLabel,
@@ -1113,13 +1137,13 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
                         {
                             id: 'property',
                             title: strings.ResultTypes.ConditionPropertyLabel,
-                            type: CustomCollectionFieldType.string,
+                            type: this._customCollectionFieldType.string,
                             required: true,
                         },
                         {
                             id: 'operator',
                             title: strings.ResultTypes.CondtionOperatorValue,
-                            type: CustomCollectionFieldType.dropdown,
+                            type: this._customCollectionFieldType.dropdown,
                             defaultValue: ResultTypeOperator.Equal,
                             required: true,
                             options: [
@@ -1160,13 +1184,13 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
                         {
                             id: 'value',
                             title: strings.ResultTypes.ConditionValueLabel,
-                            type: CustomCollectionFieldType.string,
+                            type: this._customCollectionFieldType.string,
                             required: false,
                         },
                         {
                             id: "inlineTemplateContent",
                             title: "Inline template",
-                            type: CustomCollectionFieldType.custom,
+                            type: this._customCollectionFieldType.custom,
                             onCustomRender: (field, value, onUpdate) => {
                                 return (
                                     React.createElement("div", null,
@@ -1188,7 +1212,7 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
                         {
                             id: 'externalTemplateUrl',
                             title: strings.ResultTypes.ExternalUrlLabel,
-                            type: CustomCollectionFieldType.url,
+                            type: this._customCollectionFieldType.url,
                             onGetErrorMessage: this._onTemplateUrlChange.bind(this),
                             placeholder: 'https://mysite/Documents/external.html'
                         },
@@ -1222,7 +1246,7 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
                         text: prop
                     });
                 });
-                stylingFields.push(PropertyFieldCollectionData('customTemplateFieldValues', {
+                stylingFields.push(this._propertyFieldCollectionData('customTemplateFieldValues', {
                     key: 'customTemplateFieldValues',
                     label: strings.customTemplateFieldsLabel,
                     panelHeader: strings.customTemplateFieldsPanelHeader,
@@ -1232,12 +1256,12 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
                         {
                             id: 'fieldName',
                             title: strings.customTemplateFieldTitleLabel,
-                            type: CustomCollectionFieldType.string,
+                            type: this._customCollectionFieldType.string,
                         },
                         {
                             id: 'searchProperty',
                             title: strings.customTemplateFieldPropertyLabel,
-                            type: CustomCollectionFieldType.dropdown,
+                            type: this._customCollectionFieldType.dropdown,
                             options: searchPropertyOptions
                         }
                     ]
