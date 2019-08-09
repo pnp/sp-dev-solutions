@@ -51,7 +51,7 @@ abstract class BaseTemplateService {
         this.registerTemplateServices();
 
         // Register web components
-        this.registerWebComponents();       
+        this.registerWebComponents();
 
         this.DayLightSavings = this.isDST();
     }
@@ -119,10 +119,10 @@ abstract class BaseTemplateService {
 
             case ResultsLayoutOption.DetailsList:
                 return require('./templates/layouts/details-list.html');
-            
+
             case ResultsLayoutOption.Tiles:
                 return require('./templates/layouts/tiles.html');
-            
+
             case ResultsLayoutOption.People:
                 return require('./templates/layouts/people.html');
 
@@ -153,7 +153,7 @@ abstract class BaseTemplateService {
      * @returns the template HTML markup
      */
     public static getDefaultResultTypeTileItem(): string {
-       return require('./templates/resultTypes/default_tile.html');
+        return require('./templates/resultTypes/default_tile.html');
     }
 
     /**
@@ -326,6 +326,14 @@ abstract class BaseTemplateService {
                 accum += block.fn(i);
             return accum;
         });
+
+        Handlebars.registerHelper("regex", (regx: string, str: string) => {
+            let rx = new RegExp(regx);
+            let i = rx.exec(str);
+            if (!!!i || i.length === 0) return "-";
+            let ret: string = i[0];
+            return ret;
+        });
     }
 
     /**
@@ -382,17 +390,17 @@ abstract class BaseTemplateService {
                 // Set the arbitrary property to all instances to get the WebPart context available in components (ex: PersonaCard)
                 wc.class.prototype._ctx = this._ctx;
                 wc.class.prototype._themeVariant = themeVariant;
-                customElements.define(wc.name,wc.class);
+                customElements.define(wc.name, wc.class);
             }
         });
 
         // Register slider component as partial 
         let sliderTemplate = Handlebars.compile(`<slider-component items="{{items}}" options="{{options}}" template="{{@partial-block}}"></slider-component>`);
-        Handlebars.registerPartial('slider', sliderTemplate,);
+        Handlebars.registerPartial('slider', sliderTemplate);
 
         // Register live persona wrapper as partial
         let livePersonaTemplate = Handlebars.compile(`<live-persona upn="{{upn}}" disable-hover="{{disableHover}}" template="{{@partial-block}}"></live-persona>`);
-        Handlebars.registerPartial('livepersona', livePersonaTemplate,);
+        Handlebars.registerPartial('livepersona', livePersonaTemplate);
     }
 
     /**
@@ -400,7 +408,7 @@ abstract class BaseTemplateService {
      * @returns the compiled HTML template string 
      */
     public async processTemplate(templateContext: any, templateContent: string): Promise<string> {
-    
+
         // Process the Handlebars template
         const handlebarFunctionNames = [
             "getDate",
@@ -587,19 +595,19 @@ abstract class BaseTemplateService {
 
         // Use configuration
         const fieldsConfiguration: IComponentFieldsConfiguration[] = JSON.parse(fieldsConfigurationAsString);
-        fieldsConfiguration.map(configuration => { 
-            
+        fieldsConfiguration.map(configuration => {
+
             let processedValue = item[configuration.value];
-            
+
             if (configuration.useHandlebarsExpr && configuration.value) {
-                
+
                 try {
                     // Create a temp context with the current so we can use global registered helpers on the current item
                     const tempTemplateContent = `{{#with item as |item|}}${configuration.value}{{/with}}`;
                     let template = Handlebars.compile(tempTemplateContent);
 
                     // Pass the current item as context
-                    processedValue = template({ item: item }, { data: { themeVariant: themeVariant }});
+                    processedValue = template({ item: item }, { data: { themeVariant: themeVariant } });
 
                     processedValue = processedValue ? processedValue.trim() : null;
 
@@ -611,7 +619,7 @@ abstract class BaseTemplateService {
             processedProps[configuration.field] = processedValue;
         });
 
-        return processedProps as T;        
+        return processedProps as T;
     }
 
     /**
@@ -652,31 +660,31 @@ abstract class BaseTemplateService {
 
             let operator = currentResultType.operator;
             let param1 = currentResultType.property;
-    
+
             // Use a token or a string value
             let param2 = handlebarsToken ? handlebarsToken[1] : `"${currentResultType.value}"`;
-    
+
             // Operator: "Starts With"
             if (currentResultType.operator === ResultTypeOperator.StartsWith) {
                 param1 = `"${currentResultType.value}"`;
                 param2 = `${currentResultType.property}`;
             }
-    
+
             // Operator: "Not null"
             if (currentResultType.operator === ResultTypeOperator.NotNull) {
                 param2 = null;
             }
-    
+
             const baseCondition = `{{#${operator} ${param1} ${param2 || ""}}} 
                                         ${templateContent}`;
-    
+
             if (currentIdx === resultTypes.length - 1) {
                 // Renders inner content set in the 'resultTypes' partial
                 conditionBlockContent = "{{> @partial-block }}";
             } else {
                 conditionBlockContent = await this._buildCondition(resultTypes, resultTypes[currentIdx + 1], currentIdx + 1);
             }
-    
+
             return `${baseCondition}   
                     {{else}} 
                         ${conditionBlockContent}
