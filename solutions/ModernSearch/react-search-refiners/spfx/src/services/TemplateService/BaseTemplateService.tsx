@@ -317,6 +317,21 @@ abstract class BaseTemplateService {
             return result.length;
         });
 
+        // Return the unique values as a new array based on an array or property of an object in the array
+        // <p>{{getUnique items "NewsCategory"}}</p>
+        Handlebars.registerHelper("getUnique", (array: any[], property: string) => {
+            if (!Array.isArray(array)) return 0;
+            if (array.length === 0) return 0;
+
+            let result;
+            if (property) {
+                result = uniqBy(array, property);
+            } else {
+                result = uniq(array);
+            }
+            return result;
+        });
+
         // Repeat the block N times
         // https://stackoverflow.com/questions/11924452/iterating-over-basic-for-loop-using-handlebars-js
         // <p>{{#times 10}}</p>

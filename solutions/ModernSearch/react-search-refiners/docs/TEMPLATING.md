@@ -187,10 +187,9 @@ Setting | Description
 `{{siteUrl}}` | The current site relative url. Use `{{@root/siteUrl}}` inside a loop.
 `{{getUniqueCount items "property"}}` | Get the unique count of a property over the result set (or another array)
 `{{getUniqueCount array}}` | Get the unique count of objects in an array. Example: [1,1,1,2,2,4] would return `3`.
+`{{getUnique items "NewsCategory"}}` | Return the unique values as a new array based on an array or property of an object in the array.
 `{{regex <exp> <string> }}` | Match a regular expression against a string.
-`{{#times 10}}
-    <span>{{this}}</span>
-{{/times}}` | Iterate X times over a block
+`{{#times 10}}<span>{{this}}</span>{{/times}}` | Iterate X times over a block
 
 You can also define your own in the *BaseTemplateService.ts* file. See [helper-moment](https://github.com/helpers/helper-moment) for date samples using moment.
 
