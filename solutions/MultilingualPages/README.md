@@ -116,12 +116,14 @@ Node.js version >=8.9.4 <9.0.0 is required to build this project.
 
 ## Known Issues
 
-### Set up as English user
+### Setup as non-English user fails
 The user adding this app to a site must use SharePoint in English. This is due to [#175](https://github.com/SharePoint/sp-dev-solutions/issues/175) and [#207](https://github.com/SharePoint/sp-dev-solutions/issues/207) and does not affect normal users.
 
 ### Initialization takes time
 
-After adding the app to a site it might take a couple of minutes for the footer and the language folders to appear. No progress indicator will be shown. As soon as the language folders appear inside the Pages library setup should be completed.
+After adding the app to a site scripts start running to create assets needed by the solution (fields, folders, ...). It might take a couple of minutes for this initialization to finish. No progress indicator will be shown. As soon as you see new language folders appearing in the Pages library this initialization should be completed.
+
+Also, during initialization, make sure to open the site only in one browser window or tab. If your colleagues have the site open as well initialization might fail because scripts start running there as well. As soon as the language folders appear you are good to go and everyone can start using the solution. 
 
 ## Solution
 
