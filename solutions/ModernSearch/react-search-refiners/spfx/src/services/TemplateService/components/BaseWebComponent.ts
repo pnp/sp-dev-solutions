@@ -3,11 +3,13 @@ import { camelCase } from '@microsoft/sp-lodash-subset';
 import "@webcomponents/webcomponentsjs/webcomponents-bundle";
 import '@webcomponents/webcomponentsjs/custom-elements-es5-adapter.js';
 import { WebPartContext } from '@microsoft/sp-webpart-base';
+import { IReadonlyTheme } from '@microsoft/sp-component-base';
 
 export abstract class BaseWebComponent extends HTMLElement {
 
     // Property set by the BaseTemplateService via prototype
     public _ctx: WebPartContext;
+    public _themeVariant: IReadonlyTheme | undefined;
 
     protected connectedCallback() {
         throw 'Not implemented';

@@ -32,7 +32,7 @@ Displays the search results inside a tabular view using the associated Office UI
 
 | Option | Description
 | ------ | ---------------
-| **Manage columns** | Allows you to build you own table view by adding or removing columns dynamically. For each column, you get the following options:<br><p align="center"><img width="100%" src="../images/details_list_manage_columns.png"/></p><ul><li>**Column name**: the column name to display.</li><li>**Minimum width in px**: the minimum width of the column.</li><li>**Maximum width in px**: the maximum width of the column.</li><li>**Sortable**: allows you to sort column values alphabetically when the column header is clicked (ascending or descending).</li><li>**Resizable**: allows you to resize the column dynamically in display mode.</li><li>**Multiline**: if the column column should be multiline. By default only ellipsis (...) will be display for larger text.</li><li>**Link to item**: if enabled, wrap the column value with an URL link pointing to the search result item (i.e. Path). This option is especially suitable for the 'Title' column.</li><li>**Column value**: you can choose here either a managed property value (from the list or as free text) without any transformation or use an Handlebars expression by clicking on the checkbox next to it. In this case, all helpers from the main template are available and you can also add you own HTML markup in the column value:<br><p align="center"><img width="500px" src="../images/details_list_hb_expr.png"/><br><br><img width="500px" src="../images/details_list_hb_expr2.png"/></p></ul>
+| **Manage columns** | Allows you to build you own table view by adding or removing columns dynamically. For each column, you get the following options:<br><p align="center"><img width="100%" src="../images/details_list_manage_columns.png"/></p><ul><li>**Column name**: the column name to display.</li><li>**Minimum width in px**: the minimum width of the column.</li><li>**Maximum width in px**: the maximum width of the column.</li><li>**Sortable**: allows you to sort column values alphabetically when the column header is clicked (ascending or descending).</li><li>**Resizable**: allows you to resize the column dynamically in display mode.</li><li>**Multiline**: if the column column should be multiline. By default only ellipsis (...) will be display for larger text.</li><li>**Link to item**: if enabled, wrap the column value with an URL link pointing to the search result item (i.e. Path). This option is especially suitable for the 'Title' column.</li><li>**Column value**: you can choose here either a managed property value (from the list or as free text) without any transformation or use an Handlebars expression by clicking on the checkbox next to it. In this case, all helpers from the main template are available and you can also add you own HTML markup in the column value. For HTML fields you can use the special variable `@themeVariant` to use theme colors (ex: `@themeVariant.palette.themePrimary`)<br><p align="center"><img width="500px" src="../images/details_list_hb_expr.png"/><br><br><img width="500px" src="../images/details_list_hb_expr2.png"/></p></ul>
 | **Show file icon** | Hide or display the file icon in the first column.
 | **Compact mode** | Display the details list in compact mode. 
 
@@ -56,7 +56,7 @@ Displays search results as cards view using the associated Office UI Fabric [Doc
 
 | Option | Description
 | ------ | ---------------
-| **Manage card fields** | Allows you to define you own values for card placeholder fields. By default, the document card fields come with predefined mappings but you can set your own.<br><p align="center"><img width="100%" src="../images/documentcards_manage_fields.png"/></p>As a field value, you can choose either a managed property value (from the list or as free text) and without any transformation or use an Handlebars expression by clicking on the checkbox next to it. In this case, all helpers from the main template are available. Also, if the field doesn't have the **'Allow HTML'** indication flag enabled, it means the value will be always interpreted as text, whatever if you set an HTML value. Otherwise, your value will be interpreted as HTML for those fields (ex: '_Location_' and '_Tags_' placeholder fields). If you don't set a value for those fields (i.e an empty value), they won't appear in the UI:<br><p align="center"><img width="200px" src="../images/documentcards_html_fields.png"/></p>
+| **Manage card fields** | Allows you to define you own values for card placeholder fields. By default, the document card fields come with predefined mappings but you can set your own.<br><p align="center"><img width="100%" src="../images/documentcards_manage_fields.png"/></p>As a field value, you can choose either a managed property value (from the list or as free text) and without any transformation or use an Handlebars expression by clicking on the checkbox next to it. In this case, all helpers from the main template are available. Also, if the field doesn't have the **'Allow HTML'** indication flag enabled, it means the value will be always interpreted as text, whatever if you set an HTML value. Otherwise, your value will be interpreted as HTML for those fields (ex: '_Location_' and '_Tags_' placeholder fields). For HTML fields you can use the special variable `@themeVariant` to use theme colors (ex: `@themeVariant.palette.themePrimary`). If you don't set a value for those fields (i.e an empty value), they won't appear in the UI:<br><p align="center"><img width="200px" src="../images/documentcards_html_fields.png"/></p>
 | **Enable result preview** | If enabled, displays a preview callout when the document card image is clicked.
 | **Show file icon** | Hide or display the file icon in the card.
 | **Compact mode** | Display the cards in compact mode. 
@@ -183,10 +183,13 @@ Setting | Description
 `{{getUrlField managed_propertyOWSURLH "URL/Title"}}` | Return the URL or Title part of a URL field managed property.
 `{{getCountMessage totalRows <?keywords>}}` | Display a friendly message displaying the result and the entered keywords.
 `{{<search_managed_property_name>}}` | Any valid search managed property returned in the results set. These are typically managed properties set in the *"Selected properties"* setting in the property pane. You don't need to prefix them with `item.` if you are in the "each" loop.
-`{{webUrl}}` | The current web relative url. Use `{{../webUrl}}` inside a loop.
-`{{siteUrl}}` | The current site relative url. Use `{{../siteUrl}}` inside a loop.
+`{{webUrl}}` | The current web relative url. Use `{{@root/webUrl}}` inside a loop.
+`{{siteUrl}}` | The current site relative url. Use `{{@root/siteUrl}}` inside a loop.
 `{{getUniqueCount items "property"}}` | Get the unique count of a property over the result set (or another array)
 `{{getUniqueCount array}}` | Get the unique count of objects in an array. Example: [1,1,1,2,2,4] would return `3`.
+`{{getUnique items "NewsCategory"}}` | Return the unique values as a new array based on an array or property of an object in the array.
+`{{regex <exp> <string> }}` | Match a regular expression against a string.
+`{{#times 10}}<span>{{this}}</span>{{/times}}` | Iterate X times over a block
 
 You can also define your own in the *BaseTemplateService.ts* file. See [helper-moment](https://github.com/helpers/helper-moment) for date samples using moment.
 
@@ -288,7 +291,7 @@ A `themeVariant` variable is available in the root Handlebars context. It contai
         color: {{@root.themeVariant.palette.themePrimary}};
     }
 </style>
-```
+``` 
 
 To see all available values, you can inspect the `themeVariant` objetc using the 'Debug View' layout. Notice the values are udpated dynamically every time you udpate the theme through the UI.
 

@@ -6,6 +6,7 @@ import { mergeStyleSets } from 'office-ui-fabric-react/lib/Styling';
 import { ISearchResult } from '../../../models/ISearchResult';
 import * as Handlebars from 'handlebars';
 import { ShimmeredDetailsList } from 'office-ui-fabric-react/lib/ShimmeredDetailsList';
+import { IReadonlyTheme } from '@microsoft/sp-component-base';
 
 const classNames = mergeStyleSets({
   fileIconHeaderIcon: {
@@ -121,6 +122,11 @@ export interface DetailsListComponentProps {
      * If the details lsit should be compact
      */
     isCompact?: boolean;
+
+    /**
+     * The current theme settings
+     */
+    themeVariant?: IReadonlyTheme;
 }
 
 export interface IDetailsListComponentState {
@@ -199,9 +205,7 @@ export class DetailsListComponent extends React.Component<DetailsListComponentPr
                   let template = Handlebars.compile(tempTemplateContent);
 
                   // Pass the current item as context
-                  value = template({
-                    item: item
-                  });
+                  value = template({ item: item }, { data: { themeVariant: this.props.themeVariant }});
 
                   value = value ? value.trim() : null;
                   
@@ -215,7 +219,7 @@ export class DetailsListComponent extends React.Component<DetailsListComponentPr
 
               // Make the value clickable to the corresponding result item 
               if (column.isResultItemLink) {
-                renderColumnValue = <a href={item.ServerRedirectedURL ? item.ServerRedirectedURL : item.Path}>{renderColumnValue}</a>;
+                renderColumnValue = <a style={{ color: this.props.themeVariant.semanticColors.link }} href={item.ServerRedirectedURL ? item.ServerRedirectedURL : item.Path}>{renderColumnValue}</a>;
               }
             
               return renderColumnValue;

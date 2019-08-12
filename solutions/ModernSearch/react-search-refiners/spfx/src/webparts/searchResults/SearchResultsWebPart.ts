@@ -336,7 +336,7 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
         }
 
         // Set the default search results layout
-        this.properties.selectedLayout = this.properties.selectedLayout ? this.properties.selectedLayout : ResultsLayoutOption.DetailsList;
+        this.properties.selectedLayout = (this.properties.selectedLayout !== undefined && this.properties.selectedLayout !== null) ? this.properties.selectedLayout : ResultsLayoutOption.DetailsList;
 
         this.context.dynamicDataSourceManager.initializeSource(this);
         this._synonymTable = this._convertToSynonymTable(this.properties.synonymList);
