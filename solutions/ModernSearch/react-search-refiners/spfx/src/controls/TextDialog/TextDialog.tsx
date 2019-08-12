@@ -1,9 +1,9 @@
 import * as React                               from 'react';
+import { Suspense }                             from 'react';
 import { Dialog, DialogType, DialogFooter } 	from 'office-ui-fabric-react/lib/Dialog';
 import { ButtonType, PrimaryButton } 			from 'office-ui-fabric-react/lib/Button';
 import { ITextDialogProps }                  	from './ITextDialogProps';
 import { ITextDialogState }                  	from './ITextDialogState';
-import AceEditor 								from 'react-ace';
 import styles                                   from './TextDialog.module.scss';
 import './AceEditor.module.scss';
 
@@ -13,6 +13,7 @@ import 'brace/theme/monokai';
 import 'brace/ext/language_tools';
 import { TextField } from 'office-ui-fabric-react/lib/TextField';
 import { Icon } from 'office-ui-fabric-react/lib/Icon';
+const AceEditor = React.lazy(() => import('react-ace'));
 
 export default class TextDialog extends React.Component<ITextDialogProps, ITextDialogState> {
 
@@ -99,26 +100,26 @@ export default class TextDialog extends React.Component<ITextDialogProps, ITextD
 								containerClassName: 'ms-dialogMainOverride ' + styles.textDialog,
 							}
 						}>
-				
-					<AceEditor
-						width="600px"
-						mode={ this.props.language ? this.props.language: 'html' }
-						theme="monokai"
-						enableLiveAutocompletion={ true }
-						showPrintMargin={ false }
-						showGutter= { true }
-						onChange={ this.onDialogTextChanged.bind(this) }
-						value={ this.state.dialogText }
-						highlightActiveLine={ true }
-						editorProps={
-							{
-								$blockScrolling: Infinity
-							}
-						}					
-						name="CodeEditor"
-						enableBasicAutocompletion={true}
-						/>
-
+                    <Suspense fallback={""}>
+                        <AceEditor
+                            width="600px"
+                            mode={ this.props.language ? this.props.language: 'html' }
+                            theme="monokai"
+                            enableLiveAutocompletion={ true }
+                            showPrintMargin={ false }
+                            showGutter= { true }
+                            onChange={ this.onDialogTextChanged.bind(this) }
+                            value={ this.state.dialogText }
+                            highlightActiveLine={ true }
+                            editorProps={
+                                {
+                                    $blockScrolling: Infinity
+                                }
+                            }					
+                            name="CodeEditor"
+                            enableBasicAutocompletion={true}
+                            />
+                    </Suspense>
 					<DialogFooter>
 						<PrimaryButton buttonType={ ButtonType.primary } onClick={ this.saveDialog.bind(this) }>{ this.props.strings.saveButtonText }</PrimaryButton>
 						<PrimaryButton onClick={ this.cancelDialog.bind(this) }>{ this.props.strings.cancelButtonText }</PrimaryButton>

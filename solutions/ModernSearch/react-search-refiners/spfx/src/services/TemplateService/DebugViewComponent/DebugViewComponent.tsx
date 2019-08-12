@@ -1,5 +1,6 @@
 import * as React from 'react';
-import AceEditor from 'react-ace';
+import { Suspense } from 'react';
+const AceEditor = React.lazy(() => import('react-ace'));
 
 export interface IDebugViewProps {
 
@@ -15,7 +16,7 @@ export interface IDebugViewState {
 export default class DebugViewComponent extends React.Component<IDebugViewProps, IDebugViewState> {
     
     public render() {
-        return <AceEditor
+        return <Suspense fallback={""}><AceEditor
             width={ '100%' }
             mode={ 'json' }
             theme="textmate"
@@ -31,6 +32,6 @@ export default class DebugViewComponent extends React.Component<IDebugViewProps,
                 }
             }					
             name="CodeView"
-        />;
+        /></Suspense> ;
     }
 }

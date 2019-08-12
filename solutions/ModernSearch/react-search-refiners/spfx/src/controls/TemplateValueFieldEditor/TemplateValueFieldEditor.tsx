@@ -1,7 +1,7 @@
 import * as React from 'react';
+import { Suspense } from 'react';
 import * as strings from 'SearchResultsWebPartStrings';
-import { PropertyFieldCodeEditorLanguages } from '@pnp/spfx-property-controls/lib/PropertyFieldCodeEditor';
-import { TextDialog } from '../TextDialog';
+const TextDialog = React.lazy(() => import('../TextDialog/TextDialog'));
 import { ICustomCollectionField } from '@pnp/spfx-property-controls/lib/PropertyFieldCollectionData';
 import { SearchManagedProperties } from '../SearchManagedProperties/SearchManagedProperties';
 import { IComboBoxOption } from 'office-ui-fabric-react/lib/ComboBox';
@@ -16,7 +16,7 @@ export interface ITemplateValueFieldEditorProps {
      * The search service instance
      */
     searchService: ISearchService;
-    
+
     /**
      * The field mode to render
      */
@@ -76,43 +76,44 @@ export class TemplateValueFieldEditor extends React.Component<ITemplateValueFiel
         let renderField: JSX.Element = null;
 
         if (this.props.useHandlebarsExpr) {
-            renderField =   <TextDialog
-                                language={PropertyFieldCodeEditorLanguages.Handlebars}
-                                dialogTextFieldValue={this.props.value}
-                                onChanged={(fieldValue) => {
-                                    this.props.onUpdate(this.props.field.id, fieldValue);
-                                }}
-                                strings={{
-                                    cancelButtonText: strings.CancelButtonText,
-                                    dialogButtonText: "Edit Handlebars expression",
-                                    dialogTitle: "Add Handlebars expression",
-                                    saveButtonText: strings.SaveButtonText
-                                }}
-                            />;
+            let lang: any = "handlebars";
+            renderField = <Suspense fallback={""}><TextDialog
+                language={lang}
+                dialogTextFieldValue={this.props.value}
+                onChanged={(fieldValue) => {
+                    this.props.onUpdate(this.props.field.id, fieldValue);
+                }}
+                strings={{
+                    cancelButtonText: strings.CancelButtonText,
+                    dialogButtonText: "Edit Handlebars expression",
+                    dialogTitle: "Add Handlebars expression",
+                    saveButtonText: strings.SaveButtonText
+                }}
+            /></Suspense>;
         } else {
 
-            renderField =   <SearchManagedProperties 
-                                defaultSelectedKey={ this.props.value }
-                                onUpdate={ (newValue: string, isSortable?: boolean) => { 
+            renderField = <SearchManagedProperties
+                defaultSelectedKey={this.props.value}
+                onUpdate={(newValue: string, isSortable?: boolean) => {
 
-                                    if (this.props.validateSortable) {
-                                        if (!isSortable) {
-                                            this.props.onCustomFieldValidation(this.props.field.id, strings.Sort.SortInvalidSortableFieldMessage);
-                                        } else {
-                                            this.props.onUpdate(this.props.field.id, newValue);
-                                            this.props.onCustomFieldValidation(this.props.field.id, '');
-                                        }
-                                    } else {
-                                        this.props.onUpdate(this.props.field.id, newValue);
-                                    }
-                                }}
-                                availableProperties={this.props.availableProperties}
-                                onUpdateAvailableProperties={this.props.onUpdateAvailableProperties}
-                                searchService={this.props.searchService}
-                                validateSortable={this.props.validateSortable}
-                            />;
+                    if (this.props.validateSortable) {
+                        if (!isSortable) {
+                            this.props.onCustomFieldValidation(this.props.field.id, strings.Sort.SortInvalidSortableFieldMessage);
+                        } else {
+                            this.props.onUpdate(this.props.field.id, newValue);
+                            this.props.onCustomFieldValidation(this.props.field.id, '');
+                        }
+                    } else {
+                        this.props.onUpdate(this.props.field.id, newValue);
+                    }
+                }}
+                availableProperties={this.props.availableProperties}
+                onUpdateAvailableProperties={this.props.onUpdateAvailableProperties}
+                searchService={this.props.searchService}
+                validateSortable={this.props.validateSortable}
+            />;
         }
-            
+
         return renderField;
     }
 }
