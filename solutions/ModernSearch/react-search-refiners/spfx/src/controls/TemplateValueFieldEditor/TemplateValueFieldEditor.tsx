@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { TextField } from 'office-ui-fabric-react/lib/TextField';
 import * as strings from 'SearchResultsWebPartStrings';
 import { PropertyFieldCodeEditorLanguages } from '@pnp/spfx-property-controls/lib/PropertyFieldCodeEditor';
 import { TextDialog } from '../TextDialog';
