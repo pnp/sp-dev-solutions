@@ -205,6 +205,6 @@ export default class DateRangeTemplate extends React.Component<IDateRangeTemplat
     }
 
     private _onFormatDate(date: Date): string {
-        return (window as any).searchMoment(date, "LL", this.props.language);
+        return (window as any).searchMoment(date).locale(this.props.language).format('LL');
     }
 }

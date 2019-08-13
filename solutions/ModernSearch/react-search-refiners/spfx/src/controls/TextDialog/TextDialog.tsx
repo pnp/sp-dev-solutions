@@ -6,11 +6,6 @@ import { ITextDialogProps }                  	from './ITextDialogProps';
 import { ITextDialogState }                  	from './ITextDialogState';
 import styles                                   from './TextDialog.module.scss';
 import './AceEditor.module.scss';
-
-import 'brace';
-import 'brace/mode/html';
-import 'brace/theme/monokai';
-import 'brace/ext/language_tools';
 import { TextField } from 'office-ui-fabric-react/lib/TextField';
 import { Icon } from 'office-ui-fabric-react/lib/Icon';
 const AceEditor = React.lazy(() => import('react-ace'));

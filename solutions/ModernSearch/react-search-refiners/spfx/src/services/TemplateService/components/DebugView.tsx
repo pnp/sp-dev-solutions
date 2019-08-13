@@ -9,7 +9,13 @@ export class DebugViewWebComponent extends BaseWebComponent {
        super(); 
    }
 
-   public connectedCallback() {
+   public async connectedCallback() {
+
+      // Reuse the 'brace' imports from the PnP control instead of reference them explicitly in the debug view
+      await import(
+         /* webpackChunkName: 'debug-view' */
+         '@pnp/spfx-property-controls/lib/PropertyFieldCodeEditor'
+      );
 
       let props = this.resolveAttributes();
       const debugView = <DebugView {...props}/>;
