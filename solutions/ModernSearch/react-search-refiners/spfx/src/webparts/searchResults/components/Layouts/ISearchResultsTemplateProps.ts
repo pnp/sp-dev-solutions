@@ -1,5 +1,5 @@
 import ISearchResultsTemplateContext from './ISearchResultsTemplateContext';
-import TemplateService from               '../../../../services/TemplateService/TemplateService';
+import { TemplateService } from               '../../../../services/TemplateService/TemplateService';
 
 interface ISearchResultsTemplateProps {
 

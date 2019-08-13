@@ -1,12 +1,12 @@
 import ISearchService from '../../../../services/SearchService/ISearchService';
 import ITaxonomyService from '../../../../services/TaxonomyService/ITaxonomyService';
 import { DisplayMode } from '@microsoft/sp-core-library';
-import TemplateService from '../../../../services/TemplateService/TemplateService';
-import { Sort } from '@pnp/sp';
+import { TemplateService } from '../../../../services/TemplateService/TemplateService';
 import ISortableFieldConfiguration from '../../../../models/ISortableFieldConfiguration';
 import { ISearchResultType } from '../../../../models/ISearchResultType';
 import {ICustomTemplateFieldValue} from '../../../../services/ResultService/ResultService';
 import SearchResultsOperationCallback from '../../../../models/SearchResultsOperationCallback';
+import { IReadonlyTheme } from '@microsoft/sp-component-base';
 
 interface ISearchResultsContainerProps {
 
@@ -66,6 +66,11 @@ interface ISearchResultsContainerProps {
     templateContent: string;
 
     /**
+     * Template parameters from Web Part property pane
+     */
+    templateParameters: { [key:string]: any };
+
+    /**
      * The site server relative url for the current Site
      */
     siteServerRelativeUrl: string;
@@ -115,6 +120,11 @@ interface ISearchResultsContainerProps {
      * The selected page to show for the search results
      */
     selectedPage: number;
+
+    /**
+     * The current theme variant
+     */
+    themeVariant: IReadonlyTheme | undefined;
 }
 
 export default ISearchResultsContainerProps;

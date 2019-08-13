@@ -1,15 +1,102 @@
 
-.template_root {
-    @import '~office-ui-fabric/dist/sass/Fabric.scss';
-    @import '~office-ui-fabric/dist/components/Label/Label.scss';
-    @import '~office-ui-fabric/dist/components/List/List.scss';
-    @import '~office-ui-fabric/dist/components/ListItem/ListItem.scss';
-    @import '~@microsoft/sp-office-ui-fabric-core/dist/sass/FabricCore.scss';
-    
+.template_root, .placeholder_root {
+
     .template_defaultList {
+
+        padding: 0;
     
         strong {
             color: "[theme: themePrimary, default: #005a9e]";
+        }
+
+        .template_listItem {
+
+            display:flex;
+            display: -ms-flexbox;
+            padding: 10px;
+            min-height: 110px;
+            justify-content: space-between;
+
+            img.img-preview  {
+                width: 120px;
+                opacity: 1;
+                display: block;
+                height: auto;
+                transition: .5s ease;
+                backface-visibility: hidden;
+            }  
+
+            .template_result {
+                display: flex;    
+                display: -ms-flexbox;
+                width: 100%;
+            }
+            
+            .template_contentContainer {
+                display: flex;
+                width: 100%;
+                display: -ms-flexbox;
+                flex-direction: column;
+                margin-right: 15px;
+            }
+
+            .template_title {
+                font-size: 16px;
+                margin-bottom: 10px;
+            }
+
+            .template_author {
+                display: inline-block;
+                font-size: 12px;
+                margin-bottom: 5px;
+                text-decoration: underline;
+            }
+
+            .template_tags {
+                display: flex;
+                align-items: center;
+                margin-top: 5px;
+
+                i {
+                    margin-right: 5px;
+                }
+            }
+            
+            .template_previewContainer {
+                align-items: flex-start;
+                display: flex;
+                display: -ms-flexbox;
+            }
+            
+            .template_icon {
+                height: 32px;
+                width: 32px;
+                margin-right: 15px;
+            }
+            
+            .hover {
+                transition: .5s ease;
+                opacity: 0;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                -ms-transform: translate(-50%, -50%);
+                text-align: center;
+                pointer-events: none;
+            }
+            
+            .img-container {
+                position: relative;
+            }
+            
+            .img-container:hover img {
+                opacity: 0.2;
+            }
+            
+            .img-container:hover .hover {
+                opacity: 1;
+            }
         }
     }
 
@@ -34,7 +121,9 @@
         }
     }
     
+    // Legacy CSS for backward compatibility, now replaced by Office UI Fabric controls
     .template_defaultCard {
+
         .singleCard {
             margin: 10px;
             border: 1px solid #eaeaea;
@@ -50,6 +139,8 @@
             .cardInfo {
                 padding-left: 10px;
                 padding-right: 10px;
+                display: flex;
+                flex-direction: column;
             }
             .cardFileIcon {
                 left: 10px;
@@ -66,5 +157,41 @@
     .template_resultCount {
         padding-left: 10px;
         margin-bottom: 10px;
+    }
+}
+
+.placeholder_root {
+
+    .shimmer {
+        background: #f6f7f8;
+        background-image: linear-gradient(to right, #f6f7f8 0%, #edeef1 20%, #f6f7f8 40%, #f6f7f8 100%);
+        background-repeat: no-repeat;
+        background-size: 800px 104px; 
+        display: inline-block;
+        position: relative; 
+        
+        -webkit-animation-duration: 1s;
+        -webkit-animation-fill-mode: forwards; 
+        -webkit-animation-iteration-count: infinite;
+        -webkit-animation-name: placeholderShimmer;
+        -webkit-animation-timing-function: linear;
+    }
+
+    @-webkit-keyframes placeholderShimmer {
+        0% {
+            background-position: -468px 0;
+        }
+        
+        100% {
+            background-position: 468px 0; 
+        }
+    }
+
+    .line {
+        height: 10px;
+    }
+
+    .line.shimmer + .line.shimmer {
+        margin-top: 10px;
     }
 }

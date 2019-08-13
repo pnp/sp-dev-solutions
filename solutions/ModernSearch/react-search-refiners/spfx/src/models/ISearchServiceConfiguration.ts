@@ -42,4 +42,14 @@ export interface ISearchServiceConfiguration {
      * The selected filters that need to be applied on the search query
      */
     refinementFilters?: IRefinementFilter[];
+
+    /**
+     * The synonyms table
+     */
+    synonymTable?: { [key:string]: string[] };
+
+    /**
+     * The search query culture
+     */
+    queryCulture: number;
 }

@@ -1,0 +1,37 @@
+<style>
+    /* Insert your CSS here */
+</style>
+
+<!-- If you use a scope using #with, you need to access the current item with the parent path '../<item>|<property_name>' -->
+{{#with (split AuthorOWSUSER '|')}}
+    <document-card  title="{{../Title}}" 
+                    location="{{../SiteTitle}}"
+                    preview-image="{{getPreviewSrc ../item}}" 
+                    preview-url="{{../ServerRedirectedEmbedURL}}" 
+                    date="{{getDate ../Created 'LL'}}" 
+                    href="{{getUrl ../item}}" 
+                    author="{{../Author}}" 
+                    profile-image="/_layouts/15/userphoto.aspx?size=L&username={{[0]}}" 
+                    icon-src="{{../IconSrc}}" 
+                    enable-preview="{{@root.enablePreview}}" 
+                    show-file-icon="{{@root.showFileIcon}}">
+    </document-card>
+{{/with}}
+
+<!--
+    Custom attributes you can use for the document card web component:
+
+    | Attribute         |
+    | -------------     | 
+    | title             | The card title.
+    | location          | The card location, for instance the site title. You can inject HTML markup as text here but Handlebars tokens won't be resolved.
+    | tags              | Associated tags. You can inject HTML markup as text here but Handlebars tokens won't be resolved.
+    | href              | Link to the result item (ex: Path).
+    | preview-image     | The preview image to use.
+    | date              | The date to display (ex: Created).
+    | profile-image     | The profile image to display.
+    | preview-url       | Url to use to the preview.
+    | author            | The author name.
+    | icon-src          | The file icon source. Use 'IconSrc' token to determine it automatically.
+    | file-extension    | Only for the <video-card/> component.
+-->

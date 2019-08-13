@@ -42,8 +42,12 @@ declare interface ISearchResultsWebPartStrings {
     DialogTitle: string;
     SaveButtonText: string;
     ResultsLayoutLabel: string;
-    ListLayoutOption: string;
+    SimpleListLayoutOption: string;
+    DetailsListLayoutOption: string;
     TilesLayoutOption: string;
+    SliderLayoutOption: string;
+    PeopleLayoutOption: string;
+    DebugLayoutOption: string;
     CustomLayoutOption: string;
     TemplateUrlFieldLabel: string;
     TemplateUrlPlaceholder: string;
@@ -77,16 +81,29 @@ declare interface ISearchResultsWebPartStrings {
         SortableFieldDisplayValueField: string;
         EditSortableFieldsLabel: string;
         EditSortLabel: string;
+        SortInvalidSortableFieldMessage: string;
+    },
+    Synonyms: {
+        EditSynonymLabel: string;
+        SynonymListDescription: string;
+        SynonymPropertyPanelFieldLabel: string;
+        SynonymListTerm: string;
+        SynonymListSynonyms: string;
+        SynonymIsTwoWays: string;
+        SynonymListSynonymsExemple: string;
+        SynonymListTermExemple: string;
     },
     ResultTypes: {
         ResultTypeslabel: string;
         ResultTypesDescription: string;
+        InlineTemplateContentLabel: string;
         EditResultTypesLabel: string;
         ConditionPropertyLabel: string;
         ConditionValueLabel: string;
         CondtionOperatorValue: string;
         ExternalUrlLabel: string;
         EqualOperator: string;
+        NotEqualOperator: string;
         ContainsOperator: string;
         StartsWithOperator: string;
         NotNullOperator: string;
@@ -99,6 +116,46 @@ declare interface ISearchResultsWebPartStrings {
     UseDefaultSearchQueryKeywordsFieldLabel: string;
     DefaultSearchQueryKeywordsFieldLabel: string;
     DefaultSearchQueryKeywordsFieldDescription: string;
+    QueryCultureLabel: string;
+    QueryCultureUseUiLanguageLabel: string;
+    TemplateParameters: {
+        TemplateParametersGroupName: string;
+        EnableItemPreview: string;
+        ShowFileIcon: string;
+        ManageDetailsListColumnDescription: string;
+        ManageTilesFieldsLabel: string;
+        ManageTilesFieldsPanelDescriptionLabel: string;
+        ManageDetailsListColumnLabel: string;
+        ManagePeopleFieldsLabel: string;
+        ManagePeopleFieldsPanelDescriptionLabel: string;
+        PlaceholderNameFieldLabel: string;
+        PlaceholderValueFieldLabel: string;
+        ValueColumnLabel: string;
+        DisplayNameColumnLabel: string;
+        UseHandlebarsExpressionLabel: string;
+        MinimumWidthColumnLabel: string;
+        MaximumWidthColumnLabel: string;
+        SortableColumnLabel: string;
+        ResizableColumnLabel: string;
+        MultilineColumnLabel: string;
+        LinkToItemColumnLabel: string;
+        SupportHTMLColumnLabel: string;
+        CompactModeLabel: string;
+        SliderAutoPlayDuration: string;
+        SliderAutoPlay: string;
+        SliderPauseAutoPlayOnHover: string;
+        SliderGroupCells: string;
+        SliderShowPageDots: string;
+        SliderWrapAround: string;
+        PersonaSizeOptionsLabel: string,
+        PersonaSizeExtraSmall: string;
+        PersonaSizeSmall: string;
+        PersonaSizeRegular: string;
+        PersonaSizeLarge: string;
+        PersonaSizeExtraLarge: string;
+        LivePersonaDisableHover: string;
+    }
+    ManagedPropertiesListPlaceHolder: string;
 }
 
 declare module 'SearchResultsWebPartStrings' {

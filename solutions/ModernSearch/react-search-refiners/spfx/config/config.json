@@ -41,6 +41,14 @@
           "manifest": "./src/webparts/searchPagination/SearchPaginationWebPart.manifest.json"
         }
       ]
+    },
+    "search-verticals-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/searchVerticals/SearchVerticalsWebPart.js",
+          "manifest": "./src/webparts/searchVerticals/SearchVerticalsWebPart.manifest.json"
+        }
+      ]
     }
   },
   "externals": {},
@@ -51,6 +59,7 @@
     "PropertyControlStrings": "node_modules/@pnp/spfx-property-controls/lib/loc/{locale}.js",
     "SearchNavigationWebPartStrings": "lib/webparts/searchNavigation/loc/{locale}.js",
     "SearchRefinersWebPartStrings": "lib/webparts/searchRefiners/loc/{locale}.js",
-    "SearchPaginationWebPartStrings": "lib/webparts/searchPagination/loc/{locale}.js"
+    "SearchPaginationWebPartStrings": "lib/webparts/searchPagination/loc/{locale}.js",
+    "SearchVerticalsWebPartStrings": "lib/webparts/searchVerticals/loc/{locale}.js"
   }
 }

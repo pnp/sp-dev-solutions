@@ -1,6 +1,6 @@
 {
     "name": "hub-web-parts",
-    "version": "1.2.0",
+    "version": "2.3.3",
     "private": true,
     "engines": {
         "node": ">=0.10.0"
@@ -14,16 +14,19 @@
         "@microsoft/sp-webpart-base": "1.6.0",
         "@microsoft/sp-lodash-subset": "1.6.0",
         "@microsoft/sp-office-ui-fabric-core": "1.6.0",
-        "@microsoft/sp-http": "~1.6.0",
-        "@microsoft/sp-loader": "~1.6.0",
+        "@microsoft/sp-http": "1.6.0",
+        "@microsoft/sp-loader": "1.6.0",
         "@types/webpack-env": "1.13.1",
         "@types/es6-promise": "0.0.33",
-        "@pnp/spfx-property-controls": "^1.9.0",
-        "deep-diff": "^0.3.8",
-        "handlebars": "^4.0.10",
-        "linqts": "^1.8.2",
-        "npm": "^6.1.0",
-        "sp-pnp-js": "^3.0.7"
+        "@types/handlebars": "4.0.39",
+        "@pnp/spfx-property-controls": "1.9.0",
+        "deep-diff": "0.3.8",
+        "handlebars": "4.0.12",
+        "handlebars-helpers": "0.8.4",
+        "moment": "2.22.2",
+        "linqts": "1.8.2",
+        "npm": "6.1.0",
+        "sp-pnp-js": "3.0.7"
     },
     "devDependencies": {
         "@microsoft/sp-build-web": "1.6.0",
@@ -36,7 +39,8 @@
         "ajv": "~5.2.2",
         "es6-promise": "^4.2.4",
         "file-saver": "^1.3.3",
-        "moment": "^2.18.1"
+        "unlazy-loader": "0.1.3",
+        "webpack-bundle-analyzer": "3.0.3"
     },
     "scripts": {
         "build": "gulp bundle",

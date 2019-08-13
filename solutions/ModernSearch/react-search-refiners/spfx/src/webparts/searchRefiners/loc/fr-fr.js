@@ -28,6 +28,7 @@ define([], function() {
       "AvailableRefinersLabel": "Filtre(s) disponible(s)",
       "ApplyFiltersLabel": "Appliquer",
       "ClearFiltersLabel": "Effacer",
+      "ShowExpanded": "Mode développé par défaut",
       "Templates": {
         "RefinementItemTemplateLabel": "Filtre par défaut",
         "MutliValueRefinementItemTemplateLabel": "Filtre à valeurs multiples",
@@ -38,7 +39,7 @@ define([], function() {
           "months": ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'],      
           "shortMonths": ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Jui', 'Jui', 'Aoû', 'Sep', 'Oct', 'Nov', 'Déc'],      
           "days": ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'],      
-          "shortDays": ['D', 'M', 'M', 'J', 'V', 'V', 'S'],      
+          "shortDays": ['D', 'L', 'M', 'M', 'J', 'V', 'S'],      
           "goToToday": "Aujourd'hui",
           "prevMonthAriaLabel": 'Mois précédent',
           "nextMonthAriaLabel": 'Mois suivant',
@@ -47,7 +48,10 @@ define([], function() {
           "closeButtonAriaLabel": 'Fermer le sélecteur de date',      
           "isRequiredErrorMessage": 'La date de début est requise.',      
           "invalidInputErrorMessage": 'Format de date invalide.'
-        }
+        },
+        "RefinerSortTypeLabel": "Trier selon ce critère",
+        "RefinerSortTypeAlphabetical": "Alphabétique",
+        "RefinerSortTypeByNumberOfResults": "Par nombre de résultats"
       }
     },
   }

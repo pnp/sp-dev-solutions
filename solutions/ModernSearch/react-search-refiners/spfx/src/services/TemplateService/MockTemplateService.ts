@@ -1,5 +1,10 @@
-import { html } from                               'common-tags';
 import BaseTemplateService from                    './BaseTemplateService';
+import ResultsLayoutOption from '../../models/ResultsLayoutOption';
+import { ISearchResultsWebPartProps } from '../../webparts/searchResults/ISearchResultsWebPartProps';
+import { IComboBoxOption } from 'office-ui-fabric-react/lib/ComboBox';
+import { TemplateService } from './TemplateService';
+import MockSearchService from '../SearchService/MockSearchService';
+import { IPropertyPaneField } from '@microsoft/sp-property-pane';
 
 class MockTemplateService extends BaseTemplateService {
     constructor(locale: string) {
@@ -7,23 +12,7 @@ class MockTemplateService extends BaseTemplateService {
         this.CurrentLocale = locale;
     }
 
-    private readonly _mockFileContent: string = html`
-                                        <div class='template_root'>
-                                            <span><strong>Mocked external template</strong></span>
-                                            {{#if showResultsCount}}
-                                                <div class='template_resultCount'>
-                                                    <label class='ms-fontWeight-semibold'>{{getCountMessage totalRows keywords}}</label>
-                                                </div>
-                                            {{/if}}
-                                            <ul class='ms-List template_defaultList'>
-                                                {{#each items as |item|}}
-                                                    <li class='ms-ListItem ms-ListItem--image' tabindex='0'>
-                                                        <span class='ms-ListItem-primaryText'><a href='{{getUrl item}}'>{{Title}}</a></span>
-                                                    </li>
-                                                {{/each}}
-                                            </ul>
-                                        </div>
-                                        `;
+    private readonly _mockFileContent: string = require('./templates/layouts/mock.html');
 
     public getFileContent(fileUrl: string): Promise<string> {
 
@@ -38,6 +27,12 @@ class MockTemplateService extends BaseTemplateService {
 
     public ensureFileResolves(fileUrl: string): Promise<void> {
         return Promise.resolve();
+    }
+
+    public getTemplateParameters(layout: ResultsLayoutOption, properties: ISearchResultsWebPartProps, onUpdateAvailableProperties?: (properties: IComboBoxOption[]) => void, availableProperties?: IComboBoxOption[]): IPropertyPaneField<any>[] {
+        
+        const templateService = new TemplateService(null, this.CurrentLocale, new MockSearchService());
+        return templateService.getTemplateParameters(layout, properties, onUpdateAvailableProperties);
     }
 }
 

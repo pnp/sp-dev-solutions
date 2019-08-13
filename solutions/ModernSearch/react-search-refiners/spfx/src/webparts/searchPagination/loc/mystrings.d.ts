@@ -8,6 +8,7 @@ declare interface ISearchPaginationWebPartStrings {
   PlaceHolderDescription: string;
   CurrentPageLabel: string;
   ConnectToSearchResultsLabel: string;
+  ShowBlankEditInfoMessage: string;
 }
 
 declare module 'SearchPaginationWebPartStrings' {

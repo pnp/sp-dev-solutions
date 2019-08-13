@@ -1,7 +1,9 @@
 import * as React from 'react';
 import * as strings from 'handlebarTemplateDisplayStrings';
-import Handlebars = require('handlebars');
-import moment = require('moment');
+//import Handlebars = require('handlebars');
+import * as Handlebars from 'handlebars';
+//import moment = require('moment');
+import * as moment from 'moment';
 import 'file-saver';
 import styles from './HandlebarTemplateDisplay.module.scss';
 import LinkPickerPanel from "../../../components/LinkPickerPanel/LinkPickerPanel";

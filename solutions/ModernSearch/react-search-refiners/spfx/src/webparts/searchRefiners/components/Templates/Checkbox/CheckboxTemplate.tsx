@@ -4,7 +4,7 @@ import IBaseRefinerTemplateState from '../IBaseRefinerTemplateState';
 import { IRefinementValue, RefinementOperator } from "../../../../../models/ISearchResult";
 import { Checkbox } from 'office-ui-fabric-react/lib/Checkbox';
 import { Text } from '@microsoft/sp-core-library';
-import { Link } from "office-ui-fabric-react";
+import { Link } from 'office-ui-fabric-react/lib/Link';
 import * as strings from 'SearchRefinersWebPartStrings';
 import * as update from 'immutability-helper';
 
@@ -27,12 +27,18 @@ export default class CheckboxTemplate extends React.Component<IBaseRefinerTempla
     
     public render() {
 
+
         return <div>
                     {
                         this.props.refinementResult.Values.map((refinementValue: IRefinementValue, j) => {
 
                                 return (
                                 <Checkbox
+                                    styles={{
+                                        root:{
+                                            padding: 10
+                                        }
+                                    }}
                                     key={j}                                    
                                     checked={this._isValueInFilterSelection(refinementValue)}
                                     label={Text.format(refinementValue.RefinementValue + ' ({0})', refinementValue.RefinementCount)}
@@ -79,7 +85,7 @@ export default class CheckboxTemplate extends React.Component<IBaseRefinerTempla
         if (nextProps.removeFilterValue) {
             
             const newFilterValues = this.state.refinerSelectedFilterValues.filter((elt) => {
-                return elt.RefinementToken !== nextProps.removeFilterValue.RefinementToken;
+                return elt.RefinementName !== nextProps.removeFilterValue.RefinementName;
             });
     
             this.setState({
@@ -97,7 +103,7 @@ export default class CheckboxTemplate extends React.Component<IBaseRefinerTempla
     private _isValueInFilterSelection(valueToCheck: IRefinementValue): boolean {
 
         let newFilters = this.state.refinerSelectedFilterValues.filter((filter) => {
-            return filter.RefinementToken === valueToCheck.RefinementToken;
+            return filter.RefinementToken === valueToCheck.RefinementToken && filter.RefinementName === valueToCheck.RefinementName;
         });
 
         return newFilters.length === 0 ? false : true;
@@ -127,7 +133,7 @@ export default class CheckboxTemplate extends React.Component<IBaseRefinerTempla
     private _onFilterRemoved(removedValue: IRefinementValue) {
         
         const newFilterValues = this.state.refinerSelectedFilterValues.filter((elt) => {
-            return elt.RefinementToken !== removedValue.RefinementToken;
+            return elt.RefinementName !== removedValue.RefinementName;
         });
 
         this.setState({

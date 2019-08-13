@@ -1,4 +1,5 @@
-import RefinerTemplateOption from "./RefinerTemplateOption";
+import RefinersSortOption from './RefinersSortOptions';
+import RefinerTemplateOption from './RefinerTemplateOption';
 
 interface IRefinerConfiguration {
     
@@ -17,6 +18,16 @@ interface IRefinerConfiguration {
      * The selected template for this refiner
      */
     template: RefinerTemplateOption;
+
+    /**
+     * How the refiner values should be sorted
+     */
+    refinerSortType: RefinersSortOption;
+
+    /** 
+     * Allow refiners to be expanded by default
+     */    
+     showExpanded: boolean;
 }
 
 export default IRefinerConfiguration;

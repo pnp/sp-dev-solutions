@@ -7,7 +7,8 @@
   "manifestVersion": 2,
   "supportsFullBleed": true,
   "requiresCustomScript": false,
-
+  "supportedHosts": ["SharePointWebPart"],
+  "loadLegacyFabricCss": true,
   "preconfiguredEntries": [
     {
         "groupId": "5c03119e-3074-46fd-976b-c60198311f70",
@@ -36,7 +37,7 @@
                     "sortDirection": 2
                 }
             ],
-            "selectedProperties": "Title,Path,Created,Filename,SiteLogo,PreviewUrl,PictureThumbnailURL,ServerRedirectedPreviewURL,ServerRedirectedURL,HitHighlightedSummary,FileType,contentclass,ServerRedirectedEmbedURL,DefaultEncodingURL,owstaxidmetadataalltagsinfo",
+            "selectedProperties": "Title,Path,Created,Filename,SiteLogo,PreviewUrl,PictureThumbnailURL,ServerRedirectedPreviewURL,ServerRedirectedURL,HitHighlightedSummary,FileType,contentclass,ServerRedirectedEmbedURL,DefaultEncodingURL,owstaxidmetadataalltagsinfo,Author,AuthorOWSUSER,SPSiteUrl,SiteTitle",
             "enableQueryRules": false,
             "maxResultsCount": 10,
             "showBlank": true,

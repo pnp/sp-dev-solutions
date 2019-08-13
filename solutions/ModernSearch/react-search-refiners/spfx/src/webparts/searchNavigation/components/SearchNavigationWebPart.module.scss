@@ -1,4 +1,4 @@
-@import '~@microsoft/sp-office-ui-fabric-core/dist/sass/SPFabricCore.scss';
+@import '~office-ui-fabric-react/dist/sass/Fabric.scss';
 
 .navigationNodes {
   > nav {
@@ -10,7 +10,6 @@
     .nodeText {
       text-align: center;
       position: relative;
-      line-height: 40px;
       padding: 8px;
       font-size: 14px;
       font-family:"Segoe UI Web (West European)",Segoe UI,-apple-system,BlinkMacSystemFont,Roboto,Helvetica Neue,sans-serif;
@@ -30,6 +29,7 @@
       bottom: 0;
       left: 0;
       right: 0;
+      top: 10px;
       height: 2px;
       margin: auto;
       position: relative;
