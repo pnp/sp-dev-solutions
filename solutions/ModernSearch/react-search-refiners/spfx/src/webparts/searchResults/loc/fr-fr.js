@@ -115,8 +115,8 @@ define([], function() {
       "LessOrEqualOperator": "Inférieur ou égal",
       "LessThanOperator": "Inférieur"
     },
-    "QueryCultureLabel": "Query Language",
-    "QueryCultureUseUiLanguageLabel": "Same as UI language",
+    "QueryCultureLabel": "Langue de la requête",
+    "QueryCultureUseUiLanguageLabel": "Utiliser la langue de l'interface",
     "TemplateParameters": {
       "TemplateParametersGroupName": "Options d'affichage",
       "EnableItemPreview": "Activer l'aperçu de résultat",
