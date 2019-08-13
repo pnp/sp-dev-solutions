@@ -195,8 +195,15 @@ export class SearchManagedProperties extends React.Component<ISearchManagedPrope
 
             // Re-sort ascending after adding free values
             options = options.sort((a, b) => {
-            if (a.text.toLowerCase() > b.text.toLowerCase()) return 1;
-                if (b.text.toLowerCase() > a.text.toLowerCase()) return -1;
+
+                const aValue = a.text ? a.text : a.key ? a.key.toString() : null;
+                const bValue = b.text ? b.text : b.key ? b.key.toString() : null;
+
+                if (aValue && bValue) {
+                    if (aValue.toLowerCase() > bValue.toLowerCase()) return 1;
+                    if (bValue.toLowerCase() > aValue.toLowerCase()) return -1;
+                } 
+
                 return 0;
             });
 
@@ -251,8 +258,15 @@ export class SearchManagedProperties extends React.Component<ISearchManagedPrope
 
             // Re-sort ascending after adding free values
             options = options.sort((a, b) => {
-            if (a.text.toLowerCase() > b.text.toLowerCase()) return 1;
-                if (b.text.toLowerCase() > a.text.toLowerCase()) return -1;
+
+                const aValue = a.text ? a.text : a.key ? a.key.toString() : null;
+                const bValue = b.text ? b.text : b.key ? b.key.toString() : null;
+
+                if (aValue && bValue) {
+                    if (aValue.toLowerCase() > bValue.toLowerCase()) return 1;
+                    if (bValue.toLowerCase() > aValue.toLowerCase()) return -1;
+                } 
+
                 return 0;
             });
 
@@ -304,6 +318,7 @@ export class SearchManagedProperties extends React.Component<ISearchManagedPrope
 
             // Get managed properties and build dropdown options
             let searchManagedProperties = await this.props.searchService.getAvailableManagedProperties();
+            options.pop();
             searchManagedProperties.map(managedProperty => {
 
                 options.push({
@@ -334,10 +349,20 @@ export class SearchManagedProperties extends React.Component<ISearchManagedPrope
 
             // Re-sort ascending after adding free values
             options = options.sort((a, b) => {
-            if (a.text.toLowerCase() > b.text.toLowerCase()) return 1;
-                if (b.text.toLowerCase() > a.text.toLowerCase()) return -1;
+
+                const aValue = a.text ? a.text : a.key ? a.key.toString() : null;
+                const bValue = b.text ? b.text : b.key ? b.key.toString() : null;
+
+                if (aValue && bValue) {
+                    if (aValue.toLowerCase() > bValue.toLowerCase()) return 1;
+                    if (bValue.toLowerCase() > aValue.toLowerCase()) return -1;
+                } 
+
                 return 0;
             });
+
+            // Remove null values
+            options = options.filter((elt) => { return elt.key != null && elt.text !=null; });
 
             this.setState({
                 options: options,

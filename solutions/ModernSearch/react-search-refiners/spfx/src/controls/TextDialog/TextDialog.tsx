@@ -19,7 +19,10 @@ export default class TextDialog extends React.Component<ITextDialogProps, ITextD
      *************************************************************************************/
     constructor(props: ITextDialogProps, state: ITextDialogState) {
         super(props);
-		this.state = { dialogText: this.props.dialogTextFieldValue, showDialog: false };
+		this.state = { 
+			dialogText: this.props.dialogTextFieldValue ? this.props.dialogTextFieldValue : "", 
+			showDialog: false 
+		};
     }
 
 
@@ -27,7 +30,7 @@ export default class TextDialog extends React.Component<ITextDialogProps, ITextD
 	 * Shows the dialog
 	 *************************************************************************************/
 	private showDialog() {
-		this.setState({ dialogText: this.state.dialogText, showDialog: true });
+		this.setState({ dialogText: this.state.dialogText ? this.state.dialogText : "", showDialog: true });
 	}
 
 
@@ -35,7 +38,7 @@ export default class TextDialog extends React.Component<ITextDialogProps, ITextD
 	 * Notifies the parent with the dialog's latest value, then closes the dialog
 	 *************************************************************************************/
 	private saveDialog() {
-		this.setState({ dialogText: this.state.dialogText, showDialog: false });
+		this.setState({ dialogText: this.state.dialogText ? this.state.dialogText : "", showDialog: false });
 
 		if(this.props.onChanged) {
 			this.props.onChanged(this.state.dialogText);
@@ -47,7 +50,7 @@ export default class TextDialog extends React.Component<ITextDialogProps, ITextD
 	 * Closes the dialog without notifying the parent for any changes
 	 *************************************************************************************/
 	private cancelDialog() {
-		this.setState({ dialogText: this.props.dialogTextFieldValue, showDialog: false });
+		this.setState({ dialogText: this.props.dialogTextFieldValue ? this.props.dialogTextFieldValue : "", showDialog: false });
 	}
 
 
@@ -64,7 +67,7 @@ export default class TextDialog extends React.Component<ITextDialogProps, ITextD
      *************************************************************************************/
     public componentDidUpdate(prevProps: ITextDialogProps, prevState: ITextDialogState): void {
         if (this.props.disabled !== prevProps.disabled || this.props.stateKey !== prevProps.stateKey) {
-            this.setState({ dialogText: this.props.dialogTextFieldValue, showDialog: this.state.showDialog });
+            this.setState({ dialogText: this.props.dialogTextFieldValue ? this.props.dialogTextFieldValue : "", showDialog: this.state.showDialog });
         }
     }
 
