@@ -143,19 +143,6 @@ Displays people with details when hovered:
 | **Pause on hover** | If enabled, pause the slider on mouse hover.
 | **Disable info on hover** | Disable the hover behavior for people info panel.
 
-##### Use the 'Live Persona' wrapper control
-
-Any HTML element in your Handlebars template can be wrapped with the 'LivePersona' React control to display more information about an user. The usage is as follow: you need to pass the UPN of the user to make it work and add your content inside the partial block. Careful, the `@root` context variable isn't available in the partial content so you need to reference any global variable by its relative path (ex: `../../myVariable`):
-
-```
-{{#with (split AuthorOWSUSER '|')}}
-    {{#>livepersona upn=[0] disableHover=false}} <!-- [0] is equal to the user UPN -->
-        {{../[1]}} <!-- Display the author display name -->
-    {{/livepersona}}
-{{/with}}
-```
-
-You can see an example of this in the 'Simple list' HTML template.
 
 ## Customize templates with Handlebars ##
 

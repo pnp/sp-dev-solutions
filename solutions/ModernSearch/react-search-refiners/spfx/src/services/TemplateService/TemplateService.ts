@@ -307,7 +307,7 @@ export class TemplateService extends BaseTemplateService {
 
             properties.templateParameters.documentCardFields = [
                 { name: 'Title', field: 'title', value: "Title", useHandlebarsExpr: false, supportHtml: false },
-                { name: 'Location', field: 'location', value: `<a class="ms-Link" href="{{SPSiteUrl}}">{{SiteTitle}}</a>`, useHandlebarsExpr: true, supportHtml: true },
+                { name: 'Location', field: 'location', value: `<a style="color:{{@themeVariant.palette.themePrimary}}" href="{{SPSiteUrl}}">{{SiteTitle}}</a>`, useHandlebarsExpr: true, supportHtml: true },
                 { name: 'Tags', field: 'tags', value: `{{#if owstaxidmetadataalltagsinfo}}<i class='ms-Icon ms-Icon--Tag' aria-hidden='true'></i> {{#each (split owstaxidmetadataalltagsinfo ',') as |tag| }}<a class="ms-Link" href="#owstaxidmetadataalltagsinfo:'{{trim tag}}'">{{tag}}</a>{{/each}}{{/if}}`, useHandlebarsExpr: true, supportHtml: true },
                 { name: 'Preview Image', field: 'previewImage',  value: "{{{getPreviewSrc item}}}", useHandlebarsExpr: true, supportHtml: false },
                 { name: 'Preview URL', field: 'previewUrl' , value: "{{#eq contentclass 'STS_ListItem_851'}}{{{DefaultEncodingURL}}}{{else}}{{#eq FileType 'pdf'}}<!-- Documents from OneDrive sites can't be viewed directly due to SAMEORIGIN iframe restrictions-->{{#contains Path '-my.sharepoint'}}{{{ServerRedirectedEmbedURL}}}{{else}}{{{Path}}}{{/contains}}{{else}}{{{ServerRedirectedEmbedURL}}}{{/eq}}{{/eq}} ", useHandlebarsExpr: true, supportHtml: false },

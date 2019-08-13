@@ -20,9 +20,7 @@
                             {{#> resultTypes item=item}}
                                 <div class="personaCard">
                                     {{#with (split AccountName '|')}}
-                                        {{#>livepersona upn=[2] disableHover=@root.disableHover}}
-                                            <persona-card fields-configuration="{{JSONstringify ../../../../peopleFields}}" item="{{JSONstringify item}}" persona-size="{{../../../../personaSize}}" />
-                                        {{/livepersona}}
+                                            <persona-card fields-configuration="{{JSONstringify ../../../peopleFields}}" item="{{JSONstringify item}}" persona-size="{{../../../personaSize}}" />
                                     {{/with}}
                                 </div>
                             {{/resultTypes}}
