@@ -19,8 +19,6 @@ const LOG_SOURCE: string = 'PersonRendererApplicationCustomizer';
  * You can define an interface to describe it.
  */
 export interface IPersonRendererApplicationCustomizerProperties {
-  // This is an example; replace with your own property
-  testMessage: string;
 }
 
 /** A Custom Action which can be run during execution of a Client Side Application */

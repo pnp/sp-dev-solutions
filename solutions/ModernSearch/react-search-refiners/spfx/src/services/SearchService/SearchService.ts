@@ -1,7 +1,7 @@
 import * as Handlebars from 'handlebars';
 import ISearchService from './ISearchService';
 import { ISearchResults, ISearchResult, IRefinementResult, IRefinementValue, IRefinementFilter, IPromotedResult, ISearchVerticalInformation } from '../../models/ISearchResult';
-import { sp, SearchQuery, SearchResults, SPRest, Sort, SearchSuggestQuery } from '@pnp/sp';
+import { sp, SearchQuery, SearchResults, SPRest, Sort, SearchSuggestQuery, SortDirection } from '@pnp/sp';
 import { Logger, LogLevel, ConsoleListener } from '@pnp/logging';
 import { Text, Guid } from '@microsoft/sp-core-library';
 import { sortBy, isEmpty, escape } from '@microsoft/sp-lodash-subset';
@@ -16,6 +16,7 @@ import ISynonymTable from '../../models/ISynonym';
 import { JSONParser } from '@pnp/odata';
 import { UrlHelper } from '../../helpers/UrlHelper';
 import { ISearchVertical } from '../../models/ISearchVertical';
+import IManagedPropertyInfo from '../../models/IManagedPropertyInfo';
 
 class SearchService implements ISearchService {
     private _initialSearchResult: SearchResults = null;
@@ -30,6 +31,7 @@ class SearchService implements ISearchService {
     private _refiners: IRefinerConfiguration[];
     private _refinementFilters: IRefinementFilter[];
     private _synonymTable: ISynonymTable;
+    private _queryCulture: number;
 
     public get resultsCount(): number { return this._resultsCount; }
     public set resultsCount(value: number) { this._resultsCount = value; }
@@ -57,6 +59,9 @@ class SearchService implements ISearchService {
 
     public set synonymTable(value: ISynonymTable) { this._synonymTable = value; }
     public get synonymTable(): ISynonymTable { return this._synonymTable; }
+
+    public get queryCulture(): number { return this._queryCulture; }
+    public set queryCulture(value: number) { this._queryCulture = value; }
 
     private _localPnPSetup: SPRest;
 
@@ -123,6 +128,11 @@ class SearchService implements ISearchService {
         searchQuery.TrimDuplicates = false;
         searchQuery.SortList = this._sortList ? this._sortList : [];
 
+        // https://docs.microsoft.com/en-us/previous-versions/office/sharepoint-csom/jj262828(v%3Doffice.15)
+        if (this._queryCulture) {
+            searchQuery.Culture = this._queryCulture;
+        }
+
         if (this.refiners) {
             // Get the refiners order specified in the property pane
             sortedRefiners = this.refiners.map(e => e.refinerName);
@@ -169,6 +179,14 @@ class SearchService implements ISearchService {
 
                 const refinementRows: any = refinementResultsRows ? refinementResultsRows.Refiners : [];
                 if (refinementRows.length > 0 && (<any>window).searchHBHelper === undefined) {
+                    const moment = await import(
+                        /* webpackChunkName: 'search-handlebars-helpers' */
+                        'moment'
+                    );
+                    if ((<any>window).searchMoment === undefined) {
+                        (<any>window).searchMoment = moment;
+                    }
+
                     const component = await import(
                         /* webpackChunkName: 'search-handlebars-helpers' */
                         'handlebars-helpers'
@@ -254,7 +272,7 @@ class SearchService implements ISearchService {
             return results;
 
         } catch (error) {
-            Logger.write('[SharePointDataProvider.search()]: Error: ' + error, LogLevel.Error);
+            Logger.write('[SearchService.search()]: Error: ' + error, LogLevel.Error);
             throw error;
         }
     }
@@ -290,7 +308,7 @@ class SearchService implements ISearchService {
             return suggestions;
 
         } catch (error) {
-            Logger.write("[SharePointDataProvider.suggest()]: Error: " + error, LogLevel.Error);
+            Logger.write("[SearchService.suggest()]: Error: " + error, LogLevel.Error);
             throw error;
         }
     }
@@ -303,11 +321,11 @@ class SearchService implements ISearchService {
      */
     public async getSearchVerticalCounts(queryText: string, searchVerticals: ISearchVertical[], enableQueryRules: boolean): Promise<ISearchVerticalInformation[]> {
 
-        const batch = this._localPnPSetup.createBatch();   
-        const parser = new JSONParser();     
+        const batch = this._localPnPSetup.createBatch();
+        const parser = new JSONParser();
         const batchId = Guid.newGuid().toString();
         let verticalInfos: ISearchVerticalInformation[] = [];
- 
+
         const promises = searchVerticals.map(async vertical => {
 
             // Specify the same query parameters as the current vertical one to be sure to get the same total rows
@@ -318,13 +336,18 @@ class SearchService implements ISearchService {
             // More info here https://blog.mastykarz.nl/inconvenient-content-targeting-user-segments-search-rest-api/
             const rowLimit: string = enableQueryRules ? '1' : '0';
 
-            url = UrlHelper.addOrReplaceQueryStringParam(url, 'querytext', `'${queryText.replace(/'/g, "''")}'`);
+            // See http://www.silver-it.com/node/127 for quotes handling with GET requests
+            url = UrlHelper.addOrReplaceQueryStringParam(url, 'querytext', `'${encodeURIComponent(queryText.replace(/'/g, '\'\''))}'`);
             url = UrlHelper.addOrReplaceQueryStringParam(url, 'rowlimit', rowLimit);
             url = UrlHelper.addOrReplaceQueryStringParam(url, 'querytemplate', `'${vertical.queryTemplate}'`);
             url = UrlHelper.addOrReplaceQueryStringParam(url, 'trimduplicates', "'false'");
             url = UrlHelper.addOrReplaceQueryStringParam(url, 'properties', "'EnableDynamicGroups:true,EnableMultiGeoSearch:true'");
             url = UrlHelper.addOrReplaceQueryStringParam(url, 'clienttype', "'ContentSearchRegular'");
             url = UrlHelper.addOrReplaceQueryStringParam(url, 'enablequeryrules', `${enableQueryRules}`);
+
+            if (this._queryCulture) {
+                url = UrlHelper.addOrReplaceQueryStringParam(url, 'culture', `${this.queryCulture}`);
+            }
 
             if (vertical.resultSourceId) {
                 url = UrlHelper.addOrReplaceQueryStringParam(url, 'sourceid', `'${vertical.resultSourceId}'`);
@@ -336,7 +359,7 @@ class SearchService implements ISearchService {
                 }
             }, parser, batchId);
         });
-        
+
         // Execute the batch
         await batch.execute();
 
@@ -361,8 +384,88 @@ class SearchService implements ISearchService {
                 );
             }
         });
-        
+
         return verticalInfos;
+    }
+
+    /**
+     * Gets all available languages for the search query
+     */
+    public async getAvailableQueryLanguages(): Promise<any[]> {
+
+        try {
+            let languages: any = await this._localPnPSetup.web.regionalSettings.installedLanguages.usingCaching().get();
+            return languages.Items;
+
+        } catch (error) {
+            Logger.write('[SearchService._getQueryLanguages()]: Error: ' + error, LogLevel.Error);
+            throw new Error(error);
+        }
+    }
+
+    /**
+     * Gets available search managed properties in the search schema
+     */
+    public async getAvailableManagedProperties(): Promise<IManagedPropertyInfo[]> {
+
+        let managedProperties: IManagedPropertyInfo[] = [];
+        let searchQuery: SearchQuery = {};
+
+        searchQuery.Querytext = '*';
+        searchQuery.Refiners = 'ManagedProperties(filter=50000/0/*,sort=name/ascending)';
+        searchQuery.RowLimit = 1;
+
+        try {
+
+            const results = await this._localPnPSetup.search(searchQuery);
+
+            let refinementResultsRows = results.RawSearchResults.PrimaryQueryResult.RefinementResults;
+            const refinementRows: any = refinementResultsRows ? refinementResultsRows.Refiners : [];
+
+            // Map refinement results                    
+            refinementRows.map((refiner) => {
+                refiner.Entries.map((item) => {
+                    managedProperties.push({
+                        name: item.RefinementName
+                    });
+                });
+            });
+
+        } catch (error) {
+            Logger.write('[SearchService.getAvailableManagedProperties()]: Error: ' + error, LogLevel.Error);
+            throw error;
+        } 
+
+        return managedProperties;       
+    }
+
+    /**
+     * Checks if the provided manage property is sortable or not
+     * @param property the managed property to verify
+     */
+    public async validateSortableProperty(property: string): Promise<boolean> {
+
+        let isSortable: boolean = false;
+
+        let searchQuery: SearchQuery = {};
+        searchQuery.Querytext = "*";
+        searchQuery.SortList = [
+            {
+                Property: property,
+                Direction: SortDirection.Ascending
+            }
+        ];
+        searchQuery.RowLimit = 1;
+        searchQuery.SelectProperties = ['Path'];
+
+        try {
+            const results = await this._localPnPSetup.search(searchQuery);
+            isSortable = true;
+        } catch {
+            isSortable = false;
+        }  
+
+        return isSortable;
     }
 
     /**
@@ -378,8 +481,9 @@ class SearchService implements ISearchService {
             resultsCount: this.resultsCount,
             selectedProperties: this.selectedProperties,
             sortList: this.sortList,
-            synonymTable: this.synonymTable
-        };
+            synonymTable: this.synonymTable,
+            queryCulture: this.queryCulture
+        } as ISearchServiceConfiguration;
     }
 
     /**
@@ -392,12 +496,12 @@ class SearchService implements ISearchService {
 
             let updatedSearchResults = searchResults;
 
-            const batch = this._localPnPSetup.createBatch();   
-            const parser = new JSONParser();     
+            const batch = this._localPnPSetup.createBatch();
+            const parser = new JSONParser();
             const batchId = Guid.newGuid().toString();
 
             const promises = searchResults.map(async result => {
-                
+
                 const filename = result.Filename ? result.Filename : `.${result.FileExtension}`;
 
                 let encodedFileName = filename ? filename.replace(/['']/g, '') : '';
@@ -449,11 +553,18 @@ class SearchService implements ISearchService {
 
         if (matches) {
             matches.map(match => {
-                updatedInputValue = updatedInputValue.replace(match, (<any>window).searchHBHelper.moment(match, "LL", { lang: this._pageContext.cultureInfo.currentUICultureName }));
+                updatedInputValue = updatedInputValue.replace(match, this.momentHelper(match, "LL", this._pageContext.cultureInfo.currentUICultureName));
             });
         }
 
         return updatedInputValue;
+    }
+
+    private momentHelper(str, pattern, lang) {
+        // if no args are passed, return a formatted date
+        let moment = (<any>window).searchMoment;
+        moment.locale(lang);
+        return moment(new Date(str)).format(pattern);
     }
 
     /**
@@ -472,7 +583,7 @@ class SearchService implements ISearchService {
                 // The correct operator is determined by the refiner display template according to its behavior
                 const conditions = filter.Values.map(value => {
 
-                    return /ǂǂ/.test(value.RefinementToken) && encodeTokens ? encodeURIComponent(value.RefinementToken) : value.RefinementToken; 
+                    return /ǂǂ/.test(value.RefinementToken) && encodeTokens ? encodeURIComponent(value.RefinementToken) : value.RefinementToken;
                 });
                 refinementQueryConditions.push(`${filter.FilterName}:${filter.Operator}(${conditions.join(',')})`);
             } else {

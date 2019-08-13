@@ -1,16 +1,16 @@
 import * as React from 'react';
 import * as ReactDom from 'react-dom';
-import { Version, DisplayMode } from '@microsoft/sp-core-library';
-import {
-  BaseClientSideWebPart,
-  IPropertyPaneConfiguration,
-  PropertyPaneTextField,
-  PropertyPaneToggle,
-  PropertyPaneDropdown,
-  IPropertyPaneField,
-  IPropertyPaneChoiceGroupOption,
-  PropertyPaneChoiceGroup
-} from '@microsoft/sp-webpart-base';
+import { Version, DisplayMode, Environment, EnvironmentType } from '@microsoft/sp-core-library';
+import { BaseClientSideWebPart } from "@microsoft/sp-webpart-base";
+import { 
+  IPropertyPaneConfiguration, 
+  IPropertyPaneField, 
+  IPropertyPaneChoiceGroupOption, 
+  PropertyPaneChoiceGroup, 
+  PropertyPaneDropdown, 
+  PropertyPaneTextField, 
+  PropertyPaneToggle 
+} from "@microsoft/sp-property-pane";
 import { PropertyFieldCollectionData, CustomCollectionFieldType } from '@pnp/spfx-property-controls/lib/PropertyFieldCollectionData';
 import * as strings from 'SearchRefinersWebPartStrings';
 import { IRefinementFilter, IRefinementResult } from '../../models/ISearchResult';
@@ -19,7 +19,7 @@ import { IDynamicDataCallables, IDynamicDataPropertyDefinition, IDynamicDataSour
 import { ISearchRefinersWebPartProps } from './ISearchRefinersWebPartProps';
 import { Placeholder } from '@pnp/spfx-controls-react/lib/Placeholder';
 import IRefinerSourceData from '../../models/IRefinerSourceData';
-import { DynamicProperty } from '@microsoft/sp-component-base';
+import { DynamicProperty, ThemeChangedEventArgs, ThemeProvider } from '@microsoft/sp-component-base';
 import { SearchComponentType } from '../../models/SearchComponentType';
 import RefinersLayoutOption from '../../models/RefinersLayoutOptions';
 import { ISearchRefinersContainerProps } from './components/SearchRefinersContainer/ISearchRefinersContainerProps';
@@ -28,12 +28,25 @@ import { DynamicDataService } from '../../services/DynamicDataService/DynamicDat
 import IDynamicDataService from '../../services/DynamicDataService/IDynamicDataService';
 import RefinerTemplateOption from '../../models/RefinerTemplateOption';
 import RefinersSortOption from '../../models/RefinersSortOptions';
+import { SearchManagedProperties, ISearchManagedPropertiesProps } from '../../controls/SearchManagedProperties/SearchManagedProperties';
+import MockSearchService from '../../services/SearchService/MockSearchService';
+import SearchService from '../../services/SearchService/SearchService';
+import ISearchService from '../../services/SearchService/ISearchService';
+import { IComboBoxOption } from 'office-ui-fabric-react/lib/ComboBox';
+import { cloneDeep } from '@microsoft/sp-lodash-subset';
 
 export default class SearchRefinersWebPart extends BaseClientSideWebPart<ISearchRefinersWebPartProps> implements IDynamicDataCallables {
 
   private _dynamicDataService: IDynamicDataService;
   private _selectedFilters: IRefinementFilter[] = [];
   private _searchResultSourceData: DynamicProperty<ISearchResultSourceData>;
+  private _searchService: ISearchService;
+  private _themeProvider: ThemeProvider;
+
+  /**
+   * The list of available managed managed properties (managed globally for all proeprty pane fiels if needed)
+   */
+  private _availableManagedProperties: IComboBoxOption[];
 
   public render(): void {
 
@@ -131,8 +144,16 @@ export default class SearchRefinersWebPart extends BaseClientSideWebPart<ISearch
   protected onInit(): Promise<void> {
 
     this._initializeRequiredProperties();
+    this.initThemeVariant();
+
     this._dynamicDataService = new DynamicDataService(this.context.dynamicDataProvider);
     this.ensureDataSourceConnection();
+
+    if (Environment.type === EnvironmentType.Local) {
+      this._searchService = new MockSearchService();
+    } else {
+        this._searchService = new SearchService(this.context.pageContext, this.context.spHttpClient);
+    }
 
     if (this.properties.searchResultsDataSourceReference) {
       // Needed to retrieve manually the value for the dynamic property at render time. See the associated SPFx bug
@@ -171,8 +192,22 @@ export default class SearchRefinersWebPart extends BaseClientSideWebPart<ISearch
           {
             id: 'refinerName',
             title: strings.Refiners.RefinerManagedPropertyField,
-            type: CustomCollectionFieldType.string,
-            placeholder: '\"RefinableStringXXX\", etc.'
+            type: CustomCollectionFieldType.custom,
+            onCustomRender: (field, value, onUpdate, item, itemId, onCustomFieldValidation) => {
+              // Need to specify a React key to avoid item duplication when adding a new row
+              return React.createElement("div", {key : `${field.id}-${itemId}`},
+                  React.createElement(SearchManagedProperties, {
+                  defaultSelectedKey: item[field.id] ? item[field.id] : '',
+                  onUpdate: (newValue: any, isSortable: boolean) => { 
+                    onUpdate(field.id, newValue);
+                    onCustomFieldValidation(field.id, '');
+                  },
+                  searchService: this._searchService,
+                  validateSortable: false,
+                  availableProperties: this._availableManagedProperties,
+                  onUpdateAvailableProperties: this._onUpdateAvailableProperties
+              } as ISearchManagedPropertiesProps));
+            } 
           },
           {
             id: 'displayValue',
@@ -374,5 +409,39 @@ export default class SearchRefinersWebPart extends BaseClientSideWebPart<ISearch
     }
 
     this.properties.selectedLayout = this.properties.selectedLayout ? this.properties.selectedLayout : RefinersLayoutOption.Vertical;
+  }
+
+  /**
+   * Handler when the list of available managed properties is fetched by a property pane control¸or a field in a collection data control
+   * @param properties the fetched properties
+   */
+  private _onUpdateAvailableProperties(properties: IComboBoxOption[]) {
+
+    // Save the value in the root Web Part class to avoid fetching it again if the property list is requested again by any other property pane control
+    this._availableManagedProperties = cloneDeep(properties);
+
+    // Refresh all fields so other property controls can use the new list 
+    this.context.propertyPane.refresh();
+    this.render();
+  }
+
+  /**
+   * Initializes theme variant properties
+   */
+  private initThemeVariant(): void {
+
+    // Consume the new ThemeProvider service
+    this._themeProvider = this.context.serviceScope.consume(ThemeProvider.serviceKey);
+
+    // Register a handler to be notified if the theme variant changes
+    this._themeProvider.themeChangedEvent.add(this, this._handleThemeChangedEvent.bind(this));
+  }
+
+  /**
+   * Update the current theme variant reference and re-render.
+   * @param args The new theme
+   */
+  private _handleThemeChangedEvent(args: ThemeChangedEventArgs): void {
+      this.render();
   }
 }

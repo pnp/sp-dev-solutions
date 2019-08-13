@@ -1,4 +1,5 @@
 define([], function() {
-  return {
-  }
+    return {
+        "UpdatedPrefix": "Updated"
+    }
 });

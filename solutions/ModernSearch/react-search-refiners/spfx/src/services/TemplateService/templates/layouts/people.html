@@ -1,0 +1,54 @@
+<content id="template">
+
+        <style>
+            .personaCard {
+                margin: 10px;
+            }
+        </style>
+    
+        <div class="template_root">
+            <div class="template_defaultCard">
+                {{#if showResultsCount}}
+                <div class="template_resultCount">
+                    <label class="ms-fontWeight-semibold">{{getCountMessage totalRows keywords}}</label>
+                </div>
+                {{/if}}
+                <div class="ms-Grid">
+                    <div class="ms-Grid-row">
+                        {{#each items as |item|}}
+                        <div class="ms-Grid-col ms-sm12 ms-md12 ms-lg12">
+                            {{#> resultTypes item=item}}
+                                <div class="personaCard">
+                                    {{#with (split AccountName '|')}}
+                                            <persona-card fields-configuration="{{JSONstringify ../../../peopleFields}}" item="{{JSONstringify item}}" persona-size="{{../../../personaSize}}" />
+                                    {{/with}}
+                                </div>
+                            {{/resultTypes}}
+                        </div>
+                        {{/each}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </content>
+        
+    <content id="placeholder">   
+        <div class="placeholder_root">
+            <div class="template_defaultCard">
+                {{#if showResultsCount}}
+                    <div class="template_resultCount">
+                        <span class="shimmer line" style="width: 20%"></span>
+                    </div>
+                {{/if}}
+                <div class="ms-Grid"> 
+                    <div class="ms-Grid-row">
+                        {{#times maxResultsCount}}
+                            <div class="ms-Grid-col ms-sm12 ms-md12 ms-lg12">
+                                <persona-card-shimmers persona-size="{{@root.personaSize}}"></persona-card-shimmers>
+                            </div>
+                        {{/times}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </content>

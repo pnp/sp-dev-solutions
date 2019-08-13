@@ -1,18 +1,14 @@
 import * as React from 'react';
 import * as ReactDom from 'react-dom';
 import { Version, DisplayMode } from '@microsoft/sp-core-library';
-import {
-  BaseClientSideWebPart,
-  IPropertyPaneConfiguration,
-  PropertyPaneDropdown
-} from '@microsoft/sp-webpart-base';
-
+import { BaseClientSideWebPart } from "@microsoft/sp-webpart-base";
+import { IPropertyPaneConfiguration, PropertyPaneDropdown } from "@microsoft/sp-property-pane";
 import * as strings from 'SearchPaginationWebPartStrings';
 import SearchPagination from './components/SearchPaginationContainer/SearchPaginationContainer';
 import { ISearchPaginationWebPartProps } from './ISearchPaginationWebPartProps';
 import { Placeholder } from '@pnp/spfx-controls-react/lib/Placeholder';
 import { IDynamicDataCallables, IDynamicDataPropertyDefinition } from '@microsoft/sp-dynamic-data';
-import { DynamicProperty } from '@microsoft/sp-component-base';
+import { DynamicProperty, ThemeChangedEventArgs, ThemeProvider } from '@microsoft/sp-component-base';
 import ISearchResultSourceData from '../../models/ISearchResultSourceData';
 import { SearchComponentType } from '../../models/SearchComponentType';
 import { IPaginationInformation } from '../../models/ISearchResult';
@@ -24,6 +20,7 @@ export default class SearchPaginationWebPart extends BaseClientSideWebPart<ISear
   private _dynamicDataService: IDynamicDataService;
   private _currentPage: number = 1;
   private _pageInformation: DynamicProperty<ISearchResultSourceData>;
+  private _themeProvider: ThemeProvider;
 
   public render(): void {
     let searchPagination: IPaginationInformation = null;
@@ -104,6 +101,8 @@ export default class SearchPaginationWebPart extends BaseClientSideWebPart<ISear
     this._dynamicDataService = new DynamicDataService(this.context.dynamicDataProvider);
     this.ensureDataSourceConnection();
 
+    this.initThemeVariant();
+
     if (this.properties.searchResultsDataSourceReference) {
         // Needed to retrieve manually the value for the dynamic property at render time. See the associated SPFx bug
         // https://github.com/SharePoint/sp-dev-docs/issues/2985
@@ -171,5 +170,25 @@ export default class SearchPaginationWebPart extends BaseClientSideWebPart<ISear
     if (propertyPath.localeCompare('searchResultsDataSourceReference') === 0) {
       this.ensureDataSourceConnection();
     }
+  }
+
+  /**
+   * Initializes theme variant properties
+   */
+  private initThemeVariant(): void {
+
+    // Consume the new ThemeProvider service
+    this._themeProvider = this.context.serviceScope.consume(ThemeProvider.serviceKey);
+
+    // Register a handler to be notified if the theme variant changes
+    this._themeProvider.themeChangedEvent.add(this, this._handleThemeChangedEvent.bind(this));
+  }
+
+  /**
+   * Update the current theme variant reference and re-render.
+   * @param args The new theme
+   */
+  private _handleThemeChangedEvent(args: ThemeChangedEventArgs): void {
+      this.render();
   }
 }

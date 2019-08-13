@@ -4,7 +4,7 @@ import IBaseRefinerTemplateState from '../IBaseRefinerTemplateState';
 import { IRefinementValue, RefinementOperator } from "../../../../../models/ISearchResult";
 import { Checkbox } from 'office-ui-fabric-react/lib/Checkbox';
 import { Text } from '@microsoft/sp-core-library';
-import { Link } from "office-ui-fabric-react";
+import { Link } from 'office-ui-fabric-react/lib/Link';
 import * as strings from 'SearchRefinersWebPartStrings';
 import * as update from 'immutability-helper';
 
@@ -27,12 +27,18 @@ export default class CheckboxTemplate extends React.Component<IBaseRefinerTempla
     
     public render() {
 
+
         return <div>
                     {
                         this.props.refinementResult.Values.map((refinementValue: IRefinementValue, j) => {
 
                                 return (
                                 <Checkbox
+                                    styles={{
+                                        root:{
+                                            padding: 10
+                                        }
+                                    }}
                                     key={j}                                    
                                     checked={this._isValueInFilterSelection(refinementValue)}
                                     label={Text.format(refinementValue.RefinementValue + ' ({0})', refinementValue.RefinementCount)}

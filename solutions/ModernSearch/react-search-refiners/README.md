@@ -1,14 +1,17 @@
 # SharePoint Framework modern search Web Parts
 
-![Version](https://img.shields.io/badge/version-3.3.2-green.svg)
+![Version](https://img.shields.io/badge/version-3.6.0-green.svg)
+
+## Download
+**Get the latest release at our [releases page](https://github.com/SharePoint/sp-dev-solutions/releases/latest).**
 
 ## Summary
 This solution allows you to build user friendly SharePoint search experiences using SPFx in the modern interface. The main features include:
 
 - Fully customizable SharePoint search query like the good old Content Search Web Part.
 - Can either use a static query or be connected to a search box component using SPFx dynamic data.
-- Live templating system with Handlebar to meet your requirements in terms of UI + builtin list and tiles templates. Can also use template from an external file.
-- Search results includings previews for Office documents and Office 365 videos.
+- Live templating system with Handlebar to meet your requirements in terms of UI + built-in layouts. Can also use template from an external file.
+- Search results including previews for Office documents and Office 365 videos.
 - Customizable refiners supporting multilingual values for taxonomy based filters.
 - Sortable results (unique field).
 - Refiners Web Part.
@@ -16,7 +19,7 @@ This solution allows you to build user friendly SharePoint search experiences us
 - SharePoint best bets support.
 - Search query enhancement with NLP tools (like Microsoft LUIS).
 
-A complete 1 hour turorial video is available on the [official SharePoint Developer blog](https://developer.microsoft.com/en-us/sharepoint/blogs/pnp-webcast-sharepoint-framework-modern-search-web-part/):
+A complete 1 hour tutorial video is available on the [official SharePoint Developer blog](https://developer.microsoft.com/en-us/sharepoint/blogs/pnp-webcast-sharepoint-framework-modern-search-web-part/):
 
 <a href="https://www.youtube.com/watch?v=g41nvRVwtds" target="_blank"><img src="http://img.youtube.com/vi/g41nvRVwtds/maxresdefault.jpg"/></a>
 
@@ -28,8 +31,8 @@ This sample includes the following components and service(s):
 
 **Web Part(s)**
 
-Component | Description 
------ | ----- 
+Component | Description
+----- | -----
 Search Box Web Part | Allows users to enter free text/KQL search queries connected to a search results Web Part.
 Search Results Web Part | Performs static or dynamic search query with customizable parameters sorting and templating. An associated [blog post](http://thecollaborationcorner.com/2017/10/16/build-dynamic-sharepoint-search-experiences-with-refiners-and-paging-with-spfx-office-ui-fabric-and-pnp-js-library/) is available to give you more details about this Web Part implementation.
 Search Refiners | Allows users to configure refiners for a search results Web Part.
@@ -39,12 +42,12 @@ Search Verticals | Allows users to search in predefined scopes.
 
 **Back-end service(s)**
 
-Service | Description 
------ | ----- 
+Service | Description
+----- | -----
 Search Query Enhancer | Sample Azure function to demonstrate the use of Microsoft LUIS and other cognitive services to interpret user intents and enhance the search box query accordingly.
 
-## Used SharePoint Framework Version 
-![drop](https://img.shields.io/badge/drop-1.7.1-green.svg)
+## Used SharePoint Framework Version
+![drop](https://img.shields.io/badge/drop-1.8.2-green.svg)
 
 ## Applies to
 
@@ -55,7 +58,8 @@ Search Query Enhancer | Sample Azure function to demonstrate the use of Microsof
 
 Solution| Contributors(s)
 --------|---------
-ModernSearch | Franck Cornu (aequos) - [@FranckCornu](http://www.twitter.com/FranckCornu)<br/>Tarald Gåsbakk (Puzzlepart AS) - [@taraldgasbakk](https://twitter.com/Taraldgasbakk)<br/>Yannick Reekmans - [@yannickreekmans](https://twitter.com/yannickreekmans)<br/>Mikael Svenson (Puzzlepart AS) - [@mikaelsvenson](http://www.twitter.com/mikaelsvenson)
+ModernSearch | Franck Cornu - [@FranckCornu](http://www.twitter.com/FranckCornu)<br/>Tarald Gåsbakk - [@taraldgasbakk](https://twitter.com/Taraldgasbakk)<br/>Yannick Reekmans - [@yannickreekmans](https://twitter.com/yannickreekmans)<br/>Mikael Svenson - [@mikaelsvenson](http://www.twitter.com/mikaelsvenson)<br/>Albert-Jan Schot - [@appieschot](https://twitter.com/appieschot)
+
 
 ## Web Parts Configuration
 
@@ -63,15 +67,15 @@ ModernSearch | Franck Cornu (aequos) - [@FranckCornu](http://www.twitter.com/Fra
 
 <p align="center"><img width="300px" src="./images/sb_property_pane.png"/><p>
 
-#### Default Search Query Settings 
+#### Default Search Query Settings
 
-Setting | Description 
+Setting | Description
 -------|----
-Use a dynamic data source | You can set a default query text coming from am other data source. This case is particularly useful when you want to put a search box Web Part on the front page redirecting to an other page with the same query. Use the query string parameter 'q' from the builtin 'Page Environment' data source.
+Use a dynamic data source | You can set a default query text coming from am other data source. This case is particularly useful when you want to put a search box Web Part on the front page redirecting to an other page with the same query. Use the query string parameter 'q' from the built-in 'Page Environment' data source.
 
 #### Search box options
 
-Setting | Description 
+Setting | Description
 -------|----
 Enable query suggestions | The search box supports query suggestions from SharePoint. Refer to the following [article](https://docs.microsoft.com/en-us/sharepoint/search/manage-query-suggestions) to know how to add query suggestions in your SharePoint tenant (caution: it can take up to 24h for changes to take effect).
 Send the query to a new page | Sends the search query text to a new page. On that page, use an other search box Web Part configured with a dynamic data source as the default query. This Web Part uses the URL fragment '#' to pass the entered keywords. Make sure you use this data source property in your targeted components to retrieve the query.
@@ -79,7 +83,7 @@ Placeholder text | The placeholder text to display in the search box.
 
 #### Search query enhancement
 
-Setting | Description 
+Setting | Description
 -------|----
 Use Natural Language Processing service | Turn this option 'on' if you want to enhance the query text with NLP services like LUIS. In the _'Service Url'_ field, enter the URL of the Azure Function endpoint. Refer the instructions in the `'/functions/README.md'` file to set up the service. In this sample, only relevant detected keywords are returned as q new query using LUIS. Enabling debug mode will show you relevant information about the entered query.
 
@@ -101,9 +105,9 @@ Use Natural Language Processing service | Turn this option 'on' if you want to e
   </tr>
 <table>
 
-#### Search Query Configuration 
+#### Search Query Configuration
 
-Setting | Description 
+Setting | Description
 -------|----
 Search query keywords | Here you choose to use a static search query or a query coming from a data source. It is recommended to use the associated Web Part coming with this sample. The search query is in KQL format so you can use search query variables (See this [post](http://www.techmikael.com/2015/07/sharepoint-rest-do-support-query.html) to know which ones are allowed). You can only plug one source to this Web Part.
 
@@ -111,28 +115,28 @@ Search query keywords | Here you choose to use a static search query or a query 
 
 #### Search Settings
 
-Setting | Description 
+Setting | Description
 -------|----
 Query template | The search query template in KQL format. You can use search variables here (like Path:{Site}).
 Result Source Identifier | The GUID of a SharePoint result source.
-Initial sort order | The initial search results sort order. You can use mutliple properties here.
-Sortable fields | The search managed properties to use for sorting. Make sure these are sortable. With SharePoint Online, you have to reuse the default ones to do so (RefinableStringXX etc.). The order is the same as they will appear in the sort panel. You can also provide your own custom labels using the following format RefinableString01:"You custom filter label",RefinableString02:"You custom filter label",... If no sortable fields are provided, the 'Sort' button will not be visible.
-Connect to a search refiners Web Part | If enable, select the search refiners Web Part to use on the current page to get selected filters. It is a 2 ways connection so don't forget to connect the targeted search refiners to the search results Web Part as well. 
+Sort order | The initial search results sort order, where you can use one or multiple properties to sort by. **By default, results are sorted by created date (ascending) and size (descending). Remove these values to reset default sorting**
+Sortable fields | The search managed properties to use for sorting. With SharePoint Online, you have to reuse the default ones to do so (RefinableStringXX etc.). The order is the same as they will appear in the sort panel. You can also provide your own custom labels using the following format RefinableString01:"You custom filter label",RefinableString02:"You custom filter label",... If no sortable fields are provided, the 'Sort' button will not be visible.
+Connect to a search refiners Web Part | If enable, select the search refiners Web Part to use on the current page to get selected filters. It is a 2 ways connection so don't forget to connect the targeted search refiners to the search results Web Part as well.
+Connect to a search verticals Web Part | If enable, select the search verticals Web Part to connect to.
 Enable Query Rules | Enable the query rules if applies. Turn this options  'on' to display your SharePoint Promoted results (links only).
-Selected properties | The search managed properties to retrieve. You can use these properties then in your Handlebar template with the syntax (`item.property_name`).
+Selected properties | The search managed properties to retrieve. You can select them from a predefined list or add them as free text if not listed. Then, these properties are available in your Handlebars template with the syntax (`item.property_name` or `property_name` inside the `{{#each}}` loop).
 Number of items to retrieve per page | Quite explicit. The paging behavior is done directly by the search API (See the *SearchDataProvider.ts* file), not by the code on post-render.
 
 #### Styling Options
 
-Setting | Description 
+Setting | Description
 -------|----
 Web Part Title | Shows a title for this Web Part. Set blank if you don't want a title.
 Show blank if no result | Shows nothing if there is no result
-Show result count | Shows the result count and entered keywords  
-Connect to a search pagination Web Part	 | If enable, select the search pagination Web Part to use on the current page to get selected page. It is a 2 ways connection so don't forget to connect the targeted search pagination to the search results Web Part as well. 
-Result Layouts options | Choose the template to use to display search results. Some layouts are defined by default (List and Tiles) but you can create your own either by clinkg on the **"Custom"** tile, or **"Edit template"** from an existing chosen template. In custom mode, you can set an external template. It has to be in the same SharePoint tenant. Behind the scenes, the Office UI Fabric core CSS components are used in a isolated way. Custom code templates will also automaticly be displayed here upon registration.
+Show result count | Shows the result count and entered keywords
+Connect to a search pagination Web Part	 | If enable, select the search pagination Web Part to use on the current page to get selected page. It is a 2 ways connection so don't forget to connect the targeted search pagination to the search results Web Part as well.
+Result Layouts options | Choose the template to use to display search results. Some layouts are defined by default but you can create your own either by clicking on the **"Custom"** tile, or **"Edit template"** from an existing chosen template. In custom mode, you can set an external template. It has to be in the same SharePoint tenant. Behind the scenes, the Office UI React controls are used. Custom code templates will also automatically be displayed here upon registration. See the [TEMPLATING.md documentation](./docs/TEMPLATING.md) for more information about templating.
 Result types | Allows you to set a custom template at item level according to a specific condition (ex: FileType equals 'pdf').
-Handlebars Helpers | Load [handlebar helpers](https://github.com/helpers/handlebars-helpers) to use in your template. Disable this option will make Web Part loading faster if you don't need them.
 
 ##### Miscellaneous: Taxonomy values dynamic translation
 
@@ -148,73 +152,7 @@ The search results Web Part supports automatic translation for taxonomy based fi
 
 ---
 
-#### Templates with Handlebars
 
-This Web Part allows you change customize the way you display your search results. The templating feature comes directly from the original [react-content-query-webpart](https://github.com/SharePoint/sp-dev-fx-webparts/tree/master/samples/react-content-query-webpart) so thanks to @spplante!
-
-<p align="center">
-  <img width="500px" src="./images/edit_template.png"/>
-</p>
-
-##### Available tokens
-
-Setting | Description 
--------|----
-`{{showResultsCount}}` | Boolean flag corresponding to the associated in the property pane.
-`{{totalRows}}` | The result count.
-`{{maxResultsCount}}` | The number of results configured to retrieve in the web part.
-`{{actualResultsCount}}` | The actual number of results retreived.
-`{{keywords}}` | The search query.
-`{{getSummary HitHighlightedSummary}}` | Format the *HitHighlightedSummary* property with recognized words in bold.
-`{{getDate <date_managed_property> "<format>}}"` | Format the date with moment.ts according to the current language. Date in the managed property should be on the form `2018-09-10T06:29:25.0000000Z` for the function to work.
-`{{getPreviewSrc item}}` | Determine the image thumbnail URL if applicable.
-`{{getUrl item}}` | Get the item URL. For a document, it means the URL to the Office Online instance or the direct URL (to download it).
-`{{getUrlField managed_propertyOWSURLH "URL/Title"}}` | Return the URL or Title part of a URL field managed property.
-`{{getCountMessage totalRows <?keywords>}}` | Display a friendly message displaying the result and the entered keywords.
-`{{<search_managed_property_name>}}` | Any valid search managed property returned in the results set. These are typically managed properties set in the *"Selected properties"* setting in the property pane. You don't need to prefix them with `item.` if you are in the "each" loop.
-`{{webUrl}}` | The current web relative url. Use `{{../webUrl}}` inside a loop.
-`{{siteUrl}}` | The current site relative url. Use `{{../siteUrl}}` inside a loop.
-`{{getUniqueCount items "property"}}` | Get the unique count of a property over the result set (or another array)
-`{{getUniqueCount array}}` | Get the unique count of objects in an array. Example: [1,1,1,2,2,4] would return `3`.
-
-Also the [Handlebars helpers](https://github.com/helpers/handlebars-helpers) (188 helpers) are also available. You can also define your own in the *BaseTemplateService.ts* file. See [helper-moment](https://github.com/helpers/helper-moment) for date samples using moment.
-
-##### Use result types
-
-The result types feature is a convenient way to split your templates according to results characteristics instead of making a huge central template with multiple conditions. They can be defined in 'inline' mode or using an external file. You can use the sorting option to determine to order of evaluation for each condition. 
-
-<p align="center">
-  <img width="5700px" src="./images/result_types.png"/>
-</p>
-
-The following operators are supported:
-- Equals
-- Contains
-- StartsWith
-- Greater Or Equal
-- Less Or Equal
-- Less than
-- Greater than
-- Is not null
-
-To use it in your main template, just follow this pattern. This block is not mandatory.
-
-```
-{{#> resultTypes}}
-  {{!-- The block below will be used as default item template if no result types matched --}}
-  <div class="template_result">
-      <!-- Your default template markup -->
-  </div>
-  
-{{/resultTypes}}
-```
-
-Handlebars [partials](https://handlebarsjs.com/partials.html) are used behind the scenes and conditions are built dynamically using a recursive if/else structure.
-
-#### Custom code renderers
-You may also define  your own renderers, which most often should be SPFx application customizers. These should use the resultservice to register themselves as renderers, and will upon registration be available as a rendering choice in the "Result Layouts" Section.
-
-More information about custom code renderers may be found in a [seperate sample](../react-search-refiners-renderer), which showcases such a renderer.
 
 #### Out of the box query variables
 
@@ -248,7 +186,7 @@ The following out of the box [query variables](https://docs.microsoft.com/en-us/
 |{User.PreferredContentLanguage}  <br/> |Language as specified as Preferred Content Language in the profile of the user who issued the query.  <br/> |
 |{User.PreferredDisplayLanguage}  <br/> |Language as specified as Preferred Display Language in the profile of the user who issued the query.  <br/> |
 |{User.\<property\>}  <br/> |Any property from the user profile of the user who issued the query — for example, SPS-Interests, including custom properties.  <br/> |
-   
+
 ##### Other properties
 |**Query variable**|**Definition**|
 |:-----|:-----|
@@ -282,51 +220,20 @@ This WP supports SharePoint best bets via SharePoint query rules:
   <img width="500px" src="./images/best_bets.png"/>
 </p>
 
-#### Elements previews
-
-Previews are available by default for list and tiles layouts, for Office documents and Office 365 videos (not Microsoft Stream). The embed URL is directly taken from the `ServerRedirectedEmbedURL` managed property retrieved from the search results. 
-
-<p align="center">
-  <img width="500px" src="./images/result_preview.png"/>
-</p>
-
-The WebPart must have the following selected properties in the configuration to get the preview feature work (they are set by default): 
-- ServerRedirectedPreviewURL
-- ServerRedirectedURL
-- contentclass
-- ServerRedirectedEmbedURL
-- DefaultEncodingURL
-
-This preview is displayed as an _iframe_ or a _video_ tag when the user clicks on the corresponding preview image or compliant HTML elementss. To enable the callout preview in your templates, your HTML elements must have the  `document-preview-item` or `video-preview-item` CSS class and provide the following attributes:
-
-- `data-src`: the URL of the preview image.
-- `data-url`: the URL of the iframe source or the video.
-- `data-fileext`: the file extension for the video (for video only).
-
-**Preview on documents**
-```
-<div class="document-preview-item" data-src="{{ServerRedirectedPreviewURL}}" data-url="{{Path}}">
-```
-
-**Preview on videos**
-```
-<img class="video-preview-item" src="{{PictureThumbnailURL}}" data-src="{{PictureThumbnailURL}}" data-url="{{DefaultEncodingURL}}" data-fileext="{{FileType}}"/>
-```
-
 ### Search Refiners
 
 <p align="center"><img width="300px" src="./images/search-refiners-property-pane.png"/><p>
 
 #### Refiner Options
 
-Setting | Description 
+Setting | Description
 -------|----
-Refiners | The search managed properties to use as refiners. Make sure these are refinable. With SharePoint Online, you have to reuse the default ones to do so (RefinableStringXX etc.). The order is the same as they will appear in the refnement panel. You can also provide your own custom labels using the following format RefinableString01:"You custom filter label",RefinableString02:"You custom filter label",... This Web Part supports dynamic translation of taxonomy based refiners with few additional configurations in the connected search results Web Part (see above).
+Refiners | The search managed properties to use as refiners. Make sure these are refinable. With SharePoint Online, you have to reuse the default ones to do so (RefinableStringXX etc.). The order is the same as they will appear in the refinement panel. You can also provide your own custom labels using the following format RefinableString01:"You custom filter label",RefinableString02:"You custom filter label",... This Web Part supports dynamic translation of taxonomy based refiners with few additional configurations in the connected search results Web Part (see above).
 Connect to search results Web Part | The search results Web Part to use on the current page to get filters.
 
 #### Styling Options
 
-Setting | Description 
+Setting | Description
 -------|----
 Web Part Title | Shows a title for this Web Part. Set blank if you don't want a title.
 Show blank if no result | Shows nothing if there is no filter
@@ -338,12 +245,12 @@ Filters layout | Choose the template to use to display filters results.
 
 #### Pagination Options
 
-Setting | Description 
+Setting | Description
 -------|----
 Connect to search results Web Part | The search results Web Part to use on the current page to get page.
 
 ### Search Navigation Webpart
-This addition is a pivot-navigation link list that may be used to emulate the navigation in the out-of-the-box search center. You can use this webpart on several different pages and set up a searchbox and refiners webpart to handle different types of result. The webpart will automaticly detect if it is on the right page from the set of navigation nodes, and display it in the preferred color. 
+This addition is a pivot-navigation link list that may be used to emulate the navigation in the out-of-the-box search center. You can use this webpart on several different pages and set up a searchbox and refiners webpart to handle different types of result. The webpart will automatically detect if it is on the right page from the set of navigation nodes, and display it in the preferred color.
 <img src="./images/NavNodesMain.gif">
 
 #### Connect to a source
@@ -354,7 +261,7 @@ This step is used to set up the navigation nodes, and needs to be done on all pa
 <img src="./images/ChangeNode.gif">
 
 #### Setup colors
-The you may either use the sitecollections theme colors, or use a custom color you choose in the settings pane.
+The you may either use the site collection theme colors, or use a custom color you choose in the settings pane.
 <img src="./images/ChangeColor.gif">
 
 ### Search Verticals Web Part
@@ -362,7 +269,7 @@ The you may either use the sitecollections theme colors, or use a custom color y
 <p align="center"><img width="500px" src="./images/search_verticals.png"/><p>
 
 
-The search verticals Web Part allow users to search through predefined scopes (i.e videos, people, etc.). The behavior is different from the search navigation Web Part because here, we simply replace the query template and result source dynamically for a chosen vertical. To get it work, you simply need to connect the search verticals Web Part to a search results Web Part using the associated opton. Also, if you want to display counts for each verticals **when a new query is performed** (for instance a search box query or an URL fragment udpate), connect the search results Web Part to the search verticals one (two ways connection in this case).
+The search verticals Web Part allow users to search through predefined scopes (i.e videos, people, etc.). The behavior is different from the search navigation Web Part because here, we simply replace the query template and result source dynamically for a chosen vertical. To get it work, you simply need to connect the search verticals Web Part to a search results Web Part using the associated option. Also, if you want to display counts for each verticals **when a new query is performed** (for instance a search box query or an URL fragment update), connect the search results Web Part to the search verticals one (two ways connection in this case).
 
 #### Verticals Options
 
@@ -383,7 +290,7 @@ The search verticals Web Part allow users to search through predefined scopes (i
 <table>
 
 
-Setting | Description 
+Setting | Description
 -------|----
 Search verticals | Configure the search verticals to display. When you set a query template or a result source id for a vertical, these override the ones in the connected search results. You can also set an icon for a vertical using [Office UI Fabric icons names](https://developer.microsoft.com/en-us/fabric#/styles/icons). The query keywords are shared across all verticals. For instance, if you need default results for tabs, just specify a default query in the connected search results Web Part (like `*`) and the `{searchTerms}` expression in your vertical query template. Also, selected refinement filters are reset, if present, when a new vertical is selected.
 Show results count | Indicates if the results count should be displayed for each vertical. In this case, you need to connect the Web Part to an existing search results Web Part on the page.
@@ -393,7 +300,7 @@ Show results count | Indicates if the results count should be displayed for each
 This Web Part illustrates the following concepts on top of the SharePoint Framework:
 
 - Build an user friendly search experience on the top of the SharePoint search REST API with paging, refiners and query suggestions using the *@pnp* JavaScript library.
-- Use [Handlebars](https://handlebarsjs.com/) to create templates for search results according to your requirements like the good old display templates. 
+- Use [Handlebars](https://handlebarsjs.com/) to create templates for search results according to your requirements like the good old display templates.
 - Using the SPFx [dynamic data feature](https://docs.microsoft.com/en-us/sharepoint/dev/spfx/dynamic-data) to connect Web Parts.
 - Using SharePoint taxonomy using JSOM in SPFx (filter translations)
 - Integrate the [@pnp/spfx-property-controls](https://github.com/SharePoint/sp-dev-fx-property-controls) in your solution (*PlaceHolder* control).
@@ -420,21 +327,24 @@ Version|Date|Comments
 2.2.0.1 | Dec 3, 2018 | <ul><li>Remove switch for handlebar helpers, and instead load helpers if used in the template.</li></ul>
 2.3.0.0 | Dec 13, 2018 | <ul><li>Upgraded to @pnp/controls 1.13.0</li><li>Added a result types features</li><li>Fix bug regarding dynamic data source connection</li></ul>
 2.4.0.0 | Jan 03, 2019 | Added custom code renderer support.
-2.4.0.1 | Jan 07, 2019 | Added backwards compability for older sort configurations, and old empty refiner configurations
+2.4.0.1 | Jan 07, 2019 | Added backwards compatibility for older sort configurations, and old empty refiner configurations
 2.5.0.1 | Feb 11, 2019 | Downgrade @microsoft/sp-office-ui-fabric-core to v1.6.0 to fix theming
 2.5.1.0 | Mar 05, 2019 | Added Search Navigation webpart to the package.
 3.0.0.0 | Mar 10, 2019 | Created a dedicated refiners Web Part to connect with a search results like to the classic SharePoint search experience.
-3.0.1.0 | Mar 14, 2019 | Created a dedicated pagination Web Part to connect with a search results like to the classic SharePoint search experience. Improved Refienrs WP CSS.
+3.0.1.0 | Mar 14, 2019 | Created a dedicated pagination Web Part to connect with a search results like to the classic SharePoint search experience. Improved Refiners WP CSS.
 3.0.2.0 | Mar 14, 2019 | Fixed regressions with the paging experience
 3.0.3.0 | Mar 16, 2019 | Fixed display of custom renderers, in edit mode
 3.0.4.0 | Mar 21, 2019 | Fixed loading of Handlebars helpers when having multiple search parts on a page
 3.0.5.0 | Mar 26, 2019 | Fixed recreating SearchService on each render
 3.1.0.0 | Mar 30, 2019 | Added date range and multi value refiner templates
 3.2.0.0 | Apr 08, 2019 | Added support for QueryString token
-3.3.0.0 | Apr 20, 2019 | Added search verticals Web Part allwoing to search within predefined scopes using query template and result source.
+3.3.0.0 | Apr 20, 2019 | Added search verticals Web Part allowing to search within predefined scopes using query template and result source.
+3.4.0.0 | May 23, 2019 | Added placeholders HTML markup by template instead of global.
+3.5.0.0 | July 8th, 2019 | Fixes: Taxonomy tags, web part header, theme colors, search box clearing, loading of handlebars helpers. Added Spanish locale. Optimized CSS references (may break in custom templates if you used some of the OUIF styles). Optimized bundle size for run-time. Added more options for time zone handling with `getDate`.
+3.6.0.0 | Aug 13th, 2019 | <ul><li>Removed the deprecated 'office-ui-fabric' module and updated layouts with the Office UI React components by wrapping them with web components.</li><li>Added a DetailsList and Debug layouts + template options for 'Tiles' (placeholders fileds, etc.) and 'Details List' (column builder, etc.).</li><li>Updated property pane fields (Search Results and Refiners WP) to use a dynamic search managed properties list instead of text values.</li><li>Added `regEx` and `getUnique` helpers.</li><li>Added Dutch translation.</li></ul>
 
 ## Important notice on upgrading the solution from pre v2.2.0.0
-**Due to code restucturing we have hit an edge case which impacts upgrades from previous versions. To solve the issue go to `https://<tenant>.sharepoint.com/sites/<appcatalog>/Lists/ComponentManifests` and remove the entries for SearchBox and Search Results, and then upload the .sppkg for the new release.**
+**Due to code restructuring we have hit an edge case which impacts upgrades from previous versions. To solve the issue go to `https://<tenant>.sharepoint.com/sites/<appcatalog>/Lists/ComponentManifests` and remove the entries for SearchBox and Search Results, and then upload the .sppkg for the new release.**
 
 **Next you need to loop over all sites which have the web parts installed, and upgrade the App on those sites. Now the web parts should work on new and existing sites. You may use the PnP command `Update-PnPApp` to update the application.**
 
@@ -453,7 +363,7 @@ Version|Date|Comments
 
 - Clone this repository
 
-### SPFx 
+### SPFx
 - Go to the [spfx](./spfx) directory
 - In the command line run:
   - `npm install`

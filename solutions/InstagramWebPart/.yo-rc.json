@@ -1,0 +1,11 @@
+{
+  "@microsoft/generator-sharepoint": {
+    "isCreatingSolution": true,
+    "environment": "spo",
+    "version": "1.7.0-dev.1",
+    "libraryName": "insta-webpart",
+    "libraryId": "7ce362ee-19a4-4c94-8b1d-bb86aeae6f9e",
+    "packageManager": "npm",
+    "componentType": "webpart"
+  }
+}

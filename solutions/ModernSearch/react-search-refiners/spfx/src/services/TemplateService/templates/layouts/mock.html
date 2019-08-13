@@ -13,3 +13,21 @@
         {{/each}}
     </ul>
 </div>
+
+<content id="placeholder">
+    <div class="placeholder_root">
+        <span><strong>Mocked external template</strong></span>
+        {{#if showResultsCount}}
+            <div class="template_resultCount">
+                <span class="shimmer line" style="width: 20%"></span>
+            </div>
+        {{/if}}
+        <ul class='ms-List template_defaultList'>
+            {{#times maxResultsCount}}  
+                <li class='ms-ListItem ms-ListItem--image' tabindex='0'>
+                    <span class="shimmer line" style="width: 100%"></span>
+                </li>
+            {{/times}}
+        </ul>
+    </div>
+</content>

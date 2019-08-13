@@ -28,7 +28,7 @@ export interface IPreviewContainerProps {
    /**
     * The video props
     */
-   videoProps: IVideoPreviewProps;
+   videoProps?: IVideoPreviewProps;
 }
 
 export interface IVideoPreviewProps {

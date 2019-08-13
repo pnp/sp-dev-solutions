@@ -1,13 +1,8 @@
 import * as React from 'react';
 import * as ReactDom from 'react-dom';
 import { Version, Guid, DisplayMode } from '@microsoft/sp-core-library';
-import {
-  BaseClientSideWebPart,
-  IPropertyPaneConfiguration,
-  IPropertyPaneField,
-  PropertyPaneToggle,
-  PropertyPaneDropdown
-} from '@microsoft/sp-webpart-base';
+import { BaseClientSideWebPart } from "@microsoft/sp-webpart-base";
+import { IPropertyPaneConfiguration, IPropertyPaneField, PropertyPaneDropdown, PropertyPaneToggle } from "@microsoft/sp-property-pane";
 import * as strings from 'SearchVerticalsWebPartStrings';
 import { ISearchVerticalsWebPartProps } from './ISearchVerticalsWebPartProps';
 import ISearchVerticalsContainerProps from './components/SearchVerticalsContainer/ISearchVerticalsContainerProps';
@@ -19,7 +14,7 @@ import { ISearchVertical } from '../../models/ISearchVertical';
 import IDynamicDataService from '../../services/DynamicDataService/IDynamicDataService';
 import { DynamicDataService } from '../../services/DynamicDataService/DynamicDataService';
 import ISearchResultSourceData from '../../models/ISearchResultSourceData';
-import { DynamicProperty } from '@microsoft/sp-component-base';
+import { DynamicProperty, ThemeProvider, ThemeChangedEventArgs } from '@microsoft/sp-component-base';
 import { cloneDeep } from '@microsoft/sp-lodash-subset';
 import { Placeholder } from '@pnp/spfx-controls-react/lib/Placeholder';
 
@@ -30,7 +25,7 @@ export default class SearchVerticalsWebPart extends BaseClientSideWebPart<ISearc
   private _dynamicDataService: IDynamicDataService;
   private _searchResultSourceData: DynamicProperty<ISearchResultSourceData>;
   private _selectedVertical: ISearchVertical;
-
+  private _themeProvider: ThemeProvider;
 
   public constructor() {
     super();
@@ -124,6 +119,8 @@ export default class SearchVerticalsWebPart extends BaseClientSideWebPart<ISearc
 
     this._dynamicDataService = new DynamicDataService(this.context.dynamicDataProvider);
     this.ensureDataSourceConnection();
+
+    this.initThemeVariant();
 
     this.properties.verticals = this.properties.verticals ? this.properties.verticals : [];
 
@@ -294,5 +291,25 @@ export default class SearchVerticalsWebPart extends BaseClientSideWebPart<ISearc
    */
   private _setupWebPart() {
     this.context.propertyPane.open();
+  }
+
+  /**
+   * Initializes theme variant properties
+   */
+  private initThemeVariant(): void {
+
+    // Consume the new ThemeProvider service
+    this._themeProvider = this.context.serviceScope.consume(ThemeProvider.serviceKey);
+
+    // Register a handler to be notified if the theme variant changes
+    this._themeProvider.themeChangedEvent.add(this, this._handleThemeChangedEvent.bind(this));
+  }
+
+  /**
+   * Update the current theme variant reference and re-render.
+   * @param args The new theme
+   */
+  private _handleThemeChangedEvent(args: ThemeChangedEventArgs): void {
+      this.render();
   }
 }
