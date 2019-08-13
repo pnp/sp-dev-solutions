@@ -130,7 +130,7 @@ Displays search result items and global Handlebars context in a debug view (read
 
 #### People View
 
-Displays people with details when hovered:
+Displays people:
 
 <p align="center"><img width="300px" src="../images/people_layout.png"/></p>
 
@@ -140,8 +140,7 @@ Displays people with details when hovered:
 | ------ | ---------------
 | **Manage persona fields** | Allows you to define you own values for card placeholder fields. Like the document card, by default, the persona card fields come with predefined mappings but you can set your own.
 | **Picture size** | The size of the person picture to isplay. The more the size is and the more information will be displayed for each item and vice versa.
-| **Pause on hover** | If enabled, pause the slider on mouse hover.
-| **Disable info on hover** | Disable the hover behavior for people info panel.
+| **Disable info on hover** | Disable the hover behavior for people info panel. (for future use)
 
 
 ## Customize templates with Handlebars ##
