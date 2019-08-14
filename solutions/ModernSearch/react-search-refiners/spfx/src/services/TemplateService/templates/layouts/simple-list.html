@@ -43,9 +43,7 @@
                                         {{getSummary HitHighlightedSummary}}
                                         <span class="template_author">
                                             {{#with (split AuthorOWSUSER '|')}}
-                                                {{#>livepersona upn=[0] disableHover=false}}
-                                                    {{../[1]}}
-                                                {{/livepersona}}
+                                                    {{[1]}}
                                             {{/with}}
                                         </span>
                                     </span>

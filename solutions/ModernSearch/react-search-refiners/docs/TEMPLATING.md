@@ -130,7 +130,7 @@ Displays search result items and global Handlebars context in a debug view (read
 
 #### People View
 
-Displays people with details when hovered:
+Displays people:
 
 <p align="center"><img width="300px" src="../images/people_layout.png"/></p>
 
@@ -140,22 +140,8 @@ Displays people with details when hovered:
 | ------ | ---------------
 | **Manage persona fields** | Allows you to define you own values for card placeholder fields. Like the document card, by default, the persona card fields come with predefined mappings but you can set your own.
 | **Picture size** | The size of the person picture to isplay. The more the size is and the more information will be displayed for each item and vice versa.
-| **Pause on hover** | If enabled, pause the slider on mouse hover.
-| **Disable info on hover** | Disable the hover behavior for people info panel.
+| **Disable info on hover** | Disable the hover behavior for people info panel. (for future use)
 
-##### Use the 'Live Persona' wrapper control
-
-Any HTML element in your Handlebars template can be wrapped with the 'LivePersona' React control to display more information about an user. The usage is as follow: you need to pass the UPN of the user to make it work and add your content inside the partial block. Careful, the `@root` context variable isn't available in the partial content so you need to reference any global variable by its relative path (ex: `../../myVariable`):
-
-```
-{{#with (split AuthorOWSUSER '|')}}
-    {{#>livepersona upn=[0] disableHover=false}} <!-- [0] is equal to the user UPN -->
-        {{../[1]}} <!-- Display the author display name -->
-    {{/livepersona}}
-{{/with}}
-```
-
-You can see an example of this in the 'Simple list' HTML template.
 
 ## Customize templates with Handlebars ##
 
