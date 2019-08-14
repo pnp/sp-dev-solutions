@@ -1,6 +1,6 @@
 {
     "name": "pnp-react-search-refiners",
-    "version": "3.6.2",
+    "version": "3.6.3",
     "private": true,
     "engines": {
         "node": ">=0.10.0"
@@ -28,9 +28,6 @@
         "@pnp/sp-taxonomy": "1.3.4",
         "@pnp/spfx-controls-react": "1.14.0",
         "@pnp/spfx-property-controls": "1.16.0",
-        "@types/es6-promise": "0.0.33",
-        "@webcomponents/custom-elements": "^1.2.4",
-        "@webcomponents/webcomponentsjs": "^2.2.10",
         "core-js": "3.2.1",
         "custom-event-polyfill": "^1.0.6",
         "downshift": "3.1.5",
@@ -61,10 +58,13 @@
         "@types/react-dom": "16.8.0",
         "@types/sharepoint": "2013.1.9",
         "@types/webpack-env": "1.13.1",
+        "@types/es6-promise": "0.0.33",
         "ajv": "~5.2.2",
         "gulp": "~3.9.1",
         "unlazy-loader": "0.1.3",
-        "webpack-bundle-analyzer": "^3.3.2"
+        "webpack-bundle-analyzer": "^3.3.2",
+        "@webcomponents/custom-elements": "^1.2.4",
+        "@webcomponents/webcomponentsjs": "^2.2.10"
     },
     "resolutions": {
         "@types/react": "16.7.22"
