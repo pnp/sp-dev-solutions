@@ -3,7 +3,7 @@ import * as ReactDom from 'react-dom';
 import { Version, DisplayMode } from '@microsoft/sp-core-library';
 import { DynamicProperty, ThemeChangedEventArgs, ThemeProvider } from '@microsoft/sp-component-base';
 import { BaseClientSideWebPart } from "@microsoft/sp-webpart-base";
-import { IPropertyPaneConfiguration, PropertyPaneDropdown, PropertyPaneToggle } from "@microsoft/sp-property-pane";
+import { IPropertyPaneConfiguration, PropertyPaneDropdown, PropertyPaneToggle, IPropertyPaneField, PropertyPaneTextField } from "@microsoft/sp-property-pane";
 import { Placeholder } from '@pnp/spfx-controls-react/lib/Placeholder';
 import * as strings from 'SearchNavigationWebPartStrings';
 import SearchNavigation from './components/SearchNavigationContainer/SearchNavigationContainer';
@@ -12,6 +12,7 @@ import { SearchComponentType } from '../../models/SearchComponentType';
 import { DynamicDataService } from '../../services/DynamicDataService/DynamicDataService';
 import IDynamicDataService from '../../services/DynamicDataService/IDynamicDataService';
 import ISearchQuery from '../../models/ISearchQuery';
+import { QueryPathBehavior } from '../../helpers/UrlHelper';
 
 export default class SearchNavigationWebPart extends BaseClientSideWebPart<ISearchNavigationWebPartProps> {
     private _propertyFieldCollectionData;
@@ -78,6 +79,9 @@ export default class SearchNavigationWebPart extends BaseClientSideWebPart<ISear
         this.ensureDataSourceConnection();
 
         this.initThemeVariant();
+
+        this.properties.queryPathBehavior = (this.properties.queryPathBehavior !== undefined && this.properties.queryPathBehavior !== null) ? this.properties.queryPathBehavior : QueryPathBehavior.QueryParameter;
+        this.properties.queryStringParameter = (this.properties.queryStringParameter !== undefined && this.properties.queryStringParameter !== null) ? this.properties.queryStringParameter : "q";
     
         return Promise.resolve();
     }
@@ -111,57 +115,115 @@ export default class SearchNavigationWebPart extends BaseClientSideWebPart<ISear
                 {
                     groups: [
                         {
-                            groupFields: [
-                                PropertyPaneDropdown('queryKeywordsDataSourceReference', {
-                                    options: this._dynamicDataService.getAvailableDataSourcesByType(SearchComponentType.SearchBoxWebPart),
-                                    label: strings.DynamicFieldLabel
-                                }),
-                                PropertyPaneToggle('useNlpValue', {
-                                    label: strings.UseNlpValueLabel,
-                                }),
-                                this._propertyFieldCollectionData('nodes', {
-                                    key: 'nodes',
-                                    enableSorting: true,
-                                    label: strings.NavNodeLabel,
-                                    panelHeader: strings.NavNodeHeader,
-                                    manageBtnLabel: strings.NavNodeManageBtnLabel,
-                                    value: this.properties.nodes,
-                                    fields: [
-                                        {
-                                            id: 'displayText',
-                                            title: strings.NavNodeDisplayTextFieldLabel,
-                                            type: this._customCollectionFieldType.string,
-                                        },
-                                        {
-                                            id: 'url',
-                                            title: strings.NavNodeUrlFieldLabel,
-                                            type: this._customCollectionFieldType.url,
-                                        }
-                                    ]
-                                }),
-                                PropertyPaneToggle('useThemeColor', {
-                                  label: strings.UseThemeColorLabel,
-                                }),
-                            ]
+                            groupName: strings.SearchNavigationDataSettings,
+                            groupFields: this._getSearchNavigationConfigFields()
+                        },
+                        {
+                            groupName: strings.SearchNavigationColorSettings,
+                            groupFields: this._getSearchNavigationColorFields()
+                        },
+                        {
+                            groupName: strings.SearchNavigationQueryPathBehaviorSettings,
+                            groupFields: this._getSearchNavigationBehaviorFields()
                         }
-                    ]
+                    ],
+                    displayGroupsAsAccordion: true
                 }
             ]
         };
-        if(!this.properties.useThemeColor) {
-          propertypane.pages[0].groups[0].groupFields.push(this._propertyFieldColorPicker('color', {
-            label: strings.ColorPickerLabel,
-            selectedColor: this.properties.color,
-            onPropertyChange: this.onPropertyPaneFieldChanged,
-            properties: this.properties,
-            disabled: false,
-            alphaSliderHidden: false,
-            style: this._propertyFieldColorPickerStyle.Full,
-            iconName: 'Precipitation',
-            key: 'colorFieldId',
-          }));
-        }
+
         return propertypane;
+    }
+
+    private _getSearchNavigationConfigFields(): IPropertyPaneField<any>[] {
+        let searchNavigationConfigFields: IPropertyPaneField<any>[] = [
+            this._propertyFieldCollectionData('nodes', {
+                key: 'nodes',
+                enableSorting: true,
+                label: strings.NavNodeLabel,
+                panelHeader: strings.NavNodeHeader,
+                manageBtnLabel: strings.NavNodeManageBtnLabel,
+                value: this.properties.nodes,
+                fields: [
+                    {
+                        id: 'displayText',
+                        title: strings.NavNodeDisplayTextFieldLabel,
+                        type: this._customCollectionFieldType.string,
+                    },
+                    {
+                        id: 'url',
+                        title: strings.NavNodeUrlFieldLabel,
+                        type: this._customCollectionFieldType.url,
+                    }
+                ]
+            }),
+            PropertyPaneDropdown('queryKeywordsDataSourceReference', {
+                options: this._dynamicDataService.getAvailableDataSourcesByType(SearchComponentType.SearchBoxWebPart),
+                label: strings.DynamicFieldLabel
+            }),
+            PropertyPaneToggle('useNlpValue', {
+                label: strings.UseNlpValueLabel,
+            })
+        ];
+    
+        return searchNavigationConfigFields;
+    }
+
+    private _getSearchNavigationColorFields(): IPropertyPaneField<any>[] {
+        let searchNavigationColorFields: IPropertyPaneField<any>[] = [
+            PropertyPaneToggle('useThemeColor', {
+                label: strings.UseThemeColorLabel,
+            })
+        ];
+
+        if(!this.properties.useThemeColor) {
+            searchNavigationColorFields.push(this._propertyFieldColorPicker('color', {
+              label: strings.ColorPickerLabel,
+              selectedColor: this.properties.color,
+              onPropertyChange: this.onPropertyPaneFieldChanged,
+              properties: this.properties,
+              disabled: false,
+              alphaSliderHidden: false,
+              style: this._propertyFieldColorPickerStyle.Full,
+              iconName: 'Precipitation',
+              key: 'colorFieldId',
+            }));
+        }
+    
+        return searchNavigationColorFields;
+    }
+
+    private _getSearchNavigationBehaviorFields(): IPropertyPaneField<any>[] {
+        let searchNavigationBehaviorFields: IPropertyPaneField<any>[] = [
+            PropertyPaneDropdown('queryPathBehavior', {
+                label:  strings.SearchBoxQueryPathBehaviorLabel,
+                options: [
+                  { key: QueryPathBehavior.URLFragment, text: strings.SearchBoxUrlFragmentQueryPathBehavior },
+                  { key: QueryPathBehavior.QueryParameter, text: strings.SearchBoxQueryStringQueryPathBehavior }
+                ],
+                selectedKey: this.properties.queryPathBehavior
+            })
+        ];
+
+        if (this.properties.queryPathBehavior === QueryPathBehavior.QueryParameter) {
+            searchNavigationBehaviorFields.push(
+              PropertyPaneTextField('queryStringParameter', {
+                disabled: this.properties.queryPathBehavior !== QueryPathBehavior.QueryParameter,
+                label: strings.SearchBoxQueryStringParameterName,
+                onGetErrorMessage: (value) => {
+                  if (this.properties.queryPathBehavior === QueryPathBehavior.QueryParameter) {
+                    if (value === null ||
+                      value.trim().length === 0) {
+                      return strings.SearchBoxQueryParameterNotEmpty;
+                    }              
+                  }
+                  return '';
+                }
+              })
+            );
+        }
+    
+        return searchNavigationBehaviorFields;
     }
 
     /**

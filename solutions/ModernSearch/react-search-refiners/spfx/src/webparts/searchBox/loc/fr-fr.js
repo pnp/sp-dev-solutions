@@ -6,7 +6,7 @@ define([], function() {
       "SearchBoxSearchInNewPageLabel": "Envoyer la requête sur une nouvelle page",
       "SearchBoxPageUrlLabel": "URL de la page",
       "SearchBoxUrlErrorMessage": "Veuillez spécifier une URL valide",
-      "SearchBoxQuerySettings": "Pamètres de la requête par défaut",
+      "SearchBoxQuerySettings": "Paramètres de la requête par défaut",
       "SearchBoxSameTabOpenBehavior": "Utiliser l'onglet courant",
       "SearchBoxNewTabOpenBehavior": "Ouvrir dans un nouvel onglet",
       "SearchBoxPageOpenBehaviorLabel": "Mode d'ouverture de la page",

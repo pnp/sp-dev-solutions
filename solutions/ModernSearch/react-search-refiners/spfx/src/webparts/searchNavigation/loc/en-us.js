@@ -12,6 +12,14 @@ define([], function() {
     "PlaceHolderConfigureBtnLabel": "Configure",
     "PlaceHolderIconText": "Search Navigation Web Part",
     "PlaceHolderDescription": "This component displays search navigation",
-    "UseNlpValueLabel": "Use Natural Language Processing query value"
+    "UseNlpValueLabel": "Use Natural Language Processing query value",
+    "SearchBoxQueryPathBehaviorLabel": "Method",
+    "SearchBoxUrlFragmentQueryPathBehavior": "URL fragment",
+    "SearchBoxQueryStringQueryPathBehavior": "Query parameter",
+    "SearchBoxQueryStringParameterName": "Query parameter name",
+    "SearchBoxQueryParameterNotEmpty": "Please provide a value for the parameter",
+    "SearchNavigationDataSettings": "Navigation settings",
+    "SearchNavigationColorSettings": "Color settings",
+    "SearchNavigationQueryPathBehaviorSettings": "Navigation behaviour settings"
   }
 });

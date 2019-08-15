@@ -15,7 +15,9 @@
     "officeFabricIconFontName": "NavigationFlipper",
     "properties": {
       "useThemeColor": true,
-      "useNlpValue": false
+      "useNlpValue": false,
+      "queryPathBehavior": 1,
+      "queryStringParameter": "q"
     }
   }]
 }

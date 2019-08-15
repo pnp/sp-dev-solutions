@@ -12,6 +12,14 @@ declare interface ISearchNavigationWebPartStrings {
   PlaceHolderIconText: string;
   PlaceHolderDescription: string;
   UseNlpValueLabel: string;
+  SearchBoxQueryPathBehaviorLabel: string;
+  SearchBoxUrlFragmentQueryPathBehavior: string;
+  SearchBoxQueryStringQueryPathBehavior: string;
+  SearchBoxQueryStringParameterName: string;
+  SearchBoxQueryParameterNotEmpty: string;
+  SearchNavigationDataSettings: string;
+  SearchNavigationColorSettings: string;
+  SearchNavigationQueryPathBehaviorSettings: string;
 }
 
 declare module 'SearchNavigationWebPartStrings' {
