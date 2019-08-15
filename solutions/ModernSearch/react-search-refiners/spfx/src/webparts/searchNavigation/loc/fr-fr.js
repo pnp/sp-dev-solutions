@@ -22,6 +22,9 @@ define([], function() {
       "SearchBoxQueryParameterNotEmpty": "Veuillez fournir une valeur pour le paramètre",
       "SearchNavigationDataSettings": "Paramètres de navigation",
       "SearchNavigationColorSettings": "Paramètres de couleur",
-      "SearchNavigationQueryPathBehaviorSettings": "Configuración de comportamiento de navegación"
+      "SearchNavigationQueryPathBehaviorSettings": "Configuración de comportamiento de navegación",
+      "SearchBoxSameTabOpenBehavior": "Utiliser l'onglet courant",
+      "SearchBoxNewTabOpenBehavior": "Ouvrir dans un nouvel onglet",
+      "SearchBoxPageOpenBehaviorLabel": "Mode d'ouverture de la page"
     }
   });

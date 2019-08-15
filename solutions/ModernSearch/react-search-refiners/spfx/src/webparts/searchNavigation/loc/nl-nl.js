@@ -20,6 +20,9 @@ define([], function() {
     "SearchBoxQueryParameterNotEmpty": "Geef een parameter op",
     "SearchNavigationDataSettings": "Navigatie instellingen",
     "SearchNavigationColorSettings": "Kleur instellingen",
-    "SearchNavigationQueryPathBehaviorSettings": "Navigatiegedrag instellingen"
+    "SearchNavigationQueryPathBehaviorSettings": "Navigatiegedrag instellingen",
+    "SearchBoxSameTabOpenBehavior": "Gebruik huidige tab",
+    "SearchBoxNewTabOpenBehavior": "Open in nieuwe tab",
+    "SearchBoxPageOpenBehaviorLabel": "Gedrag van openen"
   }
 });

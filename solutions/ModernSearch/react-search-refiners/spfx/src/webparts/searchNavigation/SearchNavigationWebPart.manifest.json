@@ -17,7 +17,8 @@
       "useThemeColor": true,
       "useNlpValue": false,
       "queryPathBehavior": 1,
-      "queryStringParameter": "q"
+      "queryStringParameter": "q",
+      "openBehavior": 0
     }
   }]
 }

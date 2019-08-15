@@ -20,6 +20,9 @@ declare interface ISearchNavigationWebPartStrings {
   SearchNavigationDataSettings: string;
   SearchNavigationColorSettings: string;
   SearchNavigationQueryPathBehaviorSettings: string;
+  SearchBoxSameTabOpenBehavior: string;
+  SearchBoxNewTabOpenBehavior: string;
+  SearchBoxPageOpenBehaviorLabel: string;
 }
 
 declare module 'SearchNavigationWebPartStrings' {

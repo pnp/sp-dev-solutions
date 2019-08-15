@@ -12,7 +12,7 @@ import { SearchComponentType } from '../../models/SearchComponentType';
 import { DynamicDataService } from '../../services/DynamicDataService/DynamicDataService';
 import IDynamicDataService from '../../services/DynamicDataService/IDynamicDataService';
 import ISearchQuery from '../../models/ISearchQuery';
-import { QueryPathBehavior } from '../../helpers/UrlHelper';
+import { QueryPathBehavior, PageOpenBehavior } from '../../helpers/UrlHelper';
 
 export default class SearchNavigationWebPart extends BaseClientSideWebPart<ISearchNavigationWebPartProps> {
     private _propertyFieldCollectionData;
@@ -82,7 +82,8 @@ export default class SearchNavigationWebPart extends BaseClientSideWebPart<ISear
 
         this.properties.queryPathBehavior = (this.properties.queryPathBehavior !== undefined && this.properties.queryPathBehavior !== null) ? this.properties.queryPathBehavior : QueryPathBehavior.QueryParameter;
         this.properties.queryStringParameter = (this.properties.queryStringParameter !== undefined && this.properties.queryStringParameter !== null) ? this.properties.queryStringParameter : "q";
-    
+        this.properties.openBehavior = (this.properties.openBehavior !== undefined && this.properties.openBehavior !== null) ? this.properties.openBehavior : PageOpenBehavior.Self;
+
         return Promise.resolve();
     }
 
@@ -195,6 +196,14 @@ export default class SearchNavigationWebPart extends BaseClientSideWebPart<ISear
 
     private _getSearchNavigationBehaviorFields(): IPropertyPaneField<any>[] {
         let searchNavigationBehaviorFields: IPropertyPaneField<any>[] = [
+            PropertyPaneDropdown('openBehavior', {
+                label:  strings.SearchBoxPageOpenBehaviorLabel,
+                options: [
+                  { key: PageOpenBehavior.Self, text: strings.SearchBoxSameTabOpenBehavior },
+                  { key: PageOpenBehavior.NewTab, text: strings.SearchBoxNewTabOpenBehavior }
+                ],
+                selectedKey: this.properties.openBehavior
+            }),
             PropertyPaneDropdown('queryPathBehavior', {
                 label:  strings.SearchBoxQueryPathBehaviorLabel,
                 options: [
