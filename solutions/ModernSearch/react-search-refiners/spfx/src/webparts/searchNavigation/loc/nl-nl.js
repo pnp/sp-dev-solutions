@@ -12,6 +12,17 @@ define([], function() {
     "PlaceHolderConfigureBtnLabel": "Configureren",
     "PlaceHolderIconText": "Zoeknavigatie webpart",
     "PlaceHolderDescription": "Dit onderdeel toont de zoeknavigatie",
-    "UseNlpValueLabel": "Gebruik Natural Language Processing zoekopdracht waarde"
+    "UseNlpValueLabel": "Gebruik Natural Language Processing zoekopdracht waarde",
+    "SearchBoxQueryPathBehaviorLabel": "Methode",
+    "SearchBoxUrlFragmentQueryPathBehavior": "URL fragment",
+    "SearchBoxQueryStringQueryPathBehavior": "Zoekopdracht parameter",
+    "SearchBoxQueryStringParameterName": "Zoekopdracht parameter naam",
+    "SearchBoxQueryParameterNotEmpty": "Geef een parameter op",
+    "SearchNavigationDataSettings": "Navigatie instellingen",
+    "SearchNavigationColorSettings": "Kleur instellingen",
+    "SearchNavigationQueryPathBehaviorSettings": "Navigatiegedrag instellingen",
+    "SearchBoxSameTabOpenBehavior": "Gebruik huidige tab",
+    "SearchBoxNewTabOpenBehavior": "Open in nieuwe tab",
+    "SearchBoxPageOpenBehaviorLabel": "Gedrag van openen"
   }
 });
