@@ -45,7 +45,10 @@ export default class SearchNavigationWebPart extends BaseClientSideWebPart<ISear
                     queryKeywords: queryKeywords,
                     color: this.properties.color,
                     useThemeColor: this.properties.useThemeColor,
-                    currentPageUrl: this.context.pageContext.site.absoluteUrl.replace(this.context.pageContext.site.serverRelativeUrl, "") + this.context.pageContext.site.serverRequestPath
+                    currentPageUrl: this.context.pageContext.site.absoluteUrl.replace(this.context.pageContext.site.serverRelativeUrl, "") + this.context.pageContext.site.serverRequestPath,
+                    openBehavior: this.properties.openBehavior,
+                    queryPathBehavior: this.properties.queryPathBehavior,
+                    queryStringParameter: this.properties.queryStringParameter
                 }
             );
         }
