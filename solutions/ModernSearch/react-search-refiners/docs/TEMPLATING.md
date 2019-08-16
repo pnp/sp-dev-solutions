@@ -130,7 +130,7 @@ Displays search result items and global Handlebars context in a debug view (read
 
 #### People View
 
-Displays people with details when hovered:
+Displays people:
 
 <p align="center"><img width="300px" src="../images/people_layout.png"/></p>
 
@@ -140,22 +140,8 @@ Displays people with details when hovered:
 | ------ | ---------------
 | **Manage persona fields** | Allows you to define you own values for card placeholder fields. Like the document card, by default, the persona card fields come with predefined mappings but you can set your own.
 | **Picture size** | The size of the person picture to isplay. The more the size is and the more information will be displayed for each item and vice versa.
-| **Pause on hover** | If enabled, pause the slider on mouse hover.
-| **Disable info on hover** | Disable the hover behavior for people info panel.
+| **Disable info on hover** | Disable the hover behavior for people info panel. (for future use)
 
-##### Use the 'Live Persona' wrapper control
-
-Any HTML element in your Handlebars template can be wrapped with the 'LivePersona' React control to display more information about an user. The usage is as follow: you need to pass the UPN of the user to make it work and add your content inside the partial block. Careful, the `@root` context variable isn't available in the partial content so you need to reference any global variable by its relative path (ex: `../../myVariable`):
-
-```
-{{#with (split AuthorOWSUSER '|')}}
-    {{#>livepersona upn=[0] disableHover=false}} <!-- [0] is equal to the user UPN -->
-        {{../[1]}} <!-- Display the author display name -->
-    {{/livepersona}}
-{{/with}}
-```
-
-You can see an example of this in the 'Simple list' HTML template.
 
 ## Customize templates with Handlebars ##
 
@@ -177,7 +163,7 @@ Setting | Description
 `{{actualResultsCount}}` | The actual number of results retrived.
 `{{keywords}}` | The search query.
 `{{getSummary HitHighlightedSummary}}` | Format the *HitHighlightedSummary* property with recognized words in bold.
-`{{getDate <date_managed_property> "<format>" <time handling>}}` | Format the date with moment.ts according to the current language. Date in the managed property should be on the form `2018-09-10T06:29:25.0000000Z` for the function to work.<p>&lt;time handling&gt; is optional and takes <ul><li>0 = format to browsers time zone (default)</li><li>1 = ignore Z time and handle as browsers local time zone</li><li>2 = strip time and set to 00:00:00 in browsers local time zone</li><li>3 = display in the time zone for the current web</li><li>4 = display in the time zone from the uers profile</li>
+`{{getDate <date_managed_property> "<format>" <time handling>}}` | Format the date with [Moment.js](https://momentjs.com/docs/#/parsing/string-format/) according to the current language. Date in the managed property should be on the form `2018-09-10T06:29:25.0000000Z` for the function to work.<p>&lt;time handling&gt; is optional and takes <ul><li>0 = format to browsers time zone (default)</li><li>1 = ignore Z time and handle as browsers local time zone</li><li>2 = strip time and set to 00:00:00 in browsers local time zone</li><li>3 = display in the time zone for the current web</li><li>4 = display in the time zone from the uers profile</li>
 `{{getPreviewSrc item}}` | Determine the image thumbnail URL if applicable.
 `{{getUrl item}}` | Get the item URL. For a document, it means the URL to the Office Online instance or the direct URL (to download it).
 `{{getUrlField managed_propertyOWSURLH "URL/Title"}}` | Return the URL or Title part of a URL field managed property.

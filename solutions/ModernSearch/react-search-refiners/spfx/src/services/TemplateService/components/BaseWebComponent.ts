@@ -1,9 +1,9 @@
 import * as ReactDOM from 'react-dom';
 import { camelCase } from '@microsoft/sp-lodash-subset';
-import "@webcomponents/webcomponentsjs/webcomponents-bundle";
-import '@webcomponents/webcomponentsjs/custom-elements-es5-adapter.js';
 import { WebPartContext } from '@microsoft/sp-webpart-base';
 import { IReadonlyTheme } from '@microsoft/sp-component-base';
+import '@webcomponents/custom-elements/src/native-shim';
+import '@webcomponents/custom-elements/custom-elements.min';
 
 export abstract class BaseWebComponent extends HTMLElement {
 
@@ -18,7 +18,7 @@ export abstract class BaseWebComponent extends HTMLElement {
     protected disconnectedCallback() {
         ReactDOM.unmountComponentAtNode(this);
     }
-
+    
     /**
      * Transforms web component attributes to camel case propreties to pass in React components
      * (ex: a 'preview-image' HTML attribute becomes 'previewImage' prop, etc.)

@@ -1,6 +1,6 @@
-import 'core-js/modules/es7.array.includes.js';
-import 'core-js/modules/es6.string.includes.js';
-import 'core-js/modules/es6.number.is-nan.js';
+import 'core-js/features/array';
+import 'core-js/modules/es.string.includes';
+import 'core-js/modules/es.number.is-nan';
 import * as Handlebars from 'handlebars';
 import { ISearchResult } from '../../models/ISearchResult';
 import { isEmpty, uniqBy, uniq, trimEnd } from '@microsoft/sp-lodash-subset';
@@ -21,7 +21,6 @@ import { LivePersonaWebComponent } from './components/livepersona';
 import { PersonaCardWebComponent } from './components/personacard';
 import { DocumentCardShimmersWebComponent } from './components/shimmers/DocumentCardShimmers';
 import { PersonaCardShimmersWebComponent } from './components/shimmers/PersonaCardShimmers';
-import '@webcomponents/custom-elements';
 import { IPropertyPaneField } from '@microsoft/sp-property-pane';
 import ResultsLayoutOption from '../../models/ResultsLayoutOption';
 import { ISearchResultsWebPartProps } from '../../webparts/searchResults/ISearchResultsWebPartProps';
@@ -588,7 +587,7 @@ abstract class BaseTemplateService {
 
         let template = Handlebars.compile(templateContent);
         let result = template(templateContext);
-        if (result.indexOf("video-preview-item") || result.indexOf("video-card") !== -1) {
+        if (result.indexOf("video-preview-item")  !== -1 || result.indexOf("video-card") !== -1) {
             await this._loadVideoLibrary();
         }
 

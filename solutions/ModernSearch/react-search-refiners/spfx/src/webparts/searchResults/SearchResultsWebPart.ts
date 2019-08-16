@@ -510,12 +510,6 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
 
     protected async loadPropertyPaneResources(): Promise<void> {
 
-        // Code editor component for result types
-        this._textDialogComponent = await import(
-            /* webpackChunkName: 'search-property-pane' */
-            '../../controls/TextDialog'
-        );
-
         // tslint:disable-next-line:no-shadowed-variable
         const { PropertyFieldCodeEditor, PropertyFieldCodeEditorLanguages } = await import(
             /* webpackChunkName: 'search-property-pane' */
@@ -523,6 +517,12 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
         );
         this._propertyFieldCodeEditor = PropertyFieldCodeEditor;
         this._propertyFieldCodeEditorLanguages = PropertyFieldCodeEditorLanguages;
+
+        // Code editor component for property pane controls
+        this._textDialogComponent = await import(
+            /* webpackChunkName: 'search-property-pane' */
+            '../../controls/TextDialog'
+        );
 
         const { PropertyFieldCollectionData, CustomCollectionFieldType } = await import(
             /* webpackChunkName: 'search-property-pane' */
