@@ -1,7 +1,7 @@
 define([], function() {
   return {
     "RefinersConfigurationGroupName": "Verfijner instellingen",
-    "ShowBlankLabel": "Toon leeg als er geen resultaten zijn",
+    "ShowBlankLabel": "Toon niets als er geen resultaten zijn",
     "WebPartTitle": "Webonderdeel titel",
     "StylingSettingsGroupName": "Weergave opties",
     "AppliedRefinersLabel": "Toegepaste verfijners",
@@ -21,9 +21,9 @@ define([], function() {
     "ConnectToSearchResultsLabel": "Verbind met een zoek webonderdeel",
     "Refiners": {
       "RefinersFieldLabel": "Verfijningen",
-      "RefinerManagedPropertyField": "Filter managed property",
+      "RefinerManagedPropertyField": "Filter beheerde eigenschap",
       "RefinerDisplayValueField": "Filter naam om te tonen",
-      "RefinersFieldDescription": "Specificeer de eigenschappen die als refiner moeten worden getoond. Lege filters worden niet getoond.",
+      "RefinersFieldDescription": "Specificeer de eigenschappen die als verfijner moeten worden getoond. Lege filters worden niet getoond.",
       "EditRefinersLabel": "Bewerk verfijners",
       "AvailableRefinersLabel": "Beschikbare verfijners",
       "ApplyFiltersLabel": "Toepassen",
