@@ -3,7 +3,7 @@ define([], function() {
     "DynamicFieldLabel": "Verbind met een zoek webonderdeel",
     "NavNodeLabel": "Navigatie",
     "NavNodeHeader": "Navigatie",
-    "NavNodeManageBtnLabel": "Bewerkt navigatie instellingen",
+    "NavNodeManageBtnLabel": "Bewerk navigatie instellingen",
     "NavNodeDisplayTextFieldLabel": "Weergavetekst",
     "NavNodeUrlFieldLabel": "Url",
     "ColorPickerLabel": "Kleur",
