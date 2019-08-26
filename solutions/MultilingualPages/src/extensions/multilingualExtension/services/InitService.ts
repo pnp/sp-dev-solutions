@@ -24,10 +24,6 @@ export default class InitService implements IInitService {
   constructor(context: ApplicationCustomizerContext, redirectorWebpartId: string) {
     this._context = context;
     this._redirectorWebpartId = redirectorWebpartId;
-    sp.setup({
-      spfxContext: context,
-      globalCacheDisable: true 
-    });
   }
 
   public async getLanguages(): Promise<ILanguage[]> {

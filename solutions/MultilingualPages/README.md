@@ -135,6 +135,8 @@ MultilingualPages | Dave Feldman (Takeda) - [@bostonmusicdave](https://twitter.c
 
 Version|Date|Comments
 -------|----|--------
+1.6.5|Aug 20, 2019|Fix bug with mutiple customizers in page.
+1.6.4|Aug 19, 2019|Stabilize loading customizer during page transitions across sites.
 1.6.3|May 14, 2019|Fix issue with redirectorPageUrl being undefined.
 1.6.2|April 9, 2019|Generalize move page message.
 1.6.1|April 8, 2019|Initial release

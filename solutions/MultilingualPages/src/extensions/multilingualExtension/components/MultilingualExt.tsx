@@ -50,7 +50,7 @@ export class MultilingualExt extends React.Component<IMultilingualExtProps, IMul
   constructor(props) {
     super(props);
     this.state = new MultilingualExtState();
-    this._init = new InitService(props.context, "{E842C4DA-371B-410E-A3CA-B890D4342564}");    
+    this._init = new InitService(props.context, "{E842C4DA-371B-410E-A3CA-B890D4342564}");
     try {
       this.loadingComponent();
     } catch (err) {
@@ -141,6 +141,10 @@ export class MultilingualExt extends React.Component<IMultilingualExtProps, IMul
       const _self = this;
       return function (data: any, title: string, url?: string | null) {
         try {
+          if (_self.props.context.isDisposed) {
+            Logger.write(`Disposed context during page transition - ${_self.LOG_SOURCE} (componentDidMount-pushState)`, LogLevel.Error);
+            return _defaultPushState.apply(this, [data, title, url]);
+          }
           let rootFolder: boolean = false;
           let homePage: boolean = false;
           let languageFolder: boolean = false;
@@ -211,7 +215,7 @@ export class MultilingualExt extends React.Component<IMultilingualExtProps, IMul
     }
   }
 
-  private reloadPages = async(): Promise<void> => {
+  private reloadPages = async (): Promise<void> => {
     let url = this.state.url;
     if (!url.startsWith("http")) {
       url = `${document.location.origin}${url}`;
@@ -231,7 +235,7 @@ export class MultilingualExt extends React.Component<IMultilingualExtProps, IMul
     }
   }
 
-  private setEditMode = async(): Promise<void> => {
+  private setEditMode = async (): Promise<void> => {
     if (this.state.editMode) return;
     let checkedOut = await this._init.checkoutPage();
     if (checkedOut) {
@@ -240,11 +244,11 @@ export class MultilingualExt extends React.Component<IMultilingualExtProps, IMul
     return;
   }
 
-  private savePage = async(): Promise<void> => {
+  private savePage = async (): Promise<void> => {
     await this._init.savePage();
   }
 
-  private manageRedirectorPage = async(redirectorUrl: string, mapping: IMap): Promise<boolean> => {
+  private manageRedirectorPage = async (redirectorUrl: string, mapping: IMap): Promise<boolean> => {
     return await this._init.manageRedirectorPage(redirectorUrl, mapping);
   }
 
