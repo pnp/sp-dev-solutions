@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
 import { override } from '@microsoft/decorators';
-import { BaseApplicationCustomizer, PlaceholderName } from '@microsoft/sp-application-base';
+import { BaseApplicationCustomizer, PlaceholderName, ApplicationCustomizerContext } from '@microsoft/sp-application-base';
 import { SPHttpClient, SPHttpClientResponse, HttpClientResponse } from '@microsoft/sp-http';
 
 import * as strings from 'MultilingualExtensionApplicationCustomizerStrings';
@@ -99,7 +99,7 @@ export default class MultilingualExtensionApplicationCustomizer
   }
 
   private render(): void {
-    if (!this.context) {
+    if (!this.context || !this.context.placeholderProvider || !this.context.placeholderProvider.tryCreateContent) {
       Logger.write(`Context is undefined [render - ${this.LOG_SOURCE}]`, LogLevel.Error);
       //Reset current page because it's not loaded?
       (window as any).currentPage = '';
@@ -107,10 +107,10 @@ export default class MultilingualExtensionApplicationCustomizer
       return;
     }
 
-    this.renderMultilingual();
+    this.renderMultilingual(this.context);
   }
 
-  private async renderMultilingual(): Promise<void> {
+  private async renderMultilingual(context: ApplicationCustomizerContext): Promise<void> {
     try {
       Logger.write(`Start [renderMultilingual - ${this.LOG_SOURCE}]`, LogLevel.Info);
 
@@ -119,7 +119,7 @@ export default class MultilingualExtensionApplicationCustomizer
         let isInstalled = await this.isMultiLingualInstalled();
         //this.deleteAllPickers();
         if (isInstalled) {
-          let bottomPlaceholder = this.context.placeholderProvider.tryCreateContent(PlaceholderName.Bottom, { onDispose: this.onDispose });
+          let bottomPlaceholder = context.placeholderProvider.tryCreateContent(PlaceholderName.Bottom, { onDispose: this.onDispose });
           if (bottomPlaceholder != undefined) {
             Logger.write(`Found Bottom placeholder [${strings.Title} - ${this.LOG_SOURCE}]`, LogLevel.Info);
             Logger.write(`Rendering picker! [${strings.Title} - ${this.LOG_SOURCE}]`, LogLevel.Info);
@@ -127,7 +127,7 @@ export default class MultilingualExtensionApplicationCustomizer
             multiContainer.setAttribute("id", this.elementId);
             multiContainer.className = this.className;
             bottomPlaceholder.domElement.appendChild(multiContainer);
-            let element = React.createElement(MultilingualExt, { context: this.context, disable: this.deleteAllPickers.bind(this), topPlaceholder: bottomPlaceholder.domElement });
+            let element = React.createElement(MultilingualExt, { context: context, disable: this.deleteAllPickers.bind(this), topPlaceholder: bottomPlaceholder.domElement });
             let elements: any = [];
             elements.push(element);
             ReactDOM.render(elements, multiContainer);
