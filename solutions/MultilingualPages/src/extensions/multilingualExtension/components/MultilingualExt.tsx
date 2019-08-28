@@ -105,7 +105,7 @@ export class MultilingualExt extends React.Component<IMultilingualExtProps, IMul
         //In Language folder -- configure and render app customizer
         if (rootFolder || inLanguageFolder) {
           if (valid) {
-            let userCanEdit = await this._init.pageEdit();
+            let userCanEdit = this._init.pageEdit();
             pages = await this._init.getAllPages(languages, url);
             this.setState({
               usersLanguage: usersLanguage,
