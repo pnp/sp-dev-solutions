@@ -95,6 +95,7 @@ export default class MultilingualExtensionApplicationCustomizer
     while (pickerDivs[0]) {
       pickerDivs[0].parentNode.removeChild(pickerDivs[0]);
     }
+    this.dispose();
   }
 
   private render(): void {
@@ -116,7 +117,7 @@ export default class MultilingualExtensionApplicationCustomizer
       let redirector = await this.hasRedirector();
       if (!redirector) {
         let isInstalled = await this.isMultiLingualInstalled();
-        this.deleteAllPickers();
+        //this.deleteAllPickers();
         if (isInstalled) {
           let bottomPlaceholder = context.placeholderProvider.tryCreateContent(PlaceholderName.Bottom, { onDispose: this.onDispose });
           if (bottomPlaceholder != undefined) {
