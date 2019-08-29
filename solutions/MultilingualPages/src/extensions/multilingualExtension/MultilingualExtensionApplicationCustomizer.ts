@@ -3,15 +3,11 @@ import * as ReactDOM from 'react-dom';
 
 import { override } from '@microsoft/decorators';
 import { BaseApplicationCustomizer, PlaceholderName, ApplicationCustomizerContext } from '@microsoft/sp-application-base';
-import { SPHttpClient, SPHttpClientResponse, HttpClientResponse } from '@microsoft/sp-http';
 
 import * as strings from 'MultilingualExtensionApplicationCustomizerStrings';
-
 import { MultilingualExt } from './components/MultilingualExt';
 import "@pnp/polyfill-ie11";
 import { Logger, LogLevel, ConsoleListener } from "@pnp/logging";
-
-import { getQueryStringValue } from '../../common/services/utilities';
 import { sp, ClientSidePage, ClientSideWebpart, CanvasControl } from '@pnp/sp';
 
 export interface IMultilingualExtensionApplicationCustomizerProperties { }
@@ -67,28 +63,6 @@ export default class MultilingualExtensionApplicationCustomizer
     }, 50);
   }
 
-  // protected onDispose(): void {
-  //   let multiContainer = document.getElementById(this.elementId);
-  //   if (multiContainer != undefined) {
-  //     ReactDOM.unmountComponentAtNode(multiContainer);
-  //     multiContainer.remove();
-  //   }
-  // }
-
-  //HACK CODE TO HANDLE MULTIPLE NAVIGATE CALLS, WHICH IS AN SPFX BUG
-  //https://github.com/SharePoint/sp-dev-docs/issues/1871
-  //https://github.com/SharePoint/sp-dev-docs/issues/1971
-  // private navigatedEvent(): void {
-
-  //   Logger.write(`navigatedEvent: [${strings.Title} - ${this.LOG_SOURCE}]`, LogLevel.Info);
-  //   const navigatedPage = window.location.pathname + window.location.search;
-  //   if (navigatedPage != sessionStorage.getItem('mlCurrentPage')) {
-  //     this.context.placeholderProvider.changedEvent.add(this, this.renderMultilingual);
-  //   }
-  //   sessionStorage.setItem('mlCurrentPage', window.location.pathname + window.location.search);
-  // }
-  //END HACK
-
   private deleteAllPickers() {
     Logger.write(`Deleting existing Multilingual pickers! [${strings.Title} - ${this.LOG_SOURCE}]`, LogLevel.Info);
     let pickerDivs = document.getElementsByClassName(this.className);
@@ -98,15 +72,23 @@ export default class MultilingualExtensionApplicationCustomizer
   }
 
   private render(): void {
-    if (!this.context || !this.context.placeholderProvider || !this.context.placeholderProvider.tryCreateContent) {
+    let error = false;
+    try {
+      if (this.context.placeholderProvider.tryCreateContent == undefined) {
+        error = true;
+      }
+    } catch (err) {
+      error = true;
+    }
+
+    if (error) {
       Logger.write(`Context is undefined [render - ${this.LOG_SOURCE}]`, LogLevel.Error);
       //Reset current page because it's not loaded?
       (window as any).currentPage = '';
       this.navigationEventHandler();
-      return;
+    } else {
+      this.renderMultilingual(this.context);
     }
-
-    this.renderMultilingual(this.context);
   }
 
   private async renderMultilingual(context: ApplicationCustomizerContext): Promise<void> {
@@ -182,23 +164,4 @@ export default class MultilingualExtensionApplicationCustomizer
       return false;
     }
   }
-
-  // private getPageServerRelativeUrl(): string {
-  //   let pathName: string = window.location.pathname;
-  //   let serverRelativeUrl: string = this.context.pageContext.web.serverRelativeUrl;
-  //   let start: number = pathName.indexOf(serverRelativeUrl);
-  //   Logger.write(`getPageServerRelativeUrl: ${pathName.substring(start)} [${strings.Title} - ${this.LOG_SOURCE}]`, LogLevel.Info);
-  //   return `${pathName.substring(start)}`;
-  // }
-
-  // private stopDataInterception() {
-  //   var els = document.querySelectorAll('a');
-  //   for (var i = 0; i < els.length; i++) {
-  //     els[i].setAttribute("data-interception", "off");
-  //   }
-  // }
 }
-
-// (() => {
-//   sessionStorage.setItem('mlCurrentPage', '');
-// })();
