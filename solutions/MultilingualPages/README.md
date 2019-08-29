@@ -135,6 +135,7 @@ MultilingualPages | Dave Feldman (Takeda) - [@bostonmusicdave](https://twitter.c
 
 Version|Date|Comments
 -------|----|--------
+1.6.6|Aug 29, 2019|Handle 403 for getUserEffectivePermissions.
 1.6.5|Aug 20, 2019|Fix bug with mutiple customizers in page.
 1.6.4|Aug 19, 2019|Stabilize loading customizer during page transitions across sites.
 1.6.3|May 14, 2019|Fix issue with redirectorPageUrl being undefined.
