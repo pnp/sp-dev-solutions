@@ -34,6 +34,7 @@
         "flickity": "^2.2.1",
         "flickity-imagesloaded": "^2.0.0",
         "handlebars": "4.1.2",
+        "handlebars-group-by": "^1.0.1",
         "handlebars-helpers": "0.8.4",
         "immutability-helper": "2.4.0",
         "moment": "2.24.0",

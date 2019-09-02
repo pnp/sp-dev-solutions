@@ -28,6 +28,7 @@ import { IComboBoxOption } from 'office-ui-fabric-react/lib/ComboBox';
 import { IComponentFieldsConfiguration } from './TemplateService';
 import { WebPartContext } from '@microsoft/sp-webpart-base';
 import { ThemeProvider, IReadonlyTheme } from '@microsoft/sp-component-base';
+import groupBy from 'handlebars-group-by';
 
 abstract class BaseTemplateService {
 
@@ -348,6 +349,9 @@ abstract class BaseTemplateService {
             let ret: string = i[0];
             return ret;
         });
+
+        // Group by a specific property
+        Handlebars.registerHelper(groupBy(Handlebars));
     }
 
     /**
@@ -572,7 +576,8 @@ abstract class BaseTemplateService {
             "urlResolve",
             "urlParse",
             "stripQuerystring",
-            "stripProtocol"
+            "stripProtocol",
+            "group"
         ];
 
         for (let i = 0; i < handlebarFunctionNames.length; i++) {
@@ -582,7 +587,7 @@ abstract class BaseTemplateService {
             if (regEx.test(templateContent)) {
                 await this.LoadHandlebarsHelpers();
                 break;
-            }
+            } 
         }
 
         let template = Handlebars.compile(templateContent);
