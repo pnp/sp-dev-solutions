@@ -176,6 +176,7 @@ Setting | Description
 `{{getUnique items "NewsCategory"}}` | Return the unique values as a new array based on an array or property of an object in the array.
 `{{regex <exp> <string> }}` | Match a regular expression against a string.
 `{{#times 10}}<span>{{this}}</span>{{/times}}` | Iterate X times over a block
+`{{#group items by="owstaxidmetadataalltagsinfo"}}` | Group items by a specific results property. See [https://github.com/shannonmoeller/handlebars-group-by](https://github.com/shannonmoeller/handlebars-group-by) for usage.
 
 You can also define your own in the *BaseTemplateService.ts* file. See [helper-moment](https://github.com/helpers/helper-moment) for date samples using moment.
 
