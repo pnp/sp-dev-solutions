@@ -5,7 +5,7 @@ Convert SharePoint modern themes to classic and classic themes to modern.
 2. Uncomment the relevant conversion method(s) you need.
 3. Run the program.
 
-For reference, here are the mapped values between SharePoint [Modern](https://github.com/OfficeDev/office-ui-fabric-react/wiki/Theming) and [Classic](https://docs.microsoft.com/en-us/sharepoint/dev/solution-guidance/use-composed-looks-to-brand-sharepoint-sites) theme palettes: 
+For reference, here are the mapped values between SharePoint [Modern](https://github.com/OfficeDev/office-ui-fabric-react/wiki/Theming) and [Classic](https://docs.microsoft.com/en-us/sharepoint/dev/solution-guidance/use-composed-looks-to-brand-sharepoint-sites) theme palette slots: 
 
 | Modern Palette Slots  | Classic Palette Slots |
 | ------------- | ------------- |
@@ -24,5 +24,10 @@ For reference, here are the mapped values between SharePoint [Modern](https://gi
 | neutralLighter | NavigationSelectedBackground<br/>SubtleEmphasisBackground<br/>TopBarBackground |
 | neutralLight | DisabledLines<br/>DialogBorder<br/>HeaderDisabledLines<br/>ButtonDisabledBorder | 
 | neutralQuaternaryAlt | HeaderFlyoutBorder |
-| neutralQuaternary | No [Designer](https://fabricweb.z5.web.core.windows.net/pr-deploy-site/refs/heads/master/theming-designer/index.html) setting available |
-| neutralTertiaryAlt | 
+| neutralQuaternary | *No [Designer](https://fabricweb.z5.web.core.windows.net/pr-deploy-site/refs/heads/master/theming-designer/index.html) setting available* |
+| neutralTertiaryAlt | SubtleLines<br/>HeaderSubtleLines<br/>SuiteBarDisabledText<br/>ButtonGlyphDisabled |
+| neutralTertiary | DisabledText<br/>CommandLinksDisabled<br/>HeaderDisableText<br/>ButtonDisabledText |
+| neutralSecondary | Lines<br/>HeaderLines<br/>ButtonBorder |
+| neutralPrimaryAlt | SubtleBodyText<br/>HeaderSubtleText |
+| neutralDark | CommandLinks<br/>Navigation<br/>SubtleEmphasisText<br/>TopBarText<br/>HeaderNavigationText<br/>ButtonGlyph |
+| black | StrongBodyText<br/>SiteTitle<br/>CommandLinksSecondary<br/>SubtleEmphasisCommandLinks<br/>TopBarHoverText<br/>TopBarPressedText<br/>HeaderSiteTitle |
