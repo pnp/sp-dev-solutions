@@ -30,11 +30,7 @@ export default class MultilingualExtensionApplicationCustomizer
       globalCacheDisable: true
     });
 
-    if (!(window as any).isNavigatedEventSubscribed) {
-      this.context.application.navigatedEvent.add(this, this.navigationEventHandler);
-      (window as any).isNavigatedEventSubscribed = true;
-    }
-
+    this.render();
     return Promise.resolve();
   }
 
@@ -63,12 +59,14 @@ export default class MultilingualExtensionApplicationCustomizer
     }, 50);
   }
 
-  private deleteAllPickers() {
-    Logger.write(`Deleting existing Multilingual pickers! [${strings.Title} - ${this.LOG_SOURCE}]`, LogLevel.Info);
-    let pickerDivs = document.getElementsByClassName(this.className);
-    while (pickerDivs[0]) {
-      pickerDivs[0].parentNode.removeChild(pickerDivs[0]);
-    }
+  private getMultilingualContainer(): HTMLElement {
+    return document.getElementById(this.elementId);
+  }
+
+  private deleteMultilingualContainer() {
+    let container = this.getMultilingualContainer();
+    Logger.write(`Deleting existing Multilingual picker! [${strings.Title} - ${this.LOG_SOURCE}]`, LogLevel.Info);
+    container.parentNode.removeChild(container);
   }
 
   private render(): void {
@@ -87,6 +85,10 @@ export default class MultilingualExtensionApplicationCustomizer
       (window as any).currentPage = '';
       this.navigationEventHandler();
     } else {
+      if (!(window as any).isNavigatedEventSubscribed) {
+        this.context.application.navigatedEvent.add(this, this.navigationEventHandler);
+        (window as any).isNavigatedEventSubscribed = true;
+      }
       this.renderMultilingual(this.context);
     }
   }
@@ -98,23 +100,26 @@ export default class MultilingualExtensionApplicationCustomizer
       let redirector = await this.hasRedirector();
       if (!redirector) {
         let isInstalled = await this.isMultiLingualInstalled();
-        this.deleteAllPickers();
         if (isInstalled) {
           let bottomPlaceholder = context.placeholderProvider.tryCreateContent(PlaceholderName.Bottom, { onDispose: this.onDispose });
           if (bottomPlaceholder != undefined) {
-            Logger.write(`Found Bottom placeholder [${strings.Title} - ${this.LOG_SOURCE}]`, LogLevel.Info);
             Logger.write(`Rendering picker! [${strings.Title} - ${this.LOG_SOURCE}]`, LogLevel.Info);
-            let multiContainer = document.createElement("DIV");
-            multiContainer.setAttribute("id", this.elementId);
-            multiContainer.className = this.className;
-            bottomPlaceholder.domElement.appendChild(multiContainer);
-            let element = React.createElement(MultilingualExt, { context: context, disable: this.deleteAllPickers.bind(this), topPlaceholder: bottomPlaceholder.domElement });
+            let multiContainer = this.getMultilingualContainer();
+            if (multiContainer == undefined) {
+              multiContainer = document.createElement("DIV");
+              multiContainer.setAttribute("id", this.elementId);
+              multiContainer.className = this.className;
+              bottomPlaceholder.domElement.appendChild(multiContainer);
+            }
+            let element = React.createElement(MultilingualExt, { context: context, disable: this.deleteMultilingualContainer, topPlaceholder: bottomPlaceholder.domElement });
             let elements: any = [];
             elements.push(element);
             ReactDOM.render(elements, multiContainer);
           } else {
             Logger.write(`Bottom Placeholder not available! [${strings.Title} - ${this.LOG_SOURCE}]`, LogLevel.Error);
           }
+        } else {
+          this.deleteMultilingualContainer();
         }
       }
     }
@@ -145,7 +150,7 @@ export default class MultilingualExtensionApplicationCustomizer
       // let stay: boolean = getQueryStringValue("Stay") == undefined || getQueryStringValue("Stay") == "" ? false : true;
       // if (stay == true) { return false; }
       if (window.location.pathname.toLocaleLowerCase().indexOf("/_layouts/") != -1) { return false; }
-      const page = await ClientSidePage.fromFile(sp.web.getFileByServerRelativeUrl(window.location.pathname));
+      const page = await ClientSidePage.fromFile(sp.web.getFileByServerRelativeUrl(this.context.pageContext.legacyPageContext["serverRequestPath"]));
       const redirectorControl = page.findControl<ClientSideWebpart>((c: CanvasControl) => {
         return c["webPartId"] === "e842c4da-371b-410e-a3ca-b890d4342564";
       });
