@@ -24,7 +24,7 @@ For reference, here are the mapped values between SharePoint [Modern](https://gi
 | neutralLighter | NavigationSelectedBackground<br/>SubtleEmphasisBackground<br/>TopBarBackground |
 | neutralLight | DisabledLines<br/>DialogBorder<br/>HeaderDisabledLines<br/>ButtonDisabledBorder | 
 | neutralQuaternaryAlt | HeaderFlyoutBorder |
-| neutralQuaternary | *No [Designer](https://fabricweb.z5.web.core.windows.net/pr-deploy-site/refs/heads/master/theming-designer/index.html) setting available* |
+| neutralQuaternary | *No [Modern Designer](https://fabricweb.z5.web.core.windows.net/pr-deploy-site/refs/heads/master/theming-designer/index.html) setting available* |
 | neutralTertiaryAlt | SubtleLines<br/>HeaderSubtleLines<br/>SuiteBarDisabledText<br/>ButtonGlyphDisabled |
 | neutralTertiary | DisabledText<br/>CommandLinksDisabled<br/>HeaderDisableText<br/>ButtonDisabledText |
 | neutralSecondary | Lines<br/>HeaderLines<br/>ButtonBorder |
