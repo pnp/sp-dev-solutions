@@ -1,5 +1,5 @@
 # SPTheme-Converter
-Convert SharePoint modern themes to classic and classic themes to modern.
+Convert SharePoint Modern themes to Classic and SharePoint Classic themes to Modern.
 
 1. Open the Program.cs file and add input and output local path values for the relevant conversion method(s) you need:  ```ClassicToModern()``` or ```ModernToClassic()```.
 2. Uncomment the relevant conversion method(s) you need.
