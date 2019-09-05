@@ -1,9 +1,12 @@
 # SPTheme-Converter
 Convert SharePoint Modern themes to Classic, and SharePoint Classic themes to Modern.
 
+# NOTE:  This application only works with valid [SPColor file](https://docs.microsoft.com/en-us/sharepoint/dev/solution-guidance/use-composed-looks-to-brand-sharepoint-sites) and UI Fabric Theme Designer [JSON file](https://fabricweb.z5.web.core.windows.net/pr-deploy-site/refs/heads/master/theming-designer/index.html) inputs.
 1. Open the Program.cs file and add input and output local path values for the relevant conversion method(s) you need:  ```ClassicToModern()``` or ```ModernToClassic()```.
 2. Uncomment the relevant conversion method(s) you need.
 3. Run the program.
+
+The [SharePoint (classic) Color Palette Tool](https://www.microsoft.com/en-us/download/details.aspx?id=38182) exposes ~90 color slot settings.  The [UI Fabric Theme Designer](https://fabricweb.z5.web.core.windows.net/pr-deploy-site/refs/heads/master/theming-designer/index.html) has trimmed that number down to 21 color slot settings.  (There are actually 22 slots that appear in an exported theme files, but only 21 of them are available in the UI application.)
 
 For reference, here are the mapped values between SharePoint [Modern](https://github.com/OfficeDev/office-ui-fabric-react/wiki/Theming) and [Classic](https://docs.microsoft.com/en-us/sharepoint/dev/solution-guidance/use-composed-looks-to-brand-sharepoint-sites) theme palette slots: 
 
