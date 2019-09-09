@@ -1,6 +1,6 @@
 {
   "name": "multilingual-sp-fx-ext",
-  "version": "1.6.6",
+  "version": "1.6.7",
   "private": true,
   "engines": {
     "node": ">=0.10.0"
