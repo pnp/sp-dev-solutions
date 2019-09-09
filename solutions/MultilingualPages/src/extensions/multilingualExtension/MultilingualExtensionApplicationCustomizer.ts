@@ -103,7 +103,7 @@ export default class MultilingualExtensionApplicationCustomizer
         if (isInstalled) {
           let bottomPlaceholder = context.placeholderProvider.tryCreateContent(PlaceholderName.Bottom, { onDispose: this.onDispose });
           if (bottomPlaceholder != undefined) {
-            Logger.write(`Rendering picker! [${strings.Title} - ${this.LOG_SOURCE}]`, LogLevel.Info);
+            Logger.write(`starting to render multilingual picker! [${strings.Title} - ${this.LOG_SOURCE}]`, LogLevel.Info);
             let multiContainer = this.getMultilingualContainer();
             if (multiContainer == undefined) {
               multiContainer = document.createElement("DIV");
@@ -111,10 +111,13 @@ export default class MultilingualExtensionApplicationCustomizer
               multiContainer.className = this.className;
               bottomPlaceholder.domElement.appendChild(multiContainer);
             }
+            Logger.write(`Have container - ${multiContainer.id} [${strings.Title} - ${this.LOG_SOURCE}]`, LogLevel.Info);
             let element = React.createElement(MultilingualExt, { context: context, disable: this.deleteMultilingualContainer, topPlaceholder: bottomPlaceholder.domElement });
             let elements: any = [];
             elements.push(element);
+            Logger.write(`Render react components: ${elements.length} - ${multiContainer.id} [${strings.Title} - ${this.LOG_SOURCE}]`, LogLevel.Info);
             ReactDOM.render(elements, multiContainer);
+            Logger.write(`Redner multilingual complete- ${multiContainer.id} [${strings.Title} - ${this.LOG_SOURCE}]`, LogLevel.Info);
           } else {
             Logger.write(`Bottom Placeholder not available! [${strings.Title} - ${this.LOG_SOURCE}]`, LogLevel.Error);
           }
