@@ -430,7 +430,7 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
      */
     private initializeRequiredProperties() {
 
-        this.properties.queryTemplate = this.properties.queryTemplate ? this.properties.queryTemplate : "{searchTerms} Path:{Site}";
+        this.properties.queryTemplate = this.properties.queryTemplate ? this.properties.queryTemplate : "{searchTerms}";
 
         if (!Array.isArray(this.properties.sortList) && !isEmpty(this.properties.sortList)) {
             this.properties.sortList = this._convertToSortConfig(this.properties.sortList);
