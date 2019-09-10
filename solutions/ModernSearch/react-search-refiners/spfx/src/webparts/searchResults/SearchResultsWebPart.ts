@@ -2,7 +2,7 @@
 import * as ReactDom from 'react-dom';
 import { Version, Text, Environment, EnvironmentType, DisplayMode } from '@microsoft/sp-core-library';
 import { BaseClientSideWebPart, IWebPartPropertiesMetadata, IPropertyPaneGroup } from '@microsoft/sp-webpart-base';
-import {     
+import {
     IPropertyPaneConfiguration,
     PropertyPaneTextField,
     PropertyPaneDynamicFieldSet,
@@ -453,7 +453,7 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
         this.properties.resultTypes = Array.isArray(this.properties.resultTypes) ? this.properties.resultTypes : [];
         this.properties.synonymList = Array.isArray(this.properties.synonymList) ? this.properties.synonymList : [];
         this.properties.searchQueryLanguage = this.properties.searchQueryLanguage ? this.properties.searchQueryLanguage : -1;
-        this.properties.templateParameters = this.properties.templateParameters ? this.properties.templateParameters : {}; 
+        this.properties.templateParameters = this.properties.templateParameters ? this.properties.templateParameters : {};
     }
 
     protected getPropertyPaneConfiguration(): IPropertyPaneConfiguration {
@@ -465,7 +465,7 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
                 groupName: strings.StylingSettingsGroupName,
                 groupFields: this._getStylingFields(),
                 isCollapsed: false
-            },                        
+            },
         ];
 
         if (templateParametersGroup) {
@@ -479,10 +479,10 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
                         description: strings.SearchQuerySettingsGroupName
                     },
                     groups: [
-                        this._getSearchQueryFields()                    
+                        this._getSearchQueryFields()
                     ]
                 },
-                {                   
+                {
                     groups: [
                         {
                             groupFields: this._getSearchSettingsFields(),
@@ -688,7 +688,7 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
     private async _initTemplate(): Promise<void> {
 
         if (this.properties.selectedLayout === ResultsLayoutOption.Custom) {
-            
+
             // Reset options
             this._templatePropertyPaneOptions = [];
 
@@ -787,23 +787,23 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
                         onCustomRender: (field, value, onUpdate, item, itemId, onCustomFieldValidation) => {
 
                             // Need to specify a React key to avoid item duplication when adding a new row
-                            return React.createElement("div", {key : `${field.id}-${itemId}`},
+                            return React.createElement("div", { key: `${field.id}-${itemId}` },
                                 React.createElement(SearchManagedProperties, {
-                                defaultSelectedKey: item[field.id] ? item[field.id] : '',
-                                onUpdate: (newValue: any, isSortable: boolean) => { 
+                                    defaultSelectedKey: item[field.id] ? item[field.id] : '',
+                                    onUpdate: (newValue: any, isSortable: boolean) => {
 
-                                    if (!isSortable) {
-                                        onCustomFieldValidation(field.id, strings.Sort.SortInvalidSortableFieldMessage);
-                                    } else {
-                                        onUpdate(field.id, newValue);
-                                        onCustomFieldValidation(field.id, '');
-                                    }
-                                },
-                                searchService: this._searchService,
-                                validateSortable: true,
-                                availableProperties: this._availableManagedProperties,
-                                onUpdateAvailableProperties: this._onUpdateAvailableProperties
-                            } as ISearchManagedPropertiesProps));
+                                        if (!isSortable) {
+                                            onCustomFieldValidation(field.id, strings.Sort.SortInvalidSortableFieldMessage);
+                                        } else {
+                                            onUpdate(field.id, newValue);
+                                            onCustomFieldValidation(field.id, '');
+                                        }
+                                    },
+                                    searchService: this._searchService,
+                                    validateSortable: true,
+                                    availableProperties: this._availableManagedProperties,
+                                    onUpdateAvailableProperties: this._onUpdateAvailableProperties
+                                } as ISearchManagedPropertiesProps));
                         }
                     },
                     {
@@ -840,25 +840,25 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
                         required: true,
                         onCustomRender: (field, value, onUpdate, item, itemId, onCustomFieldValidation) => {
                             // Need to specify a React key to avoid item duplication when adding a new row
-                            return React.createElement("div", {key : `${field.id}-${itemId}`},
+                            return React.createElement("div", { key: `${field.id}-${itemId}` },
                                 React.createElement(SearchManagedProperties, {
-                                defaultSelectedKey: item[field.id] ? item[field.id] : '',
-                                onUpdate: (newValue: any, isSortable: boolean) => { 
+                                    defaultSelectedKey: item[field.id] ? item[field.id] : '',
+                                    onUpdate: (newValue: any, isSortable: boolean) => {
 
-                                    if (!isSortable) {
-                                        onCustomFieldValidation(field.id, strings.Sort.SortInvalidSortableFieldMessage);
-                                    } else {
-                                        onUpdate(field.id, newValue);
-                                        onCustomFieldValidation(field.id, '');
-                                    }
-                                },
-                                searchService: this._searchService,
-                                validateSortable: true,
-                                availableProperties: this._availableManagedProperties,
-                                onUpdateAvailableProperties: this._onUpdateAvailableProperties
-                            } as ISearchManagedPropertiesProps));
+                                        if (!isSortable) {
+                                            onCustomFieldValidation(field.id, strings.Sort.SortInvalidSortableFieldMessage);
+                                        } else {
+                                            onUpdate(field.id, newValue);
+                                            onCustomFieldValidation(field.id, '');
+                                        }
+                                    },
+                                    searchService: this._searchService,
+                                    validateSortable: true,
+                                    availableProperties: this._availableManagedProperties,
+                                    onUpdateAvailableProperties: this._onUpdateAvailableProperties
+                                } as ISearchManagedPropertiesProps));
                         }
-                    },                    
+                    },
                     {
                         id: 'displayValue',
                         title: strings.Sort.SortableFieldDisplayValueField,
@@ -884,8 +884,8 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
                 allowMultiSelect: true,
                 availableProperties: this._availableManagedProperties,
                 defaultSelectedKeys: this.properties.selectedProperties.split(","),
-                onPropertyChange: (propertyPath: string, newValue: any) => { 
-                    this.properties[propertyPath] = newValue.join(','); 
+                onPropertyChange: (propertyPath: string, newValue: any) => {
+                    this.properties[propertyPath] = newValue.join(',');
                     this.onPropertyPaneFieldChanged(propertyPath);
 
                     // Refresh the WP with new selected properties
@@ -1242,17 +1242,17 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
                             required: true,
                             onCustomRender: (field, value, onUpdate, item, itemId, onCustomFieldValidation) => {
                                 // Need to specify a React key to avoid item duplication when adding a new row
-                                return React.createElement("div", {key : itemId},
-                                React.createElement(SearchManagedProperties, {
-                                defaultSelectedKey: item[field.id] ? item[field.id] : '',
-                                onUpdate: (newValue: any, isSortable: boolean) => { 
-                                    onUpdate(field.id, newValue);
-                                },
-                                searchService: this._searchService,
-                                validateSortable: false,
-                                availableProperties: this._availableManagedProperties,
-                                onUpdateAvailableProperties: this._onUpdateAvailableProperties
-                                } as ISearchManagedPropertiesProps));
+                                return React.createElement("div", { key: itemId },
+                                    React.createElement(SearchManagedProperties, {
+                                        defaultSelectedKey: item[field.id] ? item[field.id] : '',
+                                        onUpdate: (newValue: any, isSortable: boolean) => {
+                                            onUpdate(field.id, newValue);
+                                        },
+                                        searchService: this._searchService,
+                                        validateSortable: false,
+                                        availableProperties: this._availableManagedProperties,
+                                        onUpdateAvailableProperties: this._onUpdateAvailableProperties
+                                    } as ISearchManagedPropertiesProps));
                             }
                         },
                         {
@@ -1406,7 +1406,7 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
                 isCollapsed: false,
                 groupName: strings.TemplateParameters.TemplateParametersGroupName
             };
-        } 
+        }
 
         return templateFieldsGroup;
     }
@@ -1502,7 +1502,7 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
         this._themeVariant = args.theme;
 
         if (!isEqual(this._themeVariant, args.theme)) {
-          this.render();
+            this.render();
         }
     }
 }
