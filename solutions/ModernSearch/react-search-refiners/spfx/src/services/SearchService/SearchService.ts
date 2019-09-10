@@ -434,9 +434,9 @@ class SearchService implements ISearchService {
         } catch (error) {
             Logger.write('[SearchService.getAvailableManagedProperties()]: Error: ' + error, LogLevel.Error);
             throw error;
-        } 
+        }
 
-        return managedProperties;       
+        return managedProperties;
     }
 
     /**
@@ -463,7 +463,7 @@ class SearchService implements ISearchService {
             isSortable = true;
         } catch {
             isSortable = false;
-        }  
+        }
 
         return isSortable;
     }
@@ -527,7 +527,9 @@ class SearchService implements ISearchService {
             response.map((result: any, index: number) => {
 
                 if (result.value) {
-                    const iconUrl = this._pageContext.web.absoluteUrl + '/_layouts/15/images/' + result.value;
+                    let iconUrl = this._pageContext.web.absoluteUrl + '/_layouts/15/images/' + result.value;
+                    iconUrl = iconUrl.replace("lg_iczip.gif", "lg_iczip.png");
+                    iconUrl = iconUrl.replace("lg_icmsg.png", "lg_icmsg.gif");
                     updatedSearchResults[index].IconSrc = iconUrl;
                 }
             });
