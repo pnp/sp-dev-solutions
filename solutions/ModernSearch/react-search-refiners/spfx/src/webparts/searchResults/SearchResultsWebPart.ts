@@ -104,6 +104,7 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
 
     private _themeProvider: ThemeProvider;
     private _themeVariant: IReadonlyTheme;
+    private _initComplete = false;
 
     public constructor() {
         super();
@@ -117,6 +118,12 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
     }
 
     public async render(): Promise<void> {
+
+        if (!this._initComplete) {
+            // Don't render until all init is complete
+            return;
+        }
+
         // Determine the template content to display
         // In the case of an external template is selected, the render is done asynchronously waiting for the content to be fetched
         await this._initTemplate();
@@ -341,6 +348,7 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
         this.context.dynamicDataSourceManager.initializeSource(this);
         this._synonymTable = this._convertToSynonymTable(this.properties.synonymList);
 
+        this._initComplete = true;
         return super.onInit();
     }
 
