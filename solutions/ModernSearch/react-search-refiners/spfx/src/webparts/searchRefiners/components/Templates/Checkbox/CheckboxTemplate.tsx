@@ -72,7 +72,7 @@ export default class CheckboxTemplate extends React.Component<IBaseRefinerTempla
         });
     }
 
-    public componentWillReceiveProps(nextProps: IBaseRefinerTemplateProps) {
+    public UNSAFE_componentWillReceiveProps(nextProps: IBaseRefinerTemplateProps) {
         
         if (nextProps.shouldResetFilters) {
             this.setState({

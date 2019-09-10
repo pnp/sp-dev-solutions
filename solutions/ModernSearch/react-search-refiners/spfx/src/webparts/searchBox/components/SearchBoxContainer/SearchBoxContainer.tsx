@@ -367,7 +367,7 @@ export default class SearchBoxContainer extends React.Component<ISearchBoxContai
     this._setInputValue(this.props.inputValue);
   }
 
-  public componentWillReceiveProps(nextProps: ISearchBoxContainerProps) {
+  public UNSAFE_componentWillReceiveProps(nextProps: ISearchBoxContainerProps) {
     this._setInputValue(nextProps.inputValue);
   }
 

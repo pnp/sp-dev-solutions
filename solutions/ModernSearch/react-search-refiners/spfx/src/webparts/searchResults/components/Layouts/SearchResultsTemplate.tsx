@@ -32,7 +32,7 @@ export default class SearchResultsTemplate extends React.Component<ISearchResult
         TemplateService.initPreviewElements();  
     }
 
-    public componentWillReceiveProps(nextProps: ISearchResultsTemplateProps) {
+    public UNSAFE_componentWillReceiveProps(nextProps: ISearchResultsTemplateProps) {
         this._updateTemplate(nextProps);
     }
 

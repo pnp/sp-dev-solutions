@@ -31,7 +31,7 @@ export class VideoPlayer extends React.Component<IVideoPlayerProps, {}> {
         }
     }
 
-    public componentWillReceiveProps(nextProps: IVideoPlayerProps) {
+    public UNSAFE_componentWillReceiveProps(nextProps: IVideoPlayerProps) {
 
         if (nextProps.isVideoPaused) {
             if (!this._videoPlayer.paused()) {
@@ -124,7 +124,7 @@ export default class PreviewContainer extends React.Component<IPreviewContainerP
         });
     }   
 
-    public componentWillReceiveProps(nextProps: IPreviewContainerProps) {
+    public UNSAFE_componentWillReceiveProps(nextProps: IPreviewContainerProps) {
         this.setState({
             showCallout: nextProps.showPreview,
             isVideoPaused: false

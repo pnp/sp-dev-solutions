@@ -14,7 +14,7 @@ export default class Paging extends React.Component<IPagingProps, IPagingState> 
         };
     }
 
-    public componentWillReceiveProps(nextProps: IPagingProps) {
+    public UNSAFE_componentWillReceiveProps(nextProps: IPagingProps) {
         if (this.state.currentPage !== nextProps.currentPage)
         {
             this.setState({

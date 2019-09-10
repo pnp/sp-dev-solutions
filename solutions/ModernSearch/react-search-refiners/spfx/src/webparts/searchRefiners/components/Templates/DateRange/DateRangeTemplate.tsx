@@ -103,7 +103,7 @@ export default class DateRangeTemplate extends React.Component<IDateRangeTemplat
         }
     }
 
-    public componentWillReceiveProps(nextProps: IBaseRefinerTemplateProps) {
+    public UNSAFE_componentWillReceiveProps(nextProps: IBaseRefinerTemplateProps) {
 
         if (nextProps.shouldResetFilters) {
             this.setState({
