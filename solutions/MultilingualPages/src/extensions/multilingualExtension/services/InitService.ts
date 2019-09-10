@@ -1,6 +1,6 @@
 import { ILanguages, ILanguage, MultilingualFields, IPageProperties, PageProperties, IMap } from '../../../common/models/Models';
 import { ApplicationCustomizerContext } from '@microsoft/sp-application-base';
-import { sp, Fields, PermissionKind, ClientSidePage, ClientSideWebpart, File, CheckinType } from '@pnp/sp';
+import { sp, Fields, ClientSidePage, ClientSideWebpart, File, CheckinType } from '@pnp/sp';
 import * as lodash from 'lodash';
 import ConfigService from './ConfigService';
 import { SPHttpClient } from '@microsoft/sp-http';
@@ -12,7 +12,7 @@ export interface IInitService {
   validateConfig(languages: ILanguage[]): Promise<boolean>;
   checkoutPage(): Promise<boolean>;
   savePage(): Promise<void>;
-  pageEdit(): Promise<boolean>;
+  pageEdit(): boolean;
   manageRedirectorPage(redirectorUrl: string, mapping: IMap): Promise<boolean>;
 }
 
@@ -24,10 +24,6 @@ export default class InitService implements IInitService {
   constructor(context: ApplicationCustomizerContext, redirectorWebpartId: string) {
     this._context = context;
     this._redirectorWebpartId = redirectorWebpartId;
-    sp.setup({
-      spfxContext: context,
-      globalCacheDisable: true 
-    });
   }
 
   public async getLanguages(): Promise<ILanguage[]> {
@@ -188,10 +184,11 @@ export default class InitService implements IInitService {
     }
   }
 
-  public async pageEdit(): Promise<boolean> {
+  public pageEdit(): boolean {
     try {
       let retVal: boolean = false;
-      retVal = await sp.web.lists.getByTitle('Site Pages').userHasPermissions(`i:0#.f|membership|${this._context.pageContext.user.loginName}`, PermissionKind.EditListItems);
+      //using bitwize operation because reference to SPPermission causes app customizer not to load.
+      retVal = (this._context.pageContext.list.permissions.value.High & 4) > 0;
       return retVal;
     } catch (err) {
       //Don't log failure, means user doesn't have edit rights.
