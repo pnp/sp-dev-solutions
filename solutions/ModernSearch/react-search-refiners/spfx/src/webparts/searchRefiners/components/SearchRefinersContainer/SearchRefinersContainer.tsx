@@ -14,6 +14,7 @@ import * as update from 'immutability-helper';
 import RefinerTemplateOption from '../../../../models/RefinerTemplateOption';
 import { find } from '@microsoft/sp-lodash-subset';
 import RefinersSortOption from '../../../../models/RefinersSortOptions';
+import RefinerSortDirection from '../../../../models/RefinersSortDirection';
 
 export default class SearchRefinersContainer extends React.Component<ISearchRefinersContainerProps, ISearchRefinersContainerState> {
 
@@ -98,20 +99,35 @@ export default class SearchRefinersContainer extends React.Component<ISearchRefi
 
     public UNSAFE_componentWillReceiveProps(nextProps: ISearchRefinersContainerProps) {
 
-        let sameQuery = nextProps.query === this.props.query;
+        // let sameQuery = nextProps.query === this.props.query;
 
-        if (sameQuery && nextProps.availableRefiners.length === 0) {
-            // Same query - zero filters - early exit. Patch for sync issue where filters sometimes are cleared and should stay
-            return;
-        }
+        // if (sameQuery && nextProps.availableRefiners.length === 0) {
+        //     // Same query - zero filters - early exit. Patch for sync issue where filters sometimes are cleared and should stay
+        //     return;
+        // }
+        // // If a new query has been entered, we reset all filters
+        // if (!sameQuery) {
+        //     this.setState({
+        //         shouldResetFilters: true,
+        //         selectedRefinementFilters: []
+        //     });
+
+        // } else {
+        //     // Reset the flag every time we receive new refinement results
+        //     this.setState({
+        //         shouldResetFilters: false
+        //     });
+        // }
         // If a new query has been entered, we reset all filters
-        if (!sameQuery) {
+        if (nextProps.query !== this.props.query) {
+
             this.setState({
                 shouldResetFilters: true,
                 selectedRefinementFilters: []
             });
 
         } else {
+
             // Reset the flag every time we receive new refinement results
             this.setState({
                 shouldResetFilters: false
@@ -128,11 +144,26 @@ export default class SearchRefinersContainer extends React.Component<ISearchRefi
             // if the Sort Option is Alphabetical, reorder the values
             if (refinerConfig && refinerConfig.refinerSortType === RefinersSortOption.Alphabetical) {
                 let sortedValues = refinementResult.Values.sort((a, b) => {
-                    let textA = a.RefinementName.toUpperCase();
-                    let textB = b.RefinementName.toUpperCase();
+                    let textA = a.RefinementName.toLocaleUpperCase();
+                    let textB = b.RefinementName.toLocaleUpperCase();
                     return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
                 });
                 availableFilters[index].Values = sortedValues;
+            }
+            else if (refinerConfig && refinerConfig.refinerSortType === RefinersSortOption.ByNumberOfResults) {
+                let sortedValues = refinementResult.Values.sort((a, b) => {
+                    let textA = a.RefinementName.toLocaleUpperCase();
+                    let textB = b.RefinementName.toLocaleUpperCase();
+                    return (a.RefinementCount < b.RefinementCount) ? -1 : (a.RefinementCount > b.RefinementCount) ? 1 : (
+                        // on same number, alphabetically
+                        (textA < textB) ? -1 : (textA > textB) ? 1 : 0
+                    );
+                });
+                availableFilters[index].Values = sortedValues;
+            }
+
+            if (refinerConfig && refinerConfig.refinerSortType !== RefinersSortOption.Default && refinerConfig.refinerSortDirection == RefinerSortDirection.Descending) {
+                refinementResult.Values = refinementResult.Values.reverse();
             }
         });
 

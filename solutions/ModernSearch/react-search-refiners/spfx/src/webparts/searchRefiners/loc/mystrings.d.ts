@@ -51,7 +51,10 @@ declare interface ISearchRefinersWebPartStrings {
       };
       RefinerSortTypeLabel: string,
       RefinerSortTypeAlphabetical: string,
-      RefinerSortTypeByNumberOfResults: string
+      RefinerSortTypeByNumberOfResults: string,
+      RefinerSortTypeSortOrderLabel: string,
+      RefinerSortTypeSortDirectionAscending: string,
+      RefinerSortTypeSortDirectionDescending: string
     }
   },
 }
