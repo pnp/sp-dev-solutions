@@ -38,7 +38,7 @@ export default class SearchNavigationContainer extends React.Component<ISearchNa
         const searchUrl = new URL(node.url);
         const openBehavior = this.props.openBehavior === PageOpenBehavior.NewTab ? '_blank' : '_self';
 
-        if (this.props.queryKeywords && this.props.queryKeywords.length > 0) {
+        if (this.props.passQuery && this.props.queryKeywords && this.props.queryKeywords.length > 0) {
             const urlEncodedQueryText = encodeURIComponent(this.props.queryKeywords);
             if (this.props.queryPathBehavior === QueryPathBehavior.URLFragment) {
               searchUrl.hash = urlEncodedQueryText;

@@ -8,6 +8,7 @@ export interface ISearchNavigationContainerProps {
   useThemeColor: boolean;
   currentPageUrl: string;
   openBehavior: PageOpenBehavior;
+  passQuery: boolean;
   queryPathBehavior: QueryPathBehavior;
   queryStringParameter: string;
 }

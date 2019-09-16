@@ -13,6 +13,7 @@ define([], function() {
     "PlaceHolderIconText": "Zoeknavigatie webpart",
     "PlaceHolderDescription": "Dit onderdeel toont de zoeknavigatie",
     "UseNlpValueLabel": "Gebruik Natural Language Processing zoekopdracht waarde",
+    "PassQueryLabel": "Stuur query keyword naar doelpagina",
     "SearchBoxQueryPathBehaviorLabel": "Methode",
     "SearchBoxUrlFragmentQueryPathBehavior": "URL fragment",
     "SearchBoxQueryStringQueryPathBehavior": "Zoekopdracht parameter",
