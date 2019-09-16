@@ -12,6 +12,7 @@ declare interface ISearchNavigationWebPartStrings {
   PlaceHolderIconText: string;
   PlaceHolderDescription: string;
   UseNlpValueLabel: string;
+  PassQueryLabel: string;
   SearchBoxQueryPathBehaviorLabel: string;
   SearchBoxUrlFragmentQueryPathBehavior: string;
   SearchBoxQueryStringQueryPathBehavior: string;
