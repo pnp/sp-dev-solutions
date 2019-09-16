@@ -64,6 +64,7 @@ export default class SearchNavigationContainer extends React.Component<ISearchNa
                 <a
                     className={`${styles.nodeText} `}
                     target={openBehavior}
+                    data-interception="off"
                     href={searchUrl}>
                     {node.displayText}
                 </a>
@@ -89,6 +90,7 @@ export default class SearchNavigationContainer extends React.Component<ISearchNa
                     className={`${styles.nodeText}`}
                     href={searchUrl}
                     target={openBehavior}
+                    data-interception="off"
                     style={colorStyle}
                     onMouseOver={() => this.setHover(idx)}
                     onMouseOut={() => this.setHover(undefined)}>
