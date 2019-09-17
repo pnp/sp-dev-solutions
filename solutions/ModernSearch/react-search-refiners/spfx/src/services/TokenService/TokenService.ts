@@ -52,7 +52,7 @@ export class TokenService implements ITokenService {
                 let itemProp: string = "";
                 if (pageProp.indexOf(".Label") !== -1 || pageProp.indexOf(".TermID") !== -1) {
                     let term = pageProp.split(".");
-                    let columnName = term[0];
+                    let columnName = term[0].toLowerCase();
                     // Handle multi or single values
                     if (Array.isArray(item[columnName]) && item[columnName].length > 0) {
                         itemProp = item[columnName].map(e => { return e[term[1]]; }).join(',');
