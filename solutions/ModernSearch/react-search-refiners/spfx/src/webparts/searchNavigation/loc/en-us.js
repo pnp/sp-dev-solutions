@@ -13,6 +13,7 @@ define([], function() {
     "PlaceHolderIconText": "Search Navigation Web Part",
     "PlaceHolderDescription": "This component displays search navigation",
     "UseNlpValueLabel": "Use Natural Language Processing query value",
+    "PassQueryLabel": "Pass query keyword to target page",
     "SearchBoxQueryPathBehaviorLabel": "Method",
     "SearchBoxUrlFragmentQueryPathBehavior": "URL fragment",
     "SearchBoxQueryStringQueryPathBehavior": "Query parameter",

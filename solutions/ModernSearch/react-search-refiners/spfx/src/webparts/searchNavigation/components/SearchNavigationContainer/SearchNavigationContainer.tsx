@@ -38,7 +38,7 @@ export default class SearchNavigationContainer extends React.Component<ISearchNa
         const searchUrl = new URL(node.url);
         const openBehavior = this.props.openBehavior === PageOpenBehavior.NewTab ? '_blank' : '_self';
 
-        if (this.props.queryKeywords && this.props.queryKeywords.length > 0) {
+        if (this.props.passQuery && this.props.queryKeywords && this.props.queryKeywords.length > 0) {
             const urlEncodedQueryText = encodeURIComponent(this.props.queryKeywords);
             if (this.props.queryPathBehavior === QueryPathBehavior.URLFragment) {
               searchUrl.hash = urlEncodedQueryText;
@@ -64,6 +64,7 @@ export default class SearchNavigationContainer extends React.Component<ISearchNa
                 <a
                     className={`${styles.nodeText} `}
                     target={openBehavior}
+                    data-interception="off"
                     href={searchUrl}>
                     {node.displayText}
                 </a>
@@ -89,6 +90,7 @@ export default class SearchNavigationContainer extends React.Component<ISearchNa
                     className={`${styles.nodeText}`}
                     href={searchUrl}
                     target={openBehavior}
+                    data-interception="off"
                     style={colorStyle}
                     onMouseOver={() => this.setHover(idx)}
                     onMouseOut={() => this.setHover(undefined)}>
