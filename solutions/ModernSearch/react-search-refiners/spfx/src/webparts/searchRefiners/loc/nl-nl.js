@@ -34,7 +34,7 @@ define([], function() {
                 "MutliValueRefinementItemTemplateLabel": "Multi-value verfijningsitem",
                 "DateRangeRefinementItemLabel": "Datumbereik",
                 "DateFromLabel": "Van",
-                "DateTolabel": "Tog",
+                "DateTolabel": "Tot",
                 "DatePickerStrings": {
                     "months": ['Januari', 'Februari', 'Maart', 'April', 'Mei', 'Juni', 'Juli', 'Augustus', 'September', 'Oktober', 'November', 'December'],
                     "shortMonths": ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
