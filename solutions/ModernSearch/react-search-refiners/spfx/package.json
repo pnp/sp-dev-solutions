@@ -28,6 +28,8 @@
         "@pnp/sp-taxonomy": "1.3.4",
         "@pnp/spfx-controls-react": "1.14.0",
         "@pnp/spfx-property-controls": "1.16.0",
+        "@uifabric/file-type-icons": "^7.0.8",
+        "@uifabric/icons": "^7.2.0",
         "core-js": "3.2.1",
         "custom-event-polyfill": "^1.0.6",
         "downshift": "3.1.5",
@@ -53,19 +55,19 @@
         "@microsoft/sp-tslint-rules": "1.8.2",
         "@microsoft/sp-webpart-workbench": "1.8.2",
         "@types/chai": "3.4.34",
-        "@types/mocha": "2.2.38",
+        "@types/es6-promise": "0.0.33",
         "@types/fabric": "^1.5.43",
+        "@types/mocha": "2.2.38",
         "@types/react": "16.7.22",
         "@types/react-dom": "16.8.0",
         "@types/sharepoint": "2013.1.9",
         "@types/webpack-env": "1.13.1",
-        "@types/es6-promise": "0.0.33",
+        "@webcomponents/custom-elements": "^1.2.4",
+        "@webcomponents/webcomponentsjs": "^2.2.10",
         "ajv": "~5.2.2",
         "gulp": "~3.9.1",
         "unlazy-loader": "0.1.3",
-        "webpack-bundle-analyzer": "^3.3.2",
-        "@webcomponents/custom-elements": "^1.2.4",
-        "@webcomponents/webcomponentsjs": "^2.2.10"
+        "webpack-bundle-analyzer": "^3.3.2"
     },
     "resolutions": {
         "@types/react": "16.7.22"

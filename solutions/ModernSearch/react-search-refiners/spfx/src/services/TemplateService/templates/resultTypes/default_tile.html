@@ -12,7 +12,7 @@
                     href="{{getUrl ../item}}" 
                     author="{{../Author}}" 
                     profile-image="/_layouts/15/userphoto.aspx?size=L&username={{[0]}}" 
-                    icon-src="{{../IconSrc}}" 
+                    file-extension="\{{../IconExt}}" 
                     enable-preview="{{@root.enablePreview}}" 
                     show-file-icon="{{@root.showFileIcon}}">
     </document-card>
@@ -32,6 +32,5 @@
     | profile-image     | The profile image to display.
     | preview-url       | Url to use to the preview.
     | author            | The author name.
-    | icon-src          | The file icon source. Use 'IconSrc' token to determine it automatically.
-    | file-extension    | Only for the <video-card/> component.
+    | file-extension    | Use 'IconExt' token to determine it automatically.
 -->

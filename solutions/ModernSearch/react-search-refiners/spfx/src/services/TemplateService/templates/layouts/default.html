@@ -10,7 +10,7 @@
                     {{#> resultTypes item=item}}
                         {{!-- The block below will be used as default item template if no result types matched --}}
                         <div class="template_result">
-                                <img class="template_icon" src="{{IconSrc}}"/>
+                                <fabric-icon file-extension='{{IconExt}}'></fabric-icon>
                                 <div class="template_contentContainer">
                                     <span class="template_title"><a href="{{getUrl item}}">{{Title}}</a></span>
                                     <span>{{getSummary HitHighlightedSummary}}</span>

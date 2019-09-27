@@ -20,6 +20,7 @@ export interface ISearchVerticalInformation {
 export interface ISearchResult {
     [key: string]: string;
     IconSrc?: string;
+    IconExt?: string;
 }
 
 export interface IRefinementResult {

@@ -88,7 +88,7 @@ class SearchService implements ISearchService {
      * @param query The search query in KQL format
      * @return The search results
      */
-    public async search(query: string, pageNumber?: number): Promise<ISearchResults> {
+    public async search(query: string, pageNumber?: number, useOldSPIcons?: boolean): Promise<ISearchResults> {
 
         let searchQuery: SearchQuery = {};
         let sortedRefiners: string[] = [];
@@ -213,7 +213,7 @@ class SearchService implements ISearchService {
                 });
 
                 // Map results icon (using batch)
-                searchResults = await this._mapToIcons(searchResults);
+                searchResults = await this._mapToIcons(searchResults, useOldSPIcons);
 
                 // Map refinement results                    
                 refinementRows.map((refiner) => {
@@ -490,56 +490,86 @@ class SearchService implements ISearchService {
      * Gets the icons corresponding to the result file name extensions
      * @param searchResults The raw search results
      */
-    private async _mapToIcons(searchResults: ISearchResult[]): Promise<ISearchResult[]> {
+    private async _mapToIcons(searchResults: ISearchResult[], useOldSPIcons: boolean): Promise<ISearchResult[]> {
+        if (useOldSPIcons) {
+            // fallback for backwards compat - remove useOldSPIcons later at some point
+            try {
+                let updatedSearchResults = searchResults;
 
-        try {
+                const batch = this._localPnPSetup.createBatch();
+                const parser = new JSONParser();
+                const batchId = Guid.newGuid().toString();
 
-            let updatedSearchResults = searchResults;
+                const promises = searchResults.map(async result => {
 
-            const batch = this._localPnPSetup.createBatch();
-            const parser = new JSONParser();
-            const batchId = Guid.newGuid().toString();
+                    const filename = result.Filename ? result.Filename : `.${result.FileExtension}`;
 
-            const promises = searchResults.map(async result => {
-
-                const filename = result.Filename ? result.Filename : `.${result.FileExtension}`;
-
-                let encodedFileName = filename ? filename.replace(/['']/g, '') : '';
-                const queryStringIndex = encodedFileName.indexOf('?');
-                if (queryStringIndex !== -1) { // filename with query string leads to 400 error.
-                    encodedFileName = encodedFileName.slice(0, queryStringIndex);
-                }
-
-                let url = `${this._pageContext.web.absoluteUrl}/_api/web/maptoicon(filename='${encodeURIComponent(encodedFileName)}', progid='', size=1)`;
-
-                return batch.add(url, 'GET', {
-                    headers: {
-                        Accept: 'application/json; odata=nometadata'
+                    let encodedFileName = filename ? filename.replace(/['']/g, '') : '';
+                    const queryStringIndex = encodedFileName.indexOf('?');
+                    if (queryStringIndex !== -1) { // filename with query string leads to 400 error.
+                        encodedFileName = encodedFileName.slice(0, queryStringIndex);
                     }
-                }, parser, batchId);
-            });
 
-            // Execute the batch
-            await batch.execute();
+                    let url = `${this._pageContext.web.absoluteUrl}/_api/web/maptoicon(filename='${encodeURIComponent(encodedFileName)}', progid='', size=1)`;
 
-            const response = await Promise.all(promises);
+                    return batch.add(url, 'GET', {
+                        headers: {
+                            Accept: 'application/json; odata=nometadata'
+                        }
+                    }, parser, batchId);
+                });
 
-            response.map((result: any, index: number) => {
+                // Execute the batch
+                await batch.execute();
 
-                if (result.value) {
-                    let iconUrl = this._pageContext.web.absoluteUrl + '/_layouts/15/images/' + result.value;
-                    iconUrl = iconUrl.replace("lg_iczip.gif", "lg_iczip.png");
-                    iconUrl = iconUrl.replace("lg_icmsg.png", "lg_icmsg.gif");
-                    updatedSearchResults[index].IconSrc = iconUrl;
-                }
-            });
+                const response = await Promise.all(promises);
 
-            return updatedSearchResults;
+                response.map((result: any, index: number) => {
 
-        } catch (error) {
-            Logger.write('[SearchService._mapToIcons()]: Error: ' + error, LogLevel.Error);
-            throw new Error(error);
+                    if (result.value) {
+                        let iconUrl = this._pageContext.web.absoluteUrl + '/_layouts/15/images/' + result.value;
+                        iconUrl = iconUrl.replace("lg_iczip.gif", "lg_iczip.png");
+                        iconUrl = iconUrl.replace("lg_icmsg.png", "lg_icmsg.gif");
+                        updatedSearchResults[index].IconSrc = iconUrl;
+                    }
+                });
+
+                return updatedSearchResults;
+
+            } catch (error) {
+                Logger.write('[SearchService._mapToIcons()]: Error: ' + error, LogLevel.Error);
+                throw new Error(error);
+            }
         }
+
+        searchResults.map(result => {
+
+            const filename = result.Filename ? result.Filename : `.${result.FileExtension}`;
+
+            let encodedFileName = filename ? filename.replace(/['']/g, '') : '';
+            const queryStringIndex = encodedFileName.indexOf('?');
+            if (queryStringIndex !== -1) { // filename with query string leads to 400 error.
+                encodedFileName = encodedFileName.slice(0, queryStringIndex);
+            }
+
+            if (filename.indexOf('.') !== -1) {
+                // we have a file
+                result.IconExt = filename.split('.').pop();
+            } else if (!isEmpty(result.HtmlFileType) && result.HtmlFileType.indexOf("OneNote") !== -1) {
+                result.IconExt = "onetoc";
+            } else if (
+                (!isEmpty(result.IsContainer) && result.IsContainer == "true")
+                && ((!isEmpty(result.contentclass) && result.contentclass.indexOf('STS_ListItem_') !== -1))) {
+                // we have a folder
+                result.IconExt = "IsContainer";
+            }
+            else if (isEmpty(result.FileType) && !isEmpty(result.IsListItem) && result.IsListItem == "true") {
+                result.IconExt = "IsListItem";
+            } else {
+                result.IconExt = result.FileType;
+            }
+        });
+        return searchResults;
     }
 
     /**

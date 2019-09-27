@@ -661,8 +661,8 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
      */
     private async _getSearchResults(props: ISearchResultsContainerProps, pageNumber?: number): Promise<ISearchResults> {
 
-        // Get search results
-        const searchResults = await props.searchService.search(props.queryKeywords, pageNumber);
+        // Get search results        
+        const searchResults = await props.searchService.search(props.queryKeywords, pageNumber, this.props.templateService.UseOldSPIcons);
 
         // Translates taxonomy refiners and result values by using terms ID if applicable
         if (props.enableLocalization) {

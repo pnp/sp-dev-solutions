@@ -21,14 +21,17 @@ import { LivePersonaWebComponent } from './components/livepersona';
 import { PersonaCardWebComponent } from './components/personacard';
 import { DocumentCardShimmersWebComponent } from './components/shimmers/DocumentCardShimmers';
 import { PersonaCardShimmersWebComponent } from './components/shimmers/PersonaCardShimmers';
+import { IconWebComponent } from './components/Icon';
 import { IPropertyPaneField } from '@microsoft/sp-property-pane';
 import ResultsLayoutOption from '../../models/ResultsLayoutOption';
 import { ISearchResultsWebPartProps } from '../../webparts/searchResults/ISearchResultsWebPartProps';
 import { IComboBoxOption } from 'office-ui-fabric-react/lib/ComboBox';
-import { IComponentFieldsConfiguration } from './TemplateService';
+import { IComponentFieldsConfiguration, TemplateService } from './TemplateService';
 import { WebPartContext } from '@microsoft/sp-webpart-base';
 import { ThemeProvider, IReadonlyTheme } from '@microsoft/sp-component-base';
 import groupBy from 'handlebars-group-by';
+import { initializeIcons } from '@uifabric/icons';
+import { initializeFileTypeIcons } from '@uifabric/file-type-icons';
 
 abstract class BaseTemplateService {
 
@@ -42,6 +45,7 @@ abstract class BaseTemplateService {
         UserDST: 0
     };
     private DayLightSavings = true;
+    public UseOldSPIcons = false;
 
     constructor(ctx?: WebPartContext) {
 
@@ -62,6 +66,13 @@ abstract class BaseTemplateService {
         var jul = new Date(today.getFullYear(), 6, 1);
         let stdTimeZoneOffset = Math.max(jan.getTimezoneOffset(), jul.getTimezoneOffset());
         return today.getTimezoneOffset() < stdTimeZoneOffset;
+    }
+
+    private LoadUIFabricIcons() {
+        //initializeFileTypeIcons('https://spoprod-a.akamaihd.net/files/fabric/assets/item-types-fluent/');
+        initializeFileTypeIcons();
+        initializeIcons();
+
     }
 
     private async LoadHandlebarsHelpers() {
@@ -395,6 +406,10 @@ abstract class BaseTemplateService {
             {
                 name: 'live-persona',
                 class: LivePersonaWebComponent
+            },
+            {
+                name: 'fabric-icon',
+                class: IconWebComponent
             }
         ];
 
@@ -421,12 +436,7 @@ abstract class BaseTemplateService {
         Handlebars.registerPartial('livepersona', livePersonaTemplate);
     }
 
-    /**
-     * Compile the specified Handlebars template with the associated context object¸
-     * @returns the compiled HTML template string 
-     */
-    public async processTemplate(templateContext: any, templateContent: string): Promise<string> {
-
+    public async optimizeLoadingForTemplate(templateContent: string): Promise<void> {
         // Process the Handlebars template
         const handlebarFunctionNames = [
             "getDate",
@@ -587,15 +597,31 @@ abstract class BaseTemplateService {
             if (regEx.test(templateContent)) {
                 await this.LoadHandlebarsHelpers();
                 break;
-            } 
+            }
         }
 
-        let template = Handlebars.compile(templateContent);
-        let result = template(templateContext);
-        if (result.indexOf("video-preview-item")  !== -1 || result.indexOf("video-card") !== -1) {
+        this.UseOldSPIcons = templateContent.indexOf("{{IconSrc}}") !== -1;
+
+        if (templateContent.indexOf("fabric-icon") === -1) {
+            // load CDN for icons
+            this.LoadUIFabricIcons();
+        }
+
+        if (templateContent.indexOf("video-card") !== -1) {
             await this._loadVideoLibrary();
         }
+    }
 
+    /**
+     * Compile the specified Handlebars template with the associated context object¸
+     * @returns the compiled HTML template string 
+     */
+    public async processTemplate(templateContext: any, templateContent: string): Promise<string> {
+        let template = Handlebars.compile(templateContent);
+        let result = template(templateContext);
+        if (result.indexOf("video-preview-item") !== -1) {
+            await this._loadVideoLibrary();
+        }
         return result;
     }
 
