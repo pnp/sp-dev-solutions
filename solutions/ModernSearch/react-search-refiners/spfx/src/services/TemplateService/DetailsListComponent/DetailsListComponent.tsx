@@ -163,7 +163,7 @@ export class DetailsListComponent extends React.Component<DetailsListComponentPr
                     maxWidth: 16,
                     onColumnClick: this._onColumnClick,
                     onRender: (item: ISearchResult) => {
-                        return (<IconComponent fileExtension={item.IconExt} size={16} ></IconComponent>);
+                        return (<IconComponent fileExtension={item.IconExt} imageUrl={item.SiteLogo} size={16} ></IconComponent>);
                     }
                 }
             );

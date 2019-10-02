@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Icon, mergeStyles } from 'office-ui-fabric-react';
+import { Icon, IconType, mergeStyles, ImageFit } from 'office-ui-fabric-react';
 import { getFileTypeIconProps, FileTypeIconSize, FileIconType } from '@uifabric/file-type-icons';
 import { isEmpty, trimStart } from '@microsoft/sp-lodash-subset';
 
@@ -7,6 +7,7 @@ export interface IIconProps {
     fileExtension?: string;
     iconName?: string;
     size?: FileTypeIconSize;
+    imageUrl?: string;
 }
 
 export interface IIconState {
@@ -29,7 +30,9 @@ export class IconComponent extends React.Component<IIconProps, IIconState> {
         });
 
         let iconProps;
-        if (!isEmpty(this.props.fileExtension)) {
+        if (!isEmpty(this.props.imageUrl)) {
+            iconProps = { iconType: IconType.Image, imageProps: { src: this.props.imageUrl, imageFit: ImageFit.contain, width: iconSize + 'px', height: iconSize + 'px' } };
+        } else if (!isEmpty(this.props.fileExtension)) {
 
             if (this.props.fileExtension == "IsListItem") {
                 iconProps = getFileTypeIconProps({ type: FileIconType.listItem, size: iconSize, imageFileType: 'svg' });
@@ -44,7 +47,6 @@ export class IconComponent extends React.Component<IIconProps, IIconState> {
         } else {
             iconProps = getFileTypeIconProps({ type: FileIconType.genericFile, size: iconSize, imageFileType: 'svg' });
         }
-
         return <Icon {...iconProps} className={iconClass} />;
     }
 }
