@@ -117,6 +117,15 @@ class SearchService implements ISearchService {
 
         if (this._resultSourceId) {
             searchQuery.SourceId = this._resultSourceId;
+
+            // enable phoenetic search for people result source
+            if (this._resultSourceId.toLocaleLowerCase() === "b09a7990-05ea-4af9-81ef-edfab16c4e31") {
+                searchQuery.EnableNicknames = true;
+                searchQuery.EnablePhonetic = true;
+            } else {
+                searchQuery.EnableNicknames = false;
+                searchQuery.EnablePhonetic = false;
+            }
         }
 
         // To be able to use search query variable according to the current context
@@ -352,6 +361,14 @@ class SearchService implements ISearchService {
 
             if (vertical.resultSourceId) {
                 url = UrlHelper.addOrReplaceQueryStringParam(url, 'sourceid', `'${vertical.resultSourceId}'`);
+                // enable phoenetic search for people result source
+                if (vertical.resultSourceId.toLocaleLowerCase() === "b09a7990-05ea-4af9-81ef-edfab16c4e31") {
+                    url = UrlHelper.addOrReplaceQueryStringParam(url, 'enablenicknames', 'true');
+                    url = UrlHelper.addOrReplaceQueryStringParam(url, 'enablephonetic', 'true');
+                } else {
+                    url = UrlHelper.addOrReplaceQueryStringParam(url, 'enablenicknames', 'false');
+                    url = UrlHelper.addOrReplaceQueryStringParam(url, 'enablephonetic', 'false');
+                }
             }
 
             return batch.add(url, 'GET', {
