@@ -112,7 +112,7 @@ export class DocumentCardComponent extends React.Component<IDocumentCardComponen
                     previewImageSrc: processedProps.previewImage,
                     imageFit: ImageFit.centerCover,
                     iconSrc: globalSettings.icons[iconProps.iconName].code.props.src,
-                    //width: 318,
+                    width: 318,
                     height: 196,
                 }
             ],
