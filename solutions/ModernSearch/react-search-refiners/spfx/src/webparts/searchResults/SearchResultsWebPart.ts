@@ -606,6 +606,14 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
             this.properties.selectedProperties = udpatedProperties.join(',');
         }
 
+        // clean out duplicate ones
+        let allProps = this.properties.selectedProperties.split(',');
+        allProps = allProps.filter((item, index) => {
+            return allProps.indexOf(item) === index;
+        });
+        this.properties.selectedProperties = allProps.join(',');
+
+
         if (propertyPath.localeCompare('selectedLayout') === 0) {
             // Refresh setting the right template for the property pane
             if (!this.codeRendererIsSelected()) {
