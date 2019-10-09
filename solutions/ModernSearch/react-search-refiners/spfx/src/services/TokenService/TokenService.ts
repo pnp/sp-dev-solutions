@@ -21,6 +21,8 @@ export class TokenService implements ITokenService {
         queryTemplate = this.replaceQueryStringTokens(queryTemplate);
         queryTemplate = this.replaceHubSiteTokens(queryTemplate);
 
+        queryTemplate = queryTemplate.replace("{TenantUrl}", `https://` + window.location.host);
+
         return queryTemplate;
     }
 
