@@ -188,7 +188,7 @@ export default class InitService implements IInitService {
     try {
       let retVal: boolean = false;
       //using bitwize operation because reference to SPPermission causes app customizer not to load.
-      retVal = (this._context.pageContext.list.permissions.value.High & 4) > 0;
+      retVal = ((this._context.pageContext.list.permissions.value.High & 4) > 0 || (this._context.pageContext.list.permissions.value.Low & 4) > 0);
       return retVal;
     } catch (err) {
       //Don't log failure, means user doesn't have edit rights.
