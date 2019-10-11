@@ -186,7 +186,7 @@ abstract class BaseTemplateService {
 
         let templates: any = htmlContent.getElementById('template');
         if (templates && templates.innerHTML) {
-            // Need to unescape '&gt;' for handlebars partials 
+            // Need to unescape '&gt;' for handlebars partials
             return templates.innerHTML.replace(/\&gt;/g, '>');
         } else {
             return templateContent;
@@ -203,7 +203,7 @@ abstract class BaseTemplateService {
 
         const placeHolders = htmlContent.getElementById('placeholder');
         if (placeHolders && placeHolders.innerHTML) {
-            // Need to unescape '&gt;' for handlebars partials 
+            // Need to unescape '&gt;' for handlebars partials
             return placeHolders.innerHTML.replace(/\&gt;/g, '>');
         } else {
             return null;
@@ -427,7 +427,7 @@ abstract class BaseTemplateService {
             }
         });
 
-        // Register slider component as partial 
+        // Register slider component as partial
         let sliderTemplate = Handlebars.compile(`<slider-component items="{{items}}" options="{{options}}" template="{{@partial-block}}"></slider-component>`);
         Handlebars.registerPartial('slider', sliderTemplate);
 
@@ -600,21 +600,21 @@ abstract class BaseTemplateService {
             }
         }
 
-        this.UseOldSPIcons = templateContent.indexOf("{{IconSrc}}") !== -1;
+        this.UseOldSPIcons = templateContent && templateContent.indexOf("{{IconSrc}}") !== -1;
 
-        if (templateContent.indexOf("fabric-icon") === -1) {
+        if (templateContent && templateContent.indexOf("fabric-icon") === -1) {
             // load CDN for icons
             this.LoadUIFabricIcons();
         }
 
-        if (templateContent.indexOf("video-card") !== -1) {
+        if (templateContent && templateContent.indexOf("video-card") !== -1) {
             await this._loadVideoLibrary();
         }
     }
 
     /**
      * Compile the specified Handlebars template with the associated context object¸
-     * @returns the compiled HTML template string 
+     * @returns the compiled HTML template string
      */
     public async processTemplate(templateContext: any, templateContent: string): Promise<string> {
         let template = Handlebars.compile(templateContent);
@@ -668,7 +668,7 @@ abstract class BaseTemplateService {
     }
 
     /**
-     * Builds and registers the result types as Handlebars partials 
+     * Builds and registers the result types as Handlebars partials
      * Based on https://github.com/helpers/handlebars-helpers/ operators
      * @param resultTypes the configured result types from the property pane
      */
@@ -686,7 +686,7 @@ abstract class BaseTemplateService {
 
     /**
      * Builds the Handlebars nested conditions recursively to reflect the result types configuration
-     * @param resultTypes the configured result types from the property pane 
+     * @param resultTypes the configured result types from the property pane
      * @param currentResultType the current processed result type
      * @param currentIdx current index
      */
@@ -720,7 +720,7 @@ abstract class BaseTemplateService {
                 param2 = null;
             }
 
-            const baseCondition = `{{#${operator} ${param1} ${param2 || ""}}} 
+            const baseCondition = `{{#${operator} ${param1} ${param2 || ""}}}
                                         ${templateContent}`;
 
             if (currentIdx === resultTypes.length - 1) {
@@ -730,8 +730,8 @@ abstract class BaseTemplateService {
                 conditionBlockContent = await this._buildCondition(resultTypes, resultTypes[currentIdx + 1], currentIdx + 1);
             }
 
-            return `${baseCondition}   
-                    {{else}} 
+            return `${baseCondition}
+                    {{else}}
                         ${conditionBlockContent}
                     {{/${operator}}}`;
         } else {
@@ -793,7 +793,7 @@ abstract class BaseTemplateService {
     }
 
     private async _loadVideoLibrary() {
-        // Load Videos-Js on Demand 
+        // Load Videos-Js on Demand
         // Webpack will create a other bundle loaded on demand just for this library
         if ((window as any).searchVideoJS === undefined) {
             const videoJs = await import(
