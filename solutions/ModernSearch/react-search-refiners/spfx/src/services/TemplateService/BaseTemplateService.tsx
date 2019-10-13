@@ -602,7 +602,7 @@ abstract class BaseTemplateService {
 
         this.UseOldSPIcons = templateContent.indexOf("{{IconSrc}}") !== -1;
 
-        if (templateContent.indexOf("fabric-icon") === -1) {
+        if (templateContent.indexOf("fabric-icon") !== -1) {
             // load CDN for icons
             this.LoadUIFabricIcons();
         }
