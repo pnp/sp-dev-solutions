@@ -146,6 +146,29 @@ class SearchService implements ISearchService {
             // Get the refiners order specified in the property pane
             sortedRefiners = this.refiners.map(e => e.refinerName);
             searchQuery.Refiners = sortedRefiners.join(',');
+
+            var sevenOffset = (24 * 60 * 60 * 1000) * 7;
+            var thirtyOffset = (24 * 60 * 60 * 1000) * 30;
+            var ninetyOffset = (24 * 60 * 60 * 1000) * 90;
+            var threeSixtyFiveOffset = (24 * 60 * 60 * 1000) * 365;
+
+            let today = new Date();
+            // let yesterday = new Date();
+            // yesterday.setTime(yesterday.getTime()- oneOffset);
+
+            let weekAgo = new Date();
+            weekAgo.setTime(weekAgo.getTime() - sevenOffset);
+
+            let monthAgo = new Date();
+            monthAgo.setTime(monthAgo.getTime() - thirtyOffset);
+
+            let threeMonthsAgo = new Date();
+            threeMonthsAgo.setTime(threeMonthsAgo.getTime() - ninetyOffset);
+
+            let yearAgo = new Date();
+            yearAgo.setTime(yearAgo.getTime() - threeSixtyFiveOffset);
+
+            searchQuery.Refiners = searchQuery.Refiners.replace("LastModifiedTime", `LastModifiedTime(discretize=manual/${yearAgo.toISOString()}/${threeMonthsAgo.toISOString()}/${monthAgo.toISOString()}/${weekAgo.toISOString()}/${today.toISOString()})`);
         }
 
         if (this.refinementFilters) {
@@ -229,6 +252,9 @@ class SearchService implements ISearchService {
 
                     let values: IRefinementValue[] = [];
                     refiner.Entries.map((item) => {
+                        if (item.RefinementCount === "0") {
+                            return false;
+                        }
                         values.push({
                             RefinementCount: parseInt(item.RefinementCount, 10),
                             // replace string;# for calculated columns https://github.com/SharePoint/sp-dev-solutions/issues/304
