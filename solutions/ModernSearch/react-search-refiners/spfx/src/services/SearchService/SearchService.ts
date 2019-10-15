@@ -1,6 +1,6 @@
 import * as Handlebars from 'handlebars';
 import ISearchService from './ISearchService';
-import { ISearchResults, ISearchResult, IRefinementResult, IRefinementValue, IRefinementFilter, IPromotedResult, ISearchVerticalInformation } from '../../models/ISearchResult';
+import { ISearchResults, ISearchResult, IRefinementResult, IRefinementValue, IRefinementFilter, IPromotedResult, ISearchVerticalInformation, ISearchResultBlock } from '../../models/ISearchResult';
 import { sp, SearchQuery, SearchResults, SPRest, Sort, SearchSuggestQuery, SortDirection } from '@pnp/sp';
 import { Logger, LogLevel, ConsoleListener } from '@pnp/logging';
 import { Text, Guid } from '@microsoft/sp-core-library';
@@ -247,7 +247,7 @@ class SearchService implements ISearchService {
                 // Map results icon (using batch)
                 searchResults = await this._mapToIcons(searchResults, useOldSPIcons);
 
-                // Map refinement results                    
+                // Map refinement results
                 refinementRows.map((refiner) => {
 
                     let values: IRefinementValue[] = [];
@@ -270,11 +270,27 @@ class SearchService implements ISearchService {
                     });
                 });
 
-                // Query rules handling
-                const secondaryQueryResults = r2.RawSearchResults.SecondaryQueryResults;
+                // Sort refiners according to the property pane value
+                refinementResults = sortBy(refinementResults, (refinement) => {
+
+                    // Get the index of the corresponding filter name
+                    return sortedRefiners.indexOf(refinement.FilterName);
+                });
+
+                results.RelevantResults = searchResults;
+                results.RefinementResults = refinementResults;
+                results.PaginationInformation.TotalRows = this._initialSearchResult.TotalRows;
+            }
+
+            // Query rules handling
+            if (this._initialSearchResult.RawSearchResults.SecondaryQueryResults) {
+
+                const secondaryQueryResults = this._initialSearchResult.RawSearchResults.SecondaryQueryResults;
+
                 if (Array.isArray(secondaryQueryResults) && secondaryQueryResults.length > 0) {
 
                     let promotedResults: IPromotedResult[] = [];
+                    let secondaryResults: ISearchResultBlock[] = [];
 
                     secondaryQueryResults.map((e) => {
 
@@ -289,21 +305,40 @@ class SearchService implements ISearchService {
                                 } as IPromotedResult);
                             });
                         }
+
+                        // Secondary/Query Rule results are mapped through SecondaryQueryResults.RelevantResults
+                        if (e.RelevantResults) {
+                          const secondaryResultItems = e.RelevantResults.Table.Rows.map((srr) => {
+                            let result: ISearchResult = {};
+
+                            srr.Cells.map((item) => {
+                              result[item.Key] = item.Value;
+                            });
+
+                            return result;
+                          });
+
+                          const secondaryResultBlock: ISearchResultBlock = {
+                            Title: e.RelevantResults.ResultTitle,
+                            Results: secondaryResultItems
+                          };
+
+                          // Only keep secondary result blocks which have items
+                          if (secondaryResultBlock.Results.length > 0) {
+                            secondaryResults.push(secondaryResultBlock);
+                          }
+                        }
                     });
 
                     results.PromotedResults = promotedResults;
+
+                    secondaryResults = await Promise.all(secondaryResults.map(async (srb) =>  {
+                      srb.Results = await this._mapToIcons(srb.Results, useOldSPIcons);
+                      return srb;
+                    }));
+                    results.SecondaryResults = secondaryResults;
                 }
 
-                // Sort refiners according to the property pane value
-                refinementResults = sortBy(refinementResults, (refinement) => {
-
-                    // Get the index of the corresponding filter name
-                    return sortedRefiners.indexOf(refinement.FilterName);
-                });
-
-                results.RelevantResults = searchResults;
-                results.RefinementResults = refinementResults;
-                results.PaginationInformation.TotalRows = this._initialSearchResult.TotalRows;
             }
             return results;
 
@@ -466,7 +501,7 @@ class SearchService implements ISearchService {
             let refinementResultsRows = results.RawSearchResults.PrimaryQueryResult.RefinementResults;
             const refinementRows: any = refinementResultsRows ? refinementResultsRows.Refiners : [];
 
-            // Map refinement results                    
+            // Map refinement results
             refinementRows.map((refiner) => {
                 refiner.Entries.map((item) => {
                     managedProperties.push({
@@ -546,7 +581,7 @@ class SearchService implements ISearchService {
 
                 const promises = searchResults.map(async result => {
 
-                    const filename = result.Filename ? result.Filename : `.${result.FileExtension}`;
+                    const filename = result.Filename || (result.FileExtension ? `.${result.FileExtension}` : '');
 
                     let encodedFileName = filename ? filename.replace(/['']/g, '') : '';
                     const queryStringIndex = encodedFileName.indexOf('?');
@@ -554,13 +589,15 @@ class SearchService implements ISearchService {
                         encodedFileName = encodedFileName.slice(0, queryStringIndex);
                     }
 
-                    let url = `${this._pageContext.web.absoluteUrl}/_api/web/maptoicon(filename='${encodeURIComponent(encodedFileName)}', progid='', size=1)`;
+                    if (encodedFileName) {
+                      let url = `${this._pageContext.web.absoluteUrl}/_api/web/maptoicon(filename='${encodeURIComponent(encodedFileName)}', progid='', size=1)`;
 
-                    return batch.add(url, 'GET', {
-                        headers: {
-                            Accept: 'application/json; odata=nometadata'
-                        }
-                    }, parser, batchId);
+                      return batch.add(url, 'GET', {
+                          headers: {
+                              Accept: 'application/json; odata=nometadata'
+                          }
+                      }, parser, batchId);
+                    }
                 });
 
                 // Execute the batch
@@ -570,7 +607,7 @@ class SearchService implements ISearchService {
 
                 response.map((result: any, index: number) => {
 
-                    if (result.value) {
+                    if (result && result.value) {
                         let iconUrl = this._pageContext.web.absoluteUrl + '/_layouts/15/images/' + result.value;
                         iconUrl = iconUrl.replace("lg_iczip.gif", "lg_iczip.png");
                         iconUrl = iconUrl.replace("lg_icmsg.png", "lg_icmsg.gif");
@@ -588,7 +625,7 @@ class SearchService implements ISearchService {
 
         searchResults.map(result => {
 
-            const filename = result.Filename ? result.Filename : `.${result.FileExtension}`;
+            const filename = result.Filename || (result.FileExtension ? `.${result.FileExtension}` : '');
 
             let encodedFileName = filename ? filename.replace(/['']/g, '') : '';
             const queryStringIndex = encodedFileName.indexOf('?');
@@ -599,9 +636,11 @@ class SearchService implements ISearchService {
             if (filename.indexOf('.') !== -1) {
                 // we have a file
                 result.IconExt = filename.split('.').pop();
-            } else if (!isEmpty(result.HtmlFileType) && result.HtmlFileType.indexOf("OneNote") !== -1) {
+            }
+            else if (!isEmpty(result.HtmlFileType) && result.HtmlFileType.indexOf("OneNote") !== -1) {
                 result.IconExt = "onetoc";
-            } else if (
+            }
+            else if (
                 (!isEmpty(result.IsContainer) && result.IsContainer == "true")
                 && ((!isEmpty(result.contentclass) && result.contentclass.indexOf('STS_ListItem_') !== -1))) {
                 // we have a folder
@@ -609,8 +648,11 @@ class SearchService implements ISearchService {
             }
             else if (isEmpty(result.FileType) && !isEmpty(result.IsListItem) && result.IsListItem == "true") {
                 result.IconExt = "IsListItem";
-            } else {
+            }
+            else if (!isEmpty(result.FileType)) {
                 result.IconExt = result.FileType;
+            } else {
+                result.IconExt = null;
             }
         });
         return searchResults;
@@ -679,7 +721,7 @@ class SearchService implements ISearchService {
     private _injectSynonyms(query: string): string {
 
         if (this._synonymTable && Object.keys(this._synonymTable).length > 0) {
-            // Remove complex query parts AND/OR/NOT/ANY/ALL/parenthasis/property queries/exclusions - can probably be improved            
+            // Remove complex query parts AND/OR/NOT/ANY/ALL/parenthasis/property queries/exclusions - can probably be improved
             const cleanQuery = query.replace(/(-\w+)|(-"\w+.*?")|(-?\w+[:=<>]+\w+)|(-?\w+[:=<>]+".*?")|((\w+)?\(.*?\))|(AND)|(OR)|(NOT)/g, '');
             const queryParts: string[] = cleanQuery.match(/("[^"]+"|[^"\s]+)/g);
 
