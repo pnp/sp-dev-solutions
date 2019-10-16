@@ -127,11 +127,19 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
                     <div>
                         {renderWebPartTitle}
                         <div className={styles.searchWp__buttonBar}>{sortPanel}</div>
-                        <div className={styles.searchWp__noresult} id={this.state.mountingNodeId}>{strings.NoResultMessage}</div>
+                        <div id={this.state.mountingNodeId}>
+                            <div className={styles.searchWp__noresult}>{strings.NoResultMessage}</div>
+                        </div>
                     </div>;
             } else {
                 if (this.props.displayMode === DisplayMode.Edit && !areResultsLoading && this.props.showBlank) {
                     renderWpContent = <MessageBar messageBarType={MessageBarType.info}>{strings.ShowBlankEditInfoMessage}</MessageBar>;
+                }
+                else {
+                    renderWpContent =
+                        <div>
+                            <div id={this.state.mountingNodeId}></div>
+                        </div>;
                 }
             }
         } else {
