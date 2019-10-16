@@ -64,7 +64,7 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
             sortDirection={this.state.sortDirection}
             sortField={this.state.sortField} />;
 
-        // Loading behavior                        
+        // Loading behavior
         if (areResultsLoading) {
 
             if (items.RelevantResults.length > 0) {
@@ -127,11 +127,19 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
                     <div>
                         {renderWebPartTitle}
                         <div className={styles.searchWp__buttonBar}>{sortPanel}</div>
-                        <div className={styles.searchWp__noresult}>{strings.NoResultMessage}</div>
+                        <div id={this.state.mountingNodeId}>
+                            <div className={styles.searchWp__noresult}>{strings.NoResultMessage}</div>
+                        </div>
                     </div>;
             } else {
                 if (this.props.displayMode === DisplayMode.Edit && !areResultsLoading && this.props.showBlank) {
                     renderWpContent = <MessageBar messageBarType={MessageBarType.info}>{strings.ShowBlankEditInfoMessage}</MessageBar>;
+                }
+                else {
+                    renderWpContent =
+                        <div>
+                            <div id={this.state.mountingNodeId}></div>
+                        </div>;
                 }
             }
         } else {
@@ -311,7 +319,7 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
                         hasError: false,
                     });
                 } else {
-                    // We don't use a state variable for the template since it is passed from props 
+                    // We don't use a state variable for the template since it is passed from props
                     // so we force a re render to apply the new template
                     this.forceUpdate();
                 }
@@ -612,7 +620,7 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
                             }
 
                             if (localizedLabel.length > 0) {
-                                // There is only one default label for a language 
+                                // There is only one default label for a language
                                 termLabels.push(localizedLabel[0].Value);
                             }
                         });
@@ -661,7 +669,7 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
      */
     private async _getSearchResults(props: ISearchResultsContainerProps, pageNumber?: number): Promise<ISearchResults> {
 
-        // Get search results        
+        // Get search results
         const searchResults = await props.searchService.search(props.queryKeywords, pageNumber, this.props.templateService.UseOldSPIcons);
 
         // Translates taxonomy refiners and result values by using terms ID if applicable
