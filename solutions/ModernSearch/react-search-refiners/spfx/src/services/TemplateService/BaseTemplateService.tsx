@@ -30,8 +30,7 @@ import { IComponentFieldsConfiguration, TemplateService } from './TemplateServic
 import { WebPartContext } from '@microsoft/sp-webpart-base';
 import { ThemeProvider, IReadonlyTheme } from '@microsoft/sp-component-base';
 import groupBy from 'handlebars-group-by';
-import { initializeIcons } from '@uifabric/icons';
-import { initializeFileTypeIcons } from '@uifabric/file-type-icons';
+import { Loader } from './LoadHelper';
 
 abstract class BaseTemplateService {
 
@@ -66,44 +65,6 @@ abstract class BaseTemplateService {
         var jul = new Date(today.getFullYear(), 6, 1);
         let stdTimeZoneOffset = Math.max(jan.getTimezoneOffset(), jul.getTimezoneOffset());
         return today.getTimezoneOffset() < stdTimeZoneOffset;
-    }
-
-    private LoadUIFabricIcons() {
-        //initializeFileTypeIcons('https://spoprod-a.akamaihd.net/files/fabric/assets/item-types-fluent/');
-        initializeFileTypeIcons();
-        initializeIcons();
-
-    }
-
-    private async LoadHandlebarsHelpers() {
-        if ((window as any).searchMoment !== undefined) {
-            // early check - seems to never hit(?)
-            return;
-        }
-        let moment = await import(
-            /* webpackChunkName: 'search-handlebars-helpers' */
-            'moment'
-        );
-        if ((window as any).searchMoment !== undefined) {
-            return;
-        }
-        (window as any).searchMoment = moment;
-
-
-        if ((window as any).searchHBHelper !== undefined) {
-            // early check - seems to never hit(?)
-            return;
-        }
-        let component = await import(
-            /* webpackChunkName: 'search-handlebars-helpers' */
-            'handlebars-helpers'
-        );
-        if ((window as any).searchHBHelper !== undefined) {
-            return;
-        }
-        (window as any).searchHBHelper = component({
-            handlebars: Handlebars
-        });
     }
 
     /**
@@ -595,7 +556,7 @@ abstract class BaseTemplateService {
 
             let regEx = new RegExp("{{#?.*?" + element + ".*?}}", "m");
             if (regEx.test(templateContent)) {
-                await this.LoadHandlebarsHelpers();
+                await Loader.LoadHandlebarsHelpers();
                 break;
             }
         }
@@ -604,11 +565,11 @@ abstract class BaseTemplateService {
 
         if (templateContent && templateContent.indexOf("fabric-icon") !== -1) {
             // load CDN for icons
-            this.LoadUIFabricIcons();
+            Loader.LoadUIFabricIcons();
         }
 
         if (templateContent && templateContent.indexOf("video-card") !== -1) {
-            await this._loadVideoLibrary();
+            await Loader.LoadVideoLibrary();
         }
     }
 
@@ -620,7 +581,7 @@ abstract class BaseTemplateService {
         let template = Handlebars.compile(templateContent);
         let result = template(templateContext);
         if (result.indexOf("video-preview-item") !== -1) {
-            await this._loadVideoLibrary();
+            await Loader.LoadVideoLibrary();
         }
         return result;
     }
@@ -790,18 +751,6 @@ abstract class BaseTemplateService {
                 }
             });
         }));
-    }
-
-    private async _loadVideoLibrary() {
-        // Load Videos-Js on Demand
-        // Webpack will create a other bundle loaded on demand just for this library
-        if ((window as any).searchVideoJS === undefined) {
-            const videoJs = await import(
-                /* webpackChunkName: 'videos-js' */
-                './video-js'
-            );
-            (window as any).searchVideoJS = videoJs.default.getVideoJs();
-        }
     }
 
     private static _initVideoPreviews() {
