@@ -49,6 +49,15 @@ define([], function() {
                     "isRequiredErrorMessage": 'Start datum is verplicht.',
                     "invalidInputErrorMessage": 'Invalide datumformat.'
                 },
+                "DateIntervalStrings": {
+                    "AnyTime": "Elk tijdstip",
+                    "PastDay": "Afgelopen 24 uur",
+                    "PastWeek": "Afgelopen week",
+                    "PastMonth": "Afgelopen maand",
+                    "Past3Months": "Afgelopen 3 maanden",
+                    "PastYear": "Afgelopen jaar",
+                    "Older": "Ouder dan een jaar"
+                },
                 "RefinerSortTypeLabel": "Verijning sorteertype",
                 "RefinerSortTypeAlphabetical": "Alfabetisch",
                 "RefinerSortTypeByNumberOfResults": "Aantal resultaten",

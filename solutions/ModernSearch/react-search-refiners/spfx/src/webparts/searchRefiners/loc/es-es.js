@@ -49,6 +49,15 @@ define([], function() {
                     "isRequiredErrorMessage": 'Fecha de Inicio es requerida.',
                     "invalidInputErrorMessage": 'Formato de Fecha Inválido.'
                 },
+                "DateIntervalStrings": {
+                    "AnyTime": "Cualquier hora",
+                    "PastDay": "Últimas 24 horas",
+                    "PastWeek": "Semana anterior",
+                    "PastMonth": "Mes anterior",
+                    "Past3Months": "Últimos 3 meses",
+                    "PastYear": "Año pasado",
+                    "Older": "Antigüedad superior a un año"
+                },
                 "RefinerSortTypeLabel": "Ordenar refinador por tipo",
                 "RefinerSortTypeAlphabetical": "Alfabéticamente",
                 "RefinerSortTypeByNumberOfResults": "Por número de resultados",

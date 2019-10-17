@@ -49,6 +49,15 @@ define([], function() {
                     "isRequiredErrorMessage": 'Start date is required.',
                     "invalidInputErrorMessage": 'Invalid date format.'
                 },
+                "DateIntervalStrings": {
+                    "AnyTime": "Any time",
+                    "PastDay": "Past 24 hours",
+                    "PastWeek": "Past week",
+                    "PastMonth": "Past month",
+                    "Past3Months": "Past 3 months",
+                    "PastYear": "Past year",
+                    "Older": "Older than a year"
+                },
                 "RefinerSortTypeLabel": "Refiner sort type",
                 "RefinerSortTypeAlphabetical": "Alphabetical",
                 "RefinerSortTypeByNumberOfResults": "By number of results",

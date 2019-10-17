@@ -231,6 +231,10 @@ export default class SearchRefinersWebPart extends BaseClientSideWebPart<ISearch
                             {
                                 key: RefinerTemplateOption.DateRange,
                                 text: strings.Refiners.Templates.DateRangeRefinementItemLabel,
+                            },
+                            {
+                                key: RefinerTemplateOption.FixedDateRange,
+                                text: "Fixed dates"//strings.Refiners.Templates.DateRangeRefinementItemLabel,
                             }
                         ]
                     },
