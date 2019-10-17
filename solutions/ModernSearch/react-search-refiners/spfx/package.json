@@ -5,20 +5,21 @@
     "engines": {
         "node": ">=0.10.0"
     },
+    "main": "lib/index.js",
     "scripts": {
         "build": "gulp bundle",
         "clean": "gulp clean",
         "test": "gulp test"
     },
     "dependencies": {
-        "@microsoft/decorators": "1.8.2",
-        "@microsoft/sp-application-base": "1.8.2",
-        "@microsoft/sp-core-library": "1.8.2",
-        "@microsoft/sp-dialog": "1.8.2",
+        "@microsoft/decorators": "1.9.1",
+        "@microsoft/sp-application-base": "1.9.1",
+        "@microsoft/sp-core-library": "1.9.1",
+        "@microsoft/sp-dialog": "1.9.1",
         "@microsoft/sp-loader": "1.8.2",
-        "@microsoft/sp-lodash-subset": "1.8.2",
-        "@microsoft/sp-property-pane": "1.8.2",
-        "@microsoft/sp-webpart-base": "1.8.2",
+        "@microsoft/sp-lodash-subset": "1.9.1",
+        "@microsoft/sp-property-pane": "1.9.1",
+        "@microsoft/sp-webpart-base": "1.9.1",
         "@pnp/common": "1.3.4",
         "@pnp/logging": "1.3.4",
         "@pnp/odata": "1.3.4",
@@ -41,25 +42,25 @@
         "immutability-helper": "2.4.0",
         "moment": "2.24.0",
         "office-ui-fabric-react": "6.194.0",
-        "react": "16.7.0",
+        "react": "16.8.5",
         "react-ace": "5.8.0",
         "react-custom-scrollbars": "4.2.1",
-        "react-dom": "16.7.0",
+        "react-dom": "16.8.5",
         "react-js-pagination": "3.0.2",
         "video.js": "^7.6.0"
     },
     "devDependencies": {
         "@microsoft/rush-stack-compiler-3.3": "0.2.26",
-        "@microsoft/sp-build-web": "1.8.2",
-        "@microsoft/sp-module-interfaces": "1.8.2",
-        "@microsoft/sp-tslint-rules": "1.8.2",
-        "@microsoft/sp-webpart-workbench": "1.8.2",
+        "@microsoft/sp-build-web": "1.9.1",
+        "@microsoft/sp-module-interfaces": "1.9.1",
+        "@microsoft/sp-tslint-rules": "1.9.1",
+        "@microsoft/sp-webpart-workbench": "1.9.1",
         "@types/chai": "3.4.34",
         "@types/es6-promise": "0.0.33",
         "@types/fabric": "^1.5.43",
         "@types/mocha": "2.2.38",
-        "@types/react": "16.7.22",
-        "@types/react-dom": "16.8.0",
+        "@types/react": "16.8.8",
+        "@types/react-dom": "16.8.3",
         "@types/sharepoint": "2013.1.9",
         "@types/webpack-env": "1.13.1",
         "@webcomponents/custom-elements": "^1.2.4",
@@ -70,6 +71,6 @@
         "webpack-bundle-analyzer": "^3.3.2"
     },
     "resolutions": {
-        "@types/react": "16.7.22"
+        "@types/react": "16.8.8"
     }
 }

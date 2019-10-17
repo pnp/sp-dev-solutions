@@ -10,12 +10,13 @@ export class Loader {
         }
         let moment = await import(
             /* webpackChunkName: 'search-handlebars-helpers' */
+            /* webpackMode: 'lazy' */
             'moment'
         );
         if ((window as any).searchMoment !== undefined) {
             return;
         }
-        (window as any).searchMoment = moment;
+        (window as any).searchMoment = (<any>moment).default;
 
 
         if ((window as any).searchHBHelper !== undefined) {
@@ -24,12 +25,13 @@ export class Loader {
         }
         let component = await import(
             /* webpackChunkName: 'search-handlebars-helpers' */
+            /* webpackMode: 'lazy' */
             'handlebars-helpers'
         );
         if ((window as any).searchHBHelper !== undefined) {
             return;
         }
-        (window as any).searchHBHelper = component({
+        (window as any).searchHBHelper = component.default({
             handlebars: Handlebars
         });
     }
