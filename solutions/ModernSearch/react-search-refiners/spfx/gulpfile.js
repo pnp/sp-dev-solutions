@@ -28,7 +28,7 @@ const envCheck = build.subTask('environmentCheck', (gulp, config, done) => {
              * Adds a loader and a node setting for webpacking the handlebars-helpers correctly
              * https://github.com/helpers/handlebars-helpers/issues/263
              ********************************************************************************************/
-            generatedConfiguration.resolve.alias = { handlebars: 'handlebars/dist/handlebars.min.js' };
+            //generatedConfiguration.resolve.alias = { handlebars: 'handlebars/dist/handlebars.min.js' };
 
             generatedConfiguration.module.rules.push({
                 test: /utils\.js$/,
