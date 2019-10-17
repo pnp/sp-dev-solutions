@@ -1,4 +1,4 @@
-import * as Handlebars from 'handlebars';
+//import * as Handlebars from 'handlebars';
 import ISearchService from './ISearchService';
 import { ISearchResults, ISearchResult, IRefinementResult, IRefinementValue, IRefinementFilter, IPromotedResult, ISearchVerticalInformation, ISearchResultBlock } from '../../models/ISearchResult';
 import { sp, SearchQuery, SearchResults, SPRest, Sort, SearchSuggestQuery, SortDirection } from '@pnp/sp';
@@ -17,6 +17,7 @@ import { JSONParser } from '@pnp/odata';
 import { UrlHelper } from '../../helpers/UrlHelper';
 import { ISearchVertical } from '../../models/ISearchVertical';
 import IManagedPropertyInfo from '../../models/IManagedPropertyInfo';
+import { Loader } from '../TemplateService/LoadHelper';
 
 class SearchService implements ISearchService {
     private _initialSearchResult: SearchResults = null;
@@ -147,28 +148,24 @@ class SearchService implements ISearchService {
             sortedRefiners = this.refiners.map(e => e.refinerName);
             searchQuery.Refiners = sortedRefiners.join(',');
 
-            var sevenOffset = (24 * 60 * 60 * 1000) * 7;
-            var thirtyOffset = (24 * 60 * 60 * 1000) * 30;
-            var ninetyOffset = (24 * 60 * 60 * 1000) * 90;
-            var threeSixtyFiveOffset = (24 * 60 * 60 * 1000) * 365;
+            
+            const refinableDate = /(RefinableDate\d+)|(LastModifiedTime)|(Created)|/g;
 
-            let today = new Date();
-            // let yesterday = new Date();
-            // yesterday.setTime(yesterday.getTime()- oneOffset);
+            const matches = searchQuery.Refiners.match(refinableDate);
+            if (matches) {
+                // set refiner spec intervals to be used for fixed interval template - and which makes more sense overall
+                await Loader.LoadHandlebarsHelpers();
 
-            let weekAgo = new Date();
-            weekAgo.setTime(weekAgo.getTime() - sevenOffset);
+                let yesterDay = this._getISOString("days", 1);
+                let weekAgo = this._getISOString("weeks", 1);
+                let monthAgo = this._getISOString("months", 1);
+                let threeMonthsAgo = this._getISOString("months", 3);
+                let yearAgo = this._getISOString("years", 1);  
 
-            let monthAgo = new Date();
-            monthAgo.setTime(monthAgo.getTime() - thirtyOffset);
-
-            let threeMonthsAgo = new Date();
-            threeMonthsAgo.setTime(threeMonthsAgo.getTime() - ninetyOffset);
-
-            let yearAgo = new Date();
-            yearAgo.setTime(yearAgo.getTime() - threeSixtyFiveOffset);
-
-            searchQuery.Refiners = searchQuery.Refiners.replace("LastModifiedTime", `LastModifiedTime(discretize=manual/${yearAgo.toISOString()}/${threeMonthsAgo.toISOString()}/${monthAgo.toISOString()}/${weekAgo.toISOString()}/${today.toISOString()})`);
+                matches.map(match => {
+                    searchQuery.Refiners = searchQuery.Refiners.replace(match, `${match}(discretize=manual/${yearAgo}/${threeMonthsAgo}/${monthAgo}/${weekAgo}/${yesterDay})`);
+                });
+            }
         }
 
         if (this.refinementFilters) {
@@ -209,26 +206,7 @@ class SearchService implements ISearchService {
                 const resultRows = r2.RawSearchResults.PrimaryQueryResult.RelevantResults.Table.Rows;
                 let refinementResultsRows = r2.RawSearchResults.PrimaryQueryResult.RefinementResults;
 
-                const refinementRows: any = refinementResultsRows ? refinementResultsRows.Refiners : [];
-                if (refinementRows.length > 0 && (<any>window).searchHBHelper === undefined) {
-                    const moment = await import(
-                        /* webpackChunkName: 'search-handlebars-helpers' */
-                        'moment'
-                    );
-                    if ((<any>window).searchMoment === undefined) {
-                        (<any>window).searchMoment = moment;
-                    }
-
-                    const component = await import(
-                        /* webpackChunkName: 'search-handlebars-helpers' */
-                        'handlebars-helpers'
-                    );
-                    if ((<any>window).searchHBHelper === undefined) {
-                        (<any>window).searchHBHelper = component({
-                            handlebars: Handlebars
-                        });
-                    }
-                }
+                const refinementRows: any = refinementResultsRows ? refinementResultsRows.Refiners : [];               
 
                 // Map search results
                 let searchResults: ISearchResult[] = resultRows.map((elt) => {
@@ -252,9 +230,6 @@ class SearchService implements ISearchService {
 
                     let values: IRefinementValue[] = [];
                     refiner.Entries.map((item) => {
-                        if (item.RefinementCount === "0") {
-                            return false;
-                        }
                         values.push({
                             RefinementCount: parseInt(item.RefinementCount, 10),
                             // replace string;# for calculated columns https://github.com/SharePoint/sp-dev-solutions/issues/304
@@ -676,6 +651,13 @@ class SearchService implements ISearchService {
         }
 
         return updatedInputValue;
+    }
+
+    private _getISOString(unit: string, count: number) {
+        if ((window as any).searchHBHelper) {
+            return (window as any).searchMoment(new Date()).subtract(count, unit).toDate().toISOString();
+        }
+        return "";
     }
 
     private momentHelper(str, pattern, lang) {
