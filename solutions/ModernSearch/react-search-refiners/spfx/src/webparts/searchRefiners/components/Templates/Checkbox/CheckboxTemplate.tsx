@@ -24,46 +24,48 @@ export default class CheckboxTemplate extends React.Component<IBaseRefinerTempla
         this._applyFilters = this._applyFilters.bind(this);
         this._clearFilters = this._clearFilters.bind(this);
     }
-    
+
     public render() {
-
-
         return <div>
-                    {
-                        this.props.refinementResult.Values.map((refinementValue: IRefinementValue, j) => {
+            {
+                this.props.refinementResult.Values.map((refinementValue: IRefinementValue, j) => {
 
-                                return (
-                                <Checkbox
-                                    styles={{
-                                        root:{
-                                            padding: 10
-                                        }
-                                    }}
-                                    key={j}                                    
-                                    checked={this._isValueInFilterSelection(refinementValue)}
-                                    label={Text.format(refinementValue.RefinementValue + ' ({0})', refinementValue.RefinementCount)}
-                                    onChange={(ev, checked: boolean) => {
-                                        checked ? this._onFilterAdded(refinementValue) : this._onFilterRemoved(refinementValue);
-                                    }} />
-                            );
-                        })
+                    if (refinementValue.RefinementCount === 0) {
+                        return null;
                     }
-                    {
-                        this.props.isMultiValue ? 
-                        
-                            <div>
-                                <Link onClick={() => { this._applyFilters(this.state.refinerSelectedFilterValues);}} disabled={this.state.refinerSelectedFilterValues.length === 0}>{strings.Refiners.ApplyFiltersLabel}</Link>|<Link onClick={this._clearFilters} disabled={this.state.refinerSelectedFilterValues.length === 0}>{strings.Refiners.ClearFiltersLabel}</Link> 
-                            </div>
-                        
-                        : null
-                    }
-                </div>;
+
+                    return (
+                        <Checkbox
+                            styles={{
+                                root: {
+                                    padding: 10
+                                }
+                            }}
+                            key={j}
+                            checked={this._isValueInFilterSelection(refinementValue)}
+                            label={Text.format(refinementValue.RefinementValue + ' ({0})', refinementValue.RefinementCount)}
+                            onChange={(ev, checked: boolean) => {
+                                checked ? this._onFilterAdded(refinementValue) : this._onFilterRemoved(refinementValue);
+                            }} />
+                    );
+                })
+            }
+            {
+                this.props.isMultiValue ?
+
+                    <div>
+                        <Link onClick={() => { this._applyFilters(this.state.refinerSelectedFilterValues); }} disabled={this.state.refinerSelectedFilterValues.length === 0}>{strings.Refiners.ApplyFiltersLabel}</Link>|<Link onClick={this._clearFilters} disabled={this.state.refinerSelectedFilterValues.length === 0}>{strings.Refiners.ClearFiltersLabel}</Link>
+                    </div>
+
+                    : null
+            }
+        </div>;
     }
 
     public componentDidMount() {
 
         // Determine the operator according to multi value setting
-        this._operator = this.props.isMultiValue ? RefinementOperator.OR :RefinementOperator.AND;
+        this._operator = this.props.isMultiValue ? RefinementOperator.OR : RefinementOperator.AND;
 
         // This scenario happens due to the behavior of the Office UI Fabric GroupedList component who recreates child components when a greoup is collapsed/expanded, causing a state reset for sub components
         // In this case we use the refiners global state to recreate the 'local' state for this component
@@ -73,7 +75,7 @@ export default class CheckboxTemplate extends React.Component<IBaseRefinerTempla
     }
 
     public UNSAFE_componentWillReceiveProps(nextProps: IBaseRefinerTemplateProps) {
-        
+
         if (nextProps.shouldResetFilters) {
             this.setState({
                 refinerSelectedFilterValues: []
@@ -83,11 +85,11 @@ export default class CheckboxTemplate extends React.Component<IBaseRefinerTempla
         // Remove an arbitrary value from the inner state
         // Useful when the remove filter action is also present in the parent layout component
         if (nextProps.removeFilterValue) {
-            
+
             const newFilterValues = this.state.refinerSelectedFilterValues.filter((elt) => {
                 return elt.RefinementName !== nextProps.removeFilterValue.RefinementName;
             });
-    
+
             this.setState({
                 refinerSelectedFilterValues: newFilterValues
             });
@@ -115,7 +117,7 @@ export default class CheckboxTemplate extends React.Component<IBaseRefinerTempla
      */
     private _onFilterAdded(addedValue: IRefinementValue) {
 
-        let newFilterValues = update(this.state.refinerSelectedFilterValues, {$push: [addedValue]});
+        let newFilterValues = update(this.state.refinerSelectedFilterValues, { $push: [addedValue] });
 
         this.setState({
             refinerSelectedFilterValues: newFilterValues
@@ -131,7 +133,7 @@ export default class CheckboxTemplate extends React.Component<IBaseRefinerTempla
      * @param removedValue the filter value removed
      */
     private _onFilterRemoved(removedValue: IRefinementValue) {
-        
+
         const newFilterValues = this.state.refinerSelectedFilterValues.filter((elt) => {
             return elt.RefinementName !== removedValue.RefinementName;
         });
@@ -142,7 +144,7 @@ export default class CheckboxTemplate extends React.Component<IBaseRefinerTempla
 
         if (!this.props.isMultiValue) {
             this._applyFilters(newFilterValues);
-        }   
+        }
     }
 
     /**
