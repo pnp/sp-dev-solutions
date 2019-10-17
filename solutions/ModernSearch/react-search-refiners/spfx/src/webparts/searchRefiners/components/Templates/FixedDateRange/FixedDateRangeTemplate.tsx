@@ -2,7 +2,7 @@ import * as React from "react";
 import IBaseRefinerTemplateProps from '../IBaseRefinerTemplateProps';
 import IBaseRefinerTemplateState from '../IBaseRefinerTemplateState';
 import { IRefinementValue, RefinementOperator } from "../../../../../models/ISearchResult";
-import { IChoiceGroupOption, ChoiceGroup, Label } from "office-ui-fabric-react";
+import { IChoiceGroupOption, ChoiceGroup } from "office-ui-fabric-react/lib/ChoiceGroup";
 import { Guid } from '@microsoft/sp-core-library';
 import * as update from 'immutability-helper';
 import { Loader } from "../../../../../services/TemplateService/LoadHelper";
