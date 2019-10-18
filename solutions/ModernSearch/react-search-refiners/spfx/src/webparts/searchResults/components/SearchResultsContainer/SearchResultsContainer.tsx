@@ -495,13 +495,7 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
 
                 updatedFilters.push({
                     FilterName: filter.FilterName,
-                    Values: updatedValues.sort((a: IRefinementValue, b: IRefinementValue) => {
-                        if (a.RefinementName) {
-                            return a.RefinementName.localeCompare(b.RefinementName);
-                        } else {
-                            return 0;
-                        }
-                    })
+                    Values: updatedValues
                 } as IRefinementResult);
             });
 
