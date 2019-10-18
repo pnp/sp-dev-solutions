@@ -23,6 +23,7 @@ define([], function() {
             "RefinersFieldLabel": "Verfijningen",
             "RefinerManagedPropertyField": "Filter beheerde eigenschap",
             "RefinerDisplayValueField": "Filter naam om te tonen",
+            "RefinerTemplateField": "Verfijningssjabloon",
             "RefinersFieldDescription": "Specificeer de eigenschappen die als verfijner moeten worden getoond. Lege filters worden niet getoond.",
             "EditRefinersLabel": "Bewerk verfijners",
             "AvailableRefinersLabel": "Beschikbare verfijners",
@@ -33,6 +34,7 @@ define([], function() {
                 "RefinementItemTemplateLabel": "Standaard verfijningsitem",
                 "MutliValueRefinementItemTemplateLabel": "Multi-value verfijningsitem",
                 "DateRangeRefinementItemLabel": "Datumbereik",
+                "FixedDateRangeRefinementItemLabel": "Datumbereik (vaste intervallen)",
                 "DateFromLabel": "Van",
                 "DateTolabel": "Tot",
                 "DatePickerStrings": {
@@ -50,7 +52,7 @@ define([], function() {
                     "invalidInputErrorMessage": 'Invalide datumformat.'
                 },
                 "DateIntervalStrings": {
-                    "AnyTime": "Elk tijdstip",
+                    "AnyTime": "Alles",
                     "PastDay": "Afgelopen 24 uur",
                     "PastWeek": "Afgelopen week",
                     "PastMonth": "Afgelopen maand",

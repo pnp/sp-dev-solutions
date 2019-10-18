@@ -23,6 +23,7 @@ define([], function() {
             "RefinersFieldLabel": "Refinadores",
             "RefinerManagedPropertyField": "Filtrar la propiedad administrada",
             "RefinerDisplayValueField": "Nombre del filtro para mostrar",
+            "RefinerTemplateField": "Plantilla de refinador",
             "RefinersFieldDescription": "Especifica las propiedades administradas utilizadas como refinadores. Si no hay valores para una propiedad de filtro, no aparecerá en el panel.",
             "EditRefinersLabel": "Editar refinadores",
             "AvailableRefinersLabel": "Refinadores disponibles",
@@ -33,6 +34,7 @@ define([], function() {
                 "RefinementItemTemplateLabel": "Elemento de refinamiento predeterminado",
                 "MutliValueRefinementItemTemplateLabel": "Elemento de refinamiento multivalor",
                 "DateRangeRefinementItemLabel": "Rango Fecha",
+                "FixedDateRangeRefinementItemLabel": "Rango Fecha (intervalos fijos)",
                 "DateFromLabel": "De",
                 "DateTolabel": "Hasta",
                 "DatePickerStrings": {
