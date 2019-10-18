@@ -217,7 +217,7 @@ export default class SearchRefinersWebPart extends BaseClientSideWebPart<ISearch
                     },
                     {
                         id: 'template',
-                        title: "Refiner template",
+                        title: strings.Refiners.RefinerTemplateField,
                         type: CustomCollectionFieldType.dropdown,
                         options: [
                             {
@@ -234,7 +234,7 @@ export default class SearchRefinersWebPart extends BaseClientSideWebPart<ISearch
                             },
                             {
                                 key: RefinerTemplateOption.FixedDateRange,
-                                text: "Fixed dates"//strings.Refiners.Templates.DateRangeRefinementItemLabel,
+                                text: strings.Refiners.Templates.FixedDateRangeRefinementItemLabel,
                             }
                         ]
                     },

@@ -23,6 +23,7 @@ define([], function() {
             "RefinersFieldLabel": "Refiners",
             "RefinerManagedPropertyField": "Filter managed property",
             "RefinerDisplayValueField": "Filter name to display",
+            "RefinerTemplateField": "Refiner template",
             "RefinersFieldDescription": "Specifies managed properties used as refiners. If there are no values for a filter property, it won't appear in the panel.",
             "EditRefinersLabel": "Edit refiners",
             "AvailableRefinersLabel": "Available refiners",
@@ -33,6 +34,7 @@ define([], function() {
                 "RefinementItemTemplateLabel": "Default refinement item",
                 "MutliValueRefinementItemTemplateLabel": "Multi-value refinement item",
                 "DateRangeRefinementItemLabel": "Date range",
+                "FixedDateRangeRefinementItemLabel": "Date range (fixed intervals)",
                 "DateFromLabel": "From",
                 "DateTolabel": "To",
                 "DatePickerStrings": {

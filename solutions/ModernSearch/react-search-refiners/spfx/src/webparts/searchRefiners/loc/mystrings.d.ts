@@ -23,6 +23,7 @@ declare interface ISearchRefinersWebPartStrings {
         RefinersFieldDescription: string;
         RefinerManagedPropertyField: string;
         RefinerDisplayValueField: string;
+        RefinerTemplateField: string;
         EditRefinersLabel: string;
         EditSortLabel: string;
         AvailableRefinersLabel: string;
@@ -33,6 +34,7 @@ declare interface ISearchRefinersWebPartStrings {
             RefinementItemTemplateLabel: string;
             MutliValueRefinementItemTemplateLabel: string;
             DateRangeRefinementItemLabel: string;
+            FixedDateRangeRefinementItemLabel: string;
             DateFromLabel: string;
             DateTolabel: string;
             DatePickerStrings: {

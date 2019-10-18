@@ -24,6 +24,7 @@ define([], function() {
             "RefinersFieldDescription": "Configurez ici les propriétés gerées à utiliser comme filtres. Si il n'existe pas de valeurs pour le filtre spécifié, il n'apparaîtra pas dans le panneau.",
             "RefinerManagedPropertyField": "Propriété gérée de filtre",
             "RefinerDisplayValueField": "Intitulé du filtre à afficher",
+            "RefinerTemplateField": "Modèle de filtre",
             "EditRefinersLabel": "Éditer les filtres",
             "AvailableRefinersLabel": "Filtre(s) disponible(s)",
             "ApplyFiltersLabel": "Appliquer",
@@ -33,6 +34,7 @@ define([], function() {
                 "RefinementItemTemplateLabel": "Filtre par défaut",
                 "MutliValueRefinementItemTemplateLabel": "Filtre à valeurs multiples",
                 "DateRangeRefinementItemLabel": "Sélecteur de dates",
+                "FixedDateRangeRefinementItemLabel": "Sélecteur de dates (intervalles fixes)",
                 "DateFromLabel": "Du",
                 "DateTolabel": "Jusqu'au",
                 "DatePickerStrings": {
