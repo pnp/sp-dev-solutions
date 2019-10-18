@@ -52,7 +52,7 @@ define([], function() {
                     "invalidInputErrorMessage": 'Invalide datumformat.'
                 },
                 "DateIntervalStrings": {
-                    "AnyTime": "Alles",
+                    "AnyTime": "Elk tijdstip",
                     "PastDay": "Afgelopen 24 uur",
                     "PastWeek": "Afgelopen week",
                     "PastMonth": "Afgelopen maand",
