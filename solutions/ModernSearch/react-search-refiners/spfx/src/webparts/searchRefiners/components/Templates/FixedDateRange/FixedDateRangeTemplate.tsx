@@ -104,7 +104,7 @@ export default class FixedDateRangeTemplate extends React.Component<IFixedDateRa
         // add any time options
         options.splice(0, 0, {
             key: Interval.AnyTime.toString(),
-            text: 'Any time'
+            text: strings.Refiners.Templates.DateIntervalStrings.AnyTime
         });
 
         return <div>
