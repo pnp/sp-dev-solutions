@@ -54,7 +54,7 @@ export default class FixedDateRangeTemplate extends React.Component<IFixedDateRa
         if (!this.state.haveMoment) return null;
 
         if (this.props.refinementResult.Values.length !== 6) {
-            return <div>This template only works for Created, LastModifiedTime and RefinableDateXX properties</div>;
+            return <div>This template only works for Created, LastModifiedTime, LastModifiedTimeForRetention and RefinableDateXX properties</div>;
         }
 
         let options =
