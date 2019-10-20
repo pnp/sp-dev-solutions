@@ -147,12 +147,9 @@ class SearchService implements ISearchService {
             // Get the refiners order specified in the property pane
             sortedRefiners = this.refiners.map(e => e.refinerName);
             searchQuery.Refiners = sortedRefiners.join(',');
-
             
-            const refinableDate = /(RefinableDate\d+)|(LastModifiedTime)|(Created)|/g;
-
-            const matches = searchQuery.Refiners.match(refinableDate);
-            if (matches) {
+            const refinableDate = /(RefinableDate\d+)(?=,|$)|(LastModifiedTime)(?=,|$)|(LastModifiedTimeForRetention)(?=,|$)|(Created)(?=,|$)/g;
+            if (refinableDate.test(searchQuery.Refiners)) {
                 // set refiner spec intervals to be used for fixed interval template - and which makes more sense overall
                 await Loader.LoadHandlebarsHelpers();
 
@@ -162,9 +159,7 @@ class SearchService implements ISearchService {
                 let threeMonthsAgo = this._getISOString("months", 3);
                 let yearAgo = this._getISOString("years", 1);  
 
-                matches.map(match => {
-                    searchQuery.Refiners = searchQuery.Refiners.replace(match, `${match}(discretize=manual/${yearAgo}/${threeMonthsAgo}/${monthAgo}/${weekAgo}/${yesterDay})`);
-                });
+                searchQuery.Refiners = searchQuery.Refiners.replace(refinableDate, `$&(discretize=manual/${yearAgo}/${threeMonthsAgo}/${monthAgo}/${weekAgo}/${yesterDay})`);
             }
         }
 
