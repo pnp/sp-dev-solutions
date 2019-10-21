@@ -29,6 +29,7 @@ class SearchService implements ISearchService {
     private _resultSourceId: string;
     private _sortList: Sort[];
     private _enableQueryRules: boolean;
+    private _includeOneDriveResults: boolean;
     private _refiners: IRefinerConfiguration[];
     private _refinementFilters: IRefinementFilter[];
     private _synonymTable: ISynonymTable;
@@ -51,6 +52,9 @@ class SearchService implements ISearchService {
 
     public set enableQueryRules(value: boolean) { this._enableQueryRules = value; }
     public get enableQueryRules(): boolean { return this._enableQueryRules; }
+
+    public set includeOneDriveResults(value: boolean) { this._includeOneDriveResults = value; }
+    public get includeOneDriveResults(): boolean { return this._includeOneDriveResults; }
 
     public set refiners(value: IRefinerConfiguration[]) { this._refiners = value; }
     public get refiners(): IRefinerConfiguration[] { return this._refiners; }
@@ -111,6 +115,19 @@ class SearchService implements ISearchService {
                 QueryPropertyValueTypeIndex: 3
             }
         }];
+
+        // Toggle to include user's personal OneDrive results as a secondary result block
+        // https://docs.microsoft.com/en-us/sharepoint/support/search/private-onedrive-results-not-included
+        if (this._includeOneDriveResults) {
+            searchQuery.Properties.push({
+                Name: "ContentSetting",
+                Value: {
+                    IntVal: 3,
+                    QueryPropertyValueTypeIndex: 2
+                }
+            });
+        }
+
         searchQuery.Querytext = this._injectSynonyms(query);
 
         // Disable query rules by default if not specified
@@ -147,7 +164,7 @@ class SearchService implements ISearchService {
             // Get the refiners order specified in the property pane
             sortedRefiners = this.refiners.map(e => e.refinerName);
             searchQuery.Refiners = sortedRefiners.join(',');
-            
+
             const refinableDate = /(RefinableDate\d+)(?=,|$)|(LastModifiedTime)(?=,|$)|(LastModifiedTimeForRetention)(?=,|$)|(Created)(?=,|$)/g;
             if (refinableDate.test(searchQuery.Refiners)) {
                 // set refiner spec intervals to be used for fixed interval template - and which makes more sense overall
@@ -157,7 +174,7 @@ class SearchService implements ISearchService {
                 let weekAgo = this._getISOString("weeks", 1);
                 let monthAgo = this._getISOString("months", 1);
                 let threeMonthsAgo = this._getISOString("months", 3);
-                let yearAgo = this._getISOString("years", 1);  
+                let yearAgo = this._getISOString("years", 1);
 
                 searchQuery.Refiners = searchQuery.Refiners.replace(refinableDate, `$&(discretize=manual/${yearAgo}/${threeMonthsAgo}/${monthAgo}/${weekAgo}/${yesterDay})`);
             }
@@ -201,7 +218,7 @@ class SearchService implements ISearchService {
                 const resultRows = r2.RawSearchResults.PrimaryQueryResult.RelevantResults.Table.Rows;
                 let refinementResultsRows = r2.RawSearchResults.PrimaryQueryResult.RefinementResults;
 
-                const refinementRows: any = refinementResultsRows ? refinementResultsRows.Refiners : [];               
+                const refinementRows: any = refinementResultsRows ? refinementResultsRows.Refiners : [];
 
                 // Map search results
                 let searchResults: ISearchResult[] = resultRows.map((elt) => {

@@ -37,6 +37,7 @@
             ],
             "selectedProperties": "Title,Path,Created,Filename,SiteLogo,PreviewUrl,PictureThumbnailURL,ServerRedirectedPreviewURL,ServerRedirectedURL,HitHighlightedSummary,FileType,contentclass,ServerRedirectedEmbedURL,DefaultEncodingURL,owstaxidmetadataalltagsinfo,Author,AuthorOWSUSER,SPSiteUrl,SiteTitle,IsContainer,IsListItem,HtmlFileType",
             "enableQueryRules": false,
+            "includeOneDriveResults": false,
             "maxResultsCount": 10,
             "showBlank": true,
             "showResultsCount": true,

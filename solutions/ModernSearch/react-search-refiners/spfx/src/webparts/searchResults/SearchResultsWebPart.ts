@@ -202,6 +202,7 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
             resultSourceId: { $set: sourceId },
             sortList: { $set: this._convertToSortList(this.properties.sortList) },
             enableQueryRules: { $set: this.properties.enableQueryRules },
+            includeOneDriveResults: { $set: this.properties.includeOneDriveResults },
             selectedProperties: { $set: this.properties.selectedProperties ? this.properties.selectedProperties.replace(/\s|,+$/g, '').split(',') : [] },
             synonymTable: { $set: this._synonymTable },
             queryCulture: { $set: this.properties.searchQueryLanguage !== -1 ? this.properties.searchQueryLanguage : currentLocaleId },
@@ -647,7 +648,7 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
     }
 
     /**
-    * Save the useful information for the connected data source. 
+    * Save the useful information for the connected data source.
     * They will be used to get the value of the dynamic property if this one fails.
     */
     private _saveDataSourceInfo() {
@@ -720,7 +721,7 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
             this._templatePropertyPaneOptions = this._templateService.getTemplateParameters(this.properties.selectedLayout, this.properties, this._onUpdateAvailableProperties, this._availableManagedProperties);
         }
 
-        // Register result types inside the template      
+        // Register result types inside the template
         this._templateService.registerResultTypes(this.properties.resultTypes);
 
         await this._templateService.optimizeLoadingForTemplate(this._templateContentToDisplay);
@@ -896,6 +897,10 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
                 label: strings.EnableQueryRulesLabel,
                 checked: this.properties.enableQueryRules,
             }),
+            PropertyPaneToggle('includeOneDriveResults', {
+                label: strings.IncludeOneDriveResultsLabel,
+                checked: this.properties.includeOneDriveResults,
+            }),
             new PropertyPaneSearchManagedProperties('selectedProperties', {
                 label: strings.SelectedPropertiesFieldLabel,
                 description: strings.SelectedPropertiesFieldDescription,
@@ -989,7 +994,7 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
     }
 
     /**
-     * Make sure the dynamic property is correctly connected to the source if a search refiner component has been selected in options 
+     * Make sure the dynamic property is correctly connected to the source if a search refiner component has been selected in options
      */
     private ensureDataSourceConnection() {
 
@@ -1125,7 +1130,7 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
      */
     private _getStylingFields(): IPropertyPaneField<any>[] {
 
-        // Options for the search results layout 
+        // Options for the search results layout
         const layoutOptions = [
             {
                 iconProps: {
@@ -1493,7 +1498,7 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
         // Save the value in the root Web Part class to avoid fetching it again if the property list is requested again by any other property pane control
         this._availableManagedProperties = cloneDeep(properties);
 
-        // Refresh all fields so other property controls can use the new list 
+        // Refresh all fields so other property controls can use the new list
         this.context.propertyPane.refresh();
         this.render();
     }
