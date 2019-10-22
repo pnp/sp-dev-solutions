@@ -30,6 +30,7 @@ define([], function () {
     "ResultSourceIdLabel": "Result Source Identifier",
     "InvalidResultSourceIdMessage": "Invalid identifier",
     "EnableQueryRulesLabel": "Enable query rules",
+    "IncludeOneDriveResultsLabel": "Include personal OneDrive results",
     "StylingSettingsGroupName": "Styling options",
     "SelectedPropertiesFieldDescription": "Specifies the properties to retrieve from the search results.",
     "SearchQueryKeywordsFieldDescription": "Use pre-defined search query keywords to retrieve a static set of results.",

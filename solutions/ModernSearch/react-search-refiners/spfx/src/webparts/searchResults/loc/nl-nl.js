@@ -30,6 +30,7 @@ define([], function () {
     "ResultSourceIdLabel": "Id van de resultatenbron",
     "InvalidResultSourceIdMessage": "Incorrecte id",
     "EnableQueryRulesLabel": "Query rules ingeschakeld",
+    "IncludeOneDriveResultsLabel": "Persoonlijke OneDrive-resultaten opnemen",
     "StylingSettingsGroupName": "Opmaak opties",
     "SelectedPropertiesFieldDescription": "Geef de eigenschappen op die moeten worden opgehaald uit de zoekresultaten.",
     "SearchQueryKeywordsFieldDescription": "Gebruik vooraf gedefinieerde zoekwoorden om een ​​statische set resultaten op te halen.",

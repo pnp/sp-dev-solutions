@@ -33,6 +33,7 @@ declare interface ISearchResultsWebPartStrings {
     ResultSourceIdLabel: string;
     InvalidResultSourceIdMessage: string;
     EnableQueryRulesLabel: string;
+    IncludeOneDriveResultsLabel: string;
     StylingSettingsGroupName: string;
     CountMessageShort: string;
     CountMessageLong: string;
@@ -60,11 +61,11 @@ declare interface ISearchResultsWebPartStrings {
     UseRefinersWebPartLabel: string;
     UseRefinersFromComponentLabel: string;
     UsePaginationFromComponentLabel: string;
-    customTemplateFieldsLabel: string;  
-    customTemplateFieldsPanelHeader: string;  
-    customTemplateFieldsConfigureButtonLabel: string;  
-    customTemplateFieldTitleLabel: string;  
-    customTemplateFieldPropertyLabel: string;  
+    customTemplateFieldsLabel: string;
+    customTemplateFieldsPanelHeader: string;
+    customTemplateFieldsConfigureButtonLabel: string;
+    customTemplateFieldTitleLabel: string;
+    customTemplateFieldPropertyLabel: string;
     Sort: {
         SortPropertyPaneFieldLabel
         SortListDescription: string;
@@ -74,10 +75,10 @@ declare interface ISearchResultsWebPartStrings {
         SortPanelSortFieldLabel:string;
         SortPanelSortFieldAria:string;
         SortPanelSortFieldPlaceHolder:string;
-        SortPanelSortDirectionLabel:string;         
+        SortPanelSortDirectionLabel:string;
         SortableFieldsPropertyPaneField: string;
         SortableFieldsDescription: string;
-        SortableFieldManagedPropertyField: string;   
+        SortableFieldManagedPropertyField: string;
         SortableFieldDisplayValueField: string;
         EditSortableFieldsLabel: string;
         EditSortLabel: string;
