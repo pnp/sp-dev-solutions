@@ -1522,9 +1522,9 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
      * @param args The new theme
      */
     private _handleThemeChangedEvent(args: ThemeChangedEventArgs): void {
-        this._themeVariant = args.theme;
-
+        
         if (!isEqual(this._themeVariant, args.theme)) {
+            this._themeVariant = args.theme;
             this.render();
         }
     }
