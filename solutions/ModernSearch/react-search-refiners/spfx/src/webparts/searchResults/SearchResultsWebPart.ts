@@ -27,7 +27,7 @@ import ISearchService from '../../services/SearchService/ISearchService';
 import ITaxonomyService from '../../services/TaxonomyService/ITaxonomyService';
 import ResultsLayoutOption from '../../models/ResultsLayoutOption';
 import { TemplateService } from '../../services/TemplateService/TemplateService';
-import { isEmpty, find, sortBy, cloneDeep } from '@microsoft/sp-lodash-subset';
+import { isEmpty, find, sortBy, cloneDeep, isEqual } from '@microsoft/sp-lodash-subset';
 import MockSearchService from '../../services/SearchService/MockSearchService';
 import MockTemplateService from '../../services/TemplateService/MockTemplateService';
 import SearchService from '../../services/SearchService/SearchService';
@@ -1499,7 +1499,10 @@ export default class SearchResultsWebPart extends BaseClientSideWebPart<ISearchR
      * @param args The new theme
      */
     private _handleThemeChangedEvent(args: ThemeChangedEventArgs): void {
-        this._themeVariant = args.theme;
-        this.render();
+        
+        if (!isEqual(this._themeVariant, args.theme)) {
+            this._themeVariant = args.theme;
+            this.render();
+        }
     }
 }
