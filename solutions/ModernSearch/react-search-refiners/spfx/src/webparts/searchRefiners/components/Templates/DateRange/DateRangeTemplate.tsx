@@ -6,10 +6,12 @@ import { DatePicker, IDatePickerProps } from "office-ui-fabric-react/lib/DatePic
 import { Link } from "office-ui-fabric-react/lib/Link";
 import * as update from 'immutability-helper';
 import * as strings from 'SearchRefinersWebPartStrings';
+import { Loader } from "../../../../../services/TemplateService/LoadHelper";
 
 export interface IDateRangeTemplateState extends IBaseRefinerTemplateState {
     selectedFromDate: Date;
     selectedToDate: Date;
+    haveMoment: boolean;
 }
 
 export interface IDateRangeTemplateProps extends IBaseRefinerTemplateProps {
@@ -24,7 +26,8 @@ export default class DateRangeTemplate extends React.Component<IDateRangeTemplat
         this.state = {
             refinerSelectedFilterValues: [],
             selectedFromDate: null,
-            selectedToDate: null
+            selectedToDate: null,
+            haveMoment: ((window as any).searchHBHelper) ? true : false
         };
 
         this._updateFromDate = this._updateFromDate.bind(this);
@@ -35,6 +38,7 @@ export default class DateRangeTemplate extends React.Component<IDateRangeTemplat
     }
 
     public render() {
+        if (!this.state.haveMoment) return null;
 
         const fromProps: IDatePickerProps = {
             placeholder: strings.Refiners.Templates.DateFromLabel,
@@ -79,6 +83,13 @@ export default class DateRangeTemplate extends React.Component<IDateRangeTemplat
         </div>;
     }
 
+    public async componentWillMount() {
+        if (!this.state.haveMoment) {
+            await Loader.LoadHandlebarsHelpers();
+            this.setState({ haveMoment: true });
+        }
+    }
+
     public componentDidMount() {
 
         // This scenario happens due to the behavior of the Office UI Fabric GroupedList component who recreates child components when a greoup is collapsed/expanded, causing a state reset for sub components
@@ -103,7 +114,7 @@ export default class DateRangeTemplate extends React.Component<IDateRangeTemplat
         }
     }
 
-    public componentWillReceiveProps(nextProps: IBaseRefinerTemplateProps) {
+    public UNSAFE_componentWillReceiveProps(nextProps: IBaseRefinerTemplateProps) {
 
         if (nextProps.shouldResetFilters) {
             this.setState({
@@ -205,6 +216,8 @@ export default class DateRangeTemplate extends React.Component<IDateRangeTemplat
     }
 
     private _onFormatDate(date: Date): string {
-        return (window as any).searchMoment(date).locale(this.props.language).format('LL');
+        if ((window as any).searchHBHelper) {
+            return (window as any).searchMoment(date).locale(this.props.language).format('LL');
+        }
     }
 }

@@ -47,6 +47,7 @@ export default class SearchNavigationWebPart extends BaseClientSideWebPart<ISear
                     useThemeColor: this.properties.useThemeColor,
                     currentPageUrl: this.context.pageContext.site.absoluteUrl.replace(this.context.pageContext.site.serverRelativeUrl, "") + this.context.pageContext.site.serverRequestPath,
                     openBehavior: this.properties.openBehavior,
+                    passQuery: this.properties.passQuery,
                     queryPathBehavior: this.properties.queryPathBehavior,
                     queryStringParameter: this.properties.queryStringParameter
                 }
@@ -83,6 +84,7 @@ export default class SearchNavigationWebPart extends BaseClientSideWebPart<ISear
 
         this.initThemeVariant();
 
+        this.properties.passQuery = (this.properties.passQuery !== undefined && this.properties.passQuery !== null) ? this.properties.passQuery : true;
         this.properties.queryPathBehavior = (this.properties.queryPathBehavior !== undefined && this.properties.queryPathBehavior !== null) ? this.properties.queryPathBehavior : QueryPathBehavior.QueryParameter;
         this.properties.queryStringParameter = (this.properties.queryStringParameter !== undefined && this.properties.queryStringParameter !== null) ? this.properties.queryStringParameter : "q";
         this.properties.openBehavior = (this.properties.openBehavior !== undefined && this.properties.openBehavior !== null) ? this.properties.openBehavior : PageOpenBehavior.Self;
@@ -207,32 +209,40 @@ export default class SearchNavigationWebPart extends BaseClientSideWebPart<ISear
                 ],
                 selectedKey: this.properties.openBehavior
             }),
-            PropertyPaneDropdown('queryPathBehavior', {
-                label:  strings.SearchBoxQueryPathBehaviorLabel,
-                options: [
-                  { key: QueryPathBehavior.URLFragment, text: strings.SearchBoxUrlFragmentQueryPathBehavior },
-                  { key: QueryPathBehavior.QueryParameter, text: strings.SearchBoxQueryStringQueryPathBehavior }
-                ],
-                selectedKey: this.properties.queryPathBehavior
+            PropertyPaneToggle('passQuery', {
+                label: strings.PassQueryLabel,
             })
         ];
 
-        if (this.properties.queryPathBehavior === QueryPathBehavior.QueryParameter) {
+        if (this.properties.passQuery) {
             searchNavigationBehaviorFields.push(
-              PropertyPaneTextField('queryStringParameter', {
-                disabled: this.properties.queryPathBehavior !== QueryPathBehavior.QueryParameter,
-                label: strings.SearchBoxQueryStringParameterName,
-                onGetErrorMessage: (value) => {
-                  if (this.properties.queryPathBehavior === QueryPathBehavior.QueryParameter) {
-                    if (value === null ||
-                      value.trim().length === 0) {
-                      return strings.SearchBoxQueryParameterNotEmpty;
-                    }              
-                  }
-                  return '';
-                }
-              })
+                PropertyPaneDropdown('queryPathBehavior', {
+                    label:  strings.SearchBoxQueryPathBehaviorLabel,
+                    options: [
+                      { key: QueryPathBehavior.URLFragment, text: strings.SearchBoxUrlFragmentQueryPathBehavior },
+                      { key: QueryPathBehavior.QueryParameter, text: strings.SearchBoxQueryStringQueryPathBehavior }
+                    ],
+                    selectedKey: this.properties.queryPathBehavior
+                })
             );
+
+            if (this.properties.queryPathBehavior === QueryPathBehavior.QueryParameter) {
+                searchNavigationBehaviorFields.push(
+                  PropertyPaneTextField('queryStringParameter', {
+                    disabled: this.properties.queryPathBehavior !== QueryPathBehavior.QueryParameter,
+                    label: strings.SearchBoxQueryStringParameterName,
+                    onGetErrorMessage: (value) => {
+                      if (this.properties.queryPathBehavior === QueryPathBehavior.QueryParameter) {
+                        if (value === null ||
+                          value.trim().length === 0) {
+                          return strings.SearchBoxQueryParameterNotEmpty;
+                        }              
+                      }
+                      return '';
+                    }
+                  })
+                );
+            }
         }
     
         return searchNavigationBehaviorFields;

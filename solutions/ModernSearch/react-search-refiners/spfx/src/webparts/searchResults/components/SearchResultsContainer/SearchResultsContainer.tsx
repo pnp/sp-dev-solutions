@@ -58,13 +58,13 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
         let renderOverlay: JSX.Element = null;
         let renderWebPartTitle: JSX.Element = null;
 
-        const sortPanel = <SortPanel 
-                                onUpdateSort={this._onUpdateSort} 
-                                sortableFieldsConfiguration={this.props.sortableFields} 
-                                sortDirection={this.state.sortDirection}
-                                sortField={this.state.sortField} />; 
+        const sortPanel = <SortPanel
+            onUpdateSort={this._onUpdateSort}
+            sortableFieldsConfiguration={this.props.sortableFields}
+            sortDirection={this.state.sortDirection}
+            sortField={this.state.sortField} />;
 
-        // Loading behavior                        
+        // Loading behavior
         if (areResultsLoading) {
 
             if (items.RelevantResults.length > 0) {
@@ -88,15 +88,15 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
                 };
 
                 // Merge with property pane template parameters
-                templateContext = {...templateContext, ...this.props.templateParameters};
+                templateContext = { ...templateContext, ...this.props.templateParameters };
 
                 if (placeHolderContent) {
                     // Load placeholder content
                     renderShimmerElements = <SearchResultsTemplate
-                                                templateService={this.props.templateService}
-                                                templateContent={placeHolderContent}
-                                                templateContext={templateContext}
-                                            />;
+                        templateService={this.props.templateService}
+                        templateContent={placeHolderContent}
+                        templateContext={templateContext}
+                    />;
                 } else {
                     // Use default shimmers
                     renderShimmerElements = this._getShimmerElements();
@@ -127,11 +127,19 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
                     <div>
                         {renderWebPartTitle}
                         <div className={styles.searchWp__buttonBar}>{sortPanel}</div>
-                        <div className={styles.searchWp__noresult}>{strings.NoResultMessage}</div>
+                        <div id={this.state.mountingNodeId}>
+                            <div className={styles.searchWp__noresult}>{strings.NoResultMessage}</div>
+                        </div>
                     </div>;
             } else {
                 if (this.props.displayMode === DisplayMode.Edit && !areResultsLoading && this.props.showBlank) {
                     renderWpContent = <MessageBar messageBarType={MessageBarType.info}>{strings.ShowBlankEditInfoMessage}</MessageBar>;
+                }
+                else {
+                    renderWpContent =
+                        <div>
+                            <div id={this.state.mountingNodeId}></div>
+                        </div>;
                 }
             }
         } else {
@@ -151,18 +159,18 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
             };
 
             // Merge with property pane template parameters
-            templateContext = {...templateContext, ...this.props.templateParameters};
+            templateContext = { ...templateContext, ...this.props.templateParameters };
 
             let renderSearchResultTemplate = <div></div>;
             if (!this.props.useCodeRenderer) {
-                renderSearchResultTemplate = 
+                renderSearchResultTemplate =
                     <SearchResultsTemplate
                         templateService={this.props.templateService}
                         templateContent={TemplateService.getTemplateMarkup(this.props.templateContent)}
-                        templateContext={ templateContext }
+                        templateContext={templateContext}
                     />;
             }
-            
+
             renderWpContent =
                 <div>
                     {renderWebPartTitle}
@@ -172,10 +180,10 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
                     {renderSearchResultTemplate}
                 </div>;
         }
-               
+
         return (
             <div className={styles.searchWp}>
-                <div tabIndex={-1} ref={ (ref) => { this._searchWpRef = ref; }}></div>
+                <div tabIndex={-1} ref={(ref) => { this._searchWpRef = ref; }}></div>
                 {renderWpContent}
             </div>
         );
@@ -192,7 +200,7 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
                 });
 
                 const searchResults = await this._getSearchResults(this.props, 1);
-                
+
                 this.setState({
                     results: searchResults,
                     areResultsLoading: false
@@ -232,7 +240,7 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
         if (!isEqual(this.props, prevProps)) {
 
             executeSearch = true;
-            
+
             const lastSelectedProperties = (prevProps.searchService.selectedProperties) ? prevProps.searchService.selectedProperties.join(',') : undefined;
             const lastQuery = prevProps.queryKeywords + prevProps.searchService.queryTemplate + lastSelectedProperties + prevProps.searchService.resultSourceId;
             const nextSelectedProperties = (this.props.searchService.selectedProperties) ? this.props.searchService.selectedProperties.join(',') : undefined;
@@ -269,7 +277,7 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
                     }
 
                     const searchResults = await this._getSearchResults(this.props, selectedPage);
-                
+
                     this.setState({
                         results: searchResults,
                         areResultsLoading: false
@@ -303,7 +311,7 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
         } else {
             // Refresh the template without making a new search query because we don't need to
             if (this.props.templateContent !== this.props.templateContent ||
-                this.props.showResultsCount !==  this.props.showResultsCount) {
+                this.props.showResultsCount !== this.props.showResultsCount) {
 
                 // Reset template errors if it has
                 if (this.state.hasError) {
@@ -311,7 +319,7 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
                         hasError: false,
                     });
                 } else {
-                    // We don't use a state variable for the template since it is passed from props 
+                    // We don't use a state variable for the template since it is passed from props
                     // so we force a re render to apply the new template
                     this.forceUpdate();
                 }
@@ -331,16 +339,16 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
                 sortField: sortField,
                 sortDirection: sortDirection,
                 areResultsLoading: true,
-                hasError:false,
-                errorMessage:null
+                hasError: false,
+                errorMessage: null
             });
 
-            this.props.searchService.sortList = [{Property: sortField, Direction: sortDirection}];
+            this.props.searchService.sortList = [{ Property: sortField, Direction: sortDirection }];
 
             try {
 
                 const searchResults = await this._getSearchResults(this.props, 1);
-                
+
                 this.setState({
                     results: searchResults,
                     areResultsLoading: false,
@@ -348,10 +356,10 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
 
                 this.handleResultUpdateBroadCast(searchResults);
             }
-            catch(error) {
+            catch (error) {
                 Logger.write('[SearchContainer._onUpdateSort()]: Error: ' + error, LogLevel.Error);
                 const errorMessage = /\"value\":\"[^:]+: SortList\.\"/.test(error.message) ? strings.Sort.SortErrorMessage : error.message;
-                
+
                 let results: ISearchResults = { QueryKeywords: this.state.results.QueryKeywords, RefinementResults: [], RelevantResults: [] };
 
                 this.setState({
@@ -409,8 +417,8 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
                                 termId: termId,
                                 localizedTermLabel: null
                             });
-                        }     
-                    }); 
+                        }
+                    });
                 }
             });
         });
@@ -436,7 +444,7 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
 
                     // It supposes the 'Label' property has been selected in the underlying call
                     // A term always have a default label so the collection can't be empty
-                    let  localizedLabel = termFromTaxonomy["Labels"]._Child_Items_.filter((label: any) => {
+                    let localizedLabel = termFromTaxonomy["Labels"]._Child_Items_.filter((label: any) => {
                         return label.Language === lcid;
                     });
 
@@ -444,7 +452,7 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
                     if (localizedLabel.length === 0) {
                         localizedLabel = termFromTaxonomy["Labels"]._Child_Items_;
                     }
-                    
+
                     localizedTerms.push({
                         uniqueIdentifier: termToLocalize.uniqueIdentifier,
                         termId: termToLocalize.termId,
@@ -466,7 +474,7 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
 
                 filter.Values.map((value) => {
                     const existingFilters = localizedTerms.filter((e) => { return e.uniqueIdentifier === value.RefinementToken; });
-                                        
+
                     if (existingFilters.length > 0) {
                         existingFilters.map((existingFilter) => {
                             updatedValues.push({
@@ -487,13 +495,7 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
 
                 updatedFilters.push({
                     FilterName: filter.FilterName,
-                    Values: updatedValues.sort((a: IRefinementValue, b: IRefinementValue) => {
-                        if (a.RefinementName) {
-                            return a.RefinementName.localeCompare(b.RefinementName);
-                        } else {
-                            return 0;
-                        }
-                    })
+                    Values: updatedValues
                 } as IRefinementResult);
             });
 
@@ -531,9 +533,9 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
                 const isTerm = /L0\|#.?([0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12})/.test(result[value]);
 
                 if (isTerm) {
-                    
+
                     let termIds = [];
-                    
+
                     const regex = /L0\|#.?([0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12})/g;
                     const str = result[value];
                     let m;
@@ -544,7 +546,7 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
                             regex.lastIndex++;
                         }
 
-                        termIds.push(m[1]); 
+                        termIds.push(m[1]);
                     }
 
                     properties.push({
@@ -569,7 +571,7 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
             let allTerms: string[] = [];
 
             // Concat all term ids from all results to make a single query
-            resultsToLocalize.map((result) => { 
+            resultsToLocalize.map((result) => {
                 result.properties.map((p) => {
                     allTerms = allTerms.concat(p.termIds);
                 });
@@ -593,13 +595,13 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
 
                     // Check if the term has been retrieved from taxonomy (i.e. exists)
                     const termsFromTaxonomy = termValues.filter((taxonomyTerm: ITerm & ITermData) => {
-                        const termIdFromTaxonomy = taxonomyTerm.Id.substring(taxonomyTerm.Id.indexOf('(') + 1, taxonomyTerm.Id.indexOf(')'));                                        
+                        const termIdFromTaxonomy = taxonomyTerm.Id.substring(taxonomyTerm.Id.indexOf('(') + 1, taxonomyTerm.Id.indexOf(')'));
                         return property.termIds.indexOf(termIdFromTaxonomy) !== -1;
                     });
 
                     if (termsFromTaxonomy.length > 0) {
                         termsFromTaxonomy.map((taxonomyTerm: ITerm & ITermData) => {
-    
+
                             // It supposes the 'Label' property has been selected in the underlying service call
                             // A term always have a default label so the collection can't be empty
                             let localizedLabel = taxonomyTerm["Labels"]._Child_Items_.filter((label: any) => {
@@ -610,9 +612,9 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
                             if (localizedLabel.length === 0) {
                                 localizedLabel = taxonomyTerm["Labels"]._Child_Items_;
                             }
-    
+
                             if (localizedLabel.length > 0) {
-                                // There is only one default label for a language 
+                                // There is only one default label for a language
                                 termLabels.push(localizedLabel[0].Value);
                             }
                         });
@@ -621,7 +623,7 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
                             propertyName: property.propertyName,
                             termLabels: termLabels
                         });
-                    }                    
+                    }
                 });
 
                 localizedTerms.push({
@@ -630,15 +632,15 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
                 });
             });
 
-             // Step #3: populate corresponding properties with term labels and returns new results
-             updatedResults = rawResults.map((result) => {
+            // Step #3: populate corresponding properties with term labels and returns new results
+            updatedResults = rawResults.map((result) => {
 
                 const existingResults = localizedTerms.filter((e) => {
                     return e.uniqueIdentifier === result.UniqueID;
                 });
 
                 if (existingResults.length > 0) {
-                    
+
                     existingResults[0].properties.map((res) => {
                         result[res.propertyName] = res.termLabels.join(', ');
                     });
@@ -662,7 +664,7 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
     private async _getSearchResults(props: ISearchResultsContainerProps, pageNumber?: number): Promise<ISearchResults> {
 
         // Get search results
-        const searchResults = await props.searchService.search(props.queryKeywords, pageNumber);
+        const searchResults = await props.searchService.search(props.queryKeywords, pageNumber, this.props.templateService.UseOldSPIcons);
 
         // Translates taxonomy refiners and result values by using terms ID if applicable
         if (props.enableLocalization) {
@@ -681,31 +683,31 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
         let i = 0;
         let renderShimmerElements: JSX.Element[] = [];
         const shimmerContent: JSX.Element = <div style={{ display: 'flex' }}>
-                                                <ShimmerElementsGroup
-                                                shimmerElements={[
-                                                    { type: ElemType.line, width: 40, height: 40 },
-                                                    { type: ElemType.gap, width: 10, height: 40 }
-                                                ]}
-                                                />
-                                                <ShimmerElementsGroup
-                                                flexWrap={true}
-                                                width="100%"
-                                                shimmerElements={[
-                                                    { type: ElemType.line, width: '100%', height: 10 },
-                                                    { type: ElemType.line, width: '75%', height: 10 },
-                                                    { type: ElemType.gap, width: '25%', height: 20 }
-                                                ]}
-                                                />
-                                            </div>;
+            <ShimmerElementsGroup
+                shimmerElements={[
+                    { type: ElemType.line, width: 40, height: 40 },
+                    { type: ElemType.gap, width: 10, height: 40 }
+                ]}
+            />
+            <ShimmerElementsGroup
+                flexWrap={true}
+                width="100%"
+                shimmerElements={[
+                    { type: ElemType.line, width: '100%', height: 10 },
+                    { type: ElemType.line, width: '75%', height: 10 },
+                    { type: ElemType.gap, width: '25%', height: 20 }
+                ]}
+            />
+        </div>;
 
         while (i < 4) {
             renderShimmerElements.push(
-                <Shimmer 
-                key={i}
-                customElementsGroup={shimmerContent} 
-                width="100%"
-                style={{ marginBottom: "20px" }}                    
-            />);
+                <Shimmer
+                    key={i}
+                    customElementsGroup={shimmerContent}
+                    width="100%"
+                    style={{ marginBottom: "20px" }}
+                />);
             i++;
         }
 

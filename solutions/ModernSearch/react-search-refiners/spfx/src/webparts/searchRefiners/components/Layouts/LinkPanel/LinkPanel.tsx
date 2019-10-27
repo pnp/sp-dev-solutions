@@ -137,7 +137,7 @@ export default class LinkPanel extends React.Component<ILinkPanelProps, ILinkPan
         this._initItems(this.props);
     }
 
-    public componentWillReceiveProps(nextProps: ILinkPanelProps) {
+    public UNSAFE_componentWillReceiveProps(nextProps: ILinkPanelProps) {
         let shouldReset = false;
 
         if (!isEqual(this.props.refinersConfiguration, nextProps.refinersConfiguration)) {

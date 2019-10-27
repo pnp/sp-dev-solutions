@@ -1,6 +1,6 @@
-import * as Handlebars from 'handlebars';
+//import * as Handlebars from 'handlebars';
 import ISearchService from './ISearchService';
-import { ISearchResults, ISearchResult, IRefinementResult, IRefinementValue, IRefinementFilter, IPromotedResult, ISearchVerticalInformation } from '../../models/ISearchResult';
+import { ISearchResults, ISearchResult, IRefinementResult, IRefinementValue, IRefinementFilter, IPromotedResult, ISearchVerticalInformation, ISearchResultBlock } from '../../models/ISearchResult';
 import { sp, SearchQuery, SearchResults, SPRest, Sort, SearchSuggestQuery, SortDirection } from '@pnp/sp';
 import { Logger, LogLevel, ConsoleListener } from '@pnp/logging';
 import { Text, Guid } from '@microsoft/sp-core-library';
@@ -17,6 +17,7 @@ import { JSONParser } from '@pnp/odata';
 import { UrlHelper } from '../../helpers/UrlHelper';
 import { ISearchVertical } from '../../models/ISearchVertical';
 import IManagedPropertyInfo from '../../models/IManagedPropertyInfo';
+import { Loader } from '../TemplateService/LoadHelper';
 
 class SearchService implements ISearchService {
     private _initialSearchResult: SearchResults = null;
@@ -28,6 +29,7 @@ class SearchService implements ISearchService {
     private _resultSourceId: string;
     private _sortList: Sort[];
     private _enableQueryRules: boolean;
+    private _includeOneDriveResults: boolean;
     private _refiners: IRefinerConfiguration[];
     private _refinementFilters: IRefinementFilter[];
     private _synonymTable: ISynonymTable;
@@ -50,6 +52,9 @@ class SearchService implements ISearchService {
 
     public set enableQueryRules(value: boolean) { this._enableQueryRules = value; }
     public get enableQueryRules(): boolean { return this._enableQueryRules; }
+
+    public set includeOneDriveResults(value: boolean) { this._includeOneDriveResults = value; }
+    public get includeOneDriveResults(): boolean { return this._includeOneDriveResults; }
 
     public set refiners(value: IRefinerConfiguration[]) { this._refiners = value; }
     public get refiners(): IRefinerConfiguration[] { return this._refiners; }
@@ -88,7 +93,7 @@ class SearchService implements ISearchService {
      * @param query The search query in KQL format
      * @return The search results
      */
-    public async search(query: string, pageNumber?: number): Promise<ISearchResults> {
+    public async search(query: string, pageNumber?: number, useOldSPIcons?: boolean): Promise<ISearchResults> {
 
         let searchQuery: SearchQuery = {};
         let sortedRefiners: string[] = [];
@@ -110,6 +115,19 @@ class SearchService implements ISearchService {
                 QueryPropertyValueTypeIndex: 3
             }
         }];
+
+        // Toggle to include user's personal OneDrive results as a secondary result block
+        // https://docs.microsoft.com/en-us/sharepoint/support/search/private-onedrive-results-not-included
+        if (this._includeOneDriveResults) {
+            searchQuery.Properties.push({
+                Name: "ContentSetting",
+                Value: {
+                    IntVal: 3,
+                    QueryPropertyValueTypeIndex: 2
+                }
+            });
+        }
+
         searchQuery.Querytext = this._injectSynonyms(query);
 
         // Disable query rules by default if not specified
@@ -117,6 +135,15 @@ class SearchService implements ISearchService {
 
         if (this._resultSourceId) {
             searchQuery.SourceId = this._resultSourceId;
+
+            // enable phoenetic search for people result source
+            if (this._resultSourceId.toLocaleLowerCase() === "b09a7990-05ea-4af9-81ef-edfab16c4e31") {
+                searchQuery.EnableNicknames = true;
+                searchQuery.EnablePhonetic = true;
+            } else {
+                searchQuery.EnableNicknames = false;
+                searchQuery.EnablePhonetic = false;
+            }
         }
 
         // To be able to use search query variable according to the current context
@@ -137,6 +164,20 @@ class SearchService implements ISearchService {
             // Get the refiners order specified in the property pane
             sortedRefiners = this.refiners.map(e => e.refinerName);
             searchQuery.Refiners = sortedRefiners.join(',');
+
+            const refinableDate = /(RefinableDate\d+)(?=,|$)|(LastModifiedTime)(?=,|$)|(LastModifiedTimeForRetention)(?=,|$)|(Created)(?=,|$)/g;
+            if (refinableDate.test(searchQuery.Refiners)) {
+                // set refiner spec intervals to be used for fixed interval template - and which makes more sense overall
+                await Loader.LoadHandlebarsHelpers();
+
+                let yesterDay = this._getISOString("days", 1);
+                let weekAgo = this._getISOString("weeks", 1);
+                let monthAgo = this._getISOString("months", 1);
+                let threeMonthsAgo = this._getISOString("months", 3);
+                let yearAgo = this._getISOString("years", 1);
+
+                searchQuery.Refiners = searchQuery.Refiners.replace(refinableDate, `$&(discretize=manual/${yearAgo}/${threeMonthsAgo}/${monthAgo}/${weekAgo}/${yesterDay})`);
+            }
         }
 
         if (this.refinementFilters) {
@@ -178,25 +219,6 @@ class SearchService implements ISearchService {
                 let refinementResultsRows = r2.RawSearchResults.PrimaryQueryResult.RefinementResults;
 
                 const refinementRows: any = refinementResultsRows ? refinementResultsRows.Refiners : [];
-                if (refinementRows.length > 0 && (<any>window).searchHBHelper === undefined) {
-                    const moment = await import(
-                        /* webpackChunkName: 'search-handlebars-helpers' */
-                        'moment'
-                    );
-                    if ((<any>window).searchMoment === undefined) {
-                        (<any>window).searchMoment = moment;
-                    }
-
-                    const component = await import(
-                        /* webpackChunkName: 'search-handlebars-helpers' */
-                        'handlebars-helpers'
-                    );
-                    if ((<any>window).searchHBHelper === undefined) {
-                        (<any>window).searchHBHelper = component({
-                            handlebars: Handlebars
-                        });
-                    }
-                }
 
                 // Map search results
                 let searchResults: ISearchResult[] = resultRows.map((elt) => {
@@ -213,18 +235,19 @@ class SearchService implements ISearchService {
                 });
 
                 // Map results icon (using batch)
-                searchResults = await this._mapToIcons(searchResults);
+                searchResults = await this._mapToIcons(searchResults, useOldSPIcons);
 
-                // Map refinement results                    
+                // Map refinement results
                 refinementRows.map((refiner) => {
 
                     let values: IRefinementValue[] = [];
                     refiner.Entries.map((item) => {
                         values.push({
                             RefinementCount: parseInt(item.RefinementCount, 10),
-                            RefinementName: this._formatDate(item.RefinementName), // This value will appear in the selected filter bar
+                            // replace string;# for calculated columns https://github.com/SharePoint/sp-dev-solutions/issues/304
+                            RefinementName: this._formatDate(item.RefinementName).replace("string;#", ""), // This value will appear in the selected filter bar
                             RefinementToken: item.RefinementToken,
-                            RefinementValue: this._formatDate(item.RefinementValue), // This value will appear in the filter panel
+                            RefinementValue: this._formatDate(item.RefinementValue).replace("string;#", ""), // This value will appear in the filter panel
                         });
                     });
 
@@ -234,11 +257,27 @@ class SearchService implements ISearchService {
                     });
                 });
 
-                // Query rules handling
-                const secondaryQueryResults = r2.RawSearchResults.SecondaryQueryResults;
+                // Sort refiners according to the property pane value
+                refinementResults = sortBy(refinementResults, (refinement) => {
+
+                    // Get the index of the corresponding filter name
+                    return sortedRefiners.indexOf(refinement.FilterName);
+                });
+
+                results.RelevantResults = searchResults;
+                results.RefinementResults = refinementResults;
+                results.PaginationInformation.TotalRows = this._initialSearchResult.TotalRows;
+            }
+
+            // Query rules handling
+            if (this._initialSearchResult.RawSearchResults.SecondaryQueryResults) {
+
+                const secondaryQueryResults = this._initialSearchResult.RawSearchResults.SecondaryQueryResults;
+
                 if (Array.isArray(secondaryQueryResults) && secondaryQueryResults.length > 0) {
 
                     let promotedResults: IPromotedResult[] = [];
+                    let secondaryResults: ISearchResultBlock[] = [];
 
                     secondaryQueryResults.map((e) => {
 
@@ -253,21 +292,40 @@ class SearchService implements ISearchService {
                                 } as IPromotedResult);
                             });
                         }
+
+                        // Secondary/Query Rule results are mapped through SecondaryQueryResults.RelevantResults
+                        if (e.RelevantResults) {
+                          const secondaryResultItems = e.RelevantResults.Table.Rows.map((srr) => {
+                            let result: ISearchResult = {};
+
+                            srr.Cells.map((item) => {
+                              result[item.Key] = item.Value;
+                            });
+
+                            return result;
+                          });
+
+                          const secondaryResultBlock: ISearchResultBlock = {
+                            Title: e.RelevantResults.ResultTitle,
+                            Results: secondaryResultItems
+                          };
+
+                          // Only keep secondary result blocks which have items
+                          if (secondaryResultBlock.Results.length > 0) {
+                            secondaryResults.push(secondaryResultBlock);
+                          }
+                        }
                     });
 
                     results.PromotedResults = promotedResults;
+
+                    secondaryResults = await Promise.all(secondaryResults.map(async (srb) =>  {
+                      srb.Results = await this._mapToIcons(srb.Results, useOldSPIcons);
+                      return srb;
+                    }));
+                    results.SecondaryResults = secondaryResults;
                 }
 
-                // Sort refiners according to the property pane value
-                refinementResults = sortBy(refinementResults, (refinement) => {
-
-                    // Get the index of the corresponding filter name
-                    return sortedRefiners.indexOf(refinement.FilterName);
-                });
-
-                results.RelevantResults = searchResults;
-                results.RefinementResults = refinementResults;
-                results.PaginationInformation.TotalRows = this._initialSearchResult.TotalRows;
             }
             return results;
 
@@ -351,6 +409,14 @@ class SearchService implements ISearchService {
 
             if (vertical.resultSourceId) {
                 url = UrlHelper.addOrReplaceQueryStringParam(url, 'sourceid', `'${vertical.resultSourceId}'`);
+                // enable phoenetic search for people result source
+                if (vertical.resultSourceId.toLocaleLowerCase() === "b09a7990-05ea-4af9-81ef-edfab16c4e31") {
+                    url = UrlHelper.addOrReplaceQueryStringParam(url, 'enablenicknames', 'true');
+                    url = UrlHelper.addOrReplaceQueryStringParam(url, 'enablephonetic', 'true');
+                } else {
+                    url = UrlHelper.addOrReplaceQueryStringParam(url, 'enablenicknames', 'false');
+                    url = UrlHelper.addOrReplaceQueryStringParam(url, 'enablephonetic', 'false');
+                }
             }
 
             return batch.add(url, 'GET', {
@@ -422,7 +488,7 @@ class SearchService implements ISearchService {
             let refinementResultsRows = results.RawSearchResults.PrimaryQueryResult.RefinementResults;
             const refinementRows: any = refinementResultsRows ? refinementResultsRows.Refiners : [];
 
-            // Map refinement results                    
+            // Map refinement results
             refinementRows.map((refiner) => {
                 refiner.Entries.map((item) => {
                     managedProperties.push({
@@ -434,9 +500,9 @@ class SearchService implements ISearchService {
         } catch (error) {
             Logger.write('[SearchService.getAvailableManagedProperties()]: Error: ' + error, LogLevel.Error);
             throw error;
-        } 
+        }
 
-        return managedProperties;       
+        return managedProperties;
     }
 
     /**
@@ -463,7 +529,7 @@ class SearchService implements ISearchService {
             isSortable = true;
         } catch {
             isSortable = false;
-        }  
+        }
 
         return isSortable;
     }
@@ -490,54 +556,93 @@ class SearchService implements ISearchService {
      * Gets the icons corresponding to the result file name extensions
      * @param searchResults The raw search results
      */
-    private async _mapToIcons(searchResults: ISearchResult[]): Promise<ISearchResult[]> {
+    private async _mapToIcons(searchResults: ISearchResult[], useOldSPIcons: boolean): Promise<ISearchResult[]> {
+        if (useOldSPIcons) {
+            // fallback for backwards compat - remove useOldSPIcons later at some point
+            try {
+                let updatedSearchResults = searchResults;
 
-        try {
+                const batch = this._localPnPSetup.createBatch();
+                const parser = new JSONParser();
+                const batchId = Guid.newGuid().toString();
 
-            let updatedSearchResults = searchResults;
+                const promises = searchResults.map(async result => {
 
-            const batch = this._localPnPSetup.createBatch();
-            const parser = new JSONParser();
-            const batchId = Guid.newGuid().toString();
+                    const filename = result.Filename || (result.FileExtension ? `.${result.FileExtension}` : '');
 
-            const promises = searchResults.map(async result => {
-
-                const filename = result.Filename ? result.Filename : `.${result.FileExtension}`;
-
-                let encodedFileName = filename ? filename.replace(/['']/g, '') : '';
-                const queryStringIndex = encodedFileName.indexOf('?');
-                if (queryStringIndex !== -1) { // filename with query string leads to 400 error.
-                    encodedFileName = encodedFileName.slice(0, queryStringIndex);
-                }
-
-                let url = `${this._pageContext.web.absoluteUrl}/_api/web/maptoicon(filename='${encodeURIComponent(encodedFileName)}', progid='', size=1)`;
-
-                return batch.add(url, 'GET', {
-                    headers: {
-                        Accept: 'application/json; odata=nometadata'
+                    let encodedFileName = filename ? filename.replace(/['']/g, '') : '';
+                    const queryStringIndex = encodedFileName.indexOf('?');
+                    if (queryStringIndex !== -1) { // filename with query string leads to 400 error.
+                        encodedFileName = encodedFileName.slice(0, queryStringIndex);
                     }
-                }, parser, batchId);
-            });
 
-            // Execute the batch
-            await batch.execute();
+                    if (encodedFileName) {
+                      let url = `${this._pageContext.web.absoluteUrl}/_api/web/maptoicon(filename='${encodeURIComponent(encodedFileName)}', progid='', size=1)`;
 
-            const response = await Promise.all(promises);
+                      return batch.add(url, 'GET', {
+                          headers: {
+                              Accept: 'application/json; odata=nometadata'
+                          }
+                      }, parser, batchId);
+                    }
+                });
 
-            response.map((result: any, index: number) => {
+                // Execute the batch
+                await batch.execute();
 
-                if (result.value) {
-                    const iconUrl = this._pageContext.web.absoluteUrl + '/_layouts/15/images/' + result.value;
-                    updatedSearchResults[index].IconSrc = iconUrl;
-                }
-            });
+                const response = await Promise.all(promises);
 
-            return updatedSearchResults;
+                response.map((result: any, index: number) => {
 
-        } catch (error) {
-            Logger.write('[SearchService._mapToIcons()]: Error: ' + error, LogLevel.Error);
-            throw new Error(error);
+                    if (result && result.value) {
+                        let iconUrl = this._pageContext.web.absoluteUrl + '/_layouts/15/images/' + result.value;
+                        iconUrl = iconUrl.replace("lg_iczip.gif", "lg_iczip.png");
+                        iconUrl = iconUrl.replace("lg_icmsg.png", "lg_icmsg.gif");
+                        updatedSearchResults[index].IconSrc = iconUrl;
+                    }
+                });
+
+                return updatedSearchResults;
+
+            } catch (error) {
+                Logger.write('[SearchService._mapToIcons()]: Error: ' + error, LogLevel.Error);
+                throw new Error(error);
+            }
         }
+
+        searchResults.map(result => {
+
+            const filename = result.Filename || (result.FileExtension ? `.${result.FileExtension}` : '');
+
+            let encodedFileName = filename ? filename.replace(/['']/g, '') : '';
+            const queryStringIndex = encodedFileName.indexOf('?');
+            if (queryStringIndex !== -1) { // filename with query string leads to 400 error.
+                encodedFileName = encodedFileName.slice(0, queryStringIndex);
+            }
+
+            if (filename.indexOf('.') !== -1) {
+                // we have a file
+                result.IconExt = filename.split('.').pop();
+            }
+            else if (!isEmpty(result.HtmlFileType) && result.HtmlFileType.indexOf("OneNote") !== -1) {
+                result.IconExt = "onetoc";
+            }
+            else if (
+                (!isEmpty(result.IsContainer) && result.IsContainer == "true")
+                && ((!isEmpty(result.contentclass) && result.contentclass.indexOf('STS_ListItem_') !== -1))) {
+                // we have a folder
+                result.IconExt = "IsContainer";
+            }
+            else if (isEmpty(result.FileType) && !isEmpty(result.IsListItem) && result.IsListItem == "true") {
+                result.IconExt = "IsListItem";
+            }
+            else if (!isEmpty(result.FileType)) {
+                result.IconExt = result.FileType;
+            } else {
+                result.IconExt = null;
+            }
+        });
+        return searchResults;
     }
 
     /**
@@ -558,6 +663,13 @@ class SearchService implements ISearchService {
         }
 
         return updatedInputValue;
+    }
+
+    private _getISOString(unit: string, count: number) {
+        if ((window as any).searchHBHelper) {
+            return (window as any).searchMoment(new Date()).subtract(count, unit).toDate().toISOString();
+        }
+        return "";
     }
 
     private momentHelper(str, pattern, lang) {
@@ -603,7 +715,7 @@ class SearchService implements ISearchService {
     private _injectSynonyms(query: string): string {
 
         if (this._synonymTable && Object.keys(this._synonymTable).length > 0) {
-            // Remove complex query parts AND/OR/NOT/ANY/ALL/parenthasis/property queries/exclusions - can probably be improved            
+            // Remove complex query parts AND/OR/NOT/ANY/ALL/parenthasis/property queries/exclusions - can probably be improved
             const cleanQuery = query.replace(/(-\w+)|(-"\w+.*?")|(-?\w+[:=<>]+\w+)|(-?\w+[:=<>]+".*?")|((\w+)?\(.*?\))|(AND)|(OR)|(NOT)/g, '');
             const queryParts: string[] = cleanQuery.match(/("[^"]+"|[^"\s]+)/g);
 

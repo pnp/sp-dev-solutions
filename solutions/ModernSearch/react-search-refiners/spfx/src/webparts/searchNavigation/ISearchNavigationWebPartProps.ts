@@ -8,6 +8,7 @@ export interface ISearchNavigationWebPartProps {
     useThemeColor: boolean;
     useNlpValue: boolean;
     openBehavior: PageOpenBehavior;
+    passQuery: boolean;
     queryPathBehavior: QueryPathBehavior;
     queryStringParameter: string;
 }

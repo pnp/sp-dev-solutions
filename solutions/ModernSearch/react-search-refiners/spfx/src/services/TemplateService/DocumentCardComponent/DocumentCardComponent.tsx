@@ -9,7 +9,10 @@ import * as documentCardLocationGetStyles from 'office-ui-fabric-react/lib/compo
 import { getTheme, mergeStyleSets } from "office-ui-fabric-react/lib/Styling";
 import { classNamesFunction } from "office-ui-fabric-react/lib/Utilities";
 import { IReadonlyTheme } from "@microsoft/sp-component-base";
-import { merge } from '@microsoft/sp-lodash-subset';
+import { merge, trimStart, isEmpty } from '@microsoft/sp-lodash-subset';
+import { getFileTypeIconProps, FileIconType } from '@uifabric/file-type-icons';
+import { GlobalSettings } from 'office-ui-fabric-react/lib/Utilities';
+let globalSettings = (window as any).__globalSettings__;
 
 /**
  * Document card props. These properties are retrieved from the web component attributes. They must be camel case.
@@ -34,6 +37,7 @@ export interface IDocumentCardComponentProps {
     previewUrl?: string;
     author?: string;
     iconSrc?: string;
+    iconExt?: string;
     fileExtension?: string;
 
     // Behavior properties
@@ -87,13 +91,27 @@ export class DocumentCardComponent extends React.Component<IDocumentCardComponen
             />;
         }
 
+        let iconProps;
+        // same code as in IconComponent.tsx
+        if (!isEmpty(processedProps.iconExt)) {
+            if (processedProps.iconExt == "IsListItem") {
+                iconProps = getFileTypeIconProps({ type: FileIconType.listItem, size: 16, imageFileType: 'png' });
+            } else if (processedProps.iconExt == "IsContainer") {
+                iconProps = getFileTypeIconProps({ type: FileIconType.folder, size: 16, imageFileType: 'png' });
+            } else {                
+                iconProps = getFileTypeIconProps({ extension: processedProps.iconExt, size: 16, imageFileType: 'png' });
+            }
+        } else {
+            iconProps = getFileTypeIconProps({ extension: trimStart(processedProps.fileExtension.trim(), '.'), size: 16, imageFileType: 'png' });
+        }
+
         let previewProps: IDocumentCardPreviewProps = {
             previewImages: [
                 {
                     name: processedProps.title,
                     previewImageSrc: processedProps.previewImage,
                     imageFit: ImageFit.centerCover,
-                    iconSrc: this.props.isVideo || !this.props.showFileIcon ? '' : processedProps.iconSrc,
+                    iconSrc: globalSettings.icons[iconProps.iconName].code.props.src,
                     width: 318,
                     height: 196,
                 }
