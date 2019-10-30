@@ -269,6 +269,10 @@ class SearchService implements ISearchService {
                 results.PaginationInformation.TotalRows = this._initialSearchResult.TotalRows;
             }
 
+            if (!isEmpty(this._initialSearchResult.RawSearchResults.SpellingSuggestion)) {
+                results.SpellingSuggestion = this._initialSearchResult.RawSearchResults.SpellingSuggestion;
+            }
+
             // Query rules handling
             if (this._initialSearchResult.RawSearchResults.SecondaryQueryResults) {
 
@@ -295,33 +299,33 @@ class SearchService implements ISearchService {
 
                         // Secondary/Query Rule results are mapped through SecondaryQueryResults.RelevantResults
                         if (e.RelevantResults) {
-                          const secondaryResultItems = e.RelevantResults.Table.Rows.map((srr) => {
-                            let result: ISearchResult = {};
+                            const secondaryResultItems = e.RelevantResults.Table.Rows.map((srr) => {
+                                let result: ISearchResult = {};
 
-                            srr.Cells.map((item) => {
-                              result[item.Key] = item.Value;
+                                srr.Cells.map((item) => {
+                                    result[item.Key] = item.Value;
+                                });
+
+                                return result;
                             });
 
-                            return result;
-                          });
+                            const secondaryResultBlock: ISearchResultBlock = {
+                                Title: e.RelevantResults.ResultTitle,
+                                Results: secondaryResultItems
+                            };
 
-                          const secondaryResultBlock: ISearchResultBlock = {
-                            Title: e.RelevantResults.ResultTitle,
-                            Results: secondaryResultItems
-                          };
-
-                          // Only keep secondary result blocks which have items
-                          if (secondaryResultBlock.Results.length > 0) {
-                            secondaryResults.push(secondaryResultBlock);
-                          }
+                            // Only keep secondary result blocks which have items
+                            if (secondaryResultBlock.Results.length > 0) {
+                                secondaryResults.push(secondaryResultBlock);
+                            }
                         }
                     });
 
                     results.PromotedResults = promotedResults;
 
-                    secondaryResults = await Promise.all(secondaryResults.map(async (srb) =>  {
-                      srb.Results = await this._mapToIcons(srb.Results, useOldSPIcons);
-                      return srb;
+                    secondaryResults = await Promise.all(secondaryResults.map(async (srb) => {
+                        srb.Results = await this._mapToIcons(srb.Results, useOldSPIcons);
+                        return srb;
                     }));
                     results.SecondaryResults = secondaryResults;
                 }
@@ -577,13 +581,13 @@ class SearchService implements ISearchService {
                     }
 
                     if (encodedFileName) {
-                      let url = `${this._pageContext.web.absoluteUrl}/_api/web/maptoicon(filename='${encodeURIComponent(encodedFileName)}', progid='', size=1)`;
+                        let url = `${this._pageContext.web.absoluteUrl}/_api/web/maptoicon(filename='${encodeURIComponent(encodedFileName)}', progid='', size=1)`;
 
-                      return batch.add(url, 'GET', {
-                          headers: {
-                              Accept: 'application/json; odata=nometadata'
-                          }
-                      }, parser, batchId);
+                        return batch.add(url, 'GET', {
+                            headers: {
+                                Accept: 'application/json; odata=nometadata'
+                            }
+                        }, parser, batchId);
                     }
                 });
 

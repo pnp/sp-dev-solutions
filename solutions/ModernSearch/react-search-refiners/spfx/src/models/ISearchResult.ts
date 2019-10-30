@@ -5,6 +5,7 @@ export interface ISearchResults {
     RefinementResults: IRefinementResult[];
     PromotedResults?: IPromotedResult[];
     SecondaryResults?: ISearchResultBlock[];
+    SpellingSuggestion?: string;
 }
 
 export interface IPaginationInformation {

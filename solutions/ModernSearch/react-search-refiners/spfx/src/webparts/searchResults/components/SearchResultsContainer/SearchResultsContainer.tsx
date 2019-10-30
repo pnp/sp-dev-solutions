@@ -155,7 +155,8 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
                 maxResultsCount: this.props.searchService.resultsCount,
                 actualResultsCount: items.RelevantResults.length,
                 strings: strings,
-                themeVariant: this.props.themeVariant
+                themeVariant: this.props.themeVariant,
+                spellingSuggestion: items.SpellingSuggestion
             };
 
             // Merge with property pane template parameters

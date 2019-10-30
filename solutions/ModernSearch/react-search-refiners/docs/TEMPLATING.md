@@ -171,6 +171,7 @@ Setting | Description
 `{{<search_managed_property_name>}}` | Any valid search managed property returned in the results set. These are typically managed properties set in the *"Selected properties"* setting in the property pane. You don't need to prefix them with `item.` if you are in the "each" loop.
 `{{webUrl}}` | The current web relative url. Use `{{@root/webUrl}}` inside a loop.
 `{{siteUrl}}` | The current site relative url. Use `{{@root/siteUrl}}` inside a loop.
+`{{spellingSuggestion}}` | Spelling suggestions returned for the query to be used for "Did you mean" functionality.
 `{{getUniqueCount items "property"}}` | Get the unique count of a property over the result set (or another array)
 `{{getUniqueCount array}}` | Get the unique count of objects in an array. Example: [1,1,1,2,2,4] would return `3`.
 `{{getUnique items "NewsCategory"}}` | Return the unique values as a new array based on an array or property of an object in the array.

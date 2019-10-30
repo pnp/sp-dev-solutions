@@ -14,6 +14,7 @@ interface ISearchResultsTemplateContext {
     webUrl?: string;
     maxResultsCount: number;
     actualResultsCount?: number;
+    spellingSuggestion?: string;
 }
 
 export default ISearchResultsTemplateContext;
