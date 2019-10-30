@@ -127,7 +127,7 @@ export default class SearchResultsContainer extends React.Component<ISearchResul
                     <div>
                         {renderWebPartTitle}
                         <div className={styles.searchWp__buttonBar}>{sortPanel}</div>
-                        <div id={this.state.mountingNodeId}>
+                        <div id={this.state.mountingNodeId + "nores"}>
                             <div className={styles.searchWp__noresult}>{strings.NoResultMessage}</div>
                         </div>
                     </div>;
