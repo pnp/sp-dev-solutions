@@ -1,6 +1,8 @@
 # SharePoint Framework modern search Web Parts
 
-![Version](https://img.shields.io/badge/version-3.6.0-green.svg)
+## This repo has moved to https://github.com/microsoft-search/pnp-modern-search
+
+![Version](https://img.shields.io/badge/version-3.7.0-green.svg)
 
 ## Download
 **Get the latest release at our [releases page](https://github.com/SharePoint/sp-dev-solutions/releases/latest).**
