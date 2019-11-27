@@ -98,7 +98,7 @@ export class DocumentCardComponent extends React.Component<IDocumentCardComponen
                 iconProps = getFileTypeIconProps({ type: FileIconType.listItem, size: 16, imageFileType: 'png' });
             } else if (processedProps.iconExt == "IsContainer") {
                 iconProps = getFileTypeIconProps({ type: FileIconType.folder, size: 16, imageFileType: 'png' });
-            } else {                
+            } else {
                 iconProps = getFileTypeIconProps({ extension: processedProps.iconExt, size: 16, imageFileType: 'png' });
             }
         } else {
@@ -111,7 +111,7 @@ export class DocumentCardComponent extends React.Component<IDocumentCardComponen
                     name: processedProps.title,
                     previewImageSrc: processedProps.previewImage,
                     imageFit: ImageFit.centerCover,
-                    iconSrc: globalSettings.icons[iconProps.iconName].code.props.src,
+                    iconSrc: this.props.showFileIcon ? globalSettings.icons[iconProps.iconName].code.props.src : null,
                     width: 318,
                     height: 196,
                 }
