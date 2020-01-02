@@ -67,7 +67,6 @@ export class MultilingualExt extends React.Component<IMultilingualExtProps, IMul
     let pages: IPageProperties[] = null;
 
     try {
-      //if (document.location.pathname.indexOf(`${this.props.context.pageContext.site.serverRelativeUrl}/`) < 0) return;
       usersLanguage = sessionStorage.getItem('menuLanguage');
       if (!usersLanguage)
         usersLanguage = this.props.context.pageContext.cultureInfo.currentUICultureName;
