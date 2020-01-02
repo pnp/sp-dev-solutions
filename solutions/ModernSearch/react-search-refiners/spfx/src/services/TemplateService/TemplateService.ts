@@ -190,7 +190,7 @@ export class TemplateService extends BaseTemplateService {
         }
 
         // Set required selected properties if not present
-        let requiredProperties = ['Title','Created','HitHighlightedSummary'];
+        let requiredProperties = ['Title','Created','HitHighlightedSummary','IsContainer','IsListItem','HtmlFileType'];
         this._ensureRequiredSelectedProperties(requiredProperties, properties);
 
         return [
@@ -316,12 +316,13 @@ export class TemplateService extends BaseTemplateService {
                 { name: 'Author', field: 'author', value: "Author", useHandlebarsExpr: false, supportHtml: false },
                 { name: 'Profile Image', field: 'profileImage', value: "{{#with (split AuthorOWSUSER '|')}}/_layouts/15/userphoto.aspx?size=L&username={{[0]}}{{/with}}", useHandlebarsExpr: true, supportHtml: false  },
                 { name: 'IconSrc', field: 'iconSrc', value: "{{IconSrc}}", useHandlebarsExpr: true, supportHtml: false },
+                { name: 'IconExt', field: 'iconExt', value: "{{IconExt}}", useHandlebarsExpr: true, supportHtml: false },
                 { name: 'File Extension', field: 'fileExtension', value: "FileType", useHandlebarsExpr: false, supportHtml: false }
             ] as IComponentFieldsConfiguration[];
         }
 
         // Set required selected properties if not present
-        let requiredProperties = ['SPSiteUrl','SiteTitle','owstaxidmetadataalltagsinfo','contentclass','Created','AuthorOWSUSER','Author','FileType','ServerRedirectedEmbedURL','DefaultEncodingURL','Path'];
+        let requiredProperties = ['SPSiteUrl','SiteTitle','owstaxidmetadataalltagsinfo','contentclass','Created','AuthorOWSUSER','Author','FileType','ServerRedirectedEmbedURL','DefaultEncodingURL','Path','IsContainer','IsListItem','HtmlFileType'];
         this._ensureRequiredSelectedProperties(requiredProperties, properties);
 
         if (properties.resultSourceId === PEOPLE_RESULT_SOURCEID) {
@@ -426,7 +427,7 @@ export class TemplateService extends BaseTemplateService {
         }
 
         // Set required selected properties if not present (by default we use the document card component)
-        let requiredProperties = ['SPSiteUrl','SiteTitle','owstaxidmetadataalltagsinfo','contentclass','Created','AuthorOWSUSER','Author','FileType','ServerRedirectedEmbedURL','DefaultEncodingURL','Path'];
+        let requiredProperties = ['SPSiteUrl','SiteTitle','owstaxidmetadataalltagsinfo','contentclass','Created','AuthorOWSUSER','Author','FileType','ServerRedirectedEmbedURL','DefaultEncodingURL','Path','IsContainer','IsListItem','HtmlFileType'];
         this._ensureRequiredSelectedProperties(requiredProperties, properties);
 
         let groupFields: IPropertyPaneField<any>[] = [

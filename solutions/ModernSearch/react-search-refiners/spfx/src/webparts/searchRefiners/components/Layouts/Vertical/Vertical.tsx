@@ -68,7 +68,7 @@ export default class Vertical extends React.Component<IFilterLayoutProps, IVerti
         this._initItems(this.props);
     }
 
-    public componentWillReceiveProps(nextProps: IFilterLayoutProps) {      
+    public UNSAFE_componentWillReceiveProps(nextProps: IFilterLayoutProps) {      
         
         let shouldReset = false;
 

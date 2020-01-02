@@ -1,16 +1,15 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/spfx/client-side-web-part-manifest.schema.json",
-  "id": "42ad2740-3c60-49cf-971a-c44e33511b93",
-  "alias": "SearchResultsWebPart",
-  "componentType": "WebPart",
-  "version": "*",
-  "manifestVersion": 2,
-  "supportsFullBleed": true,
-  "requiresCustomScript": false,
-  "supportedHosts": ["SharePointWebPart"],
-  "loadLegacyFabricCss": true,
-  "preconfiguredEntries": [
-    {
+    "$schema": "https://developer.microsoft.com/json-schemas/spfx/client-side-web-part-manifest.schema.json",
+    "id": "42ad2740-3c60-49cf-971a-c44e33511b93",
+    "alias": "SearchResultsWebPart",
+    "componentType": "WebPart",
+    "version": "*",
+    "manifestVersion": 2,
+    "supportsFullBleed": true,
+    "requiresCustomScript": false,
+    "supportedHosts": ["SharePointWebPart"],
+    "loadLegacyFabricCss": true,
+    "preconfiguredEntries": [{
         "groupId": "5c03119e-3074-46fd-976b-c60198311f70",
         "group": {
             "default": "PnP"
@@ -26,9 +25,8 @@
         "officeFabricIconFontName": "SearchAndApps",
         "properties": {
             "queryKeywords": "",
-            "queryTemplate": "{searchTerms} Path:{Site}",
-            "sortList": [
-                {
+            "queryTemplate": "{searchTerms}",
+            "sortList": [{
                     "sortField": "Created",
                     "sortDirection": 1
                 },
@@ -37,8 +35,9 @@
                     "sortDirection": 2
                 }
             ],
-            "selectedProperties": "Title,Path,Created,Filename,SiteLogo,PreviewUrl,PictureThumbnailURL,ServerRedirectedPreviewURL,ServerRedirectedURL,HitHighlightedSummary,FileType,contentclass,ServerRedirectedEmbedURL,DefaultEncodingURL,owstaxidmetadataalltagsinfo,Author,AuthorOWSUSER,SPSiteUrl,SiteTitle",
+            "selectedProperties": "Title,Path,Created,Filename,SiteLogo,PreviewUrl,PictureThumbnailURL,ServerRedirectedPreviewURL,ServerRedirectedURL,HitHighlightedSummary,FileType,contentclass,ServerRedirectedEmbedURL,DefaultEncodingURL,owstaxidmetadataalltagsinfo,Author,AuthorOWSUSER,SPSiteUrl,SiteTitle,IsContainer,IsListItem,HtmlFileType",
             "enableQueryRules": false,
+            "includeOneDriveResults": false,
             "maxResultsCount": 10,
             "showBlank": true,
             "showResultsCount": true,
@@ -52,6 +51,5 @@
             "appliedRefiners": [],
             "refinersConfiguration": []
         }
-    }
-  ]
+    }]
 }
