@@ -11,7 +11,7 @@ export interface ILanguageSelectorProps {
   changePage: (value: string) => void;
 }
 
-export interface ILanguageSelectorState { 
+export interface ILanguageSelectorState {
   mobileShow: boolean;
 }
 
@@ -35,18 +35,17 @@ export default class LanguageSelector extends React.Component<ILanguageSelectorP
     return true;
   }
 
-  //<span className={styles.mobileShow + " ms-Icon" + (this.state.mobileShow?" ms-Icon--ChevronDown":" ms-Icon--ChevronRight")} onClick={() => {this.setState({mobileShow: !this.state.mobileShow});}}></span>
   public render(): React.ReactElement<ILanguageSelectorProps> {
     let currentLanguage: ILanguageSelectOption = lodash.find(this.props.pageLanguages, { selected: true });
     let otherLanguages: ILanguageSelectOption[] = lodash.filter(this.props.pageLanguages, { selected: false });
     try {
       return (
-        <div className={styles.languageSelectorCont + (this.state.mobileShow?` ${styles.show}`:"")}>
+        <div className={styles.languageSelectorCont + (this.state.mobileShow ? ` ${styles.show}` : "")}>
           <div className={styles.languageSelect}>
             <div className={styles.selected + " ms-fontWeight-semibold"}>
               <span>{currentLanguage.text}</span>
               <span className={styles.nonMobileShow + " ms-Icon ms-Icon--ChevronRight"}></span>
-              <span className={styles.mobileShow + " ms-Icon" + (this.state.mobileShow?" ms-Icon--ChevronDown":" ms-Icon--ChevronRight")} onClick={() => {this.setState({mobileShow: !this.state.mobileShow});}}></span>
+              <span className={styles.mobileShow + " ms-Icon" + (this.state.mobileShow ? " ms-Icon--ChevronDown" : " ms-Icon--ChevronRight")} onClick={() => { this.setState({ mobileShow: !this.state.mobileShow }); }}></span>
             </div>
             {otherLanguages.map((p) => {
               return (<div className={styles.languageOther} onClick={() => { this.props.changePage(p.key); }}>

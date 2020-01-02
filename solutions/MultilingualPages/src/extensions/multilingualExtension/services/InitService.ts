@@ -20,6 +20,7 @@ export default class InitService implements IInitService {
   private LOG_SOURCE: string = 'Multilingual-InitService';
   private _context: ApplicationCustomizerContext;
   private _redirectorWebpartId: string;
+  private _sitePagesLibraryId: string;
 
   constructor(context: ApplicationCustomizerContext, redirectorWebpartId: string) {
     this._context = context;
@@ -43,41 +44,60 @@ export default class InitService implements IInitService {
     }
   }
 
+  private async getSitePagesLibraryId(): Promise<boolean> {
+    let retVal = false;
+    try {
+      let lists = await sp.web.lists.select("Id", "EntityTypeName").filter("EntityTypeName eq 'SitePages'").get();
+      if (lists.length == 1) {
+        this._sitePagesLibraryId = lists[0].Id;
+        retVal = true;
+      }
+    } catch (err) {
+      Logger.write(`${err} - ${this.LOG_SOURCE} (getSitePagesLibraryId)`, LogLevel.Error);
+      return false;
+    }
+    return retVal;
+  }
+
   public async validateConfig(languages: ILanguage[]): Promise<boolean> {
     let configService: ConfigService;
-
+    let success = this.getSitePagesLibraryId();
+    if (!success) {
+      Logger.write(`Could not find Site Pages library Id - ${this.LOG_SOURCE} (validateConfig)`, LogLevel.Error);
+      return false;
+    }
     //Validate Site Columns... try to create them if not there.
     try {
       let siteColumns: Fields[] = await sp.web.fields.filter("Group eq 'Multilingual'").get();
       let siteFieldsValid = true;
       if ((lodash.find(siteColumns, ['Id', MultilingualFields.LanguageVariant.id]) == null)) {
         let defaultLangString = lodash.map(languages, 'code').join(' ');
-        if (!configService) configService = new ConfigService();
-        let resultLanguage = await configService.createSiteColumn(this._context, sp, MultilingualFields.LanguageVariant.id, MultilingualFields.LanguageVariant.xml, defaultLangString);
+        if (!configService) configService = new ConfigService(this._sitePagesLibraryId);
+        let resultLanguage = await configService.createSiteColumn(this._context, MultilingualFields.LanguageVariant.id, MultilingualFields.LanguageVariant.xml, defaultLangString);
         if (!resultLanguage)
           siteFieldsValid = false;
       }
       if (siteFieldsValid && (lodash.find(siteColumns, ['Id', MultilingualFields.LastSynced.id]) == null)) {
-        if (!configService) configService = new ConfigService();
-        let resultLastSync = await configService.createSiteColumn(this._context, sp, MultilingualFields.LastSynced.id, MultilingualFields.LastSynced.xml, null);
+        if (!configService) configService = new ConfigService(this._sitePagesLibraryId);
+        let resultLastSync = await configService.createSiteColumn(this._context, MultilingualFields.LastSynced.id, MultilingualFields.LastSynced.xml, null);
         if (!resultLastSync)
           siteFieldsValid = false;
       }
       if (siteFieldsValid && (lodash.find(siteColumns, ['Id', MultilingualFields.MasterTranslationPage.id]) == null)) {
-        if (!configService) configService = new ConfigService();
-        let resultMTP = await configService.createSiteColumn(this._context, sp, MultilingualFields.MasterTranslationPage.id, MultilingualFields.MasterTranslationPage.xml, null);
+        if (!configService) configService = new ConfigService(this._sitePagesLibraryId);
+        let resultMTP = await configService.createSiteColumn(this._context, MultilingualFields.MasterTranslationPage.id, MultilingualFields.MasterTranslationPage.xml, null);
         if (!resultMTP)
           siteFieldsValid = false;
       }
       if (siteFieldsValid && (lodash.find(siteColumns, ['Id', MultilingualFields.LanguageFolder.id]) == null)) {
-        if (!configService) configService = new ConfigService();
-        let resultLF = await configService.createSiteColumn(this._context, sp, MultilingualFields.LanguageFolder.id, MultilingualFields.LanguageFolder.xml, null);
+        if (!configService) configService = new ConfigService(this._sitePagesLibraryId);
+        let resultLF = await configService.createSiteColumn(this._context, MultilingualFields.LanguageFolder.id, MultilingualFields.LanguageFolder.xml, null);
         if (!resultLF)
           siteFieldsValid = false;
       }
       if (siteFieldsValid && (lodash.find(siteColumns, ['Id', MultilingualFields.RedirectorPage.id]) == null)) {
-        if (!configService) configService = new ConfigService();
-        let resultRP = await configService.createSiteColumn(this._context, sp, MultilingualFields.RedirectorPage.id, MultilingualFields.RedirectorPage.xml, null);
+        if (!configService) configService = new ConfigService(this._sitePagesLibraryId);
+        let resultRP = await configService.createSiteColumn(this._context, MultilingualFields.RedirectorPage.id, MultilingualFields.RedirectorPage.xml, null);
         if (!resultRP)
           siteFieldsValid = false;
       }
@@ -87,7 +107,7 @@ export default class InitService implements IInitService {
       //Validate Folders in SitePages library
       let existingFolders: string[] = [];
       const viewXml = `<View Scope='RecursiveAll'><ViewFields><FieldRef Name='FileLeafRef'/></ViewFields><Query><Eq><FieldRef Name='ContentType'/><Value Type='Computed'>Folder</Value></Eq></Query></View>`;
-      const viewUrl = `${this._context.pageContext.site.absoluteUrl}/_api/web/Lists/GetByTitle('Site Pages')/RenderListDataAsStream`;
+      const viewUrl = `${this._context.pageContext.site.absoluteUrl}/_api/web/Lists/GetById('${this._sitePagesLibraryId}')/RenderListDataAsStream`;
       const body = { "parameters": { "RenderOptions": 0, "ViewXml": viewXml } };
       var fieldOptions = {
         headers: { Accept: "application/json;odata.metadata=none" },
@@ -110,7 +130,7 @@ export default class InitService implements IInitService {
         let languageFolder = `SitePages/${language.code}`;
         let folder = lodash.includes(existingFolders, language.code);
         if (!folder) {
-          if (!configService) configService = new ConfigService();
+          if (!configService) configService = new ConfigService(this._sitePagesLibraryId);
           let resultFolder = await sp.web.folders.add(languageFolder);
           if (!resultFolder)
             foldersValid = false;
@@ -129,7 +149,7 @@ export default class InitService implements IInitService {
     var allPages: IPageProperties[] = [];
     const viewXml = `<View Scope='RecursiveAll'><ViewFields><FieldRef Name='ID'/><FieldRef Name='FileLeafRef'/><FieldRef Name='FileRef'/><FieldRef Name='Title'/><FieldRef Name='LanguageVariant'/>`
       + `<FieldRef Name='LastSynced'/><FieldRef Name='MasterTranslationPage'/><FieldRef Name='LanguageFolder'/><FieldRef Name='RedirectorPage'/><FieldRef Name='_UIVersionString'/><FieldRef Name='Modified'/><FieldRef Name='Editor'/><FieldRef Name='ContentType'/></ViewFields><Query></Query></View>`;
-    const viewUrl = `${this._context.pageContext.site.absoluteUrl}/_api/web/Lists/GetByTitle('Site Pages')/RenderListDataAsStream`;
+    const viewUrl = `${this._context.pageContext.site.absoluteUrl}/_api/web/Lists/GetById('${this._sitePagesLibraryId}')/RenderListDataAsStream`;
     const body = { "parameters": { "RenderOptions": 0, "ViewXml": viewXml } };
 
     var fieldOptions = {
@@ -188,7 +208,7 @@ export default class InitService implements IInitService {
     try {
       let retVal: boolean = false;
       //using bitwize operation because reference to SPPermission causes app customizer not to load.
-      retVal = (this._context.pageContext.list.permissions.value.High & 4) > 0;
+      retVal = ((this._context.pageContext.list.permissions.value.High & 4) > 0 || (this._context.pageContext.list.permissions.value.Low & 4) > 0);
       return retVal;
     } catch (err) {
       //Don't log failure, means user doesn't have edit rights.

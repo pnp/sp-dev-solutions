@@ -1,4 +1,5 @@
 {
+  "extends": "./node_modules/@microsoft/rush-stack-compiler-3.3/includes/tsconfig-web.json",
   "compilerOptions": {
     "target": "es5",
     "forceConsistentCasingInFileNames": true,
@@ -22,7 +23,10 @@
       "es5",
       "dom",
       "es2015.collection"
-    ]
+    ],
+    "inlineSources": false,
+    "strictNullChecks": false,
+    "noUnusedLocals": false
   },
   "include": [
     "src/**/*.ts"

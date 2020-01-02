@@ -86,7 +86,7 @@ The Multilingual Redirector web parts job is to redirect the user to the page ap
 
 ## Used SharePoint Framework Version
 
-![drop](https://img.shields.io/badge/drop-1.7.0-green.svg)
+![drop](https://img.shields.io/badge/drop-1.9.1-green.svg)
 
 ## Applies to
 
@@ -116,14 +116,11 @@ Node.js version >=8.9.4 <9.0.0 is required to build this project.
 
 ## Known Issues
 
-### Setup as non-English user fails
-The user adding this app to a site must use SharePoint in English. This is due to [#175](https://github.com/SharePoint/sp-dev-solutions/issues/175) and [#207](https://github.com/SharePoint/sp-dev-solutions/issues/207) and does not affect normal users.
-
 ### Initialization takes time
 
 After adding the app to a site scripts start running to create assets needed by the solution (fields, folders, ...). It might take a couple of minutes for this initialization to finish. No progress indicator will be shown. As soon as you see new language folders appearing in the Pages library this initialization should be completed.
 
-Also, during initialization, make sure to open the site only in one browser window or tab. If your colleagues have the site open as well initialization might fail because scripts start running there as well. As soon as the language folders appear you are good to go and everyone can start using the solution. 
+Also, during initialization, make sure to open the site only in one browser window or tab. If your colleagues have the site open as well initialization might fail because scripts start running there as well. As soon as the language folders appear you are good to go and everyone can start using the solution.
 
 ## Solution
 
@@ -135,9 +132,10 @@ MultilingualPages | Dave Feldman (Takeda) - [@bostonmusicdave](https://twitter.c
 
 Version|Date|Comments
 -------|----|--------
+2.0.0|Jan 2, 2020|Update to SPFx 1.9.1, Fix edit permission bug, Fix for 'Site Pages' reference for non-english sites #207 and part/all of #175
 1.6.7|Sept 9, 2019|Further refinement of App Customizer bootstrap code.
 1.6.6|Aug 29, 2019|Handle 403 for getUserEffectivePermissions.
-1.6.5|Aug 20, 2019|Fix bug with mutiple customizers in page.
+1.6.5|Aug 20, 2019|Fix bug with multiple customizers in page.
 1.6.4|Aug 19, 2019|Stabilize loading customizer during page transitions across sites.
 1.6.3|May 14, 2019|Fix issue with redirectorPageUrl being undefined.
 1.6.2|April 9, 2019|Generalize move page message.

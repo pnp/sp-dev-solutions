@@ -131,10 +131,13 @@ export class MultilingualExt extends React.Component<IMultilingualExtProps, IMul
   }
 
   public async componentDidMount(): Promise<void> {
+    //this.mountCode();
     //this.calculateLocation();
 
     // Thanks to Elio Stuyf - https://www.eliostruyf.com/check-page-mode-from-within-spfx-extensions/
-    // Binding to page mode changes
+    // *****
+    // Needed to trap page state changes between edit/view to change display
+    // *****
     const _pushState = () => {
       const _defaultPushState = history.pushState;
       // We need the current this context to update the component its state
@@ -217,13 +220,13 @@ export class MultilingualExt extends React.Component<IMultilingualExtProps, IMul
 
   private reloadPages = async (): Promise<void> => {
     let url = this.state.url;
-    if (!url.startsWith("http")) {
+    if (url.substr(0, 4) !== "http") {
       url = `${document.location.origin}${url}`;
     }
     let pages = this.state.pages;
     try {
-      if (url.indexOf(document.location.pathname.toLowerCase()) === -1 && document.location.pathname.toLowerCase().indexOf('.aspx') > -1)
-        url = (document.location.href.indexOf('?') > 0) ? document.location.href.split('?')[0] : document.location.href;
+      // if (url.indexOf(document.location.pathname.toLowerCase()) === -1 && document.location.pathname.toLowerCase().indexOf('.aspx') > -1)
+      //   url = (document.location.href.indexOf('?') > 0) ? document.location.href.split('?')[0] : document.location.href;
       url = url.toLowerCase();
       pages = await this._init.getAllPages(this.state.languages, url);
       this.setState({
