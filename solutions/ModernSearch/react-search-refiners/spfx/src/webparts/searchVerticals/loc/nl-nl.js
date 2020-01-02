@@ -14,7 +14,7 @@ define([], function() {
         Fields: {
           TabName: "Tab naam",
           QueryTemplate: "zoekopdracht template",
-          ResultSource: "Result Source Identifier",
+          ResultSource: "Id van de resultatenbron",
           IconName: "Office UI Fabric icoon naam"
         }
       },

@@ -21,13 +21,16 @@ import { LivePersonaWebComponent } from './components/livepersona';
 import { PersonaCardWebComponent } from './components/personacard';
 import { DocumentCardShimmersWebComponent } from './components/shimmers/DocumentCardShimmers';
 import { PersonaCardShimmersWebComponent } from './components/shimmers/PersonaCardShimmers';
+import { IconWebComponent } from './components/Icon';
 import { IPropertyPaneField } from '@microsoft/sp-property-pane';
 import ResultsLayoutOption from '../../models/ResultsLayoutOption';
 import { ISearchResultsWebPartProps } from '../../webparts/searchResults/ISearchResultsWebPartProps';
 import { IComboBoxOption } from 'office-ui-fabric-react/lib/ComboBox';
-import { IComponentFieldsConfiguration } from './TemplateService';
+import { IComponentFieldsConfiguration, TemplateService } from './TemplateService';
 import { WebPartContext } from '@microsoft/sp-webpart-base';
 import { ThemeProvider, IReadonlyTheme } from '@microsoft/sp-component-base';
+import groupBy from 'handlebars-group-by';
+import { Loader } from './LoadHelper';
 
 abstract class BaseTemplateService {
 
@@ -41,6 +44,7 @@ abstract class BaseTemplateService {
         UserDST: 0
     };
     private DayLightSavings = true;
+    public UseOldSPIcons = false;
 
     constructor(ctx?: WebPartContext) {
 
@@ -61,37 +65,6 @@ abstract class BaseTemplateService {
         var jul = new Date(today.getFullYear(), 6, 1);
         let stdTimeZoneOffset = Math.max(jan.getTimezoneOffset(), jul.getTimezoneOffset());
         return today.getTimezoneOffset() < stdTimeZoneOffset;
-    }
-
-    private async LoadHandlebarsHelpers() {
-        if ((window as any).searchMoment !== undefined) {
-            // early check - seems to never hit(?)
-            return;
-        }
-        let moment = await import(
-            /* webpackChunkName: 'search-handlebars-helpers' */
-            'moment'
-        );
-        if ((window as any).searchMoment !== undefined) {
-            return;
-        }
-        (window as any).searchMoment = moment;
-
-
-        if ((window as any).searchHBHelper !== undefined) {
-            // early check - seems to never hit(?)
-            return;
-        }
-        let component = await import(
-            /* webpackChunkName: 'search-handlebars-helpers' */
-            'handlebars-helpers'
-        );
-        if ((window as any).searchHBHelper !== undefined) {
-            return;
-        }
-        (window as any).searchHBHelper = component({
-            handlebars: Handlebars
-        });
     }
 
     /**
@@ -174,7 +147,7 @@ abstract class BaseTemplateService {
 
         let templates: any = htmlContent.getElementById('template');
         if (templates && templates.innerHTML) {
-            // Need to unescape '&gt;' for handlebars partials 
+            // Need to unescape '&gt;' for handlebars partials
             return templates.innerHTML.replace(/\&gt;/g, '>');
         } else {
             return templateContent;
@@ -191,7 +164,7 @@ abstract class BaseTemplateService {
 
         const placeHolders = htmlContent.getElementById('placeholder');
         if (placeHolders && placeHolders.innerHTML) {
-            // Need to unescape '&gt;' for handlebars partials 
+            // Need to unescape '&gt;' for handlebars partials
             return placeHolders.innerHTML.replace(/\&gt;/g, '>');
         } else {
             return null;
@@ -348,6 +321,9 @@ abstract class BaseTemplateService {
             let ret: string = i[0];
             return ret;
         });
+
+        // Group by a specific property
+        Handlebars.registerHelper(groupBy(Handlebars));
     }
 
     /**
@@ -391,6 +367,10 @@ abstract class BaseTemplateService {
             {
                 name: 'live-persona',
                 class: LivePersonaWebComponent
+            },
+            {
+                name: 'fabric-icon',
+                class: IconWebComponent
             }
         ];
 
@@ -408,7 +388,7 @@ abstract class BaseTemplateService {
             }
         });
 
-        // Register slider component as partial 
+        // Register slider component as partial
         let sliderTemplate = Handlebars.compile(`<slider-component items="{{items}}" options="{{options}}" template="{{@partial-block}}"></slider-component>`);
         Handlebars.registerPartial('slider', sliderTemplate);
 
@@ -417,12 +397,7 @@ abstract class BaseTemplateService {
         Handlebars.registerPartial('livepersona', livePersonaTemplate);
     }
 
-    /**
-     * Compile the specified Handlebars template with the associated context object¸
-     * @returns the compiled HTML template string 
-     */
-    public async processTemplate(templateContext: any, templateContent: string): Promise<string> {
-
+    public async optimizeLoadingForTemplate(templateContent: string): Promise<void> {
         // Process the Handlebars template
         const handlebarFunctionNames = [
             "getDate",
@@ -572,7 +547,8 @@ abstract class BaseTemplateService {
             "urlResolve",
             "urlParse",
             "stripQuerystring",
-            "stripProtocol"
+            "stripProtocol",
+            "group"
         ];
 
         for (let i = 0; i < handlebarFunctionNames.length; i++) {
@@ -580,17 +556,33 @@ abstract class BaseTemplateService {
 
             let regEx = new RegExp("{{#?.*?" + element + ".*?}}", "m");
             if (regEx.test(templateContent)) {
-                await this.LoadHandlebarsHelpers();
+                await Loader.LoadHandlebarsHelpers();
                 break;
             }
         }
 
-        let template = Handlebars.compile(templateContent);
-        let result = template(templateContext);
-        if (result.indexOf("video-preview-item")  !== -1 || result.indexOf("video-card") !== -1) {
-            await this._loadVideoLibrary();
+        this.UseOldSPIcons = templateContent && templateContent.indexOf("{{IconSrc}}") !== -1;
+
+        if (templateContent && templateContent.indexOf("fabric-icon") !== -1) {
+            // load CDN for icons
+            Loader.LoadUIFabricIcons();
         }
 
+        if (templateContent && templateContent.indexOf("video-card") !== -1) {
+            await Loader.LoadVideoLibrary();
+        }
+    }
+
+    /**
+     * Compile the specified Handlebars template with the associated context object¸
+     * @returns the compiled HTML template string
+     */
+    public async processTemplate(templateContext: any, templateContent: string): Promise<string> {
+        let template = Handlebars.compile(templateContent);
+        let result = template(templateContext);
+        if (result.indexOf("video-preview-item") !== -1) {
+            await Loader.LoadVideoLibrary();
+        }
         return result;
     }
 
@@ -637,7 +629,7 @@ abstract class BaseTemplateService {
     }
 
     /**
-     * Builds and registers the result types as Handlebars partials 
+     * Builds and registers the result types as Handlebars partials
      * Based on https://github.com/helpers/handlebars-helpers/ operators
      * @param resultTypes the configured result types from the property pane
      */
@@ -655,7 +647,7 @@ abstract class BaseTemplateService {
 
     /**
      * Builds the Handlebars nested conditions recursively to reflect the result types configuration
-     * @param resultTypes the configured result types from the property pane 
+     * @param resultTypes the configured result types from the property pane
      * @param currentResultType the current processed result type
      * @param currentIdx current index
      */
@@ -689,7 +681,7 @@ abstract class BaseTemplateService {
                 param2 = null;
             }
 
-            const baseCondition = `{{#${operator} ${param1} ${param2 || ""}}} 
+            const baseCondition = `{{#${operator} ${param1} ${param2 || ""}}}
                                         ${templateContent}`;
 
             if (currentIdx === resultTypes.length - 1) {
@@ -699,8 +691,8 @@ abstract class BaseTemplateService {
                 conditionBlockContent = await this._buildCondition(resultTypes, resultTypes[currentIdx + 1], currentIdx + 1);
             }
 
-            return `${baseCondition}   
-                    {{else}} 
+            return `${baseCondition}
+                    {{else}}
                         ${conditionBlockContent}
                     {{/${operator}}}`;
         } else {
@@ -759,18 +751,6 @@ abstract class BaseTemplateService {
                 }
             });
         }));
-    }
-
-    private async _loadVideoLibrary() {
-        // Load Videos-Js on Demand 
-        // Webpack will create a other bundle loaded on demand just for this library
-        if ((window as any).searchVideoJS === undefined) {
-            const videoJs = await import(
-                /* webpackChunkName: 'videos-js' */
-                './video-js'
-            );
-            (window as any).searchVideoJS = videoJs.default.getVideoJs();
-        }
     }
 
     private static _initVideoPreviews() {

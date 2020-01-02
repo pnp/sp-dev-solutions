@@ -171,13 +171,43 @@ Setting | Description
 `{{<search_managed_property_name>}}` | Any valid search managed property returned in the results set. These are typically managed properties set in the *"Selected properties"* setting in the property pane. You don't need to prefix them with `item.` if you are in the "each" loop.
 `{{webUrl}}` | The current web relative url. Use `{{@root/webUrl}}` inside a loop.
 `{{siteUrl}}` | The current site relative url. Use `{{@root/siteUrl}}` inside a loop.
+`{{spellingSuggestion}}` | Spelling suggestions returned for the query to be used for "Did you mean" functionality.
 `{{getUniqueCount items "property"}}` | Get the unique count of a property over the result set (or another array)
 `{{getUniqueCount array}}` | Get the unique count of objects in an array. Example: [1,1,1,2,2,4] would return `3`.
 `{{getUnique items "NewsCategory"}}` | Return the unique values as a new array based on an array or property of an object in the array.
 `{{regex <exp> <string> }}` | Match a regular expression against a string.
 `{{#times 10}}<span>{{this}}</span>{{/times}}` | Iterate X times over a block
+`{{#group items by="owstaxidmetadataalltagsinfo"}}` | Group items by a specific results property. See [https://github.com/shannonmoeller/handlebars-group-by](https://github.com/shannonmoeller/handlebars-group-by) for usage.
 
 You can also define your own in the *BaseTemplateService.ts* file. See [helper-moment](https://github.com/helpers/helper-moment) for date samples using moment.
+
+### Web-components
+
+The web part has a couple of helper web-components to ease rendering, used by the default templates. You may also use these in your custom templates. Pick one of the default templates, then click on customize to see how they are used.
+
+- document-card
+- document-card-shimmers
+- details-list
+- video-card
+- debug-view
+- slider-component
+- persona-card
+- persona-card-shimmers
+- fabric-icon - You only need to set one property, which are evaluated in order if multiple ones are set.
+   ```handlebars
+   <fabric-icon
+    image-url='[url to icon - pri 1]'
+    file-extension='[file extension - pri 2]'
+    icon-name='[office ui fabric icon name - pri 3]'
+    size='16 | 20 | 32 (default) | 40 | 48 | 64 | 96'
+    >
+    </fabric-icon>
+    ```
+
+fileExtension?: string;
+    iconName?: string;
+    size?: FileTypeIconSize;
+    imageUrl?: string;
 
 ### Use result types
 

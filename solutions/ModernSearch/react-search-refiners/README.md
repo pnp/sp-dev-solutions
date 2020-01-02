@@ -1,6 +1,8 @@
 # SharePoint Framework modern search Web Parts
 
-![Version](https://img.shields.io/badge/version-3.6.0-green.svg)
+## This repo has moved to https://github.com/microsoft-search/pnp-modern-search
+
+![Version](https://img.shields.io/badge/version-3.7.0-green.svg)
 
 ## Download
 **Get the latest release at our [releases page](https://github.com/SharePoint/sp-dev-solutions/releases/latest).**
@@ -58,7 +60,7 @@ Search Query Enhancer | Sample Azure function to demonstrate the use of Microsof
 
 Solution| Contributors(s)
 --------|---------
-ModernSearch | Franck Cornu - [@FranckCornu](http://www.twitter.com/FranckCornu)<br/>Tarald Gåsbakk - [@taraldgasbakk](https://twitter.com/Taraldgasbakk)<br/>Yannick Reekmans - [@yannickreekmans](https://twitter.com/yannickreekmans)<br/>Mikael Svenson - [@mikaelsvenson](http://www.twitter.com/mikaelsvenson)<br/>Albert-Jan Schot - [@appieschot](https://twitter.com/appieschot)
+ModernSearch | Franck Cornu - [@FranckCornu](http://www.twitter.com/FranckCornu)<br/>Tarald Gåsbakk - [@taraldgasbakk](https://twitter.com/Taraldgasbakk)<br/>Yannick Reekmans - [@yannickreekmans](https://twitter.com/yannickreekmans)<br/>Mikael Svenson - [@mikaelsvenson](http://www.twitter.com/mikaelsvenson)<br/>Albert-Jan Schot - [@appieschot](https://twitter.com/appieschot)<br />Brad Schlintz - [@bschlintz](https://twitter.com/bschlintz)
 
 
 ## Web Parts Configuration
@@ -123,7 +125,8 @@ Sort order | The initial search results sort order, where you can use one or mul
 Sortable fields | The search managed properties to use for sorting. With SharePoint Online, you have to reuse the default ones to do so (RefinableStringXX etc.). The order is the same as they will appear in the sort panel. You can also provide your own custom labels using the following format RefinableString01:"You custom filter label",RefinableString02:"You custom filter label",... If no sortable fields are provided, the 'Sort' button will not be visible.
 Connect to a search refiners Web Part | If enable, select the search refiners Web Part to use on the current page to get selected filters. It is a 2 ways connection so don't forget to connect the targeted search refiners to the search results Web Part as well.
 Connect to a search verticals Web Part | If enable, select the search verticals Web Part to connect to.
-Enable Query Rules | Enable the query rules if applies. Turn this options  'on' to display your SharePoint Promoted results (links only).
+Enable Query Rules | Enable the query rules if applies. Turn this options  'on' to display your SharePoint Promoted results (links only) and make result blocks available to custom renderers.
+Include OneDrive results | Include OneDrive results if applicable. Turn this option 'on' to make users' personal OneDrive results available to custom renderers. Read more [here](https://docs.microsoft.com/en-us/sharepoint/support/search/private-onedrive-results-not-included).
 Selected properties | The search managed properties to retrieve. You can select them from a predefined list or add them as free text if not listed. Then, these properties are available in your Handlebars template with the syntax (`item.property_name` or `property_name` inside the `{{#each}}` loop).
 Number of items to retrieve per page | Quite explicit. The paging behavior is done directly by the search API (See the *SearchDataProvider.ts* file), not by the code on post-render.
 
@@ -207,6 +210,7 @@ The following custom query variables are supported:
 |{CurrentDate}  <br/> | Today's date, 1-31 <br/> |
 |{QueryString.&lt;ParameterName&gt;} <br/> | A value from a query string in the URL of the current page. For example, if the URL of the current page contains a query string such as ItemNumber=567, you could obtain the value 567 by specifying {QueryString.ItemNumber}. <br/> |
 |{PageContext.&lt;ParameterName&gt;} <br/> | A value from the legacyPageContext object on the page. For example, if the legacyPageContext object of the current page contains a property "hubSiteId": "166aa115-7ae7-4c21-9e02-9e0c8872be28", you could obtain the value 166aa115-7ae7-4c21-9e02-9e0c8872be28 by specifying {PageContext.hubSiteId}. The property name is case sensitive!<br/> |
+|{TenantUrl}  <br/> |URL of the tenant (root site)<br/> |
 
 #### Best bets
 
@@ -343,6 +347,7 @@ Version|Date|Comments
 3.5.0.0 | July 8th, 2019 | Fixes: Taxonomy tags, web part header, theme colors, search box clearing, loading of handlebars helpers. Added Spanish locale. Optimized CSS references (may break in custom templates if you used some of the OUIF styles). Optimized bundle size for run-time. Added more options for time zone handling with `getDate`.
 3.6.2.0 | Aug 13th, 2019 | <ul><li>Does not work with IE11 (looking into it)</li><li>Removed the deprecated 'office-ui-fabric' module and updated layouts with the Office UI React components by wrapping them with web components.</li><li>Added a DetailsList and Debug layouts + template options for 'Tiles' (placeholders fileds, etc.) and 'Details List' (column builder, etc.).</li><li>Updated property pane fields (Search Results and Refiners WP) to use a dynamic search managed properties list instead of text values.</li><li>Added `regEx` and `getUnique` helpers.</li><li>Added Dutch translation.</li></ul>
 3.6.3.0 | Aug 14th, 2019 | Now works in IE11, just ignore the errors :)
+3.7.0.0 | Oct 30th, 2019 | <ul><li>Allow selecting between URL Fragment or QueryString parameter.</li><li>Refiner flashing fix.</li><li>Fixed Page token handling.</li><li>Added more handlebar helper methods.</li><li>Removed default path filter on the webpart.</li><li>Added sorting option for refiners.</li><li>Better default icon handling and support for using [OUIFR icons](https://developer.microsoft.com/en-us/fabric#/styles/web/icons) in your templates. See [TEMPLATING.md documentation](./docs/TEMPLATING.md#Web-components) for more information.</li><li>Added support for rendering secondary result blocks in custom renderers.</li><li>Added toggle to include OneDrive results as a secondary result block (not currently visible without custom renderer).</li><li>Allow custom renderers to render even if there are zero search results to display.</li><li>Added fixed date refiner template.</li><li>Fix for using custom code renderer.</li><li>Upgraded to SPFx v1.9.1.</li><li>Added preview support for 'spellingSuggestion' token.</li></ul>
 
 ## Important notice on upgrading the solution from pre v2.2.0.0
 **Due to code restructuring we have hit an edge case which impacts upgrades from previous versions. To solve the issue go to `https://<tenant>.sharepoint.com/sites/<appcatalog>/Lists/ComponentManifests` and remove the entries for SearchBox and Search Results, and then upload the .sppkg for the new release.**

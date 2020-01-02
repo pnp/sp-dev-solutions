@@ -4,6 +4,8 @@ export interface ISearchResults {
     RelevantResults: ISearchResult[];
     RefinementResults: IRefinementResult[];
     PromotedResults?: IPromotedResult[];
+    SecondaryResults?: ISearchResultBlock[];
+    SpellingSuggestion?: string;
 }
 
 export interface IPaginationInformation {
@@ -20,6 +22,7 @@ export interface ISearchVerticalInformation {
 export interface ISearchResult {
     [key: string]: string;
     IconSrc?: string;
+    IconExt?: string;
 }
 
 export interface IRefinementResult {
@@ -38,7 +41,7 @@ export interface IRefinementValue {
     RefinementName: string;
     RefinementToken: string;
     RefinementValue: string;
-} 
+}
 
 export interface IRefinementFilter {
     FilterName: string;
@@ -49,4 +52,9 @@ export interface IRefinementFilter {
 export enum RefinementOperator {
     OR = 'or',
     AND = 'and'
+}
+
+export interface ISearchResultBlock {
+  Title: string;
+  Results: ISearchResult[];
 }

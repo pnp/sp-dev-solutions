@@ -121,9 +121,19 @@
         }
     }
     
-    // Legacy CSS for backward compatibility, now replaced by Office UI Fabric controls
     .template_defaultCard {
+        .document-card-container {
+            display: flex;
+            flex-flow: row wrap;
+            justify-content: left;
+        }
 
+        .document-card-item {
+            margin-right: 15px;
+            flex: 0 0 345px;
+        }
+
+        // Legacy CSS for backward compatibility, now replaced by Office UI Fabric controls
         .singleCard {
             margin: 10px;
             border: 1px solid #eaeaea;

@@ -14,6 +14,7 @@ export interface ISearchResultsWebPartProps {
     resultSourceId: string;
     sortList: ISortFieldConfiguration[];
     enableQueryRules: boolean;
+    includeOneDriveResults: boolean;
     maxResultsCount: number;
     selectedProperties: string;
     sortableFields: ISortableFieldConfiguration[];

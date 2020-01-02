@@ -28,10 +28,10 @@ export default class SearchBoxContainer extends React.Component<ISearchBoxContai
       proposedQuerySuggestions: [],
       selectedQuerySuggestions: [],
       isRetrievingSuggestions: false,
-      searchInputValue: '',
+      searchInputValue: (props.inputValue) ? decodeURIComponent(props.inputValue) : '',
       termToSuggestFrom: null,
       errorMessage: null,
-      showClearButton: false,
+      showClearButton: !!props.inputValue
     };
 
     this._onSearch = this._onSearch.bind(this);
@@ -45,7 +45,7 @@ export default class SearchBoxContainer extends React.Component<ISearchBoxContai
       clearButton = <IconButton iconProps={{
                         iconName: 'Clear',
                         iconType: IconType.default,
-                      }} onClick= {() => { this._onSearch(this.props.inputValue, true); } } className={ styles.clearBtn }>
+                      }} onClick= {() => { this._onSearch('', true); } } className={ styles.clearBtn }>
                     </IconButton>;
     }
 
@@ -74,7 +74,7 @@ export default class SearchBoxContainer extends React.Component<ISearchBoxContai
                       }
                       else if (event.keyCode === 27) {
                         // Clear search on "Escape" 
-                        this._onSearch(this.props.inputValue, true);
+                        this._onSearch('', true);
                       }
                     }
 
@@ -125,7 +125,7 @@ export default class SearchBoxContainer extends React.Component<ISearchBoxContai
       clearButton = <IconButton iconProps={{
                         iconName: 'Clear',
                         iconType: IconType.default,
-                      }} onClick= {() => { this._onSearch(this.props.inputValue, true); } } className={ styles.clearBtn }>
+                      }} onClick= {() => { this._onSearch('', true); } } className={ styles.clearBtn }>
                     </IconButton>;
     }
 
@@ -148,7 +148,7 @@ export default class SearchBoxContainer extends React.Component<ISearchBoxContai
                     }
                     else if (event.keyCode === 27) {
                       // Clear search on "Escape" 
-                      this._onSearch(this.props.inputValue, true);
+                      this._onSearch('', true);
                     }
 
                 }}
@@ -213,14 +213,6 @@ export default class SearchBoxContainer extends React.Component<ISearchBoxContai
     }
 
     return renderSuggestions;
-  }
-
-  private _setInputValue(inputValue: string) {
-    if (inputValue) {
-      this.setState({
-        searchInputValue: decodeURIComponent(inputValue),
-      });
-    }
   }
 
   /**
@@ -296,7 +288,7 @@ export default class SearchBoxContainer extends React.Component<ISearchBoxContai
     });     
   }
 
-  private _replaceAt(string, index, replace) {
+  private _replaceAt(string: string, index: number, replace: string) {
     return string.substring(0, index) + replace;
   }
 
@@ -363,12 +355,10 @@ export default class SearchBoxContainer extends React.Component<ISearchBoxContai
     }
   }
 
-  public componentDidMount() {
-    this._setInputValue(this.props.inputValue);
-  }
-
-  public componentWillReceiveProps(nextProps: ISearchBoxContainerProps) {
-    this._setInputValue(nextProps.inputValue);
+  public UNSAFE_componentWillReceiveProps(nextProps: ISearchBoxContainerProps) {
+    this.setState({
+      searchInputValue: decodeURIComponent(nextProps.inputValue),
+    });
   }
 
   public render(): React.ReactElement<ISearchBoxContainerProps> {

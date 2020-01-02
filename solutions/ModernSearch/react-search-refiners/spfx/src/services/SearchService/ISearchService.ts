@@ -8,7 +8,7 @@ interface ISearchService extends ISearchServiceConfiguration {
      * Perfoms a search query.
      * @returns ISearchResults object. Use the 'RelevantResults' property to acces results proeprties (returned as key/value pair object => item.[<Managed property name>])
      */
-    search(kqlQuery: string, pageNumber?: number): Promise<ISearchResults>;
+    search(kqlQuery: string, pageNumber?: number, useOldSPIcons?: boolean): Promise<ISearchResults>;
 
     /**
      * Retrieves search query suggestions

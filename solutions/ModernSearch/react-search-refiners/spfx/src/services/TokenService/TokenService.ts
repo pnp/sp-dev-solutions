@@ -3,7 +3,6 @@ import { Text, Log } from "@microsoft/sp-core-library";
 import { ITokenService } from ".";
 import { UrlQueryParameterCollection } from '@microsoft/sp-core-library';
 import { PageContext } from "@microsoft/sp-page-context";
-import { Guid } from '@microsoft/sp-core-library';
 
 const LOG_SOURCE: string = '[SearchResultsWebPart_{0}]';
 
@@ -22,6 +21,8 @@ export class TokenService implements ITokenService {
         queryTemplate = this.replaceQueryStringTokens(queryTemplate);
         queryTemplate = this.replaceHubSiteTokens(queryTemplate);
 
+        queryTemplate = queryTemplate.replace("{TenantUrl}", `https://` + window.location.host);
+
         return queryTemplate;
     }
 
@@ -38,7 +39,7 @@ export class TokenService implements ITokenService {
                 if (response.ok) {
                     let result = await response.json();
                     let itemRow = JSON.parse(result.value);
-                    item = Object.keys(itemRow.Data.Row[0]).reduce((c, k) => (c[k.toLowerCase()] = itemRow.Data.Row[0][k], c), {});   
+                    item = Object.keys(itemRow.Data.Row[0]).reduce((c, k) => (c[k.toLowerCase()] = itemRow.Data.Row[0][k], c), {});
                 }
                 else {
                     throw response.statusText;
@@ -50,18 +51,19 @@ export class TokenService implements ITokenService {
             while (match !== null && item != null) {
                 // matched variable
                 let pageProp = match[1];
-                let itemProp: string;
+                let itemProp: string = "";
                 if (pageProp.indexOf(".Label") !== -1 || pageProp.indexOf(".TermID") !== -1) {
                     let term = pageProp.split(".");
+                    let columnName = term[0].toLowerCase();
                     // Handle multi or single values
-                    if (item[term[0]].length > 0) {
-                        itemProp = item[term[0]].map(e => { return e[term[1]]; }).join(',');
+                    if (Array.isArray(item[columnName]) && item[columnName].length > 0) {
+                        itemProp = item[columnName].map(e => { return e[term[1]]; }).join(',');
                     }
-                    else {
-                        itemProp = item[term[0]][term[1]];
+                    else if (!Array.isArray(item[columnName]) && item[columnName] !== undefined && item[columnName] !== "") {
+                        itemProp = item[columnName][term[1]];
                     }
                 }
-                else {
+                else if (item[pageProp.toLowerCase()] !== undefined) {
                     itemProp = item[pageProp.toLowerCase()];
                 }
                 if (itemProp && itemProp.indexOf(' ') !== -1) {
@@ -90,8 +92,7 @@ export class TokenService implements ITokenService {
         const queryStringVariables = /\{(?:QueryString)\.(.*?)\}/gi;
         let reQueryTemplate = queryTemplate;
         let match = queryStringVariables.exec(reQueryTemplate);
-        if (match != null)
-        {
+        if (match != null) {
             var queryParameters = new UrlQueryParameterCollection(window.location.href);
             while (match !== null) {
                 let qsProp = match[1];
@@ -107,8 +108,7 @@ export class TokenService implements ITokenService {
         const queryStringVariables = /\{(?:PageContext)\.(.*?)\}/gi;
         let reQueryTemplate = queryTemplate;
         let match = queryStringVariables.exec(reQueryTemplate);
-        if (match != null)
-        {
+        if (match != null) {
             while (match !== null) {
                 let pageContextProp = match[1];
                 queryTemplate = queryTemplate.replace(match[0], this._pageContext.legacyPageContext[pageContextProp] || '');

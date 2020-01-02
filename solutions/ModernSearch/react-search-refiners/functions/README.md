@@ -35,32 +35,32 @@ This sample demonstrates the following principles:
 
 | Setting | Description
 | ------- | ---------
-LUIS_SubscriptionKey | The key value for LUIS retrieved from the Azure portal
-LUIS_AzureRegion | Azure region where you created the LUIS key 
-Bing_SpellCheckApiKey | The Bing Spell Check API key retrieved from the Azure portal
-TextAnalytics_SubscriptionKey | The key value for Text Analytics Service retrieved from the Azure portal 
-TextAnalytics_AzureRegion | Azure region where you created the Text Analytics key
+**LUIS_SubscriptionKey** | The key value for LUIS retrieved from the Azure portal.
+**LUIS_AzureRegion** | Azure region where you created the LUIS key. Ex: '_westus_'.
+**Bing_SpellCheckApiKey** | The Bing Spell Check API key retrieved from the Azure portal.
+**TextAnalytics_SubscriptionKey** | The key value for Text Analytics Service retrieved from the Azure portal 
+**TextAnalytics_AzureRegion** | Azure region where you created the Text Analytics key. Ex: '_westus_'.
 
 - Add keys to your LUIS applications
 
 <p align="center"><img width="500px" src="../images/luis_key_manage.png"/><p>
 
 - Train and publish the LUIS applications
-- Fill LUIS app ids in the `luismappings.json` according to your environment
+- Fill LUIS app IDs in the `luismappings.json` file in the `functions/enhanceQuery/config/` folder according to your environment.
 - Play with the function!
 
 ### Intents
 
 | Intent | Description
 | ------ | -----------
-| PnP.SearchByKeywords | The default intent for the search query. Used to improve free text searches for SharePoint (90% of users queries in the portal).
+| **PnP.SearchByKeywords** | The default intent for the search query. Used to improve free text searches for SharePoint (90% of users queries in the portal).
 | None | Needed to avoid unrelevant query such as noise words, trolling or insulting words
 
 ### Entities
 
 | Entity | Type | Description | Recognition method |
 | ------ | ---- | ----------- | ------------ |
-| [keyPhrase](https://docs.microsoft.com/en-us/azure/cognitive-services/luis/luis-quickstart-intent-and-key-phrase) | Builtin | This prebuilt enity catches important keywords in the phrase. In this case, we treat these values as a "free" keyword which will be matched with all relevant SharePoint search managed properties. | Machine Learning
+| **[keyPhrase](https://docs.microsoft.com/en-us/azure/cognitive-services/luis/luis-quickstart-intent-and-key-phrase)** | Builtin | This prebuilt enity catches important keywords in the phrase. In this case, we treat these values as a "free" keyword which will be matched with all relevant SharePoint search managed properties. | Machine Learning
 
 ## How to debug this function locally ? ##
 
@@ -69,13 +69,16 @@ TextAnalytics_AzureRegion | Azure region where you created the Text Analytics ke
 - In VSCode, open the root folder `./functions`.
 - Install all dependencies using `npm i`.
 - Install [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli-windows?view=azure-cli-latest) on youre machine.
-- Install Azure Function Core tools globaly using `npm install -g azure-functions-core-tools@2` (version 2).
+- Install Azure Function Core tools globaly using `npm i -g azure-functions-core-tools@2.7.1149` (version 2).
 - In a Node.js console, build the solution using `npm run build:dev` cmd. For production use, execute `npm run build` (minified version of the JS code).
-- In a Node.js console, from the `pnp-query-enhancer/dist` folder, run the following command `func start`.
+- In a Node.js console, from the `functions/dist` folder, run the following command `func start`.
 - In VSCode, launch the *'Debug Local Azure Function'* debug configuration
 - Set breakpoints directly in your **'.ts'** files
-- Send your requests either using Postman with the localhost address according to your settings (i.e. `http://localhost:7071/api/enhanceQuery`) or directly in the 'Search Box Webpart' via the 'Service URL' parameter.
-- Enjoy ;)
+- Send your requests either using Postman with the localhost address according to your settings (i.e. `http://localhost:7071/api/enhanceQuery`) or directly in the 'Search Box Webpart' via the 'Service URL' parameter. For the last scenario  you can use `npm i -g ngrok` to redirect calls to your localhost function using the following command `ngrok http 7071`.
+
+<p align="center"><img width="100%" src="../images/ngrok.png"/><p>
+
+<p align="center"><img width="50%" src="../images/search_box_luis.png"/><p>
 
 ### Azure Function Proxy configuration ###
 
@@ -101,9 +104,22 @@ A `deploy.ps1` script is available to also deploy this function into your Azure 
 - Set the `Azure_Function_Name` value in the `local.settings.json` accordingly.
 - Login to Azure using `az login` then run `deploy.ps1` script with your parameters.
 
+OR
+
+- If you use Azure DevOps, you can simply use the default build template and release task for Azure Functions ommiting this script.
+
+_Build template_
+
+<p align="center"><img width="70%" src="../images/function_devops_build.png"/><p>
+
+_Release task_
+
+<p align="center"><img width="70%" src="../images/function_devops.png"/><p>
+
+
 ***In both scenarios, you can test your function using Postman. If you test it using a SPFx component, don't forget to add the SharePoint domain to the CORS settings to allow this origin:***
 
-<p align="center"><img width="500px" src="../images/cors_settings.png"/><p>
+<p align="center"><img width="50%" src="../images/cors_settings.png"/><p>
 
 
 
