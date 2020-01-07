@@ -5,7 +5,7 @@ import { Logger, LogLevel } from "@pnp/logging";
 import "@pnp/polyfill-ie11";
 import styles from './MultilingualExtension.module.scss';
 import { ILanguage, IPageProperties, ITranslation, Translation, IMap, IRoute, Route } from '../../../common/models/Models';
-import { IconButton, DefaultButton } from 'office-ui-fabric-react/lib/Button';
+import { IconButton, PrimaryButton } from 'office-ui-fabric-react/lib/Button';
 import { Label } from 'office-ui-fabric-react/lib/Label';
 import { Toggle } from 'office-ui-fabric-react/lib/Toggle';
 import { sp, ItemUpdateResult, EmailProperties } from '@pnp/sp';
@@ -515,7 +515,7 @@ export class MultilingualPanel extends React.Component<IMultilingualPanelProps, 
               {this.state.workingApply &&
                 <Spinner className={styles.spinner} size={SpinnerSize.large} />
               }
-              <DefaultButton
+              <PrimaryButton
                 text="Apply Language Changes"
                 primary={true}
                 disabled={(((this.props.currentPage.MasterTranslationPage === "") && !this.state.hasChanged) || this.state.pageNotMaster)}
