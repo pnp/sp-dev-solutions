@@ -72,7 +72,7 @@ export class MultilingualButton extends React.Component<IMultilingualButtonProps
   }
 
   private init(): void {
-    if(this.props.rootFolder) {return;}
+    if (this.props.rootFolder) { return; }
     let pageLanguages: IPageVariants[] = [];
     let pageLanguagesOptions: ILanguageSelectOption[] = [];
     let defaultOption: string = "";
@@ -93,7 +93,7 @@ export class MultilingualButton extends React.Component<IMultilingualButtonProps
           let variants = this.props.currentPage.LanguageVariant.join(", ");
           if (variants.lastIndexOf(",") > -1)
             variants = variants.slice(0, variants.lastIndexOf(","));
-          pageLanguages.push({ variant: variants, url: this.props.currentPage.Url });          
+          pageLanguages.push({ variant: variants, url: this.props.currentPage.Url });
           let language = lodash.find(this.props.languages, { code: this.props.currentPage.LanguageFolder });
           pageLanguagesOptions.push({ key: this.props.currentPage.LanguageFolder, text: language.description, selected: true, master: false });
           defaultOption = variants;
@@ -204,7 +204,7 @@ export class MultilingualButton extends React.Component<IMultilingualButtonProps
           />
         }
         {!this.props.rootFolder && this.props.editMode &&
-          <DefaultButton className={styles.languageButton}
+          <PrimaryButton className={styles.languageButton}
             primary={true}
             text={this.state.buttonLabel}
             onClick={this.props.setShowPanel}
