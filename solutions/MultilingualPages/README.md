@@ -132,6 +132,7 @@ MultilingualPages | Dave Feldman (Takeda) - [@bostonmusicdave](https://twitter.c
 
 Version|Date|Comments
 -------|----|--------
+2.0.1|Jan 7, 2020|Bug fix for button color issue created by Office Fabric React, Performance improvement to provisioning step.
 2.0.0|Jan 2, 2020|Update to SPFx 1.9.1, Fix edit permission bug, Fix for 'Site Pages' reference for non-english sites #207 and part/all of #175
 1.6.7|Sept 9, 2019|Further refinement of App Customizer bootstrap code.
 1.6.6|Aug 29, 2019|Handle 403 for getUserEffectivePermissions.
