@@ -2,15 +2,17 @@ import * as React from 'react';
 import * as ReactDom from 'react-dom';
 import { Version } from '@microsoft/sp-core-library';
 import {
-  BaseClientSideWebPart,
-  IPropertyPaneConfiguration,
-  PropertyPaneTextField,
-  PropertyPaneButton,
-  PropertyPaneButtonType,
-  PropertyPaneLabel,
-  PropertyPaneDropdown,
-  PropertyPaneToggle
+  BaseClientSideWebPart
 } from '@microsoft/sp-webpart-base';
+import { 
+    IPropertyPaneConfiguration, 
+    PropertyPaneButtonType, 
+    PropertyPaneButton, 
+    PropertyPaneDropdown, 
+    PropertyPaneLabel, 
+    PropertyPaneTextField, 
+    PropertyPaneToggle 
+} from "@microsoft/sp-property-pane";
 
 import * as strings from 'LeadsWebPartStrings';
 import { Leads, ILeadsProps } from './components/Leads';
