@@ -1,3 +1,13 @@
+---
+page_type: sample
+products:
+- office-sp
+languages:
+- typescript
+extensions:
+  contentType: samples
+  createdDate: 6/13/2017 12:47:19 PM
+---
 ![SharePoint Patterns and Practices](https://devofficecdn.azureedge.net/media/Default/PnP/sppnp.png)
 
 # SharePoint Patterns and Practices Community Solutions
