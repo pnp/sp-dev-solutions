@@ -1,0 +1,15 @@
+page_type: sample
+products:
+  - office-sp
+languages:
+  - javascript
+  - typescript
+extensions:
+  contentType: tools
+  technologies:
+    - SharePoint Framework
+  platforms:
+    - react
+  createdDate: '10/1/2017 12:00:00 AM'
+title: Change Request web parts (ChangeRequests)
+description: The Change Request management web parts provide a simple tracking tool for change requests for your team. A change request could serve as the foundation for a wide range of processes, from website issue tracking to equipment repair and beyond.
