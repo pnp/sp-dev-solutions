@@ -3,7 +3,7 @@
   "solution": {
     "name": "Multilingual Page Management",
     "id": "07280005-a4b4-4d18-9154-4d7290d40f99",
-    "version": "2.0.1.0",
+    "version": "2.0.1.11",
     "includeClientSideAssets": true,
     "isDomainIsolated": false,
     "features": [

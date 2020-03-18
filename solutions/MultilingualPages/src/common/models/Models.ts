@@ -118,3 +118,8 @@ export interface ILanguageSelectOption{
   selected: boolean;
   master: boolean;
 }
+
+export interface IPagePromotedState {
+  PromotedState: string;
+  FirstPublishedDate: string;
+}
