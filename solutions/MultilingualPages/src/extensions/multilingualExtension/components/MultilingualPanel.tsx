@@ -467,10 +467,10 @@ export class MultilingualPanel extends React.Component<IMultilingualPanelProps, 
             let sourceUrl = this.props.currentPage.Url.replace(/'/g, "''");
             let destUrl = this.props.variantPages[i].Url.replace(/'/g, "''");
             let pageState:IPagePromotedState = await this.getPromotedState(destUrl);
-           // await sp.web.getFileByServerRelativeUrl(sourceUrl).copyTo(destUrl, true);
-            let fileBuffer = await sp.web.getFileByServerRelativeUrl(sourceUrl).getBuffer();
-            let folderUrl = destUrl.substr(0, destUrl.lastIndexOf("/"));
-            await sp.web.getFolderByServerRelativeUrl(folderUrl).files.add(this.props.currentPage.FileLeafRef, fileBuffer, true);
+            await sp.web.getFileByServerRelativeUrl(sourceUrl).copyTo(destUrl, true);
+           // let fileBuffer = await sp.web.getFileByServerRelativeUrl(sourceUrl).getBuffer();
+           // let folderUrl = destUrl.substr(0, destUrl.lastIndexOf("/"));
+           // await sp.web.getFolderByServerRelativeUrl(folderUrl).files.add(this.props.currentPage.FileLeafRef, fileBuffer, true);
             let copyToResultId = await this.getFileItemId(destUrl);
             if (pageState) {
               await this.setPromotedState(destUrl, pageState);
