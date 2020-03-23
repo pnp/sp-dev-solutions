@@ -13,6 +13,8 @@ import styles from './Vertical.module.scss';
 import * as strings from 'SearchRefinersWebPartStrings';
 import TemplateRenderer from '../../Templates/TemplateRenderer';
 import { isEqual } from '@microsoft/sp-lodash-subset';
+import { IRefinerGroup } from '../../../../../models/IRefinerGroup'
+import { TextField } from 'office-ui-fabric-react';
 
 export default class Vertical extends React.Component<IFilterLayoutProps, IVerticalState> {
 
@@ -29,6 +31,7 @@ export default class Vertical extends React.Component<IFilterLayoutProps, IVerti
         this._removeAllFilters = this._removeAllFilters.bind(this);
         this._onRenderHeader = this._onRenderHeader.bind(this);
         this._onRenderCell = this._onRenderCell.bind(this);
+        this._onValueFilterChange = this._onValueFilterChange.bind(this);
     }
 
     public render(): React.ReactElement<IFilterLayoutProps> {
@@ -68,8 +71,7 @@ export default class Vertical extends React.Component<IFilterLayoutProps, IVerti
         this._initItems(this.props);
     }
 
-    public UNSAFE_componentWillReceiveProps(nextProps: IFilterLayoutProps) {      
-        
+    public UNSAFE_componentWillReceiveProps(nextProps: IFilterLayoutProps) {
         let shouldReset = false;
 
         if (!isEqual(this.props.refinersConfiguration, nextProps.refinersConfiguration)) {
@@ -92,23 +94,43 @@ export default class Vertical extends React.Component<IFilterLayoutProps, IVerti
     }
 
     private _onRenderHeader(props: IGroupDividerProps): JSX.Element {
+        let currentGroup = props.group as IRefinerGroup;
 
         return (
             <div className={styles.verticalLayout__filterPanel__body__group__header}
                 style={props.groupIndex > 0 ? { marginTop: '10px' } : undefined}
                 onClick={() => {
-                    props.onToggleCollapse(props.group);
+                    props.onToggleCollapse(currentGroup);
                 }}>
                 <div className={styles.verticalLayout__filterPanel__body__headerIcon}>
-                    <i className={props.group.isCollapsed ? 'ms-Icon ms-Icon--ChevronDown' : 'ms-Icon ms-Icon--ChevronUp'}></i>
+                    <i className={currentGroup.isCollapsed ? 'ms-Icon ms-Icon--ChevronDown' : 'ms-Icon ms-Icon--ChevronUp'}></i>
                 </div>
-                <div className='ms-font-l'>{props.group.name}</div>
+                <div className='ms-font-l'>
+                    <div>{currentGroup.name}</div>
+                    {(currentGroup.showValueFilter && !currentGroup.isCollapsed) &&
+                    <div className={styles.verticalLayout__filterPanel__body__group__valueFilter}>
+                        <TextField value={currentGroup.valueFilter} onChange={(event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,newValue?: string) => { this._onValueFilterChange(currentGroup.key,newValue) }} onClick={this._onValueFilterClick} />
+                    </div>
+                    }
+                </div>
             </div>
         );
     }
 
     private _removeAllFilters() {
         this.props.onRemoveAllFilters();
+    }
+
+    private _onValueFilterChange(groupKey: string,newValue: string) {
+        let filterName = this.state.items[groupKey] && this.state.items[groupKey].props  && this.state.items[groupKey].props.refinementResult && this.state.items[groupKey].props.refinementResult.FilterName;
+        if(filterName) {
+            this.props.onGroupFilterUpdated(filterName,newValue);
+        }
+    }
+
+    private _onValueFilterClick(event: React.MouseEvent<HTMLInputElement | HTMLTextAreaElement, MouseEvent>) {
+        //Prevent the group to be collapsed
+        event.stopPropagation();
     }
 
     /***
@@ -126,8 +148,10 @@ export default class Vertical extends React.Component<IFilterLayoutProps, IVerti
             const configuredFilters = props.refinersConfiguration.filter(e => { return e.refinerName === refinementResult.FilterName;});
             groupName = configuredFilters.length > 0 && configuredFilters[0].displayValue ? configuredFilters[0].displayValue : groupName;
             let isCollapsed = true;
+            let showValueFilter = false;
+            let valueFilter = "";
 
-            const existingGroups = this.state.groups.filter(g => { return g.name === groupName;});
+            const existingGroups = this.state.groups.filter(g => { return g.name === groupName;}) as IRefinerGroup[];
 
             if (existingGroups.length > 0 && !shouldResetCollapse) {
                 isCollapsed = existingGroups[0].isCollapsed;
@@ -135,12 +159,22 @@ export default class Vertical extends React.Component<IFilterLayoutProps, IVerti
                 isCollapsed = configuredFilters.length > 0 && configuredFilters[0].showExpanded ? !configuredFilters[0].showExpanded : true;
             }
 
-            let group: IGroup = {
+            if(existingGroups.length > 0) {
+                showValueFilter = existingGroups[0].showValueFilter;
+                valueFilter = existingGroups[0].valueFilter
+            } else {
+                showValueFilter = configuredFilters.length > 0 && configuredFilters[0].showValueFilter ? configuredFilters[0].showValueFilter : false;
+                valueFilter = configuredFilters.length > 0 && configuredFilters[0].valueFilter ? configuredFilters[0].valueFilter : "";
+            }
+
+            let group: IRefinerGroup = {
                 key: i.toString(),
                 name: groupName,
                 count: 1,
                 startIndex: i,
-                isCollapsed: isCollapsed
+                isCollapsed: isCollapsed,
+                showValueFilter: configuredFilters[0].showValueFilter,
+                valueFilter: configuredFilters[0].valueFilter
             };
 
             groups.push(group);

@@ -281,6 +281,11 @@ export default class SearchRefinersWebPart extends BaseClientSideWebPart<ISearch
                         id: 'showExpanded',
                         title: strings.Refiners.ShowExpanded,
                         type: CustomCollectionFieldType.boolean
+                    },
+                    {
+                        id: 'showValueFilter',
+                        title: strings.Refiners.showValueFilter,
+                        type: CustomCollectionFieldType.boolean
                     }
                 ]
             }),
@@ -422,7 +427,9 @@ export default class SearchRefinersWebPart extends BaseClientSideWebPart<ISearch
                     template: RefinerTemplateOption.CheckBox,
                     refinerSortType: RefinersSortOption.Default,
                     refinerSortDirection: RefinersSortDirection.Ascending,
-                    showExpanded: false
+                    showExpanded: false,
+                    showValueFilter: false,
+                    valueFilter: ""
                 },
                 {
                     refinerName: "Size",
@@ -430,7 +437,9 @@ export default class SearchRefinersWebPart extends BaseClientSideWebPart<ISearch
                     template: RefinerTemplateOption.CheckBox,
                     refinerSortType: RefinersSortOption.ByNumberOfResults,
                     refinerSortDirection: RefinersSortDirection.Descending,
-                    showExpanded: false
+                    showExpanded: false,
+                    showValueFilter: false,
+                    valueFilter: ""
                 },
                 {
                     refinerName: "owstaxidmetadataalltagsinfo",
@@ -438,7 +447,9 @@ export default class SearchRefinersWebPart extends BaseClientSideWebPart<ISearch
                     template: RefinerTemplateOption.CheckBox,
                     refinerSortType: RefinersSortOption.Alphabetical,
                     refinerSortDirection: RefinersSortDirection.Ascending,
-                    showExpanded: false
+                    showExpanded: false,
+                    showValueFilter: false,
+                    valueFilter: ""
                 }
             ];
         }

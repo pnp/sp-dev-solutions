@@ -49,4 +49,9 @@ export interface ISearchRefinersContainerProps {
    * The current search query
    */
   query: string;
+
+  /**
+   * Handler method when refinement values are to be filtered
+   */
+  UpdateValueFilter: (filterName:string,filterValue:string) => void;
 }

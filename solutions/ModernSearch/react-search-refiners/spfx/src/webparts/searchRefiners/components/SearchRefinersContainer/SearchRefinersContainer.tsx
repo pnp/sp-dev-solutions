@@ -9,12 +9,13 @@ import RefinersLayoutOption from '../../../../models/RefinersLayoutOptions';
 import { MessageBarType, MessageBar } from 'office-ui-fabric-react/lib/MessageBar';
 import * as strings from 'SearchRefinersWebPartStrings';
 import { ISearchRefinersContainerState } from './ISearchRefinersContainerState';
-import { IRefinementFilter, IRefinementValue, RefinementOperator } from '../../../../models/ISearchResult';
+import { IRefinementFilter, IRefinementValue, RefinementOperator, IRefinementResult } from '../../../../models/ISearchResult';
 import * as update from 'immutability-helper';
 import RefinerTemplateOption from '../../../../models/RefinerTemplateOption';
 import { find } from '@microsoft/sp-lodash-subset';
 import RefinersSortOption from '../../../../models/RefinersSortOptions';
 import RefinerSortDirection from '../../../../models/RefinersSortDirection';
+import { ZIndexes } from 'office-ui-fabric-react';
 
 export default class SearchRefinersContainer extends React.Component<ISearchRefinersContainerProps, ISearchRefinersContainerState> {
 
@@ -24,11 +25,13 @@ export default class SearchRefinersContainer extends React.Component<ISearchRefi
         this.state = {
             shouldResetFilters: false,
             selectedRefinementFilters: [],
-            availableRefiners: []
+            availableRefiners: [],
+            refinersConfiguration: this.props.refinersConfiguration
         };
 
         this.onFilterValuesUpdated = this.onFilterValuesUpdated.bind(this);
         this.onRemoveAllFilters = this.onRemoveAllFilters.bind(this);
+        this.onGroupFilterUpdated = this.onGroupFilterUpdated.bind(this);
     }
 
     public render(): React.ReactElement<ISearchRefinersContainerProps> {
@@ -55,9 +58,10 @@ export default class SearchRefinersContainer extends React.Component<ISearchRefi
             switch (this.props.selectedLayout) {
                 case RefinersLayoutOption.Vertical:
                     renderWpContent = <Vertical
+                        onGroupFilterUpdated={this.onGroupFilterUpdated}
                         onFilterValuesUpdated={this.onFilterValuesUpdated}
-                        refinementResults={this.state.availableRefiners}
-                        refinersConfiguration={this.props.refinersConfiguration}
+                        refinementResults={this._applyFilterValues(this.state.availableRefiners)}
+                        refinersConfiguration={this.state.refinersConfiguration}
                         shouldResetFilters={this.state.shouldResetFilters}
                         onRemoveAllFilters={this.onRemoveAllFilters}
                         hasSelectedValues={this.state.selectedRefinementFilters.length > 0 ? true : false}
@@ -75,9 +79,10 @@ export default class SearchRefinersContainer extends React.Component<ISearchRefi
                     });
 
                     renderWpContent = <LinkPanel
+                        onGroupFilterUpdated={this.onGroupFilterUpdated}
                         onFilterValuesUpdated={this.onFilterValuesUpdated}
-                        refinementResults={this.state.availableRefiners}
-                        refinersConfiguration={this.props.refinersConfiguration}
+                        refinementResults={this._applyFilterValues(this.state.availableRefiners)}
+                        refinersConfiguration={this.state.refinersConfiguration}
                         shouldResetFilters={this.state.shouldResetFilters}
                         onRemoveAllFilters={this.onRemoveAllFilters}
                         hasSelectedValues={this.state.selectedRefinementFilters.length > 0 ? true : false}
@@ -265,5 +270,33 @@ export default class SearchRefinersContainer extends React.Component<ISearchRefi
         });
 
         this.props.onUpdateFilters([]);
+    }
+
+    private _applyFilterValues(items: IRefinementResult[]): IRefinementResult[] {
+        let filteredItems: IRefinementResult[] = [];
+
+        items.map((item) => {
+            let config = this.state.refinersConfiguration.find(rc => rc.refinerName == item.FilterName);
+            if(config && item.FilterName === config.refinerName && config.showValueFilter && config.valueFilter && config.valueFilter !== "") {
+                let filteredItem = item;
+                filteredItem.Values = filteredItem.Values.filter(fi => {
+                    //Only do this when filter is shown
+                    return fi.RefinementValue.toLowerCase().indexOf(config.valueFilter.toLowerCase()) !== -1 
+                });
+                filteredItems.push(filteredItem)
+            } else {
+                filteredItems.push(item);
+            }
+        });
+
+        return filteredItems;
+    }
+
+    private onGroupFilterUpdated(refinerName: string,valueFilter: string) {
+        let refinersConfiguration = this.state.refinersConfiguration;
+        refinersConfiguration.find(x => x.refinerName == refinerName).valueFilter = valueFilter ? valueFilter : "";
+        this.setState({
+            refinersConfiguration: refinersConfiguration
+        });
     }
 }
