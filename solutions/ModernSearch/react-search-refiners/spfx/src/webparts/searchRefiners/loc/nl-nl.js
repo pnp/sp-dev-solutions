@@ -30,6 +30,7 @@ define([], function() {
             "ApplyFiltersLabel": "Toepassen",
             "ClearFiltersLabel": "Opschonen",
             "ShowExpanded": "Vouw filters standaard uit",
+            "showValueFilter": "Filter weergeven voor verfijningswaarden",
             "Templates": {
                 "RefinementItemTemplateLabel": "Standaard verfijningsitem",
                 "MutliValueRefinementItemTemplateLabel": "Multi-value verfijningsitem",
