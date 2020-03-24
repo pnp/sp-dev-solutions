@@ -428,8 +428,7 @@ export default class SearchRefinersWebPart extends BaseClientSideWebPart<ISearch
                     refinerSortType: RefinersSortOption.Default,
                     refinerSortDirection: RefinersSortDirection.Ascending,
                     showExpanded: false,
-                    showValueFilter: false,
-                    valueFilter: ""
+                    showValueFilter: false
                 },
                 {
                     refinerName: "Size",
@@ -438,8 +437,7 @@ export default class SearchRefinersWebPart extends BaseClientSideWebPart<ISearch
                     refinerSortType: RefinersSortOption.ByNumberOfResults,
                     refinerSortDirection: RefinersSortDirection.Descending,
                     showExpanded: false,
-                    showValueFilter: false,
-                    valueFilter: ""
+                    showValueFilter: false
                 },
                 {
                     refinerName: "owstaxidmetadataalltagsinfo",
@@ -448,8 +446,7 @@ export default class SearchRefinersWebPart extends BaseClientSideWebPart<ISearch
                     refinerSortType: RefinersSortOption.Alphabetical,
                     refinerSortDirection: RefinersSortDirection.Ascending,
                     showExpanded: false,
-                    showValueFilter: false,
-                    valueFilter: ""
+                    showValueFilter: false
                 }
             ];
         }

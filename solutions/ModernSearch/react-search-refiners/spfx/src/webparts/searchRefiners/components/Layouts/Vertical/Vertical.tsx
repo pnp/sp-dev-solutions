@@ -69,6 +69,7 @@ export default class Vertical extends React.Component<IFilterLayoutProps, IVerti
     }
 
     public UNSAFE_componentWillReceiveProps(nextProps: IFilterLayoutProps) {
+
         let shouldReset = false;
 
         if (!isEqual(this.props.refinersConfiguration, nextProps.refinersConfiguration)) {
@@ -91,6 +92,7 @@ export default class Vertical extends React.Component<IFilterLayoutProps, IVerti
     }
 
     private _onRenderHeader(props: IGroupDividerProps): JSX.Element {
+
         return (
             <div className={styles.verticalLayout__filterPanel__body__group__header}
                 style={props.groupIndex > 0 ? { marginTop: '10px' } : undefined}
@@ -125,7 +127,7 @@ export default class Vertical extends React.Component<IFilterLayoutProps, IVerti
             groupName = configuredFilters.length > 0 && configuredFilters[0].displayValue ? configuredFilters[0].displayValue : groupName;
             let isCollapsed = true;
 
-            const existingGroups = this.state.groups.filter(g => { return g.name === groupName;}) as IGroup[];
+            const existingGroups = this.state.groups.filter(g => { return g.name === groupName;});
 
             if (existingGroups.length > 0 && !shouldResetCollapse) {
                 isCollapsed = existingGroups[0].isCollapsed;

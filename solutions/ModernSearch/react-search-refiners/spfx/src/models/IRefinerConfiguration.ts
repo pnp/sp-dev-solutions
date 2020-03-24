@@ -39,12 +39,6 @@ interface IRefinerConfiguration {
      * Show filter textbox to search inside the refiner values
      */
     showValueFilter: boolean;
-
-    /** 
-     * 
-     * The filter to apply for reducing refinement values
-     */
-    valueFilter: string;
 }
 
 export default IRefinerConfiguration;
