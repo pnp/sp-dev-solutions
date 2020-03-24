@@ -34,13 +34,13 @@ export default class CheckboxTemplate extends React.Component<IBaseRefinerTempla
             {
                 this.props.showValueFilter ? 
                     <div style={ { width: "200px", display: "flex"} }>
-                        <TextField value={this.state.valueFilter} placeholder="Filter" onChange={(event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,newValue?: string) => { this._onValueFilterChanged(newValue) }} onClick={this._onValueFilterClick} />
+                        <TextField value={this.state.valueFilter} placeholder="Filter" onChange={(event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,newValue?: string) => { this._onValueFilterChanged(newValue); }} onClick={this._onValueFilterClick} />
                         <Link onClick={this._clearValueFilter} disabled={!this.state.valueFilter || this.state.valueFilter === ""}>Clear</Link>
                     </div>
                     : null
             }
             {
-                this.props.refinementResult.Values.filter(x => { return !this._isFilterMatch(x)}).map((refinementValue: IRefinementValue, j) => {
+                this.props.refinementResult.Values.filter(x => { return !this._isFilterMatch(x);}).map((refinementValue: IRefinementValue, j) => {
 
                     if (refinementValue.RefinementCount === 0) {
                         return null;
@@ -76,7 +76,7 @@ export default class CheckboxTemplate extends React.Component<IBaseRefinerTempla
 
     private _isFilterMatch(item): boolean {
         if(!this.state.valueFilter) { return false; }
-        return item.RefinementValue.toLowerCase().indexOf(this.state.valueFilter.toLowerCase()) === -1 
+        return item.RefinementValue.toLowerCase().indexOf(this.state.valueFilter.toLowerCase()) === -1 ;
     }
 
     private _onValueFilterChanged(newValue: string) {
