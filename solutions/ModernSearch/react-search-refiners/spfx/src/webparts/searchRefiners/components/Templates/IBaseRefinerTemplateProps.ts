@@ -33,6 +33,11 @@ interface IBaseRefinerTemplateProps {
      * A single filter value to reset
      */
     removeFilterValue?: IRefinementValue;
+    
+    /**
+     * Indicates if the value filter should be visible
+     */
+    showValueFilter: boolean;
 } 
 
 export default IBaseRefinerTemplateProps;

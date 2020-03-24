@@ -266,6 +266,7 @@ export default class LinkPanel extends React.Component<ILinkPanelProps, ILinkPan
                    onFilterValuesUpdated={props.onFilterValuesUpdated}
                    language={props.language}
                    selectedValues={selectedFilterValues}
+                   showValueFilter={configuredFilter[0].showValueFilter}
                />
            );
         });

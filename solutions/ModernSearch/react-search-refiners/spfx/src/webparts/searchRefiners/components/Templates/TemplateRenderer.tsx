@@ -43,6 +43,11 @@ export interface ITemplateRendererProps {
      * Used to build local state for sub components
      */
     selectedValues: IRefinementValue[];
+
+    /**
+     * Indicates if the value filter should be visible
+     */
+    showValueFilter: boolean;
 }
 
 export default class TemplateRenderer extends React.Component<ITemplateRendererProps> {
@@ -61,6 +66,7 @@ export default class TemplateRenderer extends React.Component<ITemplateRendererP
                     isMultiValue={false}
                     removeFilterValue={this.props.valueToRemove}
                     selectedValues={this.props.selectedValues}
+                    showValueFilter={this.props.showValueFilter}
                 />;
                 break;
 
@@ -72,6 +78,7 @@ export default class TemplateRenderer extends React.Component<ITemplateRendererP
                     isMultiValue={true}
                     removeFilterValue={this.props.valueToRemove}
                     selectedValues={this.props.selectedValues}
+                    showValueFilter={this.props.showValueFilter}
                 />;
                 break;
 
@@ -84,6 +91,7 @@ export default class TemplateRenderer extends React.Component<ITemplateRendererP
                     removeFilterValue={this.props.valueToRemove}
                     language={this.props.language}
                     selectedValues={this.props.selectedValues}
+                    showValueFilter={this.props.showValueFilter}
                 />;
                 break;
 
@@ -95,7 +103,8 @@ export default class TemplateRenderer extends React.Component<ITemplateRendererP
                     isMultiValue={false}
                     removeFilterValue={this.props.valueToRemove}
                     language={this.props.language}
-                    selectedValues={this.props.selectedValues} />;
+                    selectedValues={this.props.selectedValues}
+                    showValueFilter={this.props.showValueFilter} />;
                 break;
 
             default:

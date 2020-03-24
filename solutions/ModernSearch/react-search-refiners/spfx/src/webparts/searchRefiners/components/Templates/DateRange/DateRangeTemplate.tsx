@@ -77,6 +77,11 @@ export default class DateRangeTemplate extends React.Component<IDateRangeTemplat
         }
 
         return <div>
+            {
+                this.props.showValueFilter ? 
+                    <div className='ms-font-s'>Value filters are not allowed for dates. Clear 'show filter' to remove this message</div>
+                    : null
+            }
             <DatePicker {...fromProps} />
             <DatePicker {...toProps} />
             <Link onClick={this._clearFilters} disabled={!this.state.selectedToDate && !this.state.selectedFromDate}>{strings.Refiners.ClearFiltersLabel}</Link>

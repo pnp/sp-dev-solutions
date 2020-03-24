@@ -103,6 +103,11 @@ export default class FixedDateRangeTemplate extends React.Component<IFixedDateRa
         }
 
         return <div>
+            {
+                this.props.showValueFilter ? 
+                    <div className='ms-font-s'>Value filters are not allowed for dates. Clear 'show filter' to remove this message</div>
+                    : null
+            }
             <ChoiceGroup
                 selectedKey={this._getIntervalKeyForValue()}
                 options={options}

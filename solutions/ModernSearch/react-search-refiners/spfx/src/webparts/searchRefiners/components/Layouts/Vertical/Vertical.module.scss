@@ -23,7 +23,8 @@
             &__group {
 
                 &__header {                    
-                    display: flex;                   
+                    display: flex;
+                    align-items: center;                
                 }
 
                 button {
@@ -33,10 +34,6 @@
                 &__item {
                     padding-left: 15px;
                     padding-top: 10px;
-                }
-
-                &__valueFilter {
-                    margin-top:5px;
                 }
             }
 

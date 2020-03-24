@@ -43,11 +43,6 @@ interface IFilterLayoutProps {
      * The current UI language
      */
     language: string;
-
-    /**
-     * Handler method called when a filter is provided that filter refinement values in a group
-     */
-    onGroupFilterUpdated: (refinerName: string,valueFilter: string) => void;
 }
   
 export default IFilterLayoutProps;
