@@ -2,7 +2,7 @@
 // Licensed under the MIT license.
 
 import * as React from 'react';
-import * as Update from 'immutability-helper';
+import update from 'immutability-helper';
 import * as moment from 'moment';
 import styles from './CRManagementPublicSection.module.scss';
 import { ICRManagementPublicSectionProps } from './ICRManagementPublicSectionProps';
@@ -23,7 +23,7 @@ export default class CRManagementPublicSection extends React.Component<ICRManage
 
   public componentWillReceiveProps(props: ICRManagementPublicSectionProps) {
     this.setState(
-      Update(this.state, {
+      update(this.state, {
         item: {
           $set: props.selectedItem
         },
@@ -56,7 +56,7 @@ export default class CRManagementPublicSection extends React.Component<ICRManage
                   </div>
                   <div className={css('ms-Grid-row')}>
                     <div className={css('ms-Grid-col ms-u-sm4')}>
-                    <div className={styles.formHeader}>Last Update:</div>
+                    <div className={styles.formHeader}>Last update:</div>
                     </div>
                     <div className={css('ms-Grid-col ms-u-sm8')}>
                       <TextField multiline autoAdjustHeight value = { item.statusupdates? item.statusupdates: "" } onChanged = { this._handleLastUpdatesChanged.bind(this) } />
@@ -120,7 +120,7 @@ export default class CRManagementPublicSection extends React.Component<ICRManage
     let {item} = this.state;
     item.description = value;
     this.setState(
-      Update(this.state, {
+      update(this.state, {
         item: {
           $set: item
         },
@@ -133,7 +133,7 @@ export default class CRManagementPublicSection extends React.Component<ICRManage
     let {item} = this.state;
     item.status = value.key.toString();
     this.setState(
-      Update(this.state, {
+      update(this.state, {
         item: {
           $set: item
         },
@@ -146,7 +146,7 @@ export default class CRManagementPublicSection extends React.Component<ICRManage
     let {item} = this.state;
     item.statusupdates = value;
     this.setState(
-      Update(this.state, {
+      update(this.state, {
         item: {
           $set: item
         },

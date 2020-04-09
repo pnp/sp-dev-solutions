@@ -1,12 +1,8 @@
 import * as React from 'react';
 import * as ReactDom from 'react-dom';
 import { Environment, EnvironmentType, Version } from '@microsoft/sp-core-library';
-import {
-  BaseClientSideWebPart,
-  IPropertyPaneConfiguration,
-  PropertyPaneTextField,
-  PropertyPaneDropdown
-} from '@microsoft/sp-webpart-base';
+import { BaseClientSideWebPart } from "@microsoft/sp-webpart-base";
+import { IPropertyPaneConfiguration, PropertyPaneDropdown, PropertyPaneTextField } from "@microsoft/sp-property-pane";
 import { escape } from '@microsoft/sp-lodash-subset';
 
 import * as strings from 'myChangeRequestsWebPartStrings';

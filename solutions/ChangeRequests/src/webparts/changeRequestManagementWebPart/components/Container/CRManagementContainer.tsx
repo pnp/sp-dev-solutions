@@ -2,7 +2,7 @@
 // Licensed under the MIT license.
 
 import * as React from 'react';
-import * as Update from 'immutability-helper';
+import update from 'immutability-helper';
 import { css, Label, PrimaryButton, CommandButton, Spinner, SpinnerSize } from 'office-ui-fabric-react';
 
 import { Modal } from 'office-ui-fabric-react/lib/Modal';
@@ -44,7 +44,8 @@ export default class ChangeRequestManagementContainer extends React.Component<IC
       allTriageUsers: [],
       allPersons: [],
       loading: true,
-      showModal: false
+      showModal: false,
+      createdBy: null
     };
 
     this._isEdit = false;
@@ -94,7 +95,7 @@ export default class ChangeRequestManagementContainer extends React.Component<IC
       .then((values: any) => {
         allTriageUsers = values;
 
-        this.setState(Update(this.state, {
+        this.setState(update(this.state, {
           items: {
             $set: items
           },
@@ -196,26 +197,26 @@ export default class ChangeRequestManagementContainer extends React.Component<IC
 
   private _provisioningLists() {
     var utility = ca.SharePointUtility;
-    this.setState(Update(this.state, {
+    this.setState(update(this.state, {
       submitting: { $set: true }
     }));
 
     ProvisionManager.siteProvisoning(this.props.context).then(() => {
-      this.setState(Update(this.state, {
+      this.setState(update(this.state, {
         isInitialized: { $set: true }
       }));
     });
   }
 
   private _closeModal() {
-    this.setState(Update(this.state, {
+    this.setState(update(this.state, {
       showModal: { $set: false }
     }));
   }
 
   // select tab callback
   private _tabOperationClickCallback(tab: CRMTab): void {
-    this.setState(Update(this.state, {
+    this.setState(update(this.state, {
       selectedTab: { $set: tab },
       loading: { $set: true }
     }));
@@ -233,7 +234,7 @@ export default class ChangeRequestManagementContainer extends React.Component<IC
             };
           }
         });
-        this.setState(Update(this.state, {
+        this.setState(update(this.state, {
           items: { $set: items },
           loading: { $set: false },
           showSections: { $set: false },
@@ -265,13 +266,13 @@ export default class ChangeRequestManagementContainer extends React.Component<IC
         };
       }
 
-      this.setState(Update(this.state, {
+      this.setState(update(this.state, {
         selectedItem: { $set: tempItem },
         showModal: { $set: true }
       }));
     }
     else {
-      this.setState(Update(this.state, {
+      this.setState(update(this.state, {
         selectedItem: { $set: _.find(this.state.items, (value) => value.critem.id === item.id) },
         showSections: { $set: true },
         createdBy: { $set: item.createdBy }
@@ -286,7 +287,7 @@ export default class ChangeRequestManagementContainer extends React.Component<IC
   private _discardChanges() {
     this._isEdit = false;
 
-    this.setState(Update(this.state, {
+    this.setState(update(this.state, {
       selectedItem: { $set: _.find(this.state.items, (value) => value.critem.id === this._currentClickedItem.id) },
       showSections: { $set: true },
       createdBy: { $set: this._currentClickedItem.createdBy },
@@ -295,7 +296,7 @@ export default class ChangeRequestManagementContainer extends React.Component<IC
   }
 
   private _cancelChange() {
-    this.setState(Update(this.state, {
+    this.setState(update(this.state, {
       showModal: { $set: false }
     }));
   }
@@ -316,7 +317,7 @@ export default class ChangeRequestManagementContainer extends React.Component<IC
       };
     }
 
-    this.setState(Update(this.state, {
+    this.setState(update(this.state, {
       submitting: { $set: true },
       selectedItem: { $set: tempItem }
     }));
@@ -328,7 +329,7 @@ export default class ChangeRequestManagementContainer extends React.Component<IC
         })
         .then((items) => {
           this._isEdit = false;
-          this.setState(Update(this.state, {
+          this.setState(update(this.state, {
             items: { $set: items },
             selectedItem: { $set: _.find(this.state.items, (value) => value.critem.id === this._currentClickedItem.id) },
             createdBy: { $set: this._currentClickedItem.createdBy },
@@ -367,7 +368,7 @@ export default class ChangeRequestManagementContainer extends React.Component<IC
       };
     }
 
-    this.setState(Update(this.state, {
+    this.setState(update(this.state, {
       submitting: { $set: true },
       selectedItem: { $set: tempItem }
     }));
@@ -379,7 +380,7 @@ export default class ChangeRequestManagementContainer extends React.Component<IC
         })
         .then((items) => {
           this._isEdit = false;
-          this.setState(Update(this.state, {
+          this.setState(update(this.state, {
             items: { $set: items },
             selectedItem: { $set: null },
             submitting: { $set: false },
@@ -392,7 +393,7 @@ export default class ChangeRequestManagementContainer extends React.Component<IC
   private _cancelForm(): void {
     this._isEdit = false;
 
-    this.setState(Update(this.state, {
+    this.setState(update(this.state, {
       selectedItem: { $set: null },
       showSections: { $set: false }
     }));
