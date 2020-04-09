@@ -11,7 +11,7 @@ There are two web parts included with Change Request Management:
 ![Issues Screenshot](./assets/screenshot.png)
 
 ## Used SharePoint Framework Version 
-![drop](https://img.shields.io/badge/version-v1.1-green.svg)
+![drop](https://img.shields.io/badge/version-v1.10-green.svg)
 
 ## Applies to
 
@@ -41,6 +41,7 @@ ChangeRequests               | Cindy Yan (Canviz)                               
 
 Version | Date               | Comments
 ------- | ------------------ | --------
+1.0.13  | April 9, 2020 | Update to SPFx v1.10
 1.0     | September 27, 2017 | Initial release
 
 ## Disclaimer

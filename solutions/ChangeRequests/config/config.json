@@ -1,19 +1,27 @@
 {
-  "entries": [
-    {
-      "entry": "./lib/webparts/changeRequestManagementWebPart/ChangeRequestManagementWebPart.js",
-      "manifest": "./src/webparts/changeRequestManagementWebPart/ChangeRequestManagementWebPart.manifest.json",
-      "outputPath": "./dist/change-request-management-web-part.bundle.js"
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/config.2.0.schema.json",
+  "version": "2.0",
+  "bundles": {
+    "change-request-management-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/changeRequestManagementWebPart/ChangeRequestManagementWebPart.js",
+          "manifest": "./src/webparts/changeRequestManagementWebPart/ChangeRequestManagementWebPart.manifest.json"
+        }
+      ]
     },
-    {
-      "entry": "./lib/webparts/myChangeRequestsWebPart/MyChangeRequestsWebPart.js",
-      "manifest": "./src/webparts/myChangeRequestsWebPart/MyChangeRequestsWebPart.manifest.json",
-      "outputPath": "./dist/my-change-requests-web-part.bundle.js"
+    "my-change-requests-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/myChangeRequestsWebPart/MyChangeRequestsWebPart.js",
+          "manifest": "./src/webparts/myChangeRequestsWebPart/MyChangeRequestsWebPart.manifest.json"
+        }
+      ]
     }
-  ],
+  },
   "externals": {},
   "localizedResources": {
-    "changeRequestManagementWebPartStrings": "webparts/changeRequestManagementWebPart/loc/{locale}.js",
-    "myChangeRequestsWebPartStrings": "webparts/myChangeRequestsWebPart/loc/{locale}.js"
+    "changeRequestManagementWebPartStrings": "lib/webparts/changeRequestManagementWebPart/loc/{locale}.js",
+    "myChangeRequestsWebPartStrings": "lib/webparts/myChangeRequestsWebPart/loc/{locale}.js"
   }
 }

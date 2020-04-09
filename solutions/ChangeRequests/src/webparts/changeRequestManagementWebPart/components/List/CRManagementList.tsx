@@ -2,7 +2,7 @@
 // Licensed under the MIT license.
 
 import * as React from 'react';
-import * as Update from 'immutability-helper';
+import update from 'immutability-helper';
 import * as _ from "lodash";
 import * as moment from 'moment';
 
@@ -34,7 +34,7 @@ export default class CRManagementList extends React.Component<ICRManagementListP
 
   public componentWillReceiveProps(props: ICRManagementListProps) {
     this.setState(
-      Update(this.state, {
+      update(this.state, {
         sortedItems: {
           $set: this._buildSortedItems(props.items, props.allUsers)
         },
@@ -67,7 +67,7 @@ export default class CRManagementList extends React.Component<ICRManagementListP
     );
   }
 
-  private _onDidUpdate(detaiList: DetailsList) {
+  private _onDidUpdate(detaiList: any) {
     if (detaiList.props.items.length > 0 && this._selectKey !== undefined) {
       this._selection.setKeySelected(this._selectKey, true, false);
     }

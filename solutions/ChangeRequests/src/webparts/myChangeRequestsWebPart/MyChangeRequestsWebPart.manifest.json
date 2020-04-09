@@ -1,11 +1,14 @@
 {
-  "$schema": "../../../node_modules/@microsoft/sp-module-interfaces/lib/manifestSchemas/jsonSchemas/clientSideComponentManifestSchema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx/client-side-web-part-manifest.schema.json",
 
   "id": "fc1fa611-07f5-4af4-b9eb-d59da23fec1f",
   "alias": "MyChangeRequestsWebPart",
   "componentType": "WebPart",
-  "version": "1.0.1",
+  "version": "*",
   "manifestVersion": 2,
+
+  "supportedHosts": ["SharePointWebPart","TeamsPersonalApp","TeamsTab"],
+  "requiresCustomScript": false,
 
   "preconfiguredEntries": [{
     "groupId": "fc1fa611-07f5-4af4-b9eb-d59da23fec1f",
