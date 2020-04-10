@@ -4,7 +4,7 @@ import * as lodash from 'lodash';
 import { Logger, LogLevel } from "@pnp/logging";
 import "@pnp/polyfill-ie11";
 import styles from './MultilingualExtension.module.scss';
-import { ILanguage, IPageProperties, ITranslation, Translation, IMap, IRoute, Route } from '../../../common/models/Models';
+import { ILanguage, IPageProperties, ITranslation, Translation, IMap, IRoute, Route, IPagePromotedState } from '../../../common/models/Models';
 import { IconButton, PrimaryButton } from 'office-ui-fabric-react/lib/Button';
 import { Label } from 'office-ui-fabric-react/lib/Label';
 import { Toggle } from 'office-ui-fabric-react/lib/Toggle';
@@ -12,7 +12,6 @@ import { sp, ItemUpdateResult, EmailProperties } from '@pnp/sp';
 import { Spinner, SpinnerSize } from 'office-ui-fabric-react/lib/Spinner';
 import { TextField } from 'office-ui-fabric-react/lib/TextField';
 import PageInformation from '../atom/PageInformation';
-
 export interface IMultilingualPanelProps {
   editMode: boolean;
   languages: ILanguage[];
@@ -229,6 +228,15 @@ export class MultilingualPanel extends React.Component<IMultilingualPanelProps, 
     }
   }
 
+  private async testFileUrl(fileUrl: string): Promise<boolean> {
+    try {
+      await sp.web.getFileByServerRelativeUrl(fileUrl).get();
+      return true;
+    } catch (err) {
+      return false;
+    }
+  }
+
   private async validateFolders(destUrl: string, language: string): Promise<boolean> {
     try {
       let sitePagesArray = destUrl.split(language);
@@ -266,6 +274,77 @@ export class MultilingualPanel extends React.Component<IMultilingualPanelProps, 
     return item.Id;
   }
 
+  private async getPromotedState (pageUrl): Promise<IPagePromotedState> {
+    
+    if(! await this.testFileUrl(pageUrl)) {
+      return null;
+    }
+    
+    let itemId = await this.getFileItemId(pageUrl);
+    let pageState:IPagePromotedState =  {
+      FirstPublishedDate: null,
+      PromotedState: "0"
+    };
+
+    if(itemId > 0) {
+      //the item already exists
+      let item = await sp.web.lists.getByTitle('Site Pages').items.getById(itemId);
+      pageState = await item.fieldValuesAsText.select("PromotedState","FirstPublishedDate").get();
+    }
+    if(pageState.PromotedState || pageState.FirstPublishedDate) {
+      return pageState;
+    }
+    else {
+      return null;
+    }
+  }
+
+  private async loadPageItem(pageFile:SP.File): Promise<SP.ListItem<any>> {
+    return new Promise<SP.ListItem<any>> ((resolve, reject) => {
+      const ctx = SP.ClientContext.get_current();
+      let pageItem = pageFile.get_listItemAllFields();
+      ctx.load(pageItem);
+      ctx.executeQueryAsync(() => resolve(pageItem), (sender, args) => reject(args));
+
+    });
+  }
+
+  private async loadPageFile (pageUrl:string) : Promise<SP.File> {
+    return new Promise<SP.File> ((resolve, reject) => {
+      const ctx = SP.ClientContext.get_current();
+      const web = ctx.get_web();
+      let pageFile = web.getFileByServerRelativeUrl(pageUrl);
+      ctx.load(pageFile);
+      ctx.executeQueryAsync(() => resolve(pageFile), (sender, args) => reject(args));
+    });
+  }
+  
+  private async setPromotedState(pageUrl, pageState:IPagePromotedState)  {
+    return new Promise<boolean> (async (resolve, reject) =>
+    {
+      try{
+      // Logger.write(`reset promoted state for: ${pageUrl} - [${this.LOG_SOURCE}]`, LogLevel.Info);
+      // Logger.write(`promotedState: ${pageState.PromotedState}, firstPublishedDate: ${pageState.FirstPublishedDate} - [${this.LOG_SOURCE}]`, LogLevel.Info);    
+        const pageFile = await this.loadPageFile(pageUrl);
+        const pageItem = await this.loadPageItem(pageFile);
+
+        const ctx = SP.ClientContext.get_current();
+        console.log(pageItem);
+
+        pageItem.parseAndSetFieldValue("PromotedState", pageState.PromotedState);
+        pageItem.parseAndSetFieldValue("FirstPublishedDate", pageState.FirstPublishedDate);
+        pageItem.update();
+        ctx.executeQueryAsync(() => resolve(true), (sender, args) => reject(args));
+      }
+      catch (err) {
+        Logger.write(`Exception setting promoted state on item. ${err} - ${this.LOG_SOURCE}`, LogLevel.Error);
+        
+        resolve(false);
+      }
+    });
+  }
+
+ 
   private async apply(): Promise<void> {
     try {
       //Validate url hasn't changed, if has, reload pages which will not trigger refresh because only currentPage will change
@@ -300,7 +379,15 @@ export class MultilingualPanel extends React.Component<IMultilingualPanelProps, 
           if (exists) {
             let sourceUrl = this.props.currentPage.Url.replace(/'/g, "''");
             await sp.web.getFileByServerRelativeUrl(sourceUrl).copyTo(destUrl, true);
+           // let fileBuffer = await sp.web.getFileByServerRelativeUrl(sourceUrl).getBuffer();
+           // let folderUrl = destUrl.substr(0, destUrl.lastIndexOf("/"));
+           // await sp.web.getFolderByServerRelativeUrl(folderUrl).files.add(this.props.currentPage.FileLeafRef, fileBuffer, true);
             let itemCreatedId = await this.getFileItemId(destUrl);
+            let initialPagePromotedState: IPagePromotedState = {
+              PromotedState:"0",
+              FirstPublishedDate:null
+            };
+            let itemResetPromotedStateResult = await this.setPromotedState(destUrl, initialPagePromotedState);
             let itemUpdateResult = await sp.web.lists.getByTitle('Site Pages').items.getById(itemCreatedId).update({ MasterTranslationPage: this.props.currentPage.Id, LanguageVariant: lang, LastSynced: lastSyncedDate.toISOString(), LanguageFolder: lang }, "*", entityTypeFullName);
             //let itemCreated = await sp.web.getFileByServerRelativeUrl(destUrl).getItem<{ Id: number }>("Id");
             //   if (itemCreated != null) {
@@ -379,8 +466,15 @@ export class MultilingualPanel extends React.Component<IMultilingualPanelProps, 
             //Copy again and overwrite.
             let sourceUrl = this.props.currentPage.Url.replace(/'/g, "''");
             let destUrl = this.props.variantPages[i].Url.replace(/'/g, "''");
+            let pageState:IPagePromotedState = await this.getPromotedState(destUrl);
             await sp.web.getFileByServerRelativeUrl(sourceUrl).copyTo(destUrl, true);
+           // let fileBuffer = await sp.web.getFileByServerRelativeUrl(sourceUrl).getBuffer();
+           // let folderUrl = destUrl.substr(0, destUrl.lastIndexOf("/"));
+           // await sp.web.getFolderByServerRelativeUrl(folderUrl).files.add(this.props.currentPage.FileLeafRef, fileBuffer, true);
             let copyToResultId = await this.getFileItemId(destUrl);
+            if (pageState) {
+              await this.setPromotedState(destUrl, pageState);
+            }
             let itemUpdateResult: ItemUpdateResult = await sp.web.lists.getByTitle('Site Pages').items.getById(copyToResultId).update({ LanguageVariant: this.props.variantPages[i].LanguageVariant.join(' '), MasterTranslationPage: this.props.variantPages[i].MasterTranslationPage, LanguageFolder: this.props.variantPages[i].LanguageFolder, LastSynced: lastSyncedDate.toISOString() }, "*", entityTypeFullName);
             // let copyToResult = await sp.web.getFileByServerRelativeUrl(destUrl).getItem<{ Id: number }>("Id");
             // if (copyToResult != null) {
@@ -432,6 +526,7 @@ export class MultilingualPanel extends React.Component<IMultilingualPanelProps, 
       emailComment: newText
     });
   }
+
 
   public render() {
     //Don't Render if currentLangugage hasn't or couldn't be initialized

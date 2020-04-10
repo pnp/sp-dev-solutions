@@ -3,6 +3,7 @@ import * as ReactDOM from 'react-dom';
 
 import { override } from '@microsoft/decorators';
 import { BaseApplicationCustomizer, PlaceholderName } from '@microsoft/sp-application-base';
+import {SPComponentLoader} from '@microsoft/sp-loader';
 
 import * as strings from 'MultilingualExtensionApplicationCustomizerStrings';
 import { MultilingualExt } from './components/MultilingualExt';
@@ -20,10 +21,12 @@ export default class MultilingualExtensionApplicationCustomizer
   private className = "MultilingualApplicationSupport";
 
   @override
-  public onInit(): Promise<void> {
+  public async onInit(): Promise<void> {
     Logger.subscribe(new ConsoleListener());
     Logger.activeLogLevel = LogLevel.Info;
     Logger.write(`onInit() [${strings.Title} - ${this.LOG_SOURCE}]`, LogLevel.Info);
+
+    await this.loadJSOM();
 
     sp.setup({
       spfxContext: this.context,
@@ -31,13 +34,49 @@ export default class MultilingualExtensionApplicationCustomizer
     });
 
     this.context.application.navigatedEvent.add(this, this.render);
-    return Promise.resolve();
   }
 
   @override
   public onDispose(): Promise<void> {
     this.context.application.navigatedEvent.remove(this, this.render);
     return Promise.resolve();
+  }
+
+   /** Load SharePoint JSOM modules if needed  */
+   private loadJSOM(): Promise<any> {
+    var globalExportsName = null, p = null;
+    var promise = new Promise<any>((resolve, reject) => {
+      globalExportsName = '$_global_init'; 
+        p = (window[globalExportsName] ? 
+          Promise.resolve(window[globalExportsName]) : 
+          SPComponentLoader.loadScript('/_layouts/15/init.js', { globalExportsName }));
+      p.catch((error) => { })
+        .then(($_global_init): Promise<any> => {
+          globalExportsName = 'Sys'; 
+          p = (window[globalExportsName] ? 
+            Promise.resolve(window[globalExportsName]) : 
+            SPComponentLoader.loadScript('/_layouts/15/MicrosoftAjax.js', { globalExportsName }));
+          return p;
+        }).catch((error) => { })
+        .then((Sys): Promise<any> => {
+          globalExportsName = 'SP'; p = ((window[globalExportsName] && window[globalExportsName].ClientRuntimeContext) ? 
+            Promise.resolve(window[globalExportsName]) : 
+            SPComponentLoader.loadScript('/_layouts/15/SP.Runtime.js', { globalExportsName }));
+          return p;
+        }).catch((error) => { })
+        .then((SP): Promise<any> => {
+          globalExportsName = 'SP'; 
+          p = ((window[globalExportsName] && window[globalExportsName].ClientContext) ? 
+            Promise.resolve(window[globalExportsName]) : 
+            SPComponentLoader.loadScript('/_layouts/15/SP.js', { globalExportsName }));
+          return p;
+        }).catch((error) => { })
+        .then((SP) => {
+          resolve(SP);
+        })
+      ;
+    });
+    return promise;
   }
 
   private getMultilingualContainer(): HTMLElement {
