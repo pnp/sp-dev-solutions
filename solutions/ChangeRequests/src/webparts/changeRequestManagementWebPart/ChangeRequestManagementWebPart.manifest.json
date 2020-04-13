@@ -1,17 +1,19 @@
 {
-  "$schema": "../../../node_modules/@microsoft/sp-module-interfaces/lib/manifestSchemas/jsonSchemas/clientSideComponentManifestSchema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx/client-side-web-part-manifest.schema.json",
 
   "id": "c9db9295-9313-477a-80e4-b1727e700c40",
   "alias": "ChangeRequestManagementWebPart",
   "componentType": "WebPart",
-  "version": "1.0.1",
+  "version": "*",
   "manifestVersion": 2,
 
+  "supportedHosts": ["SharePointWebPart","TeamsPersonalApp","TeamsTab"],
+  "requiresCustomScript": false,
   "preconfiguredEntries": [{
     "groupId": "c9db9295-9313-477a-80e4-b1727e700c40",
     "group": { "default": "Business and intelligence" },
     "title": { "default": "Change Request Management" },
-    "officeFabricIconFontName": "InboxCheck",    
+    "officeFabricIconFontName": "InboxCheck",
     "description": { "default": "Provides a simple way to manage inbound change requests coming from users." },
     "properties": {
     }

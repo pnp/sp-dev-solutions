@@ -1,5 +1,5 @@
 import * as React from 'react';
-import * as Update from 'immutability-helper';
+import update from 'immutability-helper';
 import * as lodash from '@microsoft/sp-lodash-subset';
 import { css, Label, TextField, Dialog, DialogType, DialogFooter, PrimaryButton, DefaultButton } from 'office-ui-fabric-react';
 import IMyCRNewFormProps from './IMyCRNewFormProps';
@@ -79,7 +79,7 @@ export default class MyCRNewDialog extends React.Component<IMyCRNewFormProps, IM
                             </div>
                         </div>
                         <div className="ms-Grid-row" hidden={this.state.isNewForm}>
-                            <div className={`ms-Grid-col ${styles.mycrnewformcell} ms-u-sm12 ms-u-lg3`}>Update:</div>
+                            <div className={`ms-Grid-col ${styles.mycrnewformcell} ms-u-sm12 ms-u-lg3`}>update:</div>
                             <div className="ms-Grid-col ms-u-sm12 ms-u-lg9">
                                 <Label>{this.state.item.statusupdates ? this.state.item.statusupdates : ""}</Label>
                             </div>
@@ -91,7 +91,7 @@ export default class MyCRNewDialog extends React.Component<IMyCRNewFormProps, IM
                         </div>
                     </div>
                     <div className={styles.mycrdialogButtons}>                        
-                        <PrimaryButton onClick={this._saveButtonClick.bind(this)} text={this._itemIsClosedStatus() ? 'Reactivate' : this.props.showIn == NewCRFormShowIn.Dialog?(this.state.isNewForm?'Create':'Update'):this.props.newcrbuttontext} disabled={this.state.submitting} />
+                        <PrimaryButton onClick={this._saveButtonClick.bind(this)} text={this._itemIsClosedStatus() ? 'Reactivate' : this.props.showIn == NewCRFormShowIn.Dialog?(this.state.isNewForm?'Create':'update'):this.props.newcrbuttontext} disabled={this.state.submitting} />
                         <DefaultButton onClick={this._cancelButtonClick.bind(this)} text='Cancel' disabled={this.state.submitting} />
                     </div>
                 </div>
@@ -117,7 +117,7 @@ export default class MyCRNewDialog extends React.Component<IMyCRNewFormProps, IM
     }
     private _handleTitleChange(text: string) {
         this.setState(
-            Update(this.state, {
+            update(this.state, {
                 item: {
                     title: {
                         $set: text
@@ -128,7 +128,7 @@ export default class MyCRNewDialog extends React.Component<IMyCRNewFormProps, IM
     }
     private _handleDescriptionChange(text: string) {
         this.setState(
-            Update(this.state, {
+            update(this.state, {
                 item: {
                     description: {
                         $set: text

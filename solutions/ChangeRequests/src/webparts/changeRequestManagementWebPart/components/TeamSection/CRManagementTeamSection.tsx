@@ -2,7 +2,7 @@
 // Licensed under the MIT license.
 
 import * as React from 'react';
-import * as Update from 'immutability-helper';
+import update from 'immutability-helper';
 import styles from './CRManagementTeamSection.module.scss';
 import { ICRManagementTeamSectionProps } from './ICRManagementTeamSectionProps';
 import { ICRManagementTeamSectionState } from './ICRManagementTeamSectionState';
@@ -21,7 +21,7 @@ export default class CRManagementTeamSection extends React.Component<ICRManageme
 
   public componentWillReceiveProps(props: ICRManagementTeamSectionProps) {
     this.setState(
-      Update(this.state, {
+      update(this.state, {
         item: {
           $set: props.selectedItem
         }
@@ -189,7 +189,7 @@ export default class CRManagementTeamSection extends React.Component<ICRManageme
     item.triagecomments = value;
 
     this.setState(
-      Update(this.state, {
+      update(this.state, {
         item: {
           $set: item
         },
@@ -203,7 +203,7 @@ export default class CRManagementTeamSection extends React.Component<ICRManageme
     item.substatus = value.key.toString();
 
     this.setState(
-      Update(this.state, {
+      update(this.state, {
         item: {
           $set: item
         },
@@ -217,7 +217,7 @@ export default class CRManagementTeamSection extends React.Component<ICRManageme
     item.assignedto = values.length > 0 ? Number(values[0].id) : null;
 
     this.setState(
-      Update(this.state, {
+      update(this.state, {
         item: {
           $set: item
         },
@@ -231,7 +231,7 @@ export default class CRManagementTeamSection extends React.Component<ICRManageme
     item.priority = pivotItem.props.itemKey.toString();
 
     this.setState(
-      Update(this.state, {
+      update(this.state, {
         item: {
           $set: item
         },

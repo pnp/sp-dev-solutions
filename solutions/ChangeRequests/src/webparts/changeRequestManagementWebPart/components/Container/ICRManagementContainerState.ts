@@ -19,6 +19,7 @@ interface ICRManagementContainerState {
     status: string[];
     loading: boolean;
     showModal: boolean;
+    createdBy: any;
 }
 
 export default ICRManagementContainerState;

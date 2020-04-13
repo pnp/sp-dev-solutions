@@ -25,7 +25,7 @@ To get started, you'll need to upload the web part package to your app (or site)
 
 ## Adding it to a Site
 
-You can add Custom Formatter to a page (classic or modern) just as you would any other webpart.
+You can add Column Formatter to a page (classic or modern) just as you would any other webpart.
 
 ![Add to a site](./assets/AddToPage.png)
 
@@ -55,7 +55,7 @@ If you've previously deployed Column Formatter but want all the new stuff - Good
 Just like the initial deployment you'll need to upload the web part package to your app (or site) catalog. This will require administrator rights so you may have to hand it off to someone in IT for these steps.
 
 1. Upload or drag and drop the **[package](../../../assets/column-formatter.sppkg)** to the catalog:
-2. You will prompted to replace the existing solution, click **Replace it**:
+2. You will be prompted to replace the existing solution, click **Replace it**:
 
 ![Replace existing solution](./assets/UpdateReplaceSolution.png)
 

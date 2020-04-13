@@ -1,3 +1,18 @@
+---
+page_type: sample
+products:
+- office-sp
+languages:
+- javascript
+- typescript
+extensions:
+  contentType: samples
+  technologies:
+  - SharePoint Framework
+  platforms:
+  - react
+  createdDate: 10/1/2017 12:00:00 AM
+---
 ﻿# Inventory and Check Outs
 
 The Inventory and Checkout management part lets you manage a simple list inventory items, and build a "lending library" style check out infrastructure around them.   
