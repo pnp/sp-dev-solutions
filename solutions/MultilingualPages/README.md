@@ -10,7 +10,7 @@ Multilingual Pages Converter is a .NET console application that allows you to co
 
 Before you start you should enable the OOB Languages settings in the site administration. Once configured, required site columns will be enabled on pages library.
 
-![Screenshot Language Settings](./languagesettings.png)
+![Screenshot Language Settings](./LanguageSettings.png)
 
 The solution is designed to run on a site by site bases. It requires that you provide the Site Url, requests if you would like to run in cleanup* mode only, and then asks for a username and password.
 
