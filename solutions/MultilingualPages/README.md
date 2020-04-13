@@ -2,7 +2,7 @@
 
 ## Summary
 
-Multilingual Pages Converter is a .NET console application that allows you to convert a site previously using the PnP Multilingual Pages Application Extension to using the OOB SharePoint Online Multilingual Pages solution.
+Multilingual Pages Converter is a .NET console application that allows you to convert a site previously using the PnP Multilingual Pages Application Extension (archived to teh SPFxExt folder) to using the OOB SharePoint Online Multilingual Pages solution.
 
 ### Using the Multilingual Pages Converter
 
@@ -41,7 +41,7 @@ Version|Date|Comments
 ## Minimal Path to Awesome
 
 * Clone this repository
-* Move to right solution folder
+* Move to the "Converter" sub-folder
 * Build the Visual Studio solution
 * Enable and configure OOB languages settings in site administration
 * Execute MultilingualPagesConverter.exe
