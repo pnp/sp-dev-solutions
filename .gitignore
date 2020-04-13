@@ -83,3 +83,5 @@ configBeta/
 
 
 solutions/MultilingualPages/\.vscode/settings\.json
+
+.vscode/settings.json
