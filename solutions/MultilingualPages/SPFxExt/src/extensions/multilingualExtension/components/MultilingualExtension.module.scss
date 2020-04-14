@@ -1,0 +1,259 @@
+@import '~office-ui-fabric-react/dist/sass/References.scss';
+
+.multilingualContainer {
+  background-color: whitesmoke;
+  padding-top: 5px;
+  padding-bottom: 5px;
+
+  .multilingualButton {
+    margin-left: 30px;
+
+    .languageButton {
+      z-index: 6;
+      text-align: center;
+      cursor: pointer;
+    }
+
+    .languageSelectorCont {
+      %languageButton {
+        display: none;
+        padding: .75em .75em;
+        cursor: pointer;
+
+        &:hover {
+          background-color: #eaeaea;
+        }
+
+        .mastericon {
+          margin-left: 5px;
+        }
+      }
+
+      .languageOther {
+        @extend %languageButton;
+      }
+
+      .languageSelect {
+        .selected {
+          @extend %languageButton;
+          display: inline-block;
+        }
+
+        &:hover {
+          .languageOther {
+            display: inline-block;
+            margin-left: 10px;
+          }
+        }
+
+        .nonMobileShow {
+          display: block;
+          float: right;
+          margin-left: 10px;
+          font-size: .85em;
+          margin-top: 3px;
+        }
+
+        .mobileShow {
+          display: none;
+        }
+      }
+    }
+
+    @media only screen and (max-width: 480px) {
+      .languageSelectorCont {
+        max-height: 55px;
+        height: 55px;
+        transition: max-height 1s ease-out;
+
+        &.show {
+          height: unset;
+          max-height: 1000px;
+          transition: max-height 1s ease-in;
+        }
+
+        %languageButtonMobile {
+          padding: .75em .75em;
+          cursor: pointer;
+          display: block;
+
+          &:hover {
+            background-color: transparent;
+          }
+        }
+
+        .languageSelect {
+          @extend %languageButtonMobile;
+
+          .selected {
+            display: block;
+
+            &:hover {
+              background-color: transparent;
+            }
+          }
+
+          &:hover {
+            .languageOther {
+              display: block;
+              margin-left: 0;
+            }
+          }
+
+          .nonMobileShow {
+            display: none;
+          }
+
+          .mobileShow {
+            display: block;
+            float: right;
+          }
+
+          >div {
+            @extend %languageButtonMobile;
+          }
+        }
+      }
+    }
+
+    .languageCombo {
+      //Taken from Fabric React ComboBox component
+      font-family: "Segoe UI", "Segoe UI Web (West European)", "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif;
+      -webkit-font-smoothing: antialiased;
+      font-size: 14px;
+      font-weight: 400;
+      box-shadow: none;
+      margin-left: 0px;
+      padding-top: 1px;
+      padding-bottom: 1px;
+      padding-right: 32px;
+      padding-left: 12px;
+      color: rgb(51, 51, 51);
+      position: relative;
+      background-color: rgb(255, 255, 255);
+      cursor: pointer;
+      display: block;
+      height: 32px;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      box-sizing: border-box;
+      user-select: none;
+      outline: 0px;
+      border-width: 1px;
+      border-style: solid;
+      border-color: rgb(166, 166, 166);
+      overflow: hidden;
+    }
+
+    .buttonMovePage {
+      >* {
+        display: inline-block;
+      }
+
+      .label {
+        margin-right: 10px;
+      }
+    }
+  }
+
+  .multilingualPanel {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    width: 340px;
+    background: white;
+    z-index: 11;
+    display: none;
+    padding: 20px;
+    overflow-y: auto;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 0px 30px 0px;
+    border-left: 1px solid rgb(234, 234, 234);
+    border-right: 1px solid rgb(234, 234, 234);
+
+    &.show {
+      display: block;
+    }
+
+    .hidePanel {
+      top: 0;
+      right: 15px;
+      position: fixed;
+      color: black;
+      cursor: pointer;
+    }
+
+    .panelDetail {
+      margin-top: 30px;
+
+      .iconPanel {
+        margin-left: 5px;
+        vertical-align: middle;
+        cursor: pointer;
+      }
+
+      .translationToggle {
+        .toggle {
+          display: inline-block;
+          vertical-align: text-top;
+          width: 54px;
+        }
+
+        .desc {
+          display: inline-block;
+          vertical-align: text-top;
+          width: 269px;
+
+          .pageInfoPanel {
+            margin: 5px 0 5px -55px;
+            background: #f5f5f5;
+            padding: 8px;
+
+            .info {
+              margin-left: 2px;
+            }
+          }
+        }
+      }
+
+      .pageInfoCont {
+        display: inline-block;
+
+        .pageInfoPanel {
+          margin: 5px 0 5px 0;
+          background: #f5f5f5;
+          padding: 8px;
+
+          .info {
+            margin-left: 2px;
+          }
+        }
+      }
+
+      .pageInfoTitle {
+        display: inline-block;
+        color: rgb(166, 166, 166);
+
+        &.selected {
+          color: inherit;
+          cursor: pointer;
+        }
+      }
+
+      .commandCont {
+        margin-top: 20px;
+        text-align: right;
+
+        .panelCommand {
+          margin-top: 10px;
+
+          .spinner {
+            margin-right: 20px;
+            display: inline-block;
+          }
+        }
+      }
+
+    }
+  }
+}

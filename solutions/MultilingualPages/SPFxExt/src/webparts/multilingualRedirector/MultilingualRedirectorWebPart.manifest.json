@@ -1,0 +1,30 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx/client-side-web-part-manifest.schema.json",
+  "id": "e842c4da-371b-410e-a3ca-b890d4342564",
+  "alias": "MultilingualRedirectorWebPart",
+  "componentType": "WebPart",
+  "version": "*",
+  "manifestVersion": 2,
+  "requiresCustomScript": false,
+  "supportedHosts": [
+    "SharePointWebPart"
+  ],
+  "preconfiguredEntries": [
+    {
+      "groupId": "5c03119e-3074-46fd-976b-c60198311f70",
+      "group": {
+        "default": "Other"
+      },
+      "title": {
+        "default": "Multilingual Redirector"
+      },
+      "description": {
+        "default": "A web part for redirecting users to multilingual pages based onlanguage setting"
+      },
+      "officeFabricIconFontName": "Forward",
+      "properties": {
+        "redirectionMap": "{\"routes\":[]}"
+      }
+    }
+  ]
+}

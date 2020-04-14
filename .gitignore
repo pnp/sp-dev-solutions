@@ -84,3 +84,5 @@ configBeta/
 
 solutions/MultilingualPages/\.vscode/settings\.json
 .DS_Store
+
+.vscode/settings.json

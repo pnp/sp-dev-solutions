@@ -1,0 +1,21 @@
+@import '~office-ui-fabric-react/dist/sass/References.scss';
+
+.multilingualRedirector {
+  .propLanguage {
+    display: flex;
+
+    align-content: flex-start;
+    flex: 1;
+    flex-wrap: nowrap;
+
+    .propLangValue {
+      flex-grow: 1;
+    }
+
+    .propLangButton {
+      width: 35px;
+      margin-left: 5px;
+      align-self: flex-end;
+    }
+  }
+}
