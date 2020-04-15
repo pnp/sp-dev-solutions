@@ -10,6 +10,8 @@ There are two web parts included with Change Request Management:
 
 ![Issues Screenshot](./assets/screenshot.png)
 
+![Change management web parts set up as a personal Teams app](./assets/screenshot-teams.png)
+
 ## Used SharePoint Framework Version 
 ![drop](https://img.shields.io/badge/version-v1.10-green.svg)
 
