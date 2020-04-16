@@ -128,7 +128,7 @@ export default class PersonDisplay extends React.Component<IPersonDisplayProps, 
           </div>
 
           <Pivot ref="pivot">
-            <PivotItem key="summary" linkText="Summary">
+            <PivotItem key="summary" headerText="Summary">
               <div className={styles.pivotInterior}>
                 <div className={styles.fieldListArea}>
                   <div className={styles.fieldArea}>
@@ -170,7 +170,7 @@ export default class PersonDisplay extends React.Component<IPersonDisplayProps, 
                 </div>
               </div>
             </PivotItem>
-            <PivotItem key="address" linkText="Address">
+            <PivotItem key="address" headerText="Address">
               <div className={styles.pivotInterior}>
                 <div className={styles.fieldListArea}>
                   <div className={styles.fieldArea}>
@@ -217,7 +217,7 @@ export default class PersonDisplay extends React.Component<IPersonDisplayProps, 
               </div>
             </PivotItem>
             
-            <PivotItem key="social" linkText="Social">
+            <PivotItem key="social" headerText="Social">
               <div className={styles.pivotInterior}>
                 <div className={styles.fieldListArea}>
                   <div className={styles.fieldArea}>
@@ -263,7 +263,7 @@ export default class PersonDisplay extends React.Component<IPersonDisplayProps, 
                 </div>              
               </div>
             </PivotItem>
-            <PivotItem key="phone" linkText="Phone">
+            <PivotItem key="phone" headerText="Phone">
               <div className={styles.pivotInterior}>
                 <div className={styles.fieldListArea}>
                   <div className={styles.fieldArea}>
@@ -301,7 +301,7 @@ export default class PersonDisplay extends React.Component<IPersonDisplayProps, 
                 </div>              
               </div>
             </PivotItem>
-            <PivotItem key="misc" linkText="Miscellaneous">
+            <PivotItem key="misc" headerText="Miscellaneous">
               <div className={styles.pivotInterior}>
                 <div className={styles.iteratorArea}>
                   <ItemFieldIterator isDisplayOnly={true} excludedFields={ ["Facebook", "LinkedIn", "Twitter", "WebPage", "PersonalWebsite", "Title", "First Name", "Tags", "Organization", "JobTitle", "FullName", "Email", "Company", "Comments", "WorkFax", "CellPhone", "HomePhone", "WorkPhone", "WorkState", "WorkCountry", "WorkAddress", "WorkZip", "WorkCity"] } itemContext={ this._itemContext } />

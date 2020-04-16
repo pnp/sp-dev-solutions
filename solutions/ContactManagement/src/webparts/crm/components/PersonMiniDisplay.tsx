@@ -16,9 +16,9 @@ export interface IPersonMiniDisplayState {
 
 export default class PersonMiniDisplay extends React.Component<IPersonMiniDisplayProps, IPersonMiniDisplayState> {
 
-  public constructor()
+  public constructor(props: IPersonMiniDisplayProps)
   {
-    super();
+    super(props);
   }
 
   public render(): JSX.Element {

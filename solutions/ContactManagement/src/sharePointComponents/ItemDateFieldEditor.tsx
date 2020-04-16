@@ -18,9 +18,9 @@ export interface IItemDateFieldEditorState extends IFieldComponentState {
 
 export default class ItemDateFieldEditor extends FieldComponent<IItemDateFieldEditorProps, IItemDateFieldEditorState> {
 
-  public constructor()
+  public constructor(props: IItemDateFieldEditorProps)
   {
-    super();
+    super(props);
   }
 
   public render(): JSX.Element {
@@ -28,7 +28,7 @@ export default class ItemDateFieldEditor extends FieldComponent<IItemDateFieldEd
       <div className={styles.sharePointComponent}>
         <TextField 
           value={ this.valueString }
-          onChanged={ this._handleValueChanged }
+          onChange={ this._handleValueChanged }
         />
       </div>
     );

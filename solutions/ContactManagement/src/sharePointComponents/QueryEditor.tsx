@@ -12,7 +12,7 @@ import { ISharePointDataProvider } from '../data/ISharePointDataProvider';
 import { ISPList } from '../data/ISPList';
 import ClauseEditor from './ClauseEditor';
 
-import { Button } from 'office-ui-fabric-react';
+import { DefaultButton } from 'office-ui-fabric-react';
 
 export interface IQueryEditorProps {
   query: Query;
@@ -27,9 +27,9 @@ export interface IQueryEditorState {
 
 export default class QueryEditor extends React.Component<IQueryEditorProps, IQueryEditorState> {
 
-  public constructor()
+  public constructor(props: IQueryEditorProps)
   {
-    super();
+    super(props);
 
     this._handleAddClause = this._handleAddClause.bind(this);
     this._handleApply = this._handleApply.bind(this);
@@ -81,10 +81,10 @@ export default class QueryEditor extends React.Component<IQueryEditorProps, IQue
           }
         </div>
         <div className={styles.buttonArea} >
-          <Button onClick={ this._handleAddClause } className={ styles.button}>Add</Button>
+          <DefaultButton onClick={ this._handleAddClause } className={ styles.button}>Add</DefaultButton>
           {
             this.props.displayApplyButton ?
-              <Button onClick={ this._handleApply } className={styles.button}>Apply</Button> : <div></div>
+              <DefaultButton onClick={ this._handleApply } className={styles.button}>Apply</DefaultButton> : <div></div>
           }
         </div>
       </div>

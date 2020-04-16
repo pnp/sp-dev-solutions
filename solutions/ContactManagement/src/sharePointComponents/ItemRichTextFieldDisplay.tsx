@@ -16,9 +16,9 @@ export interface IItemRichTextFieldDisplayState extends IFieldComponentState {
 
 export default class ItemRichTextFieldDisplay extends FieldComponent<IItemRichTextFieldDisplayProps, IItemRichTextFieldDisplayState> {
 
-  public constructor()
+  public constructor(props: IItemRichTextFieldDisplayProps)
   {
-    super();
+    super(props);
   }
 
   public render(): JSX.Element {

@@ -26,9 +26,9 @@ export interface IPickerItem
 
 export default class ItemMultiLookupFieldEditor extends FieldComponent<IItemMultiLookupFieldEditorProps, IItemMultiLookupFieldEditorState> {
 
-  public constructor()
+  public constructor(props: IItemMultiLookupFieldEditorProps)
   {
-    super();
+    super(props);
 
     this._handleChanged = this._handleChanged.bind(this);
     this._onFilterChanged = this._onFilterChanged.bind(this);

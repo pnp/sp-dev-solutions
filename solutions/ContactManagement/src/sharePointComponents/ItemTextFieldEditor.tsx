@@ -19,9 +19,9 @@ export interface IItemTextFieldEditorState extends IFieldComponentState {
 
 export default class ItemTextFieldEditor extends FieldComponent<IItemTextFieldEditorProps, IItemTextFieldEditorState> {
 
-  public constructor()
+  public constructor(props: IItemTextFieldEditorProps)
   {
-    super();
+    super(props);
   }
 
   public render(): JSX.Element {
@@ -30,7 +30,7 @@ export default class ItemTextFieldEditor extends FieldComponent<IItemTextFieldEd
         <TextField 
           value={ this.valueString }
           placeholder={ this.props.placeholder ? this.props.placeholder : "" }
-          onChanged={ this._handleValueChanged }
+          onChange={ this._handleValueChanged }
         />
       </div>
     );

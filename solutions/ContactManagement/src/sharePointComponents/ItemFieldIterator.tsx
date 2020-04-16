@@ -29,9 +29,9 @@ export interface IItemFieldIteratorState extends IItemComponentState {
 
 export default class ItemFieldIterator extends ItemComponent<IItemFieldIteratorProps, IItemFieldIteratorState> {
 
-  public constructor()
+  public constructor(props: IItemFieldIteratorProps)
   {
-    super();
+    super(props);
 
     this.state = {
 

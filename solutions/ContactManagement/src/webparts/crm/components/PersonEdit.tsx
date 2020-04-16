@@ -130,7 +130,9 @@ export default class PersonEdit extends React.Component<IPersonEditProps, IPerso
       else
       {
         this.props.manager.data.updatePersonItem(this.state.person).then((data: IPerson[]) => {
-          this.state.person = data[0];
+          this.setState({ 
+            person: data[0]
+          });
         });
       }
 
@@ -172,7 +174,7 @@ export default class PersonEdit extends React.Component<IPersonEditProps, IPerso
           </div>
         </div>
         <Pivot ref="pivot">
-            <PivotItem key="summary" linkText="Summary">
+            <PivotItem key="summary" headerText="Summary">
               <div className={styles.pivotInterior}>
                 <ItemMultilineTextFieldEditor field={ this._itemContext.getField("Comments") } placeholder="Comments" stripHtml={true} itemContext={ this._itemContext } />
                 <div className={styles.fieldListArea}>
@@ -215,7 +217,7 @@ export default class PersonEdit extends React.Component<IPersonEditProps, IPerso
                 </div>
               </div>
             </PivotItem>
-            <PivotItem key="address" linkText="Address">
+            <PivotItem key="address" headerText="Address">
               <div className={styles.pivotInterior}>
                 <div className={styles.fieldListArea}>
                   <div className={styles.fieldArea}>
@@ -262,7 +264,7 @@ export default class PersonEdit extends React.Component<IPersonEditProps, IPerso
               </div>
             </PivotItem>
             
-            <PivotItem key="social" linkText="Social">
+            <PivotItem key="social" headerText="Social">
               <div className={styles.pivotInterior}>
                 <div className={styles.fieldListArea}>
                   <div className={styles.fieldArea}>
@@ -308,7 +310,7 @@ export default class PersonEdit extends React.Component<IPersonEditProps, IPerso
                 </div>              
               </div>
             </PivotItem>
-            <PivotItem key="phone" linkText="Phone">
+            <PivotItem key="phone" headerText="Phone">
               <div className={styles.pivotInterior}>
                 <div className={styles.fieldListArea}>
                   <div className={styles.fieldArea}>
@@ -346,7 +348,7 @@ export default class PersonEdit extends React.Component<IPersonEditProps, IPerso
                 </div>              
               </div>
             </PivotItem>
-            <PivotItem key="misc" linkText="Miscellaneous">
+            <PivotItem key="misc" headerText="Miscellaneous">
               <div className={styles.pivotInterior}>
                 <div className={styles.iteratorArea}>
                   <ItemFieldIterator excludedFields={ ["Facebook", "LinkedIn", "Twitter", "WebPage", "PersonalWebsite", "Title", "First Name", "Tags", "Organization", "JobTitle", "FullName", "Email", "Company", "Comments", "WorkFax", "CellPhone", "HomePhone", "WorkPhone", "WorkState", "WorkCountry", "WorkAddress", "WorkZip", "WorkCity"] } itemContext={ this._itemContext } />

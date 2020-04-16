@@ -18,7 +18,7 @@ import View from '../../../data/View';
 import ViewSet from '../../../data/ViewSet';
 import SearchResults from './SearchResults';
 
-import { Button } from 'office-ui-fabric-react/lib/Button';
+import { DefaultButton } from 'office-ui-fabric-react/lib/Button';
 
 import {
   PivotItem,
@@ -124,10 +124,10 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
       return (
         <div className={ styles.crm } >
           <div className={ styles.formToolBar }>          
-            <Button className={ styles.formButton } onClick={ () => { 
+            <DefaultButton className={ styles.formButton } onClick={ () => { 
                 this.setState( { initialMode: this.props.mode, mode: CrmMode.PersonDirectory });
               }
-            }><i className="ms-Icon ms-Icon--Back" aria-hidden="true"></i></Button>
+            }><i className="ms-Icon ms-Icon--Back" aria-hidden="true"></i></DefaultButton>
           </div>
           <SearchResults manager={ this.props.manager } searchTerm= { this.props.searchTerm } searchTags= { this.props.searchTags } onPersonSelected={ this._handlePersonSelected } onOrganizationSelected={ this._handleOrganizationSelected } />
         </div>
@@ -138,12 +138,12 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
 
   	return (
     	<div className={styles.crm} >
-        <Pivot ref="pivot" onLinkClick={ this._handleLinkClick }  initialSelectedKey={ activeMode.toString() }>
+        <Pivot ref="pivot" onLinkClick={ this._handleLinkClick }  defaultSelectedKey={ activeMode.toString() }>
           { searchPane } 
-          <PivotItem  key={ CrmMode.PersonDirectory.toString() } itemKey={ CrmMode.PersonDirectory.toString() }  linkText="People">
+          <PivotItem  key={ CrmMode.PersonDirectory.toString() } itemKey={ CrmMode.PersonDirectory.toString() }  headerText="People">
               <PersonDirectory ref='personDirectory' manager={ this.props.manager } onPersonSelected={ this._handlePersonSelected } />
           </PivotItem>
-          <PivotItem key={ CrmMode.OrganizationDirectory.toString() } itemKey={ CrmMode.OrganizationDirectory.toString() }  linkText='Organizations'  >
+          <PivotItem key={ CrmMode.OrganizationDirectory.toString() } itemKey={ CrmMode.OrganizationDirectory.toString() }  headerText='Organizations'  >
               <OrganizationDirectory ref='organizationDirectory' mode={ OrganizationDirectoryMode.All } manager={ this.props.manager } onOrganizationSelected={ this._handleOrganizationSelected } />
           </PivotItem>
             {
@@ -152,12 +152,12 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
                 {
                   view.onViewChange = me._handleViewChange;
 
-                  return <PivotItem key={ (50 + i) + ""} itemKey= { (50 + i) + "" } linkText={view.title}>
+                  return <PivotItem key={ (50 + i) + ""} itemKey= { (50 + i) + "" } headerText={view.title}>
                       <OrganizationDirectory view={ view } mode={ OrganizationDirectoryMode.View } manager={ me.props.manager }  onOrganizationSelected={ me._handleOrganizationSelected }/>
                     </PivotItem>;
                 }) : ''
             } 
-          <PivotItem key={ CrmMode.OrganizationQuery.toString() } itemKey={ CrmMode.OrganizationQuery.toString() }  linkText='Query'  >
+          <PivotItem key={ CrmMode.OrganizationQuery.toString() } itemKey={ CrmMode.OrganizationQuery.toString() }  headerText='Query'  >
               <OrganizationQuery ref='organizationQuery' manager={ this.props.manager } onOrganizationSelected={ this._handleOrganizationSelected } />
           </PivotItem>
         </Pivot>

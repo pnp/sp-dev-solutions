@@ -11,7 +11,7 @@ import ViewEditor from './ViewEditor';
 import styles from '../Crm.module.scss';
 import { ICrmDataProvider } from '../../../dataProviders/ICrmDataProvider';
 
-import { Button, IDropdownOption } from 'office-ui-fabric-react';
+import { IDropdownOption, DefaultButton } from 'office-ui-fabric-react';
 import { DropdownEx } from '../../../sharePointComponents/DropdownEx';
 
 export interface IPartViewManagerProps {
@@ -143,7 +143,7 @@ export default class PartViewManager extends React.Component<IPartViewManagerPro
                   }
                 </div>
                 <div className= { styles.selectorAdd }>
-                  <Button onClick={ this._handleAddView }>Add</Button>
+                  <DefaultButton onClick={ this._handleAddView }>Add</DefaultButton>
                 </div>       
               </div>
             </div>

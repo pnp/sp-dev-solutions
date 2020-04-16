@@ -20,9 +20,9 @@ export interface IItemLookupFieldEditorState extends IFieldComponentState {
 
 export default class ItemLookupFieldEditor extends FieldComponent<IItemLookupFieldEditorProps, IItemLookupFieldEditorState> {
 
-  public constructor()
+  public constructor(props: IItemLookupFieldEditorProps)
   {
-    super();
+    super(props);
 
     this._handleDropdownValueChanged = this._handleDropdownValueChanged.bind(this);
   }

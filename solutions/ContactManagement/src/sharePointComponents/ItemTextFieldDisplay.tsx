@@ -15,9 +15,9 @@ export interface IItemTextFieldDisplayState extends IFieldComponentState {
 
 export default class ItemTextFieldDisplay extends FieldComponent<IItemTextFieldDisplayProps, IItemTextFieldDisplayState> {
 
-  public constructor()
+  public constructor(props: IItemTextFieldDisplayProps)
   {
-    super();
+    super(props);
   }
 
   public render(): JSX.Element {

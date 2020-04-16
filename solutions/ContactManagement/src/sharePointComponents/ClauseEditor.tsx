@@ -31,9 +31,9 @@ export interface IClauseEditorState {
 
 export default class ClauseEditor extends React.Component<IClauseEditorProps, IClauseEditorState> {
 
-  public constructor()
+  public constructor(props: Readonly<IClauseEditorProps>)
   {
-    super();
+    super(props);
 
     this._handleFieldDropdownValueChanged = this._handleFieldDropdownValueChanged.bind(this);
     this._handleTypeDropdownValueChanged = this._handleTypeDropdownValueChanged.bind(this);
