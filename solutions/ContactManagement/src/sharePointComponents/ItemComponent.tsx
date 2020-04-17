@@ -15,9 +15,9 @@ export interface IItemComponentState {
 
 export abstract class ItemComponent<P extends IItemComponentProps, S extends IItemComponentState> extends React.Component<P, S> {
 
-  public constructor()
+  public constructor(props: P)
   {
-    super();
+    super(props);
   }
 
   public abstract render();

@@ -1,13 +1,18 @@
 {
-  "entries": [
-    {
-      "entry": "./lib/webparts/crm/CrmWebPart.js",
-      "manifest": "./src/webparts/crm/CrmWebPart.manifest.json",
-      "outputPath": "./dist/crm.bundle.js"
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/config.2.0.schema.json",
+  "version": "2.0",
+  "bundles": {
+    "crm-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/crm/CrmWebPart.js",
+          "manifest": "./src/webparts/crm/CrmWebPart.manifest.json"
+        }
+      ]
     }
-  ],
+  },
   "externals": {},
   "localizedResources": {
-    "crmStrings": "webparts/crm/loc/{locale}.js"
+    "crmStrings": "lib/webparts/crm/loc/{locale}.js"
   }
 }

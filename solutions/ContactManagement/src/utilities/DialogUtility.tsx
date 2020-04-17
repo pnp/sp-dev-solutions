@@ -4,18 +4,16 @@
 import * as React from 'react';
 import * as ReactDom from 'react-dom';
 
-import styles from '../webparts/crm/Crm.module.scss';
 import DialogOptions from './DialogOptions';
-
-import { Dialog, DialogType, DialogFooter } from 'office-ui-fabric-react/lib/Dialog';
-import { Button } from 'office-ui-fabric-react/lib/Button';
+import { DialogBase } from 'office-ui-fabric-react/lib/Dialog';
+import { CustomDialog, CustomDialogOptions } from './CustomDialog';
 
 export type DialogCallback = (options? : DialogOptions) => void;
 
 export default class DialogUtility {
     
     private static activeDialog : Element;
-    public static dialogHostElement : Dialog;
+    public static dialogHostElement : DialogBase;
     private static activeOptions : DialogOptions;
 
     public static isShowingDialog : boolean;
@@ -31,30 +29,17 @@ export default class DialogUtility {
 
         DialogUtility.isShowingDialog = true;
 
-        var CustomDialog = React.createClass({
-            render: () => {
-                return <Dialog  isOpen={ DialogUtility.isShowingDialog }
-                            type={ DialogType.largeHeader }
-                            className = { styles.dialogOuter}
-                            title= { options && options.dialogTitle ? options.dialogTitle : "Dialog" }
-                            subText= { options && options.dialogSubtext ? options.dialogSubtext : "" }
-                            ref={ (input) => { DialogUtility.dialogHostElement = input; }}
-                            isBlocking={ false } >
-                            {elt}
-                      <DialogFooter>
-                        <Button style={{ border: "solid 1px #D0D0D0" }} onClick={ DialogUtility.saveDialog }>Save</Button>
-                        <Button style={{ border: "solid 1px #D0D0D0" }} onClick={ DialogUtility.hideDialog }>Cancel</Button>
-                      </DialogFooter>
-                    </Dialog>;
-                }
-            });
-
         let divOuter = document.createElement("DIV");
         divOuter.style.zIndex = "100";
         divOuter.style.minWidth = "600px";
         divOuter.style.width = "80vw";
 
-        ReactDom.render(<CustomDialog/>, divOuter, (eltA) => {
+        const customDialog = React.createElement<CustomDialogOptions>(CustomDialog, {
+            elt: elt,
+            options: options
+        });
+
+        ReactDom.render(customDialog, divOuter, () => {
             DialogUtility.dialogHostElement.setState( { isOpen: true });
             DialogUtility.dialogHostElement.forceUpdate();
         });

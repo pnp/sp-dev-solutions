@@ -21,9 +21,9 @@ export interface IItemMultilineTextFieldEditorState extends IFieldComponentState
 
 export default class ItemMultilineTextFieldEditor extends FieldComponent<IItemMultilineTextFieldEditorProps, IItemMultilineTextFieldEditorState> {
 
-  public constructor()
+  public constructor(props: IItemMultilineTextFieldEditorProps)
   {
-    super();
+    super(props);
   }
 
   public render(): JSX.Element {
@@ -41,7 +41,7 @@ export default class ItemMultilineTextFieldEditor extends FieldComponent<IItemMu
           multiline = { true }
           value={ val }
           placeholder={ this.props.placeholder ? this.props.placeholder : "" }
-          onChanged={ this._handleValueChanged }
+          onChange={ this._handleValueChanged }
         />
       </div>
     );

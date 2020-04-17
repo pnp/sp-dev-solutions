@@ -18,9 +18,9 @@ export interface IItemRichTextFieldEditorState extends IFieldComponentState {
 export default class ItemRichTextFieldEditor extends FieldComponent<IItemRichTextFieldEditorProps, IItemRichTextFieldEditorState> {
   private _lastValue = null;
   private _lastRichTextState = null;
-  public constructor()
+  public constructor(props: IItemRichTextFieldEditorProps)
   {
-    super();
+    super(props);
 
     this._handleHtmlChanged = this._handleHtmlChanged.bind(this);
   }

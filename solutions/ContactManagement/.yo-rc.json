@@ -1,5 +1,11 @@
 {
   "@microsoft/generator-sharepoint": {
+    "version": "1.10.0",
+    "isDomainIsolated": false,
+    "isCreatingSolution": true,
+    "packageManager": "npm",
+    "componentType": "webpart",
+    "environment": "spo",
     "libraryName": "crm",
     "libraryId": "7e571ffc-e6a5-443e-8bbb-78d0ddbee6a0",
     "framework": "react"

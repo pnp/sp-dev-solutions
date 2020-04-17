@@ -30,7 +30,7 @@ export default class ViewEditor extends React.Component<IViewEditorProps, IViewE
     this._handleChange = this._handleChange.bind(this);
   }
 
-  private _handleChange(newValue : string) : void
+  private _handleChange(event, newValue?: string) : void
   {
     if (newValue != this.props.view.title)
     {
@@ -58,7 +58,7 @@ export default class ViewEditor extends React.Component<IViewEditorProps, IViewE
     return (
       <div className={ styles.organizationDirectory }>
         
-        <TextField onChanged={ this._handleChange } value= { this.props.view.title}></TextField>
+        <TextField onChange={ this._handleChange } value= { this.props.view.title}></TextField>
         <QueryEditor query={this.props.view.query} list={this.props.data.selectedOrganizationList } dataProvider={ this.props.data } displayApplyButton={ false }/>
 
       </div>

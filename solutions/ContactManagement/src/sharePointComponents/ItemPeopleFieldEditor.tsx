@@ -28,9 +28,9 @@ export interface IItemPeopleFieldEditorState extends IFieldComponentState {
 export default class ItemPeopleFieldEditor extends FieldComponent<IItemPeopleFieldEditorProps, IItemPeopleFieldEditorState> {
   private _wasRetrieved : boolean = false;
 
-  public constructor()
+  public constructor(props: IItemPeopleFieldEditorProps)
   {
-    super();
+    super(props);
 
     this._handleDropdownValueChanged = this._handleDropdownValueChanged.bind(this);
     this._onFilterChanged = this._onFilterChanged.bind(this);
@@ -58,7 +58,7 @@ export default class ItemPeopleFieldEditor extends FieldComponent<IItemPeopleFie
           for (var user of users)
           {
               var persona = {
-                primaryText: user.Title,
+                text: user.Title,
                 imageUrl: user.EMail != null ? "https://outlook.office365.com/owa/service.svc/s/GetPersonaPhoto?email=" + user.EMail + "&amp;UA=0&amp;size=HR64x64" : null,                       
                 presence: PersonaPresence.none,
                 size: PersonaSize.small,
@@ -124,7 +124,7 @@ export default class ItemPeopleFieldEditor extends FieldComponent<IItemPeopleFie
             var personas : IPersonaProps[] = new Array();
 
             var personaMe = {
-              primaryText: "[me]",
+              text: "[me]",
               size: PersonaSize.small,
               presence: PersonaPresence.none,
               key: "Ume" 
@@ -136,7 +136,7 @@ export default class ItemPeopleFieldEditor extends FieldComponent<IItemPeopleFie
             for (var user of users)
             {
               var persona = {
-                primaryText: user.Title,
+                text: user.Title,
                 imageUrl: user.EMail != null ? "https://outlook.office365.com/owa/service.svc/s/GetPersonaPhoto?email=" + user.EMail + "&amp;UA=0&amp;size=HR64x64" : null,       
                 size : PersonaSize.small,
                 presence: PersonaPresence.none,
@@ -165,7 +165,7 @@ export default class ItemPeopleFieldEditor extends FieldComponent<IItemPeopleFie
       <div className={styles.sharePointComponent}>
         <CompactPeoplePicker
           onResolveSuggestions={ this._onFilterChanged }
-          getTextFromItem={ (persona: IPersonaProps) => persona ? persona.primaryText : null }
+          getTextFromItem={ (persona: IPersonaProps) => persona ? persona.text : null }
           className={ 'ms-PeoplePicker' }
           defaultSelectedItems={ this.state != null && this.state.selectedPersonas != null ? this.state.selectedPersonas : null }
           onChange={this._onChange }

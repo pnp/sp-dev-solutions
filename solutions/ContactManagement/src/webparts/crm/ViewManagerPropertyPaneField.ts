@@ -5,9 +5,9 @@ import * as React from 'react';
 import * as ReactDom from 'react-dom';
 import {
   IPropertyPaneField,
-  PropertyPaneFieldType
-} from '@microsoft/sp-webpart-base';
-import { IPropertyPaneCustomFieldProps } from '@microsoft/sp-webpart-base';
+  PropertyPaneFieldType,
+  IPropertyPaneCustomFieldProps
+} from '@microsoft/sp-property-pane';
 import PartViewManager, {IPartViewManagerProps} from './components/PartViewManager';
 import ViewSet from '../../data/ViewSet';
 import { ICrmDataProvider } from '../../dataProviders/ICrmDataProvider';

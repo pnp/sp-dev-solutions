@@ -144,7 +144,7 @@ export default class OrganizationEdit extends React.Component<IOrganizationEditP
         </div>
 
         <Pivot ref="pivot">
-          <PivotItem key="summary" linkText="Summary">
+          <PivotItem key="summary" headerText="Summary">
             <div className={styles.fieldTab}>
             <div>Description:</div>
             <ItemMultilineTextFieldEditor stripHtml={true} field={this._itemContext.getField("Description") } itemContext={ this._itemContext } />
@@ -178,7 +178,7 @@ export default class OrganizationEdit extends React.Component<IOrganizationEditP
               </div>
             </div>
           </PivotItem>
-          <PivotItem key="org" linkText='Address' >            
+          <PivotItem key="org" headerText='Address' >            
             <div className="{styles.fieldTab}">
               <div className={styles.fieldListArea}>
                 <div className={styles.fieldArea}>
@@ -224,7 +224,7 @@ export default class OrganizationEdit extends React.Component<IOrganizationEditP
               </div>
             </div>
           </PivotItem>
-          <PivotItem key="res" linkText='Resources' >            
+          <PivotItem key="res" headerText='Resources' >            
             <div className="{styles.fieldTab}">
               <div className={styles.fieldListArea}>
                 <div className={styles.fieldArea}>
@@ -255,7 +255,7 @@ export default class OrganizationEdit extends React.Component<IOrganizationEditP
               </div>
             </div>
           </PivotItem>
-          <PivotItem key="orgrecent" linkText='Miscellaneous' >
+          <PivotItem key="orgrecent" headerText='Miscellaneous' >
               <div className={styles.fieldTab}>
             
             <div className={styles.iteratorArea}>
