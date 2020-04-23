@@ -7,7 +7,7 @@ import * as DateTimePicker from 'react-datetime';
 import ICheckInDialogProps from './ICheckInDialogProps';
 import ICheckInDialogState from './ICheckInDialogState';
 import styles from './CheckInDialog.module.scss';
-import * as update from 'immutability-helper';
+import update from 'immutability-helper';
 import { ICheckOut, CheckOutStatus } from '../../models/InventoryCheckOutModel';
 import { Moment } from 'moment';
 import *as moment from 'moment';

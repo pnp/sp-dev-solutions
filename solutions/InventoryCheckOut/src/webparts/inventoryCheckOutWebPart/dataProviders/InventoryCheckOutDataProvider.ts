@@ -97,11 +97,16 @@ export class InventoryCheckOutDataProvider implements IInventoryCheckOutDataProv
             'Description': item.description,
             'Location': item.location,
             'Total_x0020_Quantity': item.totalQuantity,
-            'Image_x0020_Url' : item.imageUrl
+            'Image_x0020_Url' : {
+                Url: item.imageUrl
+            }
         };
         let requester: SPHttpClient = this._webPartContext.spHttpClient;
         return requester.post(`${this._ivItemlistItemsUrl}`, SPHttpClient.configurations.v1,
             {
+                headers: [
+                    ['content-type', 'application/json;odata.metadata=none']
+                ],
                 body: JSON.stringify(body)
             })
             .then((response: SPHttpClientResponse) => {
@@ -114,7 +119,7 @@ export class InventoryCheckOutDataProvider implements IInventoryCheckOutDataProv
                     description: json.Description,
                     location: json.Location,
                     totalQuantity: json.Total_x0020_Quantity,
-                    imageUrl: json.Image_x0020_Url
+                    imageUrl: json.Image_x0020_Url ? json.Image_x0020_Url.Url : undefined
                 };
                 return ivItem;
             });
@@ -127,11 +132,14 @@ export class InventoryCheckOutDataProvider implements IInventoryCheckOutDataProv
             'Description': item.description,
             'Location': item.location,
             'Total_x0020_Quantity': item.totalQuantity,
-            'Image_x0020_Url': item.imageUrl
+            'Image_x0020_Url': {
+                Url: item.imageUrl
+            }
         };
         let requester: SPHttpClient = this._webPartContext.spHttpClient;
         let headers: Headers = new Headers();
         headers.append('If-Match', '*');
+        headers.append('content-type', 'application/json;odata.metadata=none');
         return requester.fetch(`${this._ivItemlistItemsUrl}(${item.id})`, SPHttpClient.configurations.v1,
             {
                 body: JSON.stringify(body),
@@ -316,7 +324,7 @@ export class InventoryCheckOutDataProvider implements IInventoryCheckOutDataProv
                             description: item.Description,
                             location: item.Location,
                             totalQuantity: item.Total_x0020_Quantity,
-                            imageUrl: item.Image_x0020_Url
+                            imageUrl: item.Image_x0020_Url ? item.Image_x0020_Url.Url : undefined
                         };
                         return ivItem;
                     });

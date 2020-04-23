@@ -146,7 +146,7 @@ export class MockInventoryCheckOutList {
         return true;
     }
     private static _addDays(date: Date, days: number): Date {
-        let result = new Date(date);
+        let result = date;
         result.setDate(result.getDate() + days);
         return result;
     }

@@ -13,9 +13,9 @@ extensions:
   - react
   createdDate: 10/1/2017 12:00:00 AM
 ---
-﻿# Inventory and Check Outs
+# Inventory and Check Outs
 
-The Inventory and Checkout management part lets you manage a simple list inventory items, and build a "lending library" style check out infrastructure around them.   
+The Inventory and Checkout management part lets you manage a simple list inventory items, and build a "lending library" style check out infrastructure around them.
 
 The inventory web part is a single web part you can add to a web part page.  When fully configured, you can add inventory items to a list.  
 
@@ -26,9 +26,10 @@ Optionally, you can also choose to upload and link to pictures for items, so tha
 Users can individually view the items in the inventory list, and if they'd like, check out items from the list by clicking the checkout item button.  From there, they can input a time by which they expect to return the item.
 
 ![Inventory and Check-out Screenshot](./assets/inventorycheckout.png)
+![Inventory and Check-out as a personal Teams app](./assets/inventorycheckoutteams.png)
 
 ## Used SharePoint Framework Version 
-![drop](https://img.shields.io/badge/version-v1.1-green.svg)
+![drop](https://img.shields.io/badge/version-v1.10-green.svg)
 
 ## Applies to
 
@@ -57,6 +58,7 @@ InventoryCheckOut            | Cindy Yan (Canviz)                               
 
 Version  | Date               | Comments
 -------- | ------------------ | --------
+1.0.13   | April 23, 2020 | Updated to SPFx v1.10
 1.0      | September 27, 2017 | Initial release
 
 
