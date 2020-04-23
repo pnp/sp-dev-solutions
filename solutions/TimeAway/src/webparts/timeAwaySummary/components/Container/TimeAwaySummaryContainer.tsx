@@ -2,7 +2,7 @@
 // Licensed under the MIT license.
 
 import * as React from 'react';
-import * as Update from 'immutability-helper';
+import update from 'immutability-helper';
 import styles from './TimeAwaySummaryContainer.module.scss';
 
 import * as ca from "../../../../libraries/solutions/SharePointUtility";
@@ -35,7 +35,7 @@ export default class TimeAwaySummaryContainer extends React.Component<ITimeAwayS
   }
 
   public componentWillReceiveProps(props: ITimeAwaySummaryPagePros) {
-    this.setState(Update(this.state, {
+    this.setState(update(this.state, {
       weekType: {
         $set: props.weekType
       },
@@ -113,19 +113,19 @@ export default class TimeAwaySummaryContainer extends React.Component<ITimeAwayS
   }
 
   private _showMyTimeAway() {
-    this.setState(Update(this.state, {
+    this.setState(update(this.state, {
       isShowtimeawaySummary: { $set: !this.state.isShowtimeawaySummary }
     }));
   }
 
   private _provisioningLists(){
     var utility = ca.SharePointUtilityModule.SharePointUtility;
-    this.setState(Update(this.state, {
+    this.setState(update(this.state, {
       submitting: { $set: true }
     }));
 
     TimeAwayManager.ensureSPListTimeAway(this.props.context).then(() => {
-      this.setState(Update(this.state, {
+      this.setState(update(this.state, {
         isInitialized: { $set: true }
       }));
     });

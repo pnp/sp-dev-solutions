@@ -2,7 +2,7 @@
 // Licensed under the MIT license.
 
 import * as React from 'react';
-import * as Update from 'immutability-helper';
+import update from 'immutability-helper';
 import ITimeAwaySummaryListProps from './ITimeAwaySummaryListProps';
 import TimeAwaySummaryDay from '../day/TimeAwaySummaryDay';
 import { TimeAwaySummaryItem } from "../../models/TimeAwaySummaryItem";
@@ -57,7 +57,7 @@ export default class TimeAwaySummaryList extends React.Component<ITimeAwaySummar
   private _getTimeAwaySummaryList(): any {
     this.props.dataProvider.getTimeAwaySummaryList(this.props.weekType, this.props.phase, this.props.statusFilter).then(
       (items: TimeAwaySummaryItem[]) => {
-        this.setState(Update(this.state, {
+        this.setState(update(this.state, {
           items: {
             $set: items
           }

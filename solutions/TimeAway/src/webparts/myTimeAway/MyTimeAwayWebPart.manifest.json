@@ -1,11 +1,13 @@
 {
-  "$schema": "../../../node_modules/@microsoft/sp-module-interfaces/lib/manifestSchemas/jsonSchemas/clientSideComponentManifestSchema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx/client-side-web-part-manifest.schema.json",
 
   "id": "cc3ff58a-edf7-44ba-a47c-7daa593e1b93",
   "alias": "MyTimeAwayWebPart",
   "componentType": "WebPart",
-  "version": "1.0.1",
+  "version": "*",
   "manifestVersion": 2,
+  "supportedHosts": ["SharePointWebPart", "TeamsPersonalApp", "TeamsTab"],
+  "safeWithCustomScriptDisabled": true,
 
   "preconfiguredEntries": [{
     "groupId": "cc3ff58a-edf7-44ba-a47c-7daa593e1b93",

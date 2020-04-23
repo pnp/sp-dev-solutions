@@ -1,6 +1,5 @@
 import {
   SPHttpClient,
-  SPHttpClientBatch,
   SPHttpClientResponse
 } from '@microsoft/sp-http';
 import { IWebPartContext } from '@microsoft/sp-webpart-base';
@@ -48,40 +47,22 @@ export class SharePointDataProvider implements IMyTimeAwayDataProvider {
   //create items
   public createMyTimeAwayItem(item: IMyTimeAwayItem): Promise<IMyTimeAwayItem[]> {
     return this._checkItemPerson(item)
-      .then(() => {
-        const batch: SPHttpClientBatch = this._webPartContext.spHttpClient.beginBatch();
-        const batchPromises: Promise<{}>[] = [
-          this._createItem(batch, item),
-          this._getItemsBatched(batch, item.personId)
-        ];
-        return this._resolveBatch(batch, batchPromises);
-      });
+      .then(() => this._createItem(item))
+      .then(() => this._getItems(item.personId));
   }
  
   // update item
   public updateMyTimeAwayItem(itemUpdated: IMyTimeAwayItem): Promise<IMyTimeAwayItem[]> {
     return this._checkItemPerson(itemUpdated)
-      .then(() => {
-        const batch: SPHttpClientBatch = this._webPartContext.spHttpClient.beginBatch();
-        const batchPromises: Promise<{}>[] = [
-          this._updateItem(batch, itemUpdated),
-          this._getItemsBatched(batch, itemUpdated.personId)
-        ];
-        return this._resolveBatch(batch, batchPromises);
-      });
+      .then(() => this._updateItem(itemUpdated))
+      .then(() => this._getItems(itemUpdated.personId));
   }
  
   //delete item
   public deleteMyTimeAwayItem(itemDeleted: IMyTimeAwayItem): Promise<IMyTimeAwayItem[]> {
     return this._checkItemPerson(itemDeleted)
-      .then(() => {
-        const batch: SPHttpClientBatch = this._webPartContext.spHttpClient.beginBatch();
-        const batchPromises: Promise<{}>[] = [
-          this._deleteItem(batch, itemDeleted),
-          this._getItemsBatched(batch, itemDeleted.personId)
-        ];
-        return this._resolveBatch(batch, batchPromises);
-      });
+      .then(() => this._deleteItem(itemDeleted))
+      .then(() => this._getItems(itemDeleted.personId));
   }
 
   private _getItems(userId: string): Promise<IMyTimeAwayItem[]> {
@@ -116,32 +97,7 @@ export class SharePointDataProvider implements IMyTimeAwayDataProvider {
       });
   }
 
-  private _getItemsBatched(requester: SPHttpClientBatch, userId: string): Promise<IMyTimeAwayItem[]> {
-    const queryString: string = `?$select=Id,First_x0020_Name,Last_x0020_Name,Start,End,Comments,PersonId,OData__ModerationStatus`;
-    const queryUrl: string = this._listItemsUrl + queryString + this._getFilterString(userId);
-
-    return requester.get(queryUrl, SPHttpClientBatch.configurations.v1)
-      .then((response: SPHttpClientResponse) => {
-        return response.json();
-      })
-      .then((json: { value: any[] }) => {
-        return json.value.map((item: any) => {
-          const myTimeAwayItem: IMyTimeAwayItem = {
-            id: item.Id,
-            firstName: item.First_x0020_Name,
-            lastName: item.Last_x0020_Name,
-            start: item.Start,
-            end: item.End,
-            personId: item.PersonId,
-            comments: item.Comments,
-            status: item.OData__ModerationStatus,
-            link: `${this._webPartContext.pageContext.web.absoluteUrl}/lists/${this._listName}/DispForm.aspx?ID=${item.Id}`
-          };
-          return myTimeAwayItem;
-        });
-      });
-  }
-  private _createItem(batch: SPHttpClientBatch, item: IMyTimeAwayItem): Promise<SPHttpClientResponse> {
+  private _createItem(item: IMyTimeAwayItem): Promise<SPHttpClientResponse> {
     const body: {} = {
       'Title': 'My Time Away',
       'First_x0020_Name': item.firstName,
@@ -152,13 +108,13 @@ export class SharePointDataProvider implements IMyTimeAwayDataProvider {
       'Comments': item.comments
     };
 
-    return batch.post(
+    return this._webPartContext.spHttpClient.post(
       this._listItemsUrl,
-      SPHttpClientBatch.configurations.v1, { body: JSON.stringify(body) }
+      SPHttpClient.configurations.v1, { body: JSON.stringify(body) }
     );
   }
 
-  private _updateItem(batch: SPHttpClientBatch, item: IMyTimeAwayItem): Promise<SPHttpClientResponse> {
+  private _updateItem(item: IMyTimeAwayItem): Promise<SPHttpClientResponse> {
     const itemUpdatedUrl: string = `${this._listItemsUrl}(${item.id})`;
 
     const headers: Headers = new Headers();
@@ -174,8 +130,8 @@ export class SharePointDataProvider implements IMyTimeAwayDataProvider {
       'Comments': item.comments
     };
 
-    return batch.fetch(itemUpdatedUrl,
-      SPHttpClientBatch.configurations.v1,
+    return this._webPartContext.spHttpClient.fetch(itemUpdatedUrl,
+      SPHttpClient.configurations.v1,
       {
         body: JSON.stringify(body),
         headers,
@@ -184,27 +140,19 @@ export class SharePointDataProvider implements IMyTimeAwayDataProvider {
     );
   }
 
-  private _deleteItem(batch: SPHttpClientBatch, item: IMyTimeAwayItem): Promise<SPHttpClientResponse> {
+  private _deleteItem(item: IMyTimeAwayItem): Promise<SPHttpClientResponse> {
     const itemDeletedUrl: string = `${this._listItemsUrl}(${item.id})`;
 
     const headers: Headers = new Headers();
     headers.append('If-Match', '*');
 
-    return batch.fetch(itemDeletedUrl,
-      SPHttpClientBatch.configurations.v1,
+    return this._webPartContext.spHttpClient.fetch(itemDeletedUrl,
+      SPHttpClient.configurations.v1,
       {
         headers,
         method: 'DELETE'
       }
     );
-  }
-
-  private _resolveBatch(batch: SPHttpClientBatch, promises: Promise<{}>[]): Promise<IMyTimeAwayItem[]> {
-    return batch.execute()
-      .then(() => Promise.all(promises).then((values: any) => {
-        return values[values.length - 1];
-      }
-      ));
   }
 
   //get current login user

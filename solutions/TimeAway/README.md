@@ -13,7 +13,7 @@ extensions:
   - react
   createdDate: 10/1/2017 12:00:00 AM
 ---
-﻿# Time Away Web Parts
+# Time Away Web Parts
 
 ## Summary
 
@@ -27,9 +27,10 @@ The Time Away web part contains two web parts:
 When you add the web part for the first time, a user will need to create the backing lists within the site that support storage of Time Away entries.  A user with list creation permissions within the site will need to click the "Create Lists" button that shows up within the web part.
 
 ![Time Away Screenshot](./assets/timeaway.png)
+![Time Away as a personal Teams app](./assets/timeaway-teams.png)
 
 ## Used SharePoint Framework Version 
-![drop](https://img.shields.io/badge/version-1.0-green.svg)
+![drop](https://img.shields.io/badge/version-1.10-green.svg)
 
 ## Applies to
 
@@ -58,6 +59,7 @@ TimeAway                     | Cindy Yan (Canviz)                               
 
 Version  | Date               | Comments
 -------- | ------------------ | --------
+1.0.13   | April 24, 2020 | Updated to SPFx v1.10
 1.0      | September 27, 2017 | Initial release
 
 ## Disclaimer
