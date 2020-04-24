@@ -1,5 +1,5 @@
 import * as React from 'react';
-import * as Update from 'immutability-helper';
+import update from 'immutability-helper';
 import ITimeAwayCreateDialogProp from './ITimeAwayCreateDialogProp';
 import ITimeAwayCreateDialogState from './ITimeAwayCreateDialogState';
 import { IMyTimeAwayItem } from "../../models/timeAwayModel";
@@ -41,7 +41,7 @@ export default class TimeAwayCreateDialog extends React.Component<ITimeAwayCreat
     }
 
     this.setState(
-      Update(this.state, {
+      update(this.state, {
         showDialog: {
           $set: props.isOpen
         },
@@ -128,7 +128,7 @@ export default class TimeAwayCreateDialog extends React.Component<ITimeAwayCreat
 
   private _handleStartDateChange(date: Moment) {
     this.setState(
-      Update(this.state, {
+      update(this.state, {
         item: {
           start: {
             $set: date.toDate()
@@ -140,7 +140,7 @@ export default class TimeAwayCreateDialog extends React.Component<ITimeAwayCreat
 
   private _handleEndDateChange(date: Moment) {
     this.setState(
-      Update(this.state, {
+      update(this.state, {
         item: {
           end: {
             $set: date.toDate()
@@ -152,7 +152,7 @@ export default class TimeAwayCreateDialog extends React.Component<ITimeAwayCreat
 
   private _handleCommentsChange(text: string) {
     this.setState(
-      Update(this.state, {
+      update(this.state, {
         item: {
           comments: {
             $set: text
@@ -176,7 +176,7 @@ export default class TimeAwayCreateDialog extends React.Component<ITimeAwayCreat
       error = "The end datetime must be after the start datetime.";
     }
 
-    this.setState(Update(this.state, {
+    this.setState(update(this.state, {
       errorMessage: {
         $set: error
       },
@@ -187,7 +187,7 @@ export default class TimeAwayCreateDialog extends React.Component<ITimeAwayCreat
     );
 
     if (error !== "") {
-      this.setState(Update(this.state, {
+      this.setState(update(this.state, {
         errorMessage: {
           $set: error
         },
@@ -205,7 +205,7 @@ export default class TimeAwayCreateDialog extends React.Component<ITimeAwayCreat
             this._saveCallback(this.state.item)
               .then((): void => {
                 this.setState(
-                  Update(this.state, {
+                  update(this.state, {
                     showDialog: {
                       $set: false
                     }
@@ -215,7 +215,7 @@ export default class TimeAwayCreateDialog extends React.Component<ITimeAwayCreat
           }
           else {
             error = "There is already a conflicting Time Away entry during this time period.";
-            this.setState(Update(this.state, {
+            this.setState(update(this.state, {
               errorMessage: {
                 $set: error
               },
@@ -231,7 +231,7 @@ export default class TimeAwayCreateDialog extends React.Component<ITimeAwayCreat
 
   private _closeDialog() {
     this.setState(
-      Update(this.state,
+      update(this.state,
         {
           showDialog: {
             $set: false

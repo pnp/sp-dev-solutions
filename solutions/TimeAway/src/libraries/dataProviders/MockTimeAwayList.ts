@@ -61,7 +61,7 @@ export class MockTimeAwayList {
         return mockMyTimeAwayItem;
     }
     private static _addDays(date: Date, days: number) {
-        let result = new Date(date);
+        let result = date;
         result.setDate(result.getDate() + days);
         return result;
     }
