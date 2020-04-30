@@ -1,22 +1,23 @@
 import * as React from 'react';
 import * as ReactDom from 'react-dom';
-import { Version } from '@microsoft/sp-core-library';
+import { Version, UrlQueryParameterCollection } from '@microsoft/sp-core-library';
 import {
   BaseClientSideWebPart
 } from '@microsoft/sp-webpart-base';
-import { 
-    IPropertyPaneConfiguration, 
-    PropertyPaneButtonType, 
-    PropertyPaneButton, 
-    PropertyPaneDropdown, 
-    PropertyPaneLabel, 
-    PropertyPaneTextField, 
-    PropertyPaneToggle 
+import {
+  IPropertyPaneConfiguration,
+  PropertyPaneButtonType,
+  PropertyPaneButton,
+  PropertyPaneDropdown,
+  PropertyPaneLabel,
+  PropertyPaneTextField,
+  PropertyPaneToggle
 } from "@microsoft/sp-property-pane";
 
 import * as strings from 'LeadsWebPartStrings';
-import { Leads, ILeadsProps } from './components/Leads';
+import { Leads, ILeadsProps, LeadView } from './components/Leads';
 import { SPHttpClient, HttpClientResponse, HttpClient, SPHttpClientResponse } from '@microsoft/sp-http';
+import { ILeadsSettings, LeadsSettings } from '../../LeadsSettings';
 
 export interface ILeadsWebPartProps {
   description: string;
@@ -26,10 +27,11 @@ export interface ILeadsWebPartProps {
 }
 
 export default class LeadsWebPart extends BaseClientSideWebPart<ILeadsWebPartProps> {
-
   private needsConfiguration: boolean;
   private leadsApiUrl: string;
   private connectionStatus: string;
+  private queryParameters: UrlQueryParameterCollection;
+  private view?: LeadView;
 
   protected onInit(): Promise<void> {
     if (this.properties.demo) {
@@ -40,6 +42,17 @@ export default class LeadsWebPart extends BaseClientSideWebPart<ILeadsWebPartPro
     return this.getApiUrl();
   }
 
+  private getLeadView(): LeadView | undefined {
+    const view: string = this.queryParameters.getValue('view');
+    const supportedViews: string[] = ['new', 'mostProbable', 'recentComments', 'requireAttention'];
+
+    if (!view || supportedViews.indexOf(view) < 0) {
+      return undefined;
+    }
+
+    return LeadView[view];
+  }
+
   public render(): void {
     const element: React.ReactElement<ILeadsProps> = React.createElement(
       Leads,
@@ -47,7 +60,8 @@ export default class LeadsWebPart extends BaseClientSideWebPart<ILeadsWebPartPro
         demo: this.properties.demo,
         httpClient: this.context.httpClient,
         leadsApiUrl: this.leadsApiUrl,
-        needsConfiguration: this.needsConfiguration
+        needsConfiguration: this.needsConfiguration,
+        view: this.view
       }
     );
 
@@ -121,19 +135,20 @@ export default class LeadsWebPart extends BaseClientSideWebPart<ILeadsWebPartPro
               isCollapsed: true,
               groupFields: [
                 PropertyPaneTextField('apiUrl', {
-                  label: 'Data Source',
-                  value: this.leadsApiUrl || 'Not configured',
+                  label: 'LOB API URL',
+                  placeholder: 'Not configured',
+                  value: this.leadsApiUrl,
                   disabled: true
                 }),
                 PropertyPaneLabel('spacer1', { text: '' }),
                 PropertyPaneButton('testConnection', {
                   buttonType: PropertyPaneButtonType.Primary,
-                  disabled: this.needsConfiguration,
+                  disabled: this.properties.demo || this.needsConfiguration,
                   onClick: this.testConnection,
                   text: 'Test connection'
                 }),
                 PropertyPaneLabel('connectionStatus', {
-                  text: this.needsConfiguration ? 'Required tenant properties LeadsApiUrl and LeadsApiAadAppId not set' : this.connectionStatus
+                  text: this.needsConfiguration ? 'Required tenant property LeadsApiUrl not set' : this.connectionStatus
                 })
               ]
             }
@@ -157,22 +172,42 @@ export default class LeadsWebPart extends BaseClientSideWebPart<ILeadsWebPartPro
   }
 
   private getApiUrl(reRender: boolean = false): Promise<void> {
+    if (this.leadsApiUrl) {
+      this.needsConfiguration = false;
+      if (reRender) {
+        this.render();
+      }
+      return Promise.resolve();
+    }
+
     return new Promise<void>((resolve: () => void, reject: (err: any) => void): void => {
-      this.context.spHttpClient
-        .get(`${this.context.pageContext.web.absoluteUrl}/_api/web/GetStorageEntity('LeadsApiUrl')`, SPHttpClient.configurations.v1)
-        .then((res: SPHttpClientResponse) => {
-          return res.json();
-        })
-        .then((res) => {
-          this.leadsApiUrl = res.Value;
+      LeadsSettings
+        .getLeadsApiUrl(this.context.spHttpClient, this.context.pageContext.web.absoluteUrl)
+        .then((leadsApiUrl: string): void => {
+          this.leadsApiUrl = leadsApiUrl;
           this.needsConfiguration = !this.leadsApiUrl;
           if (reRender) {
             this.render();
           }
           resolve();
-        }, (err: any): void => {
-          reject(err);
-        });
+        }, () => resolve());
     });
+  }
+
+  protected onAfterDeserialize(deserializedObject: any, dataVersion: Version): ILeadsWebPartProps {
+    const props: ILeadsWebPartProps = deserializedObject;
+    this.queryParameters = new UrlQueryParameterCollection(window.location.href);
+    this.view = this.getLeadView();
+
+    if (this.context.microsoftTeams && typeof this.view !== 'undefined') {
+      const settings: ILeadsSettings = LeadsSettings.getSettings();
+      if (settings) {
+        props.demo = settings.demo;
+        props.quarterlyOnly = settings.quarterlyOnly;
+        props.region = settings.region;
+      }
+    }
+
+    return props;
   }
 }

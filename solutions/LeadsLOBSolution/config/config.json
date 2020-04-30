@@ -9,11 +9,20 @@
           "manifest": "./src/webparts/leads/LeadsWebPart.manifest.json"
         }
       ]
+    },
+    "leads-settings-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/leadsSettings/LeadsSettingsWebPart.js",
+          "manifest": "./src/webparts/leadsSettings/LeadsSettingsWebPart.manifest.json"
+        }
+      ]
     }
   },
   "externals": {},
   "localizedResources": {
     "LeadsWebPartStrings": "lib/webparts/leads/loc/{locale}.js",
-    "ControlStrings": "node_modules/@pnp/spfx-controls-react/lib/loc/{locale}.js"
+    "ControlStrings": "node_modules/@pnp/spfx-controls-react/lib/loc/{locale}.js",
+    "LeadsSettingsWebPartStrings": "lib/webparts/leadsSettings/loc/{locale}.js"
   }
 }

@@ -1,0 +1,89 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/teams/v1.5/MicrosoftTeams.schema.json",
+  "manifestVersion": "1.5",
+  "packageName": "LeadsWebPart",
+  "id": "e81a1b68-686e-412f-90ac-cb80f2544398",
+  "version": "1.1.0",
+  "developer": {
+    "name": "PnP",
+    "websiteUrl": "https://aka.ms/sppnp",
+    "privacyUrl": "https://privacy.microsoft.com/privacystatement",
+    "termsOfUseUrl": "https://www.microsoft.com/servicesagreement"
+  },
+  "name": {
+    "short": "Leads"
+  },
+  "description": {
+    "short": "Company Leads from the LOB system",
+    "full": "Company Leads from the LOB system"
+  },
+  "icons": {
+    "outline": "e81a1b68-686e-412f-90ac-cb80f2544398_outline.png",
+    "color": "e81a1b68-686e-412f-90ac-cb80f2544398_color.png"
+  },
+  "accentColor": "#004578",
+  "staticTabs": [
+    {
+      "entityId": "com.pnp.leads.new",
+      "name": "New leads",
+      "contentUrl": "https://{teamSiteDomain}/_layouts/15/TeamsLogon.aspx?SPFX=true&dest=/_layouts/15/teamshostedapp.aspx%3Fteams%26personal%26componentId=e81a1b68-686e-412f-90ac-cb80f2544398%26forceLocale={locale}%26view=new",
+      "scopes": [
+        "personal"
+      ]
+    },
+    {
+      "entityId": "com.pnp.leads.mostprobable",
+      "name": "Most probable",
+      "contentUrl": "https://{teamSiteDomain}/_layouts/15/TeamsLogon.aspx?SPFX=true&dest=/_layouts/15/teamshostedapp.aspx%3Fteams%26personal%26componentId=e81a1b68-686e-412f-90ac-cb80f2544398%26forceLocale={locale}%26view=mostProbable",
+      "scopes": [
+        "personal"
+      ]
+    },
+    {
+      "entityId": "com.pnp.leads.recentcomments",
+      "name": "Recently commented",
+      "contentUrl": "https://{teamSiteDomain}/_layouts/15/TeamsLogon.aspx?SPFX=true&dest=/_layouts/15/teamshostedapp.aspx%3Fteams%26personal%26componentId=e81a1b68-686e-412f-90ac-cb80f2544398%26forceLocale={locale}%26view=recentComments",
+      "scopes": [
+        "personal"
+      ]
+    },
+    {
+      "entityId": "com.pnp.leads.requireattention",
+      "name": "Require attention",
+      "contentUrl": "https://{teamSiteDomain}/_layouts/15/TeamsLogon.aspx?SPFX=true&dest=/_layouts/15/teamshostedapp.aspx%3Fteams%26personal%26componentId=e81a1b68-686e-412f-90ac-cb80f2544398%26forceLocale={locale}%26view=requireAttention",
+      "scopes": [
+        "personal"
+      ]
+    },
+    {
+      "entityId": "com.pnp.leads.settings",
+      "name": "Settings",
+      "contentUrl": "https://{teamSiteDomain}/_layouts/15/TeamsLogon.aspx?SPFX=true&dest=/_layouts/15/teamshostedapp.aspx%3Fteams%26personal%26componentId=bdde2513-bf88-438a-b42e-8fad43d6a18d%26forceLocale={locale}%26view=requireAttention",
+      "scopes": [
+        "personal"
+      ]
+    }
+  ],
+  "configurableTabs": [
+    {
+      "configurationUrl": "https://{teamSiteDomain}{teamSitePath}/_layouts/15/TeamsLogon.aspx?SPFX=true&dest={teamSitePath}/_layouts/15/teamshostedapp.aspx%3FopenPropertyPane=true%26teams%26componentId=e81a1b68-686e-412f-90ac-cb80f2544398%26forceLocale={locale}",
+      "canUpdateConfiguration": true,
+      "scopes": [
+        "team"
+      ]
+    }
+  ],
+  "validDomains": [
+    "*.login.microsoftonline.com",
+    "*.sharepoint.com",
+    "*.sharepoint-df.com",
+    "spoppe-a.akamaihd.net",
+    "spoprod-a.akamaihd.net",
+    "resourceseng.blob.core.windows.net",
+    "msft.spoppe.com"
+  ],
+  "webApplicationInfo": {
+    "resource": "https://{teamSiteDomain}",
+    "id": "00000003-0000-0ff1-ce00-000000000000"
+  }
+}
