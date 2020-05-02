@@ -19,11 +19,11 @@ export class Leads extends React.Component<ILeadsProps, ILeadsState> {
       loading: false,
       error: undefined,
       leads: [],
-      view: LeadView.new
+      view: typeof props.view !== 'undefined' ? props.view : LeadView.new
     };
   }
 
-  private loadLeads(view: LeadView = LeadView.new): void {
+  private loadLeads(view: LeadView): void {
     if (this.props.needsConfiguration) {
       return;
     }
@@ -244,7 +244,13 @@ export class Leads extends React.Component<ILeadsProps, ILeadsState> {
   }
 
   public componentDidMount(): void {
-    this.loadLeads();
+    this.loadLeads(this.state.view);
+  }
+
+  public componentDidUpdate(prevProps: ILeadsProps, prevState: ILeadsState, snapshot?: any): void {
+    if (this.props.demo !== prevProps.demo) {
+      this.loadLeads(this.state.view);
+    }
   }
 
   private getCommentsForCard(comments: LeadComment[]): any {
@@ -315,7 +321,7 @@ export class Leads extends React.Component<ILeadsProps, ILeadsState> {
         <Placeholder
           iconName='Chart'
           iconText='Configure your environment'
-          description='The required LeadsApiUrl or LeadsApiAadAppId tenant property is not configured. Please ensure that both properties are configured before using this web part.' />
+          description='The required LeadsApiUrl tenant property is not configured. Please configure the property before using this web part.' />
       </div>;
     }
 
@@ -336,19 +342,21 @@ export class Leads extends React.Component<ILeadsProps, ILeadsState> {
           <div>
             <div className={styles.viewWrapper}>
               <div className={styles.title}>Leads from the Lead Management System</div>
-              <Dropdown
-                placeHolder='Select view'
-                className={styles.view}
-                options={
-                  [
-                    { key: 'new', text: 'New Leads', data: LeadView.new },
-                    { key: 'mostProbable', text: 'Most probable', data: LeadView.mostProbable },
-                    { key: 'recentComments', text: 'Recently commented', data: LeadView.recentComments },
-                    { key: 'requireAttention', text: 'Require attention', data: LeadView.requireAttention }
-                  ]
-                }
-                selectedKey={LeadView[view]}
-                onChanged={this.viewChanged} />
+              {typeof this.props.view === 'undefined' &&
+                <Dropdown
+                  placeHolder='Select view'
+                  className={styles.view}
+                  options={
+                    [
+                      { key: 'new', text: 'New Leads', data: LeadView.new },
+                      { key: 'mostProbable', text: 'Most probable', data: LeadView.mostProbable },
+                      { key: 'recentComments', text: 'Recently commented', data: LeadView.recentComments },
+                      { key: 'requireAttention', text: 'Require attention', data: LeadView.requireAttention }
+                    ]
+                  }
+                  selectedKey={LeadView[view]}
+                  onChanged={this.viewChanged} />
+              }
             </div>
             <div className={styles.cards}>
               {

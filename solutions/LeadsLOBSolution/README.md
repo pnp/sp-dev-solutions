@@ -6,6 +6,8 @@ Demo solution demonstrating how to build a solution using SharePoint Framework a
 
 ![Teams Tab](./assets/teams-tab-solution.png)
 
+![Personal Teams app](./assets/personal-app-solution.png)
+
 > This solution was originally demonstrated in the SharePoint Conference 2018 keynote and also in the Ignite 2018. As part of the release of SharePoint Framework 1.7, it can be finally shared as a generic demo for the community.
 
 ## Installation
@@ -24,7 +26,7 @@ By default web part is using "demo mode", which does not require any additional 
 
 ## Solution information
 
-![SPFx v1.7.0](https://img.shields.io/badge/SPFx-1.7.0-green.svg)
+![SPFx v1.10.0](https://img.shields.io/badge/SPFx-1.10.0-green.svg)
 
 ### Compatibility
 
@@ -38,6 +40,7 @@ This solution is compatible with SharePoint Online. Teams capability only works 
 
 Version|Date|Comments
 -------|----|--------
+1.1.0|May 1, 2020|Extended with a multi-tab personal Teams app configuration
 1.0.0|November 21, 2018|Updated to match v1.7 experience and tested in RTM
 
 ## Disclaimer
