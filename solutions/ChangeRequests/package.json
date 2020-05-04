@@ -1,6 +1,6 @@
 {
   "name": "spca-change-requests",
-  "version": "1.0.13",
+  "version": "1.0.14",
   "private": true,
   "engines": {
     "node": ">=0.10.0"
@@ -12,6 +12,7 @@
     "@microsoft/sp-page-context": "1.10.0",
     "@microsoft/sp-property-pane": "1.10.0",
     "@microsoft/sp-webpart-base": "1.10.0",
+    "@pnp/sp": "^2.0.4",
     "@types/es6-promise": "0.0.33",
     "@types/react": "16.8.8",
     "@types/react-dom": "16.8.3",

@@ -2,6 +2,7 @@ import { SharePointUtilityModule as ca } from '../solutions/SharePointUtility';
 import { Constants } from "./Constants";
 import { EnsureListResult } from "../models/EnsureListResult";
 import { IWebPartContext } from '@microsoft/sp-webpart-base';
+import { IRoleDefinition } from '@pnp/sp/security';
 
 export class ProvisionManager {
   public static utility = ca.SharePointUtility;
