@@ -16,6 +16,7 @@ import ViewManagerPropertyPaneField from './ViewManagerPropertyPaneField';
 import View from '../../data/View';
 import ViewSet from '../../data/ViewSet';
 import UserInterfaceUtility from '../../sharePointComponents/UserInterfaceUtility';
+import { sp } from '../../pnp-preset';
 
 export interface ICrmWebPartProps {
   description: string;
@@ -31,6 +32,8 @@ export default class CrmWebPart extends BaseClientSideWebPart<ICrmWebPartProps> 
   }
 
   protected onInit(): Promise<void>  {
+    sp.setup(this.context);
+
     if (Environment.type === EnvironmentType.Local) {
       this._isInitialized = true;
 
