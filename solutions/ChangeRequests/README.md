@@ -43,6 +43,7 @@ ChangeRequests               | Cindy Yan (Canviz)                               
 
 Version | Date               | Comments
 ------- | ------------------ | --------
+1.0.14  | May 7, 2020 | Updated solution to use PnPjs
 1.0.13  | April 9, 2020 | Update to SPFx v1.10
 1.0     | September 27, 2017 | Initial release
 

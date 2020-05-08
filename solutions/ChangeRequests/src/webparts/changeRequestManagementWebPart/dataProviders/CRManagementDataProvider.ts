@@ -1,64 +1,46 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-import {
-    SPHttpClient,
-    SPHttpClientResponse
-} from '@microsoft/sp-http';
 import * as lodash from 'lodash';
 import { IWebPartContext } from '@microsoft/sp-webpart-base';
 import { ICRManagementDataProvider } from './ICRManagementDataProvider';
 import { IMyChangeRequestItem, IChangeDiscussionItem, Constants, IPerson } from '../../../libraries/index';
 import { IChangeRequestManagementItem, CRMTab } from '../models/CRManagementModel';
+import { sp } from '../../../pnp-preset';
+import { ISiteUserInfo } from '@pnp/sp/site-users/types';
 
 export class CRManagementDataProvider implements ICRManagementDataProvider {
-    private _webPartContext: IWebPartContext;
-    private _crlistUrl: string;
-    private _cdlistUrl: string;
-    private _crlistItemsUrl: string;
-    private _cdlistItemsUrl: string;
     private _currentUser: IPerson;
 
     public constructor(context: IWebPartContext) {
-        this._webPartContext = context;
-        this._crlistUrl = `${this._webPartContext.pageContext.web.absoluteUrl}/_api/web/lists/GetByTitle('${Constants.ChangeRequestListTitle}')`;
-        this._cdlistUrl = `${this._webPartContext.pageContext.web.absoluteUrl}/_api/web/lists/GetByTitle('${Constants.ChangeDiscussionListTitle}')`;
-        this._crlistItemsUrl = `${this._webPartContext.pageContext.web.absoluteUrl}/_api/web/lists/GetByTitle('${Constants.ChangeRequestListTitle}')/items`;
-        this._cdlistItemsUrl = `${this._webPartContext.pageContext.web.absoluteUrl}/_api/web/lists/GetByTitle('${Constants.ChangeDiscussionListTitle}')/items`;
+        sp.setup(context);
         this._currentUser = null;
     }
 
     public getChangeRequestStatusField(): Promise<Array<string>> {
-        const requester: SPHttpClient = this._webPartContext.spHttpClient;
-        const queryString: string = `?$filter=EntityPropertyName eq 'Status'`;
-        const queryUrl: string = this._crlistUrl + `/fields` + queryString;
-
-        return requester.get(queryUrl, SPHttpClient.configurations.v1)
-            .then((response: SPHttpClientResponse) => {
-                return response.json();
-            })
-            .then((json) => {
-                return Promise.resolve(json.value[0].Choices);
-            });
+        return sp.web
+            .lists.getByTitle(`${Constants.ChangeRequestListTitle}`)
+            .fields.getByInternalNameOrTitle('Status')()
+            .then(
+                (field: any) => Promise.resolve(field.Choices),
+                err => Promise.reject(err)
+            );
     }
     public getChangeDiscussionStatusField(): Promise<Array<string>> {
-        const requester: SPHttpClient = this._webPartContext.spHttpClient;
-        const queryString: string = `?$filter=EntityPropertyName eq 'Sub_x0020_Status'`;
-        const queryUrl: string = this._cdlistUrl + `/fields` + queryString;
-
-        return requester.get(queryUrl, SPHttpClient.configurations.v1)
-            .then((response: SPHttpClientResponse) => {
-                return response.json();
-            })
-            .then((json) => {
-                return Promise.resolve(json.value[0].Choices);
-            });
+        return sp.web
+            .lists.getByTitle(`${Constants.ChangeDiscussionListTitle}`)
+            .fields.getByInternalNameOrTitle('Sub_x0020_Status')()
+            .then(
+                (field: any) => Promise.resolve(field.Choices),
+                err => Promise.reject(err)
+            );
     }
     public getCRMItems(tab: CRMTab): Promise<IChangeRequestManagementItem[]> {
-        return this._getCurrentUser()
+        return this
+            ._getCurrentUser()
             .then((person: IPerson) => {
                 if (tab == CRMTab.ActiveIssues) {
-                    return this._getCRMItems(person, `&$filter=Status ne 'Closed'`);
+                    return this._getCRMItems(person, `Status ne 'Closed'`);
                 }
                 else if (tab == CRMTab.MyIssues) {
                     if (person.isInTriage) {
@@ -69,20 +51,17 @@ export class CRManagementDataProvider implements ICRManagementDataProvider {
                     }
                 }
                 else {
-                    return this._getCRMItems(person, `&$filter=Status eq 'Closed'`);
+                    return this._getCRMItems(person, `Status eq 'Closed'`);
                 }
-
             });
     }
-    public getUserById(uid: Number): Promise<IPerson> {
-        return this._webPartContext.spHttpClient.
-            get(this._webPartContext.pageContext["web"]["absoluteUrl"] + `/_api/web/GetUserById(${uid})`, SPHttpClient.configurations.v1)
-            .then((response: SPHttpClientResponse) => {
-                return response.json();
-            })
-            .then((json: any) => {
-                return this._analyseAndGetPersonGroup(json);
-            });
+    public getUserById(uid: number): Promise<IPerson> {
+        return sp.web
+            .getUserById(uid)()
+            .then(
+                user => this._analyseAndGetPersonGroup(user),
+                err => Promise.reject(err)
+            );
     }
 
     public isTriageTeamUser(): Promise<Boolean> {
@@ -93,8 +72,8 @@ export class CRManagementDataProvider implements ICRManagementDataProvider {
 
     public saveCRMItem(item: IChangeRequestManagementItem): Promise<boolean> {
         return this._updateCRItem(item.critem)
-            .then((sucess) => {
-                if (sucess) {
+            .then((success) => {
+                if (success) {
                     return item.cditem.id > 0 ? this._updateCDItem(item.cditem) : this._createCDItem(item.cditem);
                 }
                 else {
@@ -108,30 +87,23 @@ export class CRManagementDataProvider implements ICRManagementDataProvider {
             return Promise.resolve(this._currentUser);
         }
         else {
-            return this._webPartContext.spHttpClient.
-                get(this._webPartContext.pageContext["web"]["absoluteUrl"] + `/_api/web/currentuser`, SPHttpClient.configurations.v1)
-                .then((response: SPHttpClientResponse) => {
-                    return response.json();
-                })
-                .then((json: any) => {
-                    return this._analyseAndGetPersonGroup(json);
-                });
+            return sp.web
+                .currentUser()
+                .then(
+                    user => this._analyseAndGetPersonGroup(user),
+                    err => Promise.reject(err)
+                );
         }
     }
     //get site users
     public getTriageSiteUsers(): Promise<IPerson[]> {
-        return this._webPartContext.spHttpClient.
-            get(this._webPartContext.pageContext["web"]["absoluteUrl"] + `/_api/web/siteusers`, SPHttpClient.configurations.v1)
-            .then((response: SPHttpClientResponse) => {
-                return response.json();
-            })
-            .then((json: { value: any[] }) => {
-                if (json.value != null) {
-                    let peoplePromiseArray: Array<Promise<IPerson>> = [];
-                    json.value.forEach((item: any) => {
-                        peoplePromiseArray.push(this._analyseAndGetPersonGroup(item));
-                    });
-                    return Promise.all(peoplePromiseArray)
+        return sp.web
+            .siteUsers()
+            .then((siteUsers: ISiteUserInfo[]) => {
+                if (siteUsers && siteUsers.length > 0) {
+                    const peoplePromiseArray: Promise<IPerson>[] = siteUsers.map(user => this._analyseAndGetPersonGroup(user));
+                    return Promise
+                        .all(peoplePromiseArray)
                         .then((users: IPerson[]) => {
                             return lodash.filter(users, (user: IPerson) => {
                                 return user.isInTriage;
@@ -152,7 +124,7 @@ export class CRManagementDataProvider implements ICRManagementDataProvider {
                     if (person.isInTriage) {
                         let cdPromiseArray: Array<Promise<IChangeDiscussionItem>> = [];
                         critems.forEach((item: IMyChangeRequestItem) => {
-                            let filterString: string = `&$filter=ChangeId eq ${item.id}`;
+                            let filterString: string = `ChangeId eq ${item.id}`;
                             cdPromiseArray.push(this._getCDItem(filterString));
                         });
                         return Promise.all(cdPromiseArray)
@@ -180,12 +152,12 @@ export class CRManagementDataProvider implements ICRManagementDataProvider {
     }
     //My Issues will display all issues that are assigned to the current user viewing the issues
     private _getMyCRMItems(person: IPerson): Promise<IChangeRequestManagementItem[]> {
-        return this._getCDItems(`&$filter=Assigned_x0020_ToId eq ${person.id}`)
+        return this._getCDItems(`Assigned_x0020_ToId eq ${person.id}`)
             .then((cditems: IChangeDiscussionItem[]) => {
                 if (cditems != null && cditems.length > 0) {
-                    let crPromiseArray: Array<Promise<IMyChangeRequestItem>> = [];
+                    const crPromiseArray: Array<Promise<IMyChangeRequestItem>> = [];
                     cditems.forEach((item: IChangeDiscussionItem) => {
-                        let filterString: string = `&$filter=Id eq ${item.changeid}`;
+                        const filterString: string = `Id eq ${item.changeid}`;
                         crPromiseArray.push(this._getCRItem(filterString));
                     });
                     return Promise.all(crPromiseArray)
@@ -208,34 +180,28 @@ export class CRManagementDataProvider implements ICRManagementDataProvider {
             });
     }
     private _getCRItems(crfilter: string): Promise<IMyChangeRequestItem[]> {
-        const requester: SPHttpClient = this._webPartContext.spHttpClient;
-        const queryString: string = `?$select=ID,Title,Description,Status,Status_x0020_Updates,Created,AuthorId`;
-        const queryUrl: string = this._crlistItemsUrl + queryString + crfilter + "&$orderby=ID desc";
-
-        return requester.get(queryUrl, SPHttpClient.configurations.v1)
-            .then((response: SPHttpClientResponse) => {
-                return response.json();
-            })
-            .then((json: { value: any[] }) => {
-                if (json.value != null) {
-                    return json.value.map((item: any) => {
-                        const crItem: IMyChangeRequestItem = {
-                            id: item.ID,
-                            title: item.Title,
-                            description: item.Description,
-                            status: item.Status,
-                            statusupdates: item.Status_x0020_Updates,
-                            createdby: item.AuthorId,
-                            createddate: item.Created
-                        };
-                        return crItem;
-                    });
-                }
-                else {
-                    return [];
-                }
-            });
+        return sp.web
+            .lists.getByTitle(Constants.ChangeRequestListTitle)
+            .items
+                .filter(crfilter)
+                .select('ID', 'Title', 'Description', 'Status', 'Status_x0020_Updates', 'Created', 'AuthorId')
+                .orderBy('ID', false)()
+            .then(
+                crItems => crItems.map(item => {
+                    return {
+                        id: item.ID,
+                        title: item.Title,
+                        description: item.Description,
+                        status: item.Status,
+                        statusupdates: item.Status_x0020_Updates,
+                        createdby: item.AuthorId,
+                        createddate: item.Created
+                    };
+                }),
+                err => Promise.reject(err)
+            );
     }
+    
     private _getCRItem(crfilter: string): Promise<IMyChangeRequestItem> {
         return this._getCRItems(crfilter)
             .then((critems: IMyChangeRequestItem[]) => {
@@ -249,52 +215,38 @@ export class CRManagementDataProvider implements ICRManagementDataProvider {
     }
 
 
-    private _updateCRItem(item: IMyChangeRequestItem): Promise<SPHttpClientResponse> {
-        const body: {} = {
-            'Title': item.title,
-            'Status': item.status,
-            'Description': item.description,
-            'Status_x0020_Updates': item.statusupdates
-        };
-        const itemUpdatedUrl: string = `${this._crlistItemsUrl}(${item.id})`;
-        let requester: SPHttpClient = this._webPartContext.spHttpClient;
-        const headers: Headers = new Headers();
-        headers.append('If-Match', '*');
-        return requester.fetch(itemUpdatedUrl, SPHttpClient.configurations.v1,
-            {
-                body: JSON.stringify(body),
-                headers,
-                method: 'PATCH'
-            });
+    private _updateCRItem(item: IMyChangeRequestItem): Promise<boolean> {
+        return sp.web
+            .lists.getByTitle(Constants.ChangeRequestListTitle)
+            .items.getById(item.id)
+            .update({
+                'Title': item.title,
+                'Status': item.status,
+                'Description': item.description,
+                'Status_x0020_Updates': item.statusupdates
+            })
+            .then(_ => Promise.resolve(true), _ => Promise.resolve(false));
     }
 
     private _getCDItems(cdfilter: string): Promise<IChangeDiscussionItem[]> {
-        const requester: SPHttpClient = this._webPartContext.spHttpClient;
-        const queryString: string = `?$select=ID,ChangeId,Triage_x0020_Comments,Sub_x0020_Status,Priority,Assigned_x0020_ToId`;
-        const queryUrl: string = this._cdlistItemsUrl + queryString + cdfilter;
-
-        return requester.get(queryUrl, SPHttpClient.configurations.v1)
-            .then((response: SPHttpClientResponse) => {
-                return response.json();
-            })
-            .then((json: { value: any[] }) => {
-                if (json.value != null) {
-                    return json.value.map((item: any) => {
-                        const cdItem: IChangeDiscussionItem = {
-                            id: item.ID,
-                            changeid: item.ChangeId,
-                            triagecomments: item.Triage_x0020_Comments,
-                            substatus: item.Sub_x0020_Status,
-                            priority: item.Priority,
-                            assignedto: item.Assigned_x0020_ToId
-                        };
-                        return cdItem;
-                    });
-                }
-                else {
-                    return [];
-                }
-            });
+        return sp.web
+        .lists.getByTitle(Constants.ChangeDiscussionListTitle)
+        .items
+            .filter(cdfilter)
+            .select('ID', 'ChangeId', 'Triage_x0020_Comments', 'Sub_x0020_Status', 'Priority', 'Assigned_x0020_ToId')()
+        .then(
+            crItems => crItems.map(item => {
+                return {
+                    id: item.ID,
+                    changeid: item.ChangeId,
+                    triagecomments: item.Triage_x0020_Comments,
+                    substatus: item.Sub_x0020_Status,
+                    priority: item.Priority,
+                    assignedto: item.Assigned_x0020_ToId
+                };
+            }),
+            err => Promise.reject(err)
+        );
     }
 
     private _getCDItem(cdfilter: string): Promise<IChangeDiscussionItem> {
@@ -310,49 +262,33 @@ export class CRManagementDataProvider implements ICRManagementDataProvider {
     }
 
     private _updateCDItem(item: IChangeDiscussionItem): Promise<boolean> {
-        const itemUpdatedUrl: string = `${this._cdlistItemsUrl}(${item.id})`;
-        let requester: SPHttpClient = this._webPartContext.spHttpClient;
-        const headers: Headers = new Headers();
-        headers.append('If-Match', '*');
-
-        const body: {} = {
-            'Assigned_x0020_ToId': item.assignedto,
-            'Priority': item.priority,
-            'Sub_x0020_Status': item.substatus,
-            'Triage_x0020_Comments': item.triagecomments
-        };
-        return requester.fetch(itemUpdatedUrl, SPHttpClient.configurations.v1,
-            {
-                body: JSON.stringify(body),
-                headers,
-                method: 'PATCH'
+        return sp.web
+            .lists.getByTitle(Constants.ChangeDiscussionListTitle)
+            .items.getById(item.id)
+            .update({
+                'Assigned_x0020_ToId': item.assignedto,
+                'Priority': item.priority,
+                'Sub_x0020_Status': item.substatus,
+                'Triage_x0020_Comments': item.triagecomments
             })
-            .then((response: SPHttpClientResponse) => {
-                return response.ok;
-            });
+            .then(_ => Promise.resolve(true), _ => Promise.resolve(false));
     }
 
     private _createCDItem(item: IChangeDiscussionItem): Promise<boolean> {
-        const body: {} = {
-            'ChangeId': item.changeid,
-            'Triage_x0020_Comments': item.triagecomments,
-            'Sub_x0020_Status': item.substatus,
-            'Priority': item.priority,
-            'Assigned_x0020_ToId': item.assignedto
-        };
-        let requester: SPHttpClient = this._webPartContext.spHttpClient;
-        return requester.post(this._cdlistItemsUrl, SPHttpClient.configurations.v1,
-            {
-                body: JSON.stringify(body)
+        return sp.web
+            .lists.getByTitle(Constants.ChangeDiscussionListTitle)
+            .items.add({
+                'ChangeId': item.changeid,
+                'Triage_x0020_Comments': item.triagecomments,
+                'Sub_x0020_Status': item.substatus,
+                'Priority': item.priority,
+                'Assigned_x0020_ToId': item.assignedto
             })
-            .then((response: SPHttpClientResponse) => {
-                return response.ok;
-            });
-
+            .then(_ => Promise.resolve(true), _ => Promise.resolve(false));
     }
-    
-    private _analyseAndGetPersonGroup(item: any): Promise<IPerson> {
-        let userId: string = item['Id'], userTitle: string = item['Title'], isSiteAdmin: boolean = item["IsSiteAdmin"];
+
+    private _analyseAndGetPersonGroup(item: ISiteUserInfo): Promise<IPerson> {
+        const userId: number = item.Id, userTitle: string = item.Title, isSiteAdmin: boolean = item.IsSiteAdmin;
         let firstName: string = '', lastName: string = '';
         let person: IPerson = null;
         if (userTitle != null) {
@@ -360,26 +296,26 @@ export class CRManagementDataProvider implements ICRManagementDataProvider {
             firstName = strArray[0];
             lastName = strArray.length > 1 ? strArray[1] : '';
         }
-        person = { id: Number(userId), firstName: firstName, lastName: lastName, isInTriage: false, displayName: userTitle };
+        person = { id: userId, firstName: firstName, lastName: lastName, isInTriage: false, displayName: userTitle };
         if (isSiteAdmin) {
             person.isInTriage = true;
             return Promise.resolve(person);
         }
         else {
-            return this._webPartContext.spHttpClient.
-                get(this._webPartContext.pageContext["web"]["absoluteUrl"] + `/_api/web/GetUserById(${person.id})/Groups`, SPHttpClient.configurations.v1)
-                .then((response: SPHttpClientResponse) => {
-                    return response.json();
-                })
-                .then((groupjson: any) => {
-                    let filterGroups = lodash.filter(groupjson.value, (group: any) => {
-                        return group.Title == Constants.ChangeRequestTriageTeamGroupName;
-                    });
-                    if (groupjson.value.length > 0 && filterGroups.length > 0) {
-                        person.isInTriage = true;
-                    }
-                    return person;
-                });
+            return sp.web
+                .getUserById(person.id)
+                .groups()
+                .then(
+                    groups => {
+                        const filterGroups = lodash.filter(groups, group => {
+                            return group.Title == Constants.ChangeRequestTriageTeamGroupName;
+                        });
+                        if (groups.length > 0 && filterGroups.length > 0) {
+                            person.isInTriage = true;
+                        }
+                        return person;
+                    },
+                    err => Promise.reject(err));
         }
     }
 }
