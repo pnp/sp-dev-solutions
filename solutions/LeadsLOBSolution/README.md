@@ -69,6 +69,7 @@ This solution is compatible with SharePoint Online. Teams capability only works 
 
 Version|Date|Comments
 -------|----|--------
+1.4.0|May 19, 2020|Extended with the ability to create a reminder in Planner for the specific lead
 1.3.0|May 18, 2020|Extended with Teams messaging extension
 1.2.0|May 11, 2020|Extended with a Teams task module
 1.1.0|May 1, 2020|Extended with a multi-tab personal Teams app configuration

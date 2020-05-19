@@ -16,7 +16,7 @@ import {
 
 import * as strings from 'LeadsWebPartStrings';
 import { Leads, ILeadsProps, LeadView } from './components/Leads';
-import { SPHttpClient, HttpClientResponse, HttpClient, SPHttpClientResponse } from '@microsoft/sp-http';
+import { HttpClientResponse, HttpClient, MSGraphClient } from '@microsoft/sp-http';
 import { ILeadsSettings, LeadsSettings } from '../../LeadsSettings';
 
 export interface ILeadsWebPartProps {
@@ -32,14 +32,21 @@ export default class LeadsWebPart extends BaseClientSideWebPart<ILeadsWebPartPro
   private connectionStatus: string;
   private queryParameters: UrlQueryParameterCollection;
   private view?: LeadView;
+  private msGraphClient: MSGraphClient;
 
   protected onInit(): Promise<void> {
-    if (this.properties.demo) {
-      this.needsConfiguration = false;
-      return Promise.resolve();
-    }
+    return this.context.msGraphClientFactory
+      .getClient()
+      .then((client: MSGraphClient): Promise<void> => {
+        this.msGraphClient = client;
 
-    return this.getApiUrl();
+        if (this.properties.demo) {
+          this.needsConfiguration = false;
+          return Promise.resolve();
+        }
+
+        return this.getApiUrl();
+      });
   }
 
   private getLeadView(): LeadView | undefined {
@@ -61,8 +68,10 @@ export default class LeadsWebPart extends BaseClientSideWebPart<ILeadsWebPartPro
         httpClient: this.context.httpClient,
         host: (this.context as any)._host,
         leadsApiUrl: this.leadsApiUrl,
+        msGraphClient: this.msGraphClient,
         teamsContext: this.context.microsoftTeams,
         needsConfiguration: this.needsConfiguration,
+        userId: this.context.pageContext.aadInfo.userId,
         view: this.view
       }
     );
