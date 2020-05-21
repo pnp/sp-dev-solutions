@@ -3,10 +3,16 @@
   "solution": {
     "name": "leads-lob-client-side-solution",
     "id": "2dc4f7fe-cd2e-4f2a-8a92-86acc494e909",
-    "version": "1.3.0.0",
+    "version": "1.4.0.0",
     "includeClientSideAssets": true,
     "skipFeatureDeployment": true,
-    "isDomainIsolated": false
+    "isDomainIsolated": false,
+    "webApiPermissionRequests": [
+      {
+        "resource": "Microsoft Graph",
+        "scope": "Group.ReadWrite.All"
+      }
+    ]
   },
   "paths": {
     "zippedPackage": "solution/leads-lob.sppkg"
