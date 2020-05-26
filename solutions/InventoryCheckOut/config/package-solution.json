@@ -3,7 +3,7 @@
   "solution": {
     "name": "Inventory and Check-out Tracking",
     "id": "409e89a1-db89-4b0f-b599-fa67cc22c273",
-    "version": "1.0.13.0",
+    "version": "1.0.14.0",
     "isDomainIsolated": false,
     "includeClientSideAssets": true
   },

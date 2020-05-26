@@ -1,19 +1,16 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-//Import Web Part properties
-import { IWebPartContext } from '@microsoft/sp-webpart-base';
-//Import SPHttpClient
-import { SPHttpClient, SPHttpClientResponse } from '@microsoft/sp-http';
 import { SPPermission } from '@microsoft/sp-page-context';
+import { sp } from '../../pnp-preset';
+import { IFields, IFieldAddResult, DateTimeFieldFormatType, CalendarType, DateTimeFieldFriendlyFormatType, ChoiceFieldFormatType, UrlFieldFormatType, FieldUserSelectionMode } from '@pnp/sp/fields';
 
 export namespace SharePointUtilityModule {
     export class SharePointUtility {
         constructor() { }
 
         // Checks if the current user has permissions to manage lists.
-        public static checkCurrentUserIsAbleToManageList(context: IWebPartContext): boolean {
-            let currentPermission = context.pageContext.web.permissions;
+        public static checkCurrentUserIsAbleToManageList(currentPermission: SPPermission): boolean {
             var isAbleToProvision = currentPermission.hasPermission(SPPermission.manageLists) && currentPermission.hasPermission(SPPermission.managePermissions);
             console.log("Current user permission: { High:" + currentPermission.value.High + ",Low:" + currentPermission.value.Low + "}");
             console.log("Current user is" + (isAbleToProvision ? " " : "not ") + "able to manage lists and permissions.");
@@ -21,67 +18,30 @@ export namespace SharePointUtilityModule {
         }
 
         // Determines if a SharePoint list exists
-        public static checkListExists(context: IWebPartContext, listTitle: string): Promise<boolean> {
-            return context.spHttpClient.get(context.pageContext.web.absoluteUrl
-                + "/_api/web/lists/GetByTitle('"
-                + listTitle
-                + "')?$select=Title", SPHttpClient.configurations.v1)
-                .then((response: SPHttpClientResponse) => {
-                    if (response.status === 404) {
-                        return false;
-                    }
-                    else {
-                        return true;
-                    }
-                });
+        public static checkListExists(listTitle: string): Promise<boolean> {
+            return sp.web
+                .lists.getByTitle(listTitle).select('Title')()
+                .then(_ => true, _ => false);
         }
 
         // Creates a SharePoint list
-        public static createList(context: IWebPartContext,
-            listTitle: string,
+        public static createList(listTitle: string,
             listDescription: string,
             baseTemplate: number,
             enableApproval: boolean = true,
             enableVersioning: boolean = false): Promise<any> {
-
             console.log(`create list ${listTitle}`);
 
-            const reqJSON: any = JSON.parse(
-                `{
-                "@odata.type": "#SP.List",
-                "AllowContentTypes": true,
-                "BaseTemplate": ${baseTemplate},
-                "ContentTypesEnabled": true,
-                "Description": "${listDescription}",
-                "Title": "${listTitle}"
-            }`);
-
-            if (enableApproval){
-                reqJSON.EnableModeration = true;
-            }
-
-            if (enableVersioning){
-                reqJSON.EnableVersioning = true;
-            }
-
-            return context.spHttpClient.post(context.pageContext.web.absoluteUrl + "/_api/web/lists",
-                SPHttpClient.configurations.v1,
-                {
-                    body: JSON.stringify(reqJSON),
-                    headers: {
-                        "accept": "application/json",
-                        "content-type": "application/json"
-                    }
+            return sp.web
+                .lists.add(listTitle, listDescription, baseTemplate, true, {
+                    EnableModeration: enableApproval,
+                    EnableVersioning: enableVersioning
                 })
-                .then((response: SPHttpClientResponse): Promise<any> => {
-                    console.log("result: " + response.status);
-                    return response.json();
-                });
+                .then(listResponse => listResponse.data);
         }
 
         // Creates a field in a SharePoint list
-        public static createListField(context: IWebPartContext,
-            listGuid: string,
+        public static createListField(listGuid: string,
             title: string,
             staticName: string,
             required: boolean,
@@ -91,297 +51,143 @@ export namespace SharePointUtilityModule {
             lookuplistGuid?: string,
             lookupFieldName?: string)
             : Promise<any> {
-
             console.log(`create list field ${title}`);
 
-            let reqJSON: Object,
-                postUrl: string = context.pageContext.web.absoluteUrl
-                    + "/_api/web/lists('"
-                    + listGuid
-                    + "')/Fields";
-
-            const headers: any = {
-                "accept": "application/json",
-                "content-type": "application/json"
+            const fieldProperties: any = {
+                FieldTypeKind: fieldTypeKind,
+                Required: required
             };
 
-            if (fieldTypeKind == 7) {
-                //add lookupfield
-                reqJSON = JSON.parse(`{
-                  "parameters": {
-                    "@odata.type": "#SP.FieldCreationInformation",
-                    "Title": "${title}",
-                    "FieldTypeKind": ${fieldTypeKind},
-                    "LookupListId": "${lookuplistGuid}",
-                    "LookupFieldName": "${lookupFieldName}"
-                  }
-                }`);
-
-                if (more != null) {
-                    for (let i: number = 0; i < Object.getOwnPropertyNames(more).length; i++)
-                        reqJSON["parameters"][Object.getOwnPropertyNames(more)[i]] = more[Object.getOwnPropertyNames(more)[i]];
-                }
-    
-                postUrl += "/addfield";
-            }
-            else {
-                //general field
-                reqJSON = JSON.parse(`{
-                "@odata.type": "#${fieldType}",
-                "Title": "${title}",
-                "FieldTypeKind": ${fieldTypeKind},
-                "Required": ${required},
-                "StaticName": "${staticName}"
-                }`);
-            
-                //date field
-                if (fieldTypeKind === 4) {
-                    reqJSON["DateTimeCalendarType"] = 0;
-                    reqJSON["DisplayFormat"] = 1;
-                    reqJSON["FriendlyDisplayFormat"] = 1;
-                }
-
-                if (more != null) {
-                    for (let i: number = 0; i < Object.getOwnPropertyNames(more).length; i++)
-                        reqJSON[Object.getOwnPropertyNames(more)[i]] = more[Object.getOwnPropertyNames(more)[i]];
+            if (more != null) {
+                for (let i: number = 0; i < Object.getOwnPropertyNames(more).length; i++) {
+                    const propertyName = Object.getOwnPropertyNames(more)[i];
+                    fieldProperties[propertyName] = more[propertyName];
                 }
             }
 
-            return context.spHttpClient.post(
-                postUrl,
-                SPHttpClient.configurations.v1,
-                {
-                    body: JSON.stringify(reqJSON),
-                    headers: headers
-                })
-                .then((response: SPHttpClientResponse): Promise<any> => {
-                    console.log("result: " + response.status);
-                    return response.json();
-                })
-                .then((value: any): string => {
-                    return value.Id;
-                });
+            const fields: IFields = sp.web.lists.getById(listGuid).fields;
+            let fieldAddResult: Promise<IFieldAddResult>;
+
+            switch (fieldTypeKind) {
+                case 2:
+                    fieldAddResult = fields.addText(title, undefined, fieldProperties);
+                    break;
+                case 3:
+                    const richText: boolean = typeof fieldProperties.RichText !== 'undefined' ? fieldProperties.RichText : false;
+                    delete fieldProperties.RichText;
+                    fieldAddResult = fields.addMultilineText(title, undefined, richText);
+                    break;
+                case 4:
+                    fieldAddResult = fields.addDateTime(
+                        title,
+                        DateTimeFieldFormatType.DateTime,
+                        CalendarType.Gregorian,
+                        DateTimeFieldFriendlyFormatType.Disabled,
+                        fieldProperties);
+                    break;
+                case 6:
+                    const choices: string[] = typeof fieldProperties.Choices !== 'undefined' ? fieldProperties.Choices : [];
+                    delete fieldProperties.Choices;
+                    fieldAddResult = fields.addChoice(title, choices, ChoiceFieldFormatType.Dropdown, false, fieldProperties);
+                    break;
+                case 7:
+                    fieldAddResult = fields.addLookup(title, lookuplistGuid, lookupFieldName, fieldProperties);
+                    break;
+                case 9:
+                    fieldAddResult = fields.addNumber(title, undefined, undefined, fieldProperties);
+                    break;
+                case 11:
+                    fieldAddResult = fields.addUrl(title, UrlFieldFormatType.Image, fieldProperties);
+                    break;   
+                case 20:
+                    fieldAddResult = fields.addUser(title, FieldUserSelectionMode.PeopleOnly, fieldProperties);
+                    break; 
+                default:
+                    fieldAddResult = fields.add(title, fieldType, fieldProperties);
+            }
+
+            return fieldAddResult.then(fieldResult => fieldResult.data.Id);
         }
 
         // Modifies a field in a SharePoint list
-        public static updateListField(context: IWebPartContext, listGuid: string, fieldGuid: string, fieldType: string, change: Object)
+        public static updateListField(listGuid: string, fieldGuid: string, fieldType: string, change: Object)
             : Promise<any> {
-
-            let restUrl: string = context.pageContext.web.absoluteUrl
-                    + `/_api/web/lists('${listGuid}')/fields('${fieldGuid}')`;
-
-            let reqJSON = JSON.parse(`{
-                "@odata.type": "#${fieldType}"
-            }`);
-
-            if (change != null) {
-                for (let i: number = 0; i < Object.getOwnPropertyNames(change).length; i++)
-                    reqJSON[Object.getOwnPropertyNames(change)[i]] = change[Object.getOwnPropertyNames(change)[i]];
-            }
-
             console.log(`Modify a field ${fieldGuid} in a SharePoint list ${listGuid}`);
 
-            return context.spHttpClient.post(restUrl,
-                SPHttpClient.configurations.v1,
-                {
-                    body: JSON.stringify(reqJSON),
-                    headers: {
-                        "accept": "application/json",
-                        "content-type": "application/json",
-                        "IF-MATCH": "*",
-                        "X-HTTP-Method": "MERGE"
-                    }
-                })
-                .then((response: SPHttpClientResponse): void => {
-                    console.log("result: " + response.status);
-                });
+            return sp.web
+                .lists.getById(listGuid)
+                .fields.getById(fieldGuid)
+                .update(change, fieldType);
         }
 
         // Creates a SharePoint Group in a SharePoint site
-        public static createGroup(context: IWebPartContext, groupTitle: string): Promise<any> {
+        public static createGroup(groupTitle: string): Promise<any> {
             console.log(`create group ${groupTitle}`);
 
-            let reqJSON: Object,
-                postUrl: string = context.pageContext.web.absoluteUrl
-                    + "/_api/web/sitegroups";
-
-            const headers: any = {
-                "accept": "application/json",
-                "content-type": "application/json"
-            };
-
-            reqJSON = JSON.parse(`{
-                "@odata.type": "#SP.Group",
-                "Title": "${groupTitle}"
-                }`);
-
-            return context.spHttpClient.post(
-                postUrl,
-                SPHttpClient.configurations.v1,
-                {
-                    body: JSON.stringify(reqJSON),
-                    headers: headers
-                })
-                .then((response: SPHttpClientResponse): Promise<any> => {
-                    console.log("result: " + response.status);
-                    return response.json();
-                });
+            return sp.web.siteGroups.add({
+                Title: groupTitle
+            })
+            .then(groupAddResult => groupAddResult.data);
         }
 
         // Creates a Role definition in a SharePoint site
-        public static createRole(context: IWebPartContext, roleTitle: string, high: string, low: string): Promise<void> {
+        public static createRole(roleTitle: string, high: string, low: string): Promise<void> {
             console.log(`create role ${roleTitle}`);
 
-            let reqJSON: any,
-                restUrl: string = context.pageContext.web.absoluteUrl
-                    + "/_api/web/roledefinitions";
-
-            const headers: any = {
-                "accept": "application/json",
-                "content-type": "application/json;IEEE754Compatible=true"
-            };
-
-            reqJSON = JSON.parse(
-                `{
-                    "@odata.type": "#SP.RoleDefinition",
-                    "Name": "${roleTitle}",
-                    "BasePermissions":
-                    {
-                        "High": "${high}",
-                        "Low": "${low}"
-                    }
-                }`);
-
-            return context.spHttpClient.post(
-                restUrl, 
-                SPHttpClient.configurations.v1,{
-                body: JSON.stringify(reqJSON),
-                headers: headers
-            })
-            .then((response: SPHttpClientResponse): Promise<any> => {
-                console.log("result: " + response.status);
-                return response.json();
-            });
+            return sp.web
+                .roleDefinitions.add(roleTitle, '', 255, {
+                    High: high,
+                    Low: low
+                } as any)
+                .then(roleDefinitionAddResult => roleDefinitionAddResult.data);
         }
 
         // Assigns a role definition to a user or group in SharePoint site
-        public static addRoleAssignment(context: IWebPartContext, principalid: string, roleId: string): Promise<any> {
-            let restUrl: string = context.pageContext.web.absoluteUrl
-                    + `/_api/web/roleassignments/addroleassignment(principalid=${principalid}, roledefid=${roleId})`;
-
-            const headers: any = {
-                "accept": "application/json",
-                "content-type": "application/json;IEEE754Compatible=true"
-            };
-
+        public static addRoleAssignment(principalid: string, roleId: string): Promise<any> {
             console.log(`Assign role ${roleId} to group/user ${principalid}`);
 
-            return context.spHttpClient.post(
-                restUrl, 
-                SPHttpClient.configurations.v1,{
-                headers: headers
-            }).then((response: SPHttpClientResponse) =>{
-                console.log("result: " + response.status);
-                return Promise.resolve(true);
-            });
+            return sp.web
+                .roleAssignments.add(Number(principalid), Number(roleId))
+                .then(_ => Promise.resolve(true), _ => Promise.resolve(false));
         }
 
         // Gets the role id for a role in the current web
-        public static getRoleId(context: IWebPartContext, roleName: string): Promise<string>{
-            let restUrl: string = context.pageContext.web.absoluteUrl
-                + `/_api/web/roledefinitions?$filter=Name eq '${roleName}'`;
-
-            const headers: any = {
-                "accept": "application/json",
-                "content-type": "application/json;IEEE754Compatible=true"
-            };
-
-            return context.spHttpClient.get(
-                restUrl, 
-                SPHttpClient.configurations.v1,{
-                headers: headers
-            })
-            .then((response: SPHttpClientResponse) => {
-                return response.json();
-            })
-            .then((json: { value: any[] }) => {
-                if (json.value != null)
-                    return Promise.resolve(json.value[0].Id);
-                else
-                    return Promise.resolve("");
-            });
+        public static getRoleId(roleName: string): Promise<string>{
+            return sp.web
+                .roleDefinitions.filter(`Name eq '${roleName}'`).get()
+                .then(roleDefinitions => {
+                    if (roleDefinitions && roleDefinitions.length > 0) {
+                        return Promise.resolve(roleDefinitions[0].Id.toString());
+                    }
+                    else {
+                        return Promise.resolve('');
+                    }
+                });
         }
 
         // Breaks role inheritance on a SharePoint list
-        public static breakRoleInheritanceOfList(context: IWebPartContext, listTitle: string): Promise<void> {
-            let restUrl: string = context.pageContext.web.absoluteUrl
-                + `/_api/web/lists/getbytitle('${listTitle}')/breakroleinheritance(true)`;
-            
-            const headers: any = {
-                "accept": "application/json",
-                "content-type": "application/json;IEEE754Compatible=true"
-            };
-
-            console.log(`break role inheritance on the ${listTitle} list`);
-
-            return context.spHttpClient.post(
-                restUrl, 
-                SPHttpClient.configurations.v1,{
-                headers: headers
-            }).then((response: SPHttpClientResponse) =>{
-                console.log("result: " + response.status);
-            });
+        public static breakRoleInheritanceOfList(listTitle: string): Promise<void> {
+            return sp.web
+                .lists.getByTitle(listTitle)
+                .breakRoleInheritance(true);
         }
 
         // Adds a new role assignment for the group on a SharePoint list
-        public static setNewPermissionsForGroup(context: IWebPartContext, listTitle: string, principalid: string, roleid: string): Promise<void> {
-            let restUrl: string = context.pageContext.web.absoluteUrl
-                    + `/_api/web/lists/getbytitle('${listTitle}')/roleassignments/addroleassignment(principalid=${principalid},roledefid=${roleid})`;
-            
-            const headers: any = {
-                "accept": "application/json",
-                "content-type": "application/json;IEEE754Compatible=true"
-            };
-
-            console.log(`Add the new role ${roleid} assignment for the group ${principalid} on the ${listTitle} list`);
-
-            return context.spHttpClient.post(
-                restUrl, 
-                SPHttpClient.configurations.v1,{
-                headers: headers
-            }).then((response: SPHttpClientResponse) =>{
-                console.log("result: " + response.status);
-            });
+        public static setNewPermissionsForGroup(listTitle: string, principalid: string, roleid: string): Promise<void> {
+            return sp.web
+                .lists.getByTitle(listTitle)
+                .roleAssignments.add(Number(principalid), Number(roleid));
         }
 
         // Sets or updates ReadSecurity or WriteSecurity on a SharePoint list
-        public static setListSecurity(context: IWebPartContext, listTitle: string, readSecurity: string, writeSecurity: string): Promise<void>{
-            let restUrl: string = context.pageContext.web.absoluteUrl
-                    + `/_api/web/lists/getbytitle('${listTitle}')`;
-
-            let reqJSON: any = JSON.parse(
-                `{
-                "@odata.type": "#SP.List",
-                "ReadSecurity": ${readSecurity},
-                "WriteSecurity": ${writeSecurity}
-            }`);
-
-            console.log(`set ReadSecurity to ${readSecurity} and WriteSecurity to ${writeSecurity} for ${listTitle} list`);
-
-            return context.spHttpClient.post(restUrl,
-                SPHttpClient.configurations.v1,
-                {
-                    body: JSON.stringify(reqJSON),
-                    headers: {
-                        "accept": "application/json",
-                        "content-type": "application/json",
-                        "IF-MATCH": "*",
-                        "X-HTTP-Method": "MERGE"
-                    }
+        public static setListSecurity(listTitle: string, readSecurity: string, writeSecurity: string): Promise<void>{
+            return sp.web
+                .lists.getByTitle(listTitle)
+                .update({
+                    ReadSecurity: Number(readSecurity),
+                    WriteSecurity: Number(writeSecurity)
                 })
-                .then((response: SPHttpClientResponse): void => {
-                    console.log("result: " + response.status);
-                });
+                .then(_ => Promise.resolve());
         }
     }
 }
