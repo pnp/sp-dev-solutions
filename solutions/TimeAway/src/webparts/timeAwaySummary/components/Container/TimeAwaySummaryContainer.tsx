@@ -28,7 +28,7 @@ export default class TimeAwaySummaryContainer extends React.Component<ITimeAwayS
       weekType: this.props.weekType,
       statusFilter: this.props.statusFilter,
       showMyTimeAwayLink: this.props.showMyTimeAwayLink,
-      isHaveAdminPermission: utility.checkCurrentUserIsAbleToManageList(this.props.context),
+      isHaveAdminPermission: utility.checkCurrentUserIsAbleToManageList(this.props.context.pageContext.web.permissions),
       submitting: false,
       isInitialized: this.props.isInitialized
     };
