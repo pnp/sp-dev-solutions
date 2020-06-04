@@ -25,6 +25,9 @@ namespace MultilingualPagesConverter
         private static List sitePages;
         private static bool cleanupTasksOnly = false;
 
+        private static AppManager manager;
+        private static AppMetadata app;
+
         static void Main(string[] args)
         {
             log.Echo = true;
@@ -119,10 +122,11 @@ namespace MultilingualPagesConverter
                     var web = ctx.Web;
                     ctx.Load(web);
                     //Validate Microsoft Multilingual Feature is Enabled
-                    var multilingualFeature = ctx.Web.Features.GetById(new Guid("24611c05-ee19-45da-955f-6602264abaf8"));
-                    ctx.Load(multilingualFeature);
-                    ctx.ExecuteQuery();
-                    if (multilingualFeature.ServerObjectIsNull())
+                    manager = new AppManager(ctx);
+                    var apps = manager.GetAvailable();
+
+                    app = apps.Where(a => a.Title == "Multilingual Page Management").FirstOrDefault();
+                    if (app == null)
                     {
                         log.Log("ConvertMultilingual", Severity.Error, $"PnP Multilingual Pages feature has not been enabled and configured, exiting.");
                         return retVal;
@@ -333,10 +337,6 @@ namespace MultilingualPagesConverter
             try
             {
                 log.Log("disableApp", Severity.Info, $"Disabling Multilingual Pages SPFx Application Customizer.");
-                AppManager manager = new AppManager(ctx);
-                var apps = manager.GetAvailable();
-
-                var app = apps.Where(a => a.Title == "Multilingual Page Management").FirstOrDefault();
                 if (app != null)
                     manager.Uninstall(app);
                 log.Log("disableApp", Severity.Info, $"Multilingual Pages SPFx Application Customizer disabled.");
