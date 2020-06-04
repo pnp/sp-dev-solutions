@@ -30,6 +30,7 @@ MultilingualPagesConverter | Julie Turner (Sympraxis Consulting) - [@jfj1997](ht
 
 Version|Date|Comments
 -------|----|--------
+1.0.1|June 4, 2020|Fixed check for multilingual pages solution enabled in site.
 1.0.0|April 13, 2020|Initial release
 
 ## Disclaimer
