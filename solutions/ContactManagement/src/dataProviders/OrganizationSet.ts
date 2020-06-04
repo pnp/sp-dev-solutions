@@ -25,7 +25,7 @@ export default class OrganizationSet implements IOrganizationSet {
     public get organizations() : IOrganization[]
     {
         return this._orgs;
-    };
+    }
 
     public apply(newOrgs : IOrganization[], removeAndAdd : boolean)
     {

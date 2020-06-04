@@ -16,9 +16,9 @@ export interface IItemFieldLabelState extends IFieldComponentState {
 
 export default class ItemFieldLabel extends FieldComponent<IItemFieldLabelProps, IItemFieldLabelState> {
 
-  public constructor()
+  public constructor(props: IItemFieldLabelProps)
   {
-    super();
+    super(props);
   }
 
   public render(): JSX.Element {

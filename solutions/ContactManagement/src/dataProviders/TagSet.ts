@@ -25,7 +25,7 @@ export default class TagSet implements ITagSet {
     public get tags() : ITag[]
     {
         return this._tags;
-    };
+    }
 
     public apply(newTags : ITag[], removeAndAdd : boolean)
     {

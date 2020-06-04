@@ -1,19 +1,27 @@
 {
-  "entries": [
-    {
-      "entry": "./lib/webparts/timeAwaySummary/TimeAwaySummaryWebPart.js",
-      "manifest": "./src/webparts/timeAwaySummary/TimeAwaySummaryWebPart.manifest.json",
-      "outputPath": "./dist/time-away-summary.bundle.js"
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/config.2.0.schema.json",
+  "version": "2.0",
+  "bundles": {
+    "time-away-summary-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/timeAwaySummary/TimeAwaySummaryWebPart.js",
+          "manifest": "./src/webparts/timeAwaySummary/TimeAwaySummaryWebPart.manifest.json"
+        }
+      ]
     },
-    {
-      "entry": "./lib/webparts/myTimeAway/MyTimeAwayWebPart.js",
-      "manifest": "./src/webparts/myTimeAway/MyTimeAwayWebPart.manifest.json",
-      "outputPath": "./dist/my-time-away.bundle.js"
+    "my-time-away-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/myTimeAway/MyTimeAwayWebPart.js",
+          "manifest": "./src/webparts/myTimeAway/MyTimeAwayWebPart.manifest.json"
+        }
+      ]
     }
-  ],
+  },
   "externals": {},
   "localizedResources": {
-    "timeAwaySummaryStrings": "webparts/timeAwaySummary/loc/{locale}.js",
-    "myTimeAwayStrings": "webparts/myTimeAway/loc/{locale}.js"
+    "timeAwaySummaryStrings": "lib/webparts/timeAwaySummary/loc/{locale}.js",
+    "myTimeAwayStrings": "lib/webparts/myTimeAway/loc/{locale}.js"
   }
 }

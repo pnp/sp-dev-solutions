@@ -3,7 +3,7 @@
   "solution": {
     "name": "Change Request Management",
     "id": "9fcb6dd8-3a9b-4501-9e77-8a4ed3b914ea",
-    "version": "1.0.13.0",
+    "version": "1.0.14.0",
     "isDomainIsolated": false,
     "includeClientSideAssets": true,
     "skipFeatureDeployment": true

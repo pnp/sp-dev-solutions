@@ -16,9 +16,9 @@ export interface IItemImageUrlFieldDisplayState extends IFieldComponentState {
 
 export default class ItemImageUrlFieldDisplay extends FieldComponent<IItemImageUrlFieldDisplayProps, IItemImageUrlFieldDisplayState> {
 
-  public constructor()
+  public constructor(props: IItemImageUrlFieldDisplayProps)
   {
-    super();
+    super(props);
   }
 
   public render(): JSX.Element {

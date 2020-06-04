@@ -23,9 +23,9 @@ export interface IItemPeopleFieldDisplayState extends IFieldComponentState {
 
 export default class ItemPeopleFieldDisplay extends FieldComponent<IItemPeopleFieldDisplayProps, IItemPeopleFieldDisplayState> {
 
-  public constructor()
+  public constructor(props: IItemPeopleFieldDisplayProps)
   {
-    super();
+    super(props);
   }
 
   public componentWillMount() : void {
@@ -75,7 +75,7 @@ export default class ItemPeopleFieldDisplay extends FieldComponent<IItemPeopleFi
     {
 
       var persona : IPersonaProps = {
-        primaryText : user.Title,
+        text : user.Title,
         imageUrl: user.EMail != null ? "https://outlook.office365.com/owa/service.svc/s/GetPersonaPhoto?email=" + user.EMail + "&amp;UA=0&amp;size=HR64x64" : null,       
         presence : null
       };      
@@ -87,7 +87,7 @@ export default class ItemPeopleFieldDisplay extends FieldComponent<IItemPeopleFi
       {
         personas.map( (personaIn, i) =>
         {
-          return <Persona primaryText={ personaIn.primaryText } imageUrl={ personaIn.imageUrl } presence={ PersonaPresence.none } size= { PersonaSize.small } key={ i }/>;
+          return <Persona text={ personaIn.text } imageUrl={ personaIn.imageUrl } presence={ PersonaPresence.none } size= { PersonaSize.small } key={ i }/>;
         })
       }
       </div>;

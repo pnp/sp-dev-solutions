@@ -18,9 +18,9 @@ export interface IItemDateFieldDisplayState extends IFieldComponentState {
 
 export default class ItemDateFieldDisplay extends FieldComponent<IItemDateFieldDisplayProps, IItemDateFieldDisplayState> {
 
-  public constructor()
+  public constructor(props: IItemDateFieldDisplayProps)
   {
-    super();
+    super(props);
   }
 
   public render(): JSX.Element {

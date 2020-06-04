@@ -14,22 +14,26 @@ export interface IUrlFieldComponentState extends IFieldComponentState {
 
 export abstract class UrlFieldComponent<P extends IUrlFieldComponentProps, S extends IUrlFieldComponentState> extends FieldComponent<P, S> 
 {
-  public constructor()
+  public constructor(props: P)
   {
-    super();
+    super(props);
 
     this._urlChanged = this._urlChanged.bind(this);
     this._descriptionChanged = this._descriptionChanged.bind(this);
   }
 
-  protected _urlChanged(newValue : any) : void
+  protected _urlChanged(event, newValue? : any) : void
   {
-    this.url = newValue;
+    if (newValue) {
+      this.url = newValue;
+    }
   }
 
-  protected _descriptionChanged(newValue : any) : void
+  protected _descriptionChanged(event, newValue?: any) : void
   {
-    this.description = newValue;
+    if (newValue) {
+      this.description = newValue;
+    }
   }
 
   public get url() : string

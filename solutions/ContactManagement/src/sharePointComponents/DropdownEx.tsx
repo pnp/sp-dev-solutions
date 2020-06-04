@@ -5,6 +5,7 @@
 import * as React from 'react';
 
 import styles from './sharePointComponents.module.scss';
+import { ChangeEvent } from 'react';
 
 export type DropdownExOptionCallback = (option: IDropdownExOption) => void;
 
@@ -26,14 +27,14 @@ export interface IDropdownExState {
 
 export  class DropdownEx extends React.Component<IDropdownExProps, IDropdownExState> {
 
-  public constructor()
+  public constructor(props: Readonly<IDropdownExProps>)
   {
-    super();
+    super(props);
 
     this._handleSelectChanged = this._handleSelectChanged.bind(this);
   }
 
-  private _handleSelectChanged(e : React.MouseEvent<HTMLSelectElement>)
+  private _handleSelectChanged(e : ChangeEvent<HTMLSelectElement>)
   {
     var selElt = e.nativeEvent.srcElement as HTMLElement;
 

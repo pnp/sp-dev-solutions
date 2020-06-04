@@ -23,11 +23,11 @@ export default class ItemUrlFieldEditor extends UrlFieldComponent<IItemUrlFieldE
       <div className={styles.sharePointComponent}>
         <TextField 
           value={ this.url }
-          onChanged={ this._urlChanged }
+          onChange={ this._urlChanged }
         />
         <TextField 
           value={ this.description }
-          onChanged={ this._descriptionChanged }
+          onChange={ this._descriptionChanged }
         />        
       </div>
     );

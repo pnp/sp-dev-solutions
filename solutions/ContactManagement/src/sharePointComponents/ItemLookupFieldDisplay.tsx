@@ -20,9 +20,9 @@ export interface IItemLookupFieldDisplayState extends IFieldComponentState {
 
 export default class ItemLookupFieldDisplay extends FieldComponent<IItemLookupFieldDisplayProps, IItemLookupFieldDisplayState> {
 
-  public constructor()
+  public constructor(props: IItemLookupFieldDisplayProps)
   {
-    super();
+    super(props);
   }
 
   public componentWillMount() : void {

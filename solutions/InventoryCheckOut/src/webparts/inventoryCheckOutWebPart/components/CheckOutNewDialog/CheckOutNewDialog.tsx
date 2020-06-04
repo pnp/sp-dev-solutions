@@ -2,7 +2,7 @@
 // Licensed under the MIT license.
 
 import * as React from 'react';
-import * as update from 'immutability-helper';
+import update from 'immutability-helper';
 import ICheckOutNewDialogProp from './CheckOutNewDialogProp';
 import ICheckOutNewDialogState from './CheckOutNewDialogState';
 import { IPerson, ICheckOut } from "../../models/InventoryCheckOutModel";
@@ -68,9 +68,9 @@ export default class CheckOutNewDialog extends React.Component<ICheckOutNewDialo
           id: {$set: props.item && props.item.id ? props.item.id : 0},
           itemId: {$set: props.item && props.item.itemId ? props.item.itemId : null},
           checkedOutTo: {$set: props.item && props.item.checkedOutTo ? props.item.checkedOutTo : null},
-          checkedOutDate: {$set: props.item && props.item.checkedOutDate ? new Date(props.item.checkedOutDate) : new Date()},
-          scheduledCheckInDate: {$set: props.item && props.item.scheduledCheckInDate ? new Date(props.item.scheduledCheckInDate) : scheduledCheckInDate},
-          actualCheckInDate: {$set: props.item && props.item.actualCheckInDate ? new Date(props.item.actualCheckInDate) : null},
+          checkedOutDate: {$set: props.item && props.item.checkedOutDate ? props.item.checkedOutDate : new Date()},
+          scheduledCheckInDate: {$set: props.item && props.item.scheduledCheckInDate ? props.item.scheduledCheckInDate : scheduledCheckInDate},
+          actualCheckInDate: {$set: props.item && props.item.actualCheckInDate ? props.item.actualCheckInDate : null},
           status: {$set: props.item && props.item.status ? props.item.status : null},
           notes: {$set: props.item && props.item.notes ? props.item.notes : ""},
           quantity: {$set: props.item && props.item.quantity ? props.item.quantity : null}
@@ -80,9 +80,6 @@ export default class CheckOutNewDialog extends React.Component<ICheckOutNewDialo
         },
         users: {
           $set: props.users || this.state.users
-        },
-        errorMessage: {
-          $set: ""
         },
         submitting: {
           $set: false
@@ -375,7 +372,7 @@ export default class CheckOutNewDialog extends React.Component<ICheckOutNewDialo
         }, (): void => {
             this.setState(update(this.state, {
               errorMessages: {
-                $push: "Save failed."
+                $push: ["Save failed."]
               },
               submitting: {
                 $set: false

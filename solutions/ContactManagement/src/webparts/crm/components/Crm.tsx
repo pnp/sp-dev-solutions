@@ -33,7 +33,7 @@ import UserInterfaceUtility from '../../../sharePointComponents/UserInterfaceUti
 import SharePointUtility from '../../../data/SharePointUtility';
 
 import { Label } from 'office-ui-fabric-react/lib/Label';
-import { Button } from 'office-ui-fabric-react/lib/Button';
+import { DefaultButton } from 'office-ui-fabric-react/lib/Button';
 import { TagPicker } from 'office-ui-fabric-react/lib/components/pickers/TagPicker/TagPicker';
 
 export interface IPickerItem 
@@ -358,7 +358,6 @@ export default class Crm extends React.Component<ICrmProps, ICrmState> {
     
     var splashHeader = <div>
               	    <CommandBar
-                       isSearchBoxVisible={ false }
                       items={ [] }
                      />        
           <div className={ styles.logoArea }>
@@ -380,7 +379,7 @@ export default class Crm extends React.Component<ICrmProps, ICrmState> {
         { splashHeader } 
         <div>This web part requires Organization, Contact, and Tag lists for storage of data. Click Create Lists to set these lists up.</div>
         <p>
-          <Button onClick={ () => { 
+          <DefaultButton onClick={ () => { 
             ProvisionManager.provisionSite(this.props.context).then((result: EnsureListResult) => {          
               this.props.manager.data.init().then( () => {
                 this.setState( { 
@@ -392,7 +391,7 @@ export default class Crm extends React.Component<ICrmProps, ICrmState> {
               });
             }}>
             Create Lists
-          </Button>
+          </DefaultButton>
         </p>        
       </div>;
     }
@@ -471,7 +470,7 @@ export default class Crm extends React.Component<ICrmProps, ICrmState> {
     {
       pageRender = <div>
           <div className={ styles.formToolBar }>
-            <Button className={styles.formButton} onClick={ () => { 
+            <DefaultButton className={styles.formButton} onClick={ () => { 
                   if (this._personDisplay != null && this.state.isEditing)
                   {
                     this._personDisplay.updatePersonEdit();
@@ -483,8 +482,8 @@ export default class Crm extends React.Component<ICrmProps, ICrmState> {
                       lastMode: CrmMode.OrganizationDirectory,
                       isEditing: false});
                 }
-              }><i className="ms-Icon ms-Icon--Back" aria-hidden="true"></i></Button>
-            <Button className={styles.formButton} onClick={ () => {
+              }><i className="ms-Icon ms-Icon--Back" aria-hidden="true"></i></DefaultButton>
+            <DefaultButton className={styles.formButton} onClick={ () => {
                 if (this._personDisplay != null && this.state.isEditing)
                 {
                   this._personDisplay.updatePersonEdit();
@@ -496,7 +495,7 @@ export default class Crm extends React.Component<ICrmProps, ICrmState> {
                       lastMode: CrmMode.OrganizationDirectory, 
                       isEditing: !this.state.isEditing });
                 }
-              }><i className="ms-Icon ms-Icon--Edit" aria-hidden="true"></i></Button>
+              }><i className="ms-Icon ms-Icon--Edit" aria-hidden="true"></i></DefaultButton>
           </div>
           <PersonDisplay manager={ this.props.manager }           
                ref={ (incomingPersonDisplay : PersonDisplay) => { this._personDisplay = incomingPersonDisplay; } }
@@ -507,7 +506,7 @@ export default class Crm extends React.Component<ICrmProps, ICrmState> {
     {
       pageRender = <div>
           <div className={ styles.formToolBar }>
-            <Button className={styles.formButton} onClick={ () => { 
+            <DefaultButton className={styles.formButton} onClick={ () => { 
                   if (this._organizationDisplay != null && this.state.isEditing)
                   {
                     this._organizationDisplay.updateOrganizationEdit();
@@ -519,8 +518,8 @@ export default class Crm extends React.Component<ICrmProps, ICrmState> {
                     lastMode: this._lastMode != null ? this._lastMode : this.state.lastMode, 
                     isEditing: false });
                 }
-              }><i className="ms-Icon ms-Icon--Back" aria-hidden="true"></i></Button>
-            <Button className={styles.formButton}  onClick={ () => {
+              }><i className="ms-Icon ms-Icon--Back" aria-hidden="true"></i></DefaultButton>
+            <DefaultButton className={styles.formButton}  onClick={ () => {
                 if (this._organizationDisplay != null && this.state.isEditing)
                 {
                   this._organizationDisplay.updateOrganizationEdit();
@@ -532,7 +531,7 @@ export default class Crm extends React.Component<ICrmProps, ICrmState> {
                   lastMode: this.state.lastMode, 
                   isEditing: !this.state.isEditing
                 });
-               }}><i className="ms-Icon ms-Icon--Edit" aria-hidden="true"></i></Button>
+               }}><i className="ms-Icon ms-Icon--Edit" aria-hidden="true"></i></DefaultButton>
           </div>
           <div className={styles.formArea}>
             <OrganizationDisplay manager={ this.props.manager }
@@ -583,7 +582,6 @@ export default class Crm extends React.Component<ICrmProps, ICrmState> {
                   </div>
                   <div className={css(styles.toolBar)}>
               	    <CommandBar
-                      isSearchBoxVisible={ false }
                       items={ menuItems }
                      />          
                   </div>
@@ -607,11 +605,15 @@ export default class Crm extends React.Component<ICrmProps, ICrmState> {
             </div> : 
             <div></div> 
         }        
-        <Dialog  isOpen={ this.state.dialogMode == CrmDialogMode.Organization }
-          type={ DialogType.largeHeader }    
+        <Dialog  hidden={ this.state.dialogMode !== CrmDialogMode.Organization }
+          dialogContentProps={{
+            type: DialogType.largeHeader
+          }}
           title= { "Organization" }
-          containerClassName = { styles.fullDialog }
-          isBlocking={ true } >
+          modalProps={{
+            isBlocking: true,
+            containerClassName: styles.fullDialog
+          }}>
           <OrganizationEdit
             organization = { null }
             manager = { this.props.manager }
@@ -619,15 +621,19 @@ export default class Crm extends React.Component<ICrmProps, ICrmState> {
             isDialog = { true }
           />
           <DialogFooter>
-            <Button style={{ border: "solid 1px #D0D0D0" }} onClick={ this._confirmDialog }>Save</Button>
-            <Button style={{ border: "solid 1px #D0D0D0" }} onClick={ this._hideDialog }>Cancel</Button>
+            <DefaultButton style={{ border: "solid 1px #D0D0D0" }} onClick={ this._confirmDialog }>Save</DefaultButton>
+            <DefaultButton style={{ border: "solid 1px #D0D0D0" }} onClick={ this._hideDialog }>Cancel</DefaultButton>
           </DialogFooter>
         </Dialog>
-        <Dialog  isOpen={ this.state.dialogMode == CrmDialogMode.Person }
-          type={ DialogType.largeHeader }    
+        <Dialog  hidden={ this.state.dialogMode !== CrmDialogMode.Person }
+          dialogContentProps={{
+            type: DialogType.largeHeader
+          }}
           title= { "Person" }
-          containerClassName = { styles.fullDialog }
-          isBlocking={ true } >
+          modalProps={{
+            isBlocking: true,
+            containerClassName: styles.fullDialog
+          }}>
           <PersonEdit
             person = { null }
             manager = { this.props.manager }
@@ -635,8 +641,8 @@ export default class Crm extends React.Component<ICrmProps, ICrmState> {
             isDialog = { true }
           />
           <DialogFooter>
-            <Button style={{ border: "solid 1px #D0D0D0" }} onClick={ this._confirmDialog }>Save</Button>
-            <Button style={{ border: "solid 1px #D0D0D0" }} onClick={ this._hideDialog }>Cancel</Button>
+            <DefaultButton style={{ border: "solid 1px #D0D0D0" }} onClick={ this._confirmDialog }>Save</DefaultButton>
+            <DefaultButton style={{ border: "solid 1px #D0D0D0" }} onClick={ this._hideDialog }>Cancel</DefaultButton>
           </DialogFooter>
         </Dialog>     
       </div>

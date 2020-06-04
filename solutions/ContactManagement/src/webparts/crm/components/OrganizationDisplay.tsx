@@ -45,7 +45,7 @@ import DialogUtility from '../../../utilities/DialogUtility';
 
 import PersonEdit, { IPersonEditProps }  from './PersonEdit';
 
-import { Button } from 'office-ui-fabric-react/lib/Button';
+import { DefaultButton } from 'office-ui-fabric-react/lib/Button';
 
 export default class OrganizationDisplay extends React.Component<IOrganizationDisplayProps, IOrganizationDisplayState> {
 
@@ -145,7 +145,11 @@ export default class OrganizationDisplay extends React.Component<IOrganizationDi
   }
  
   private _handlePersonClick(e : React.MouseEvent<HTMLDivElement>) {
-    var val = ElementUtilities.getParentElementAttribute(e.nativeEvent.srcElement, "data-personId");
+    if (!(e.nativeEvent.target instanceof Element)) {
+      return;
+    }
+
+    var val = ElementUtilities.getParentElementAttribute(e.nativeEvent.target, "data-personId");
 
     if (val != null)
     {
@@ -163,7 +167,9 @@ export default class OrganizationDisplay extends React.Component<IOrganizationDi
 
     if (this.state.personsQueryId != this.props.organization.Id && this.props.organization.Id != null)
     {
-      this.state.personsQueryId = this.props.organization.Id;
+      this.setState({
+        personsQueryId: this.props.organization.Id
+      });
 
       this._executeQuery();
     }
@@ -197,7 +203,7 @@ export default class OrganizationDisplay extends React.Component<IOrganizationDi
         {
           aboutUrl = aboutUrl.replace(".wikipedia.", ".m.wikipedia.");
 
-          aboutContent = <PivotItem key="wikipedia" linkText="Wikipedia"><div><iframe width="100%" frameBorder="0" className={ styles.wikipediaIframe } src={aboutUrl}></iframe></div></PivotItem>;
+          aboutContent = <PivotItem key="wikipedia" headerText="Wikipedia"><div><iframe width="100%" frameBorder="0" className={ styles.wikipediaIframe } src={aboutUrl}></iframe></div></PivotItem>;
         }
       }
 
@@ -222,7 +228,7 @@ export default class OrganizationDisplay extends React.Component<IOrganizationDi
             </div>
             
             <div className={ styles.addContact }>
-              <Button onClick={ this._handleNewPersonClick } className={ styles.button }>Add contact</Button>
+              <DefaultButton onClick={ this._handleNewPersonClick } className={ styles.button }>Add contact</DefaultButton>
             </div> 
           </div>;
       } 
@@ -230,7 +236,7 @@ export default class OrganizationDisplay extends React.Component<IOrganizationDi
       interior = <div>
           <h3>{ this.props.organization.Title }</h3>
           <Pivot ref="pivot">
-            <PivotItem key="summary" linkText="Summary">
+            <PivotItem key="summary" headerText="Summary">
               <div className={styles.pivotInterior}>
                 <div className={ styles.displayArea }>
                   <ItemRichTextFieldDisplay field={this._itemContext.getField("Description") } itemContext={ this._itemContext } />
@@ -275,7 +281,7 @@ export default class OrganizationDisplay extends React.Component<IOrganizationDi
               </div>
             </PivotItem>
             { aboutContent }
-            <PivotItem key="org" linkText='Address'>
+            <PivotItem key="org" headerText='Address'>
               <div className={styles.pivotInterior}>            
                 <div className={styles.fieldListArea}>
                   <div className={styles.fieldArea}>
@@ -320,7 +326,7 @@ export default class OrganizationDisplay extends React.Component<IOrganizationDi
                   </div>
               </div>
             </PivotItem>            
-            <PivotItem key="resources" linkText='Resources'>
+            <PivotItem key="resources" headerText='Resources'>
               <div className={styles.pivotInterior}>            
                 <div className={styles.fieldListArea}>
                   <div className={styles.fieldArea}>
@@ -342,7 +348,7 @@ export default class OrganizationDisplay extends React.Component<IOrganizationDi
                 </div>
               </div>
             </PivotItem>            
-            <PivotItem key="miscellaneous" linkText="Miscellaneous">
+            <PivotItem key="miscellaneous" headerText="Miscellaneous">
               <div className={styles.pivotInterior}>
                 <div className={styles.iteratorArea}>
                   <ItemFieldIterator isDisplayOnly={ true } excludedFields={ ["Title", "Notes", "Description", "Created", "Modified", "Editor", "Author", "PrimaryAddress", "PrimaryStateProvince", "PrimaryCity", "PrimaryCountry", "PrimaryZipPostalCode", "Logo", "HomePage", "Updates", "Tags", "Status", "About", "Owner"] } itemContext={ this._itemContext } />
@@ -350,7 +356,7 @@ export default class OrganizationDisplay extends React.Component<IOrganizationDi
                 { personsContent }
               </div>
             </PivotItem>
-            <PivotItem key="history" linkText="History">
+            <PivotItem key="history" headerText="History">
               <div className={styles.pivotInterior}>
                 <div className={ styles.displayArea }>
                   <div className={ styles.displayHeader }>Created:</div> 

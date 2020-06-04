@@ -1,0 +1,24 @@
+@import '~office-ui-fabric-react/dist/sass/References.scss';
+
+.leadsSettings {
+  max-width: 400px;
+
+  .title {
+    @include ms-font-xxl;
+    padding-bottom: 0.5em;
+  }
+
+  .section {
+    margin: 1em 0;
+    -webkit-margin-collapse: separate;
+  }
+
+  .subTitle {
+    @include ms-font-l;
+    margin-bottom: 0.5em;
+  }
+
+  button.testConnection {
+    margin-top: 0.5em;
+  }
+}

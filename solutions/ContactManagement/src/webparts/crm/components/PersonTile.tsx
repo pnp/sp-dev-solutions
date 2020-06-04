@@ -16,9 +16,9 @@ export interface IPersonTileState {
 
 export default class PersonTile extends React.Component<IPersonTileProps, IPersonTileState> {
 
-  public constructor()
+  public constructor(props: IPersonTileProps)
   {
-    super();
+    super(props);
 
     this.updateItemsState = this.updateItemsState.bind(this);
   }

@@ -18,9 +18,9 @@ export interface IItemChoiceFieldEditorState extends IFieldComponentState {
 
 export default class ItemChoiceFieldEditor extends FieldComponent<IItemChoiceFieldEditorProps, IItemChoiceFieldEditorState> {
 
-  public constructor()
+  public constructor(props: IItemChoiceFieldEditorProps)
   {
-    super();
+    super(props);
 
     this._handleDropdownValueChanged = this._handleDropdownValueChanged.bind(this);
   }

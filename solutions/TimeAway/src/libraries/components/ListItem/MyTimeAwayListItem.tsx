@@ -46,12 +46,12 @@ export default class MyTimeAwayListItem extends React.Component<IMyTimeAwayListI
             </Label>
             <Button 
               buttonType={ButtonType.icon}
-              icon='Edit'
+              iconProps={{iconName:'Edit'}}
               onClick={this._handleEditClick} />
 
             <Button 
               buttonType={ButtonType.icon}
-              icon='Cancel'
+              iconProps={{iconName:'Cancel'}}
               onClick={this._handleDeleteClick} />
           </div>
         </FocusZone>

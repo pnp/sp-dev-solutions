@@ -23,16 +23,18 @@ export interface IFieldComponentState extends IItemComponentState {
 
 export abstract class FieldComponent<P extends IFieldComponentProps, S extends IFieldComponentState> extends ItemComponent<P, S> 
 {
-  public constructor()
+  public constructor(props: P)
   {
-    super();
+    super(props);
 
     this._handleValueChanged = this._handleValueChanged.bind(this);
   }
 
-  protected _handleValueChanged(newValue : any) : void
+  protected _handleValueChanged(event, newValue? : any) : void
   {
-    this.value = newValue;
+    if (newValue) {
+      this.value = newValue;
+    }
   }
 
   public abstract render();

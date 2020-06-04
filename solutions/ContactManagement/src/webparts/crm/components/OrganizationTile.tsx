@@ -18,9 +18,9 @@ export interface IOrganizationTileState {
 
 export default class OrganizationTile extends React.Component<IOrganizationTileProps, IOrganizationTileState> {
 
-  public constructor()
+  public constructor(props: IOrganizationTileProps)
   {
-    super();
+    super(props);
 
     this.updateItemsState = this.updateItemsState.bind(this);
   }  

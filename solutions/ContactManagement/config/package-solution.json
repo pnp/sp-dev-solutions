@@ -1,13 +1,16 @@
 {
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
   "solution": {
     "name": "Contact Management",
+    "isDomainIsolated": false,
+    "includeClientSideAssets": true,
     "id": "7e571ffc-e6a5-443e-8bbb-78d0ddbee6a0",
-    "version": "1.0.12.0",
+    "version": "1.0.13.0",
     "features": [{
       "title": "Contact Management Solution",
       "description": "Contact Management Solution",
       "id": "BF238909-3634-4934-AB08-1B64622913C1",
-      "version": "1.0.12.0",
+      "version": "1.0.13.0",
       "assets": {
         "elementManifests": [
           "elements.xml"
