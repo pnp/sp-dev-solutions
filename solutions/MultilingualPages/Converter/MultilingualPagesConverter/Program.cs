@@ -153,6 +153,18 @@ namespace MultilingualPagesConverter
                             log.Log("ConvertMultilingual", Severity.Error, $"Could not resolve default language code for local {web.Language}, exiting.");
                             return retVal;
                         }
+                        Console.WriteLine("");
+                        Console.WriteLine($"CONFIRM PLEASE: Detected '{defaultLanguage}' as default site language. I'll assume your old language master pages have the same language.");
+                        Console.WriteLine($"Press Return if this is CORRECT (recommended), OR");
+                        Console.WriteLine($"Enter another language code instead (like en-gb) and press Return (advanced).");
+                        var defaultLanguageOverride = Console.ReadLine();
+                        if (!string.IsNullOrWhiteSpace(defaultLanguageOverride) && defaultLanguageOverride.Trim().Length == 5)
+                        {
+                            // this covers e.g. the case where the site uses en-us as default language and the pages were created with en-gb - language master detection would fail in this case
+                            defaultLanguage = defaultLanguageOverride.Trim().ToLower();
+                        }
+                        Console.WriteLine($"Cool, I'll use '{defaultLanguage}'.");
+
                         log.Log("ConvertMultilingual", Severity.Info, $"Loaded language config and site pages list.");
 
                         //Fix Chinese
@@ -247,7 +259,7 @@ namespace MultilingualPagesConverter
 
                                 foreach (var trans in translationsPages)
                                 {
-                                    var masterPage = masterPages.Where(m => m["MasterTranslationPage"].ToString() == trans["MasterTranslationPage"].ToString());
+                                    var masterPage = masterPages.Where(m => m.Id.ToString() == trans["MasterTranslationPage"].ToString());
                                     if (masterPage.Any())
                                     {
                                         trans["_SPIsTranslation"] = true;
@@ -363,7 +375,7 @@ namespace MultilingualPagesConverter
                 foreach (var m in fixMaster)
                 {
                     //Find all related translations and point to this new master
-                    var fixTrans = translationsPages.Where(t => t["MasterTranslationPage"] == m["MasterTranslationPage"]);
+                    var fixTrans = translationsPages.Where(t => t["MasterTranslationPage"].ToString() == m["MasterTranslationPage"].ToString());
                     foreach (var t in fixTrans)
                     {
                         t["MasterTranslationPage"] = m.Id;
