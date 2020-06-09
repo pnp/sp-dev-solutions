@@ -1,6 +1,6 @@
 {
   "name": "inventory-check-out",
-  "version": "1.0.13",
+  "version": "1.0.14",
   "private": true,
   "engines": {
     "node": ">=0.10.0"
@@ -12,6 +12,7 @@
     "@microsoft/sp-lodash-subset": "1.10.0",
     "@microsoft/sp-page-context": "1.10.0",
     "@microsoft/sp-webpart-base": "1.10.0",
+    "@pnp/sp": "^2.0.5",
     "@types/react": "0.14.46",
     "@types/react-dom": "0.14.18",
     "@types/webpack-env": ">=1.12.1 <1.14.0",
