@@ -35,11 +35,8 @@ export default class CrmManager
         }
         else
         {
-            let spcrmdata = new SharePointCrmDataProvider();
-
-            spcrmdata.httpClient = this._context.spHttpClient;
-            spcrmdata.meUserLoginName = this._context.pageContext.user.loginName;            
-            spcrmdata.webUrl = this._context.pageContext.web.serverRelativeUrl;
+            const spcrmdata = new SharePointCrmDataProvider(context);
+            spcrmdata.meUserLoginName = this._context.pageContext.user.loginName;
 
             this._data = spcrmdata;
         }
