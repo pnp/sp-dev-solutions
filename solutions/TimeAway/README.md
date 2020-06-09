@@ -29,7 +29,8 @@ When you add the web part for the first time, a user will need to create the bac
 ![Time Away Screenshot](./assets/timeaway.png)
 ![Time Away as a personal Teams app](./assets/timeaway-teams.png)
 
-## Used SharePoint Framework Version 
+## Used SharePoint Framework Version
+
 ![drop](https://img.shields.io/badge/version-1.10-green.svg)
 
 ## Applies to
@@ -38,7 +39,7 @@ When you add the web part for the first time, a user will need to create the bac
 * [Office 365 tenant](https://dev.office.com/sharepoint/docs/spfx/set-up-your-development-environment)
 
 ## Prerequisites
- 
+
 None.
 
 ## Solution
@@ -59,6 +60,7 @@ TimeAway                     | Cindy Yan (Canviz)                               
 
 Version  | Date               | Comments
 -------- | ------------------ | --------
+1.0.14   | May 27, 2020 | Changed to use PnPjs
 1.0.13   | April 24, 2020 | Updated to SPFx v1.10
 1.0      | September 27, 2017 | Initial release
 
@@ -81,9 +83,8 @@ Version  | Date               | Comments
 
 You can choose to use the web parts separately -- for example, place the "Your Time Away" web part on a page for users to manage their personal information, and the Time Away Summary part on your home page.   Alternatively, you can just use the Time Away Summary web part by itself.  It optionally will show a "Edit your Time Away" summary link that users can use to adjust their time away.
 
-You can also toggle whether the web part willl show a full week, or only show Monday/Tuesday/Wednesday/Thursday/Friday. 
+You can also toggle whether the web part will show a full week, or only show Monday/Tuesday/Wednesday/Thursday/Friday.
 
 Finally, you can also choose to use content approval features in SharePoint to set up simple notifications or approvals. Via a setting in the Time Away Summary web part, you can choose to hide Time Away out-of-office entries unless the Approval field is set to Approved. This gives administrators the ability to connect SharePoint approval features, or a workflow product like Microsoft Flow, tied to the Approval field in the Time Away list, to let managers choose to approve or hide fields.
 
 <img src="https://telemetry.sharepointpnp.com/sp-dev-solutions/solutions/timeaway" />
-

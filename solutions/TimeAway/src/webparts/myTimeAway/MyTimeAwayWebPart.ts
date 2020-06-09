@@ -6,9 +6,8 @@ import * as ReactDom from 'react-dom';
 import { Environment, EnvironmentType, Version } from '@microsoft/sp-core-library';
 import { BaseClientSideWebPart } from "@microsoft/sp-webpart-base";
 import { IPropertyPaneConfiguration, PropertyPaneToggle } from "@microsoft/sp-property-pane";
-
 import IMyTimeAwayWebPartProps from './IMyTimeAwayWebPartProps';
-
+import { sp } from '../../pnp-preset';
 
 import {
   MyTimeAwayContainer,
@@ -25,7 +24,7 @@ export default class MyTimeAwayWebPart extends BaseClientSideWebPart<IMyTimeAway
   private _dataProvider: IMyTimeAwayDataProvider;
 
   protected async onInit(): Promise<void> {
-
+    sp.setup(this.context);
     this.context.statusRenderer.displayLoadingIndicator(this.domElement, "Loading List");
     if (Environment.type === EnvironmentType.Local) {
       this._dataProvider = new MockDataProvider(this.context,
@@ -36,8 +35,7 @@ export default class MyTimeAwayWebPart extends BaseClientSideWebPart<IMyTimeAway
         this.context.statusRenderer.clearLoadingIndicator(this.domElement);
         return super.onInit();
     } else {
-      this._dataProvider = new SharePointDataProvider(this.context,
-        Constants.TimeAwayListTitle,
+      this._dataProvider = new SharePointDataProvider(Constants.TimeAwayListTitle,
         this.properties.normalWeekToggleField,
         Constants.Default_TimePeriod);
 
