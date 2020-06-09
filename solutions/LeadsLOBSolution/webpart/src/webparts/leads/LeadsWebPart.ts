@@ -71,7 +71,6 @@ export default class LeadsWebPart extends BaseClientSideWebPart<ILeadsWebPartPro
         msGraphClient: this.msGraphClient,
         teamsContext: this.context.microsoftTeams,
         needsConfiguration: this.needsConfiguration,
-        userId: this.context.pageContext.aadInfo.userId,
         view: this.view
       }
     );
