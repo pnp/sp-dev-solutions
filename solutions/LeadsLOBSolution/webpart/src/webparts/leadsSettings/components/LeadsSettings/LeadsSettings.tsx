@@ -98,10 +98,14 @@ export class LeadsSettings extends React.Component<ILeadsSettingsProps, ILeadsSe
   }
 
   public componentWillMount(): void {
-    this.settings = SettingsManager.getSettings();
     let leadsApiUrl: string;
     SettingsManager
-      .getLeadsApiUrl(this.props.spHttpClient, this.props.webUrl)
+      .getSettings()
+      .then((settings: ILeadsSettings) => {
+        this.settings = settings;
+
+        return SettingsManager.getLeadsApiUrl(this.props.spHttpClient, this.props.webUrl);
+      })
       .then((_leadsApiUrl: string): Promise<void> => {
         leadsApiUrl = _leadsApiUrl;
         return Promise.resolve();

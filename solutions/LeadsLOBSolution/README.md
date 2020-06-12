@@ -69,6 +69,7 @@ This solution is compatible with SharePoint Online. Teams capability only works 
 
 Version|Date|Comments
 -------|----|--------
+1.4.2|Jun 15, 2020|Extended with storing user's configuration in application's personal folder
 1.4.1|May 25, 2020|Switched to using preview Microsoft To Do APIs for creating lead reminders
 1.4.0|May 19, 2020|Extended with the ability to create a reminder in Planner for the specific lead
 1.3.0|May 18, 2020|Extended with Teams messaging extension

@@ -3,7 +3,7 @@
   "solution": {
     "name": "leads-lob-client-side-solution",
     "id": "2dc4f7fe-cd2e-4f2a-8a92-86acc494e909",
-    "version": "1.4.1.0",
+    "version": "1.4.2.0",
     "includeClientSideAssets": true,
     "skipFeatureDeployment": true,
     "isDomainIsolated": false,
@@ -11,6 +11,10 @@
       {
         "resource": "Microsoft Graph",
         "scope": "Tasks.ReadWrite"
+      },
+      {
+        "resource": "Microsoft Graph",
+        "scope": "Files.ReadWrite"
       }
     ]
   },
