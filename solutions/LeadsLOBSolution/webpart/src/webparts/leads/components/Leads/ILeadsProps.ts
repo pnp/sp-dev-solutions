@@ -10,7 +10,5 @@ export interface ILeadsProps {
   msGraphClient: MSGraphClient;
   needsConfiguration: boolean;
   teamsContext?: typeof microsoftTeams;
-  // AAD user ID required to create Planner tasks
-  userId: string;
   view?: LeadView;
 }

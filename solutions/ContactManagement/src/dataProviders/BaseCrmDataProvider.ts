@@ -590,7 +590,7 @@ export abstract class BaseCrmDataProvider implements ICrmDataProvider {
     
     public defaultTagList = {
         Title: 'Tags',
-        ListItemEntityTypeFullName: '#SP.Data.TagsListItem',
+        ListItemEntityTypeFullName: 'SP.Data.TagsListItem',
         Id: 'f3c61a58-44a8-4f87-bf5b-03668af15ea7',
         Fields: [
             { 
@@ -608,7 +608,7 @@ export abstract class BaseCrmDataProvider implements ICrmDataProvider {
 
     public defaultOrganizationList = {
       Title : "Organizations", 
-      ListItemEntityTypeFullName: '#SP.Data.OrganizationsListItem',
+      ListItemEntityTypeFullName: 'SP.Data.OrganizationsListItem',
       Id: '01c78e45-06c2-4384-be9e-caa23912ebda',
       Fields: [
       { 
@@ -721,7 +721,7 @@ export abstract class BaseCrmDataProvider implements ICrmDataProvider {
 
    public defaultPersonList = {
        Title: "Contacts", 
-       ListItemEntityTypeFullName: '#SP.Data.ContactsListItem',
+       ListItemEntityTypeFullName: 'SP.Data.ContactsListItem',
        Id: 'f3c61a58-44a8-4f87-bf5b-03668af15ea6',
        Fields: [
           { 

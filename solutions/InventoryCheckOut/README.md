@@ -58,6 +58,7 @@ InventoryCheckOut            | Cindy Yan (Canviz)                               
 
 Version  | Date               | Comments
 -------- | ------------------ | --------
+1.0.14   | May 27, 2020 | Updated to use PnPjs
 1.0.13   | April 23, 2020 | Updated to SPFx v1.10
 1.0      | September 27, 2017 | Initial release
 

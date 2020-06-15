@@ -24,7 +24,7 @@ export default class MyCRContainer extends React.Component<ICheckOutContainerPro
     super(props);
     this.state = {
       submitting: false,
-      hasAdminPermission: SharePointUtilityModule.SharePointUtility.checkCurrentUserIsAbleToManageList(this.props.context),
+      hasAdminPermission: SharePointUtilityModule.SharePointUtility.checkCurrentUserIsAbleToManageList(this.props.context.pageContext.web.permissions),
       isInitialized: this.props.isInitialized,
       myCheckoutItems: [],
       myCheckoutItemsOriginal: [],
@@ -149,7 +149,7 @@ export default class MyCRContainer extends React.Component<ICheckOutContainerPro
   private _provisioningLists() {
     var utility = SharePointUtilityModule.SharePointUtility;
     this.setState({ submitting: true });
-    ProvisionManager.siteProvisoning(this.props.context)
+    ProvisionManager.siteProvisoning(this.props.context.pageContext.web.permissions)
       .then(() => {
         this.setState({ isInitialized: true, submitting: false });
       });

@@ -162,46 +162,44 @@ export class Leads extends React.Component<ILeadsProps, ILeadsState> {
     });
 
     const dueDate: Date = this.state.reminderDate;
+    dueDate.setHours(9);
     const reminder: string = `Review lead ${this.state.selectedLead.title}`;
-    const taskAssignment: any = {};
-    taskAssignment[this.props.userId] = {
-      "@odata.type": "#microsoft.graph.plannerAssignment",
-      orderHint: " !"
-    };
 
-    let planId: string;
-    let taskId: string;
-    this
-      .ensureSalesGroup()
-      .then((salesGroupId: string): Promise<string> => this.ensureSalesPlan(salesGroupId))
-      .then((_planId: string): Promise<string> => {
-        planId = _planId;
-        return this.ensureToDoBucket(planId);
+    this.props.msGraphClient
+      .api('me/todo/lists', {
+        defaultVersion: 'beta'
       })
-      // create task
-      .then((bucketId: string) => this.props.msGraphClient
-        .api('planner/tasks')
-        .post({
-          planId: planId,
-          bucketId: bucketId,
-          title: reminder,
-          assignments: taskAssignment,
-          dueDateTime: dueDate.toISOString()
-        }))
-      // retrieve task details to get ETag required to add a task description
-      .then((task: { id: string }) => {
-        taskId = task.id;
+      .get()
+      .then((lists: { value: { id: string; wellknownListName: string; }[] }): Promise<void> => {
+        if (lists.value.length < 1) {
+          return Promise.reject('No To Do lists found');
+        }
+
+        let defaultList = lists.value.filter(list => list.wellknownListName === 'defaultList');
+        if (defaultList.length < 1) {
+          defaultList = [lists.value[0]];
+        }
+
+        if (defaultList.length !== 1) {
+          return Promise.reject('Default To Do list not found');
+        }
+
         return this.props.msGraphClient
-        .api(`planner/tasks/${task.id}/details`)
-        .get();
+          .api(`me/todo/lists/${defaultList[0].id}/tasks`, {
+            defaultVersion: 'beta'
+          })
+          .post({
+            title: reminder,
+            body: {
+              content: `<html>\r\n<head>\r\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\r\n<meta content=\"text/html; charset=us-ascii\">\r\n</head>\r\n<body>\r\n<p>${location.href}</p>\r\n</body>\r\n</html>\r\n`,
+              'contentType': 'html'
+            },
+            reminderDateTime: {
+              dateTime: dueDate.toISOString(),
+              timeZone: 'UTC'
+            }
+          });
       })
-      // add task description
-      .then((taskDetails: { '@odata.etag': string }) => this.props.msGraphClient
-        .api(`planner/tasks/${taskId}/details`)
-        .header('If-Match', taskDetails["@odata.etag"])
-        .patch({
-          description: location.href
-        }))
       .then((): void => {
         this.setState({
           reminderCreating: false,
@@ -219,76 +217,6 @@ export class Leads extends React.Component<ILeadsProps, ILeadsState> {
     this.setState({
       reminderDialogVisible: false
     });
-  }
-
-  private ensureSalesGroup(): Promise<string> {
-    const groupName: string = 'Sales';
-
-    return this.props.msGraphClient
-      .api(`groups?$filter=groupTypes/any(c:c+eq+'Unified') and displayName eq '${groupName}'&$select=id`)
-      .get()
-      .then((groups: { value: { id: string }[] }): Promise<string> => {
-        if (groups.value.length > 0) {
-          return Promise.resolve(groups.value[0].id);
-        }
-
-        return this.props.msGraphClient
-          .api(`/groups`)
-          .post({
-            displayName: groupName,
-            owners: [this.props.userId],
-            groupTypes: ['Unified'],
-            mailEnabled: true,
-            mailNickname: groupName.toLowerCase(),
-            securityEnabled: true
-          })
-          .then((group: { id: string }): Promise<string> => Promise.resolve(group.id));
-      })
-      .then((groupId: string): Promise<string> => Promise.resolve(groupId));
-  }
-
-  private ensureSalesPlan(groupId: string): Promise<string> {
-    const planName: string = 'Sales';
-
-    return this.props.msGraphClient
-      .api(`groups/${groupId}/planner/plans?$filter=title eq '${planName}'&$select=id`)
-      .get()
-      .then((plans: { value: { id: string }[] }): Promise<string> => {
-        if (plans.value.length > 0) {
-          return Promise.resolve(plans.value[0].id);
-        }
-
-        return this.props.msGraphClient
-          .api('/planner/plans')
-          .post({
-            owner: groupId,
-            title: planName
-          })
-          .then((plan: { id: string }): Promise<string> => Promise.resolve(plan.id));
-      })
-      .then((planId: string): Promise<string> => Promise.resolve(planId));
-  }
-
-  private ensureToDoBucket(planId: string): Promise<string> {
-    const bucketName: string = 'To do';
-
-    return this.props.msGraphClient
-      .api(`planner/plans/${planId}/buckets?$filter=name eq '${bucketName}'&$select=id`)
-      .get()
-      .then((buckets: { value: { id: string }[] }): Promise<string> => {
-        if (buckets.value.length > 0) {
-          return Promise.resolve(buckets.value[0].id);
-        }
-
-        return this.props.msGraphClient
-          .api('/planner/buckets')
-          .post({
-            planId: planId,
-            name: bucketName
-          })
-          .then((bucket: { id: string }): Promise<string> => Promise.resolve(bucket.id));
-      })
-      .then((bucketId: string): Promise<string> => Promise.resolve(bucketId));
   }
 
   public componentDidMount(): void {
