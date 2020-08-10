@@ -6,12 +6,23 @@ import {
 } from '@microsoft/sp-property-pane';
 import { BaseClientSideWebPart } from '@microsoft/sp-webpart-base';
 import { LeadsSettings, ILeadsSettingsProps } from './components/LeadsSettings';
+import { LeadsSettings as SettingsManager } from '../../LeadsSettings';
 
 export interface ILeadsSettingsWebPartProps {
   description: string;
 }
 
 export default class LeadsSettingsWebPart extends BaseClientSideWebPart<ILeadsSettingsWebPartProps> {
+  public onInit(): Promise<void> {
+    return new Promise<void>((resolve: () => void, reject: (err) => void): void => {
+      this.context.msGraphClientFactory
+        .getClient()
+        .then((client): void => {
+          SettingsManager.initialize(client, this.context.httpClient);
+          resolve();
+        }, err => reject(err));
+    });
+  }
 
   public render(): void {
     const element: React.ReactElement<ILeadsSettingsProps> = React.createElement(
