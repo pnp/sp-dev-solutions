@@ -1,50 +1,55 @@
 import * as React from 'react';
-import { IWebPartContext } from '@microsoft/sp-webpart-base';
 import { CommandButton } from 'office-ui-fabric-react';
+import { IWebPartContext } from '@microsoft/sp-webpart-base';
 import { Logger, LogLevel } from "@pnp/logging";
 
-import styles from './HubLinks.module.scss';
-import * as strings from 'hubLinksStrings';
-import { HubLinksLayout } from './layouts/HubLinksLayout';
-import HubLinksFactory from './layouts/HubLinksFactory';
-import LinkPickerPanel from '../../../components/LinkPickerPanel/LinkPickerPanel';
-import { LinkType } from '../../../components/LinkPickerPanel/ILinkPickerPanelProps';
+import styles from './FeaturedContentWebPart.module.scss';
+import * as strings from 'featuredContentWebPartStrings';
+import { IFeaturedItem } from '../FeaturedContentWebPart';
+import { FeaturedContentLayout } from './layouts/FeaturedContentFactory';
+import FeaturedContentFactory from './layouts/FeaturedContentFactory';
+import { LinkType } from "../../../components/LinkPickerPanel/ILinkPickerPanelProps";
+import LinkPickerPanel from "../../../components/LinkPickerPanel/LinkPickerPanel";
 import ElemUtil from "../../../utilities/element/elemUtil";
 
-export interface IHubLinksProps {
-  defaultExpand: boolean;
+export interface IFeaturedContentProps {
+  featuredContentItems: IFeaturedItem[];
   links: any[];
-  title: string;
-  setTitle: any;
-  setUrl: Function;
   isEdit: boolean;
-  hubLinksItems: any[];
   usesListMode: boolean;
-  editItem: Function;
-  deleteItem: Function;
-  rearrangeItems: Function;
-  setGroup: Function;
-  resetActiveIndex: Function;
+  title: string;
+  setTitle: (title: string) => void;
+  setUrl: (url: string, name?: string) => void;
+  editItem: (index: number) => void;
+  deleteItem: (index: number) => void;
+  rearrangeItems: (newOrder: number[]) => void;
+  resetActiveIndex: () => void;
+  advancedCamlQuery: string;
   advancedCamlData: string;
   context: IWebPartContext;
-  layoutMode: HubLinksLayout;
-  showDescription: boolean;
-  textColor: string;
-  backgroundColor: string;
-  borderColor: string;
+  layoutMode: FeaturedContentLayout;
 }
 
-export interface IHubLinksState {
+export interface IFeaturedContentState {
+  isLinkPanelOpen: boolean;
+  isSiteSelected: boolean;
+  linkValid: boolean;
+  linkEntered: string;
 }
 
-export default class HubLinks extends React.Component<IHubLinksProps, IHubLinksState> {
-  private LOG_SOURCE = "HubLinks";
+export default class FeaturedContent extends React.Component<IFeaturedContentProps, IFeaturedContentState> {
+  private LOG_SOURCE = "FeaturedContent";
 
   constructor(props) {
     super(props);
+    this.state = {
+      isLinkPanelOpen: false,
+      isSiteSelected: false,
+      linkEntered: "",
+      linkValid: false
+    };
   }
 
-  /* Manage drag and drop sorting feature */
   private _dragElement: any;
   public get dragElement(): any {
     return this._dragElement;
@@ -59,6 +64,46 @@ export default class HubLinks extends React.Component<IHubLinksProps, IHubLinksS
   }
   public set mouseTarget(v: any) {
     this._mouseTarget = v;
+  }
+
+  public setTitle(event) {
+    this.props.setTitle(event.target.value);
+  }
+
+  public addBox(event) {
+    this.setState(
+      {
+        isLinkPanelOpen: false,
+        isSiteSelected: true,
+        linkValid: false,
+        linkEntered: ""
+      }
+    );
+    this.props.editItem(-1);
+  }
+
+  public editBox(event) {
+    try {
+      event.stopPropagation();
+      event.preventDefault();
+      this.props.editItem(ElemUtil.closest(event.target, '[data-index]').getAttribute("data-index"));
+
+    } catch (err) {
+      Logger.write(`${err} - ${this.LOG_SOURCE} (editBox)`, LogLevel.Error);
+    }
+    return false;
+  }
+
+  public deleteBox(event) {
+    try {
+      event.stopPropagation();
+      event.preventDefault();
+      if (confirm(strings.DeleteItemConfirmMessage))
+        this.props.deleteItem(ElemUtil.closest(event.target, '[data-index]').getAttribute("data-index"));
+    } catch (err) {
+      Logger.write(`${err} - ${this.LOG_SOURCE} (deleteBox)`, LogLevel.Error);
+    }
+    return false;
   }
 
   public mouseDragDown(event) {
@@ -82,16 +127,12 @@ export default class HubLinks extends React.Component<IHubLinksProps, IHubLinksS
   }
 
   public isbefore(a, b) {
-    try {
-      if (a.parentNode == b.parentNode) {
-        for (var cur = a; cur; cur = cur.previousSibling) {
-          if (cur === b) {
-            return true;
-          }
+    if (a.parentNode == b.parentNode) {
+      for (var cur = a; cur; cur = cur.previousSibling) {
+        if (cur === b) {
+          return true;
         }
       }
-    } catch (err) {
-      Logger.write(`${err} - ${this.LOG_SOURCE} (isbefore)`, LogLevel.Error);
     }
     return false;
   }
@@ -99,16 +140,6 @@ export default class HubLinks extends React.Component<IHubLinksProps, IHubLinksS
   public endDrag(event) {
     try {
       const indexArr: number[] = [];
-      //If Grouped Layout, update GroupBy field if group has changed
-      if (this.props.layoutMode == HubLinksLayout.GroupedListLayout) {
-        const currentGroup = ElemUtil.closest(event.currentTarget, '[data-group]');
-        const groupProp = currentGroup.getAttribute('data-group');
-        if (groupProp.length > 0) {
-          const group = groupProp.split("-")[1];
-          if (group.length > 0)
-            this.props.setGroup(event.currentTarget.getAttribute('data-index'), group);
-        }
-      }
       const currentElements = ElemUtil.closest(event.currentTarget, '[data-reactroot]').querySelectorAll('[data-index]');
       currentElements.forEach((element) => { indexArr.push(parseInt(element.getAttribute('data-index'))); });
       this.props.rearrangeItems(indexArr);
@@ -131,71 +162,21 @@ export default class HubLinks extends React.Component<IHubLinksProps, IHubLinksS
     }
   }
 
-  public toggleGroup(event) {
-    try {
-      if (event.target.tagName === 'A') return;
-      event.stopPropagation();
-      event.preventDefault();
-      const element = ElemUtil.closest(event.target, "[data-group]");
-      if (element.getAttributeNode('data-expanded')) {
-        element.removeAttribute('data-expanded');
-      } else {
-        element.setAttribute('data-expanded', "");
-      }
-    } catch (err) {
-      Logger.write(`${err} - ${this.LOG_SOURCE} (toggleGroup)`, LogLevel.Error);
-    }
+  public render(): React.ReactElement<IFeaturedContentProps> {
+    return this.props.usesListMode ? this.renderAdvancedWebPart() : this.renderBasicWebPart();
   }
 
-  public setTitle(event) {
-    this.props.setTitle(event.target.value);
-  }
-
-  public addBox(event) {
-    this.props.editItem(-1);
-  }
-
-  public editBox(event) {
-    try {
-      event.stopPropagation();
-      event.preventDefault();
-      this.props.editItem(ElemUtil.closest(event.target, '[data-index]').getAttribute("data-index"));
-    } catch (err) {
-      Logger.write(`${err} - ${this.LOG_SOURCE} (editBox)`, LogLevel.Error);
-    }
-    return false;
-  }
-
-  public deleteBox(event) {
-    try {
-      event.stopPropagation();
-      event.preventDefault();
-      if (confirm(strings.DeleteItemConfirmMessage))
-        this.props.deleteItem(ElemUtil.closest(event.target, '[data-index]').getAttribute("data-index"));
-    } catch (err) {
-      Logger.write(`${err} - ${this.LOG_SOURCE} (deleteBox)`, LogLevel.Error);
-    }
-    return false;
-  }
-
-  // ** Event handlers for link picker **
   private linkPickerPanel: LinkPickerPanel;
-  // Open the link picker - called from onClick of Change (link) button
-  public openLinkPicker(event: any, currentUrl: string = "") {
 
-    this.linkPickerPanel.pickLink(currentUrl).then(({ name, url }) => {
+  public openLinkPicker(event) {
+    this.linkPickerPanel.pickLink().then(({ name, url }) => {
       this.props.setUrl(url, name);
     });
-
   }
 
-  public render(): React.ReactElement<IHubLinksProps> {
-    try {
-      return this.props.usesListMode ? this.renderAdvancedWebPart() : this.renderBasicWebPart();
-    } catch (err) {
-      Logger.write(`${err} - ${this.LOG_SOURCE} (render)`, LogLevel.Error);
-      return null;
-    }
+  public createNewItemFromLink(event) {
+    this.props.resetActiveIndex();
+    this.openLinkPicker(event);
   }
 
   public renderBasicWebPart(): JSX.Element {
@@ -207,9 +188,9 @@ export default class HubLinks extends React.Component<IHubLinksProps, IHubLinksS
             {!this.props.isEdit && this.props.title && <span className={styles["view"]}>{this.props.title}</span>}
           </div>
           {this.props.isEdit &&
-            <CommandButton iconProps={{ iconName: 'Add' }} onClick={this.addBox.bind(this)}>{strings.AddNewButtonText}</CommandButton>
+            <CommandButton className={styles["new-item"]} iconProps={{ iconName: 'Add' }} onClick={this.addBox.bind(this)}>{strings.AddNewButtonText}</CommandButton>
           }
-          {HubLinksFactory.getLayout(this.props.layoutMode, false, this).render(this.props.hubLinksItems, this.props.isEdit)}
+          {FeaturedContentFactory.getLayout(this.props.layoutMode, false, this).render(this.props.featuredContentItems, this.props.isEdit)}
           {this.props.isEdit &&
             <LinkPickerPanel
               webPartContext={this.props.context}
@@ -222,7 +203,6 @@ export default class HubLinks extends React.Component<IHubLinksProps, IHubLinksS
       );
     } catch (err) {
       Logger.write(`${err} - ${this.LOG_SOURCE} (renderBasicWebPart)`, LogLevel.Error);
-      return null;
     }
   }
 
@@ -234,12 +214,11 @@ export default class HubLinks extends React.Component<IHubLinksProps, IHubLinksS
             {this.props.isEdit && <textarea onChange={this.setTitle.bind(this)} className={styles["edit"]} placeholder={strings.TitlePlaceholder} aria-label="Add a title">{this.props.title}</textarea>}
             {!this.props.isEdit && this.props.title && <span className={styles["view"]}>{this.props.title}</span>}
           </div>
-          {HubLinksFactory.getLayout(this.props.layoutMode, true, this).render(this.props.links, this.props.isEdit)}
+          {FeaturedContentFactory.getLayout(this.props.layoutMode, true, this).render(this.props.links, this.props.isEdit)}
         </div>
       );
     } catch (err) {
       Logger.write(`${err} - ${this.LOG_SOURCE} (renderAdvancedWebPart)`, LogLevel.Error);
-      return null;
     }
   }
 }

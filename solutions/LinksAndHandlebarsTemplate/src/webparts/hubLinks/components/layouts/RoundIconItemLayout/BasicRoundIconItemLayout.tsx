@@ -1,83 +1,92 @@
 import * as React from 'react';
+import { Logger, LogLevel } from "@pnp/logging";
+
 import * as strings from 'hubLinksStrings';
 import { IHubLinksItem } from '../../IHubLinksItem';
 import { IHubLinksLayout } from "../HubLinksLayout";
-import { DefaultButton } from 'office-ui-fabric-react/lib/Button';
+import { DefaultButton } from 'office-ui-fabric-react';
 import HubLinksWebPart from "../../HubLinks";
 import styles from './Styles.module.scss';
 
-export default class BasicRoundIconItemLayout implements IHubLinksLayout{
-  constructor(webpart:HubLinksWebPart){
+export default class BasicRoundIconItemLayout implements IHubLinksLayout {
+  private LOG_SOURCE = "BasicRoundIconItemLayout";
+
+  constructor(webpart: HubLinksWebPart) {
     this.webpart = webpart;
   }
-  
-  private _webpart : HubLinksWebPart;
-  public get webpart() : HubLinksWebPart {
+
+  private _webpart: HubLinksWebPart;
+  public get webpart(): HubLinksWebPart {
     return this._webpart;
   }
-  public set webpart(v : HubLinksWebPart) {
+  public set webpart(v: HubLinksWebPart) {
     this._webpart = v;
   }
-  
-  public render(items:IHubLinksItem[], isEditMode: boolean):JSX.Element{
-    return (
-      <ul className={styles["hubLinks"] + " " + styles["themed"] + (this.webpart.props.isEdit? " " + styles["edit"] : "")}>
-        { items &&
+
+  public render(items: IHubLinksItem[], isEditMode: boolean): JSX.Element {
+    try {
+      return (
+        <ul className={styles["hubLinks"] + " " + styles["themed"] + (this.webpart.props.isEdit ? " " + styles["edit"] : "")}>
+          {items &&
             items.map((item) => {
               return item.NewTab ? (
                 <a href={item.URL} target="blank" data-interception="off"
-                      key={"item-"+items.indexOf(item)} role="link" id={"item-"+items.indexOf(item)} 
-                      draggable={isEditMode} onDragStart={this.webpart.startDrag.bind(this.webpart)} 
-                      onMouseDown={this.webpart.mouseDragDown.bind(this.webpart)} onDragEnter={this.webpart.moveItem.bind(this.webpart)} 
-                      onDragEnd={this.webpart.endDrag.bind(this.webpart)} data-index={items.indexOf(item)}>
+                  key={"item-" + items.indexOf(item)} role="link" id={"item-" + items.indexOf(item)}
+                  draggable={isEditMode} onDragStart={this.webpart.startDrag.bind(this.webpart)}
+                  onMouseDown={this.webpart.mouseDragDown.bind(this.webpart)} onDragEnter={this.webpart.moveItem.bind(this.webpart)}
+                  onDragEnd={this.webpart.endDrag.bind(this.webpart)} data-index={items.indexOf(item)}>
                   <li>
-                      <i className={"fa " + item.Icon + " " + styles["faIcon"]} aria-hidden="true"/>
-                      <div className={styles["text"]}>
-                        <p className={styles["linktitle"]}>{item.Title}</p>
-                        <p className={styles["linkdescription"]}>{item.Description}</p> 
-                      </div>                   
-                      {isEditMode &&
-                        <div className={styles["editControls"]}>
-                            <DefaultButton iconProps={{iconName:"Clear"}} onClick={this.webpart.deleteBox.bind(this.webpart)} className={styles["right-button"]}/>
-                            <DefaultButton iconProps={{iconName:"Edit"}} onClick={this.webpart.editBox.bind(this.webpart)} className={styles["right-button"]}/>
-                            <i className={"ms-Icon ms-Icon--Move "+styles["left-button"]} id="drag-handle" aria-hidden="true"></i>
-                        </div>
-                      }
+                    <i className={"fas " + item.Icon + " " + styles["faIcon"]} aria-hidden="true" />
+                    <div className={styles["text"]}>
+                      <p className={styles["linktitle"]}>{item.Title}</p>
+                      <p className={styles["linkdescription"]}>{item.Description}</p>
+                    </div>
+                    {isEditMode &&
+                      <div className={styles["editControls"]}>
+                        <DefaultButton iconProps={{ iconName: "Clear" }} onClick={this.webpart.deleteBox.bind(this.webpart)} className={styles["right-button"]} />
+                        <DefaultButton iconProps={{ iconName: "Edit" }} onClick={this.webpart.editBox.bind(this.webpart)} className={styles["right-button"]} />
+                        <i className={"ms-Icon ms-Icon--Move " + styles["left-button"]} id="drag-handle" aria-hidden="true"></i>
+                      </div>
+                    }
                   </li>
                 </a>
               ) : (
-                <a href={item.URL} key={"item-"+items.indexOf(item)} role="link" id={"item-"+items.indexOf(item)} 
-                      draggable={isEditMode} onDragStart={this.webpart.startDrag.bind(this.webpart)} 
-                      onMouseDown={this.webpart.mouseDragDown.bind(this.webpart)} onDragEnter={this.webpart.moveItem.bind(this.webpart)} 
-                      onDragEnd={this.webpart.endDrag.bind(this.webpart)} data-index={items.indexOf(item)}>
-                  <li>
-                      <i className={"fa " + item.Icon + " " + styles["faIcon"]} aria-hidden="true"/>
+                  <a href={item.URL} key={"item-" + items.indexOf(item)} role="link" id={"item-" + items.indexOf(item)}
+                    draggable={isEditMode} onDragStart={this.webpart.startDrag.bind(this.webpart)}
+                    onMouseDown={this.webpart.mouseDragDown.bind(this.webpart)} onDragEnter={this.webpart.moveItem.bind(this.webpart)}
+                    onDragEnd={this.webpart.endDrag.bind(this.webpart)} data-index={items.indexOf(item)}>
+                    <li>
+                      <i className={"fas " + item.Icon + " " + styles["faIcon"]} aria-hidden="true" />
                       <div className={styles["text"]}>
                         <p className={styles["linktitle"]}>{item.Title}</p>
-                        <p className={styles["linkdescription"]}>{item.Description}</p>  
-                      </div>                  
+                        <p className={styles["linkdescription"]}>{item.Description}</p>
+                      </div>
                       {isEditMode &&
                         <div className={styles["editControls"]}>
-                            <DefaultButton iconProps={{iconName:"Clear"}} onClick={this.webpart.deleteBox.bind(this.webpart)} className={styles["right-button"]}/>
-                            <DefaultButton iconProps={{iconName:"Edit"}} onClick={this.webpart.editBox.bind(this.webpart)} className={styles["right-button"]}/>
-                            <i className={"ms-Icon ms-Icon--Move "+styles["left-button"]} id="drag-handle" aria-hidden="true"></i>
+                          <DefaultButton iconProps={{ iconName: "Clear" }} onClick={this.webpart.deleteBox.bind(this.webpart)} className={styles["right-button"]} />
+                          <DefaultButton iconProps={{ iconName: "Edit" }} onClick={this.webpart.editBox.bind(this.webpart)} className={styles["right-button"]} />
+                          <i className={"ms-Icon ms-Icon--Move " + styles["left-button"]} id="drag-handle" aria-hidden="true"></i>
                         </div>
                       }
-                  </li>
-                </a>
+                    </li>
+                  </a>
+                );
+            })
+          }
+          {(!items || items.length < 1) && isEditMode &&
+            Array.apply(null, Array(1 - (items ? items.length : 0))).map((o, i) => {
+              return (
+                <li className={"col-md-4 " + styles["emptyBox"]}>
+                  <div role="button" onClick={this.webpart.openLinkPicker.bind(this.webpart)}>{strings.PlaceholderButtonText}</div>
+                </li>
               );
             })
-        }
-        { (!items || items.length < 1) && isEditMode &&
-          Array.apply(null,Array(1-(items ? items.length : 0))).map((o,i)=>{
-            return(
-              <li className={"col-md-4 "+styles["emptyBox"]}>
-                <div role="button" onClick={this.webpart.openLinkPicker.bind(this.webpart)}>{strings.PlaceholderButtonText}</div>
-              </li>
-            );
-          })
-        }        
-      </ul>
-    );
+          }
+        </ul>
+      );
+    } catch (err) {
+      Logger.write(`${err} - ${this.LOG_SOURCE} (render)`, LogLevel.Error);
+      return null;
+    }
   }
 }

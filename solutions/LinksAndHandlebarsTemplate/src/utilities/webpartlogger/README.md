@@ -1,6 +1,6 @@
 # Web Part Logger
 
-Web part usage logging capability is included as a based service call that is configured by a webpart-logging.config file that is located in the SiteAssets library of the root site collection of the SharePoint tenant.  The config is a JSON file, but has a different extension as the .json file extension is blocked by SharePoint by default.  The logging service call will send the following information.
+Web part usage logging capability is included as a POST based service call that is configured by a tenant app property. The logging service call will send the following payload.
 
 - Web Part Name (as defined in the SPFx config)
 - Absolute URL of the page the Web Part is on
@@ -13,8 +13,8 @@ Web part usage logging capability is included as a based service call that is co
 
 ## Configuration
 
-The web part logger will try to get the webpart-logging.config from the /SiteAssets/webpart-logging.config location in the tenant.  The config has the following properties:
+The web part logger will try to get the configuration from the Tenant App Property named "LinksHandlebarsConfig" which is stored as a stringified JSON blob. The config has the following properties:
 
 - brandImagePreviewUrl: the preview URL of Images that display from the Approved Image Library
-- endpoint: the API endpoint that should be called to log the usage information
-- apiKey: the API key that should be used with the usage to log the data
+- loggingUrl: the API endpoint that should be called to log the usage information
+- loggingKey: the API key that should be used with the usage to log the data
