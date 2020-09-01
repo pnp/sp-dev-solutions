@@ -13,7 +13,6 @@ import { Version, DisplayMode } from '@microsoft/sp-core-library';
 import { BaseClientSideWebPart } from "@microsoft/sp-webpart-base";
 import { IPropertyPaneConfiguration, PropertyPaneButton, PropertyPaneButtonType, PropertyPaneCheckbox, PropertyPaneChoiceGroup, PropertyPaneLabel, PropertyPaneLink, PropertyPaneTextField, PropertyPaneToggle } from "@microsoft/sp-property-pane";
 
-import styles from './components/FeaturedContentWebPart.module.scss';
 import * as strings from 'featuredContentWebPartStrings';
 import FeaturedContent, { IFeaturedContentProps } from './components/FeaturedContent';
 import { PropertyFieldCamlQueryFieldMapping, SPFieldType, SPFieldRequiredLevel, PropertyFieldCamlQueryOrderBy } from '../../propertyPane/propertyFieldCamlQueryFieldMapping/PropertyFieldCamlQueryFieldMapping';
@@ -115,13 +114,6 @@ export default class FeaturedContentWebPart extends BaseClientSideWebPart<IFeatu
       }
     });
 
-    let elements = [];
-
-    // Insert retired web part message
-    if (this.displayMode == DisplayMode.Edit) {
-      elements.push(React.createElement("div", { className: `${styles.editMode}` }, strings.RetiredMessage));
-    }
-
     const element: React.ReactElement<IFeaturedContentProps> = React.createElement(
       FeaturedContent,
       {
@@ -139,7 +131,8 @@ export default class FeaturedContentWebPart extends BaseClientSideWebPart<IFeatu
         editItem: this.editBasicItem.bind(this),
         deleteItem: this.deleteBasicItem.bind(this),
         rearrangeItems: this.rearrangeBasicItems.bind(this),
-        resetActiveIndex: this.resetIndex.bind(this)
+        resetActiveIndex: this.resetIndex.bind(this),
+        displayMode: this.displayMode
       }
     );
 
@@ -170,14 +163,12 @@ export default class FeaturedContentWebPart extends BaseClientSideWebPart<IFeatu
             }
           });
 
-          elements.push(element);
-          this.webpart = ReactDom.render(elements, this.domElement);
+          this.webpart = ReactDom.render(element, this.domElement);
         }).catch((error) => { });
       }
     }
     else {
-      elements.push(element);
-      this.webpart = ReactDom.render(elements, this.domElement);
+      this.webpart = ReactDom.render(element, this.domElement);
     }
   }
 

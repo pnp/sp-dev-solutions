@@ -9,6 +9,7 @@ import { IBoxButton } from '../BoxButtonWebPart';
 import LinkPickerPanel from '../../../components/LinkPickerPanel/LinkPickerPanel';
 import { LinkType } from '../../../components/LinkPickerPanel/ILinkPickerPanelProps';
 import ElemUtil from "../../../utilities/element/elemUtil";
+import { DisplayMode } from '@microsoft/sp-core-library';
 
 const urlField = "URL";
 const iconField = "Font Awesome Icon";
@@ -35,6 +36,7 @@ export interface IBoxButtonProps {
   deleteItem: Function;
   rearrangeItems: Function;
   context: IWebPartContext;
+  displayMode: DisplayMode;
 }
 
 export interface IBoxButtonState {
@@ -75,7 +77,7 @@ export default class BoxButton extends React.Component<IBoxButtonProps, IBoxButt
   // ** Event handlers for link picker **
 
   // Open the link picker - called from onClick of Change (link) button
-  public openLinkPicker(event) {
+  public openLinkPicker = (event) => {
     if (this.linkPickerPanel) {
       this.linkPickerPanel.pickLink()
         .then(({ name, url }) => {
@@ -86,12 +88,12 @@ export default class BoxButton extends React.Component<IBoxButtonProps, IBoxButt
 
   // ** Event handlers for buttons **/
   // User clicks + button to add a link
-  public addBox(event) {
+  public addBox = (event) => {
     this.props.editItem(-1);
   }
 
   // User clicks edit button on a link
-  public editBox(event) {
+  public editBox = (event) => {
     try {
       event.stopPropagation();
       event.preventDefault();
@@ -103,7 +105,7 @@ export default class BoxButton extends React.Component<IBoxButtonProps, IBoxButt
   }
 
   // User clicks delete button on a link
-  public deleteBox(event) {
+  public deleteBox = (event) => {
     try {
       event.stopPropagation();
       event.preventDefault();
@@ -115,7 +117,7 @@ export default class BoxButton extends React.Component<IBoxButtonProps, IBoxButt
     return false;
   }
 
-  public checkEventDone(event) {
+  public checkEventDone = (event) => {
     if (this.eventDone) {
       this.eventDone = false;
       return false;
@@ -124,11 +126,11 @@ export default class BoxButton extends React.Component<IBoxButtonProps, IBoxButt
 
   // Event handlers for drag and drop
 
-  public mouseDragDown(event) {
+  public mouseDragDown = (event) => {
     this.mouseTarget = event.target;
   }
 
-  public startDrag(event) {
+  public startDrag = (event) => {
     try {
       event.stopPropagation();
       if (event.currentTarget.querySelector('#drag-handle').contains(this.mouseTarget)) {
@@ -155,7 +157,7 @@ export default class BoxButton extends React.Component<IBoxButtonProps, IBoxButt
     return false;
   }
 
-  public endDrag(event) {
+  public endDrag = (event) => {
     try {
       const indexArr: number[] = [];
       const currentElements = ElemUtil.closest(event.currentTarget, '[data-reactroot]').querySelectorAll('[data-index]');
@@ -166,7 +168,7 @@ export default class BoxButton extends React.Component<IBoxButtonProps, IBoxButt
     }
   }
 
-  public moveItem(event) {
+  public moveItem = (event) => {
     try {
       if (this.isbefore(this.dragElement, ElemUtil.closest(event.target, '[data-index]'))) {
         ElemUtil.closest(event.target, '[data-index]').parentNode.insertBefore(this.dragElement, ElemUtil.closest(event.target, '[data-index]'));
@@ -183,9 +185,16 @@ export default class BoxButton extends React.Component<IBoxButtonProps, IBoxButt
   // ** Render functions **
 
   public render(): React.ReactElement<IBoxButtonProps> {
-    return this.props.usesListMode ?
-      this.renderAdvancedWebPart() :
-      this.renderBasicWebPart();
+    let body = (this.props.usesListMode) ? this.renderAdvancedWebPart() : this.renderBasicWebPart();
+    // Insert retired web part message
+    return (
+      <>
+        {(this.props.displayMode == DisplayMode.Edit) &&
+          <div className={styles.editMode}>{strings.RetiredMessage}</div>
+        }
+        {body}
+      </>
+    );
   }
 
   // Render the "basic" web part with editable links

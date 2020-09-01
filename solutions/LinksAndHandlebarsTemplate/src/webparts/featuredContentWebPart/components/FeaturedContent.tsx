@@ -11,6 +11,7 @@ import FeaturedContentFactory from './layouts/FeaturedContentFactory';
 import { LinkType } from "../../../components/LinkPickerPanel/ILinkPickerPanelProps";
 import LinkPickerPanel from "../../../components/LinkPickerPanel/LinkPickerPanel";
 import ElemUtil from "../../../utilities/element/elemUtil";
+import { DisplayMode } from '@microsoft/sp-core-library';
 
 export interface IFeaturedContentProps {
   featuredContentItems: IFeaturedItem[];
@@ -28,6 +29,7 @@ export interface IFeaturedContentProps {
   advancedCamlData: string;
   context: IWebPartContext;
   layoutMode: FeaturedContentLayout;
+  displayMode: DisplayMode;
 }
 
 export interface IFeaturedContentState {
@@ -163,7 +165,16 @@ export default class FeaturedContent extends React.Component<IFeaturedContentPro
   }
 
   public render(): React.ReactElement<IFeaturedContentProps> {
-    return this.props.usesListMode ? this.renderAdvancedWebPart() : this.renderBasicWebPart();
+    let body = (this.props.usesListMode) ? this.renderAdvancedWebPart() : this.renderBasicWebPart();
+    // Insert retired web part message
+    return (
+      <>
+        {(this.props.displayMode == DisplayMode.Edit) &&
+          <div className={styles.editMode}>{strings.RetiredMessage}</div>
+        }
+        {body}
+      </>
+    );
   }
 
   private linkPickerPanel: LinkPickerPanel;

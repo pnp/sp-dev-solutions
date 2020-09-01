@@ -117,12 +117,6 @@ export default class BoxButtonWebPartWebPart extends BaseClientSideWebPart<IBoxB
       const propPaneRefresh = this.context.propertyPane.refresh;
 
       // Set up the BoxButtonWebPart component
-      let elements = [];
-
-      // Insert retired web part message
-      if (this.displayMode == DisplayMode.Edit) {
-        elements.push(React.createElement("div", { className: `${styles.editMode}` }, strings.RetiredMessage));
-      }
       const element: React.ReactElement<IBoxButtonProps> = React.createElement(
         BoxButton,
         {
@@ -205,7 +199,8 @@ export default class BoxButtonWebPartWebPart extends BaseClientSideWebPart<IBoxB
               this.properties.data.push(val);
             this.render();
           },
-          context: this.context
+          context: this.context,
+          displayMode: this.displayMode
         }
       );
 
@@ -233,8 +228,7 @@ export default class BoxButtonWebPartWebPart extends BaseClientSideWebPart<IBoxB
             });
             // TODO: Return from ReactDom.render has a race condition
             // Switch to a function ref
-            elements.push(element);
-            this.webpart = ReactDom.render(elements, this.domElement);
+            this.webpart = ReactDom.render(element, this.domElement);
           }).catch((error) => { });
         }
       }
@@ -242,8 +236,7 @@ export default class BoxButtonWebPartWebPart extends BaseClientSideWebPart<IBoxB
         // Not in list mode, just render the BoxButtonWebPart
         // TODO: Return from ReactDom.render has a race condition
         // Switch to a function ref
-        elements.push(element);
-        this.webpart = ReactDom.render(elements, this.domElement);
+        this.webpart = ReactDom.render(element, this.domElement);
       }
     } catch (err) {
       Logger.write(`${err} - ${this.LOG_SOURCE} (onInit)`, LogLevel.Error);
