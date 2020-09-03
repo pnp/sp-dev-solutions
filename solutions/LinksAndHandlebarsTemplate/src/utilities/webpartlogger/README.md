@@ -18,3 +18,5 @@ The web part logger will try to get the configuration from the Tenant App Proper
 - brandImagePreviewUrl: the preview URL of Images that display from the Approved Image Library
 - loggingUrl: the API endpoint that should be called to log the usage information
 - loggingKey: the API key that should be used with the usage to log the data
+
+See the [CreateTenantAppProperty.ps1](./CreateTenantAppProperty.ps1) script for an example of how to create the tenant app property using PnP PowerShell.

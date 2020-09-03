@@ -35,7 +35,7 @@ export class Usage {
   }
 
 }
-const storageEntity = "LinksHandlebarsConfig";
+const storageEntity = "myTakedaConfig_PROD";
 const environmentName = "PROD";
 
 export class WebPartLogger {

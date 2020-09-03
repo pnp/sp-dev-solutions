@@ -693,7 +693,7 @@ export default class HubLinksWebPart extends BaseClientSideWebPart<IHubLinksWebP
         onGetErrorMessage: this.itemValidation.bind(this, 80, (this.properties.layoutMode === HubLinksLayout.GroupedListLayout), strings.EditItemGeneralGroupByErrorText)
       }));
 
-      group0.groupFields.concat([
+      group0.groupFields = group0.groupFields.concat([
         PropertyPaneLabel("itemLinkLabel", {
           text: strings.EditItemGeneralSelectLinkLabel
         }),
