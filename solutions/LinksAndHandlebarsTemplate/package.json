@@ -25,7 +25,7 @@
         "handlebars-helpers": "0.8.4",
         "moment": "2.22.2",
         "linqts": "1.8.2",
-        "npm": "6.1.0",
+        "npm": "6.14.6",
         "sp-pnp-js": "3.0.7"
     },
     "devDependencies": {
