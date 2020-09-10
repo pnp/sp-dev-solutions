@@ -10,6 +10,7 @@ import HubLinksFactory from './layouts/HubLinksFactory';
 import LinkPickerPanel from '../../../components/LinkPickerPanel/LinkPickerPanel';
 import { LinkType } from '../../../components/LinkPickerPanel/ILinkPickerPanelProps';
 import ElemUtil from "../../../utilities/element/elemUtil";
+import WebPartTitle from "../../../components/WebPartTitle/WebPartTitle";
 
 export interface IHubLinksProps {
   defaultExpand: boolean;
@@ -147,10 +148,6 @@ export default class HubLinks extends React.Component<IHubLinksProps, IHubLinksS
     }
   }
 
-  public setTitle(event) {
-    this.props.setTitle(event.target.value);
-  }
-
   public addBox(event) {
     this.props.editItem(-1);
   }
@@ -201,11 +198,8 @@ export default class HubLinks extends React.Component<IHubLinksProps, IHubLinksS
   public renderBasicWebPart(): JSX.Element {
     try {
       return (
-        <div>
-          <div className={styles["webpart-header"]}>
-            {this.props.isEdit && <textarea onChange={this.setTitle.bind(this)} className={styles["edit"]} placeholder={strings.TitlePlaceholder} aria-label="Add a title">{this.props.title}</textarea>}
-            {!this.props.isEdit && this.props.title && <span className={styles["view"]}>{this.props.title}</span>}
-          </div>
+        <div data-component="HubLinks-Basic" >
+          <WebPartTitle editMode={this.props.isEdit} title={this.props.title} updateTitle={this.props.setTitle} />
           {this.props.isEdit &&
             <CommandButton iconProps={{ iconName: 'Add' }} onClick={this.addBox.bind(this)}>{strings.AddNewButtonText}</CommandButton>
           }
@@ -229,11 +223,8 @@ export default class HubLinks extends React.Component<IHubLinksProps, IHubLinksS
   public renderAdvancedWebPart(): JSX.Element {
     try {
       return (
-        <div>
-          <div className={styles["webpart-header"]}>
-            {this.props.isEdit && <textarea onChange={this.setTitle.bind(this)} className={styles["edit"]} placeholder={strings.TitlePlaceholder} aria-label="Add a title">{this.props.title}</textarea>}
-            {!this.props.isEdit && this.props.title && <span className={styles["view"]}>{this.props.title}</span>}
-          </div>
+        <div data-component="HubLinks-Advanced">
+          <WebPartTitle editMode={this.props.isEdit} title={this.props.title} updateTitle={this.props.setTitle} />
           {HubLinksFactory.getLayout(this.props.layoutMode, true, this).render(this.props.links, this.props.isEdit)}
         </div>
       );

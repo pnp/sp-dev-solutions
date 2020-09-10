@@ -105,13 +105,11 @@ export default class PropertyFieldSearchHost extends React.Component<IPropertyFi
   public render(): JSX.Element {
     return (
       <div>
-        <TextField label={strings.SearchQueryLabel} multiline={true} rows={5} onChanged={(e) => this.onQueryChange.call(this, e)} value={this.state.query} />
-        {/* <TextField label={strings.SelectPropertiesLabel} multiline={true} rows={3} onChanged={(e)=>this.onSelectPropertiesChanged.call(this,e)} value={this.state.selectProperties}/> */}
+        <TextField label={strings.SearchQueryLabel} multiline={true} rows={5} onChange={(ev: any, newValue: string) => this.onQueryChange.call(this, newValue)} value={this.state.query} />
         <Label>{strings.SortLabel}</Label>
         {this.state.sort !== null && this.state.sort.length > 0 ? this.state.sort.map((v, i) => {
           return (
             <div>
-              {/* <TextField label={strings.SortPropertyLabel} value={v.Property} onChanged={(e)=>this.changeSortProperty.call(this,i,e)}/> */}
               <Dropdown
                 label={strings.SortPropertyLabel}
                 disabled={false}

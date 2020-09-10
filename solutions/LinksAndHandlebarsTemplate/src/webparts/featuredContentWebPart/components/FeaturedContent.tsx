@@ -12,6 +12,7 @@ import { LinkType } from "../../../components/LinkPickerPanel/ILinkPickerPanelPr
 import LinkPickerPanel from "../../../components/LinkPickerPanel/LinkPickerPanel";
 import ElemUtil from "../../../utilities/element/elemUtil";
 import { DisplayMode } from '@microsoft/sp-core-library';
+import WebPartTitle from "../../../components/WebPartTitle/WebPartTitle";
 
 export interface IFeaturedContentProps {
   featuredContentItems: IFeaturedItem[];
@@ -193,11 +194,8 @@ export default class FeaturedContent extends React.Component<IFeaturedContentPro
   public renderBasicWebPart(): JSX.Element {
     try {
       return (
-        <div>
-          <div className={styles["webpart-header"]}>
-            {this.props.isEdit && <textarea onChange={this.setTitle.bind(this)} className={styles["edit"]} placeholder={strings.TitlePlaceholder} aria-label="Add a title">{this.props.title}</textarea>}
-            {!this.props.isEdit && this.props.title && <span className={styles["view"]}>{this.props.title}</span>}
-          </div>
+        <div data-component="FeaturedContent-Basic">
+          <WebPartTitle editMode={this.props.isEdit} title={this.props.title} updateTitle={this.props.setTitle} />
           {this.props.isEdit &&
             <CommandButton className={styles["new-item"]} iconProps={{ iconName: 'Add' }} onClick={this.addBox.bind(this)}>{strings.AddNewButtonText}</CommandButton>
           }
@@ -220,11 +218,8 @@ export default class FeaturedContent extends React.Component<IFeaturedContentPro
   public renderAdvancedWebPart(): JSX.Element {
     try {
       return (
-        <div>
-          <div className={styles["webpart-header"]}>
-            {this.props.isEdit && <textarea onChange={this.setTitle.bind(this)} className={styles["edit"]} placeholder={strings.TitlePlaceholder} aria-label="Add a title">{this.props.title}</textarea>}
-            {!this.props.isEdit && this.props.title && <span className={styles["view"]}>{this.props.title}</span>}
-          </div>
+        <div data-component="FeaturedContent-Advanced">
+          <WebPartTitle editMode={this.props.isEdit} title={this.props.title} updateTitle={this.props.setTitle} />
           {FeaturedContentFactory.getLayout(this.props.layoutMode, true, this).render(this.props.links, this.props.isEdit)}
         </div>
       );

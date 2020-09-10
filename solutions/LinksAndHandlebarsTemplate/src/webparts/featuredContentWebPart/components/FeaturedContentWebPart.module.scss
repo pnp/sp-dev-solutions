@@ -6,36 +6,6 @@
   line-height: 40px;
 }
 
-.webpart-header {
-  font-size: 24px;
-  font-weight: 100;
-  margin-bottom: 11px;
-
-  & .edit {
-    background-color: transparent;
-    border: none;
-    box-sizing: border-box;
-    display: block;
-    margin: 0;
-    outline: 0;
-    overflow: hidden;
-    resize: none;
-    white-space: pre;
-    width: 100%;
-    font-family: inherit;
-    font-size: inherit;
-    font-weight: inherit;
-    line-height: inherit;
-    text-align: inherit;
-    color: "[theme:primaryText, default: #000000]";
-    height: 40px;
-  }
-
-  & .view {
-    color: "[theme:primaryText, default: #000000]";
-  }
-}
-
 .link-picker {
   & [role="navigation"] {
     width: 210px;

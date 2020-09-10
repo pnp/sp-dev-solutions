@@ -10,6 +10,7 @@ import LinkPickerPanel from '../../../components/LinkPickerPanel/LinkPickerPanel
 import { LinkType } from '../../../components/LinkPickerPanel/ILinkPickerPanelProps';
 import ElemUtil from "../../../utilities/element/elemUtil";
 import { DisplayMode } from '@microsoft/sp-core-library';
+import WebPartTitle from "../../../components/WebPartTitle/WebPartTitle";
 
 const urlField = "URL";
 const iconField = "Font Awesome Icon";
@@ -30,7 +31,7 @@ export interface IBoxButtonProps {
   advancedCamlQuery: string;
   advancedCamlData: string;
   links: any[];
-  setTitle: Function;
+  setTitle: (title: string) => void;
   setUrl: Function;
   editItem: Function;
   deleteItem: Function;
@@ -201,11 +202,8 @@ export default class BoxButton extends React.Component<IBoxButtonProps, IBoxButt
   public renderBasicWebPart(): JSX.Element {
     try {
       return (
-        <div>
-          <div className={styles["webpart-header"]}>
-            {this.props.isEdit && <textarea onChange={this.setTitle.bind(this)} className={styles["edit"]} placeholder={strings.TitlePlaceholder} aria-label="Add a title" defaultValue={this.props.title}></textarea>}
-            {!this.props.isEdit && this.props.title && <span className={styles["view"]}>{this.props.title}</span>}
-          </div>
+        <div data-component="BoxButton-Basic">
+          <WebPartTitle editMode={this.props.isEdit} title={this.props.title} updateTitle={this.props.setTitle} />
           {this.props.isEdit &&
             <CommandButton className={styles["new-item"]} iconProps={{ iconName: 'Add' }} onClick={this.addBox.bind(this)}>{strings.AddNewButtonText}</CommandButton>
           }
@@ -274,11 +272,8 @@ export default class BoxButton extends React.Component<IBoxButtonProps, IBoxButt
   public renderAdvancedWebPart(): JSX.Element {
     try {
       return (
-        <div>
-          <div className={styles["webpart-header"]}>
-            {this.props.isEdit && <textarea onChange={this.setTitle.bind(this)} className={styles["edit"]} placeholder={strings.TitlePlaceholder} aria-label="Add a title" defaultValue={this.props.title}></textarea>}
-            {!this.props.isEdit && this.props.title && <span className={styles["view"]}>{this.props.title}</span>}
-          </div>
+        <div data-component="BoxButton-Advanced">
+          <WebPartTitle editMode={this.props.isEdit} title={this.props.title} updateTitle={this.props.setTitle} />
           {this.props.links.length > 0 && this.props.links.map((item) => {
             return this.renderAdvancedDefaultLayout(item);
           })}

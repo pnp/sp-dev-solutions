@@ -976,7 +976,7 @@ export default class PropertyFieldCamlQueryFieldMappingHost extends React.Compon
                     selectedKey={value.operator}
                     onChanged={(option: IDropdownOption, selectIndex?: number) => this._onChangedFilterOperator(option, selectIndex, index)}
                   />
-                  <TextField disabled={this.props.disabled} defaultValue={value.value} onChanged={(value2: string) => this._onChangedFilterValue(value2, index)} />
+                  <TextField disabled={this.props.disabled} defaultValue={value.value} onChange={(ev: any, value2: string) => this._onChangedFilterValue(value2, index)} />
                   <Button disabled={this.props.disabled} buttonType={ButtonType.command} onClick={() => this._onClickRemoveFilter(index)} iconProps={{ iconName: "Delete" }}>
                     {strings.SPListQueryRemove}
                   </Button>

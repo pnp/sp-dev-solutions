@@ -8,6 +8,7 @@ import 'file-saver';
 import styles from './HandlebarTemplateDisplay.module.scss';
 import LinkPickerPanel from "../../../components/LinkPickerPanel/LinkPickerPanel";
 import { LinkType } from "../../../components/LinkPickerPanel/ILinkPickerPanelProps";
+import WebPartTitle from "../../../components/WebPartTitle/WebPartTitle";
 
 const specialChar = "    ";
 
@@ -106,11 +107,8 @@ export default class HandlebarTemplateDisplay extends React.Component<IHandlebar
   public render(): React.ReactElement<IHandlebarTemplateDisplayProps> {
     const template = this.props.isOptimized ? Handlebars.template(eval('(' + this.props.template + ')')) : Handlebars.compile(this.props.template);
     return (
-      <div>
-        <div className={styles["webpart-header"]}>
-          {this.props.isEdit && <textarea onChange={this.setTitle.bind(this)} className={styles["edit"]} placeholder={strings.TitlePlaceholder} aria-label="Add a title" defaultValue={this.props.title}></textarea>}
-          {!this.props.isEdit && this.props.title && <span className={styles["view"]}>{this.props.title}</span>}
-        </div>
+      <div data-component="HandlebarTemplateDisplay">
+        <WebPartTitle editMode={this.props.isEdit} title={this.props.title} updateTitle={this.props.setTitle} />
         <div className={this.props.containerClass}>
           {this.props.items.length > 0 && this.props.templateUrl && this.props.items.map((item) => this.templateRender(item, template))}
           {this.props.items.length > 0 && this.props.isEdit && !this.props.templateUrl && this.noTemplateRender(this.props.items[0])}

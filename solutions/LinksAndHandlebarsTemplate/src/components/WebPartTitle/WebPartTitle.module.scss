@@ -1,0 +1,13 @@
+.wpheader {
+  font-size: (20 / 16) * 1rem;
+  font-weight: 600;
+
+  &>div[contenteditable="true"] {
+    display: inline-block;
+
+    padding: .25em .5em .35em 0;
+
+    outline: 1px dotted #ababab;
+    width: 100%;
+  }
+}
