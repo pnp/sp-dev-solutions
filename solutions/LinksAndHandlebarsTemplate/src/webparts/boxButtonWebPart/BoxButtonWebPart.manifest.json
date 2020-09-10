@@ -8,6 +8,7 @@
   "supportedHosts": [
     "SharePointWebPart"
   ],
+  "hiddenFromToolbox": true,
   "preconfiguredEntries": [
     {
       "groupId": "925b8fdb-3c50-4035-b15e-1baf4c15e994",
