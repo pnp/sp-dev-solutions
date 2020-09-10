@@ -279,7 +279,7 @@ namespace MultilingualPagesConverter
                                     else
                                     {
                                         allTranslationsComplete = false;
-                                        log.Log("ConvertMultilingual", Severity.Error, $"{trans["FileRef"].ToString()} ({trans["MasterTranslationPage"].ToString()}) could not be converted because a cooresponding master page could not be found.");
+                                        log.Log("ConvertMultilingual", Severity.Error, $"{trans["FileRef"].ToString()} ({trans["MasterTranslationPage"].ToString()}) could not be converted because a cooresponding master page could not be found. This could be due to the page being the master but not the same language as the sites langauge or this could be an abandoned translation.");
                                     }
                                 }
                                 log.Log("ConvertMultilingual", Severity.Info, $"Finished processing translation pages.");

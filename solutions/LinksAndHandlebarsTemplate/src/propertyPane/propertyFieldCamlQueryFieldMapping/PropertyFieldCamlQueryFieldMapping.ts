@@ -11,50 +11,47 @@
  */
 import * as React from 'react';
 import * as ReactDom from 'react-dom';
-import {
-  IPropertyPaneField,
-  PropertyPaneFieldType
-} from '@microsoft/sp-webpart-base';
+import { IPropertyPaneField, PropertyPaneFieldType } from "@microsoft/sp-property-pane";
 import PropertyFieldCamlQueryFieldMappingHost, { IPropertyFieldCamlQueryFieldMappingHostProps } from './PropertyFieldCamlQueryFieldMappingHost';
-import { IWebPartContext} from '@microsoft/sp-webpart-base';
+import { IWebPartContext } from '@microsoft/sp-webpart-base';
 
 export enum PropertyFieldCamlQueryOrderBy {
   Id = 0,
   Title = 1
 }
 
-export enum SPFieldRequiredLevel{
+export enum SPFieldRequiredLevel {
   Required,
   Optional
 }
 
-export interface IList{
-  title?:string;
-  id?:string;
+export interface IList {
+  title?: string;
+  id?: string;
   isDocLib?: boolean;
 }
 
-export interface ISort{
-  title?:string;
-  direction?:SortDirection;
+export interface ISort {
+  title?: string;
+  direction?: SortDirection;
 }
 
-export interface IField{
-  name:string;
-  internalName:string;
-  kind:SPFieldType;
+export interface IField {
+  name: string;
+  internalName: string;
+  kind: SPFieldType;
 }
 
-export interface IMapping{
-  name?:string;
+export interface IMapping {
+  name?: string;
   type?: SPFieldType;
   mappedTo?: string;
-  enabled?:boolean;
+  enabled?: boolean;
   requiredLevel?: SPFieldRequiredLevel;
-  field?:string;
+  field?: string;
 }
 
-export enum SPFieldType{
+export enum SPFieldType {
   Boolean = 0,
   Choice = 1,
   Counter = 2,
@@ -69,7 +66,7 @@ export enum SPFieldType{
   Taxonomy = 11
 }
 
-export enum SortDirection{
+export enum SortDirection {
   Ascending = 0,
   Descending = 1
 }
@@ -86,15 +83,15 @@ export interface IPropertyFieldCamlQueryFieldMappingProps {
    */
   label: string;
   context: IWebPartContext;
-  dataPropertyPath:string;
-  query:string;
+  dataPropertyPath: string;
+  query: string;
   baseTemplate?: number;
   includeHidden?: boolean;
   orderBy?: PropertyFieldCamlQueryOrderBy;
   showOrderBy?: boolean;
   showMax?: boolean;
   showFilters?: boolean;
-  showCreate?:boolean;
+  showCreate?: boolean;
   fieldMappings: IMapping[];
   createFields?: string[];
   createTitleRequired?: boolean;
@@ -107,10 +104,10 @@ export interface IPropertyFieldCamlQueryFieldMappingProps {
    * method of the web part object.
    */
   onPropertyChange(propertyPath: string, oldValue: any, newValue: any): void;
-    /**
-   * @var
-   * Parent Web Part properties
-   */
+  /**
+ * @var
+ * Parent Web Part properties
+ */
   properties: any;
   /**
    * @var
@@ -134,12 +131,12 @@ export interface IPropertyFieldCamlQueryFieldMappingProps {
    *   - The rejected, the value is thrown away.
    *
    */
-   onGetErrorMessage?: (value: string) => string | Promise<string>;
-   /**
-    * Custom Field will start to validate after users stop typing for `deferredValidationTime` milliseconds.
-    * Default value is 200.
-    */
-   deferredValidationTime?: number;
+  onGetErrorMessage?: (value: string) => string | Promise<string>;
+  /**
+   * Custom Field will start to validate after users stop typing for `deferredValidationTime` milliseconds.
+   * Default value is 200.
+   */
+  deferredValidationTime?: number;
 }
 
 /**
@@ -154,7 +151,7 @@ export interface IPropertyFieldCamlQueryFieldMappingPropsInternal extends IPrope
   label: string;
   targetProperty: string;
   context: IWebPartContext;
-  query:string;
+  query: string;
   dataPropertyPath: string;
   baseTemplate?: number;
   orderBy?: PropertyFieldCamlQueryOrderBy;
@@ -165,8 +162,8 @@ export interface IPropertyFieldCamlQueryFieldMappingPropsInternal extends IPrope
   showCreate?: boolean;
   fieldMappings: IMapping[];
   createFields?: string[];
-  createTitleRequired?:boolean;
-  render():void;
+  createTitleRequired?: boolean;
+  render(): void;
   max?: number;
   onRender(elem: HTMLElement): void;
   onDispose(elem: HTMLElement): void;
@@ -193,21 +190,21 @@ class PropertyFieldCamlQueryBuilder implements IPropertyPaneField<IPropertyField
   //Custom properties label: string;
   private label: string;
   private context: IWebPartContext;
-  private dataPropertyPath:string;
-  private query:string;
+  private dataPropertyPath: string;
+  private query: string;
   private baseTemplate: number;
   private orderBy: PropertyFieldCamlQueryOrderBy;
   private includeHidden: boolean;
   private showOrderBy: boolean;
   private showMax: boolean;
   private showFilters: boolean;
-  private showCreate:boolean;
+  private showCreate: boolean;
   private fieldMappings: IMapping[];
   private createFields: string[];
   private createTitleRequired: boolean;
-  private renderWebpart = ()=>{ this.properties.render(); };
+  private renderWebpart = () => { this.properties.render(); };
   private max: number;
-  public onPropertyChange(propertyPath: string, oldValue: any, newValue: any): void {}
+  public onPropertyChange(propertyPath: string, oldValue: any, newValue: any): void { }
   private customProperties: any;
   private key: string;
   private disabled: boolean = false;
@@ -260,7 +257,7 @@ class PropertyFieldCamlQueryBuilder implements IPropertyPaneField<IPropertyField
       targetProperty: this.targetProperty,
       context: this.context,
       query: this.query,
-      dataPropertyPath:this.dataPropertyPath,
+      dataPropertyPath: this.dataPropertyPath,
       baseTemplate: this.baseTemplate,
       orderBy: this.orderBy,
       includeHidden: this.includeHidden,
@@ -304,35 +301,35 @@ class PropertyFieldCamlQueryBuilder implements IPropertyPaneField<IPropertyField
  */
 export function PropertyFieldCamlQueryFieldMapping(targetProperty: string, properties: IPropertyFieldCamlQueryFieldMappingProps): IPropertyPaneField<IPropertyFieldCamlQueryFieldMappingPropsInternal> {
 
-    //Create an internal properties object from the given properties
-    const newProperties: IPropertyFieldCamlQueryFieldMappingPropsInternal = {
-      label: properties.label,
-      targetProperty: targetProperty,
-      context: properties.context,
-      query:properties.query,
-      dataPropertyPath:properties.dataPropertyPath,
-      baseTemplate: properties.baseTemplate,
-      orderBy: properties.orderBy,
-      includeHidden: properties.includeHidden,
-      showOrderBy: properties.showOrderBy,
-      showMax: properties.showMax,
-      showFilters: properties.showFilters,
-      showCreate: properties.showCreate,
-      fieldMappings: properties.fieldMappings,
-      createFields: properties.createFields,
-      createTitleRequired: properties.createTitleRequired,
-      render: properties.render,
-      max: properties.max,
-      onPropertyChange: properties.onPropertyChange,
-      properties: properties.properties,
-      onDispose: null,
-      onRender: null,
-      key: properties.key,
-      disabled: properties.disabled,
-      onGetErrorMessage: properties.onGetErrorMessage,
-      deferredValidationTime: properties.deferredValidationTime
-    };
-    //Calls the PropertyFieldCamlQuery builder object
-    //This object will simulate a PropertyFieldCustom to manage his rendering process
-    return new PropertyFieldCamlQueryBuilder(targetProperty, newProperties);
+  //Create an internal properties object from the given properties
+  const newProperties: IPropertyFieldCamlQueryFieldMappingPropsInternal = {
+    label: properties.label,
+    targetProperty: targetProperty,
+    context: properties.context,
+    query: properties.query,
+    dataPropertyPath: properties.dataPropertyPath,
+    baseTemplate: properties.baseTemplate,
+    orderBy: properties.orderBy,
+    includeHidden: properties.includeHidden,
+    showOrderBy: properties.showOrderBy,
+    showMax: properties.showMax,
+    showFilters: properties.showFilters,
+    showCreate: properties.showCreate,
+    fieldMappings: properties.fieldMappings,
+    createFields: properties.createFields,
+    createTitleRequired: properties.createTitleRequired,
+    render: properties.render,
+    max: properties.max,
+    onPropertyChange: properties.onPropertyChange,
+    properties: properties.properties,
+    onDispose: null,
+    onRender: null,
+    key: properties.key,
+    disabled: properties.disabled,
+    onGetErrorMessage: properties.onGetErrorMessage,
+    deferredValidationTime: properties.deferredValidationTime
+  };
+  //Calls the PropertyFieldCamlQuery builder object
+  //This object will simulate a PropertyFieldCustom to manage his rendering process
+  return new PropertyFieldCamlQueryBuilder(targetProperty, newProperties);
 }

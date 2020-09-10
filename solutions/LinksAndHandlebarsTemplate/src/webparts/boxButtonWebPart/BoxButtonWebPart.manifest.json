@@ -1,0 +1,34 @@
+{
+  "$schema": "https://dev.office.com/json-schemas/spfx/client-side-web-part-manifest.schema.json",
+  "id": "925b8fdb-3c50-4035-b15e-1baf4c15e994",
+  "alias": "BoxButtonWebPart",
+  "componentType": "WebPart",
+  "version": "*",
+  "manifestVersion": 2,
+  "supportedHosts": [
+    "SharePointWebPart"
+  ],
+  "hiddenFromToolbox": true,
+  "preconfiguredEntries": [
+    {
+      "groupId": "925b8fdb-3c50-4035-b15e-1baf4c15e994",
+      "group": {
+        "default": "Hub Web Parts"
+      },
+      "title": {
+        "default": "Hub Box Button"
+      },
+      "description": {
+        "default": "Create a large button with a colored border on it"
+      },
+      "officeFabricIconFontName": "Link",
+      "properties": {
+        "title": "",
+        "data": [],
+        "usesListMode": false,
+        "advancedCamlQuery": "",
+        "advancedCamlData": ""
+      }
+    }
+  ]
+}

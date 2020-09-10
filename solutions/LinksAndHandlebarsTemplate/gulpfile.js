@@ -12,38 +12,40 @@ const bundleAnalyzer = require('webpack-bundle-analyzer');
  * Adds a loader and a node setting for webpacking the handlebars-helpers correctly
  * https://github.com/helpers/handlebars-helpers/issues/263
  ********************************************************************************************/
-build.configureWebpack.mergeConfig({
-  additionalConfiguration: (generatedConfiguration) => {
+// build.configureWebpack.mergeConfig({
+//   additionalConfiguration: (generatedConfiguration) => {
 
-    generatedConfiguration.resolve.alias = { handlebars: 'handlebars/dist/handlebars.min.js' };
+//     generatedConfiguration.resolve.alias = {
+//       handlebars: 'handlebars/dist/handlebars.min.js'
+//     };
 
-    generatedConfiguration.module.rules.push(
-      {
-        test: /utils\.js$/,
-        loader: 'unlazy-loader',
-        include: [
-            /node_modules/,
-        ]
-      }
-    );
+//     // generatedConfiguration.module.rules.push(
+//     //   {
+//     //     test: /utils\.js$/,
+//     //     loader: 'unlazy-loader',
+//     //     include: [
+//     //         /node_modules/,
+//     //     ]
+//     //   }
+//     // );
 
-    generatedConfiguration.node = {
-      fs: 'empty'
-    }
+//     // generatedConfiguration.node = {
+//     //   fs: 'empty'
+//     // }
 
-    const lastDirName = path.basename(__dirname);
-      const dropPath = path.join(__dirname, 'temp', 'stats');
-      generatedConfiguration.plugins.push(new bundleAnalyzer.BundleAnalyzerPlugin({
-        openAnalyzer: false,
-        analyzerMode: 'static',
-        reportFilename: path.join(dropPath, `${lastDirName}.stats.html`),
-        generateStatsFile: true,
-        statsFilename: path.join(dropPath, `${lastDirName}.stats.json`),
-        logLevel: 'error'
-      }));
+//     const lastDirName = path.basename(__dirname);
+//     const dropPath = path.join(__dirname, 'temp', 'stats');
+//     generatedConfiguration.plugins.push(new bundleAnalyzer.BundleAnalyzerPlugin({
+//       openAnalyzer: false,
+//       analyzerMode: 'static',
+//       reportFilename: path.join(dropPath, `${lastDirName}.stats.html`),
+//       generateStatsFile: true,
+//       statsFilename: path.join(dropPath, `${lastDirName}.stats.json`),
+//       logLevel: 'error'
+//     }));
 
-    return generatedConfiguration;
-  }
-});
+//     return generatedConfiguration;
+//   }
+// });
 
 build.initialize(gulp);
