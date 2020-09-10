@@ -33,12 +33,19 @@ export default class LeadsWebPart extends BaseClientSideWebPart<ILeadsWebPartPro
   private queryParameters: UrlQueryParameterCollection;
   private view?: LeadView;
   private msGraphClient: MSGraphClient;
+  private settings?: ILeadsSettings;
 
   protected onInit(): Promise<void> {
     return this.context.msGraphClientFactory
       .getClient()
-      .then((client: MSGraphClient): Promise<void> => {
+      .then((client: MSGraphClient): Promise<ILeadsSettings> => {
         this.msGraphClient = client;
+
+        LeadsSettings.initialize(this.msGraphClient, this.context.httpClient);
+        return LeadsSettings.getSettings();
+      })
+      .then((settings: ILeadsSettings): Promise<void> => {
+        this.settings = settings;
 
         if (this.properties.demo) {
           this.needsConfiguration = false;
@@ -200,7 +207,7 @@ export default class LeadsWebPart extends BaseClientSideWebPart<ILeadsWebPartPro
             this.render();
           }
           resolve();
-        }, () => resolve());
+        }, _ => resolve());
     });
   }
 
@@ -210,12 +217,9 @@ export default class LeadsWebPart extends BaseClientSideWebPart<ILeadsWebPartPro
     this.view = this.getLeadView();
 
     if (this.context.microsoftTeams && typeof this.view !== 'undefined') {
-      const settings: ILeadsSettings = LeadsSettings.getSettings();
-      if (settings) {
-        props.demo = settings.demo;
-        props.quarterlyOnly = settings.quarterlyOnly;
-        props.region = settings.region;
-      }
+      props.demo = this.settings.demo;
+      props.quarterlyOnly = this.settings.quarterlyOnly;
+      props.region = this.settings.region;
     }
 
     return props;
