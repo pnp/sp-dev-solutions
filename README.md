@@ -16,5 +16,5 @@ Each file contains pertinent information describing the workflow, such as list/l
 4. 
 ### Notes about creating Power Automate flows:
 1. This project leverages [Power Automate Management Web API](https://docs.microsoft.com/en-us/power-automate/web-api) to create a new Power Automate flow.  
-2. Per Microsoft's document, flows under My Flows are not supported by these APIs.  Instead you will find flows created via the API in your [Default Solution](https://flow.microsoft.com/en-us/blog/solutions-in-microsoft-flow/).  *(I have opened a [GitHub issue](https://github.com/MicrosoftDocs/power-automate-docs/issues/323) inquiring about how to programmatically create Power Automate flows within solutions other than Default.)*  
+2. Per Microsoft's [documentation](https://docs.microsoft.com/en-us/power-automate/web-api), flows shown in the *My Flows* tab are not supported by these APIs.  Instead you will find flows created via the API in your *[Solutions](https://flow.microsoft.com/en-us/blog/solutions-in-microsoft-flow/) > Default Solution* tab.  *(I have opened a [GitHub issue](https://github.com/MicrosoftDocs/power-automate-docs/issues/323) inquiring about how to programmatically create Power Automate flows within solutions other than Default.)*  
 3.  
