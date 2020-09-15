@@ -20,3 +20,5 @@ Each file contains pertinent information describing the workflow, such as list/l
 3. The meat and potatoes of the workflow payload is in the `clientdata` property.  To help determine appropriate content for this section, I recommend manually creating the desired Power Automate flow using the UI.  Then, you can [leverage the API](https://docs.microsoft.com/en-us/power-automate/web-api#list-flows) to get the expected `clientdata` content for your manual workflow and copy/paste it into your payload.  *(Also a great strategy for bulk-creating Power Automate flows in an environment!)*
 4.  Once you successfully create a new Power Automate flow via the API, you will need to turn it on.  Then, do a Ctrl+F5 to confirm your connections appear as expected.   
 ![Power Automate Screenshot](/SS1.png?raw=true)
+
+Happy Automating! :-)
