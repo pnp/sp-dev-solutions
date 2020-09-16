@@ -1,5 +1,5 @@
 # SharePointWorkflowConverter
-A C# console application for retrieving legacy 2010 & 2013 custom SharePoint workflow definition files, and creating new Power Automate flows programmatically.
+A proof-of-concept C# console application for retrieving legacy 2010 & 2013 custom SharePoint workflow definition files, and creating new Power Automate flows programmatically.
 
 ### General Notes:
 1. This project is a proof-of-concept to demonstrate that it's *possible* to programmatically retrieve/parse SharePoint legacy workflow definition files and create new Power Automate flows.  As for specific use cases and implementation, this is a launch pad for you to build those out.   
