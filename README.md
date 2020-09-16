@@ -2,7 +2,7 @@
 A C# console application for retrieving legacy 2010 & 2013 custom SharePoint workflow definition files, and creating new Power Automate flows programmatically.
 
 ### General Notes:
-1. This project is a proof-of-concept to demonstrate that it's *possible* to programmatically retrieve/parse SharePoint legacy workflow definition files and create new Power Automate flows.  As for specific use cases and implementation, this is just a launch pad for you to build those out.   
+1. This project is a proof-of-concept to demonstrate that it's *possible* to programmatically retrieve/parse SharePoint legacy workflow definition files and create new Power Automate flows.  As for specific use cases and implementation, this is a launch pad for you to build those out.   
 1. Only compatible with SharePoint Online.
 2. Tested with a tenant [global admin](https://docs.microsoft.com/en-us/microsoft-365/admin/add-users/about-admin-roles?view=o365-worldwide#commonly-used-microsoft-365-admin-center-roles) account.
 3. Uses the 4.7.2 [.NET Framework](https://docs.microsoft.com/en-us/dotnet/standard/choosing-core-framework-server).  
