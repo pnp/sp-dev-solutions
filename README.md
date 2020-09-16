@@ -18,7 +18,7 @@ A proof-of-concept C# console application for retrieving legacy 2010 & 2013 cust
 *(I have opened a [GitHub issue](https://github.com/MicrosoftDocs/power-automate-docs/issues/323) inquiring about how to programmatically create Power Automate flows within solutions other than Default.)* 
 3. The meat and potatoes of the flow payload is in the `clientdata` property.  To help determine appropriate content for this section, I recommend manually creating the desired Power Automate flow using the UI.  Then, you can [leverage the API](https://docs.microsoft.com/en-us/power-automate/web-api#list-flows) to get the `clientdata` content for your manual flow and copy/paste it into the payload for your new flow.  
 *(Also a great strategy for programmatically bulk-creating Power Automate flows in an environment!)*
-4.  Once you successfully create a new Power Automate flow via the API, you will need to turn it on.  Then, do a Ctrl+F5 to confirm your connections appear as expected.   
+4.  Once you successfully create a new Power Automate flow via the API, you will need to turn it on.  Then, do a Ctrl+F5 refresh to confirm your connections appear as expected.   
 ![Power Automate Screenshot](/SS1.png?raw=true)
 
 ### Happy Automating! :-)
