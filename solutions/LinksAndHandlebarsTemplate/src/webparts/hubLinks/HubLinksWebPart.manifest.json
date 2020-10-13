@@ -1,29 +1,38 @@
 {
-    "$schema": "https://dev.office.com/json-schemas/spfx/client-side-web-part-manifest.schema.json",
-
-    "id": "4a8180df-c6b5-413e-a7cf-e5f4af80b1bf",
-    "alias": "HubLinksWebPart",
-    "componentType": "WebPart",
-    "version": "*",
-    "manifestVersion": 2,
-
-    "preconfiguredEntries": [{
-        "groupId": "4a8180df-c6b5-413e-a7cf-e5f4af80b1bf",
-        "group": { "default": "Hub Web Parts" },
-        "title": { "default": "Hub Links List" },
-        "description": { "default": "A list of links from a SharePoint list" },
-        "officeFabricIconFontName": "List",
-        "properties": {
-            "title": "",
-            "layoutMode": 0,
-            "hubLinksItems": [],
-            "usesListMode": false,
-            "listQuery": "",
-            "data": "",
-            "groups": [],
-            "showDescription": false,
-            "defaultExpand": false,
-            "version": "1.0"
-        }
-    }]
+  "$schema": "https://dev.office.com/json-schemas/spfx/client-side-web-part-manifest.schema.json",
+  "id": "4a8180df-c6b5-413e-a7cf-e5f4af80b1bf",
+  "alias": "HubLinksWebPart",
+  "componentType": "WebPart",
+  "version": "*",
+  "manifestVersion": 2,
+  "supportedHosts": [
+    "SharePointWebPart"
+  ],
+  "preconfiguredEntries": [
+    {
+      "groupId": "4a8180df-c6b5-413e-a7cf-e5f4af80b1bf",
+      "group": {
+        "default": "Hub Web Parts"
+      },
+      "title": {
+        "default": "Hub Links List"
+      },
+      "description": {
+        "default": "A list of links from a SharePoint list"
+      },
+      "officeFabricIconFontName": "List",
+      "properties": {
+        "title": "",
+        "layoutMode": 0,
+        "hubLinksItems": [],
+        "usesListMode": false,
+        "listQuery": "",
+        "data": "",
+        "groups": [],
+        "showDescription": false,
+        "defaultExpand": false,
+        "version": "1.0"
+      }
+    }
+  ]
 }

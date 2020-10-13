@@ -1,0 +1,35 @@
+{
+  "$schema": "https://dev.office.com/json-schemas/spfx/client-side-web-part-manifest.schema.json",
+  "id": "6e7296cf-4ba1-4c8e-8d21-41fe5f23900b",
+  "alias": "FeaturedContentWebPart",
+  "componentType": "WebPart",
+  "version": "*",
+  "manifestVersion": 2,
+  "supportedHosts": [
+    "SharePointWebPart"
+  ],
+  "hiddenFromToolbox": true,
+  "preconfiguredEntries": [
+    {
+      "groupId": "6e7296cf-4ba1-4c8e-8d21-41fe5f23900b",
+      "group": {
+        "default": "Hub Web Parts"
+      },
+      "title": {
+        "default": "Hub Featured Content"
+      },
+      "description": {
+        "default": "This web part is used to display featured content links"
+      },
+      "officeFabricIconFontName": "Tiles",
+      "properties": {
+        "title": "",
+        "layoutMode": 0,
+        "featuredContentItems": [],
+        "usesListMode": false,
+        "advancedCamlQuery": "",
+        "advancedCamlData": ""
+      }
+    }
+  ]
+}

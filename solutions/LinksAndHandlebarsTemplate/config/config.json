@@ -5,16 +5,16 @@
     "box-button-web-part-bundle": {
       "components": [
         {
-          "entrypoint": "./lib/webparts/boxButtonWebPart/BoxButtonWebPartWebPart.js",
-          "manifest": "./src/webparts/boxButtonWebPart/BoxButtonWebPartWebPart.manifest.json"
+          "entrypoint": "./lib/webparts/boxButtonWebPart/BoxButtonWebPart.js",
+          "manifest": "./src/webparts/boxButtonWebPart/BoxButtonWebPart.manifest.json"
         }
       ]
     },
     "featured-content-web-part-bundle": {
       "components": [
         {
-          "entrypoint": "./lib/webparts/featuredContentWebPart/FeaturedContentWebPartWebPart.js",
-          "manifest": "./src/webparts/featuredContentWebPart/FeaturedContentWebPartWebPart.manifest.json"
+          "entrypoint": "./lib/webparts/featuredContentWebPart/FeaturedContentWebPart.js",
+          "manifest": "./src/webparts/featuredContentWebPart/FeaturedContentWebPart.manifest.json"
         }
       ]
     },

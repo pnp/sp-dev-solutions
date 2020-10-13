@@ -1,50 +1,60 @@
 {
-    "name": "hub-web-parts",
-    "version": "2.3.3",
-    "private": true,
-    "engines": {
-        "node": ">=0.10.0"
-    },
-    "dependencies": {
-        "react": "15.6.2",
-        "react-dom": "15.6.2",
-        "@types/react": "15.6.6",
-        "@types/react-dom": "15.5.6",
-        "@microsoft/sp-core-library": "1.6.0",
-        "@microsoft/sp-webpart-base": "1.6.0",
-        "@microsoft/sp-lodash-subset": "1.6.0",
-        "@microsoft/sp-office-ui-fabric-core": "1.6.0",
-        "@microsoft/sp-http": "1.6.0",
-        "@microsoft/sp-loader": "1.6.0",
-        "@types/webpack-env": "1.13.1",
-        "@types/es6-promise": "0.0.33",
-        "@types/handlebars": "4.0.39",
-        "@pnp/spfx-property-controls": "1.9.0",
-        "deep-diff": "0.3.8",
-        "handlebars": "4.0.12",
-        "handlebars-helpers": "0.8.4",
-        "moment": "2.22.2",
-        "linqts": "1.8.2",
-        "npm": "6.1.0",
-        "sp-pnp-js": "3.0.7"
-    },
-    "devDependencies": {
-        "@microsoft/sp-build-web": "1.6.0",
-        "@microsoft/sp-module-interfaces": "1.6.0",
-        "@microsoft/sp-webpart-workbench": "1.6.0",
-        "tslint-microsoft-contrib": "~5.0.0",
-        "gulp": "~3.9.1",
-        "@types/chai": "3.4.34",
-        "@types/mocha": "2.2.38",
-        "ajv": "~5.2.2",
-        "es6-promise": "^4.2.4",
-        "file-saver": "^1.3.3",
-        "unlazy-loader": "0.1.3",
-        "webpack-bundle-analyzer": "3.0.3"
-    },
-    "scripts": {
-        "build": "gulp bundle",
-        "clean": "gulp clean",
-        "test": "gulp test"
-    }
+  "name": "hub-web-parts",
+  "version": "3.0.0",
+  "private": true,
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "resolutions": {
+    "@types/react": "16.8.8"
+  },
+  "main": "lib/index.js",
+  "dependencies": {
+    "@microsoft/rush-stack-compiler-3.9": "^0.3.2",
+    "@microsoft/sp-core-library": "1.10.0",
+    "@microsoft/sp-listview-extensibility": "1.10.0",
+    "@microsoft/sp-lodash-subset": "1.10.0",
+    "@microsoft/sp-office-ui-fabric-core": "1.10.0",
+    "@microsoft/sp-property-pane": "1.10.0",
+    "@microsoft/sp-webpart-base": "1.10.0",
+    "@pnp/logging": "^2.0.8",
+    "@pnp/sp": "^2.0.8",
+    "@pnp/spfx-property-controls": "1.9.0",
+    "@types/es6-promise": "0.0.33",
+    "@types/handlebars": "4.0.39",
+    "@types/react": "16.8.8",
+    "@types/react-dom": "16.8.3",
+    "@types/webpack-env": "1.13.1",
+    "core-js": "^3.6.5",
+    "deep-diff": "0.3.8",
+    "es6-map": "^0.1.5",
+    "handlebars": "4.0.12",
+    "handlebars-helpers": "0.8.4",
+    "linqts": "1.8.2",
+    "moment": "2.22.2",
+    "office-ui-fabric-react": "7.59.0",
+    "react": "16.8.5",
+    "react-dom": "16.8.5",
+    "whatwg-fetch": "^3.4.0"
+  },
+  "devDependencies": {
+    "@microsoft/sp-build-web": "1.10.0",
+    "@microsoft/sp-module-interfaces": "1.10.0",
+    "@microsoft/sp-tslint-rules": "1.10.0",
+    "@microsoft/sp-webpart-workbench": "1.10.0",
+    "@types/chai": "3.4.34",
+    "@types/mocha": "2.2.38",
+    "ajv": "~5.2.2",
+    "es6-promise": "^4.2.4",
+    "file-saver": "^1.3.3",
+    "gulp": "~3.9.1",
+    "typescript": "^3.9.5",
+    "unlazy-loader": "0.1.3",
+    "webpack-bundle-analyzer": "3.0.3"
+  },
+  "scripts": {
+    "build": "gulp bundle",
+    "clean": "gulp clean",
+    "test": "gulp test"
+  }
 }

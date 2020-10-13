@@ -47,6 +47,12 @@
         position: absolute;
         right: 8px;
         margin-top: 8px;
+        width: 16px;
+        height: 16px;
+        background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDQ4IDIwNDgiPjxwYXRoIGQ9Ik05NjAgMTkyMHEtMTMzIDAtMjU1LTM0dC0yMzAtOTYtMTk0LTE1MC0xNTAtMTk1LTk3LTIyOVQwIDk2MHEwLTEzMyAzNC0yNTV0OTYtMjMwIDE1MC0xOTQgMTk1LTE1MCAyMjktOTdUOTYwIDBxMTMzIDAgMjU1IDM0dDIzMCA5NiAxOTQgMTUwIDE1MCAxOTUgOTcgMjI5IDM0IDI1NnEwIDEzMy0zNCAyNTV0LTk2IDIzMC0xNTAgMTk0LTE5NSAxNTAtMjI5IDk3LTI1NiAzNHptMC0xNzkycS0xMTUgMC0yMjEgMzB0LTE5OCA4NC0xNjkgMTMwLTEzMCAxNjgtODQgMTk5LTMwIDIyMXEwIDExNCAzMCAyMjB0ODQgMTk5IDEzMCAxNjkgMTY4IDEzMCAxOTkgODQgMjIxIDMwcTExNCAwIDIyMC0zMHQxOTktODQgMTY5LTEzMCAxMzAtMTY4IDg0LTE5OSAzMC0yMjFxMC0xMTQtMzAtMjIwdC04NC0xOTktMTMwLTE2OS0xNjgtMTMwLTE5OS04NC0yMjEtMzB6bS02NCA2NDBoMTI4djY0MEg4OTZWNzY4em0wLTI1NmgxMjh2MTI4SDg5NlY1MTJ6IiBmaWxsPSIjYTgwMDAwIj48L3BhdGg+PC9zdmc+");
+        background-size: 16px;
+        background-repeat: no-repeat;
+        background-position: center center;
       }
 
       :global {

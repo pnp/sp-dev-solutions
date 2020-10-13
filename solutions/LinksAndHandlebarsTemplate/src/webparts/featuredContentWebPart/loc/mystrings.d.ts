@@ -5,14 +5,14 @@ declare interface IFeaturedContentWebPartStrings {
   ManageContentLabel: string;
   TitlePlaceholder: string;
 
-  AddNewButtonText:string;
-  PlaceholderButtonText:string;
-  SaveButtonText:string;
-  SelectButtonText:string;
-  CancelButtonText:string;
-  SelectFromLinkLabel:string;
-  SelectFromLinkDescription:string;
-  SelectFromSiteTitle:string;
+  AddNewButtonText: string;
+  PlaceholderButtonText: string;
+  SaveButtonText: string;
+  SelectButtonText: string;
+  CancelButtonText: string;
+  SelectFromLinkLabel: string;
+  SelectFromLinkDescription: string;
+  SelectFromSiteTitle: string;
 
   EditItemGeneralLabel: string;
   EditItemGeneralTitleLabel: string;
@@ -42,8 +42,8 @@ declare interface IFeaturedContentWebPartStrings {
   SwitchToBasicButtonText: string;
   SwitchToAdvancedLabel: string;
   SwitchToAdvancedButtonText: string;
-  OnLabel:string;
-  OffLabel:string;
+  OnLabel: string;
+  OffLabel: string;
 
   AdvancedListModeGroupLabel: string;
   AdvancedEnableListModeLabel: string;
@@ -55,6 +55,8 @@ declare interface IFeaturedContentWebPartStrings {
   TitleDescriptionLabel: string;
   StackedLabel: string;
   AltStackedLabel: string;
+
+  RetiredMessage: string;
 }
 
 declare module 'featuredContentWebPartStrings' {
