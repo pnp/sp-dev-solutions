@@ -69,7 +69,7 @@ A handlebars template web part that enables highly customized UI code to be appl
 
 ## Used SharePoint Framework Version
 
-![drop](https://img.shields.io/badge/version-1.10.0-green.svg)
+![drop](https://img.shields.io/badge/version-1.12.1-green.svg)
 
 ## Applies to
 
@@ -82,7 +82,8 @@ Version  | Date               | Comments
 -------- | ------------------ | --------
 1.0      | September 27, 2017 | Initial release
 1.1      | April 12, 2018 | Updated to use CDN and to use SPFx v1.4.1
-3.0      | August, 2020 | Update to SPFx v1.10.0, Update PnPJS to 2.xUpdate, FontAwesome to 5.x, Fix bug with grouped view doubling groups on non-list backed HubLinks web part, Deprecate BoxButton and FeaturedContent web parts to promote OOB Quick Links web part which replaces functionality, Update logging to move webpart-logging-.config file to Tenant App Property "LinksHandlebarsConfig"
+3.0      | August, 2020 | Update to SPFx v1.10.0, Update PnPJS to 2.x Update, FontAwesome to 5.x, Fix bug with grouped view doubling groups on non-list backed HubLinks web part, Deprecate BoxButton and FeaturedContent web parts to promote OOB Quick Links web part which replaces functionality, Update logging to move webpart-logging-.config file to Tenant App Property "LinksHandlebarsConfig"
+4.0      | July, 2021 | Update to SPFx v1.12.1, Update PnPJS to 2.x Update, Update polyfill libraries. Bug fix for inability to change order of Hub Links Web Part items.
 
 ## Disclaimer
 

@@ -198,7 +198,7 @@ export default class HubLinks extends React.Component<IHubLinksProps, IHubLinksS
   public renderBasicWebPart(): JSX.Element {
     try {
       return (
-        <div data-component="HubLinks-Basic" >
+        <div data-reactroot data-component="HubLinks-Basic" >
           <WebPartTitle editMode={this.props.isEdit} title={this.props.title} updateTitle={this.props.setTitle} />
           {this.props.isEdit &&
             <CommandButton iconProps={{ iconName: 'Add' }} onClick={this.addBox.bind(this)}>{strings.AddNewButtonText}</CommandButton>

@@ -213,7 +213,6 @@ export default class HubLinksWebPart extends BaseClientSideWebPart<IHubLinksWebP
             this.properties.hubLinksItems.length = 0;
             for (const val of newArr)
               this.properties.hubLinksItems.push(val);
-            this.render();
           },
           setGroup: (index: string, group: string) => {
             for (var i = 0; i < this.properties.hubLinksItems.length; i++) {
@@ -359,7 +358,7 @@ export default class HubLinksWebPart extends BaseClientSideWebPart<IHubLinksWebP
           groups.push(groupName);
       }
     } catch (err) {
-      Logger.write(`${err} - ${this.LOG_SOURCE} (onPropertyPaneFieldChanged) -- Error processing property field changes.`, LogLevel.Error);
+      Logger.write(`${err} - ${this.LOG_SOURCE} (_updateGroupsProperty) -- Error processing property field changes.`, LogLevel.Error);
     }
     this.properties.groups = groups;
   }
@@ -386,7 +385,7 @@ export default class HubLinksWebPart extends BaseClientSideWebPart<IHubLinksWebP
         this.properties.tileBackgroundColorProp = this.getThemeProperty(newValue);
         super.onPropertyPaneFieldChanged(propertyPath, oldValue, newValue);
       } else {
-        super.onPropertyPaneFieldChanged(propertyPath, oldValue, newValue);
+        //super.onPropertyPaneFieldChanged(propertyPath, oldValue, newValue);
       }
     } catch (err) {
       Logger.write(`${err} - ${this.LOG_SOURCE} (onPropertyPaneFieldChanged)`, LogLevel.Error);
@@ -676,7 +675,7 @@ export default class HubLinksWebPart extends BaseClientSideWebPart<IHubLinksWebP
       group0.groupFields.push(PropertyPaneTextField(`hubLinksItems[${this.activeIndex}].Title`, {
         label: strings.EditItemGeneralTitleLabel,
         description: `${strings.EditItemGeneralTitlePreCountLabel} ${titleLength} ${strings.EditItemGeneralTitlePostCountLabel}`,
-        onGetErrorMessage: this.itemValidation.bind(this, 80, true, strings.EditItemGeneralTitleErrorText)
+        //onGetErrorMessage: this.itemValidation.bind(this, 80, true, strings.EditItemGeneralTitleErrorText)
       }));
 
       const descriptionLength: number = (130 - ((this.properties.hubLinksItems[this.activeIndex]?.Description) ? this.properties.hubLinksItems[this.activeIndex].Description.length : 0));
@@ -734,69 +733,6 @@ export default class HubLinksWebPart extends BaseClientSideWebPart<IHubLinksWebP
       Logger.write(`${err} - ${this.LOG_SOURCE} (getEditItemPropertyPane)`, LogLevel.Error);
     }
     return retVal;
-    // return {
-    //   pages: [
-    //     {
-    //       header: {
-    //         description: ""
-    //       },
-    //       displayGroupsAsAccordion: true,
-    //       groups: [
-    //         {
-    //           groupName: strings.EditItemGeneralLabel,
-    //           groupFields: [
-    //             PropertyPaneTextField("hubLinksItems[" + this.activeIndex + "].Title", {
-    //               label: strings.EditItemGeneralTitleLabel,
-    //               description: strings.EditItemGeneralTitlePreCountLabel + (80 - this.properties.hubLinksItems[this.activeIndex].Title.length) + strings.EditItemGeneralTitlePostCountLabel,
-    //               onGetErrorMessage: this.itemValidation.bind(this, 80, true, strings.EditItemGeneralTitleErrorText)
-    //             }),
-    //             PropertyPaneTextField("hubLinksItems[" + this.activeIndex + "].Description", {
-    //               label: strings.EditItemGeneralDescriptionLabel,
-    //               description: strings.EditItemGeneralDescriptionPreCountLabel + (130 - (this.properties.hubLinksItems[this.activeIndex].Description ? this.properties.hubLinksItems[this.activeIndex].Description.length : 0)) + strings.EditItemGeneralDescriptionPostCountLabel,
-    //               onGetErrorMessage: this.itemValidation.bind(this, 130, (this.properties.layoutMode === HubLinksLayout.RoundIconItemLayout || this.properties.showDescription), strings.EditItemGeneralDescriptionErrorText)
-    //             }),
-    //             PropertyPaneTextField("hubLinksItems[" + this.activeIndex + "].GroupBy", {
-    //               label: strings.EditItemGeneralGroupByLabel,
-    //               description: strings.EditItemGeneralGroupByPreCountLabel + (80 - (this.properties.hubLinksItems[this.activeIndex].GroupBy ? this.properties.hubLinksItems[this.activeIndex].GroupBy.length : 0)) + strings.EditItemGeneralGroupByPostCountLabel,
-    //               onGetErrorMessage: this.itemValidation.bind(this, 80, (this.properties.layoutMode === HubLinksLayout.GroupedListLayout), strings.EditItemGeneralGroupByErrorText)
-    //             }),
-    //             PropertyPaneLabel("itemLinkLabel", {
-    //               text: strings.EditItemGeneralSelectLinkLabel
-    //             }),
-    //             PropertyPaneLink("hubLinksItems[" + this.activeIndex + "].URL", {
-    //               target: "_blank",
-    //               href: this.properties.hubLinksItems[this.activeIndex].URL,
-    //               text: this.properties.hubLinksItems[this.activeIndex].URL
-    //             }),
-    //             PropertyPaneButton("itemChangeLink", {
-    //               text: strings.EditItemGeneralSelectLinkButtonText,
-    //               buttonType: PropertyPaneButtonType.Primary,
-    //               onClick: this.openLinkSelector.bind(this)
-    //             }),
-    //             PropertyPaneCheckbox("hubLinksItems[" + this.activeIndex + "].NewTab", {
-    //               text: strings.EditItemGeneralOpenTabLabel
-    //             })
-    //           ]
-    //         },
-    //         {
-    //           groupName: strings.EditItemIconLabel,
-    //           groupFields: [
-    //             PropertyPaneTextField("hubLinksItems[" + this.activeIndex + "].Icon", {
-    //               label: strings.EditItemIconEntryLabel,
-    //               placeholder: strings.EditItemIconEntryPlaceholder,
-    //               onGetErrorMessage: this.itemValidation.bind(this, 255, (this.properties.layoutMode === HubLinksLayout.RoundIconItemLayout), "")
-    //             }),
-    //             PropertyPaneLink('iconShortcut', {
-    //               text: strings.EditItemIconEntryLinkText,
-    //               href: "https://fontawesome.com/icons?d=gallery&m=free",
-    //               target: "_blank"
-    //             })
-    //           ]
-    //         }
-    //       ]
-    //     }
-    //   ]
-    // };
   }
 
   protected onPropertyPaneConfigurationComplete(): void {

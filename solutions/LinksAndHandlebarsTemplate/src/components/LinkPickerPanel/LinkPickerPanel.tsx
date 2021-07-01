@@ -9,6 +9,7 @@ import styles from './LinkPickerPanel.module.scss';
 import { strings } from '../loc/en-us';
 
 import { SPHttpClient, SPHttpClientResponse, HttpClientResponse } from '@microsoft/sp-http';
+import { Thenable } from 'es6-promise';
 
 const imageJsonConfigLocation = "/SiteAssets/ApprovedImageLibs.config";
 
