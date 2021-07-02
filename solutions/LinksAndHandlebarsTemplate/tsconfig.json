@@ -19,7 +19,6 @@
       "./node_modules/@microsoft"
     ],
     "types": [
-      "es6-promise",
       "webpack-env"
     ],
     "lib": [
@@ -32,10 +31,6 @@
     "esModuleInterop": true
   },
   "include": [
-    "src/**/*.ts"
-  ],
-  "exclude": [
-    "node_modules",
-    "lib"
+    "src/**/*.ts*"
   ]
 }

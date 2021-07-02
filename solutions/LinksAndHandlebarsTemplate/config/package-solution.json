@@ -3,10 +3,17 @@
   "solution": {
     "name": "Hub Web Parts",
     "id": "520c2090-be2a-4538-b2b0-fd3eeca0cea0",
-    "version": "3.0.0.0",
+    "version": "4.0.0.0",
     "skipFeatureDeployment": true,
     "includeClientSideAssets": true,
-    "isDomainIsolated": false
+    "isDomainIsolated": false,
+    "developer": {
+      "name": "Takeda",
+      "privacyUrl": "",
+      "termsOfUseUrl": "",
+      "websiteUrl": "https://github.com/pnp/sp-dev-solutions/tree/master/solutions/LinksAndHandlebarsTemplate",
+      "mpnId": "000000"
+    }
   },
   "paths": {
     "zippedPackage": "solution/hub-web-parts.sppkg"

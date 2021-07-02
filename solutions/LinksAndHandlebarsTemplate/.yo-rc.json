@@ -2,7 +2,7 @@
   "@microsoft/generator-sharepoint": {
     "isCreatingSolution": false,
     "environment": "spo",
-    "version": "1.10.0",
+    "version": "1.12.1",
     "libraryName": "hub-web-parts",
     "libraryId": "520c2090-be2a-4538-b2b0-fd3eeca0cea0",
     "packageManager": "npm",

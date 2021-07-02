@@ -1,6 +1,6 @@
 {
-    "workingDir": "./temp/deploy/",
-    "account": "",
-    "container": "",
-    "accessKey": ""
+  "workingDir": "./release/assets/",
+  "account": "",
+  "container": "",
+  "accessKey": ""
 }
