@@ -330,7 +330,7 @@ export class Leads extends React.Component<ILeadsProps, ILeadsState> {
                       <div>
                         <LeadCardPreview previewItems={this.getCommentsForCard(l.comments.reverse())} />
                         {l.requiresAttention === true &&
-                          <Icon iconName='Info' className={styles.urgent} />}
+                          <div className={styles.urgent} />}
                         <DocumentCardLocation location={l.account} locationHref='#' />
                         <DocumentCardTitle title={l.title} shouldTruncate={true} />
                         <div className={styles.titleSecondary}><DocumentCardTitle title={l.description!} shouldTruncate={true} /></div>
@@ -353,17 +353,17 @@ export class Leads extends React.Component<ILeadsProps, ILeadsState> {
                           actions={
                             [
                               {
-                                iconProps: { iconName: 'Share' },
+                                className: 'icon share',
                                 onClick: this.leadShared,
                                 ariaLabel: 'Share Lead'
                               },
                               {
-                                iconProps: { iconName: 'View' },
+                                className: 'icon view',
                                 onClick: this.leadFollowed,
                                 ariaLabel: 'Follow Lead'
                               },
                               {
-                                iconProps: { iconName: 'AlarmClock' },
+                                className: 'icon alarmClock',
                                 onClick: this.showCreateLeadReminderDialog,
                                 ariaLabel: 'Remind me about this lead',
                                 'data-leadid': l.id
