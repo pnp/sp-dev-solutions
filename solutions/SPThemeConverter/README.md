@@ -1,6 +1,5 @@
 # SPTheme-Converter
-Do you need to create a Modern theme based on an existing Classic theme?  Or have you found that you need to leverage both Modern and Classic themes in your O365 SharePoint environment to ensure a consistent experience?  Me, too!  
-So I created this app. :-)
+A C# console application to convert a classic SharePoint theme [SP color file]( https://docs.microsoft.com/en-us/sharepoint/dev/solution-guidance/use-composed-looks-to-brand-sharepoint-sites) into a modern UI Fabric Theme Designer [JSON file](https://fabricweb.z5.web.core.windows.net/pr-deploy-site/refs/heads/master/theming-designer/index.html), and vice versa. 
 
 ### NOTE:  This application only works with valid [SPColor file](https://docs.microsoft.com/en-us/sharepoint/dev/solution-guidance/use-composed-looks-to-brand-sharepoint-sites) and UI Fabric Theme Designer [JSON file](https://fabricweb.z5.web.core.windows.net/pr-deploy-site/refs/heads/master/theming-designer/index.html) inputs.
 1. Open the Program.cs file and add input and output local path values for the relevant conversion method(s) you need:  ```ClassicToModern()``` or ```ModernToClassic()```.
