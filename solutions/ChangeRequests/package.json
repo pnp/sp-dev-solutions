@@ -19,7 +19,7 @@
     "@types/webpack-env": "1.13.1",
     "immutability-helper": "^3.0.2",
     "lodash": "^4.17.4",
-    "moment": "^2.18.1",
+    "moment": "^2.29.2",
     "office-ui-fabric-react": "6.189.2",
     "react": "16.8.5",
     "react-datetime": "^2.8.10",
