@@ -1,0 +1,31 @@
+{
+  "extends": "@tsconfig/node16/tsconfig.json",
+  "rootDirs": [
+    "."
+  ],
+  "include": [
+    "*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ],
+  "ts-node": {
+    "transpileOnly": true,
+    "files": true,
+    "esm": true
+  },
+  "compilerOptions": {
+    "esModuleInterop": true,
+      "strict": true, 
+      "skipLibCheck": true,
+    "baseUrl": "./",
+    "outDir": "./debug",
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "types": [
+      "node"
+    ],
+    "module": "ES2020",
+    "target": "esnext"
+  }
+}
