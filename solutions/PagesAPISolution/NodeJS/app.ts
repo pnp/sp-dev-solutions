@@ -21,7 +21,7 @@ async function GetToken() {
 }
 
 /**
- * Scenario #1: Copy a page to multiple sites
+ * Scenario #1: List all pages in a site
  *
  * @param {string} sourcePageId - source page id
  * @param {string[]} targetSiteIds - target site ids
@@ -46,18 +46,24 @@ async function ListPages() {
  * @param {string[]} targetSiteIds - target site ids
  */
 async function CopyPageToMultipleSites(sourcePageId: string, targetSiteIds: string[]) {
+  console.log('Copy page to multiple sites ...');
+  console.log('*'.repeat(80));
+
   const GraphPages = new GraphPagesAPI(config);
   const token = await GraphPages.getAuthenticationToken();
   print.logToken(token);
   GraphPages.storeToken(token);
 
   const sourcePage = await print.log("Get page content", GraphPages.getPage(siteId, sourcePageId));
-  targetSiteIds
-    .forEach(async targetSiteId => {
-      const targetPage = modifyPage(sourcePage);
-      const page = await print.log("Creating page", GraphPages.createPage(targetSiteId, targetPage));
-      print.log("Publish page", GraphPages.publishPage(targetSiteId, page.id!));
-    });
+
+  for (let targetSiteId of targetSiteIds) {
+    const targetPage = modifyPage(sourcePage);
+    const page = await print.log(`Creating page(${targetPage.name})`, GraphPages.createPage(targetSiteId, targetPage));
+    await print.log(`Publish page(${page.id})`, GraphPages.publishPage(targetSiteId, page.id!));
+  }
+
+  console.log(`Copy page to ${targetSiteIds.length} sites successfully!`);
+  console.log('*'.repeat(80));
 }
 
 /**

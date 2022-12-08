@@ -20,7 +20,7 @@ Welcome to the Microsoft Graph SharePoint Pages API Samples repository!
 
 ## In this repository
 
-This repo is intended to provide you an example of how various functionalities of entities available in the Microsoft Graph SharePoint Pages API could be integrated to enrich your  solutions (applications or services). 
+This repo is intended to provide you an example of how various functionalities of entities available in the Microsoft Graph SharePoint Pages API could be integrated to enrich your solutions (applications or services). 
 
 These samples are available in different programming languages / scripts / formats so as to meet the needs for different developer audiences. 
 
