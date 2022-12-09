@@ -10,6 +10,7 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "chalk": "^5.2.0",
     "node-fetch": "^2.6.1"
   },
   "devDependencies": {
