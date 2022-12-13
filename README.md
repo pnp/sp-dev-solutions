@@ -32,6 +32,7 @@ We welcome your reported issues, pull requests, and new solution samples. Please
 | ContactManagement  | Organize and manage contacts and organizations.                                    | [Link](./solutions/ContactManagement/README.md) |
 | LinksAndHandlebarsTemplate  | Different kinds of visuals for hosting sets of links on a page, including with custom Handlebars Templates | [Link](./solutions/LinksAndHandlebarsTemplate/README.md) | 
 | Multilingual Pages  | Solution to create, manage, and consume multilingual pages based on users preferred language. | [Link](./solutions/MultilingualPages/README.md) | 
+| Pages API  | Solution to using Pages API to get/create/update/delete SharePoint Pages. | [Link](./solutions/PagesAPISolution/README.md) | 
 | InventoryCheckOut  | Manage a list of items in an inventory, and let users check out and reserve items. | [Link](./solutions/InventoryCheckOut/README.md) | 
 | Site Designs Studio | Enables the management of Site Designs and Site Scripts directly in the browser | [Link](./solutions/SiteDesignsStudio/README.md) |
 | TimeAway           | Provides a simple out-of-office tracker for members of your team.                  | [Link](./solutions/TimeAway/README.md) | 
