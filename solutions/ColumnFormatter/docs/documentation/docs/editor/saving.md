@@ -39,4 +39,4 @@ Lookup and Person fields can only be saved to Lookup and Person fields respectiv
 
 > Go [Home](../index.md)
 
-![](https://telemetry.sharepointpnp.com/sp-dev-solutions/solutions/ColumnFormatter/wiki/Editor/Saving)
+![](https://pnptelemetry.azurewebsites.net/sp-dev-solutions/solutions/ColumnFormatter/wiki/Editor/Saving)

@@ -51,4 +51,4 @@ Version|Date|Comments
 
 This solution contains a solution that will migrate the metadata on SharePoint pages created with the Multilingual Pages Application Customizer to appropriate metadata values for the out of the box, SharePoint Multilingual Pages solution.
 
-<img src="https://telemetry.sharepointpnp.com/sp-dev-solutions/solutions/MultiligualPages" />
+<img src="https://pnptelemetry.azurewebsites.net/sp-dev-solutions/solutions/MultiligualPages" />

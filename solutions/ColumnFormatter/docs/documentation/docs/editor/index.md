@@ -56,4 +56,4 @@ Creating a new template is fairly simple just by implementing the necessary inte
 
 > Go [Home](../index.md)
 
-![](https://telemetry.sharepointpnp.com/sp-dev-solutions/solutions/ColumnFormatter/wiki/Editor)
+![](https://pnptelemetry.azurewebsites.net/sp-dev-solutions/solutions/ColumnFormatter/wiki/Editor)

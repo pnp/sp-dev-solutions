@@ -39,4 +39,4 @@ The field values are case insensitve and should be just the user's twitter handl
 
 > Go [Home](../index.md)
 
-![](https://telemetry.sharepointpnp.com/sp-dev-solutions/solutions/ColumnFormatter/wiki/Wizards/TwitterPic)
+![](https://pnptelemetry.azurewebsites.net/sp-dev-solutions/solutions/ColumnFormatter/wiki/Wizards/TwitterPic)

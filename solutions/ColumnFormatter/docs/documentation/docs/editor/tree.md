@@ -14,4 +14,4 @@ The tree pane is provided as a way to visualize the hierarchy of your html eleme
 
 > Go [Home](../index.md)
 
-![](https://telemetry.sharepointpnp.com/sp-dev-solutions/solutions/ColumnFormatter/wiki/Editor/Tree)
+![](https://pnptelemetry.azurewebsites.net/sp-dev-solutions/solutions/ColumnFormatter/wiki/Editor/Tree)

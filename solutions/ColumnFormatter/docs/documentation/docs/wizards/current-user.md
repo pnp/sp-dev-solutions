@@ -21,4 +21,4 @@ This template uses the [`@me`](https://docs.microsoft.com/en-us/sharepoint/dev/d
 
 > Go [Home](../index.md)
 
-![](https://telemetry.sharepointpnp.com/sp-dev-solutions/solutions/ColumnFormatter/wiki/Wizards/CurrentUser)
+![](https://pnptelemetry.azurewebsites.net/sp-dev-solutions/solutions/ColumnFormatter/wiki/Wizards/CurrentUser)

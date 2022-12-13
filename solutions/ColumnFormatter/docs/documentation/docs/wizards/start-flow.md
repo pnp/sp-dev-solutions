@@ -45,4 +45,4 @@ You can also choose from all of the Office UI Fabric icons using the _Icon_ drop
 
 > Go [Home](../index.md)
 
-![](https://telemetry.sharepointpnp.com/sp-dev-solutions/solutions/ColumnFormatter/wiki/Wizards/StartFlow)
+![](https://pnptelemetry.azurewebsites.net/sp-dev-solutions/solutions/ColumnFormatter/wiki/Wizards/StartFlow)

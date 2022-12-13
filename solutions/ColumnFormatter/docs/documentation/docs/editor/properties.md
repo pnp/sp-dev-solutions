@@ -43,4 +43,4 @@ You can optionally enable the Mini Map navigation/preview in the editor. This is
 
 > Go [Home](../index.md)
 
-![](https://telemetry.sharepointpnp.com/sp-dev-solutions/solutions/ColumnFormatter/wiki/Editor/Properties)
+![](https://pnptelemetry.azurewebsites.net/sp-dev-solutions/solutions/ColumnFormatter/wiki/Editor/Properties)

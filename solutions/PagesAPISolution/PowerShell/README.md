@@ -1,8 +1,8 @@
 # PowerShell example
 
 ## Description
-This repository contains very simple PowerShell sample scripts that implements the Microsoft Graph SharePoint Pages API.
 
+This repository contains very simple PowerShell sample scripts that implements the Microsoft Graph SharePoint Pages API.
 
 The following samples are included in this repository:
 
@@ -16,9 +16,11 @@ The following samples are included in this repository:
 The scripts are licensed "as-is." under the [MIT License](../../LICENSE).
 
 ## Disclaimer
+
 Some script samples retrieve information from your tenant or update data in your tenant.  Understand the impact of each sample script prior to running it; samples should be run using a non-production or "test" tenant account.
 
 ## Prerequisites
+
 Use of these Microsoft Graph SharePoint Pages API PowerShell samples requires the following:
 * Install the AzureAD PowerShell module by running 'Install-Module AzureAD' or 'Install-Module AzureADPreview' from an elevated PowerShell prompt
 * An account with permissions to operate SharePoint page.
@@ -29,6 +31,7 @@ Use of these Microsoft Graph SharePoint Pages API PowerShell samples requires th
 * Set `urn:ietf:wg:oauth:2.0:oob` as one of the `redirect_uri` of the App.
 
 ## Getting Started
+
 After the prerequisites are installed or met, perform the following steps to use these scripts:
 
 #### 1. Script usage
@@ -41,9 +44,11 @@ After the prerequisites are installed or met, perform the following steps to use
 * Run `run .\Main.ps1`
 
 #### 2. Authentication with Microsoft Graph
+
 The first time you run these scripts you will be asked to provide an account to authenticate with the service:
 ```
 Please specify your user principal name for Azure Authentication:
 ```
 Once you have provided a user principal name a popup will open prompting for your password. After a successful authentication with Azure Active Directory the user token will last for an hour, once the hour expires within the PowerShell session you will be asked to re-authenticate.
 
+<img src="https://pnptelemetry.azurewebsites.net/sp-dev-solutions/solutions/PagesAPISolution/PowerShell" />

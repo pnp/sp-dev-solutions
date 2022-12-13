@@ -66,4 +66,4 @@ Installing Column Formatter is just a matter of uploading a package to your app 
 
 Using Column Formatter isn't too hard, but you can details on specific features in the [Getting Started](./getting-started.md) section.
 
-![](https://telemetry.sharepointpnp.com/sp-dev-solutions/solutions/ColumnFormatter/wiki/Index)
+![](https://pnptelemetry.azurewebsites.net/sp-dev-solutions/solutions/ColumnFormatter/wiki/Index)

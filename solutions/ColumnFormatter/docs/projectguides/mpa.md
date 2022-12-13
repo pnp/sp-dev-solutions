@@ -32,4 +32,4 @@ Once you have MkDocs installed on your machine, in the command line:
 
 You can also **skip all of that** and just read the [documentation](../documentation/docs/index.md) directly in the browser (but without the fancy navigation and search). 
 
-<img src="https://telemetry.sharepointpnp.com/sp-dev-solutions/solutions/ColumnFormatter/guides/MPA" />
+<img src="https://pnptelemetry.azurewebsites.net/sp-dev-solutions/solutions/ColumnFormatter/guides/MPA" />

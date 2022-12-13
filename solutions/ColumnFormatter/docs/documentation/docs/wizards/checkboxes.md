@@ -19,4 +19,4 @@ This template uses the value of the current field to show the `CheckboxComposite
 
 > Go [Home](../index.md)
 
-![](https://telemetry.sharepointpnp.com/sp-dev-solutions/solutions/ColumnFormatter/wiki/Wizards/Checkboxes)
+![](https://pnptelemetry.azurewebsites.net/sp-dev-solutions/solutions/ColumnFormatter/wiki/Wizards/Checkboxes)

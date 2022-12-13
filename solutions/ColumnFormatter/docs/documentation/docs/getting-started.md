@@ -41,4 +41,4 @@ You can either drag a \*.json file directly on to the window and release in the 
 
 > Go [Home](./index.md)
 
-![](https://telemetry.sharepointpnp.com/sp-dev-solutions/solutions/ColumnFormatter/wiki/GettingStarted)
+![](https://pnptelemetry.azurewebsites.net/sp-dev-solutions/solutions/ColumnFormatter/wiki/GettingStarted)

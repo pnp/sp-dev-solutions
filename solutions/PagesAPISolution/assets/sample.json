@@ -3,15 +3,16 @@
     "name": "graph-pages-api-solution",
     "source": "pnp",
     "title": "Microsoft Graph SharePoint Pages API Samples",
-    "shortDescription": "This repo provides you an example of how various functionalities of entities available in the Microsoft Graph SharePoint Pages API could be integrated to enrich your solutions",
-    "url": "https://github.com/pnp/sp-dev-solutions/tree/main/solutions/PagesAPISolution",
+    "shortDescription": "Example of how various functionalities of entities available in the Microsoft Graph SharePoint Pages API could be integrated to enrich your solutions",
+    "url": "https://github.com/pnp/sp-dev-solutions/blob/master/solutions/PagesAPISolution",
     "longDescription": [
-      "This repo is intended to provide you an example of how various functionalities of entities available in the Microsoft Graph SharePoint Pages API could be integrated to enrich your solutions (applications or services)."
+      "This sample is intended to provide you an example of how various functionalities of entities available in the Microsoft Graph SharePoint Pages API could be integrated to enrich your solutions (applications or services)."
     ],
     "creationDateTime": "2022-12-08",
     "updateDateTime": "2022-12-08",
     "products": [
-      "SharePoint"
+      "SharePoint",
+      "Microsoft Graph"
     ],
     "metadata": [
     ],
@@ -19,7 +20,7 @@
       {
         "type": "image",
         "order": 100,
-        "url": "https://github.com/pnp/sp-dev-solutions/tree/main/solutions/PagesAPISolution/assets/preview.png",
+        "url": "https://raw.githubusercontent.com/pnp/sp-dev-solutions/master/solutions/PagesAPISolution/assets/preview-scenario1.png",
         "alt": "Output of the Pages API solution"
       }
     ],

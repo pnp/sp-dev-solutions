@@ -6,12 +6,12 @@ languages:
 - typescript
 extensions:
   contentType: samples
-  createdDate: 6/13/2017 12:47:19 PM
+  createdDate: 12/13/2022 12:47:19 PM
 ---
 
-# SharePoint Patterns and Practices Community Solutions
+# Microsoft 365 Platform Community Solutions
 
-Welcome to the SharePoint PnP Community Solutions repository. This repository contains samples and templates you can use as foundations and patterns of solutions for your SharePoint sites.
+Welcome to the Microsoft 365 Platform Community Solutions for SharePoint repository. This repository contains samples and templates you can use as foundations and patterns of solutions related on the SharePoint technologies.
 
 #### STATUS
 
@@ -50,7 +50,7 @@ To build and start using these projects, you'll need to clone and build the proj
 Clone this repository by executing the following command in your console:
 
 ```
-git clone https://github.com/SharePoint/sp-dev-solutions.git
+git clone https://github.com/pnp/sp-dev-solutions.git
 ```
 
 Navigate to the cloned repository folder which should be the same as the repository name:
@@ -83,14 +83,11 @@ gulp serve
 
 ## Contributions
 
-These solutions are direct from the feature teams, SharePoint PnP core team (http://aka.ms/SharePointPnP) or shared by the community. This project's contributors include Microsoft and [community contributors](Contributors.md). Work is done as as open source community project. We welcome your input on issues and suggestions for new samples. We also welcome community contributions around new solutions. 
+These solutions are direct from the feature teams, Microsoft 365 Platform Community core team (http://aka.ms/m365/community) or shared by the community. This project's contributors include Microsoft and [community contributors](Contributors.md). Work is done as as open source community project. We welcome your input on issues and suggestions for new samples. We also welcome community contributions around new solutions. 
 
 Please have a look on our [Contribution Guidance](./.github/CONTRIBUTING.md) before submitting your pull requests, so that we can get your contribution processed as fast as possible. Thanks!
 
-
 > Sharing is caring!
-
-
 
 ### Disclaimer
 **THIS CODE IS PROVIDED *AS IS* WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING ANY IMPLIED WARRANTIES OF FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.**

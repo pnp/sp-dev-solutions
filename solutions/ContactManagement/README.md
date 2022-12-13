@@ -82,4 +82,4 @@ The Content Management application features simple tagging capabilities, along w
 
 We look forward to your feedback. Use Github Issues to provide information about issues as well as your feedback requests.  You can also submit pull requests; see [this link](../../.github/CONTRIBUTING.md) for more information on Contributing.
 
-<img src="https://telemetry.sharepointpnp.com/sp-dev-solutions/solutions/contactmanagement" />
+<img src="https://pnptelemetry.azurewebsites.net/sp-dev-solutions/solutions/contactmanagement" />

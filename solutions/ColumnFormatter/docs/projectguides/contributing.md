@@ -61,4 +61,4 @@ Before contributing:
 - **DO NOT** commit code you didn't write.
 - **DO NOT** submit PR's that refactor existing code without a discussion first.
 
-<img src="https://telemetry.sharepointpnp.com/sp-dev-solutions/solutions/ColumnFormatter/guides/Contributing" />
+<img src="https://pnptelemetry.azurewebsites.net/sp-dev-solutions/solutions/ColumnFormatter/guides/Contributing" />

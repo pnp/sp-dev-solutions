@@ -28,4 +28,4 @@ We appreciate your initiative and would love to integrate your work with the res
 - ideally 1 PR = 1 commit - this makes it easier to keep the log clear for everyone and track what's changed. If you're new to working with git, we'll squash your commits for you when merging your changes into the main repo
 - don't worry about changing the version or adding yourself to the list of contributors in `package.json`. We'll do that for you when merging your changes.
 
-<img src="https://telemetry.sharepointpnp.com/sp-dev-solutions/solutions/ColumnFormatter/guides/PRs" />
+<img src="https://pnptelemetry.azurewebsites.net/sp-dev-solutions/solutions/ColumnFormatter/guides/PRs" />

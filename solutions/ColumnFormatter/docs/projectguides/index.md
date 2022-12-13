@@ -10,4 +10,4 @@ The guides aren't to make it harder to submit contributions, rather it's to make
 - **[Contributing](./contributing.md)** - What you need to know about contributing _(please do!)_
 - **[Submitting a PR](./submitting-pr.md)** - How to submit a Pull Request _(send us your contributions!)_
 
-<img src="https://telemetry.sharepointpnp.com/sp-dev-solutions/solutions/ColumnFormatter/guides" />
+<img src="https://pnptelemetry.azurewebsites.net/sp-dev-solutions/solutions/ColumnFormatter/guides" />

@@ -101,4 +101,4 @@ This sample illustrates the following concepts:
 * Acquire an Access Token to consume the API
 * Manage the settings needed to consume the API
 
-<img src="https://telemetry.sharepointpnp.com/sp-dev-solutions/solutions/InstagramWebPart" />
+<img src="https://pnptelemetry.azurewebsites.net/sp-dev-solutions/solutions/InstagramWebPart" />

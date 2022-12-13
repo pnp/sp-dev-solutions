@@ -13,4 +13,4 @@ Got an idea? Spotted a bug? [Contributions](../../../projectguides/contributing.
 
 > Go [Home](../index.md)
 
-![](https://telemetry.sharepointpnp.com/sp-dev-solutions/solutions/ColumnFormatter/wiki/About)
+![](https://pnptelemetry.azurewebsites.net/sp-dev-solutions/solutions/ColumnFormatter/wiki/About)

@@ -89,4 +89,4 @@ Column Formatter was created using SPFx, react, redux, the monaco editor, and se
 
 If you'd like to contribute (yes, please!), please see the [project guides](./docs/projectguides/index.md).
 
-<img src="https://telemetry.sharepointpnp.com/sp-dev-solutions/solutions/ColumnFormatter" />
+<img src="https://pnptelemetry.azurewebsites.net/sp-dev-solutions/solutions/ColumnFormatter" />

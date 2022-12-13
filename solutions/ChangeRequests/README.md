@@ -76,4 +76,4 @@ The My Change Requests web part allows you to submit change requests.
 
 The Change Request web parts rely on the CommunityAppsLibrary NPM package which provides common functions used to set up and configure the SharePoint lists the web parts use.
 
-<img src="https://telemetry.sharepointpnp.com/sp-dev-solutions/solutions/changerequests" />
+<img src="https://pnptelemetry.azurewebsites.net/sp-dev-solutions/solutions/changerequests" />

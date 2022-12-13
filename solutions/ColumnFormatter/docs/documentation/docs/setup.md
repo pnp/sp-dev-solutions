@@ -73,4 +73,4 @@ Just like the initial deployment you'll need to upload the web part package to y
 - [Getting Started](./getting-started.md)
 - [Properties](./editor/properties.md)
 
-![](https://telemetry.sharepointpnp.com/sp-dev-solutions/solutions/ColumnFormatter/wiki/Setup)
+![](https://pnptelemetry.azurewebsites.net/sp-dev-solutions/solutions/ColumnFormatter/wiki/Setup)

@@ -18,4 +18,4 @@ Interested in having Column Formatter in your language? Why not translate it? It
 
 > Translation provided by [Thomas Goelles](http://www.modernworkplacesolutions.rocks/)
 
-![](https://telemetry.sharepointpnp.com/sp-dev-solutions/solutions/ColumnFormatter/wiki/About/Localization)
+![](https://pnptelemetry.azurewebsites.net/sp-dev-solutions/solutions/ColumnFormatter/wiki/About/Localization)

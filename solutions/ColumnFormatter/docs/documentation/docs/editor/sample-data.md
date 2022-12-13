@@ -20,4 +20,4 @@ You can edit sub properties (such as a person's email address or a lookup id) by
 
 > Go [Home](../index.md)
 
-![](https://telemetry.sharepointpnp.com/sp-dev-solutions/solutions/ColumnFormatter/wiki/Editor/SampleData)
+![](https://pnptelemetry.azurewebsites.net/sp-dev-solutions/solutions/ColumnFormatter/wiki/Editor/SampleData)

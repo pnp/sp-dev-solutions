@@ -30,4 +30,4 @@ The classes provide coloring that is applied to the icon to indicate the trend. 
 
 > Go [Home](../index.md)
 
-![](https://telemetry.sharepointpnp.com/sp-dev-solutions/solutions/ColumnFormatter/wiki/Wizards/NumberTrending)
+![](https://pnptelemetry.azurewebsites.net/sp-dev-solutions/solutions/ColumnFormatter/wiki/Wizards/NumberTrending)

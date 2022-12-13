@@ -23,4 +23,4 @@ A simpler version of this template only uses the date field: [Overdue](./overdue
 
 > Go [Home](../index.md)
 
-![](https://telemetry.sharepointpnp.com/sp-dev-solutions/solutions/ColumnFormatter/wiki/Wizards/OverdueTask)
+![](https://pnptelemetry.azurewebsites.net/sp-dev-solutions/solutions/ColumnFormatter/wiki/Wizards/OverdueTask)

@@ -87,4 +87,4 @@ You can also toggle whether the web part will show a full week, or only show Mon
 
 Finally, you can also choose to use content approval features in SharePoint to set up simple notifications or approvals. Via a setting in the Time Away Summary web part, you can choose to hide Time Away out-of-office entries unless the Approval field is set to Approved. This gives administrators the ability to connect SharePoint approval features, or a workflow product like Microsoft Flow, tied to the Approval field in the Time Away list, to let managers choose to approve or hide fields.
 
-<img src="https://telemetry.sharepointpnp.com/sp-dev-solutions/solutions/timeaway" />
+<img src="https://pnptelemetry.azurewebsites.net/sp-dev-solutions/solutions/timeaway" />

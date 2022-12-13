@@ -61,4 +61,4 @@ This extension illustrates the following concepts:
 
 > Notice that better pictures and documentation will increase the sample usage and the value you are providing for others. Thanks for your submissions advance.
 
-<img src="https://telemetry.sharepointpnp.com/sp-dev-solutions/solutions/TimeAway" />
+<img src="https://pnptelemetry.azurewebsites.net/sp-dev-solutions/solutions/TimeAway" />
