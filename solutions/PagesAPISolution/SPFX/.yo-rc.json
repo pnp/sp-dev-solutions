@@ -1,0 +1,21 @@
+{
+  "@microsoft/generator-sharepoint": {
+    "plusBeta": false,
+    "isCreatingSolution": true,
+    "nodeVersion": "16.17.0",
+    "sdksVersions": {
+      "@microsoft/microsoft-graph-client": "3.0.2",
+      "@microsoft/teams-js": "2.4.1"
+    },
+    "version": "1.16.1",
+    "libraryName": "pages-api-solution",
+    "libraryId": "958515bb-258f-40c6-be5a-05f8f3e62496",
+    "environment": "spo",
+    "packageManager": "npm",
+    "solutionName": "pages-api-solution",
+    "solutionShortDescription": "pages-api-solution description",
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "componentType": "webpart"
+  }
+}

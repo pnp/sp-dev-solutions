@@ -24,9 +24,10 @@ We have samples in the following languages for Microsoft Graph SharePoint Pages 
 
 | **Language**   | **Repo** | 
 |:---------------|:--------|
-| .NET - ASPNET MVC | [Sample](./QuickStarts/Csharp) |
-| Node.JS | [Sample](./QuickStarts/NodeJS) |
-| PowerShell | [Sample](./QuickStarts/PowerShell)|
+| .NET - ASPNET MVC | [Sample](./Csharp) |
+| Node.JS | [Sample](./NodeJS) |
+| PowerShell | [Sample](./PowerShell)|
+| Spfx solution | [Sample](./SPFX)|
 
 
 ## Solution
@@ -40,6 +41,7 @@ PagesAPISolution | Microsoft engineering
 Version|Date|Comments
 -------|----|--------
 1.0|December 13, 2022| Initial version
+1.1|December 27, 2022| Add spfx solution
 
 
 ## Resources
