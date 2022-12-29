@@ -20,7 +20,7 @@ Sample Web Part demonstrating how to leverage Pages API to list and filter all a
 
 Solution|Author(s)
 --------|---------
-PagesAPIWebPart| @Sangle7
+PagesAPIWebPart| [Hanbing Wang](https://github.com/sangle7)
 
 ## Version history
 

@@ -34,7 +34,7 @@ We have samples in the following languages for Microsoft Graph SharePoint Pages 
 
 Solution|Author(s)
 --------|---------
-PagesAPISolution | Microsoft engineering
+PagesAPISolution | [Hanbing Wang](https://github.com/sangle7)
 
 ## Version history
 
