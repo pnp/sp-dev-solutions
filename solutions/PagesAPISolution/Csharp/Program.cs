@@ -20,7 +20,8 @@ namespace MSGraphPagesAPIExample
 
       // Uncomment the code below to Run sample scenarios
 
-      // Scenario #1: Copy a page to multiple sites
+      // Scenario #1: Copy a page to multiple sites 
+      // Note: This call won't copy assets to the target site. Use pages with only cdn assets.
       string sourceSiteId = "<enter your source site Id here>";
       string sourcePageId = "<enter your source page Id here>";
       string[] targetSiteIds = new string[] { "<enter your target site Id here>" };
