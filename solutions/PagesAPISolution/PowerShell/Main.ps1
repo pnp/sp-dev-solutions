@@ -17,6 +17,7 @@ Get-AuthToken
 ###############################################################################
 
 # Scenario 1: Copy page to multiple sites
+# Note: This call won't copy assets to the target site. Use pages with only cdn assets.
 
 # $sourceSiteId = "<input your source site id here>"
 # $sourcePageId = "<input your source page id here>"

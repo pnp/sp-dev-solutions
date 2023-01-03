@@ -43,6 +43,7 @@ async function ListPages() {
 
 /**
  * Scenario #2: Copy a page to multiple sites
+ * Note: This call won't copy assets to the target site. Use pages with only cdn assets.
  *
  * @param {string} sourcePageId - source page id
  * @param {string[]} targetSiteIds - target site ids
@@ -59,7 +60,7 @@ async function CopyPageToMultipleSites(sourcePageId: string, targetSiteIds: stri
   for (let targetSiteId of targetSiteIds) {
     const targetPage = modifyPage(sourcePage);
     const page = await print.logEvent(`Creating page(${targetPage.name})`, GraphPages.createPage(targetSiteId, targetPage));
-    await print.logEvent(`Publish page(${page.id})`, GraphPages.publishPage(targetSiteId, page.id!));
+    await print.logEvent(`Publishing page(${page.id})`, GraphPages.publishPage(targetSiteId, page.id!));
     count++;
   }
 
@@ -116,6 +117,7 @@ async function PromotePagesAsNews(date: Date) {
     if (new Date(page.lastModifiedDateTime!) > date) {
       print.log(`Page(ID: ${page.id}, name: ${page.name}, lastModifiedDateTime: ${page.lastModifiedDateTime}) is going to be promoted`);
       await print.logEvent(`Promoting page(${page.name})`, GraphPages.updatePage(siteId, page.id!, { promotionKind: 'newsPost' }));
+      await print.logEvent(`Publishing page(${page.name})`, GraphPages.publishPage(siteId, page.id!));
       count++;
     }
   }
