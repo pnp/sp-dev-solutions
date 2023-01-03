@@ -29,6 +29,17 @@ We have samples in the following languages for Microsoft Graph SharePoint Pages 
 | PowerShell | [Sample](./PowerShell)|
 | Spfx solution | [Sample](./SPFX)|
 
+## Scenarios
+
+Sample code in `.NET - ASPNET MVC`, `Node.JS`, `PowerShell` includes following scenarios:
+1. List all pages in the site
+2. Copy a page to multiple sites. (Notes: This call won't copy assets to the target site. It works with pages only have cdn assets.)
+3. Delete pages before a target date
+4. Promote multiple pages to news post.
+
+Sample code in `Spfx solution` includes:
+1. List and pages in the site
+2. Filter pages by title, page layout type and the promotion kind.
 
 ## Solution
 
