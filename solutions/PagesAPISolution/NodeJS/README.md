@@ -53,6 +53,6 @@ Once changes are complete, save the file. After you've completed these steps and
 2) Register an application using the steps above
 3) Execute "npm i" to install dependencies
 4) Provide you application details in the config.js file
-5) Execute "npm start" to start the server
+5) Execute "npm start" to run the code
 
 <img src="https://pnptelemetry.azurewebsites.net/sp-dev-solutions/solutions/PagesAPISolution/NodeJS" />
