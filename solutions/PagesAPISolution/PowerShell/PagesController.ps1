@@ -133,7 +133,7 @@ Function Get-Page([string]$siteId, [string]$pageId, [object]$authToken) {
     
     [cmdletbinding()]
 
-    $rootUrl = "https://canary.graph.microsoft.com/testprodbetapages-api-df/sites"
+    $rootUrl = "https://graph.microsoft.com/beta/sites"
     $resource = "$($siteId)/pages/$($pageId)?expand=canvasLayout"
     
     try {
@@ -209,7 +209,7 @@ Function Publish-Page([string]$siteId, [string]$pageId, [object]$authToken) {
 Function Update-Page([string]$siteId, [string]$pageId, [object]$payload, [object]$authToken) {
 
     [cmdletbinding()]
-    $rootUrl = "https://canary.graph.microsoft.com/testprodbetapages-api-df/sites"
+    $rootUrl = "https://graph.microsoft.com/ba/sites"
     $resource = "$($siteId)/pages/$($pageId)"
     
     try {
