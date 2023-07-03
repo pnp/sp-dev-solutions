@@ -16,11 +16,20 @@ foreach ($line in $envFileContent) {
     $envVariables[$key] = $value
 }
 
+Get-AuthToken
+
+###############################################################################
+
 # Uncomment to run the samples
 
-# Scenario 0: Get Token
-
-Get-AuthToken
+# Scenario 0: Retrieve all pages in a site
+$authToken = Get-AuthToken
+$pages = Get-Pages -siteId $envVariables["siteId"] -authToken $authToken 
+foreach ($page in $pages) {
+  $name = $page.name
+  $id = $page.id
+  Write-Host "Page name: $name, id: $id" -f Yellow
+}
 
 ###############################################################################
 

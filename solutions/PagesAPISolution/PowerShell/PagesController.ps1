@@ -68,7 +68,7 @@ Function Get-Pages([string]$siteId, [object]$authToken) {
         $uri = "https://graph.microsoft.com/$graphApiVersion/$($resource)"
         $pages = (Invoke-RestMethod -Uri $uri -Headers $authToken -Method Get).value
         $count = $pages.Count
-        Write-Host "Get all $count pages."
+        Write-Host "Get all $count pages." -f Green
         return $pages
     } 
     catch {
