@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="DotNetEnv" Version="2.5.0" />
     <PackageReference Include="Microsoft.Graph" Version="1.17.0" />
     <PackageReference Include="Microsoft.IdentityModel.Clients.ActiveDirectory" Version="5.2.1" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />

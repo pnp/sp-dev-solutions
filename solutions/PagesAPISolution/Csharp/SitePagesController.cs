@@ -33,7 +33,7 @@ namespace MSGraphPagesAPIExample
 
     public async Task<JObject> GetPage(string siteId, string pageId)
     {
-      string url = baseUrl + siteId + "/pages/" + pageId + "?expand=canvasLayout";
+      string url = baseUrl + siteId + "/pages/" + pageId + "/microsoft.graph.sitepage?expand=canvasLayout";
 
       HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, url);
 
@@ -44,7 +44,7 @@ namespace MSGraphPagesAPIExample
 
     public async Task PublishPage(string siteId, string pageId)
     {
-      string url = baseUrl + siteId + "/pages/" + pageId + "/publish";
+      string url = baseUrl + siteId + "/pages/" + pageId + "/microsoft.graph.sitepage/publish";
 
       HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, url);
 
@@ -63,6 +63,7 @@ namespace MSGraphPagesAPIExample
 
     public async Task<SitePage> CreatePage(string siteId, JObject sitePage)
     {
+      sitePage["@odata.type"] = "microsoft.graph.sitepage";
       string payload = JsonConvert.SerializeObject(sitePage, Newtonsoft.Json.Formatting.None,
                             new JsonSerializerSettings
                             {
@@ -88,7 +89,7 @@ namespace MSGraphPagesAPIExample
                               NullValueHandling = NullValueHandling.Ignore
                             });
 
-      string url = baseUrl + siteId + "/pages/" + pageId;
+      string url = baseUrl + siteId + "/pages/" + pageId + "/microsoft.graph.sitepage";
 
       HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Patch, url);
 

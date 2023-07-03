@@ -33,15 +33,16 @@ Follow these steps to register a new application:
 
 7. Under **Application Permissions**, add the permissions/scopes required for the sample. This sample requires **Sites.ReadWrite.All**. Grant admin consent to the application.
 
-As the final step in configuring the script, modify the AccessToken.cs file in the root folder of your cloned repo.
+As the final step in configuring the script, add an `.env` file in parent of the root folder. The file should contain the following information:
 
-```c#
-static readonly string tenantId = "<enter your tenant Id here>";
-static readonly string appId = "<enter your app Id here>";
-static readonly string appSecret = "<enter your app secret here>";
+```plaintext
+appId=<your application/client ID>
+appSecret=<your application/client secret>
+tenantId=<your tenant ID>
+siteId=<source site ID>
 ```
 
-Once changes are complete, save the file. After you've completed these steps and have received admin consent for your app, you'll be able to run the Main.cs sample as covered below.
+Once changes are complete, save the file. After you've completed these steps and have received admin consent for your app, you'll be able to run the Main.cs sample as covered below with `dotnet run`.
 
 ### Notes:
 
