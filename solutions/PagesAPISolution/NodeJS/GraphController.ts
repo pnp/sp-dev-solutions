@@ -1,5 +1,4 @@
 import fetch from 'node-fetch';
-import { IConfig } from 'config.js';
 
 const baseUrl = "https://graph.microsoft.com/beta/sites";
 
@@ -49,7 +48,7 @@ export default class GraphPagesAPI {
     access_token?: string;
   };
 
-  constructor(config: IConfig) {
+  constructor(config: any) {
     this.appId = config.appId;
     this.appSecret = config.appSecret;
     this.tenantId = config.tenantId;

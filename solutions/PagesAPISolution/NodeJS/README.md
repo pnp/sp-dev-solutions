@@ -33,12 +33,13 @@ Follow these steps to register a new application:
 
 7. Under **Application Permissions**, add the permissions/scopes required for the sample. This sample requires **Sites.ReadWrite.All**. Grant admin consent to the application.
 
-As the final step in configuring the script, modify the config.ts file in the root folder of your cloned repo.
+As the final step in configuring the script, add an `.env` file in parent of the root folder. The file should contain the following information:
 
-```typescript
-appId:'<enter your application/client ID>';
-appSecret: '<enter your application/client secret>';
-tenantId: '<enter your tenant ID>';
+```plaintext
+appId=<your application/client ID>
+appSecret=<your application/client secret>
+tenantId=<your tenant ID>
+siteId=<source site ID>
 ```
 
 Once changes are complete, save the file. After you've completed these steps and have received admin consent for your app, you'll be able to run the app.ts sample as covered below.

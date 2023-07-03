@@ -1,8 +1,10 @@
+import dotenv from 'dotenv'
 import GraphPagesAPI, { IPage, IStandardWebPart } from './GraphController.js';
-import config from './config.js';
 import print from './logHelper.js';
 
-const { siteId } = config;
+const config = dotenv.config({ path: '../.env' }).parsed;
+
+print.log(`config loaded: ${JSON.stringify(config, null, 4)}`);
 
 // uncomment to activate each example:
 print.logEvent("Scenario #0: Get auth token", GetToken());
@@ -23,9 +25,6 @@ async function GetToken() {
 
 /**
  * Scenario #1: List all pages in a site
- *
- * @param {string} sourcePageId - source page id
- * @param {string[]} targetSiteIds - target site ids
  */
 async function ListPages() {
   const GraphPages = new GraphPagesAPI(config);
@@ -60,7 +59,7 @@ async function CopyPageToMultipleSites(sourcePageId: string, targetSiteIds: stri
 
   if (targetSiteIds.length === 0) {
     print.log("No target site found. Copy to the source site.");
-    targetSiteIds.push(siteId);
+    targetSiteIds.push(config.siteId);
   }
 
   for (let targetSiteId of targetSiteIds) {
@@ -133,7 +132,6 @@ async function PromotePagesAsNews(date: Date) {
 
 /**
  * Scenario #4: List all web parts on pages
- *
  */
 async function ListWebParts() {
   const GraphPages = new GraphPagesAPI(config);
