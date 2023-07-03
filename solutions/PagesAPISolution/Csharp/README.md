@@ -42,7 +42,7 @@ tenantId=<your tenant ID>
 siteId=<source site ID>
 ```
 
-Once changes are complete, save the file. After you've completed these steps and have received admin consent for your app, you'll be able to run the Main.cs sample as covered below with `dotnet run`.
+Once changes are complete, save the file. After you've completed these steps and have received admin consent for your app, you'll be able to run the Main.cs sample as covered below.
 
 ### Notes:
 
@@ -52,7 +52,7 @@ Once changes are complete, save the file. After you've completed these steps and
 
 1) Clone this repository
 2) Register an application using the steps above
-3) Provide you application details in the AccessToken.cs file
-4) Execute "dotnet run" to start the server
+3) Provide you application details in the `.env` file
+4) Execute `dotnet run` to start the server
 
 <img src="https://pnptelemetry.azurewebsites.net/sp-dev-solutions/solutions/PagesAPISolution/Csharp" />

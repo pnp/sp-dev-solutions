@@ -8,6 +8,14 @@ See LICENSE in the project root for license information.
 
 . ".\PagesController.ps1"
 
+$envFileContent = Get-Content -Path '../.env'
+
+$envVariables = @{}
+foreach ($line in $envFileContent) {
+    $key, $value = $line -split '=', 2
+    $envVariables[$key] = $value
+}
+
 # Uncomment to run the samples
 
 # Scenario 0: Get Token
@@ -19,7 +27,7 @@ Get-AuthToken
 # Scenario 1: Copy page to multiple sites
 # Note: This call won't copy assets to the target site. Use pages with only cdn assets.
 
-# $sourceSiteId = "<input your source site id here>"
+# $sourceSiteId = $envVariables["siteId"]
 # $sourcePageId = "<input your source page id here>"
 # $targetSiteIds = "<input your site id here>", "<another site id>"
 
