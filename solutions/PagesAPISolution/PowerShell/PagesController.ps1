@@ -89,8 +89,8 @@ Function Get-Page([string]$siteId, [string]$pageId, [object]$authToken) {
     
     [cmdletbinding()]
 
-    $rootUrl = "https://canary.graph.microsoft.com/testprodbetapages-api-df/sites"
-    $resource = "$($siteId)/pages/$($pageId)?expand=canvasLayout"
+    $rootUrl = "https://graph.microsoft.com/beta/sites"
+    $resource = "$($siteId)/pages/$($pageId)/microsoft.graph.sitepage?expand=canvasLayout"
     
     try {
         $uri = "$rootUrl/$($resource)"
@@ -141,7 +141,7 @@ Function Publish-Page([string]$siteId, [string]$pageId, [object]$authToken) {
     [cmdletbinding()]
     
     $graphApiVersion = "beta"
-    $resource = "sites/$($siteId)/pages/$($pageId)/publish"
+    $resource = "sites/$($siteId)/pages/$($pageId)/microsoft.graph.sitepage/publish"
     
     try {
         $uri = "https://graph.microsoft.com/$graphApiVersion/$($resource)"
@@ -165,8 +165,8 @@ Function Publish-Page([string]$siteId, [string]$pageId, [object]$authToken) {
 Function Update-Page([string]$siteId, [string]$pageId, [object]$payload, [object]$authToken) {
 
     [cmdletbinding()]
-    $rootUrl = "https://canary.graph.microsoft.com/testprodbetapages-api-df/sites"
-    $resource = "$($siteId)/pages/$($pageId)"
+    $rootUrl = "https://graph.microsoft.com/beta/sites"
+    $resource = "$($siteId)/pages/$($pageId)/microsoft.graph.sitepage"
     
     try {
         $uri = "$rootUrl/$($resource)"
@@ -190,12 +190,16 @@ Function Update-Page([string]$siteId, [string]$pageId, [object]$payload, [object
 Function New-Page([string]$siteId, [object]$payload, [object]$authToken) {
 
     [cmdletbinding()]
-    $rootUrl = "https://canary.graph.microsoft.com/testprodbetapages-api-df/sites"
+    $rootUrl = "https://graph.microsoft.com/beta/sites"
     $resource = "$($siteId)/pages"
+    
+    $payload| Add-Member -NotePropertyName "@odata.type" -NotePropertyValue "microsoft.graph.sitePage"
+    Write-Host $payload
     
     try {
         $uri = "$rootUrl/$($resource)"
-        $page = (Invoke-RestMethod -Uri $uri -Headers $authToken -Method Post -Body $payload)
+        $newPage = ConvertTo-Json $payload -Depth 100 -Compress
+        $page = (Invoke-RestMethod -Uri $uri -Headers $authToken -Method Post -Body $newPage)
         Write-Host "Create page(ID: $($page.id), URL: $($page.webUrl)) successfully."
         return $page
     } 
@@ -217,6 +221,6 @@ Function New-Page([string]$siteId, [object]$payload, [object]$authToken) {
 Function ModifyPage([object] $page) {
     # add your logic here to modify the page,
     # e.g. add a section, add a column, modify metadatas etc.
-    $page.Name = "sample name"
+    $page.Name = $page.Name + " - copy"
     return $page
 }

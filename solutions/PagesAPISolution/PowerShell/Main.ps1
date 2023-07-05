@@ -43,8 +43,7 @@ foreach ($page in $pages) {
 # $authToken = Get-AuthToken
 # $page = Get-Page -siteId $sourceSiteId -pageId $sourcePageId -authToken $authToken 
 # foreach ($siteId in $targetSiteIds) {
-#   $newPage = ConvertTo-Json (ModifyPage $page) -Depth 100 -Compress
-#   $createdPage = New-Page -siteId $siteId -payload $newPage -authToken $authToken 
+#   $createdPage = New-Page -siteId $siteId -payload (ModifyPage $page)  -authToken $authToken 
 #   Publish-Page -siteId $siteId -pageId $createdPage.id -authToken $authToken 
 # }
 
