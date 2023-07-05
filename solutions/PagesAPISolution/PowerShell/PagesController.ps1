@@ -91,6 +91,7 @@ Function Get-Page([string]$siteId, [string]$pageId, [object]$authToken) {
 
     $rootUrl = "https://graph.microsoft.com/beta/sites"
     $resource = "$($siteId)/pages/$($pageId)/microsoft.graph.sitepage?expand=canvasLayout"
+
     
     try {
         $uri = "$rootUrl/$($resource)"
