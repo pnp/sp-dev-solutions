@@ -1,8 +1,10 @@
-import GraphPagesAPI, { IPage } from './GraphController.js';
-import config from './config.js';
+import dotenv from 'dotenv'
+import GraphPagesAPI, { IPage, IStandardWebPart } from './GraphController.js';
 import print from './logHelper.js';
 
-const { siteId } = config;
+const config = dotenv.config({ path: '../.env' }).parsed;
+
+print.log(`config loaded: ${JSON.stringify(config, null, 4)}`);
 
 // uncomment to activate each example:
 print.logEvent("Scenario #0: Get auth token", GetToken());
@@ -10,6 +12,7 @@ print.logEvent("Scenario #1: List all pages in a site", ListPages());
 // print.logEvent("Scenario #2: Copy a page to multiple sites", CopyPageToMultipleSites(/* page id */, [/* site ids */]))
 // print.logEvent("Scenario #3: Delete pages before a target date", DeletePageBeforeTargetDate(/* target date*/));
 // print.logEvent("Scenario #4: Promote pages after a give date as new posts", PromotePagesAsNews(/* target date*/));
+print.logEvent("Scenario #5: List all web parts on a page", ListWebParts());
 
 /**
  * Scenario #0: Get auth token
@@ -22,9 +25,6 @@ async function GetToken() {
 
 /**
  * Scenario #1: List all pages in a site
- *
- * @param {string} sourcePageId - source page id
- * @param {string[]} targetSiteIds - target site ids
  */
 async function ListPages() {
   const GraphPages = new GraphPagesAPI(config);
@@ -56,6 +56,11 @@ async function CopyPageToMultipleSites(sourcePageId: string, targetSiteIds: stri
 
   const sourcePage = await print.logEvent(`Get page(${sourcePageId}) content`, GraphPages.getPage(siteId, sourcePageId));
   let count: number = 0;
+
+  if (targetSiteIds.length === 0) {
+    print.log("No target site found. Copy to the source site.");
+    targetSiteIds.push(config.siteId);
+  }
 
   for (let targetSiteId of targetSiteIds) {
     const targetPage = modifyPage(sourcePage);
@@ -126,12 +131,30 @@ async function PromotePagesAsNews(date: Date) {
 }
 
 /**
+ * Scenario #4: List all web parts on pages
+ */
+async function ListWebParts() {
+  const GraphPages = new GraphPagesAPI(config);
+  const token = await GraphPages.getAuthenticationToken();
+  print.logToken(token);
+  GraphPages.storeToken(token);
+
+  const list = await print.logEvent("Get pages list", GraphPages.listPages(config.siteId));
+
+  for (let i = 0; i < list.value.length; i++) {
+    const webparts = await print.logEvent(`Get webparts on page(${list.value[i].name})`, GraphPages.listWebParts(config.siteId, list.value[i].id!));
+    console.log(webparts.value.map(elem => elem.hasOwnProperty('innerHtml') ? 'Text' : (elem as IStandardWebPart).data.title));
+  }
+}
+
+/**
  * Update this function to modify your own page
  * @param {IPage} sourcePage
  * @return {*}  {IPage}
  */
 function modifyPage(sourcePage: IPage): IPage {
   return {
-    ...sourcePage
+    ...sourcePage,
+    name: sourcePage.name + ' - Copy',
   };
 }

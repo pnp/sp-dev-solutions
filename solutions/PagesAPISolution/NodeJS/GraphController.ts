@@ -1,5 +1,4 @@
 import fetch from 'node-fetch';
-import { IConfig } from 'config.js';
 
 const baseUrl = "https://graph.microsoft.com/beta/sites";
 
@@ -22,6 +21,19 @@ export interface IPage {
   showRecommendedPages?: boolean;
 }
 
+interface ITextWebPart {
+  innerHtml: string;
+  id: string;
+}
+
+export interface IStandardWebPart {
+  data: any;
+  type: string;
+  id: string;
+}
+
+export type IWebPart = ITextWebPart | IStandardWebPart;
+
 /**
  * Example controller to handle Microsoft Graph Pages API requests.
  *
@@ -36,7 +48,7 @@ export default class GraphPagesAPI {
     access_token?: string;
   };
 
-  constructor(config: IConfig) {
+  constructor(config: any) {
     this.appId = config.appId;
     this.appSecret = config.appSecret;
     this.tenantId = config.tenantId;
@@ -126,7 +138,7 @@ export default class GraphPagesAPI {
    * @memberof GraphPagesAPI
    */
   getPage = async (siteId: string, pageId: string): Promise<IPage> => {
-    const url = `${baseUrl}/${siteId}/pages/${pageId}?expand=canvasLayout`;
+    const url = `${baseUrl}/${siteId}/pages/${pageId}/microsoft.graph.sitepage/?expand=canvasLayout`;
     const options = {
       method: 'GET',
       headers: this.getHeader(),
@@ -150,7 +162,10 @@ export default class GraphPagesAPI {
     const url = `${baseUrl}/${siteId}/pages`;
     const options = {
       method: 'POST',
-      body: JSON.stringify(pagePayload),
+      body: JSON.stringify({
+        '@odata.type': 'microsoft.graph.sitePage',
+        ...pagePayload
+      }),
       headers: this.getHeader(),
     };
     const res = await fetch(url, options);
@@ -169,7 +184,7 @@ export default class GraphPagesAPI {
    * @memberof GraphPagesAPI
    */
   publishPage = async (siteId: string, pageId: string): Promise<void> => {
-    const url = `${baseUrl}/${siteId}/pages/${pageId}/publish`;
+    const url = `${baseUrl}/${siteId}/pages/${pageId}/microsoft.graph.sitepage/publish`;
     const options = {
       method: 'POST',
       headers: this.getHeader(),
@@ -208,7 +223,7 @@ export default class GraphPagesAPI {
    * @memberof GraphPagesAPI
    */
   updatePage = async (siteId: string, pageId: string, pagePayload: Partial<IPage>): Promise<IPage> => {
-    const url = `${baseUrl}/${siteId}/pages/${pageId}`;
+    const url = `${baseUrl}/${siteId}/pages/${pageId}/microsoft.graph.sitepage`;
     const options = {
       method: 'PATCH',
       body: JSON.stringify(pagePayload),
@@ -219,6 +234,20 @@ export default class GraphPagesAPI {
       throw new Error(`Error: ${res.status} ${res.statusText}, ${await res.text()}`);
     }
     const resBody: IPage = await res.json();
+    return resBody;
+  }
+
+  listWebParts = async (siteId: string, pageId: string): Promise<{ value: IWebPart[] }> => {
+    const url = `${baseUrl}/${siteId}/pages/${pageId}/microsoft.graph.sitepage/webparts`;
+    const options = {
+      method: 'GET',
+      headers: this.getHeader(),
+    };
+    const res = await fetch(url, options);
+    if (res.status !== HTTP_CODE.SUCCESS) {
+      throw new Error(`Error: ${res.status} ${res.statusText}, ${await res.text()}`);
+    }
+    const resBody: { value: IWebPart[] } = await res.json();
     return resBody;
   }
 }

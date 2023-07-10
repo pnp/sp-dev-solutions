@@ -8,26 +8,42 @@ See LICENSE in the project root for license information.
 
 . ".\PagesController.ps1"
 
-# Uncomment to run the samples
+$envFileContent = Get-Content -Path '../.env'
 
-# Scenario 0: Get Token
+$envVariables = @{}
+foreach ($line in $envFileContent) {
+    $key, $value = $line -split '=', 2
+    $envVariables[$key] = $value
+}
 
 Get-AuthToken
+
+###############################################################################
+
+# Uncomment to run the samples
+
+# Scenario 0: Retrieve all pages in a site
+$authToken = Get-AuthToken
+$pages = Get-Pages -siteId $envVariables["siteId"] -authToken $authToken 
+foreach ($page in $pages) {
+  $name = $page.name
+  $id = $page.id
+  Write-Host "Page name: $name, id: $id" -f Yellow
+}
 
 ###############################################################################
 
 # Scenario 1: Copy page to multiple sites
 # Note: This call won't copy assets to the target site. Use pages with only cdn assets.
 
-# $sourceSiteId = "<input your source site id here>"
+# $sourceSiteId = $envVariables["siteId"]
 # $sourcePageId = "<input your source page id here>"
 # $targetSiteIds = "<input your site id here>", "<another site id>"
 
 # $authToken = Get-AuthToken
 # $page = Get-Page -siteId $sourceSiteId -pageId $sourcePageId -authToken $authToken 
 # foreach ($siteId in $targetSiteIds) {
-#   $newPage = ConvertTo-Json (ModifyPage $page) -Depth 100 -Compress
-#   $createdPage = New-Page -siteId $siteId -payload $newPage -authToken $authToken 
+#   $createdPage = New-Page -siteId $siteId -payload (ModifyPage $page)  -authToken $authToken 
 #   Publish-Page -siteId $siteId -pageId $createdPage.id -authToken $authToken 
 # }
 

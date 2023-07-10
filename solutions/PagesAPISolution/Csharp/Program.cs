@@ -1,4 +1,5 @@
 ﻿using Microsoft.Graph;
+using DotNetEnv;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -11,6 +12,9 @@ namespace MSGraphPagesAPIExample
   {
     public static async Task Main()
     {
+      Env.Load("../.env"); // Loads the variables from the .env file
+      string sourceSiteId = Environment.GetEnvironmentVariable("siteId");
+
       // Get access token
       Console.WriteLine("Getting access token...");
       var accessToken = new AccessToken();
@@ -20,22 +24,34 @@ namespace MSGraphPagesAPIExample
 
       // Uncomment the code below to Run sample scenarios
 
+      // Scenario #0: Retrieve all pages in a site
+      await ListAllPages(sourceSiteId);
+
       // Scenario #1: Copy a page to multiple sites 
       // Note: This call won't copy assets to the target site. Use pages with only cdn assets.
-      string sourceSiteId = "<enter your source site Id here>";
-      string sourcePageId = "<enter your source page Id here>";
-      string[] targetSiteIds = new string[] { "<enter your target site Id here>" };
-      await CopyPageToMultipleSites(sourceSiteId, sourcePageId, targetSiteIds);
+      // string sourcePageId = "<enter your source page Id here>";
+      // string[] targetSiteIds = new string[] { "<enter your target site Id here>" };
+      // await CopyPageToMultipleSites(sourceSiteId, sourcePageId, targetSiteIds);
 
       // Scenario 2: Delete pages before a target date
-      // string siteId = "<enter your site Id here>";   
       // DateTime targetDate = new DateTime(2000, 1, 1);  
-      // await DeletePageBeforeTargetDate(siteId, targetDate);
+      // await DeletePageBeforeTargetDate(sourceSiteId, targetDate);
 
       // Scenario #3: Promote multiple pages as newposts
-      // string siteId = "<enter your site Id here>";   
       // string[] pageIds = new string[]{ "<enter your target page Id here>" };
-      // await PromotePagesAsNews(siteId, pageIds)
+      // await PromotePagesAsNews(sourceSiteId, pageIds)
+    }
+
+    public static async Task ListAllPages(string sourceSiteId)
+    {
+      SitePagesController sitePagesController = new SitePagesController();
+      Console.WriteLine("Listing pages...");
+      List<SitePage> pages = await sitePagesController.ListPages(sourceSiteId);
+      Console.WriteLine($"Received {pages.Count} pages");
+      foreach (SitePage page in pages)
+      {
+        Console.WriteLine($"Page name: {page.Name}, Page ID: {page.ID}");
+      }
     }
 
     public static async Task CopyPageToMultipleSites(string sourceSiteId, string sourcePageId, string[] targetSiteIds)
@@ -92,6 +108,7 @@ namespace MSGraphPagesAPIExample
     {
       var newPage = new JObject(page);
       // Add your code here to modify the page: e.g.: 
+      newPage["name"] = newPage.Value<string>("name") + "-copy";
       // newPage["title"] = "New Title";
       return newPage;
     }
