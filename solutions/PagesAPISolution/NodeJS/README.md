@@ -4,6 +4,14 @@
 
 This repository contains a very simple Node application that implements the Microsoft Graph SharePoint Pages API.
 
+## Version history
+
+Version|Date|Comments
+-------|----|--------
+1.0|December 27, 2022|Initial release
+2.0|July 13, 2023|Add samples for Pages API Phase 2
+
+
 ### Examples Provided
 
 - GET all pages from a SharePoint site

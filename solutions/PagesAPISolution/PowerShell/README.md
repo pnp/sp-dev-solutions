@@ -15,6 +15,13 @@ The following samples are included in this repository:
 
 The scripts are licensed "as-is." under the [MIT License](../../LICENSE).
 
+## Version history
+
+Version|Date|Comments
+-------|----|--------
+1.0|December 27, 2022|Initial release
+2.0|July 13, 2023|Add samples for Pages API Phase 2
+
 ## Disclaimer
 
 Some script samples retrieve information from your tenant or update data in your tenant.  Understand the impact of each sample script prior to running it; samples should be run using a non-production or "test" tenant account.
