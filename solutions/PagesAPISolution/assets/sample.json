@@ -9,7 +9,7 @@
       "This sample is intended to provide you an example of how various functionalities of entities available in the Microsoft Graph SharePoint Pages API could be integrated to enrich your solutions (applications or services)."
     ],
     "creationDateTime": "2022-12-08",
-    "updateDateTime": "2022-12-08",
+    "updateDateTime": "2023-07-14",
     "products": [
       "SharePoint",
       "Microsoft Graph"
