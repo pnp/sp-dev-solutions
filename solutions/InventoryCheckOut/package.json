@@ -18,7 +18,7 @@
     "@types/webpack-env": ">=1.12.1 <1.14.0",
     "immutability-helper": "^3.0.2",
     "lodash": "^4.17.4",
-    "moment": "^2.18.1",
+    "moment": "^2.29.4",
     "office-ui-fabric-react": "~2.31.0",
     "react": "15.4.2",
     "react-datetime": "^2.8.10",
