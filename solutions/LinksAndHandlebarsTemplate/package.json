@@ -23,7 +23,7 @@
     "handlebars": "4.0.12",
     "handlebars-helpers": "0.8.4",
     "linqts": "1.8.2",
-    "moment": "2.22.2",
+    "moment": "2.29.4",
     "office-ui-fabric-react": "7.156.0",
     "react": "16.9.0",
     "react-dom": "16.9.0",
