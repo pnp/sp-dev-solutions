@@ -12,8 +12,8 @@ Short summary on functionality and used technologies.
 
 ## Applies to
 
-* [SharePoint Framework](https://dev.office.com/sharepoint)
-* [Office 365 tenant](https://dev.office.com/sharepoint/docs/spfx/set-up-your-development-environment)
+* [SharePoint Framework](https://learn.microsoft.com/sharepoint/dev/spfx/sharepoint-framework-overview)
+* [Microsoft 365 tenant](https://learn.microsoft.com/sharepoint/dev/spfx/set-up-your-developer-tenant)
 
 > Update accordingly as needed.
 
@@ -25,7 +25,7 @@ Short summary on functionality and used technologies.
 
 Solution|Author(s)
 --------|---------
-folder name | Author details
+solution-folder-name | [Author name](https://github.com/GITHUB-USERNAME)
 
 ## Version history
 
@@ -43,7 +43,7 @@ Version|Date|Comments
 ## Minimal Path to Awesome
 
 * Clone this repository
-* Move to right solution folder
+* Move to the solution folder: `cd solutions/{solution-name}`
 * in the command line run:
   * `npm install`
   * `gulp serve`

@@ -26,25 +26,25 @@ Be sure to provide as much detail as possible so that we can reproduce the issue
 
 Found a typo in the documents? LIES! Just kidding, it totally hapens.
 
-Typos are easy to make and easy to fix and we'd love for you to do that. The good news is you don't even have to fork/clone the project to do it! Just hit the edit button on the document you want to correct, make the changes, and submit a pull request (targeting the Dev branch). Updates to documentation should generally be a single pull request per document. This makes it easier to merge.
+Typos are easy to make and easy to fix and we'd love for you to do that. The good news is you don't even have to fork/clone the project to do it! Just hit the edit button on the document you want to correct, make the changes, and submit a pull request targeting the `master` branch. Updates to documentation should generally be a single pull request per document. This makes it easier to merge.
 
 ## Tips
 
 Before contributing:
 
-- ensure that the **dev** branch on your fork is in sync with the original **sp-dev-solutions** repository
+- ensure that the **master** branch on your fork is in sync with the original **sp-dev-solutions** repository
     ```sh
     # assuming you are in the folder of your locally cloned fork....
-    git checkout dev
+    git checkout master
 
     # assuming you have a remote named `upstream` pointing to the official **sp-dev-solutions** repo
     git fetch upstream
 
-    # update your local dev to be a mirror of what's in the main repo
-    git pull --rebase upstream dev
+    # update your local master to be a mirror of what's in the main repo
+    git pull --rebase upstream master
     ```
 
-- create a feature branch for your change. If you get stuck on an issue or merging your PR will take a while, this will allow you to have a clean dev branch that you can use for contributing other changes
+- create a feature branch for your change. If you get stuck on an issue or merging your PR will take a while, this will allow you to have a clean master branch that you can use for contributing other changes
     ```sh
     git checkout -b my-contribution
     ```
@@ -55,10 +55,10 @@ Before contributing:
 - **DO** keep discussions focused. When a new or related topic comes up it's often better to create new issue than to side track the conversation.
 - **DO** feel free to ask questions if you're not sure where something fits or how to do it
 - **DO** add comments that make it easy to understand your code
-- **DO NOT** feel intimidated if you're new to github or contributing, we've all submitted pull requests targeting master at some point. If you make a mistake, we'll help you (you won't break the project). We'd rather have your contribution (code, issue, or otherwise) than excessivly worry about formalities. Of course, try to follow them when you can since they make things much easier in the long run.
+- **DO NOT** feel intimidated if you're new to github or contributing, we've all targeted the wrong branch at some point. If you make a mistake, we'll help you (you won't break the project). We'd rather have your contribution (code, issue, or otherwise) than excessivly worry about formalities. Of course, try to follow them when you can since they make things much easier in the long run.
 - **DO NOT** submit PR's for coding style changes.
 - **DO NOT** surprise us with big PR's. Instead file an issue & start a discussion so we can agree on a direction before you invest a large amount of time.
 - **DO NOT** commit code you didn't write.
 - **DO NOT** submit PR's that refactor existing code without a discussion first.
 
-<img src="https://pnptelemetry.azurewebsites.net/sp-dev-solutions/solutions/ColumnFormatter/guides/Contributing" />
+<img src="https://m365-visitor-stats.azurewebsites.net/sp-dev-solutions/solutions/ColumnFormatter/guides/Contributing" />
