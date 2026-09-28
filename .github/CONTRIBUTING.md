@@ -41,8 +41,8 @@ When you are submitting a new sample, it has to follow up below guidelines
 
 - You will need to have a README file for your contribution, which is based on [provided template](../solutions/README-template.md) under the `solutions` folder. Please copy this template and update accordingly. README has to be named as README.md with capital letters.
     - You will need to have a picture of the web part in practice in the README file ("pics or it didn't happen"). Preview image must be located in /assets/ folder in the root your you solution.
-- README template contains specific tracking image as a final entry in the page with img tag by default to https://pnptelemetry.azurewebsites.net/sp-dev-solutions/solutions/readme-template. This is transparent image, which is used to track popularity of individual samples in GitHub.
-    - Updated the image src element according with repository name and folder information. If your sample is for example in samples folder and named as ChangeRequests, src element should be updated as https://pnptelemetry.azurewebsites.net/sp-dev-solutions/solutions/ChangeRequests
+- The README must include the visitor tracking image as its final entry: `<img src="https://m365-visitor-stats.azurewebsites.net/sp-dev-solutions/{solution-path}" />`. This transparent image is used to track the popularity of individual samples in GitHub.
+    - Replace `{solution-path}` with the repository-relative path to the solution folder, including `solutions/` and any nested folders. For example, the `solutions/ChangeRequests` sample uses `https://m365-visitor-stats.azurewebsites.net/sp-dev-solutions/solutions/ChangeRequests`.
 - If you find already similar kind of sample from the existing samples, we would appreciate you to rather extend existing one, than submitting a new similar sample
     - When you update existing samples, please update also README accordingly with information on provided changes and with your author details
 - When you are submitting new sample solution, please name the sample solution folder accordingly

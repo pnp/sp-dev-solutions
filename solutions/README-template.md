@@ -61,4 +61,6 @@ This extension illustrates the following concepts:
 
 > Notice that better pictures and documentation will increase the sample usage and the value you are providing for others. Thanks for your submissions advance.
 
-<img src="https://m365-visitor-stats.azurewebsites.net/sp-dev-solutions/solutions/TimeAway" />
+> Replace `{solution-path}` below with the repository-relative path to the solution folder, including `solutions/` and any nested folders. Keep the visitor tracking image as the final entry in this README.
+
+<img src="https://m365-visitor-stats.azurewebsites.net/sp-dev-solutions/{solution-path}" />
