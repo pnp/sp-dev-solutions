@@ -71,4 +71,4 @@ This extension illustrates the following concepts:
 - Edit Site Scripts with a user friendly GUI and save them directly in the current Tenant
 
 
-<img src="https://pnptelemetry.azurewebsites.net/sp-dev-solutions/solutions/SiteDesignStudio" />
+<img src="https://m365-visitor-stats.azurewebsites.net/sp-dev-solutions/solutions/SiteDesignStudio" />

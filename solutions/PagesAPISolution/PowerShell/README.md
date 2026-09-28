@@ -68,4 +68,4 @@ Once changes are complete, save the file. After you've completed these steps and
 3) Provide you application details in the `.env` file
 4) Run `run .\Main.ps1` to execute the code
 
-<img src="https://pnptelemetry.azurewebsites.net/sp-dev-solutions/solutions/PagesAPISolution/PowerShell" />
+<img src="https://m365-visitor-stats.azurewebsites.net/sp-dev-solutions/solutions/PagesAPISolution/PowerShell" />
