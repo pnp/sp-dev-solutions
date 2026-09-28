@@ -81,6 +81,12 @@ Once the npm packages are installed, run the following command to preview your w
 gulp serve
 ```
 
+## Join the community calls
+
+Stay up to date with the latest Copilot, Microsoft 365, and Power Platform topics by joining our weekly community calls. Everyone is welcome—come to learn, ask questions, and connect with the community.
+
+[View the call schedule and download the recurring invites](https://aka.ms/community/calls) so you don't miss an upcoming call.
+
 ## Contributions
 
 These solutions are direct from the feature teams, Microsoft 365 Platform Community core team (http://aka.ms/m365/community) or shared by the community. This project's contributors include Microsoft and [community contributors](Contributors.md). Work is done as as open source community project. We welcome your input on issues and suggestions for new samples. We also welcome community contributions around new solutions. 
