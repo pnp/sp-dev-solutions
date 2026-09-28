@@ -64,4 +64,4 @@ Once changes are complete, save the file. After you've completed these steps and
 4) Provide you application details in the `.env` file
 5) Execute `npm start` to run the code
 
-<img src="https://pnptelemetry.azurewebsites.net/sp-dev-solutions/solutions/PagesAPISolution/NodeJS" />
+<img src="https://m365-visitor-stats.azurewebsites.net/sp-dev-solutions/solutions/PagesAPISolution/NodeJS" />

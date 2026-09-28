@@ -118,4 +118,4 @@ Version|Date|Comments
 
 **THIS CODE IS PROVIDED *AS IS* WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING ANY IMPLIED WARRANTIES OF FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.**
 
-![](https://pnptelemetry.azurewebsites.net/sp-dev-solutions/solutions/spfx-global-footer)
+![](https://m365-visitor-stats.azurewebsites.net/sp-dev-solutions/solutions/spfx-global-footer)

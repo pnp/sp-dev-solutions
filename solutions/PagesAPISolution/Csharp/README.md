@@ -62,4 +62,4 @@ Once changes are complete, save the file. After you've completed these steps and
 3) Provide you application details in the `.env` file
 4) Execute `dotnet run` to start the server
 
-<img src="https://pnptelemetry.azurewebsites.net/sp-dev-solutions/solutions/PagesAPISolution/Csharp" />
+<img src="https://m365-visitor-stats.azurewebsites.net/sp-dev-solutions/solutions/PagesAPISolution/Csharp" />

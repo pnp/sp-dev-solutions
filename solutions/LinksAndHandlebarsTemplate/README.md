@@ -100,4 +100,4 @@ Version  | Date               | Comments
   * `npm install`
   * `gulp serve`
 
-<img src="https://pnptelemetry.azurewebsites.net/sp-dev-solutions/solutions/linksandhandlebarstemplate" />
+<img src="https://m365-visitor-stats.azurewebsites.net/sp-dev-solutions/solutions/linksandhandlebarstemplate" />

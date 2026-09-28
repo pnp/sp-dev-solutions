@@ -59,4 +59,4 @@ Version|Date|Comments
 
 * [Microsoft Graph Pages API reference docs](https://developer.microsoft.com/en-us/graph/docs/api-reference/beta/resources/sitePage)
 
-<img src="https://pnptelemetry.azurewebsites.net/sp-dev-solutions/solutions/PagesAPISolution" />
+<img src="https://m365-visitor-stats.azurewebsites.net/sp-dev-solutions/solutions/PagesAPISolution" />
